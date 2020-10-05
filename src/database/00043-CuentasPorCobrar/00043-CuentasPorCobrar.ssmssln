@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# SQL Server Management Studio Solution File, Format Version 18.00
+VisualStudioVersion = 15.0.28307.421
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{4F2E2C19-372F-40D8-9FA7-9D2138C6997A}") = "BD_OCEF_CtasPorCobrar", "BD_OCEF_CtasPorCobrar\BD_OCEF_CtasPorCobrar\BD_OCEF_CtasPorCobrar.ssmssqlproj", "{19D525FB-5BFC-4EA2-A875-A9B9D2A08DD1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Default|Default = Default|Default
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8510401A-D0F3-4DFB-B0AD-608E0071D6F2}.Default|Default.ActiveCfg = Default
+		{19D525FB-5BFC-4EA2-A875-A9B9D2A08DD1}.Default|Default.ActiveCfg = Default
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C209CB12-8728-4938-8FFD-65C24082A7A6}
+	EndGlobalSection
+EndGlobal
