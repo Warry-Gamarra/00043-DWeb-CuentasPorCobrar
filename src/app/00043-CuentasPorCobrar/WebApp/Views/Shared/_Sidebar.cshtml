@@ -1,0 +1,62 @@
+﻿
+<div class="main-sidebar">
+    <ul class="nav side-nav">
+        <li class="nav-item"><a href="@Url.Action("Index", "Home")" class="nav-link"><i class="fa fa-fw fa-home"></i> Dashboard</a></li>
+        <li class="nav-item">
+            <a href="javascript:;" class="nav-link" data-toggle="collapse" data-target="#operations">
+                <i class="fa fa-fw fa-paste"></i> Operaciones<span class="pull-right"><i class="fa fa-fw fa-caret-down"></i></span>
+            </a>
+            <ul id="operations" class="collapse">
+                <li><a href="#"><i class="fa fa-fw fa-book"></i>&nbsp; Manual de Usuario</a></li>
+                <li><a href="#"><i class="fa fa-fw fa-question-circle-o"></i>&nbsp; Preguntas frecuentes</a></li>
+                <li><a href="#"><i class="fa fa-fw fa-phone-square"></i>&nbsp; Contactos</a></li>
+            </ul>
+        </li>
+        <li class="nav-item">
+            <a href="javascript:;" class="nav-link" data-toggle="collapse" data-target="#settings">
+                <i class="fa fa-fw fa-cogs"></i> Configuración<span class="pull-right"><i class="fa fa-fw fa-caret-down"></i></span>
+            </a>
+            <ul id="settings" class="collapse">
+                <li><a href="@Url.Action("Contacts", "HelpCenter")"><i class="fa fa-fw fa-list"></i>&nbsp; Conceptos de pago</a></li>
+                <li><a href="@Url.Action("Contacts", "HelpCenter")"><i class="fa fa-fw fa-file-text-o"></i>&nbsp; Desc. cuota de pago</a></li>
+                <li><a href="@Url.Action("Index", "Annexe")"><i class="fa fa-fw fa-fort-awesome"></i>&nbsp; Dependencias</a></li>
+            </ul>
+        </li>
+        <li class="nav-item">
+            <a href="javascript:;" class="nav-link" data-toggle="collapse" data-target="#help">
+                <i class="fa fa-fw fa-life-ring"></i> Ayuda<span class="pull-right"><i class="fa fa-fw fa-caret-down"></i></span>
+            </a>
+            <ul id="help" class="collapse">
+                <li><a href="@Url.Action("Manual", "HelpCenter")"><i class="fa fa-fw fa-book"></i>&nbsp; Manual de Usuario</a></li>
+                <li><a href="@Url.Action("FAQs", "HelpCenter")"><i class="fa fa-fw fa-question-circle-o"></i>&nbsp; Preguntas frecuentes</a></li>
+                <li><a href="@Url.Action("Contacts", "HelpCenter")"><i class="fa fa-fw fa-phone-square"></i>&nbsp; Contactos</a></li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+<div class="hidden-sidebar">
+    <ul class="nav hidden-side-nav hdn-sidebar">
+        <li class="nav-item">
+            <a href="javascript:;" class="nav-link" data-toggle="collapse" title="Dashboard">
+                <i class="fa fa-3x fa-home"></i><br />Dashboard
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="javascript:;" class="nav-link" data-toggle="collapse" title="Operaciones" data-target="#operations">
+                <i class="fa fa-3x fa-clipboard"></i><br />Operaciones
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="javascript:;" class="nav-link" data-toggle="collapse" title="Configuración" data-target="#settings">
+                <i class="fa fa-3x fa-fw fa-cogs"></i><br />Configuración
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="javascript:;" class="nav-link" data-toggle="collapse" title="Ayuda" data-target="#help">
+                <i class="fa fa-3x fa-life-ring"></i><br />Ayuda
+            </a>
+        </li>
+    </ul>
+</div>
+

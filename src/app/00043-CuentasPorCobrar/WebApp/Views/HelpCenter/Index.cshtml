@@ -1,0 +1,23 @@
+﻿
+<div class="container-fluid">
+    <div class="col-12">
+        <section class="content-header">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb float-right small d-none d-sm-inline-flex">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")"><i class="fa fa-home">&nbsp;</i>Inicio</a></li>
+                    <li class="breadcrumb-item active"><span><i class="fa fa-life-ring">&nbsp;</i>Ayuda </span></li>
+                </ol>
+            </nav>
+            <h1 class="">Ayuda <small></small></h1>
+        </section>
+    </div>
+    <br />
+
+    <div class="col-md-4">
+        <ul class="list-group">
+            <li class="list-group-item"><a class="list-group-item" href="@Url.Action("Manual", "HelpCenter", new { area = "" }) ">Manual de usuario &nbsp;<i class=" fa fa-fw fa-book"></i></a></li>
+            <li class="list-group-item"><a class="list-group-item" href="@Url.Action("FAQs", "HelpCenter", new { area = "" }) ">Preguntas frecuentes &nbsp;<i class=" fa fa-fw fa-question-circle-o"></i></a></li>
+            <li class="list-group-item"><a class="list-group-item" href="@Url.Action("Contacts", "HelpCenter", new { area = "" }) ">Contactos &nbsp;<i class=" fa fa-fw fa-phone-square"></i></a></li>
+        </ul>
+    </div>
+</div>

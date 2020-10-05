@@ -1,0 +1,84 @@
+﻿@model WebApp.ViewModels.LoginViewModel
+@{
+    Layout = null;
+}
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="shortcut icon" href="~/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="favicon.ico">
+    <title>.:: UNFV - Sistema de Cuentas Por Cobrar ::.</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet" />
+    <link href="@Url.Content("~/Assets/font-awesome/css/font-awesome.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Assets/application/css/login.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Assets/application/css/loaders.css")" rel="stylesheet" />
+</head>
+<body>
+    <div class="container">
+        <div class="login-content">
+            @using (Html.BeginForm("Login", "Account", new { returnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-signin" }))
+            {
+                @Html.AntiForgeryToken()
+
+                <img class="avatar" src="~/Assets/images/logo.png" alt="avatar" loading="lazy" />
+                <h1>Sistema de cuentas por Cobrar</h1>
+                <div class="input-div one">
+                    <div class="i">
+                        <i class="fa fa-user"></i>
+                    </div>
+                    <div>
+                        @Html.LabelFor(m => m.UserName)
+                        @Html.TextBoxFor(m => m.UserName, new { @class = "input" })
+                        <p class="text-danger">@Html.ValidationMessageFor(m => m.UserName)</p>
+                    </div>
+                </div>
+                <div class="input-div two">
+                    <div class="i">
+                        <i class="fa fa-lock"></i>
+                    </div>
+                    <div>
+                        @Html.LabelFor(m => m.Password)
+                        @Html.PasswordFor(m => m.Password, new { @class = "input" })
+                        <p class="text-danger">@Html.ValidationMessageFor(m => m.Password)</p>
+                    </div>
+                </div>
+                <div class="remember-checkbox">
+                    <label>
+                        @Html.CheckBoxFor(m => m.RememberMe) Recordar Cuenta
+                    </label>
+                </div>
+                <button type="submit" class="btn">Ingresar</button>
+                <a href="@Url.Action("RecuperarPassword", "Account")">¿Olvidó su contraseña?</a>
+                <br />
+                <div class="lds-css" style="display: none;">
+                    <div class="lds-microsoft" style="width:100%;height:100%"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+                </div>
+            }
+        </div>
+        <div class="img">
+            <img src="~/Assets/images/backgound.png" alt="backgound" />
+        </div>
+    </div>
+
+    <script src="@Url.Content("~/Assets/jquery/jquery-3.3.1.min.js")"></script>
+    <script src="@Url.Content("~/Assets/jquery/jquery.validate.js")"></script>
+    <script src="@Url.Content("~/Assets/jquery/jquery.validate.unobtrusive.js")"></script>
+    <script src="@Url.Content("~/Assets/jquery/jquery.unobtrusive-ajax.js")"></script>
+    <script src="@Url.Content("~/Assets/application/js/login.js")"></script>
+
+    <script>
+        $('form').on('submit', function () {
+            $('.lds-css').show();
+        });
+    </script>
+
+</body>
+</html>
