@@ -7,19 +7,19 @@ using WebApp.ViewModels;
 
 namespace WebApp.Models
 {
-    public class MailAdminModel
+    public class MailApplicationModel
     {
-        public List<MailAdminViewModel> Find()
+        public List<MailApplicationViewModel> Find()
         {
-            var result = new List<MailAdminViewModel>();
+            var result = new List<MailApplicationViewModel>();
 
 
             return result;
         }
 
-        public MailAdminViewModel Find(int mailId)
+        public MailApplicationViewModel Find(int mailId)
         {
-            var result = new MailAdminViewModel();
+            var result = new MailApplicationViewModel();
 
 
             return result;
@@ -33,7 +33,7 @@ namespace WebApp.Models
             return result;
         }
 
-        public Response Save(MailAdminViewModel mailAdminViewModel, int currentUserId)
+        public Response Save(MailApplicationViewModel mailApplicationViewModel, int currentUserId)
         {
             var result = new Response();
 

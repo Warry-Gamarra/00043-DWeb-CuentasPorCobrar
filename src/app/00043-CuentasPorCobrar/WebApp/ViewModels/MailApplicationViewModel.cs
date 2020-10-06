@@ -6,7 +6,7 @@ using System.Web;
 
 namespace WebApp.ViewModels
 {
-    public partial class MailAdminViewModel
+    public partial class MailApplicationViewModel
     {
         public int? MailID { get; set; }
 
@@ -42,7 +42,7 @@ namespace WebApp.ViewModels
         public DateTime FecUpdate { get; set; }
 
 
-        public MailAdminViewModel() { }
+        public MailApplicationViewModel() { }
 
         //public CorreoAdminViewModel(CuentaCorreo correo)
         //{

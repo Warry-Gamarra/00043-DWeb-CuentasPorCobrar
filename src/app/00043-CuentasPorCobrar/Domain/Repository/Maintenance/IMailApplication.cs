@@ -5,10 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Services
+namespace Domain.Repository
 {
-    public interface IAnnexe
+    public interface IMailApplicationSD
     {
-        List<DocumentType> GetDocumentTypes();
+        List<MailApplication> Find();
+        MailApplication Get(int mailAppId);
     }
 }

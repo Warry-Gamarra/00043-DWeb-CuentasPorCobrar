@@ -66,6 +66,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Adapters\MailApplicationAdapter.cs" />
     <Compile Include="Connection\Database.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tables\TS_CorreoAplicacion.cs" />

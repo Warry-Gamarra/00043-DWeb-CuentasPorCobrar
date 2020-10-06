@@ -12,18 +12,18 @@ namespace WebApp.Controllers
 {
     public class MailController : Controller
     {
-        public readonly MailAdminModel _mailAdminModel;
+        public readonly MailApplicationModel _mailApplicationModel;
 
         public MailController()
         {
-            _mailAdminModel = new MailAdminModel();
+            _mailApplicationModel = new MailApplicationModel();
         }
 
         // GET: Mail
         public ActionResult Index()
         {
             ViewBag.Title = "Correos";
-            var model = _mailAdminModel.Find();
+            var model = _mailApplicationModel.Find();
             return View();
         }
 
@@ -39,7 +39,7 @@ namespace WebApp.Controllers
         public ActionResult Edit(int id)
         {
             ViewBag.Title = "Editar Cuenta";
-            var model = _mailAdminModel.Find(id);
+            var model = _mailApplicationModel.Find(id);
 
             return PartialView("_CorreoRegistrarCuenta", model);
         }
@@ -48,7 +48,7 @@ namespace WebApp.Controllers
         [HttpPost]
         public JsonResult ChangeState(int RowID, bool B_habilitado)
         {
-            var result = _mailAdminModel.ChangeState(RowID, B_habilitado, WebSecurity.CurrentUserId, Url.Action("",""));
+            var result = _mailApplicationModel.ChangeState(RowID, B_habilitado, WebSecurity.CurrentUserId, Url.Action("",""));
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
@@ -56,13 +56,13 @@ namespace WebApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Save(MailAdminViewModel model)
+        public ActionResult Save(MailApplicationViewModel model)
         {
             Response result = new Response();
 
             if (ModelState.IsValid)
             {
-                result = _mailAdminModel.Save(model, WebSecurity.CurrentUserId);
+                result = _mailApplicationModel.Save(model, WebSecurity.CurrentUserId);
             }
             else
             {

@@ -9,9 +9,9 @@ namespace Data.Connection
 {
     public class Database
     {
-        public string ConnectionString {
+        public static string ConnectionString {
             get {
-                return ConfigurationManager.ConnectionStrings[""].ConnectionString;
+                return ConfigurationManager.ConnectionStrings["BD_CtasPorCobrarConnection"].ConnectionString;
             }
         }
     }
