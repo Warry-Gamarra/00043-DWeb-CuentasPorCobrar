@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -6,9 +7,9 @@ using System.Web;
 
 namespace WebApp.ViewModels
 {
-    public partial class MailApplicationViewModel
+    public partial class CorreoAplicacionViewModel
     {
-        public int? MailID { get; set; }
+        public int? MailId { get; set; }
 
         [Required]
         [StringLength(250)]
@@ -33,7 +34,7 @@ namespace WebApp.ViewModels
 
         [Required]
         [Display(Name = "Número de puerto")]
-        public int? PortNumber { get; set; }
+        public int PortNumber { get; set; }
 
         [Display(Name = "Estado de la cuenta")]
         public bool? Enabled { get; set; }
@@ -42,21 +43,19 @@ namespace WebApp.ViewModels
         public DateTime FecUpdate { get; set; }
 
 
-        public MailApplicationViewModel() { }
+        public CorreoAplicacionViewModel() { }
 
-        //public CorreoAdminViewModel(CuentaCorreo correo)
-        //{
-        //    this.idCorreo = correo.I_CorreoID;
-        //    this.hostName = correo.T_HostName;
-        //    this.mailAddress = correo.T_DireccionCorreo;
-        //    this.password = correo.T_PasswordCorreo;
-        //    this.securityType = correo.T_Seguridad;
-        //    this.portNumber = correo.I_Puerto;
-        //    this.estado = correo.B_Habilitado;
-        //    this.fecUpdate = correo.D_FecUpdate;
-        //    this.programaID = correo.I_ProgramaID;
-        //    this.programa = programaID.HasValue ? correo.T_ProgramaNom : "PARA ACTIVIDADES DE ADMINISTRACIÓN";
-        //}
+        public CorreoAplicacionViewModel(CorreoAplicacion correoAplicacion)
+        {
+            this.MailId = correoAplicacion.Id;
+            this.HostName = correoAplicacion.HostName;
+            this.MailAddress = correoAplicacion.Address;
+            this.Password = correoAplicacion.Password;
+            this.SecurityType = correoAplicacion.SecurityType;
+            this.PortNumber = correoAplicacion.Port;
+            this.Enabled = correoAplicacion.Enabled;
+            this.FecUpdate = correoAplicacion.FecUpdated;
+        }
     }
 
 }

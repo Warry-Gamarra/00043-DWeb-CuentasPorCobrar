@@ -160,6 +160,13 @@
     <Content Include="Assets\font-awesome\css\font-awesome.min.css" />
     <Content Include="Assets\font-awesome\fonts\fontawesome-webfont.svg" />
     <None Include="Assets\jquery\jquery-3.3.1.intellisense.js" />
+    <Content Include="Assets\grid-mvc\css\font-awesome.css" />
+    <Content Include="Assets\grid-mvc\css\font-awesome.min.css" />
+    <Content Include="Assets\grid-mvc\css\gridmvc.datepicker.css" />
+    <Content Include="Assets\grid-mvc\css\gridmvc.datepicker.min.css" />
+    <Content Include="Assets\grid-mvc\css\ladda-bootstrap\ladda-themeless.min.css" />
+    <Content Include="Assets\grid-mvc\js\ladda-bootstrap\ladda.min.js" />
+    <Content Include="Assets\grid-mvc\js\ladda-bootstrap\spin.min.js" />
     <Content Include="Assets\images\avatar_2x.png" />
     <Content Include="Assets\images\backgound.png" />
     <Content Include="Assets\images\logo-inverted.png" />
@@ -172,13 +179,20 @@
     <Content Include="Assets\jquery\jquery.validate.js" />
     <Content Include="Assets\jquery\jquery.validate.unobtrusive.js" />
     <Content Include="Assets\grid-mvc\css\Gridmvc.css" />
+    <Content Include="Content\Gridmvc.css" />
     <Content Include="Global.asax" />
     <Content Include="Assets\jquery\modernizr-2.6.2.js" />
     <Content Include="Assets\grid-mvc\js\gridmvc.js" />
     <Content Include="Assets\grid-mvc\js\gridmvc.lang.fr.js" />
     <Content Include="Assets\grid-mvc\js\gridmvc.lang.ru.js" />
     <Content Include="Assets\grid-mvc\js\gridmvc.min.js" />
-    <Content Include="Web.config" />
+    <Content Include="Scripts\gridmvc.js" />
+    <Content Include="Scripts\gridmvc.lang.fr.js" />
+    <Content Include="Scripts\gridmvc.lang.ru.js" />
+    <Content Include="Scripts\gridmvc.min.js" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -195,12 +209,12 @@
     </Compile>
     <Compile Include="Models\AnnexeModel.cs" />
     <Compile Include="Models\UsersModel.cs" />
-    <Compile Include="Models\MailApplicationModel.cs" />
+    <Compile Include="Models\CorreoAplicacionModel.cs" />
     <Compile Include="Models\ResponseModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="ViewModels\AnnexeViewModels.cs" />
-    <Compile Include="ViewModels\MailApplicationViewModel.cs" />
+    <Compile Include="ViewModels\CorreoAplicacionViewModel.cs" />
     <Compile Include="ViewModels\UserManualViewModel.cs" />
     <Compile Include="ViewModels\UsersViewModels.cs" />
   </ItemGroup>
@@ -227,19 +241,19 @@
     <Content Include="Views\HelpCenter\FAQs.cshtml" />
     <Content Include="Views\HelpCenter\Manual.cshtml" />
     <Content Include="Views\HelpCenter\Contacts.cshtml" />
-    <Content Include="Views\Shared\_GridPager.cshtml" />
-    <Content Include="Views\Shared\_Grid.cshtml" />
     <Content Include="Views\Shared\_MsgPartial.cshtml" />
     <Content Include="Views\Shared\_MsgPartialWR.cshtml" />
     <Content Include="Views\Account\_ChangePassword.cshtml" />
     <Content Include="Views\Account\_ResetPassword.cshtml" />
     <Content Include="Views\Shared\_MsgModalBodyPartial.cshtml" />
-    <Content Include="Views\Mail\Mails.cshtml" />
-    <Content Include="Views\Mail\_RegisterMail.cshtml" />
+    <Content Include="Views\Mail\Correos.cshtml" />
+    <Content Include="Views\Mail\_CorreoRegistrarCuenta.cshtml" />
     <Content Include="Views\Users\Users.cshtml" />
     <Content Include="Views\Users\_RegisterUser.cshtml" />
     <Content Include="Views\Users\_DetailUser.cshtml" />
     <Content Include="Views\Annexe\_RegisterAnnexe.cshtml" />
+    <Content Include="Views\Shared\_GridPager.cshtml" />
+    <Content Include="Views\Shared\_Grid.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

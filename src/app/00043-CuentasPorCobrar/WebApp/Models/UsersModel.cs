@@ -37,7 +37,7 @@ namespace WebApp.Models
 
         public Response ChangeState(int userId, bool stateValue, int currentUserId, string returnUrl)
         {
-            UserRegister userRegister = new UserRegister()
+            User userRegister = new User()
             {
                 UserId = userId,
                 Enabled = stateValue
@@ -60,13 +60,13 @@ namespace WebApp.Models
 
         public Response Save(UserRegisterViewModel userRegisterViewModel, int currentUserId)
         {
-            UserRegister userRegister = new UserRegister()
+            User user = new User()
             {
                 UserId = userRegisterViewModel.UserId,
                 UserName = userRegisterViewModel.UserName
             };
 
-            Response result = _user.Save(userRegister, currentUserId, userRegisterViewModel.UserId.HasValue ? SaveOption.Update : SaveOption.Insert);
+            Response result = _user.Save(user, currentUserId, userRegisterViewModel.UserId.HasValue ? SaveOption.Update : SaveOption.Insert);
 
             if (result.Value)
             {

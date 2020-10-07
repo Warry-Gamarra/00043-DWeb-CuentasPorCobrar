@@ -1,10 +1,10 @@
-﻿using Domain.DTO;
-using Domain.Entities;
+﻿using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.DTO;
 
 namespace Domain.Services
 {
@@ -12,7 +12,7 @@ namespace Domain.Services
     {
         List<User> Find();
         User Get(int userId);
-        Response ChangeState(UserRegister userRegister, int currentUserId);
-        Response Save(UserRegister userRegister, int currentUserId, SaveOption saveOption);
+        Response ChangeState(User userRegister, int currentUserId);
+        Response Save(User userRegister, int currentUserId, SaveOption saveOption);
     }
 }

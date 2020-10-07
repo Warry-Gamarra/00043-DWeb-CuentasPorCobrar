@@ -1,9 +1,5 @@
 ﻿using Dapper;
-using Data.Adapters;
 using Data.Connection;
-using Domain.DTO;
-using Domain.Entities;
-using Domain.Repository;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -14,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Data.Tables
 {
-    public class TS_CorreoAplicacion : IMailApplicationSD
+    public class TS_CorreoAplicacion 
     {
         public int I_CorreoID { get; set; }
         public string T_DireccionCorreo { get; set; }
@@ -27,9 +23,10 @@ namespace Data.Tables
 
         public TS_CorreoAplicacion() { }
 
-        public List<MailApplication> Find()
+
+        public List<TS_CorreoAplicacion> Find()
         {
-            List<MailApplication> result = new List<MailApplication>();
+            List<TS_CorreoAplicacion> result = new List<TS_CorreoAplicacion>();
 
             try
             {
@@ -38,10 +35,7 @@ namespace Data.Tables
                     string s_command = @"SELECT I_CorreoID, T_DireccionCorreo, T_PasswordCorreo, T_Seguridad, T_HostName, I_Puerto, D_FecUpdate, B_Habilitado 
                                         FROM TS_CorreoAplicacion;";
 
-                    foreach (var item in _dbConnection.Query<TS_CorreoAplicacion>(s_command, commandType: CommandType.Text))
-                    {
-                        result.Add(new TS_CorreoAplicacionAdapter(item));
-                    }
+                    result = _dbConnection.Query<TS_CorreoAplicacion>(s_command, commandType: CommandType.Text).ToList();
                 }
             }
             catch (Exception ex)
@@ -52,9 +46,9 @@ namespace Data.Tables
             return result;
         }
 
-        public MailApplication Get(int mailAppId)
+        public TS_CorreoAplicacion Find(int correoAplicacionId)
         {
-            MailApplication result = new MailApplication();
+            TS_CorreoAplicacion result = new TS_CorreoAplicacion();
 
             try
             {
@@ -63,12 +57,7 @@ namespace Data.Tables
                     var s_command = @"SELECT I_CorreoID, T_DireccionCorreo, T_PasswordCorreo, T_Seguridad, T_HostName, I_Puerto, D_FecUpdate, B_Habilitado 
                                         FROM TS_CorreoAplicacion WHERE I_CorreoID = @I_CorreoID;";
 
-                    var correo = _dbConnection.QueryFirstOrDefault<TS_CorreoAplicacion>(s_command, new { I_CorreoID = mailAppId}, commandType: CommandType.Text);
-
-                    if (correo != null)
-                    {
-                        result = new TS_CorreoAplicacionAdapter(correo);
-                    }
+                    result = _dbConnection.QueryFirstOrDefault<TS_CorreoAplicacion>(s_command, new { I_CorreoID = correoAplicacionId }, commandType: CommandType.Text);
                 }
             }
             catch (Exception ex)
@@ -79,23 +68,24 @@ namespace Data.Tables
             return result;
         }
 
-        public Response Update(int currentUserId)
+        public ResponseData Update(int currentUserId)
         {
-            Response result = new Response();
+            ResponseData result = new ResponseData();
             DynamicParameters parameters = new DynamicParameters();
 
             try
             {
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    //parameters.Add(name: "N_EmailAccountID", dbType: DbType.Byte, value: this.I_CorreoID);
-                    //parameters.Add(name: "T_EmailAddress", dbType: DbType.String, size: 50, value: model.T_DireccionCorreo);
-                    //parameters.Add(name: "T_EmailPassword", dbType: DbType.String, size: 500, value: model.T_PasswordCorreo);
-                    //parameters.Add(name: "T_SecurityType", dbType: DbType.String, size: 50, value: model.T_Seguridad);
-                    //parameters.Add(name: "T_HostName", dbType: DbType.String, size: 500, value: model.T_HostName);
-                    //parameters.Add(name: "N_PortNumber", dbType: DbType.Int16, value: model.I_Puerto);
-                    //parameters.Add(name: "I_ProgramaID", dbType: DbType.Byte, value: model.I_ProgramaID);
-                    parameters.Add(name: "IdUser", dbType: DbType.Int32, value: currentUserId);
+                    parameters.Add(name: "I_CorreoID", dbType: DbType.Byte, value: this.I_CorreoID);
+                    parameters.Add(name: "T_DireccionCorreo", dbType: DbType.String, size: 50, value: this.T_DireccionCorreo);
+                    parameters.Add(name: "T_PasswordCorreo", dbType: DbType.String, size: 500, value: this.T_PasswordCorreo);
+                    parameters.Add(name: "T_Seguridad", dbType: DbType.String, size: 50, value: this.T_Seguridad);
+                    parameters.Add(name: "T_HostName", dbType: DbType.String, size: 500, value: this.T_HostName);
+                    parameters.Add(name: "I_Puerto", dbType: DbType.Int16, value: this.I_Puerto);
+                    parameters.Add(name: "D_FecUpdate", dbType: DbType.DateTime, value: this.D_FecUpdate);
+                    parameters.Add(name: "CurrentUserId", dbType: DbType.Int32, value: currentUserId);
+
                     parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);
                     parameters.Add(name: "T_Message", dbType: DbType.String, size: 4000, direction: ParameterDirection.Output);
 
@@ -114,18 +104,19 @@ namespace Data.Tables
             return result;
         }
 
-        public Response ChangeState( int currentUserId)
+        public ResponseData ChangeState(int currentUserId)
         {
-            Response result = new Response();
+            ResponseData result = new ResponseData();
             DynamicParameters parameters = new DynamicParameters();
 
             try
             {
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    //parameters.Add(name: "N_EmailAccountID", dbType: DbType.Byte, value: IdAccount);
-                    //parameters.Add(name: "B_AccountState", dbType: DbType.Boolean, value: !B_habilitado);
-                    parameters.Add(name: "IdUser", dbType: DbType.Int32, value: currentUserId);
+                    parameters.Add(name: "I_CorreoID", dbType: DbType.Byte, value: this.I_CorreoID);
+                    parameters.Add(name: "B_Habilitado", dbType: DbType.Boolean, value: this.B_Habilitado);
+                    parameters.Add(name: "CurrentUserId", dbType: DbType.Int32, value: currentUserId);
+
                     parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);
                     parameters.Add(name: "T_Message", dbType: DbType.String, size: 4000, direction: ParameterDirection.Output);
 
@@ -143,23 +134,24 @@ namespace Data.Tables
             return result;
         }
 
-        public Response Insert(int currentUserId)
+        public ResponseData Insert(int currentUserId)
         {
-            Response result = new Response();
+            ResponseData result = new ResponseData();
             DynamicParameters parameters = new DynamicParameters();
 
             try
             {
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    //parameters.Add(name: "N_EmailAccountID", dbType: DbType.Byte, value: model.I_CorreoID);
-                    //parameters.Add(name: "T_EmailAddress", dbType: DbType.String, size: 50, value: model.T_DireccionCorreo);
-                    //parameters.Add(name: "T_EmailPassword", dbType: DbType.String, size: 500, value: model.T_PasswordCorreo);
-                    //parameters.Add(name: "T_SecurityType", dbType: DbType.String, size: 50, value: model.T_Seguridad);
-                    //parameters.Add(name: "T_HostName", dbType: DbType.String, size: 500, value: model.T_HostName);
-                    //parameters.Add(name: "N_PortNumber", dbType: DbType.Int16, value: model.I_Puerto);
-                    //parameters.Add(name: "I_ProgramaID", dbType: DbType.Byte, value: model.I_ProgramaID);
-                    parameters.Add(name: "IdUser", dbType: DbType.Int32, value: currentUserId);
+                    parameters.Add(name: "I_CorreoID", dbType: DbType.Byte, value: this.I_CorreoID);
+                    parameters.Add(name: "T_DireccionCorreo", dbType: DbType.String, size: 50, value: this.T_DireccionCorreo);
+                    parameters.Add(name: "T_PasswordCorreo", dbType: DbType.String, size: 500, value: this.T_PasswordCorreo);
+                    parameters.Add(name: "T_Seguridad", dbType: DbType.String, size: 50, value: this.T_Seguridad);
+                    parameters.Add(name: "T_HostName", dbType: DbType.String, size: 500, value: this.T_HostName);
+                    parameters.Add(name: "I_Puerto", dbType: DbType.Int16, value: this.I_Puerto);
+                    parameters.Add(name: "D_FecUpdate", dbType: DbType.DateTime, value: this.D_FecUpdate);
+                    parameters.Add(name: "CurrentUserId", dbType: DbType.Int32, value: currentUserId);
+
                     parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);
                     parameters.Add(name: "T_Message", dbType: DbType.String, size: 4000, direction: ParameterDirection.Output);
 

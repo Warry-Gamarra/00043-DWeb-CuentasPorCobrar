@@ -10,25 +10,27 @@ using WebMatrix.WebData;
 
 namespace WebApp.Controllers
 {
+    [Route("Mantenimiento/correo-aplicacion/{action}")]
     public class MailController : Controller
     {
-        public readonly MailApplicationModel _mailApplicationModel;
+        public readonly CorreoAplicacionModel _correoAplicacionModel;
 
         public MailController()
         {
-            _mailApplicationModel = new MailApplicationModel();
+            _correoAplicacionModel = new CorreoAplicacionModel();
         }
 
-        // GET: Mail
+        [Route("Mantenimiento/correo-aplicacion")]
         public ActionResult Index()
         {
             ViewBag.Title = "Correos";
-            var model = _mailApplicationModel.Find();
-            return View();
+            var model = _correoAplicacionModel.Find();
+            return View("Correos", model);
         }
 
 
-        public ActionResult Add()
+        //[Route("Mantenimiento/correo-aplicacion/nuevo")]
+        public ActionResult Create()
         {
             ViewBag.Title = "Agregar Cuenta";
 
@@ -36,10 +38,11 @@ namespace WebApp.Controllers
         }
 
 
+        [Route("Mantenimiento/correo-aplicacion/editar/{id}")]
         public ActionResult Edit(int id)
         {
             ViewBag.Title = "Editar Cuenta";
-            var model = _mailApplicationModel.Find(id);
+            var model = _correoAplicacionModel.Find(id);
 
             return PartialView("_CorreoRegistrarCuenta", model);
         }
@@ -48,7 +51,7 @@ namespace WebApp.Controllers
         [HttpPost]
         public JsonResult ChangeState(int RowID, bool B_habilitado)
         {
-            var result = _mailApplicationModel.ChangeState(RowID, B_habilitado, WebSecurity.CurrentUserId, Url.Action("",""));
+            var result = _correoAplicacionModel.ChangeState(RowID, B_habilitado, WebSecurity.CurrentUserId, Url.Action("",""));
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
@@ -56,13 +59,13 @@ namespace WebApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Save(MailApplicationViewModel model)
+        public ActionResult Save(CorreoAplicacionViewModel model)
         {
             Response result = new Response();
 
             if (ModelState.IsValid)
             {
-                result = _mailApplicationModel.Save(model, WebSecurity.CurrentUserId);
+                result = _correoAplicacionModel.Save(model, WebSecurity.CurrentUserId);
             }
             else
             {

@@ -25,7 +25,7 @@ namespace WebApp.Controllers
             ViewBag.Title = "Dependencias";
             var model = _annexeModel.Find();
 
-            return View(model);
+            return View("Annexes", model);
         }
 
         [Route("Mantenimiento/dependencia/nuevo")]

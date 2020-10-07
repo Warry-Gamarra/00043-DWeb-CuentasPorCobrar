@@ -10,16 +10,12 @@ namespace Domain.Entities
 {
     public class User: IUser
     {
-        public int? UserId { get; private set; }
-        public string UserName { get; private set; }
+        public int? UserId { get; set; }
+        public string UserName { get; set; }
+        public bool Enabled { get; set; }
+
 
         public User() { }
-
-        public User(UserRegister userRegister)
-        {
-            this.UserId = userRegister.UserId;
-            this.UserName = userRegister.UserName;
-        }
 
 
         public List<User> Find()
@@ -32,12 +28,12 @@ namespace Domain.Entities
             throw new NotImplementedException();
         }
 
-        public Response ChangeState(UserRegister userRegister, int currentUserId)
+        public Response ChangeState(User userRegister, int currentUserId)
         {
             throw new NotImplementedException();
         }
 
-        public Response Save(UserRegister userRegister, int currentUserId, SaveOption saveOption)
+        public Response Save(User userRegister, int currentUserId, SaveOption saveOption)
         {
             throw new NotImplementedException();
         }

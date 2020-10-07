@@ -27,16 +27,19 @@ else
     if (!Model.ItemsToDisplay.Any())
     {
         <tr class="grid-empty-text">
-            <td colspan="@Model.Columns.Count()">
+            <td colspan="@Model.Columns.Count() + 1">
                 @Model.EmptyGridText
             </td>
         </tr>
     }
     else
     {
+        int row = Model.Pager.PageSize * (Model.Pager.CurrentPage - 1) + 1;
+
         foreach (object item in Model.ItemsToDisplay)
         {
             <tr class="grid-row @Model.GetRowCssClasses(item)">
+                <td style="width:20px; text-align:right;">@row.</td>
                 @foreach (IGridColumn column in Model.Columns)
                 {
                     @column.CellRenderer.Render(column, column.GetCell(item))
@@ -48,6 +51,7 @@ else
 @helper RenderGridHeader()
 {
     <tr>
+        <th style="width:20px; text-align:center" class="text-primary">N°</th>
         @foreach (IGridColumn column in Model.Columns)
         {
             @column.HeaderRenderer.Render(column)

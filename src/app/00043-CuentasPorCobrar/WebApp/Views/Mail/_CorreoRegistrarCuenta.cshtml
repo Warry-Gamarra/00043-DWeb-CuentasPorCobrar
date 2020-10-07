@@ -1,4 +1,4 @@
-﻿@model WebApp.ViewModels.MailApplicationViewModel
+﻿@model WebApp.ViewModels.CorreoAplicacionViewModel
 
 @Scripts.Render("~/bundles/jqueryval")
 
@@ -14,21 +14,21 @@
         <div class="row">
             <fieldset class="col-md-12">
                 <legend><i class="fa fa-address-book-o">&nbsp;</i>Datos de la cuenta</legend>
-                @Html.HiddenFor(model => model.N_IdSmtpCor)
+                @Html.HiddenFor(model => model.MailId)
 
                 <div class="form-group">
-                    @Html.LabelFor(model => model.T_MailAddress, new { @class = "col-md-4" })
+                    @Html.LabelFor(model => model.MailAddress, new { @class = "col-md-4" })
                     <div class="col-md-7">
-                        @Html.TextBoxFor(model => model.T_MailAddress, new { @class = "form-control", placeholder = "Dirección de correo" })
-                        <p class="text-danger">@Html.ValidationMessageFor(model => model.T_MailAddress)</p>
+                        @Html.TextBoxFor(model => model.MailAddress, new { @class = "form-control", placeholder = "Dirección de correo" })
+                        <p class="text-danger">@Html.ValidationMessageFor(model => model.MailAddress)</p>
                     </div>
                 </div>
                 <div class="form-group"><br /></div>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.T_Password, new { @class = "col-md-4" })
+                    @Html.LabelFor(model => model.Password, new { @class = "col-md-4" })
                     <div class="col-md-7">
-                        @Html.PasswordFor(model => model.T_Password, new { @class = "form-control", placeholder = "Contraseña" })
-                        <p class="text-danger">@Html.ValidationMessageFor(model => model.T_Password)</p>
+                        @Html.PasswordFor(model => model.Password, new { @class = "form-control", placeholder = "Contraseña" })
+                        <p class="text-danger">@Html.ValidationMessageFor(model => model.Password)</p>
                     </div>
                 </div>
             </fieldset>
@@ -36,28 +36,28 @@
             <fieldset class="col-md-12">
                 <legend><i class="fa fa-server">&nbsp;</i>Datos del Servidor</legend>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.T_HostName, new { @class = "col-md-4" })
+                    @Html.LabelFor(model => model.HostName, new { @class = "col-md-4" })
                     <div class="col-md-7">
-                        @Html.TextBoxFor(model => model.T_HostName, new { @class = "form-control", placeholder = "Nombre del Host" })
-                        <p class="text-danger">@Html.ValidationMessageFor(model => model.T_HostName)</p>
+                        @Html.TextBoxFor(model => model.HostName, new { @class = "form-control", placeholder = "Nombre del Host" })
+                        <p class="text-danger">@Html.ValidationMessageFor(model => model.HostName)</p>
                     </div>
                 </div>
                 <br /><br />
                 <div class="col-md-6">
                     <div class="row form-group">
-                        @Html.LabelFor(model => model.T_SecurityType, new { @class = "col-md-10" })
+                        @Html.LabelFor(model => model.SecurityType, new { @class = "col-md-10" })
                         <div class="col-md-10">
-                            @Html.TextBoxFor(model => model.T_SecurityType, new { @class = "form-control", placeholder = "Tipo de Seguridad" })
-                            <p class="text-danger">@Html.ValidationMessageFor(model => model.T_SecurityType)</p>
+                            @Html.TextBoxFor(model => model.SecurityType, new { @class = "form-control", placeholder = "Tipo de Seguridad" })
+                            <p class="text-danger">@Html.ValidationMessageFor(model => model.SecurityType)</p>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="row form-group">
-                        @Html.LabelFor(model => model.N_PortNumber, new { @class = "col-md-10" })
+                        @Html.LabelFor(model => model.PortNumber, new { @class = "col-md-10" })
                         <div class="col-md-10">
-                            @Html.TextBoxFor(model => model.N_PortNumber, new { @class = "form-control", placeholder = "Numero de Puerto" })
-                            <p class="text-danger">@Html.ValidationMessageFor(model => model.N_PortNumber)</p>
+                            @Html.TextBoxFor(model => model.PortNumber, new { @class = "form-control", placeholder = "Numero de Puerto" })
+                            <p class="text-danger">@Html.ValidationMessageFor(model => model.PortNumber)</p>
                         </div>
                     </div>
                 </div>
@@ -81,20 +81,22 @@
     </div>
 }
 
-<script>
-    $(document).on('ready', function () {
-        $('#btnsubmit').removeClass('disabled');
-    });
+@section scripts  {
+    <script>
+        $(document).on('ready', function () {
+            $('#btnsubmit').removeClass('disabled');
+        });
 
-    $("form").submit(function () {
-        var submited = parseInt($("#Submited").val());
-        $(this).submit(function () {
-            if (submited > 0) {
-                return false;
-            }
+        $("form").submit(function () {
+            var submited = parseInt($("#Submited").val());
+            $(this).submit(function () {
+                if (submited > 0) {
+                    return false;
+                }
+                return true;
+            });
+            $("#Submited").val(submited + 1);
             return true;
         });
-        $("#Submited").val(submited + 1);
-        return true;
-    });
-</script>
+    </script>
+}

@@ -19,7 +19,16 @@
             <ul id="settings" class="collapse">
                 <li><a href="@Url.Action("Contacts", "HelpCenter")"><i class="fa fa-fw fa-list"></i>&nbsp; Conceptos de pago</a></li>
                 <li><a href="@Url.Action("Contacts", "HelpCenter")"><i class="fa fa-fw fa-file-text-o"></i>&nbsp; Desc. cuota de pago</a></li>
+            </ul>
+        </li>
+        <li class="nav-item">
+            <a href="javascript:;" class="nav-link" data-toggle="collapse" data-target="#maintenance">
+                <i class="fa fa-fw fa-wrench"></i> Mantenimiento<span class="pull-right"><i class="fa fa-fw fa-caret-down"></i></span>
+            </a>
+            <ul id="maintenance" class="collapse">
+                <li><a href="@Url.Action("Contacts", "HelpCenter")"><i class="fa fa-fw fa-list"></i>&nbsp; Conceptos de pago</a></li>
                 <li><a href="@Url.Action("Index", "Annexe")"><i class="fa fa-fw fa-fort-awesome"></i>&nbsp; Dependencias</a></li>
+                <li><a href="@Url.Action("Index", "Mail")"><i class="fa fa-fw fa-envelope"></i>&nbsp; Correo de aplicación </a></li>
             </ul>
         </li>
         <li class="nav-item">
@@ -50,6 +59,11 @@
         <li class="nav-item">
             <a href="javascript:;" class="nav-link" data-toggle="collapse" title="Configuración" data-target="#settings">
                 <i class="fa fa-3x fa-fw fa-cogs"></i><br />Configuración
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="javascript:;" class="nav-link" data-toggle="collapse" title="Configuración" data-target="#maintenance">
+                <i class="fa fa-3x fa-fw fa-cogs"></i><br />Mantenimiento
             </a>
         </li>
         <li class="nav-item">

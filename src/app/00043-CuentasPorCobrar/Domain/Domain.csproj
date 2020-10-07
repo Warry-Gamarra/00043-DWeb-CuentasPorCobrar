@@ -58,20 +58,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DTO\Options.cs" />
-    <Compile Include="DTO\UserDTO.cs" />
     <Compile Include="Entities\AccountNumber.cs" />
     <Compile Include="Entities\FinancialEntity.cs" />
-    <Compile Include="DTO\Response.cs" />
-    <Compile Include="Entities\MailApplication.cs" />
+    <Compile Include="Entities\CorreoAplicacion.cs" />
     <Compile Include="Entities\ResolutionType.cs" />
     <Compile Include="Entities\DocumentType.cs" />
     <Compile Include="Entities\Annexe.cs" />
     <Compile Include="Entities\Liabilities.cs" />
     <Compile Include="Entities\User.cs" />
+    <Compile Include="DTO\Response.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repository\IHelpResources.cs" />
-    <Compile Include="Repository\IAnnexe.cs" />
-    <Compile Include="Repository\Maintenance\IMailApplication.cs" />
+    <Compile Include="Services\ICorreoAplicacion.cs" />
     <Compile Include="Services\IHelpResources.cs" />
     <Compile Include="Services\IAnnexe.cs" />
     <Compile Include="Services\IUser.cs" />
@@ -80,6 +77,12 @@
     <Folder Include="Entities\Financial\" />
     <Folder Include="Entities\Maintenance\" />
     <Folder Include="Services\Maintenance\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Data\Data.csproj">
+      <Project>{02be7951-a281-420a-9d8d-856c384f7389}</Project>
+      <Name>Data</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
