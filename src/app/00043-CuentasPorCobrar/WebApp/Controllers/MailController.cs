@@ -69,7 +69,17 @@ namespace WebApp.Controllers
             }
             else
             {
-                ResponseModel.Error(result, "Ha ocurrido un error con el envio de datos");
+                string details = "";
+
+                foreach (ModelState modelState in ViewData.ModelState.Values)
+                {
+                    foreach (ModelError error in modelState.Errors)
+                    {
+                        details += error.ErrorMessage + " / ";
+                    }
+                }
+
+                ResponseModel.Error(result, "Ha ocurrido un error con el envio de datos" + details);
             }
 
             return PartialView("_MsgPartialWR", result);
