@@ -8,9 +8,9 @@
 </div>
 
 <div id="div-alert">
-    <div class="text-center alert alert-@Model.color"><i class="fa @Model.icon">&nbsp;</i>@Html.Raw(Model.message)</div>
+    <div class="col-12 text-center alert alert-@Model.Color"><i class="fa @Model.Icon">&nbsp;</i>@Html.Raw(Model.Message)</div>
 </div>
 
-<button type="submit" class="btn btn-default btn-primary" style="@Model.CurrentID"><i class="fa fa-save"></i>&nbsp;Guardar</button>
-<button type="button" class="btn btn-default  pull-right" data-dismiss="modal" id="btn_cerrar"><i class="fa fa-sign-out">&nbsp;</i>Finalizar</button>
+<button type="submit" class="btn btn-primary" style="@Model.CurrentID"><i class="fa fa-save"></i>&nbsp;Guardar</button>
+<button type="button" class="btn btn-secondary  pull-right" data-dismiss="modal" id="btn_cerrar"><i class="fa fa-sign-out">&nbsp;</i>Finalizar</button>
 

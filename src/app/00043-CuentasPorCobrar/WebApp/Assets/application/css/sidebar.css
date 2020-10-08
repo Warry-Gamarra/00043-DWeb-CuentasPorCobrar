@@ -108,6 +108,10 @@
   padding: 0;
 }
 
+.side-nav > li > ul > li {
+  background: var(--cs-bg-primary-2);
+}
+
 .side-nav > li > ul > li > a {
   font-size: 0.9em;
   display: block;

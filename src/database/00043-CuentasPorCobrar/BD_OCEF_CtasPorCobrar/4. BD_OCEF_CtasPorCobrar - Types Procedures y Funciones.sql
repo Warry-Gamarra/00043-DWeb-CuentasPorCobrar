@@ -68,7 +68,7 @@ BEGIN
 			, T_PasswordCorreo = @T_PasswordCorreo
 			, T_Seguridad = @T_Seguridad
 			, T_HostName = @T_HostName
-			, I_Puerto = @T_HostName
+			, I_Puerto = @I_Puerto
 			, D_FecUpdate = @D_FecUpdate
 		WHERE	I_CorreoID = @I_CorreoID
 			
@@ -85,13 +85,14 @@ END
 GO
 
 
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_GrabarCuentaCorreo')
-	DROP PROCEDURE [dbo].[USP_U_GrabarCuentaCorreo]
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarEstadoCuentaCorreo')
+	DROP PROCEDURE [dbo].[USP_U_ActualizarEstadoCuentaCorreo]
 GO
 
-CREATE PROCEDURE [dbo].[USP_U_GrabarCuentaCorreo]
+CREATE PROCEDURE [dbo].[USP_U_ActualizarEstadoCuentaCorreo]
 	 @I_CorreoID		int
 	,@B_Habilitado		bit
+	,@D_FecUpdate		datetime
 	,@CurrentUserId		int
 
 	,@B_Result bit OUTPUT
@@ -100,8 +101,17 @@ AS
 BEGIN
   SET NOCOUNT ON
   	BEGIN TRY
+		IF(@B_Habilitado = 1)
+		BEGIN
+			UPDATE	TS_CorreoAplicacion 
+			SET		B_Habilitado = 0,
+					D_FecUpdate = @D_FecUpdate
+					WHERE	I_CorreoID <> @I_CorreoID
+		END 
+
 		UPDATE	TS_CorreoAplicacion 
-		SET		B_Habilitado = @B_Habilitado
+		SET		B_Habilitado = @B_Habilitado,
+				D_FecUpdate = @D_FecUpdate
 		WHERE	I_CorreoID = @I_CorreoID
 			
 		SET @B_Result = 1

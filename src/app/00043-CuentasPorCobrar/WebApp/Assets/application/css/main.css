@@ -1,18 +1,18 @@
 :root {
-  --cs-blue: #3498db;
-  --cs-blue-dark: #195386;
-  --cs-blue-dark2: #363f4a;
-  --cs-blue-sky: #50c1cf;
-  --cs-purple: #9b59b6;
-  --cs-green: #1abb9c;
-  --cs-aero: #9cc2cb;
-  --cs-red: #e74c3c;
-  --cs-red-dark: #96180c;
-  --cs-dark: #34495e;
-  --cs-yellow: #dc9338;
-  --cs-orange: #ff8330;
-  --cs-orange-hover: #ff8a3b;
-  --cs-orange-border: #ff6a007e;
+    --cs-blue: #3498db;
+    --cs-blue-dark: #195386;
+    --cs-blue-dark2: #363f4a;
+    --cs-blue-sky: #50c1cf;
+    --cs-purple: #9b59b6;
+    --cs-green: #1abb9c;
+    --cs-aero: #9cc2cb;
+    --cs-red: #e74c3c;
+    --cs-red-dark: #96180c;
+    --cs-dark: #363f4a;
+    --cs-yellow: #dc9338;
+    --cs-orange: #ff8330;
+    --cs-orange-hover: #ff8a3b;
+    --cs-orange-border: #ff6a007e;
 }
 
 html {
@@ -146,6 +146,12 @@ body {
 .bg-blue-sky {
   background: var(--cs-blue-sky) !important;
   border: 1px solid var(--cs-blue-sky) !important;
+  color: #fff;
+}
+
+.bg-dark-gray {
+  background: var(--cs-dark) !important;
+  border: 1px solid var(--cs-dark) !important;
   color: #fff;
 }
 

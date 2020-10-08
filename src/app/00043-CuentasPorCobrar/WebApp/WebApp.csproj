@@ -179,17 +179,15 @@
     <Content Include="Assets\jquery\jquery.validate.js" />
     <Content Include="Assets\jquery\jquery.validate.unobtrusive.js" />
     <Content Include="Assets\grid-mvc\css\Gridmvc.css" />
-    <Content Include="Content\Gridmvc.css" />
+    <Content Include="Assets\toastr\css\toastr.min.css" />
+    <Content Include="Assets\toastr\js\toastr.config.js" />
+    <Content Include="Assets\toastr\js\toastr.min.js" />
     <Content Include="Global.asax" />
     <Content Include="Assets\jquery\modernizr-2.6.2.js" />
     <Content Include="Assets\grid-mvc\js\gridmvc.js" />
     <Content Include="Assets\grid-mvc\js\gridmvc.lang.fr.js" />
     <Content Include="Assets\grid-mvc\js\gridmvc.lang.ru.js" />
     <Content Include="Assets\grid-mvc\js\gridmvc.min.js" />
-    <Content Include="Scripts\gridmvc.js" />
-    <Content Include="Scripts\gridmvc.lang.fr.js" />
-    <Content Include="Scripts\gridmvc.lang.ru.js" />
-    <Content Include="Scripts\gridmvc.min.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -230,6 +228,7 @@
     <Content Include="Assets\font-awesome\fonts\fontawesome-webfont.woff2" />
     <Content Include="Assets\font-awesome\fonts\FontAwesome.otf" />
     <Content Include="Grid.mvc.readme" />
+    <Content Include="Assets\toastr\js\toastr.js.map" />
     <None Include="packages.config" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />

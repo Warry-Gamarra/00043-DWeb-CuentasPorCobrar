@@ -8,10 +8,10 @@
     </div>
 </div>
 
-<div class="text-center alert alert-@Model.color"><i class="fa @Model.icon">&nbsp;</i>@Html.Raw(Model.message)</div>
+<div class="col-12 text-center alert alert-@Model.Color"><i class="fa @Model.Icon">&nbsp;</i>@Html.Raw(Model.Message)</div>
 
-<button type="submit" class="btn btn-default btn-primary" style="@Model.CurrentID"><i class="fa fa-save"></i>&nbsp;Guardar</button>
-<button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o">&nbsp;</i>Cerrar</button>
+<button type="submit" class="btn btn-primary" style="@Model.CurrentID"><i class="fa fa-save"></i>&nbsp;Guardar</button>
+<button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times-circle-o">&nbsp;</i>Cerrar</button>
 
 <script>
     $(".modal").on('hide.bs.modal', function () {

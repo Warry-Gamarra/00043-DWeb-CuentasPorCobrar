@@ -115,6 +115,7 @@ namespace Data.Tables
                 {
                     parameters.Add(name: "I_CorreoID", dbType: DbType.Byte, value: this.I_CorreoID);
                     parameters.Add(name: "B_Habilitado", dbType: DbType.Boolean, value: this.B_Habilitado);
+                    parameters.Add(name: "D_FecUpdate", dbType: DbType.DateTime, value: this.D_FecUpdate);
                     parameters.Add(name: "CurrentUserId", dbType: DbType.Int32, value: currentUserId);
 
                     parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);
