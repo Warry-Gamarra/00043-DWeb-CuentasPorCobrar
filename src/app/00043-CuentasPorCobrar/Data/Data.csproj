@@ -68,11 +68,17 @@
   <ItemGroup>
     <Compile Include="Connection\Database.cs" />
     <Compile Include="Connection\ResponseData.cs" />
+    <Compile Include="Procedures\USP_I_GrabarPeriodo.cs" />
+    <Compile Include="Procedures\USP_I_GrabarPeriodo_CuentaDeposito.cs" />
+    <Compile Include="Procedures\USP_S_ConceptoPago_Periodo.cs" />
+    <Compile Include="Procedures\USP_S_CuentaDeposito.cs" />
+    <Compile Include="Procedures\USP_S_DependenciaUNFV.cs" />
+    <Compile Include="Procedures\USP_S_Periodos.cs" />
+    <Compile Include="Procedures\USP_U_ActualizarPeriodo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tables\TS_CorreoAplicacion.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Procedures\" />
     <Folder Include="Views\" />
   </ItemGroup>
   <ItemGroup>

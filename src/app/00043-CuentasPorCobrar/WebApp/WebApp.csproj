@@ -203,6 +203,8 @@
     <Compile Include="Controllers\HelpCenterController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MailController.cs" />
+    <Compile Include="Controllers\ObligacionesController.cs" />
+    <Compile Include="Controllers\PeriodosController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -215,6 +217,8 @@
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="ViewModels\AnnexeViewModels.cs" />
     <Compile Include="ViewModels\CorreoAplicacionViewModel.cs" />
+    <Compile Include="ViewModels\ObligacionViewModel.cs" />
+    <Compile Include="ViewModels\PeriodoViewModel.cs" />
     <Compile Include="ViewModels\UserManualViewModel.cs" />
     <Compile Include="ViewModels\UsersViewModels.cs" />
   </ItemGroup>
@@ -254,6 +258,13 @@
     <Content Include="Views\Annexe\_RegisterAnnexe.cshtml" />
     <Content Include="Views\Shared\_GridPager.cshtml" />
     <Content Include="Views\Shared\_Grid.cshtml" />
+    <Content Include="Views\Periodos\Index.cshtml" />
+    <Content Include="Views\Periodos\Create.cshtml" />
+    <Content Include="Views\Periodos\Edit.cshtml" />
+    <Content Include="Views\Periodos\Delete.cshtml" />
+    <Content Include="Views\Obligaciones\Index.cshtml" />
+    <Content Include="Views\Obligaciones\Create.cshtml" />
+    <Content Include="Views\Obligaciones\Edit.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
