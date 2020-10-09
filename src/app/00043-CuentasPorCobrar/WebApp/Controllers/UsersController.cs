@@ -10,39 +10,59 @@ using WebMatrix.WebData;
 
 namespace WebApp.Controllers
 {
+    [Authorize]
+    [Route("Mantenimiento/usuarios/{action}")]
     public class UsersController : Controller
     {
         public readonly UsersModel _usersModel;
+        public readonly SelectModels _selectControl;
 
         public UsersController()
         {
             _usersModel = new UsersModel();
+            _selectControl = new SelectModels();
         }
 
         // GET: Users
         [HttpGet]
+        [Route("Mantenimiento/usuarios")]
         public ActionResult Index()
         {
             ViewBag.Title = "Usuarios";
             var model = _usersModel.Find();
 
-            return View();
+            return View("Users", model);
         }
 
-        public ActionResult Add()
+
+        [Route("Mantenimiento/usuarios/ver/{id}")]
+        public ActionResult Show(int id)
+        {
+            ViewBag.Title = "Detalle Usuario";
+            var model = _usersModel.Find(id);
+
+            return PartialView("_DetailUser", model);
+        }
+
+        [Route("Mantenimiento/usuarios/nuevo")]
+        public ActionResult Create()
         {
             ViewBag.Title = "Agregar Usuario";
+            ViewBag.Roles = new SelectList(_selectControl.GetRoles(), dataValueField: "Value", dataTextField: "TextDisplay");
 
-            return PartialView("_CorreoRegistrarCuenta");
+            UserRegisterViewModel model = new UserRegisterViewModel();
+            return PartialView("_RegisterUser", model);
         }
 
-
+        [Route("Mantenimiento/usuarios/editar/{id}")]
         public ActionResult Edit(int id)
         {
             ViewBag.Title = "Editar Usuario";
+            ViewBag.Roles = new SelectList(_selectControl.GetRoles(), dataValueField: "Value", dataTextField: "TextDisplay");
+
             var model = _usersModel.Find(id);
 
-            return PartialView("_CorreoRegistrarCuenta", model);
+            return PartialView("_RegisterUser", model);
         }
 
 
@@ -60,6 +80,7 @@ namespace WebApp.Controllers
         public ActionResult Save(UserRegisterViewModel model)
         {
             Response result = new Response();
+            ViewBag.Roles = new SelectList(_selectControl.GetRoles(), dataValueField: "Value", dataTextField: "TextDisplay");
 
             if (ModelState.IsValid)
             {

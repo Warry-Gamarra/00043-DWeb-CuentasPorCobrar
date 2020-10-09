@@ -22,17 +22,18 @@ namespace WebApp.Models
         public List<UserViewModel> Find()
         {
             List<UserViewModel> result = new List<UserViewModel>();
-            List<User> data = _user.Find();
+
+            foreach (var item in _user.Find())
+            {
+                result.Add(new UserViewModel(item));
+            }
 
             return result;
         }
 
         public UserRegisterViewModel Find(int userId)
         {
-            UserRegisterViewModel result = new UserRegisterViewModel();
-            User data = _user.Get(userId);
-
-            return result;
+            return new UserRegisterViewModel(_user.Get(userId));
         }
 
         public Response ChangeState(int userId, bool stateValue, int currentUserId, string returnUrl)
@@ -63,18 +64,29 @@ namespace WebApp.Models
             User user = new User()
             {
                 UserId = userRegisterViewModel.UserId,
-                UserName = userRegisterViewModel.UserName
+                UserName = userRegisterViewModel.UserName,
+                Person = new Persona()
+                {
+                    Id = userRegisterViewModel.PersonId,
+                    Nombre = userRegisterViewModel.PersonName,
+                    correo = userRegisterViewModel.Email,
+                },
+                Rol = new RolAplicacion()
+                {
+                    Id = userRegisterViewModel.RoleId,
+                },
+                Dependencia = new Dependencia()
             };
 
             Response result = _user.Save(user, currentUserId, userRegisterViewModel.UserId.HasValue ? SaveOption.Update : SaveOption.Insert);
 
             if (result.Value)
             {
-                ResponseModel.Success(result, string.Empty, false);
+                result.Success(false);
             }
             else
             {
-                ResponseModel.Error(result);
+                result.Error(true);
             }
 
             return result;

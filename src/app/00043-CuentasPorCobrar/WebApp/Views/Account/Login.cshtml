@@ -30,6 +30,11 @@
 
                 <img class="avatar" src="~/Assets/images/logo.png" alt="avatar" loading="lazy" />
                 <h1>Sistema de cuentas por Cobrar</h1>
+                <p class="col-12 text-center">
+                    <div class="text-danger"> @Html.ValidationSummary(true) </div>
+                </p>
+                <br />
+
                 <div class="input-div one">
                     <div class="i">
                         <i class="fa fa-user"></i>
@@ -37,7 +42,7 @@
                     <div>
                         @Html.LabelFor(m => m.UserName)
                         @Html.TextBoxFor(m => m.UserName, new { @class = "input" })
-                        <p class="text-danger">@Html.ValidationMessageFor(m => m.UserName)</p>
+                        <p class="text-error text-danger">@Html.ValidationMessageFor(m => m.UserName)</p>
                     </div>
                 </div>
                 <div class="input-div two">
@@ -47,7 +52,7 @@
                     <div>
                         @Html.LabelFor(m => m.Password)
                         @Html.PasswordFor(m => m.Password, new { @class = "input" })
-                        <p class="text-danger">@Html.ValidationMessageFor(m => m.Password)</p>
+                        <p class="text-error text-danger">@Html.ValidationMessageFor(m => m.Password)</p>
                     </div>
                 </div>
                 <div class="remember-checkbox">

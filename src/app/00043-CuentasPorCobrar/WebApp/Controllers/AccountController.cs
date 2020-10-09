@@ -1,4 +1,6 @@
 ﻿using Domain.DTO;
+using Domain.Entities;
+using Domain.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +16,14 @@ namespace WebApp.Controllers
     [Authorize]
     public class AccountController : Controller
     {
+        private readonly IUser _users;
+
+        public AccountController()
+        {
+            _users = new User();
+        }
+
+
         private ActionResult RedirectToLocal(string returnUrl)
         {
             if (Url.IsLocalUrl(returnUrl))
@@ -74,34 +84,19 @@ namespace WebApp.Controllers
                 WebSecurity.Logout();
             }
 
-            if (WebSecurity.UserExists(model.UserName))
+            var usuarioResponse = _users.GetUserState(model.UserName);
+            if (string.IsNullOrEmpty(usuarioResponse.Message))
             {
-                //if (!Roles.IsUserInRole(model.UserName, "Operador de Cafetería"))
-                //{
-                //    var usuario = BL_Users.ObtenerEstadoUsuario(model.UserName);
-                //    if (usuario.habilitado)
-                //    {
                 if (ModelState.IsValid && WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe))
                 {
-                    //if (usuario.actualizaPassword)
-                    //{
-                    //    return RedirectToAction("ActualizarPassword", "Account");
-                    //}
-                    //else
-                    //{
-                        return RedirectToLocal(returnUrl);
-                    //}
+                    return RedirectToLocal(returnUrl);
                 }
-                ModelState.AddModelError("", "La contraseña es incorrecta.");
-                return View(model);
-                //    }
-                //    ModelState.AddModelError("", "La cuenta se encuentra deshabilitada temporalmente. Si el problema persiste comuníquese con el administrador del sistema.");
-                //    return View(model);
-                //}
-                //ModelState.AddModelError("", "La cuenta de usuario no tiene permisos para accesder a este módulo.");
-                //return View(model);
+                else
+                {
+                    ModelState.AddModelError("", "El nombre de usuario o la contraseña son incorrectos.");
+                }
             }
-            ModelState.AddModelError("", "El nombre de usuario no existe.");
+            ModelState.AddModelError("", usuarioResponse.Message);
             return View(model);
         }
 
@@ -177,14 +172,135 @@ namespace WebApp.Controllers
             }
             else
             {
-                ResponseModel.Error(result, 
-                    "No se encontró ninguna coincidencia para el enlace generado. Intente solicitar uno nuevo", 
+                ResponseModel.Error(result,
+                    "No se encontró ninguna coincidencia para el enlace generado. Intente solicitar uno nuevo",
                     false);
 
             }
 
             return PartialView("_MsgModalBodyPartial", result);
         }
+
+
+        public ActionResult Perfil()
+        {
+            return PartialView("_Perfil");
+        }
+
+
+        public ActionResult CambiarPassword()
+        {
+            return PartialView("_ChangePassword");
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CambiarPassword(ChangePasswordViewModel model)
+        {
+            Response result = new Response();
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    result.Value = WebSecurity.ChangePassword(User.Identity.Name, model.CurrentPassword, model.NewPassword);
+
+                }
+                catch (Exception ex)
+                {
+                    result.Value = false;
+                    result.Message = ex.Message;
+                }
+
+                if (result.Value)
+                {
+                    ResponseModel.Success(result, false);
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(result.Message))
+                    {
+                        ResponseModel.Error(result, "La valor ingresado en contraseña actual no corresponde a la contraseña actual", true);
+                    }
+                    else
+                    {
+                        ResponseModel.Error(result, false);
+                    }
+                }
+
+            }
+            else
+            {
+                string details = "";
+                foreach (ModelState modelState in ViewData.ModelState.Values)
+                {
+                    foreach (ModelError error in modelState.Errors)
+                    {
+                        details += error.ErrorMessage + " / ";
+                    }
+                }
+
+                ResponseModel.Error(result, "Ha ocurrido un error con el envio de datos" + details);
+
+            }
+
+            return PartialView("_MsgPartial", result);
+        }
+
+
+
+        [Authorize(Roles = "Administrador")]
+        public ActionResult AdminResetPassword(int id)
+        {
+            var model = _users.Get(id);
+            return PartialView("_AdminResetPassword", model);
+        }
+
+
+        //[HttpPost]
+        //[Authorize(Roles = "Administrador")]
+        //public ActionResult GrabarAdminResetPassword(UsuarioViewModel model, int rbtnTipReset, string NewPass, bool chkSendMail)
+        //{
+        //    var result = new ResponseViewModel();
+
+        //    if (WebSecurity.UserExists(model.usuario))
+        //    {
+        //        string s_token = WebSecurity.GeneratePasswordResetToken(model.usuario);
+        //        string newpass = "ocrh@unfv";
+
+        //        switch (rbtnTipReset)
+        //        {
+        //            case 1:
+        //                newpass = RandomPassword.Generate(8, RandomPassword.PASSWORD_CHARS_ALPHANUMERIC);
+        //                break;
+        //            case 2:
+        //                newpass = string.IsNullOrEmpty(NewPass) ? newpass : NewPass;
+        //                break;
+        //            default:
+        //                break;
+        //        }
+
+        //        if (!chkSendMail)
+        //        {
+        //            model.correo = "";
+        //        }
+
+        //        result = BL_Accounts.ResetPassword(WebSecurity.GetUserIdFromPasswordResetToken(s_token), s_token, newpass, chkSendMail, Url.Action("ResetPassword", "Account", new { token = s_token }, "http"));
+
+        //        result.CurrentID = "display:none;";
+        //    }
+        //    else
+        //    {
+        //        result.color = "danger";
+        //        result.icon = "fa-times-circle";
+        //        result.message = "No pudo identificarse al usuario.";
+        //        result.CurrentID = "display:none;";
+        //    }
+
+        //    return PartialView("_MsgModalBodyPartial", result);
+        //}
+
 
     }
 }

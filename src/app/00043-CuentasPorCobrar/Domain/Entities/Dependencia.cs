@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class Annexe : IAnnexe
+    public class Dependencia : IDependencia
     {
         public string CodeRC { get; set; }
         public string Code { get; set; }

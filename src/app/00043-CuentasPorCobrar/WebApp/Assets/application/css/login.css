@@ -131,11 +131,16 @@ form h1 {
   font-family: "Poppins", sans-serif;
   color: #555;
 }
-p.text-danger {
-    color: #ff0000;
-    font-size: .8rem;
-    margin-top: 3.5rem;
+
+p.text-error {
+  margin-top: 3.5rem;
 }
+
+.text-danger {
+  color: #ff0000;
+  font-size: .8rem;
+}
+
 .remember-checkbox {
   width: 100%;
   font-size: 0.9rem;

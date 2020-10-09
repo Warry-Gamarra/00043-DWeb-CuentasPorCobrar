@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -8,10 +9,38 @@ namespace WebApp.ViewModels
 {
     public class UserViewModel
     {
-    }
+        public int? UserId { get; set; }
 
-    public class UserDetailsViewModel
-    {
+        [Display(Name = "Nombre de la cuenta")]
+        public string UserName { get; set; }
+
+        [Display(Name = "Nombre del usuario")]
+        public string Person { get; set; }
+
+        public string NumDoc { get; set; }
+
+        [Display(Name = "Correo")]
+        public string Email { get; set; }
+
+        public string Role { get; set; }
+
+        [Display(Name = "Estado de la cuenta")]
+        public bool? Enabled { get; set; }
+
+
+        public UserViewModel() { }
+
+
+        public UserViewModel(User user)
+        {
+            this.UserId = user.UserId;
+            this.UserName = user.UserName;
+            this.Person = user.Person.Nombre;
+            this.Email = user.Person.correo;
+            this.Role = user.Rol.NombreRol;
+            this.Enabled = user.Enabled;
+        }
+
     }
 
     public class UserRegisterViewModel
@@ -29,8 +58,9 @@ namespace WebApp.ViewModels
 
 
         [Display(Name = "Dependencia")]
-        public int? DependenciaID { get; set; }
+        public string Dependenciacod { get; set; }
 
+        public int? PersonId { get; set; }
 
         [Display(Name = "Apellidos y Nombres")]
         [Required]
@@ -43,5 +73,26 @@ namespace WebApp.ViewModels
         [RegularExpression(@"[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}", ErrorMessage = "El Correo electrónico no tiene el formato correcto")]
         public string Email { get; set; }
 
+        [Display(Name = "Rol de usuario")]
+        public string RoleName { get; set; }
+
+        [Display(Name = "Dependencia")]
+        public string Dependencia { get; set; }
+
+
+
+        public UserRegisterViewModel() { }
+
+        public UserRegisterViewModel(User user)
+        {
+            this.UserId = user.UserId;
+            this.UserName = user.UserName;
+            this.PersonId = user.Person.Id;
+            this.PersonName = user.Person.Nombre;
+            this.Email = user.Person.correo;
+            this.Dependenciacod = user.Dependencia.Code;
+            this.RoleId = user.Rol.Id;
+            this.RoleName = user.Rol.NombreRol;
+        }
     }
 }
