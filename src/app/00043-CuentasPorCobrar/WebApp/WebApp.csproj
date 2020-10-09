@@ -153,6 +153,11 @@
     <Content Include="Assets\application\js\login.js" />
     <Content Include="Assets\application\js\main.js" />
     <Content Include="Assets\application\js\sidebar.js" />
+    <Content Include="Assets\bootstrap-datepicker\css\bootstrap-datepicker.css" />
+    <Content Include="Assets\bootstrap-datepicker\css\bootstrap-timepicker.css" />
+    <Content Include="Assets\bootstrap-datepicker\js\bootstrap-datepicker.es.js" />
+    <Content Include="Assets\bootstrap-datepicker\js\bootstrap-datepicker.js" />
+    <Content Include="Assets\bootstrap-datepicker\js\bootstrap-timepicker.js" />
     <Content Include="Assets\bootstrap\css\bootstrap.min.css" />
     <Content Include="Assets\bootstrap\js\bootstrap.min.js" />
     <Content Include="Assets\bootstrap\js\popper.min.js" />
@@ -198,6 +203,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AnnexeController.cs" />
+    <Compile Include="Controllers\EstudiantesController.cs" />
     <Compile Include="Controllers\HelpCenterController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MailController.cs" />
@@ -266,6 +272,11 @@
     <Content Include="Views\Obligaciones\Index.cshtml" />
     <Content Include="Views\Obligaciones\Create.cshtml" />
     <Content Include="Views\Obligaciones\Edit.cshtml" />
+    <Content Include="Views\Estudiantes\ArchivosImportados.cshtml" />
+    <Content Include="Views\Estudiantes\ImportacionArchivo.cshtml" />
+    <Content Include="Views\Estudiantes\_ResultadoBuscarAlumno.cshtml" />
+    <Content Include="Views\Estudiantes\_ImportacionArchivos.cshtml" />
+    <Content Include="Views\Periodos\Ejemplo.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

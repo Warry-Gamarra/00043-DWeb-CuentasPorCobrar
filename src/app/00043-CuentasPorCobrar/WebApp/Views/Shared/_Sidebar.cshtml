@@ -7,9 +7,8 @@
                 <i class="fa fa-fw fa-paste"></i> Operaciones<span class="pull-right"><i class="fa fa-fw fa-caret-down"></i></span>
             </a>
             <ul id="operations" class="collapse">
-                <li><a href="#"><i class="fa fa-fw fa-book"></i>&nbsp; Manual de Usuario</a></li>
-                <li><a href="#"><i class="fa fa-fw fa-question-circle-o"></i>&nbsp; Preguntas frecuentes</a></li>
-                <li><a href="#"><i class="fa fa-fw fa-phone-square"></i>&nbsp; Contactos</a></li>
+                <li><a href="@Url.Action("Cargar", "Estudiantes")"><i class="fa fa-fw fa-upload"></i>&nbsp; Cargar alumnos aptos</a></li>
+                <li><a href="@Url.Action("Generar", "Obligaciones")"><i class="fa fa-fw fa-file-text-o"></i>&nbsp; Generar obligaciones</a></li>
             </ul>
         </li>
         <li class="nav-item">
@@ -17,8 +16,9 @@
                 <i class="fa fa-fw fa-cogs"></i> Configuración<span class="pull-right"><i class="fa fa-fw fa-caret-down"></i></span>
             </a>
             <ul id="settings" class="collapse">
-                <li><a href="@Url.Action("Contacts", "HelpCenter")"><i class="fa fa-fw fa-list"></i>&nbsp; Conceptos de pago</a></li>
-                <li><a href="@Url.Action("Contacts", "HelpCenter")"><i class="fa fa-fw fa-file-text-o"></i>&nbsp; Desc. cuota de pago</a></li>
+                <li><a href="@Url.Action("Index", "ConceptoPago")"><i class="fa fa-fw fa-list"></i>&nbsp; Conceptos de pago</a></li>
+                <li><a href="@Url.Action("Index", "CuotaPago")"><i class="fa fa-fw fa-file-text-o"></i>&nbsp; Desc. cuota de pago</a></li>
+                <li><a href="@Url.Action("Index", "Clasificadores")"><i class="fa fa-fw fa-file-text-o"></i>&nbsp; Calsificadores de ingreso</a></li>
             </ul>
         </li>
         <li class="nav-item">
