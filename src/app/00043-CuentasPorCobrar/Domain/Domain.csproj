@@ -70,8 +70,10 @@
   <ItemGroup>
     <Compile Include="DTO\Options.cs" />
     <Compile Include="Entities\AccountNumber.cs" />
+    <Compile Include="Entities\CuentaDeposito.cs" />
     <Compile Include="Entities\FinancialEntity.cs" />
     <Compile Include="Entities\CorreoAplicacion.cs" />
+    <Compile Include="Entities\Periodo.cs" />
     <Compile Include="Entities\Persona.cs" />
     <Compile Include="Entities\ResolutionType.cs" />
     <Compile Include="Entities\DocumentType.cs" />
@@ -88,6 +90,7 @@
     <Compile Include="Services\IDependencia.cs" />
     <Compile Include="Services\IRoles.cs" />
     <Compile Include="Services\IUser.cs" />
+    <Compile Include="Services\PeriodoService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Entities\Financial\" />

@@ -1,0 +1,274 @@
+﻿@model WebApp.ViewModels.ObligacionViewModel
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<style>
+    .checkbox_label {
+        font-weight: inherit;
+    }
+</style>
+
+
+<h2>Crear</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Obligacion</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Descripcion, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Descripcion, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-2"></div>
+            <div class="col-md-10">
+                <div class="col-md-2">
+                    <label class="checkbox_label col-md-10" for="Fraccionable">Fraccionable</label> @Html.CheckBoxFor(model => model.Fraccionable)
+                </div>
+                <div class="col-md-2">
+                    <label class="checkbox_label col-md-10" for="Concepto_General">Concepto General</label> @Html.CheckBoxFor(model => model.Concepto_General)
+                </div>
+                <div class="col-md-2">
+                    <label class="checkbox_label col-md-10" for="Agrupa_Conceptos">Agrupa Conceptos</label> @Html.CheckBoxFor(model => model.Agrupa_Conceptos)
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Tipo_Alumno, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="col-md-2">
+                    <label class="checkbox_label col-md-10" for="Tipo_Alumno_1">Alum. Regulares</label> @Html.RadioButtonFor(model => model.Tipo_Alumno, "1", new { @id = "Tipo_Alumno_1" })
+                </div>
+                <div class="col-md-2">
+                    <label class="checkbox_label col-md-10" for="Tipo_Alumno_2">Alumn. Ingresantes</label> @Html.RadioButtonFor(model => model.Tipo_Alumno, "2", new { @id = "Tipo_Alumno_2" })
+                </div>
+                <div class="col-md-2">
+                    <label class="checkbox_label col-md-10" for="Tipo_Alumno_3">Todos</label> @Html.RadioButtonFor(model => model.Tipo_Alumno, "3", new { @id = "Tipo_Alumno_3" })
+                </div>
+                @Html.ValidationMessageFor(model => model.Tipo_Alumno, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-2"></div>
+            <div class="col-md-10">
+                <div class="col-md-2">
+                    <label class="checkbox_label col-md-10" for="Nivel_Alumno_1">Pre Grado</label> @Html.RadioButtonFor(model => model.Nivel_Alumno, "1", new { @id = "Nivel_Alumno_1" })
+                </div>
+                <div class="col-md-2">
+                    <label class="checkbox_label col-md-10" for="Nivel_Alumno_2">Post G.(Maestría)</label> @Html.RadioButtonFor(model => model.Nivel_Alumno, "2", new { @id = "Nivel_Alumno_2" })
+                </div>
+                <div class="col-md-2">
+                    <label class="checkbox_label col-md-10" for="Nivel_Alumno_3">Post G.(Doctorado)</label> @Html.RadioButtonFor(model => model.Nivel_Alumno, "3", new { @id = "Nivel_Alumno_3" })
+                </div>
+                <div class="col-md-2">
+                    <label class="checkbox_label col-md-10" for="Nivel_Alumno_4">Sec. Post G.</label> @Html.RadioButtonFor(model => model.Nivel_Alumno, "4", new { @id = "Nivel_Alumno_4" })
+                </div>
+                <div class="col-md-2">
+                    <label class="checkbox_label col-md-10" for="Nivel_Alumno_5">Todos</label> @Html.RadioButtonFor(model => model.Nivel_Alumno, "5", new { @id = "Nivel_Alumno_5" })
+                </div>
+                @Html.ValidationMessageFor(model => model.Nivel_Alumno, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Tipo_Oblicacion, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="col-md-2">
+                    <label class="checkbox_label col-md-10" for="Tipo_Oblicacion_1">Matrícula</label> @Html.RadioButtonFor(model => model.Tipo_Oblicacion, "1", new { @id = "Tipo_Oblicacion_1" })
+                </div>
+                <div class="col-md-2">
+                    <label class="checkbox_label col-md-10" for="Tipo_Oblicacion_2">Otros pagos</label> @Html.RadioButtonFor(model => model.Tipo_Oblicacion, "0", new { @id = "Tipo_Oblicacion_2" })
+                </div>
+                @Html.ValidationMessageFor(model => model.Tipo_Oblicacion, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Cuota_Pago, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.Cuota_Pago, new SelectList(ViewBag.lista_periodos, "Id", "Descripcion"), "", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Cuota_Pago, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Clasificador, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Clasificador, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Clasificador, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Clasificador_Cinco_Digitos, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Clasificador_Cinco_Digitos, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Clasificador_Cinco_Digitos, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-2">
+                <label class="col-md-10" for="Calculado">Calculado</label> @Html.CheckBoxFor(model => model.Calculado)
+            </div>
+            <div class="col-md-10">
+                <div class="col-md-2">
+                    <label class="checkbox_label col-md-10" for="Calculado_Opcion_1">Crd. Desaprobados</label> @Html.RadioButtonFor(model => model.Calculado_Opcion, "1", new { @id = "Calculado_Opcion_1" })
+                </div>
+                <div class="col-md-2">
+                    <label class="checkbox_label col-md-10" for="Calculado_Opcion_2">Deudas Anteriores</label> @Html.RadioButtonFor(model => model.Calculado_Opcion, "2", new { @id = "Calculado_Opcion_2" })
+                </div>
+                <div class="col-md-2">
+                    <label class="checkbox_label col-md-10" for="Calculado_Opcion_3">Pensión de enseñanza</label> @Html.RadioButtonFor(model => model.Calculado_Opcion, "3", new { @id = "Calculado_Opcion_3" })
+                </div>
+                <div class="col-md-2">
+                    <label class="checkbox_label col-md-10" for="Calculado_Opcion_4">No Voto</label> @Html.RadioButtonFor(model => model.Calculado_Opcion, "4", new { @id = "Calculado_Opcion_4" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-2">
+                <label class="col-md-10" for="Anio_Periodo">Año y Período</label> @Html.CheckBoxFor(model => model.Anio_Periodo)
+            </div>
+
+            <div class="col-md-2">
+                @Html.DropDownListFor(model => model.Anio, (SelectList)ViewBag.Listar_Anios, "", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Anio, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="col-md-3">
+                @Html.DropDownListFor(model => model.Periodo, (SelectList)ViewBag.Listar_Periodos_Academicos, "", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Periodo, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-2">
+                <label class="col-md-10" for="Especialidad">Cód. Especialidad</label> @Html.CheckBoxFor(model => model.Especialidad)
+            </div>
+
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.Especialidad_Opcion, (SelectList)ViewBag.Lista_Vacia, "", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Especialidad_Opcion, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-2">
+                <label class="col-md-10" for="Grupo_Cod_Rc">Grupo Cod_Rc</label> @Html.CheckBoxFor(model => model.Grupo_Cod_Rc)
+            </div>
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.Grupo_Cod_Rc_Opcion, (SelectList)ViewBag.Lista_Vacia, "", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Grupo_Cod_Rc_Opcion, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-2">
+                <label class="col-md-10" for="Codigo_Ingreso">Codigo Ingreso</label> @Html.CheckBoxFor(model => model.Codigo_Ingreso)
+            </div>
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.Codigo_Ingreso_Opcion, (SelectList)ViewBag.Lista_Vacia, "", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Codigo_Ingreso_Opcion, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-2">
+                <label class="col-md-10" for="Concepto_Agrupa">Concepto Agrupa</label> @Html.CheckBoxFor(model => model.Concepto_Agrupa)
+            </div>
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.Concepto_Agrupa_Opcion, (SelectList)ViewBag.Lista_Vacia, "", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Concepto_Agrupa_Opcion, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-2">
+                <label class="col-md-10" for="Concepto_Afecta">Concepto Afecta</label> @Html.CheckBoxFor(model => model.Concepto_Afecta)
+            </div>
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.Concepto_Afecta_Opcion, (SelectList)ViewBag.Lista_Vacia, "", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Concepto_Afecta_Opcion, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Nro_Pagos, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Nro_Pagos, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Nro_Pagos, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Porcentaje, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.Porcentaje)
+                    @Html.ValidationMessageFor(model => model.Porcentaje, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Monto, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Monto, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Monto, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Monto_Minimo, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Monto_Minimo, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Monto_Minimo, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Descripcion_Larga, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Descripcion_Larga, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Descripcion_Larga, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Observacion, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.Observacion, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Observacion, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
