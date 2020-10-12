@@ -1,51 +1,72 @@
-﻿using System;
+﻿using Domain.DTO;
+using Domain.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using WebApp.Models;
 using WebApp.ViewModels;
 
 namespace WebApp.Controllers
 {
     public class PeriodosController : Controller
     {
+        PeriodoService periodoService;
+        PeriodoModel periodoModel;
+
+        public PeriodosController()
+        {
+            periodoService = new PeriodoService();
+        } 
+
         // GET: Periodos_Academicos
         public ActionResult Index()
         {
-            if (Session["lista_periodo"] == null)
+            var lista = periodoService.ListarPeriodos();
+
+            var lista2 = new List<PeriodoViewModel>();
+
+            if (lista != null && lista.Count > 0)
             {
-                Session["lista_periodo"] = General.llenar_lista_periodos();
+                lista2 = lista.Select(x => new PeriodoViewModel()
+                {
+                    Id = x.I_PeriodoID,
+                    Cuota_Pago_Desc = x.T_CuotaPagoDesc,
+                    Anio = x.N_Anio,
+                    Fecha_Inicio = x.D_FecIni,
+                    Fecha_Vencimiento = x.D_FecFin
+                }).ToList();
             }
 
-            var lista = Session["lista_periodo"];
-
-            return View(lista);
+            return View(lista2);
         }
 
         // GET: Periodos_Academicos/Create
         public ActionResult Create()
         {
+            ViewBag.ListaCuotaPago = periodoService.ListarCuotaPagoHabilitadas();
+
             return View();
         }
 
         // POST: Periodos_Academicos/Create
         [HttpPost]
-        public ActionResult Create(PeriodoViewModel model)
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(NuevoPeriodoViewModel model)
         {
-            try
+            Response result = new Response();
+
+            if (ModelState.IsValid)
             {
-                var lista = (List<PeriodoViewModel>)Session["lista_periodo"];
-
-                model.Id = lista.Max(x => x.Id) + 1;
-
-                lista.Add(model);
-
-                return RedirectToAction("Index");
+                result = periodoModel.GrabarPeriodo(model);
             }
-            catch
+            else
             {
-                return View();
+                ResponseModel.Error(result, "Ha ocurrido un error con el envio de datos");
             }
+
+            return PartialView("_MsgPartialWR", result);
         }
 
         // GET: Periodos_Academicos/Edit/5
@@ -68,15 +89,8 @@ namespace WebApp.Controllers
 
                 var old_model = lista.FirstOrDefault(x => x.Id == id);
 
-                old_model.Descripcion = model.Descripcion;
-
-                old_model.Nro_Cuenta_Corriente = model.Nro_Cuenta_Corriente;
-
-                old_model.Codigo_Banco = model.Codigo_Banco;
 
                 old_model.Fecha_Vencimiento = model.Fecha_Vencimiento;
-
-                old_model.Prioridad = model.Prioridad;
 
                 return RedirectToAction("Index");
             }

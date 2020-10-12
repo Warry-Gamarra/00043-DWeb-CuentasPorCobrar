@@ -71,7 +71,7 @@ namespace WebApp.Controllers
 
             var model = lista.FirstOrDefault(x => x.Id == id);
 
-            ViewBag.lista_periodos = General.llenar_lista_periodos();
+            //ViewBag.lista_periodos = General.llenar_lista_periodos();
 
             ViewBag.Listar_Anios = General.Listar_Anios();
 
@@ -86,7 +86,7 @@ namespace WebApp.Controllers
         [HttpPost]
         public ActionResult Edit(int id, ObligacionViewModel model)
         {
-            ViewBag.lista_periodos = General.llenar_lista_periodos();
+            //ViewBag.lista_periodos = General.llenar_lista_periodos();
 
             ViewBag.Listar_Anios = General.Listar_Anios();
 
@@ -177,7 +177,7 @@ namespace WebApp.Controllers
 
             var model = lista.FirstOrDefault(x => x.Id == id);
 
-            ViewBag.lista_periodos = General.llenar_lista_periodos();
+            //ViewBag.lista_periodos = General.llenar_lista_periodos();
 
             ViewBag.Listar_Anios = General.Listar_Anios();
 

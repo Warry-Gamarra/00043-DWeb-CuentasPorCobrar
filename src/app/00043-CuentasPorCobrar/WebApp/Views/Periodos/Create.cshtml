@@ -1,13 +1,13 @@
-﻿@model WebApp.ViewModels.PeriodoViewModel
+﻿@model WebApp.ViewModels.NuevoPeriodoViewModel
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Crear";
 }
 
 <h2>Crear</h2>
 
 
-@using (Html.BeginForm())
+@using (Ajax.BeginForm("Create", "Periodos", new { area = "" }, new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "div_msg", OnBegin = "Load", OnComplete = "Stop" }))
 {
     @Html.AntiForgeryToken()
 
@@ -15,32 +15,33 @@
         <h4>Periodo Académico</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
         <div class="form-group">
-            @Html.LabelFor(model => model.Descripcion, htmlAttributes: new { @class = "control-label col-md-2" })
+            <label class="control-label col-md-2" for="Cuota_Pago_ID">Descripción</label>
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Descripcion, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
+                @Html.DropDownListFor(model => model.Cuota_Pago_ID, new SelectList(ViewBag.ListaCuotaPago, "I_CuotaPagoID", "T_CuotaPagoDesc"), "", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Cuota_Pago_ID, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Nro_Cuenta_Corriente, htmlAttributes: new { @class = "control-label col-md-2" })
+            <label class="control-label col-md-2" for="Anio">Año</label>
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Nro_Cuenta_Corriente, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Nro_Cuenta_Corriente, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.Anio, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Anio, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Codigo_Banco, htmlAttributes: new { @class = "control-label col-md-2" })
+            <label class="control-label col-md-2" for="Fecha_Inicio">Fecha inicio</label>
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Codigo_Banco, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Codigo_Banco, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.Fecha_Inicio, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Fecha_Inicio, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Fecha_Vencimiento, htmlAttributes: new { @class = "control-label col-md-2" })
+            <label class="control-label col-md-2" for="Fecha_Vencimiento">Fecha vencimiento</label>
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Fecha_Vencimiento, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Fecha_Vencimiento, "", new { @class = "text-danger" })
@@ -48,16 +49,18 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Prioridad, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Prioridad, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Prioridad, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer" id="div_msg">
+        <div class="col-md-12" style="display:none" id="loading">
+            <h6>Actualizando los datos...</h6>
+
+            <div class="progress">
+                <div class="indeterminate"></div>
             </div>
         </div>
     </div>

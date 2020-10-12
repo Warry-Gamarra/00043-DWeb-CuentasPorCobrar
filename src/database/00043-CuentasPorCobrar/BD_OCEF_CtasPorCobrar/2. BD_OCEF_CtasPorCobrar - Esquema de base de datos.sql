@@ -11,7 +11,7 @@ GO
 CREATE TABLE TC_Usuarios
 ( 
 	UserId               int IDENTITY ( 1,1 ) ,
-	UserName             varchar(20)  NOT NULL ,
+	UserName             varchar( 20)  NOT NULL ,
 	I_UsuarioCrea        int  NULL ,
 	D_FecActualiza       datetime  NULL ,
 	B_CambiaPassword	 bit  NOT NULL ,
@@ -231,8 +231,9 @@ GO
 
 CREATE TABLE TC_CuotaPago
 (
-	I_CuotaPagoID		int identity(1,1),
+	I_CuotaPagoID	int identity(1,1),
 	T_CuotaPagoDesc	varchar(250) NOT NULL,
+	B_Habilitado	bit not null,
 	CONSTRAINT PK_CuotaPago PRIMARY KEY (I_CuotaPagoID ASC)
 )
 GO

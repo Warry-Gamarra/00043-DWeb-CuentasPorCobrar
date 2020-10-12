@@ -1,4 +1,6 @@
 ﻿using Data.Procedures;
+using Data.Tables;
+using Domain.DTO;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -10,6 +12,27 @@ namespace Domain.Services
 {
     public class PeriodoService
     {
+        public List<CuotaPago> ListarCuotaPagoHabilitadas()
+        {
+            try
+            {
+                var lista = TC_CuotaPago.Find();
+
+                var cuotasPago = lista.Where(x => x.B_Habilitado).Select(x => new CuotaPago()
+                {
+                    I_CuotaPagoID = x.I_CuotaPagoID,
+                    T_CuotaPagoDesc = x.T_CuotaPagoDesc,
+                    B_Habilitado = x.B_Habilitado
+                }).ToList();
+
+                return cuotasPago;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         public List<CuentaDeposito> ListarCuentaDeposito()
         {
             try
@@ -25,7 +48,7 @@ namespace Domain.Services
 
                 return periodos;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return null;
             }
@@ -48,10 +71,25 @@ namespace Domain.Services
 
                 return periodos;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return null;
             }
+        }
+
+        public Response GrabarPeriodo(Periodo periodo)
+        {
+            var sp = new USP_I_GrabarPeriodo()
+            {
+                I_CuotaPagoID = periodo.Cuota_Pago_ID,
+                N_Anio = periodo.N_Anio,
+                D_FecIni = periodo.D_FecIni,
+                D_FecFin = periodo.D_FecFin
+            };
+
+            var result = sp.Execute();
+
+            return new Response(result);
         }
     }
 }

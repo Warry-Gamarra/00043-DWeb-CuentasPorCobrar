@@ -9,11 +9,23 @@ namespace WebApp.ViewModels
     public class PeriodoViewModel
     {
         public int Id { get; set; }
+        public string Cuota_Pago_Desc { get; set; }
+        public int Anio { get; set; }
+        public DateTime Fecha_Inicio { get; set; }
+        public DateTime Fecha_Vencimiento { get; set; }
+
         public string Descripcion { get; set; }
         public string Nro_Cuenta_Corriente { get; set; }
         public string Codigo_Banco { get; set; }
-        public DateTime Fecha_Vencimiento { get; set; }
         public int Prioridad { get; set; }
+    }
+
+    public class NuevoPeriodoViewModel
+    {
+        public int Cuota_Pago_ID { get; set; }
+        public int Anio { get; set; }
+        public DateTime Fecha_Inicio { get; set; }
+        public DateTime Fecha_Vencimiento { get; set; }
     }
 
     public static class General
@@ -54,6 +66,7 @@ namespace WebApp.ViewModels
 
             return lista;
         }
+
 
         public static List<ObligacionViewModel> llenar_lista_obligaciones()
         {
