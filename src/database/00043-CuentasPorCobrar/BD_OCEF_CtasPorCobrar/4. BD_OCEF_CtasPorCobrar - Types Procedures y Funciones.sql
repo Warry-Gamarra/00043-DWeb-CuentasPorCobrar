@@ -160,11 +160,11 @@ GO
 
 
 
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_CuentaDeposito')
-	DROP PROCEDURE dbo.USP_S_CuentaDeposito
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_CuentaDeposito_Habilitada')
+	DROP PROCEDURE dbo.USP_S_CuentaDeposito_Habilitada
 GO
 
-CREATE PROCEDURE dbo.USP_S_CuentaDeposito
+CREATE PROCEDURE dbo.USP_S_CuentaDeposito_Habilitada
 AS
 BEGIN
 	SET NOCOUNT ON;
@@ -176,11 +176,11 @@ GO
 
 
 
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_Periodos')
-	DROP PROCEDURE dbo.USP_S_Periodos
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_Periodos_Habilitados')
+	DROP PROCEDURE dbo.USP_S_Periodos_Habilitados
 GO
 
-CREATE PROCEDURE dbo.USP_S_Periodos
+CREATE PROCEDURE dbo.USP_S_Periodos_Habilitados
 AS
 BEGIN
 	SET NOCOUNT ON;
@@ -192,33 +192,19 @@ GO
 
 
 
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_DependenciaUNFV')
-	DROP PROCEDURE dbo.USP_S_DependenciaUNFV
-GO
-
-CREATE PROCEDURE dbo.USP_S_DependenciaUNFV
-AS
-BEGIN
-	SET NOCOUNT ON;
-	SELECT d.C_DepCod FROM dbo.TC_DependenciaUNFV d
-END
-GO
-
-
-
 IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_GrabarPeriodo')
 	DROP PROCEDURE dbo.USP_I_GrabarPeriodo
 GO
 
 
 CREATE PROCEDURE dbo.USP_I_GrabarPeriodo
-@I_CuotaPagoID int,
-@N_Anio int = null,
+@I_CuotaPagoID int = null,
+@N_Anio smallint = null,
 @D_FecIni datetime = null,
 @D_FecFin datetime = null,
 @I_PeriodoID int OUTPUT,
 @B_Result bit OUTPUT,
-@T_Message nvarchar(4000) OUTPUT	
+@T_Message nvarchar(4000) OUTPUT
 AS
 BEGIN
 	SET NOCOUNT ON
@@ -249,7 +235,7 @@ GO
 CREATE PROCEDURE dbo.USP_U_ActualizarPeriodo
 @I_PeriodoID int,
 @I_CuotaPagoID int,
-@N_Anio int = null,
+@N_Anio smallint = null,
 @D_FecIni datetime = null,
 @D_FecFin datetime = null,
 @B_Habilitado bit,
@@ -287,15 +273,14 @@ GO
 CREATE PROCEDURE dbo.USP_I_GrabarPeriodo_CuentaDeposito
 @I_CtaDepID int,
 @I_PeriodoID int,
-@C_DepCod int,
 @B_Result bit OUTPUT,
 @T_Message nvarchar(4000) OUTPUT	
 AS
 BEGIN
 	SET NOCOUNT ON
   	BEGIN TRY
-		INSERT dbo.TI_Periodo_CuentaDeposito(I_CtaDepID, I_PeriodoID, C_DepCod)
-		VALUES(@I_CtaDepID, @I_PeriodoID, @C_DepCod)
+		INSERT dbo.TI_Periodo_CuentaDeposito(I_CtaDepID, I_PeriodoID)
+		VALUES(@I_CtaDepID, @I_PeriodoID)
 		
 		SET @B_Result = 1
 		SET @T_Message = 'Inserción de datos correcta.'

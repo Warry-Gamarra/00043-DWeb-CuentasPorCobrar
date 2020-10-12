@@ -8,25 +8,27 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Data.Tables
+namespace Data.Procedures
 {
-    public class TC_CuotaPago
+    public class USP_S_Periodos_Habilitados
     {
-        public int I_CuotaPagoID { get; set; }
+        public int I_PeriodoID { get; set; }
         public string T_CuotaPagoDesc { get; set; }
-        public bool B_Habilitado { get; set; }
+        public short N_Anio { get; set; }
+        public DateTime D_FecIni { get; set; }
+        public DateTime D_FecFin { get; set; }
 
-        public static List<TC_CuotaPago> FindAll()
+        public static List<USP_S_Periodos_Habilitados> Execute()
         {
-            List<TC_CuotaPago> result;
+            List<USP_S_Periodos_Habilitados> result;
 
             try
             {
-                string s_command = @"select c.I_CuotaPagoID, c.T_CuotaPagoDesc, c.B_Habilitado from dbo.TC_CuotaPago c";
+                string s_command = @"USP_S_Periodos_Habilitados";
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    result = _dbConnection.Query<TC_CuotaPago>(s_command, commandType: CommandType.Text).ToList();
+                    result = _dbConnection.Query<USP_S_Periodos_Habilitados>(s_command, commandType: CommandType.StoredProcedure).ToList(); 
                 }
             }
             catch (Exception ex)

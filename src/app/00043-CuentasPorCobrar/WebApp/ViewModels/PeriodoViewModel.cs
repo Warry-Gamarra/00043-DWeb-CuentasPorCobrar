@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;//No deberia estar el MVC
@@ -8,66 +9,42 @@ namespace WebApp.ViewModels
 {
     public class PeriodoViewModel
     {
-        public int Id { get; set; }
-        public string Cuota_Pago_Desc { get; set; }
-        public int Anio { get; set; }
-        public DateTime Fecha_Inicio { get; set; }
-        public DateTime Fecha_Vencimiento { get; set; }
+        public int I_PeriodoID { get; set; }
+        public string T_CuotaPagoDesc { get; set; }
+        public short N_Anio { get; set; }
+        public DateTime D_FecIni { get; set; }
+        public DateTime D_FecFin { get; set; }
 
-        public string Descripcion { get; set; }
-        public string Nro_Cuenta_Corriente { get; set; }
-        public string Codigo_Banco { get; set; }
-        public int Prioridad { get; set; }
+        //public string Descripcion { get; set; }
+        //public string Nro_Cuenta_Corriente { get; set; }
+        //public string Codigo_Banco { get; set; }
+        //public int Prioridad { get; set; }
     }
 
     public class NuevoPeriodoViewModel
     {
-        public int Cuota_Pago_ID { get; set; }
-        public int Anio { get; set; }
-        public DateTime Fecha_Inicio { get; set; }
-        public DateTime Fecha_Vencimiento { get; set; }
+        [Display(Name = "Descripción")]
+        public int I_CuotaPagoID { get; set; }
+        [Display(Name = "Año")]
+        public short N_Anio { get; set; }
+        [Display(Name = "Fecha inicio")]
+        public DateTime D_FecIni { get; set; }
+        [Display(Name = "Fecha fin")]
+        public DateTime D_FecFin { get; set; }
+    }
+
+    public class EdicionPeriodoViewModel
+    {
+        public int I_PeriodoID { get; set; }
+        public int I_CuotaPagoID { get; set; }
+        public short N_Anio { get; set; }
+        public DateTime D_FecIni { get; set; }
+        public DateTime D_FecFin { get; set; }
+        public bool B_Habilitado { get; set; }
     }
 
     public static class General
     {
-        public static List<PeriodoViewModel> llenar_lista_periodos()
-        {
-            var lista = new List<PeriodoViewModel>();
-
-            lista.Add(new PeriodoViewModel()
-            {
-                Id = 1,
-                Descripcion = "Matricula 2019 - Semestre 1",
-                Nro_Cuenta_Corriente = "123456789",
-                Codigo_Banco = "123",
-                Fecha_Vencimiento = DateTime.Now,
-                Prioridad = 1
-            });
-
-            lista.Add(new PeriodoViewModel()
-            {
-                Id = 2,
-                Descripcion = "Matricula 2019 - Semestre 2",
-                Nro_Cuenta_Corriente = "123456789",
-                Codigo_Banco = "123",
-                Fecha_Vencimiento = DateTime.Now,
-                Prioridad = 1
-            });
-
-            lista.Add(new PeriodoViewModel()
-            {
-                Id = 3,
-                Descripcion = "Matricula 2020 - Semestre 1",
-                Nro_Cuenta_Corriente = "123456789",
-                Codigo_Banco = "123",
-                Fecha_Vencimiento = DateTime.Now,
-                Prioridad = 1
-            });
-
-            return lista;
-        }
-
-
         public static List<ObligacionViewModel> llenar_lista_obligaciones()
         {
             var lista = new List<ObligacionViewModel>();

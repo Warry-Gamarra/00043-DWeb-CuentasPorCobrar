@@ -13,7 +13,7 @@ namespace Data.Procedures
     public class USP_I_GrabarPeriodo
     {
         public int I_CuotaPagoID { get; set; }
-        public int N_Anio { get; set; }
+        public short N_Anio { get; set; }
         public DateTime D_FecIni { get; set; }
         public DateTime D_FecFin { get; set; }
 
@@ -36,8 +36,8 @@ namespace Data.Procedures
                     parameters.Add(name: "T_Message", dbType: DbType.String, size: 4000, direction: ParameterDirection.Output);
 
                     _dbConnection.Execute("USP_I_GrabarPeriodo", parameters, commandType: CommandType.StoredProcedure);
-
-                    result.CurrentID = parameters.Get<string>("I_PeriodoID");
+                    int id = parameters.Get<int>("I_PeriodoID");
+                    result.CurrentID = id.ToString();
                     result.Value = parameters.Get<bool>("B_Result");
                     result.Message = parameters.Get<string>("T_Message");
                 }

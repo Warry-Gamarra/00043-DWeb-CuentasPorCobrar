@@ -12,20 +12,20 @@ namespace Domain.Services
 {
     public class PeriodoService
     {
-        public List<CuotaPago> ListarCuotaPagoHabilitadas()
+        public List<CuotaPago> Listar_Cuota_Pago_Habilitadas()
         {
             try
             {
-                var lista = TC_CuotaPago.Find();
+                var lista = TC_CuotaPago.FindAll();
 
-                var cuotasPago = lista.Where(x => x.B_Habilitado).Select(x => new CuotaPago()
+                var result = lista.Where(x => x.B_Habilitado).Select(x => new CuotaPago()
                 {
                     I_CuotaPagoID = x.I_CuotaPagoID,
                     T_CuotaPagoDesc = x.T_CuotaPagoDesc,
                     B_Habilitado = x.B_Habilitado
                 }).ToList();
 
-                return cuotasPago;
+                return result;
             }
             catch (Exception ex)
             {
@@ -33,20 +33,20 @@ namespace Domain.Services
             }
         }
 
-        public List<CuentaDeposito> ListarCuentaDeposito()
+        public List<CuentaDeposito> Listar_Cuenta_Deposito_Habilitadas()
         {
             try
             {
-                var lista = USP_S_CuentaDeposito.Execute();
+                var lista = USP_S_CuentaDeposito_Habilitadas.Execute();
 
-                var periodos = lista.Select(x => new CuentaDeposito()
+                var result = lista.Select(x => new CuentaDeposito()
                 {
                     I_CtaDepID = x.I_CtaDepID,
                     C_NumeroCuenta = x.C_NumeroCuenta,
                     T_EntidadDesc = x.T_EntidadDesc
                 }).ToList();
 
-                return periodos;
+                return result;
             }
             catch (Exception ex)
             {
@@ -54,13 +54,13 @@ namespace Domain.Services
             }
         }
 
-        public List<Periodo> ListarPeriodos()
+        public List<Periodo> Listar_Periodos_Habilitados()
         {
             try
             {
-                var lista = USP_S_Periodos.Execute();
+                var lista = USP_S_Periodos_Habilitados.Execute();
 
-                var periodos = lista.Select(x => new Periodo()
+                var result = lista.Select(x => new Periodo()
                 {
                     I_PeriodoID = x.I_PeriodoID,
                     T_CuotaPagoDesc = x.T_CuotaPagoDesc,
@@ -69,7 +69,7 @@ namespace Domain.Services
                     D_FecFin = x.D_FecFin
                 }).ToList();
 
-                return periodos;
+                return result;
             }
             catch (Exception ex)
             {
@@ -77,11 +77,11 @@ namespace Domain.Services
             }
         }
 
-        public Response GrabarPeriodo(Periodo periodo)
+        public Response Grabar_Periodo(PeriodoEntity periodo)
         {
             var sp = new USP_I_GrabarPeriodo()
             {
-                I_CuotaPagoID = periodo.Cuota_Pago_ID,
+                I_CuotaPagoID = periodo.I_CuotaPagoID,
                 N_Anio = periodo.N_Anio,
                 D_FecIni = periodo.D_FecIni,
                 D_FecFin = periodo.D_FecFin
@@ -90,6 +90,72 @@ namespace Domain.Services
             var result = sp.Execute();
 
             return new Response(result);
+        }
+
+        public Response Actualizar_Periodo(PeriodoEntity periodo)
+        {
+            var sp = new USP_U_ActualizarPeriodo()
+            {
+                I_PeriodoID = periodo.I_PeriodoID,
+                I_CuotaPagoID = periodo.I_CuotaPagoID,
+                N_Anio = periodo.N_Anio,
+                D_FecIni = periodo.D_FecIni,
+                D_FecFin = periodo.D_FecFin,
+                B_Habilitado = periodo.B_Habilitado
+            };
+
+            var result = sp.Execute();
+
+            return new Response(result);
+        }
+
+        public PeriodoEntity Obtener_Periodo(int I_PeriodoID)
+        {
+            PeriodoEntity result = null;
+
+            try
+            {
+                var periodo = TC_Periodo.FindByID(I_PeriodoID);
+
+                if (periodo != null)
+                {
+                    result = new PeriodoEntity()
+                    {
+                        I_PeriodoID = periodo.I_PeriodoID,
+                        I_CuotaPagoID = periodo.I_CuotaPagoID.GetValueOrDefault(),
+                        N_Anio = periodo.N_Anio.GetValueOrDefault(),
+                        D_FecIni = periodo.D_FecIni.GetValueOrDefault(),
+                        D_FecFin = periodo.D_FecFin.GetValueOrDefault(),
+                        B_Habilitado = periodo.B_Habilitado
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return result;
+            }
+
+            return result;
+        }
+
+        public List<Periodo_CuentaDeposito> Obtener_CuentaDeposito_X_Periodo(int I_PeriodoID)
+        {
+            try
+            {
+                var lista = TI_Periodo_CuentaDeposito.FindByPeriodoID(I_PeriodoID);
+
+                var result = lista.Select(x => new Periodo_CuentaDeposito()
+                {
+                    I_PeriodoID = x.I_PeriodoID,
+                    I_CtaDepID = x.I_CtaDepID
+                }).ToList();
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
     }
 }

@@ -45,3 +45,11 @@ INSERT INTO TC_CuotaPago (T_CuotaPagoDesc,B_Habilitado) VALUES (N'PEN.MA-REG-EUP
 INSERT INTO TC_CuotaPago (T_CuotaPagoDesc,B_Habilitado) VALUES (N'PEN.DO-ING-EUPG', 1)
 INSERT INTO TC_CuotaPago (T_CuotaPagoDesc,B_Habilitado) VALUES (N'PEN.DO-REG-EUPG', 1)
 GO
+
+
+INSERT dbo.TC_CuotaPago(T_CuotaPagoDesc, B_Habilitado) VALUES('ADM.ORD.UNFV', 1)
+INSERT dbo.TC_CuotaPago(T_CuotaPagoDesc, B_Habilitado) VALUES('MAT.REG.UNFV', 1)
+INSERT dbo.TC_CuotaPago(T_CuotaPagoDesc, B_Habilitado) VALUES('MAT.REG.EUPG', 1)
+
+INSERT dbo.TC_Periodo(I_CuotaPagoID, N_Anio, D_FecIni, D_FecFin, B_Habilitado) values(1, 2020, GETDATE(), GETDATE(), 1)
+

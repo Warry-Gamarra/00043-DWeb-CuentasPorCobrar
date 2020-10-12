@@ -212,19 +212,6 @@ GO
 
 
 
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'TC_DependenciaUNFV')
-	DROP TABLE TC_DependenciaUNFV
-GO
-
-CREATE TABLE TC_DependenciaUNFV
-(
-	C_DepCod			int identity(1,1),
-	CONSTRAINT PK_DependenciaUNFV PRIMARY KEY (C_DepCod ASC)
-)
-GO
-
-
-
 IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'TC_CuotaPago')
 	DROP TABLE TC_CuotaPago
 GO
@@ -232,7 +219,7 @@ GO
 CREATE TABLE TC_CuotaPago
 (
 	I_CuotaPagoID	int identity(1,1),
-	T_CuotaPagoDesc	varchar(250) NOT NULL,
+	T_CuotaPagoDesc	varchar(250) not null,
 	B_Habilitado	bit not null,
 	CONSTRAINT PK_CuotaPago PRIMARY KEY (I_CuotaPagoID ASC)
 )
@@ -247,11 +234,11 @@ GO
 CREATE TABLE TC_Periodo
 (
 	I_PeriodoID		int identity(1,1),
-	I_CuotaPagoID	int NOT NULL,
-	N_Anio			int,
+	I_CuotaPagoID	int,
+	N_Anio			smallint,
 	D_FecIni		datetime,
 	D_FecFin		datetime,
-	B_Habilitado	bit,
+	B_Habilitado	bit not null,
 	CONSTRAINT PK_Periodo PRIMARY KEY (I_PeriodoID ASC),
 	CONSTRAINT FK_Periodo_CuotaPago FOREIGN KEY (I_CuotaPagoID) REFERENCES TC_CuotaPago(I_CuotaPagoID)
 )
@@ -267,11 +254,9 @@ CREATE TABLE TI_Periodo_CuentaDeposito
 (
 	I_CtaDepID		int  NOT NULL,
 	I_PeriodoID		int  NOT NULL,
-	C_DepCod		int  NOT NULL,
-	CONSTRAINT PK_Periodo_CuentaDeposito PRIMARY KEY (I_CtaDepID ASC, I_PeriodoID ASC, C_DepCod ASC),
+	CONSTRAINT PK_Periodo_CuentaDeposito PRIMARY KEY (I_CtaDepID ASC, I_PeriodoID ASC),
 	CONSTRAINT FK_Periodo_CuentaDeposito FOREIGN KEY (I_CtaDepID) REFERENCES TC_CuentaDeposito(I_CtaDepID),
-	CONSTRAINT FK_Periodo_CuentaDeposito_Periodo FOREIGN KEY (I_PeriodoID) REFERENCES TC_Periodo(I_PeriodoID),
-	CONSTRAINT FK_Periodo_CuentaDeposito_DependenciaUNFV FOREIGN KEY (C_DepCod) REFERENCES TC_DependenciaUNFV(C_DepCod)	
+	CONSTRAINT FK_Periodo_CuentaDeposito_Periodo FOREIGN KEY (I_PeriodoID) REFERENCES TC_Periodo(I_PeriodoID)
 )
 GO
 

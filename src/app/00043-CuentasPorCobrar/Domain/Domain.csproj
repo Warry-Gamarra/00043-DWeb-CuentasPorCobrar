@@ -75,6 +75,8 @@
     <Compile Include="Entities\FinancialEntity.cs" />
     <Compile Include="Entities\CorreoAplicacion.cs" />
     <Compile Include="Entities\Periodo.cs" />
+    <Compile Include="Entities\PeriodoEntity.cs" />
+    <Compile Include="Entities\Periodo_CuentaDeposito.cs" />
     <Compile Include="Entities\Persona.cs" />
     <Compile Include="Entities\ResolutionType.cs" />
     <Compile Include="Entities\DocumentType.cs" />

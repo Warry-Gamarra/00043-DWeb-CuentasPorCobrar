@@ -266,7 +266,7 @@
     <Content Include="Views\Shared\_GridPager.cshtml" />
     <Content Include="Views\Shared\_Grid.cshtml" />
     <Content Include="Views\Periodos\Index.cshtml" />
-    <Content Include="Views\Periodos\Create.cshtml" />
+    <Content Include="Views\Periodos\_Create.cshtml" />
     <Content Include="Views\Periodos\Edit.cshtml" />
     <Content Include="Views\Periodos\Delete.cshtml" />
     <Content Include="Views\Obligaciones\Index.cshtml" />

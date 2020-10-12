@@ -12,42 +12,31 @@ namespace WebApp.Controllers
 {
     public class PeriodosController : Controller
     {
-        PeriodoService periodoService;
         PeriodoModel periodoModel;
 
         public PeriodosController()
         {
-            periodoService = new PeriodoService();
+            periodoModel = new PeriodoModel();
         } 
 
         // GET: Periodos_Academicos
         public ActionResult Index()
         {
-            var lista = periodoService.ListarPeriodos();
+            ViewBag.Title = "Desc. Cuota de Pago";
 
-            var lista2 = new List<PeriodoViewModel>();
+            var lista = periodoModel.Listar_Periodos_Habilitados();
 
-            if (lista != null && lista.Count > 0)
-            {
-                lista2 = lista.Select(x => new PeriodoViewModel()
-                {
-                    Id = x.I_PeriodoID,
-                    Cuota_Pago_Desc = x.T_CuotaPagoDesc,
-                    Anio = x.N_Anio,
-                    Fecha_Inicio = x.D_FecIni,
-                    Fecha_Vencimiento = x.D_FecFin
-                }).ToList();
-            }
-
-            return View(lista2);
+            return View(lista);
         }
 
         // GET: Periodos_Academicos/Create
         public ActionResult Create()
         {
-            ViewBag.ListaCuotaPago = periodoService.ListarCuotaPagoHabilitadas();
+            ViewBag.Lista_Cuota_Pago = periodoModel.Listar_Cuota_Pago_Habilitadas();
 
-            return View();
+            ViewBag.Title = "Nuevo registro";
+
+            return PartialView("_Create");
         }
 
         // POST: Periodos_Academicos/Create
@@ -59,73 +48,83 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                result = periodoModel.GrabarPeriodo(model);
+                result = periodoModel.Grabar_Periodo(model);
             }
             else
             {
-                ResponseModel.Error(result, "Ha ocurrido un error con el envio de datos");
+                string details = "";
+
+                foreach (ModelState modelState in ViewData.ModelState.Values)
+                {
+                    foreach (ModelError error in modelState.Errors)
+                    {
+                        details += error.ErrorMessage + " / ";
+                    }
+                }
+
+                ResponseModel.Error(result, "Ha ocurrido un error con el envio de datos" + details);
             }
 
             return PartialView("_MsgPartialWR", result);
         }
 
-        // GET: Periodos_Academicos/Edit/5
-        public ActionResult Edit(int id)
-        {
-            var lista = (List<PeriodoViewModel>)Session["lista_periodo"];
+        //// GET: Periodos_Academicos/Edit/5
+        //public ActionResult Edit(int id)
+        //{
+        //    var lista = (List<PeriodoViewModel>)Session["lista_periodo"];
 
-            var model = lista.FirstOrDefault(x => x.Id == id);
+        //    var model = lista.FirstOrDefault(x => x.Id == id);
 
-            return View(model);
-        }
+        //    return View(model);
+        //}
 
-        // POST: Periodos_Academicos/Edit/5
-        [HttpPost]
-        public ActionResult Edit(int id, PeriodoViewModel model)
-        {
-            try
-            {
-                var lista = (List<PeriodoViewModel>)Session["lista_periodo"];
+        //// POST: Periodos_Academicos/Edit/5
+        //[HttpPost]
+        //public ActionResult Edit(int id, PeriodoViewModel model)
+        //{
+        //    try
+        //    {
+        //        var lista = (List<PeriodoViewModel>)Session["lista_periodo"];
 
-                var old_model = lista.FirstOrDefault(x => x.Id == id);
+        //        var old_model = lista.FirstOrDefault(x => x.Id == id);
 
 
-                old_model.Fecha_Vencimiento = model.Fecha_Vencimiento;
+        //        old_model.Fecha_Vencimiento = model.Fecha_Vencimiento;
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        //        return RedirectToAction("Index");
+        //    }
+        //    catch
+        //    {
+        //        return View();
+        //    }
+        //}
 
-        // GET: Periodos_Academicos/Delete/5
-        public ActionResult Delete(int id)
-        {
-            var lista = (List<PeriodoViewModel>)Session["lista_periodo"];
+        //// GET: Periodos_Academicos/Delete/5
+        //public ActionResult Delete(int id)
+        //{
+        //    var lista = (List<PeriodoViewModel>)Session["lista_periodo"];
 
-            var model = lista.FirstOrDefault(x => x.Id == id);
+        //    var model = lista.FirstOrDefault(x => x.Id == id);
 
-            return View(model);
-        }
+        //    return View(model);
+        //}
 
-        // POST: Periodos_Academicos/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
-            try
-            {
-                var lista = (List<PeriodoViewModel>)Session["lista_periodo"];
+        //// POST: Periodos_Academicos/Delete/5
+        //[HttpPost]
+        //public ActionResult Delete(int id, FormCollection collection)
+        //{
+        //    try
+        //    {
+        //        var lista = (List<PeriodoViewModel>)Session["lista_periodo"];
 
-                lista.RemoveAll(x => x.Id == id);
+        //        lista.RemoveAll(x => x.Id == id);
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        //        return RedirectToAction("Index");
+        //    }
+        //    catch
+        //    {
+        //        return View();
+        //    }
+        //}
     }
 }

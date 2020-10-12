@@ -8,28 +8,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Data.Procedures
+namespace Data.Tables
 {
-    public class USP_S_Periodos
+    public class TI_Periodo_CuentaDeposito
     {
         public int I_PeriodoID { get; set; }
-        public string T_CuotaPagoDesc { get; set; }
-        public int N_Anio { get; set; }
-        public DateTime D_FecIni { get; set; }
-        public DateTime D_FecFin { get; set; }
+        public int I_CtaDepID { get; set; }
 
-        public static List<USP_S_Periodos> Execute()
+        public static List<TI_Periodo_CuentaDeposito> FindByPeriodoID(int I_PeriodoID)
         {
-            List<USP_S_Periodos> result;
+            List<TI_Periodo_CuentaDeposito> result;
 
             try
             {
+                string s_command = @"select c.I_PeriodoID, c.I_CtaDepID from dbo.TI_Periodo_CuentaDeposito c WHERE c.I_PeriodoID = @I_PeriodoID";
+
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    string s_command = @"USP_S_Periodos";
-
-                    result = _dbConnection.Query<USP_S_Periodos>(s_command, commandType: CommandType.StoredProcedure).ToList();
-                    
+                    result = _dbConnection.Query<TI_Periodo_CuentaDeposito>(s_command, new { I_PeriodoID = I_PeriodoID }, commandType: CommandType.Text).ToList();
                 }
             }
             catch (Exception ex)
