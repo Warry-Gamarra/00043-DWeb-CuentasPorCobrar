@@ -34,9 +34,14 @@
     <Reference Include="System">
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core">
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Web">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Xml.Linq">
       <Private>True</Private>
     </Reference>
@@ -55,6 +60,12 @@
     <Reference Include="System.Xml">
       <Private>True</Private>
     </Reference>
+    <Reference Include="WebMatrix.Data, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.Data.3.2.7\lib\net45\WebMatrix.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="WebMatrix.WebData, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.WebData.3.2.7\lib\net45\WebMatrix.WebData.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DTO\Options.cs" />
@@ -64,16 +75,21 @@
     <Compile Include="Entities\FinancialEntity.cs" />
     <Compile Include="Entities\CorreoAplicacion.cs" />
     <Compile Include="Entities\Periodo.cs" />
+    <Compile Include="Entities\Persona.cs" />
     <Compile Include="Entities\ResolutionType.cs" />
     <Compile Include="Entities\DocumentType.cs" />
-    <Compile Include="Entities\Annexe.cs" />
+    <Compile Include="Entities\Dependencia.cs" />
     <Compile Include="Entities\Liabilities.cs" />
+    <Compile Include="Entities\RolAplicacion.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="DTO\Response.cs" />
+    <Compile Include="Helpers\Crypto.cs" />
+    <Compile Include="Helpers\RandomPassword.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ICorreoAplicacion.cs" />
     <Compile Include="Services\IHelpResources.cs" />
-    <Compile Include="Services\IAnnexe.cs" />
+    <Compile Include="Services\IDependencia.cs" />
+    <Compile Include="Services\IRoles.cs" />
     <Compile Include="Services\IUser.cs" />
     <Compile Include="Services\PeriodoService.cs" />
   </ItemGroup>
@@ -87,6 +103,10 @@
       <Project>{02be7951-a281-420a-9d8d-856c384f7389}</Project>
       <Name>Data</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

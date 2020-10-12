@@ -58,6 +58,14 @@ namespace WebApp.Models
 
             Response result = _correoAplicacion.Save(correoAplicacion, currentUserId, (correoAplicacion.Id == 0 ? SaveOption.Insert: SaveOption.Update));
 
+            if (result.Value)
+            {
+                result.Success(false);
+            }
+            else
+            {
+                result.Error(true);
+            }
             return result;
         }
     }

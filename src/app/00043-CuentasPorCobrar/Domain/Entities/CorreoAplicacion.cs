@@ -1,5 +1,6 @@
 ﻿using Data.Tables;
 using Domain.DTO;
+using Domain.Helpers;
 using Domain.Services;
 using System;
 using System.Collections.Generic;
@@ -31,9 +32,9 @@ namespace Domain.Entities
         {
             this.Id = table.I_CorreoID;
             this.Address = table.T_DireccionCorreo;
-            this.Password = table.T_PasswordCorreo;
-            this.SecurityType = table.T_PasswordCorreo;
-            this.HostName = table.T_PasswordCorreo;
+            this.Password = table.T_PasswordCorreo.DecryptString();
+            this.SecurityType = table.T_Seguridad;
+            this.HostName = table.T_HostName;
             this.Port = table.I_Puerto;
             this.Enabled = table.B_Habilitado;
             this.FecUpdated = table.D_FecUpdate;
@@ -44,7 +45,11 @@ namespace Domain.Entities
 
         public Response ChangeState(int corcorreoAplicacionId, bool currentState, int currentUserId)
         {
-            throw new NotImplementedException();
+            _correoRepository.I_CorreoID = corcorreoAplicacionId;
+            _correoRepository.D_FecUpdate = DateTime.Now;
+            _correoRepository.B_Habilitado = !currentState;
+
+            return new Response(_correoRepository.ChangeState(currentUserId));
         }
 
         public List<CorreoAplicacion> Find()
@@ -79,11 +84,11 @@ namespace Domain.Entities
         {
             _correoRepository.I_CorreoID = correoAplicacion.Id;
             _correoRepository.T_DireccionCorreo = correoAplicacion.Address;
-            _correoRepository.T_PasswordCorreo = correoAplicacion.Password;
+            _correoRepository.T_PasswordCorreo = correoAplicacion.Password.EncryptString();
             _correoRepository.T_HostName = correoAplicacion.HostName;
             _correoRepository.T_Seguridad = correoAplicacion.SecurityType;
             _correoRepository.I_Puerto = correoAplicacion.Port;
-            _correoRepository.D_FecUpdate = DateTime.Now;
+            _correoRepository.D_FecUpdate = correoAplicacion.FecUpdated;
 
             switch (saveOption)
             {

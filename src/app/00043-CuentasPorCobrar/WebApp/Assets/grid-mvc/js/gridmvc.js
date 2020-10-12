@@ -383,23 +383,41 @@ GridMvc = (function ($) {
 if (typeof (GridMvc.lang) == 'undefined')
     GridMvc.lang = {};
 GridMvc.lang.en = {
-    filterTypeLabel: "Type: ",
-    filterValueLabel: "Value:",
-    applyFilterButtonText: "Apply",
+    //filterTypeLabel: "Type: ",
+    //filterValueLabel: "Value:",
+    //applyFilterButtonText: "Apply",
+    //filterSelectTypes: {
+    //    Equals: "Equals",
+    //    StartsWith: "StartsWith",
+    //    Contains: "Contains",
+    //    EndsWith: "EndsWith",
+    //    GreaterThan: "Greater than",
+    //    LessThan: "Less than",
+    //    GreaterThanOrEquals: "Greater than or equals",
+    //    LessThanOrEquals: "Less than or equals"
+    //},
+    //code: 'en',
+    //boolTrueLabel: "Yes",
+    //boolFalseLabel: "No",
+    //clearFilterLabel: "Clear filter"
+
+    filterTypeLabel: "Tipo: ",
+    filterValueLabel: "Valor:",
+    applyFilterButtonText: "Aplicar",
     filterSelectTypes: {
-        Equals: "Equals",
-        StartsWith: "StartsWith",
-        Contains: "Contains",
-        EndsWith: "EndsWith",
-        GreaterThan: "Greater than",
-        LessThan: "Less than",
-        GreaterThanOrEquals: "Greater than or equals",
-        LessThanOrEquals: "Less than or equals"
+        Equals: "Igual",
+        StartsWith: "Empieza con",
+        Contains: " Contiene",
+        EndsWith: "Termina con",
+        GreaterThan: "Mayor que",
+        LessThan: "Menor que",
+        GreaterThanOrEquals: "Mayor o igual que",
+        LessThanOrEquals: "Menor o menor que"
     },
     code: 'en',
-    boolTrueLabel: "Yes",
-    boolFalseLabel: "No",
-    clearFilterLabel: "Clear filter"
+    boolTrueLabel: "Habilitado",
+    boolFalseLabel: "No habilitado",
+    clearFilterLabel: "Borrar filtro"
 };
 /***
 * ============= FILTER WIDGETS =============

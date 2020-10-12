@@ -18,7 +18,7 @@
     <br />
 
     <div class="col-12">
-        <a href="@Url.Action("Create", "Mail")" class="btn btn-primary btn-sm pull-right modal-link">
+        <a href="@Url.Action("Create", "Mail")" class="btn btn-primary pull-right modal-link">
             <i class="fa fa-envelope"></i> Agregar Correo
         </a>
 
@@ -35,10 +35,10 @@
                                 columns.Add(c => c.PortNumber).Css("text-center").Titled("Puerto").Filterable(true);
                                 columns.Add(c => c.Enabled).SetWidth(100).Css("text-center").Encoded(false).Sanitized(false)
                                        .RenderValueAs(model => model.Enabled.Value ? 
-                                                                                @Html.Raw("<span id=\"td" + @model.MailId + "\"><button type=\"submit\" class=\"btn btn-xs btn-warning\" onclick=\"ChangeStateReloadPage(" + @model.MailId + ", " + @model.Enabled.ToString().ToLower() + ", '" + @Url.Action("ChangeState", "Mail") + "');\"><i class=\"fa fa-check-circle-o\">&nbsp;</i><span class=\"hidden-xs hidden-sm\">Habilitado</span></button></span>")
-                                                                                : @Html.Raw("<span id=\"td" + @model.MailId + "\"><button type=\"submit\" class=\"btn btn-xs btn-default\" onclick=\"ChangeStateReloadPage(" + @model.MailId + ", " + @model.Enabled.ToString().ToLower() + ", '" + @Url.Action("ChangeState", "Mail") + "');\"><i class=\"fa fa-minus-circle\">&nbsp;</i><span class=\"hidden-xs hidden-sm\">Deshabilitado</span></button></span>"))
-                                       .Filterable(true).Titled("Estado");
-                                columns.Add().SetWidth(200).Css("text-right").Encoded(false).Sanitized(false).RenderValueAs(model => @<a href="@Url.Action("Edit", "Mail", new { id = model.MailId, area = "" })" class="modal-link"><i class="fa fa-pencil-square-o" aria-hidden="true">&nbsp;</i><span class="hidden-xs hidden-sm">Editar</span></a>);
+                                                                                @Html.Raw("<span id=\"td" + @model.MailId + "\"><button type=\"submit\" class=\"btn btn-xs btn-success\" onclick=\"ChangeStateReloadPage(" + @model.MailId + ", " + @model.Enabled.ToString().ToLower() + ", '" + @Url.Action("ChangeState", "Mail") + "');\"><i class=\"fa fa-check-circle-o\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Habilitado</span></button></span>")
+                                                                                : @Html.Raw("<span id=\"td" + @model.MailId + "\"><button type=\"submit\" class=\"btn btn-xs btn-secondary\" onclick=\"ChangeStateReloadPage(" + @model.MailId + ", " + @model.Enabled.ToString().ToLower() + ", '" + @Url.Action("ChangeState", "Mail") + "');\"><i class=\"fa fa-minus-circle\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Deshabilitado</span></button></span>"))
+                                       .Filterable(true).SetWidth(160).Titled("Estado");
+                                columns.Add().SetWidth(200).Css("text-right").Encoded(false).Sanitized(false).RenderValueAs(model => @<a href="@Url.Action("Edit", "Mail", new { id = model.MailId, area = "" })" class="modal-link"><i class="fa fa-pencil-square-o" aria-hidden="true">&nbsp;</i><span class="d-none d-md-inline-block">Editar</span></a>);
                             }
                        ).WithPaging(10).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
         </div>

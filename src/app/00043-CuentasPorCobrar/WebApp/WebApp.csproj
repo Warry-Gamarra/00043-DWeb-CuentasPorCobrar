@@ -153,6 +153,11 @@
     <Content Include="Assets\application\js\login.js" />
     <Content Include="Assets\application\js\main.js" />
     <Content Include="Assets\application\js\sidebar.js" />
+    <Content Include="Assets\bootstrap-datepicker\css\bootstrap-datepicker.css" />
+    <Content Include="Assets\bootstrap-datepicker\css\bootstrap-timepicker.css" />
+    <Content Include="Assets\bootstrap-datepicker\js\bootstrap-datepicker.es.js" />
+    <Content Include="Assets\bootstrap-datepicker\js\bootstrap-datepicker.js" />
+    <Content Include="Assets\bootstrap-datepicker\js\bootstrap-timepicker.js" />
     <Content Include="Assets\bootstrap\css\bootstrap.min.css" />
     <Content Include="Assets\bootstrap\js\bootstrap.min.js" />
     <Content Include="Assets\bootstrap\js\popper.min.js" />
@@ -179,17 +184,15 @@
     <Content Include="Assets\jquery\jquery.validate.js" />
     <Content Include="Assets\jquery\jquery.validate.unobtrusive.js" />
     <Content Include="Assets\grid-mvc\css\Gridmvc.css" />
-    <Content Include="Content\Gridmvc.css" />
+    <Content Include="Assets\toastr\css\toastr.min.css" />
+    <Content Include="Assets\toastr\js\toastr.config.js" />
+    <Content Include="Assets\toastr\js\toastr.min.js" />
     <Content Include="Global.asax" />
     <Content Include="Assets\jquery\modernizr-2.6.2.js" />
     <Content Include="Assets\grid-mvc\js\gridmvc.js" />
     <Content Include="Assets\grid-mvc\js\gridmvc.lang.fr.js" />
     <Content Include="Assets\grid-mvc\js\gridmvc.lang.ru.js" />
     <Content Include="Assets\grid-mvc\js\gridmvc.min.js" />
-    <Content Include="Scripts\gridmvc.js" />
-    <Content Include="Scripts\gridmvc.lang.fr.js" />
-    <Content Include="Scripts\gridmvc.lang.ru.js" />
-    <Content Include="Scripts\gridmvc.min.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -200,6 +203,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AnnexeController.cs" />
+    <Compile Include="Controllers\EstudiantesController.cs" />
     <Compile Include="Controllers\HelpCenterController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MailController.cs" />
@@ -210,6 +214,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AnnexeModel.cs" />
+    <Compile Include="Models\SelectModels.cs" />
     <Compile Include="Models\PeriodoModel.cs" />
     <Compile Include="Models\UsersModel.cs" />
     <Compile Include="Models\CorreoAplicacionModel.cs" />
@@ -220,6 +225,7 @@
     <Compile Include="ViewModels\CorreoAplicacionViewModel.cs" />
     <Compile Include="ViewModels\ObligacionViewModel.cs" />
     <Compile Include="ViewModels\PeriodoViewModel.cs" />
+    <Compile Include="ViewModels\SelectViewModel.cs" />
     <Compile Include="ViewModels\UserManualViewModel.cs" />
     <Compile Include="ViewModels\UsersViewModels.cs" />
   </ItemGroup>
@@ -235,6 +241,7 @@
     <Content Include="Assets\font-awesome\fonts\fontawesome-webfont.woff2" />
     <Content Include="Assets\font-awesome\fonts\FontAwesome.otf" />
     <Content Include="Grid.mvc.readme" />
+    <Content Include="Assets\toastr\js\toastr.js.map" />
     <None Include="packages.config" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
@@ -266,6 +273,11 @@
     <Content Include="Views\Obligaciones\Index.cshtml" />
     <Content Include="Views\Obligaciones\Create.cshtml" />
     <Content Include="Views\Obligaciones\Edit.cshtml" />
+    <Content Include="Views\Estudiantes\ArchivosImportados.cshtml" />
+    <Content Include="Views\Estudiantes\ImportacionArchivo.cshtml" />
+    <Content Include="Views\Estudiantes\_ResultadoBuscarAlumno.cshtml" />
+    <Content Include="Views\Estudiantes\_ImportacionArchivos.cshtml" />
+    <Content Include="Views\Periodos\Ejemplo.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

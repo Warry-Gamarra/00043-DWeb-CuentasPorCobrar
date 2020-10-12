@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Domain.Services
 {
-    public interface IAnnexe
+    public interface IRoles
     {
-        List<DocumentType> GetDocumentTypes();
+        List<RolAplicacion> Find();
     }
 }

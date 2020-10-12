@@ -1,0 +1,108 @@
+﻿@model BLL_RSE_LIB.ViewModels.PeriodoFaseProcesoViewModel
+
+@Scripts.Render("~/bundles/jqueryval")
+<div class="modal-header bg-dark-primary" style="border-radius: 5px 5px 0px 0px">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title text-center">@ViewBag.Title</h4>
+</div>
+@using (Ajax.BeginForm("RegisterPerFase", "Configuracion", new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "div_msg", OnBegin = "Load", OnComplete = "Stop" }))
+{
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+                @Html.AntiForgeryToken()
+
+                <fieldset class="col-md-12 col-sm-12">
+                    <legend>Periodo - Fase</legend>
+                    @Html.HiddenFor(model=>model.I_PerFaseID)
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.I_PerProcID, new { @class = "col-md-3 col-sm-3" })
+                        <div class="col-md-7 col-sm-7">
+                            @Html.DropDownListFor(m => m.I_PerProcID, ViewBag.Periodos as SelectList, " [ -- Seleccione un periodo --] ", new { @class = "form-control"})
+                            <p class="text-danger col-md-12">@Html.ValidationMessageFor(m => m.I_PerProcID)</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.I_FaseProcID, new { @class = "col-md-3 col-sm-3" })
+                        <div class="col-md-7 col-sm-7">
+                            @Html.DropDownListFor(m => m.I_FaseProcID, ViewBag.Fases as SelectList, " [ -- Seleccione una fase -- ] ", new { @class = "form-control" })
+                            <p class="text-danger col-md-12">@Html.ValidationMessageFor(m=>m.I_FaseProcID)</p>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12 col-sm-12">
+                        <div id="datepicker">
+                            <div class="input-daterange">
+                                <div class="form-group col-md-6 col-sm-6">
+                                    @Html.LabelFor(m => m.D_FaseFecIni, new { @class = "col-md-12 col-sm-12"})
+                                    <div class="input-group">
+                                        @*@Html.TextBoxFor(m => m.D_FaseFecIni, new { id = "D_FaseFecIni", @class = "form-control dateConfig", @placeholder = "Fecha inicio" })*@
+                                        <input type="text" name="D_FaseFecIni" id="D_FaseFecIni" class="form-control dateConfig" placeholder="Fecha inicio" value="@Model.D_FaseFecIni.Value.ToShortDateString()" required />
+                                        <span class="input-group-addon"><i class="fa fa-calendar-o"></i></span>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6 col-sm-6">
+                                    @Html.LabelFor(m => m.D_FaseFecFin, new { @class = "col-md-12 col-sm-12"})
+                                    <div class="input-group">
+                                        @*@Html.TextBoxFor(m => m.D_FaseFecFin, new { id = "D_FaseFecFin", @class = "form-control dateConfig", @placeholder = "Fecha termino" })*@
+                                        <input type="text" name="D_FaseFecFin" id="D_FaseFecFin" class="form-control dateConfig" placeholder="Fecha termino" value="@Model.D_FaseFecFin.Value.ToShortDateString()" required />
+                                        <span class="input-group-addon"><i class="fa fa-calendar-o"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-offset-2 col-sm-12">
+                        @Html.LabelFor(m => m.I_FasePlazoDias, new { @class = "col-md-4 col-sm-12"})
+                        <div class="col-md-4 col-sm-12">
+                            @Html.TextBoxFor(m => m.I_FasePlazoDias, new { id = "I_FasePlazoDias", @class = "form-control", @readonly = "readonly" })
+                            <p class="text-danger col-md-12">@Html.ValidationMessageFor(m=>m.I_FasePlazoDias)</p>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal-footer" id="div_msg">
+        <div class="col-md-12" style="display:none" id="loading">
+            @if (Model.I_PerFaseID.HasValue)
+            {
+                <h6>Actualizando los datos...</h6>
+            }
+            else
+            {
+                <h6>Creando el periodo...</h6>
+            }
+            <div class="progress">
+                <div class="indeterminate"></div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary" id="btnSubmit"><i class="fa fa-save"></i>&nbsp;Guardar</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o">&nbsp;</i>Cancelar</button>
+    </div>
+}
+
+<script>
+    $('#datepicker .input-daterange').datepicker({
+        todayBtn: 'linked',
+        language: 'es',
+        format: 'dd/MM/yyyy',
+        autoclose: true,
+        weekStart: 0,
+        orientation: 'top left',
+        // daysOfWeekDisabled: '0,6',
+        calendarWeeks: true
+    }).on('hide', function (e) {
+        e.stopPropagation();
+    });
+
+    $('.dateConfig').datepicker().on('changeDate', function (e) {
+        if ($('#D_FaseFecIni').val() != null && $('#D_FaseFecFin').val() != null) {
+            var FechIni = $('#D_FaseFecIni').datepicker('getDate');
+            var FechFin = $('#D_FaseFecFin').datepicker('getDate');
+            var days = (FechFin - FechIni) / 1000 / 60 / 60 / 24;
+
+            $('#I_FasePlazoDias').val(days);
+        }
+    });
+</script>
