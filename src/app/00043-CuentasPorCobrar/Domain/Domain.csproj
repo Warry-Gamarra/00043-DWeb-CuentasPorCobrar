@@ -71,9 +71,12 @@
     <Compile Include="DTO\Options.cs" />
     <Compile Include="Entities\AccountNumber.cs" />
     <Compile Include="Entities\CuentaDeposito.cs" />
+    <Compile Include="Entities\CuotaPago.cs" />
     <Compile Include="Entities\FinancialEntity.cs" />
     <Compile Include="Entities\CorreoAplicacion.cs" />
     <Compile Include="Entities\Periodo.cs" />
+    <Compile Include="Entities\PeriodoEntity.cs" />
+    <Compile Include="Entities\Periodo_CuentaDeposito.cs" />
     <Compile Include="Entities\Persona.cs" />
     <Compile Include="Entities\ResolutionType.cs" />
     <Compile Include="Entities\DocumentType.cs" />

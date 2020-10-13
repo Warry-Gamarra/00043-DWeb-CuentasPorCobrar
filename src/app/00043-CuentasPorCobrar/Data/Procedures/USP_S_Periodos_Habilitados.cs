@@ -10,39 +10,33 @@ using System.Threading.Tasks;
 
 namespace Data.Procedures
 {
-    public class USP_S_Periodos
+    public class USP_S_Periodos_Habilitados
     {
         public int I_PeriodoID { get; set; }
         public string T_CuotaPagoDesc { get; set; }
-        public int N_Anio { get; set; }
+        public short N_Anio { get; set; }
         public DateTime D_FecIni { get; set; }
         public DateTime D_FecFin { get; set; }
 
-        public static List<USP_S_Periodos> Execute()
+        public static List<USP_S_Periodos_Habilitados> Execute()
         {
-            List<USP_S_Periodos> lista;
-            string s_command;
+            List<USP_S_Periodos_Habilitados> result;
 
             try
             {
-                s_command = @"EXEC USP_S_Periodos;";
+                string s_command = @"USP_S_Periodos_Habilitados";
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    lista = new List<USP_S_Periodos>();
-
-                    foreach (var item in _dbConnection.Query<USP_S_Periodos>(s_command, commandType: CommandType.StoredProcedure))
-                    {
-                        lista.Add(item);
-                    }
+                    result = _dbConnection.Query<USP_S_Periodos_Habilitados>(s_command, commandType: CommandType.StoredProcedure).ToList(); 
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
 
-            return lista;
+            return result;
         }
     }
 }

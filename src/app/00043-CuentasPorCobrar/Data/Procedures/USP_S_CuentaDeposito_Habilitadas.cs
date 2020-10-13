@@ -10,34 +10,28 @@ using System.Threading.Tasks;
 
 namespace Data.Procedures
 {
-    public class USP_S_CuentaDeposito
+    public class USP_S_CuentaDeposito_Habilitadas
     {
         public int I_CtaDepID { get; set; }
         public string C_NumeroCuenta { get; set; }
         public string T_EntidadDesc { get; set; }
 
-        public static List<USP_S_CuentaDeposito> Execute()
+        public static List<USP_S_CuentaDeposito_Habilitadas> Execute()
         {
-            List<USP_S_CuentaDeposito> lista;
-            string s_command;
-
+            List<USP_S_CuentaDeposito_Habilitadas> lista;
+            
             try
             {
-                s_command = @"EXEC USP_S_CuentaDeposito;";
+                string s_command = @"USP_S_CuentaDeposito_Habilitada";
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    lista = new List<USP_S_CuentaDeposito>();
-
-                    foreach (var item in _dbConnection.Query<USP_S_CuentaDeposito>(s_command, commandType: CommandType.StoredProcedure))
-                    {
-                        lista.Add(item);
-                    }
+                    lista = _dbConnection.Query<USP_S_CuentaDeposito_Habilitadas>(s_command, commandType: CommandType.StoredProcedure).ToList();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
 
             return lista;

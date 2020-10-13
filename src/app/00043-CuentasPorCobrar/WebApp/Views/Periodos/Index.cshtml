@@ -1,57 +1,44 @@
 ﻿@model IEnumerable<WebApp.ViewModels.PeriodoViewModel>
 
-@{
-    ViewBag.Title = "Index";
-}
+@using GridMvc.Html
 
-<h2>Periodos Académicos(Descripción de Cuota de Pago)</h2>
+<div class="container-fluid">
+    <div class="col-12">
+        <section class="content-header">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb float-right small d-none d-sm-inline-flex">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")"><i class="fa fa-home">&nbsp;</i>Inicio</a></li>
+                    <li class="breadcrumb-item"><span><i class="fa fa-wrench">&nbsp;</i>Mantenimiento </span></li>
+                    <li class="breadcrumb-item active"><span><i class="fa fa-envelope">&nbsp;</i>@ViewBag.Title </span></li>
+                </ol>
+            </nav>
+            <h1 class="">@ViewBag.Title <small></small></h1>
+        </section>
+    </div>
+    <br />
 
-<p>
-    @Html.ActionLink("Nuevo registro", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Descripcion)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Nro_Cuenta_Corriente)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Codigo_Banco)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Fecha_Vencimiento)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Prioridad)
-        </th>
-        <th></th>
-    </tr>
+    <div class="col-12">
+        <a href="@Url.Action("Create", "Periodos")" class="btn btn-primary pull-right modal-link">
+            <i class="fa fa-envelope"></i> Nuevo
+        </a>
 
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Descripcion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nro_Cuenta_Corriente)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Codigo_Banco)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Fecha_Vencimiento)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Prioridad)
-            </td>
-            <td>
-                @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Eliminar", "Delete", new { id = item.Id })
-            </td>
-        </tr>
-    }
+        <p class="h3"><small>Desc. Cuota de pago</small></p>
+        <br />
 
-</table>
+        <br />
+        <div class="table-responsive" style="min-height:300px">
+            @Html.Grid(Model).Columns(columns =>
+                            {
+                                columns.Add(c => c.T_CuotaPagoDesc).Titled("Descripción").Filterable(true);
+                                columns.Add(c => c.N_Anio).Titled("Año").Filterable(true);
+                                columns.Add(c => c.D_FecIni).Titled("Fecha inicio").Filterable(true);
+                                columns.Add(c => c.D_FecFin).Titled("Fecha fin").Filterable(true);
+                                columns.Add().SetWidth(200).Css("text-right").Encoded(false).Sanitized(false).
+                                    RenderValueAs(model => @<a href="@Url.Action("Edit", "Mail", new { id = model.I_PeriodoID })" class="modal-link"><i class="fa fa-pencil-square-o" aria-hidden="true">&nbsp;</i><span class="d-none d-md-inline-block">Editar</span></a>);
+                                 }
+                            ).WithPaging(10).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
+        </div>
+
+    </div>
+</div>
+

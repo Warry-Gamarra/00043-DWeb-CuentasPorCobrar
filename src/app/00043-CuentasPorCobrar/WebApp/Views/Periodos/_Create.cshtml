@@ -1,0 +1,158 @@
+﻿@model WebApp.ViewModels.NuevoPeriodoViewModel
+
+@*@{
+        ViewBag.Title = "Crear";
+    }
+
+    <h2>Crear</h2>
+
+
+    @using (Ajax.BeginForm("Create", "Periodos", new { area = "" }, new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "div_msg", OnBegin = "Load", OnComplete = "Stop" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            <h4>Periodo Académico</h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="form-group">
+                <label class="control-label col-md-2" for="Cuota_Pago_ID">Descripción</label>
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.Cuota_Pago_ID, new SelectList(ViewBag.ListaCuotaPago, "I_CuotaPagoID", "T_CuotaPagoDesc"), "", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Cuota_Pago_ID, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2" for="Anio">Año</label>
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Anio, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Anio, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2" for="Fecha_Inicio">Fecha inicio</label>
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Fecha_Inicio, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Fecha_Inicio, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2" for="Fecha_Vencimiento">Fecha vencimiento</label>
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Fecha_Vencimiento, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Fecha_Vencimiento, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer" id="div_msg">
+            <div class="col-md-12" style="display:none" id="loading">
+                <h6>Actualizando los datos...</h6>
+
+                <div class="progress">
+                    <div class="indeterminate"></div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div>
+        @Html.ActionLink("Back to List", "Index")
+    </div>
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }*@
+
+
+@Scripts.Render("~/bundles/jqueryval")
+
+<div class="modal-header bg-dark-gray" style="border-radius: .2rem .2rem 0px 0px">
+    <h5 class="modal-title text-center"><i class="fa fa-address-book">&nbsp;</i> @ViewBag.Title</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+@using (Ajax.BeginForm("Create", "Periodos", new { area = "" }, new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "div_msg", OnBegin = "Load", OnComplete = "Stop" }))
+{
+    @Html.Hidden("Submited", 0)
+    @Html.AntiForgeryToken()
+    <div class="modal-body">
+        <div class="container-fluid">
+            <fieldset>
+                <legend><i class="fa fa-address-book-o">&nbsp;</i>Datos de la cuenta</legend>
+
+                <div class="form-group row">
+                    @Html.LabelFor(model => model.I_CuotaPagoID, new { @class = "col-md-4" })
+                    <div class="col-md-8">
+                        @Html.DropDownListFor(model => model.I_CuotaPagoID, new SelectList(ViewBag.Lista_Cuota_Pago, "I_CuotaPagoID", "T_CuotaPagoDesc"), "", new { @class = "form-control" })
+                        <p class="text-danger small">@Html.ValidationMessageFor(model => model.I_CuotaPagoID)</p>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    @Html.LabelFor(model => model.N_Anio, new { @class = "col-md-4" })
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.N_Anio, new { @class = "form-control" })
+                        <p class="text-danger small">@Html.ValidationMessageFor(model => model.N_Anio)</p>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    @Html.LabelFor(model => model.D_FecIni, new { @class = "col-md-4" })
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.D_FecIni, new { @class = "form-control" })
+                        <p class="text-danger small">@Html.ValidationMessageFor(model => model.D_FecIni)</p>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    @Html.LabelFor(model => model.D_FecFin, new { @class = "col-md-4" })
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.D_FecFin, new { @class = "form-control" })
+                        <p class="text-danger small">@Html.ValidationMessageFor(model => model.D_FecFin)</p>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+
+    </div>
+
+    <div class="modal-footer" id="div_msg">
+        <div class="col-md-12" style="display:none" id="loading">
+            <h6>Actualizando los datos...</h6>
+
+            <div class="progress">
+                <div class="indeterminate"></div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="btnsubmit"><i class="fa fa-save"></i>&nbsp;Guardar</button>
+        <button type="button" class="btn btn-secondary" id="btnCancel" data-dismiss="modal"><i class="fa fa-times-circle-o">&nbsp;</i>Cancelar</button>
+    </div>
+}
+
+@section scripts  {
+    <script>
+        $(document).on('ready', function () {
+            $('#btnsubmit').removeClass('disabled');
+        });
+
+        $("form").submit(function () {
+            var submited = parseInt($("#Submited").val());
+            $(this).submit(function () {
+                if (submited > 0) {
+                    return false;
+                }
+                return true;
+            });
+            $("#Submited").val(submited + 1);
+            return true;
+        });
+    </script>
+}
