@@ -168,8 +168,8 @@ CREATE PROCEDURE dbo.USP_S_CuentaDeposito
 AS
 BEGIN
 	SET NOCOUNT ON;
-	SELECT cd.I_CtaDepID, cd.C_NumeroCuenta, ef.T_EntidadDesc FROM dbo.TC_CuentaDeposito cd
-	INNER JOIN dbo.TC_EntidadFinanciera ef ON ef.C_EntidadCod = cd.C_EntidadCod
+	SELECT cd.I_CtaDepositoID, cd.C_NumeroCuenta, ef.T_EntidadDesc FROM dbo.TC_CuentaDeposito cd
+	INNER JOIN dbo.TC_EntidadFinanciera ef ON ef.I_EntidadFinanID = cd.I_EntidadFinanID
 	WHERE ef.B_Habilitado = 1 AND cd.B_Habilitado = 1
 END
 GO
@@ -182,8 +182,8 @@ CREATE PROCEDURE dbo.USP_S_Periodos
 AS
 BEGIN
 	SET NOCOUNT ON;
-	SELECT p.I_PeriodoID, cp.T_CuotaPagoDesc, p.N_Anio, p.D_FecIni, p.D_FecFin FROM dbo.TC_Periodo p
-	INNER JOIN dbo.TC_CuotaPago cp ON p.I_CuotaPagoID = cp.I_CuotaPagoID
+	SELECT p.I_PeriodoID, cp.T_TipoPerDesc, p.I_Anio, p.D_FecVencto FROM dbo.TC_Periodo p
+	INNER JOIN dbo.TC_TipoPeriodo cp ON p.I_TipoPeriodoID = cp.I_TipoPeriodoID
 	WHERE p.B_Habilitado = 1
 END
 GO
@@ -198,7 +198,7 @@ CREATE PROCEDURE dbo.USP_S_DependenciaUNFV
 AS
 BEGIN
 	SET NOCOUNT ON;
-	SELECT d.C_DepCod FROM dbo.TC_DependenciaUNFV d
+	SELECT d.I_DependenciaID, d.T_DependDesc FROM dbo.TC_DependenciaUNFV d
 END
 GO
 
@@ -221,8 +221,8 @@ AS
 BEGIN
 	SET NOCOUNT ON
   	BEGIN TRY
-		INSERT dbo.TC_Periodo(I_CuotaPagoID, N_Anio, D_FecIni, D_FecFin, B_Habilitado)
-		VALUES(@I_CuotaPagoID, @N_Anio, @D_FecIni, @D_FecFin, 1)
+		INSERT dbo.TC_Periodo(I_TipoPeriodoID, I_Anio, D_FecVencto, B_Habilitado)
+		VALUES(@I_CuotaPagoID, @N_Anio, @D_FecFin, 1)
 		
 		SET @I_PeriodoID = SCOPE_IDENTITY()
 		SET @B_Result = 1
@@ -258,10 +258,9 @@ BEGIN
 	SET NOCOUNT ON
   	BEGIN TRY
 		UPDATE dbo.TC_Periodo SET
-			I_CuotaPagoID = @I_CuotaPagoID, 
-			N_Anio = @N_Anio, 
-			D_FecIni = @D_FecIni, 
-			D_FecFin = @D_FecFin, 
+			I_TipoPeriodoID = @I_CuotaPagoID, 
+			I_Anio = @N_Anio, 
+			D_FecVencto = @D_FecFin, 
 			B_Habilitado = @B_Habilitado
 		WHERE I_PeriodoID = @I_PeriodoID
 		
@@ -292,7 +291,7 @@ AS
 BEGIN
 	SET NOCOUNT ON
   	BEGIN TRY
-		INSERT dbo.TI_Periodo_CuentaDeposito(I_CtaDepID, I_PeriodoID, C_DepCod)
+		INSERT dbo.TI_Dependencia_CtaDepo_Periodo(I_CtaDepositoID, I_PeriodoID, I_DependenciaID)
 		VALUES(@I_CtaDepID, @I_PeriodoID, @C_DepCod)
 		
 		SET @B_Result = 1
