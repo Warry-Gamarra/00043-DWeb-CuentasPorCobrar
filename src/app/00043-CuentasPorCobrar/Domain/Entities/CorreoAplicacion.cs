@@ -26,6 +26,7 @@ namespace Domain.Entities
         public CorreoAplicacion()
         {
             _correoRepository = new TS_CorreoAplicacion();
+            this.Response = new Response() { Value = true };
         }
 
         public CorreoAplicacion(TS_CorreoAplicacion table)
