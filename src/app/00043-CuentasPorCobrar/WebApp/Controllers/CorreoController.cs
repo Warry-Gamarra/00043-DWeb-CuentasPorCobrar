@@ -11,11 +11,11 @@ using WebMatrix.WebData;
 namespace WebApp.Controllers
 {
     [Route("Mantenimiento/correo-aplicacion/{action}")]
-    public class MailController : Controller
+    public class CorreoController : Controller
     {
         public readonly CorreoAplicacionModel _correoAplicacionModel;
 
-        public MailController()
+        public CorreoController()
         {
             _correoAplicacionModel = new CorreoAplicacionModel();
         }

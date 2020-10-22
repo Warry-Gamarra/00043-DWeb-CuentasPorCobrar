@@ -44,7 +44,7 @@ CREATE TABLE webpages_UsersInRoles
 	CONSTRAINT FK_Roles_UserInRoles FOREIGN KEY (RoleId) REFERENCES webpages_Roles(RoleId)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION,
-CONSTRAINT FK_Usuarios_UsersInRoles FOREIGN KEY (UserId) REFERENCES TC_Usuarios(UserId)
+	CONSTRAINT FK_Usuarios_UsersInRoles FOREIGN KEY (UserId) REFERENCES TC_Usuarios(UserId)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 )
@@ -105,7 +105,7 @@ CREATE TABLE TI_UsuarioDatosUsuario
 	CONSTRAINT FK_Usuarios_UsuarioDatosUsuario FOREIGN KEY (UserId) REFERENCES TC_Usuarios(UserId)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION,
-CONSTRAINT FK_DatosUsuario_UsuarioDatosUsuario FOREIGN KEY (I_DatosUsuarioID) REFERENCES TC_DatosUsuario(I_DatosUsuarioID)
+	CONSTRAINT FK_DatosUsuario_UsuarioDatosUsuario FOREIGN KEY (I_DatosUsuarioID) REFERENCES TC_DatosUsuario(I_DatosUsuarioID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 )
@@ -264,10 +264,10 @@ CREATE TABLE TI_Dependencia_CtaDepo_Periodo
 	CONSTRAINT FK_Periodo_DependenciaCtaPagoPeriodo FOREIGN KEY (I_PeriodoID) REFERENCES TC_Periodo(I_PeriodoID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION,
-CONSTRAINT FK_DependenciaUNFV_DependenciaCtaDepoPeriodo FOREIGN KEY (I_DependenciaID) REFERENCES TC_DependenciaUNFV(I_DependenciaID)
+	CONSTRAINT FK_DependenciaUNFV_DependenciaCtaDepoPeriodo FOREIGN KEY (I_DependenciaID) REFERENCES TC_DependenciaUNFV(I_DependenciaID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION,
-CONSTRAINT FK_CuentaDeposito_DependenciaCtaDepoPeriodo FOREIGN KEY (I_CtaDepositoID) REFERENCES TC_CuentaDeposito(I_CtaDepositoID)
+	CONSTRAINT FK_CuentaDeposito_DependenciaCtaDepoPeriodo FOREIGN KEY (I_CtaDepositoID) REFERENCES TC_CuentaDeposito(I_CtaDepositoID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 )
@@ -308,7 +308,7 @@ CREATE TABLE TI_TipoArchivo_EntidadFinanciera
 	CONSTRAINT FK_EntidadFinanciera_TipoArchivoEntidadFinanciera FOREIGN KEY (I_EntidadFinanID) REFERENCES TC_EntidadFinanciera(I_EntidadFinanID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION,
-CONSTRAINT FK_TipoArchivo_TipoArchivoEntidadFinanciera FOREIGN KEY (I_TipoArchivoID) REFERENCES TC_TipoArchivo(I_TipoArchivoID)
+	CONSTRAINT FK_TipoArchivo_TipoArchivoEntidadFinanciera FOREIGN KEY (I_TipoArchivoID) REFERENCES TC_TipoArchivo(I_TipoArchivoID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 )
@@ -375,7 +375,7 @@ CREATE TABLE TC_CuentaDeposito_TipoPeriodo
 	CONSTRAINT FK_CuentaDeposito_CuentaDepositoTipoPeriodo FOREIGN KEY (I_CtaDepositoID) REFERENCES TC_CuentaDeposito(I_CtaDepositoID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION,
-CONSTRAINT FK_TipoPeriodo_CuentaDepositoTipoPeriodo FOREIGN KEY (I_TipoPeriodoID) REFERENCES TC_TipoPeriodo(I_TipoPeriodoID)
+	CONSTRAINT FK_TipoPeriodo_CuentaDepositoTipoPeriodo FOREIGN KEY (I_TipoPeriodoID) REFERENCES TC_TipoPeriodo(I_TipoPeriodoID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 )
@@ -443,7 +443,7 @@ CREATE TABLE TI_ConceptoPago_Periodo
 	D_FecMod             datetime  NULL ,
 	CONSTRAINT PK_ConceptoPago_Periodo PRIMARY KEY  CLUSTERED (I_ConcPagPerID ASC),
 	CONSTRAINT FK_ConceptoPago_Periodo FOREIGN KEY (I_ConceptoID) REFERENCES TC_ConceptoPago(I_ConceptoID),
-CONSTRAINT FK_Periodo_ConceptoPagoPeriodo FOREIGN KEY (I_PeriodoID) REFERENCES TC_Periodo(I_PeriodoID)
+	CONSTRAINT FK_Periodo_ConceptoPagoPeriodo FOREIGN KEY (I_PeriodoID) REFERENCES TC_Periodo(I_PeriodoID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 )

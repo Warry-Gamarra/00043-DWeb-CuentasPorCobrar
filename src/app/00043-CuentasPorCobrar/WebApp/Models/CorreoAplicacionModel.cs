@@ -45,7 +45,7 @@ namespace WebApp.Models
 
         public Response Save(CorreoAplicacionViewModel correoAplicacionViewModel, int currentUserId)
         {
-            CorreoAplicacion correoAplicacion = new CorreoAplicacion
+            CorreoAplicacion correoAplicacion = new CorreoAplicacion()
             {
                 Id = correoAplicacionViewModel.MailId.HasValue ? correoAplicacionViewModel.MailId.Value : 0,
                 Address = correoAplicacionViewModel.MailAddress,
