@@ -614,3 +614,104 @@ BEGIN
 	END CATCH
 END
 GO
+
+
+
+/*-------------------------- */
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_GrabarEntidadFinanciera')
+	DROP PROCEDURE [dbo].[USP_I_GrabarEntidadFinanciera]
+GO
+
+CREATE PROCEDURE [dbo].[USP_I_GrabarEntidadFinanciera]
+	 @I_EntidadFinanID	int
+	,@T_EntidadDesc		varchar(250)
+	,@B_Habilitado		bit
+	,@D_FecCre			datetime
+	,@CurrentUserId		int
+
+	,@B_Result bit OUTPUT
+	,@T_Message nvarchar(4000) OUTPUT	
+AS
+BEGIN
+  SET NOCOUNT ON
+  	BEGIN TRY
+		INSERT INTO TC_EntidadFinanciera(T_EntidadDesc, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
+								VALUES	 (@T_EntidadDesc, @B_Habilitado, 0, @CurrentUserId, @D_FecCre)
+
+		SET @B_Result = 1
+		SET @T_Message = 'Nuevo registro agregado.'
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+
+END
+GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_GrabarEntidadFinanciera')
+	DROP PROCEDURE [dbo].[USP_U_GrabarEntidadFinanciera]
+GO
+
+CREATE PROCEDURE [dbo].[USP_U_GrabarEntidadFinanciera]
+	 @I_EntidadFinanID	int
+	,@T_EntidadDesc		varchar(250)
+	,@B_Habilitado		bit
+	,@D_FecMod			datetime
+	,@CurrentUserId		int
+
+	,@B_Result bit OUTPUT
+	,@T_Message nvarchar(4000) OUTPUT	
+AS
+BEGIN
+  SET NOCOUNT ON
+  	BEGIN TRY
+	UPDATE	TC_EntidadFinanciera 
+		SET	T_EntidadDesc = @T_EntidadDesc
+			, B_Habilitado = @B_Habilitado
+		WHERE I_EntidadFinanID = @I_EntidadFinanID
+			
+		SET @B_Result = 1
+		SET @T_Message = 'Actualización de datos correcta'
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+
+END
+GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarEstadoCuentaCorreo')
+	DROP PROCEDURE [dbo].[USP_U_ActualizarEstadoCuentaCorreo]
+GO
+
+CREATE PROCEDURE [dbo].[USP_U_ActualizarEstadoCuentaCorreo]
+	 @I_EntidadFinanID	int
+	,@B_Habilitado		bit
+	,@D_FecMod			datetime
+	,@CurrentUserId		int
+
+	,@B_Result bit OUTPUT
+	,@T_Message nvarchar(4000) OUTPUT	
+AS
+BEGIN
+  SET NOCOUNT ON
+  	BEGIN TRY
+		UPDATE	TC_EntidadFinanciera 
+		SET		B_Habilitado = @B_Habilitado,
+				D_FecMod = @D_FecMod
+				WHERE	I_EntidadFinanID <> @I_EntidadFinanID
+			
+		SET @B_Result = 1
+		SET @T_Message = 'Actualización de datos de correo correcta'
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+END
+GO

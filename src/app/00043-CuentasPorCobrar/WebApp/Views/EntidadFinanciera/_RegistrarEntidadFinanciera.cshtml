@@ -1,0 +1,71 @@
+﻿
+@model WebApp.ViewModels.EntidadFinancieraRegistroViewModel
+
+@Scripts.Render("~/bundles/jqueryval")
+
+<div class="modal-header bg-dark-gray" style="border-radius: .2rem .2rem 0px 0px">
+    <h5 class="modal-title text-center"><i class="fa fa-bank">&nbsp;</i> @ViewBag.Title</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+@using (Ajax.BeginForm("Save", "EntidadFinanciera", new { area = "" }, new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "div_msg", OnBegin = "Load", OnComplete = "Stop" }))
+{
+    @Html.Hidden("Submited", 0)
+    @Html.AntiForgeryToken()
+    <div class="modal-body">
+        <div class="container-fluid">
+            @Html.HiddenFor(model => model.Id)
+
+            <div class="form-group row">
+                @Html.LabelFor(model => model.NombreEntidad, new { @class = "col-md-4 control-label" })
+                <div class="col-md-8">
+                    @Html.TextBoxFor(model => model.NombreEntidad, new { @class = "form-control" })
+                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.NombreEntidad)</p>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-12 text-right">
+                    <div class="form-check">
+                        @Html.CheckBoxFor(model => model.Habilitado, new { @class = "form-check-input" })
+                        <label class="form-check-label" for="Habilitado">
+                            Habilitado
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal-footer" id="div_msg">
+        <div class="col-md-12" style="display:none" id="loading">
+            <h6>Actualizando los datos...</h6>
+
+            <div class="progress">
+                <div class="indeterminate"></div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="btnsubmit"><i class="fa fa-save"></i>&nbsp;Guardar</button>
+        <button type="button" class="btn btn-secondary" id="btnCancel" data-dismiss="modal"><i class="fa fa-times-circle-o">&nbsp;</i>Cancelar</button>
+    </div>
+}
+
+@section scripts  {
+    <script>
+        $(document).on('ready', function () {
+            $('#btnsubmit').removeClass('disabled');
+        });
+
+        $("form").submit(function () {
+            var submited = parseInt($("#Submited").val());
+            $(this).submit(function () {
+                if (submited > 0) {
+                    return false;
+                }
+                return true;
+            });
+            $("#Submited").val(submited + 1);
+            return true;
+        });
+    </script>
+}
