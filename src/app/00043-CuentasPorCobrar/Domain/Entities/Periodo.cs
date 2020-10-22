@@ -9,10 +9,10 @@ namespace Domain.Entities
     public class Periodo
     {
         public int I_PeriodoID { get; set; }
-        public int Cuota_Pago_ID { get; set; }
-        public string T_CuotaPagoDesc { get; set; }
-        public short N_Anio { get; set; }
-        public DateTime D_FecIni { get; set; }
-        public DateTime D_FecFin { get; set; }
+        public int I_TipoPeriodoID { get; set; }
+        public string T_TipoPerDesc { get; set; }
+        public short? I_Anio { get; set; }
+        public DateTime? D_FecVencto { get; set; }
+        public short? I_Prioridad { get; set; }
     }
 }

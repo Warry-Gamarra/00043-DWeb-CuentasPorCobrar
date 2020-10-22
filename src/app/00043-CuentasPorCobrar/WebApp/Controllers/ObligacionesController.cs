@@ -35,7 +35,7 @@ namespace WebApp.Controllers
         {
             ViewBag.lista_periodos = periodoModel.Listar_Periodos_Habilitados();
 
-            ViewBag.Listar_Anios = General.Listar_Anios();
+            //ViewBag.Listar_Anios = General.Listar_Anios();
 
             ViewBag.Listar_Periodos_Academicos = General.Listar_Periodos_Academicos();
 

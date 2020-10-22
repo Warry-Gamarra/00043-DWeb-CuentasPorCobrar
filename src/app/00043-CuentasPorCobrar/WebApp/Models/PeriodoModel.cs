@@ -18,14 +18,19 @@ namespace WebApp.Models
             periodoService = new PeriodoService();
         }
 
-        public List<CuotaPago> Listar_Cuota_Pago_Habilitadas()
+        public List<CuotaPago> Listar_Tipo_Periodo_Habilitados()
         {
-            return periodoService.Listar_Cuota_Pago_Habilitadas();
+            return periodoService.Listar_Tipo_Periodo_Habilitados();
         }
 
-        public List<CuentaDeposito> Listar_Cuenta_Deposito_Habilitadas()
+        public int Obtener_Prioridad_Tipo_Periodo(int I_TipoPeriodoID)
         {
-            return periodoService.Listar_Cuenta_Deposito_Habilitadas();
+            return periodoService.Obtener_Prioridad_Tipo_Periodo(I_TipoPeriodoID);
+        }
+
+        public List<CuentaDeposito> Listar_Cuenta_Deposito_Habilitadas(int I_TipoPeriodoID)
+        {
+            return periodoService.Listar_Cuenta_Deposito_Habilitadas(I_TipoPeriodoID);
         }
 
         public List<PeriodoViewModel> Listar_Periodos_Habilitados()
@@ -39,42 +44,64 @@ namespace WebApp.Models
                 result = lista.Select(x => new PeriodoViewModel()
                 {
                     I_PeriodoID = x.I_PeriodoID,
-                    T_CuotaPagoDesc = x.T_CuotaPagoDesc,
-                    N_Anio = x.N_Anio,
-                    D_FecIni = x.D_FecIni,
-                    D_FecFin = x.D_FecFin
+                    T_TipoPerDesc = x.T_TipoPerDesc,
+                    I_Anio = x.I_Anio,
+                    D_FecVencto = x.D_FecVencto,
+                    I_Prioridad = x.I_Prioridad
                 }).ToList();
             }
 
             return result;
         }
 
-        public Response Grabar_Periodo(NuevoPeriodoViewModel model)
+        public Response Grabar_Periodo(MantenimientoPeriodoViewModel model, int currentUserId)
         {
-            var periodo  = new PeriodoEntity()
+            PeriodoEntity periodo;
+
+            var saveOption = (!model.I_PeriodoID.HasValue) ? SaveOption.Insert : SaveOption.Update;
+
+            periodo  = new PeriodoEntity()
             {
-                I_CuotaPagoID = model.I_CuotaPagoID,
-                N_Anio = model.N_Anio,
-                D_FecIni = model.D_FecIni,
-                D_FecFin = model.D_FecFin
+                I_PeriodoID = model.I_PeriodoID.GetValueOrDefault(),
+                I_TipoPeriodoID = model.I_TipoPeriodoID,
+                I_Anio = model.I_Anio,
+                D_FecVencto = model.D_FecVencto,
+                I_Prioridad = model.I_Prioridad,
+                B_Habilitado = model.B_Habilitado.HasValue ? model.B_Habilitado.GetValueOrDefault() : true,
+                I_UsuarioCre = currentUserId,
+                I_UsuarioMod = currentUserId
             };
 
-            return periodoService.Grabar_Periodo(periodo);
+            return periodoService.Grabar_Periodo(periodo, saveOption);
         }
 
-        public Response Actualizar_Periodo(EdicionPeriodoViewModel model)
+        public MantenimientoPeriodoViewModel Obtener_Periodo(int I_PeriodoID)
         {
-            var periodo = new PeriodoEntity()
+            var periodo = periodoService.Obtener_Periodo(I_PeriodoID);
+
+            var model = new MantenimientoPeriodoViewModel()
             {
-                I_PeriodoID = model.I_PeriodoID,
-                I_CuotaPagoID = model.I_CuotaPagoID,
-                N_Anio = model.N_Anio,
-                D_FecIni = model.D_FecIni,
-                D_FecFin = model.D_FecFin,
-                B_Habilitado = model.B_Habilitado
+                I_PeriodoID = periodo.I_PeriodoID,
+                I_TipoPeriodoID = periodo.I_TipoPeriodoID,
+                I_Anio = periodo.I_Anio,
+                D_FecVencto = periodo.D_FecVencto,
+                I_Prioridad = periodo.I_Prioridad,
+                B_Habilitado = periodo.B_Habilitado
             };
 
-            return periodoService.Grabar_Periodo(periodo);
+            return model;
+        }
+
+        public List<short> Listar_Anios()
+        {
+            var lista = new List<short>();
+
+            for (int i = DateTime.Now.Year + 3; 1963 < i; i--)
+            {
+                lista.Add((short)i);
+            }
+
+            return lista;
         }
     }
 }

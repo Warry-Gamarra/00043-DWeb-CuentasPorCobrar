@@ -56,7 +56,7 @@ namespace WebApp.Controllers
             //Creamos el usuario
             if (!WebSecurity.UserExists("administrador"))
             {
-                WebSecurity.CreateUserAndAccount("administrador", "admin@OCBU", new { B_CambiaPassword = false, B_Habilitado = true });
+                WebSecurity.CreateUserAndAccount("administrador", "admin@OCBU", new { B_CambiaPassword = false, B_Habilitado = true, B_Eliminado = false });
 
                 if (!Roles.GetRolesForUser("administrador").Contains("Administrador"))
                     Roles.AddUsersToRoles(new[] { "administrador" }, new[] { "Administrador" });

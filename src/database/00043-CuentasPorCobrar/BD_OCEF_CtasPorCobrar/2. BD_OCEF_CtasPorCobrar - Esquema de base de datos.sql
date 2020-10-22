@@ -177,7 +177,7 @@ CREATE TABLE TC_Periodo
 ( 
 	I_PeriodoID          int IDENTITY ( 1,1 ) ,
 	I_TipoPeriodoID      int  NOT NULL ,
-	I_Anio               smallint  NOT NULL ,
+	I_Anio               smallint  NULL ,
 	D_FecVencto          date  NULL ,
 	I_Prioridad          tinyint  NULL ,
 	B_Habilitado         bit  NOT NULL ,

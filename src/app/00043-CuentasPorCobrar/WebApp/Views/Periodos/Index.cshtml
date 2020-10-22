@@ -28,17 +28,54 @@
         <br />
         <div class="table-responsive" style="min-height:300px">
             @Html.Grid(Model).Columns(columns =>
-                            {
-                                columns.Add(c => c.T_CuotaPagoDesc).Titled("Descripción").Filterable(true);
-                                columns.Add(c => c.N_Anio).Titled("Año").Filterable(true);
-                                columns.Add(c => c.D_FecIni).Titled("Fecha inicio").Filterable(true);
-                                columns.Add(c => c.D_FecFin).Titled("Fecha fin").Filterable(true);
-                                columns.Add().SetWidth(200).Css("text-right").Encoded(false).Sanitized(false).
-                                    RenderValueAs(model => @<a href="@Url.Action("Edit", "Mail", new { id = model.I_PeriodoID })" class="modal-link"><i class="fa fa-pencil-square-o" aria-hidden="true">&nbsp;</i><span class="d-none d-md-inline-block">Editar</span></a>);
-                                 }
-                            ).WithPaging(10).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
+                {
+                    columns.Add(c => c.T_TipoPerDesc).Titled("Descripción").Filterable(true);
+                    columns.Add(c => c.I_Anio).Titled("Año").Filterable(true);
+                    columns.Add(c => c.D_FecVencto).Titled("Fecha inicio").Filterable(true);
+                    columns.Add(c => c.I_Prioridad).Titled("Prioridad").Filterable(true);
+                    columns.Add().SetWidth(200).Css("text-right").Encoded(false).Sanitized(false).
+                        RenderValueAs(model => @<a href="@Url.Action("Edit", "Periodos", new { id = model.I_PeriodoID })" class="modal-link"><i class="fa fa-pencil-square-o" aria-hidden="true">&nbsp;</i><span class="d-none d-md-inline-block">Editar</span></a>);
+                     }).WithPaging(10).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
         </div>
 
     </div>
 </div>
 
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(document).on('ready', function () {
+            $('#btnsubmit').removeClass('disabled');
+        });
+
+        $("form").submit(function () {
+            var submited = parseInt($("#Submited").val());
+            $(this).submit(function () {
+                if (submited > 0) {
+                    return false;
+                }
+                return true;
+            });
+            $("#Submited").val(submited + 1);
+            return true;
+
+        });
+
+        $(document).on("change", '#I_TipoPeriodoID', function (event) {
+            $.ajax({
+                url: ('/api/Service/GetPrioridad/1'),
+                type: 'GET',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                cache: false,
+                beforeSend: function () { },
+                success: function (data) {
+                    $('#I_Prioridad').val(data);
+                },
+                error: function () { },
+                complete: function () { }
+            });
+        });
+    </script>
+}

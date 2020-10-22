@@ -10,37 +10,29 @@ namespace WebApp.ViewModels
     public class PeriodoViewModel
     {
         public int I_PeriodoID { get; set; }
-        public string T_CuotaPagoDesc { get; set; }
-        public short N_Anio { get; set; }
-        public DateTime D_FecIni { get; set; }
-        public DateTime D_FecFin { get; set; }
-
-        //public string Descripcion { get; set; }
-        //public string Nro_Cuenta_Corriente { get; set; }
-        //public string Codigo_Banco { get; set; }
-        //public int Prioridad { get; set; }
+        public string T_TipoPerDesc { get; set; }
+        public short? I_Anio { get; set; }
+        public DateTime? D_FecVencto { get; set; }
+        public short? I_Prioridad { get; set; }
     }
 
-    public class NuevoPeriodoViewModel
+    public class MantenimientoPeriodoViewModel
     {
+        public int? I_PeriodoID { get; set; }
+
         [Display(Name = "Descripción")]
-        public int I_CuotaPagoID { get; set; }
-        [Display(Name = "Año")]
-        public short N_Anio { get; set; }
-        [Display(Name = "Fecha inicio")]
-        public DateTime D_FecIni { get; set; }
-        [Display(Name = "Fecha fin")]
-        public DateTime D_FecFin { get; set; }
-    }
+        public int I_TipoPeriodoID { get; set; }
 
-    public class EdicionPeriodoViewModel
-    {
-        public int I_PeriodoID { get; set; }
-        public int I_CuotaPagoID { get; set; }
-        public short N_Anio { get; set; }
-        public DateTime D_FecIni { get; set; }
-        public DateTime D_FecFin { get; set; }
-        public bool B_Habilitado { get; set; }
+        [Display(Name = "Año")]
+        public short? I_Anio { get; set; }
+
+        [Display(Name = "Fch. Vencimiento")]
+        public DateTime? D_FecVencto { get; set; }
+
+        [Display(Name = "Prioridad")]
+        public byte? I_Prioridad { get; set; }
+
+        public bool? B_Habilitado { get; set; }
     }
 
     public static class General
@@ -65,24 +57,6 @@ namespace WebApp.ViewModels
             });
 
             return lista;
-        }
-
-        public static SelectList Listar_Anios()
-        {
-            var lista = new List<SelectListItem>();
-
-            for (int i = DateTime.Now.Year; 1963 < i; i--)
-            {
-                var item = new SelectListItem()
-                {
-                    Text = i.ToString(),
-                    Value = i.ToString()
-                };
-
-                lista.Add(item);
-            }
-
-            return new SelectList(lista, "Value", "Text");
         }
 
         public static SelectList Listar_Periodos_Academicos()
