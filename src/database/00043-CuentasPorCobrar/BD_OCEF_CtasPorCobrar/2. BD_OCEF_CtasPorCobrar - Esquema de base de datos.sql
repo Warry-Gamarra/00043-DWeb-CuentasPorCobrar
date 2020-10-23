@@ -448,3 +448,22 @@ CREATE TABLE TI_ConceptoPago_Periodo
 		ON UPDATE NO ACTION
 )
 GO
+
+
+CREATE TABLE TC_ClasificadorIngreso
+( 
+	I_ClasificadorID     int IDENTITY ( 1,1 ) ,
+	T_ClasificadorDesc   varchar(250)  NOT NULL ,
+	T_ClasificadorCod    varchar(50)  NULL ,
+	T_ClasificadorUnfv   varchar(50)  NULL ,
+	B_Habilitado         bit  NOT NULL ,
+	B_Eliminado          bit  NOT NULL ,
+	I_UsuarioCre         int  NULL ,
+	D_FecCre             datetime  NULL ,
+	I_UsuarioMod         int  NULL ,
+	D_FecMod             datetime  NULL ,
+	CONSTRAINT PK_ClasificadorIngreso PRIMARY KEY  CLUSTERED (I_ClasificadorID ASC)
+)
+go
+
+

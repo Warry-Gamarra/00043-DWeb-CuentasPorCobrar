@@ -815,3 +815,108 @@ BEGIN
 	END CATCH
 END
 GO
+
+
+/*-------------------------- */
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_GrabarClasificadorIngreso')
+	DROP PROCEDURE [dbo].[USP_I_GrabarClasificadorIngreso]
+GO
+
+CREATE PROCEDURE [dbo].[USP_I_GrabarClasificadorIngreso]
+	 @I_ClasificadorID		int
+	,@T_ClasificadorDesc	varchar(250)
+	,@T_ClasificadorCod		varchar(50)
+	,@T_ClasificadorUnfv	varchar(50)
+	,@N_Anio			varchar(4)
+	,@D_FecCre			datetime
+	,@CurrentUserId		int
+
+	,@B_Result bit OUTPUT
+	,@T_Message nvarchar(4000) OUTPUT	
+AS
+BEGIN
+  SET NOCOUNT ON
+  	BEGIN TRY
+		INSERT INTO TC_ClasificadorIngreso(T_ClasificadorDesc,T_ClasificadorCod, T_ClasificadorUnfv, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
+								VALUES	 (@T_ClasificadorDesc, @T_ClasificadorCod,@T_ClasificadorUnfv, 1, 0, @CurrentUserId, @D_FecCre)
+
+		SET @B_Result = 1
+		SET @T_Message = 'Nuevo registro agregado.'
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+
+END
+GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_GrabarClasificadorIngreso')
+	DROP PROCEDURE [dbo].[USP_U_GrabarClasificadorIngreso]
+GO
+
+CREATE PROCEDURE [dbo].[USP_U_GrabarClasificadorIngreso]
+	 @I_ClasificadorID		int
+	,@T_ClasificadorDesc	varchar(250)
+	,@T_ClasificadorCod		varchar(50)
+	,@T_ClasificadorUnfv	varchar(50)
+	,@N_Anio			varchar(4)
+	,@D_FecMod			datetime
+	,@CurrentUserId		int
+
+	,@B_Result bit OUTPUT
+	,@T_Message nvarchar(4000) OUTPUT	
+AS
+BEGIN
+  SET NOCOUNT ON
+  	BEGIN TRY
+	UPDATE	TC_ClasificadorIngreso 
+		SET	T_ClasificadorDesc = @T_ClasificadorDesc
+			,T_ClasificadorCod = @T_ClasificadorCod
+			,T_ClasificadorUnfv = @T_ClasificadorUnfv
+		WHERE I_ClasificadorID = @I_ClasificadorID
+			
+		SET @B_Result = 1
+		SET @T_Message = 'Actualización de datos correcta'
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+
+END
+GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarEstadoClasificadorIngreso')
+	DROP PROCEDURE [dbo].[USP_U_ActualizarEstadoClasificadorIngreso]
+GO
+
+CREATE PROCEDURE [dbo].[USP_U_ActualizarEstadoClasificadorIngreso]
+	 @I_ClasificadorID		int
+	,@B_Habilitado		bit
+	,@D_FecMod			datetime
+	,@CurrentUserId		int
+
+	,@B_Result bit OUTPUT
+	,@T_Message nvarchar(4000) OUTPUT	
+AS
+BEGIN
+  SET NOCOUNT ON
+  	BEGIN TRY
+		UPDATE	TC_ClasificadorIngreso 
+		SET		B_Habilitado = @B_Habilitado,
+				D_FecMod = @D_FecMod
+				WHERE I_ClasificadorID = @I_ClasificadorID
+			
+		SET @B_Result = 1
+		SET @T_Message = 'Actualización de datos de correo correcta'
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+END
+GO

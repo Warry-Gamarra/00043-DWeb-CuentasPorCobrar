@@ -50,9 +50,9 @@
           <FullPath>3. BD_OCEF_CtasPorCobrar - Carga de datos iniciales.sql</FullPath>
         </FileNode>
         <FileNode Name="4. BD_OCEF_CtasPorCobrar - Types Procedures y Funciones.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:localhost\SQLEXPRESS2014:False:sa</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>localhost\SQLEXPRESS2014</AssociatedConnSrvName>
-          <AssociatedConnUserName>sa</AssociatedConnUserName>
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:DESKTOP-B34HJML\SQL_2016E:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>DESKTOP-B34HJML\SQL_2016E</AssociatedConnSrvName>
+          <AssociatedConnUserName />
           <FullPath>4. BD_OCEF_CtasPorCobrar - Types Procedures y Funciones.sql</FullPath>
         </FileNode>
       </Items>
