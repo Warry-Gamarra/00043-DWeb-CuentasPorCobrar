@@ -75,7 +75,8 @@
     <Compile Include="Entities\AccountNumber.cs" />
     <Compile Include="Entities\ClasificadorDeIngreso.cs" />
     <Compile Include="Entities\CuentaDeposito.cs" />
-    <Compile Include="Entities\CuotaPago.cs" />
+    <Compile Include="Entities\TipoPeriodo.cs" />
+    <Compile Include="Entities\FinancialEntity.cs" />
     <Compile Include="Entities\Estudiante.cs" />
     <Compile Include="Entities\EntidadFinanciera.cs" />
     <Compile Include="Entities\CorreoAplicacion.cs" />

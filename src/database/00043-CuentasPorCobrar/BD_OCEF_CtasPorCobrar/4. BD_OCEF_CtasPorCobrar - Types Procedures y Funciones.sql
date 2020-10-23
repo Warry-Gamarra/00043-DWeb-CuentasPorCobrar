@@ -160,45 +160,36 @@ GO
 
 
 
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_CuentaDeposito')
-	DROP PROCEDURE dbo.USP_S_CuentaDeposito
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_CuentaDeposito_Habilitadas')
+	DROP PROCEDURE dbo.USP_S_CuentaDeposito_Habilitadas
 GO
 
-CREATE PROCEDURE dbo.USP_S_CuentaDeposito
+CREATE PROCEDURE dbo.USP_S_CuentaDeposito_Habilitadas
+@I_TipoPeriodoID int
 AS
 BEGIN
 	SET NOCOUNT ON;
-	SELECT cd.I_CtaDepositoID, cd.C_NumeroCuenta, ef.T_EntidadDesc FROM dbo.TC_CuentaDeposito cd
+	SELECT cd.I_CtaDepositoID, cd.C_NumeroCuenta, ef.T_EntidadDesc FROM dbo.TC_CuentaDeposito_TipoPeriodo cp
+	INNER JOIN dbo.TC_CuentaDeposito cd ON cp.I_CtaDepositoID = cd.I_CtaDepositoID
 	INNER JOIN dbo.TC_EntidadFinanciera ef ON ef.I_EntidadFinanID = cd.I_EntidadFinanID
-	WHERE ef.B_Habilitado = 1 AND cd.B_Habilitado = 1
+	WHERE cp.B_Habilitado = 1 AND cp.B_Eliminado = 0 AND 
+	cd.B_Habilitado = 1 AND cd.B_Eliminado = 0 AND
+	ef.B_Habilitado = 1 AND ef.B_Eliminado = 0 AND
+	cp.I_TipoPeriodoID = @I_TipoPeriodoID
 END
 GO
 
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_Periodos')
-	DROP PROCEDURE dbo.USP_S_Periodos
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_Periodos_Habilitados')
+	DROP PROCEDURE dbo.USP_S_Periodos_Habilitados
 GO
 
-CREATE PROCEDURE dbo.USP_S_Periodos
+CREATE PROCEDURE dbo.USP_S_Periodos_Habilitados
 AS
 BEGIN
 	SET NOCOUNT ON;
-	SELECT p.I_PeriodoID, cp.T_TipoPerDesc, p.I_Anio, p.D_FecVencto FROM dbo.TC_Periodo p
+	SELECT p.I_PeriodoID, cp.T_TipoPerDesc, p.I_Anio, p.D_FecVencto, p.I_Prioridad FROM dbo.TC_Periodo p
 	INNER JOIN dbo.TC_TipoPeriodo cp ON p.I_TipoPeriodoID = cp.I_TipoPeriodoID
 	WHERE p.B_Habilitado = 1
-END
-GO
-
-
-
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_DependenciaUNFV')
-	DROP PROCEDURE dbo.USP_S_DependenciaUNFV
-GO
-
-CREATE PROCEDURE dbo.USP_S_DependenciaUNFV
-AS
-BEGIN
-	SET NOCOUNT ON;
-	SELECT d.I_DependenciaID, d.T_DependDesc FROM dbo.TC_DependenciaUNFV d
 END
 GO
 
@@ -210,19 +201,20 @@ GO
 
 
 CREATE PROCEDURE dbo.USP_I_GrabarPeriodo
-@I_CuotaPagoID int,
-@N_Anio int = null,
-@D_FecIni datetime = null,
-@D_FecFin datetime = null,
+@I_TipoPeriodoID int,
+@I_Anio smallint = null,
+@D_FecVencto datetime = null,
+@I_Prioridad tinyint = null,
+@I_UsuarioCre int,
 @I_PeriodoID int OUTPUT,
 @B_Result bit OUTPUT,
-@T_Message nvarchar(4000) OUTPUT	
+@T_Message nvarchar(4000) OUTPUT
 AS
 BEGIN
 	SET NOCOUNT ON
   	BEGIN TRY
-		INSERT dbo.TC_Periodo(I_TipoPeriodoID, I_Anio, D_FecVencto, B_Habilitado)
-		VALUES(@I_CuotaPagoID, @N_Anio, @D_FecFin, 1)
+		INSERT dbo.TC_Periodo(I_TipoPeriodoID, I_Anio, D_FecVencto, I_Prioridad, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
+		VALUES(@I_TipoPeriodoID, @I_Anio, @D_FecVencto, @I_Prioridad, 1, 0, @I_UsuarioCre, getdate())
 		
 		SET @I_PeriodoID = SCOPE_IDENTITY()
 		SET @B_Result = 1
@@ -246,22 +238,26 @@ GO
 
 CREATE PROCEDURE dbo.USP_U_ActualizarPeriodo
 @I_PeriodoID int,
-@I_CuotaPagoID int,
-@N_Anio int = null,
-@D_FecIni datetime = null,
-@D_FecFin datetime = null,
+@I_TipoPeriodoID int,
+@I_Anio smallint = null,
+@D_FecVencto datetime = null,
+@I_Prioridad tinyint = null,
 @B_Habilitado bit,
+@I_UsuarioMod int,
 @B_Result bit OUTPUT,
-@T_Message nvarchar(4000) OUTPUT	
+@T_Message nvarchar(4000) OUTPUT
 AS
 BEGIN
 	SET NOCOUNT ON
   	BEGIN TRY
 		UPDATE dbo.TC_Periodo SET
-			I_TipoPeriodoID = @I_CuotaPagoID, 
-			I_Anio = @N_Anio, 
-			D_FecVencto = @D_FecFin, 
-			B_Habilitado = @B_Habilitado
+			I_TipoPeriodoID = @I_TipoPeriodoID, 
+			I_Anio = @I_Anio, 
+			D_FecVencto = @D_FecVencto, 
+			I_Prioridad = @I_Prioridad,
+			B_Habilitado = @B_Habilitado,
+			I_UsuarioMod = @I_UsuarioMod,
+			D_FecMod = getdate()
 		WHERE I_PeriodoID = @I_PeriodoID
 		
 		SET @B_Result = 1

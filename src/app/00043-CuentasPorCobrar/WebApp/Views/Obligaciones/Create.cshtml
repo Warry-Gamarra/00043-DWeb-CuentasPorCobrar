@@ -98,7 +98,7 @@
     <div class="form-group">
         @Html.LabelFor(model => model.Cuota_Pago, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.DropDownListFor(model => model.Cuota_Pago, new SelectList(ViewBag.lista_periodos, "I_PeriodoID", "T_CuotaPagoDesc"), "", new { @class = "form-control" })
+            @Html.DropDownListFor(model => model.Cuota_Pago, new SelectList(ViewBag.lista_periodos, "I_PeriodoID", "T_TipoPerDesc"), "", new { @class = "form-control" })
             @Html.ValidationMessageFor(model => model.Cuota_Pago, "", new { @class = "text-danger" })
         </div>
     </div>

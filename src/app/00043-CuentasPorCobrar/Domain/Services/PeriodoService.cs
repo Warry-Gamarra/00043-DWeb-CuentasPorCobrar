@@ -1,4 +1,5 @@
-﻿using Data.Procedures;
+﻿using Data;
+using Data.Procedures;
 using Data.Tables;
 using Domain.DTO;
 using Domain.Entities;
@@ -12,17 +13,17 @@ namespace Domain.Services
 {
     public class PeriodoService
     {
-        public List<CuotaPago> Listar_Cuota_Pago_Habilitadas()
+        public List<CuotaPago> Listar_Tipo_Periodo_Habilitados()
         {
             try
             {
-                var lista = TC_CuotaPago.FindAll();
+                var lista = TC_TipoPeriodo.FindAll();
 
-                var result = lista.Where(x => x.B_Habilitado).Select(x => new CuotaPago()
+                var result = lista.Where(x => x.B_Habilitado && !x.B_Eliminado).Select(x => new CuotaPago()
                 {
-                    I_CuotaPagoID = x.I_CuotaPagoID,
-                    T_CuotaPagoDesc = x.T_CuotaPagoDesc,
-                    B_Habilitado = x.B_Habilitado
+                    I_TipoPeriodoID = x.I_TipoPeriodoID,
+                    T_TipoPerDesc = x.T_TipoPerDesc,
+                    I_Prioridad = x.I_Prioridad
                 }).ToList();
 
                 return result;
@@ -33,11 +34,25 @@ namespace Domain.Services
             }
         }
 
-        public List<CuentaDeposito> Listar_Cuenta_Deposito_Habilitadas()
+        public int Obtener_Prioridad_Tipo_Periodo(int I_TipoPeriodoID)
         {
             try
             {
-                var lista = USP_S_CuentaDeposito_Habilitadas.Execute();
+                var result = TC_TipoPeriodo.FindByID(I_TipoPeriodoID);
+
+                return result.I_Prioridad;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+            }
+        }
+
+        public List<CuentaDeposito> Listar_Cuenta_Deposito_Habilitadas(int I_TipoPeriodoID)
+        {
+            try
+            {
+                var lista = USP_S_CuentaDeposito_Habilitadas.Execute(I_TipoPeriodoID);
 
                 var result = lista.Select(x => new CuentaDeposito()
                 {
@@ -63,10 +78,10 @@ namespace Domain.Services
                 var result = lista.Select(x => new Periodo()
                 {
                     I_PeriodoID = x.I_PeriodoID,
-                    T_CuotaPagoDesc = x.T_CuotaPagoDesc,
-                    N_Anio = x.N_Anio,
-                    D_FecIni = x.D_FecIni,
-                    D_FecFin = x.D_FecFin
+                    T_TipoPerDesc = x.T_TipoPerDesc,
+                    I_Anio = x.I_Anio,
+                    D_FecVencto = x.D_FecVencto,
+                    I_Prioridad = x.I_Prioridad
                 }).ToList();
 
                 return result;
@@ -77,35 +92,46 @@ namespace Domain.Services
             }
         }
 
-        public Response Grabar_Periodo(PeriodoEntity periodo)
+        public Response Grabar_Periodo(PeriodoEntity periodo, SaveOption saveOption)
         {
-            var sp = new USP_I_GrabarPeriodo()
+            ResponseData result;
+
+            switch (saveOption)
             {
-                I_CuotaPagoID = periodo.I_CuotaPagoID,
-                N_Anio = periodo.N_Anio,
-                D_FecIni = periodo.D_FecIni,
-                D_FecFin = periodo.D_FecFin
-            };
+                case SaveOption.Insert:
+                    var grabarPeriodo = new USP_I_GrabarPeriodo()
+                    {
+                        I_TipoPeriodoID = periodo.I_TipoPeriodoID,
+                        I_Anio = periodo.I_Anio,
+                        D_FecVencto = periodo.D_FecVencto,
+                        I_Prioridad = periodo.I_Prioridad,
+                        I_UsuarioCre = periodo.I_UsuarioCre.GetValueOrDefault()
+                    };
 
-            var result = sp.Execute();
+                    result = grabarPeriodo.Execute();
 
-            return new Response(result);
-        }
+                    break;
 
-        public Response Actualizar_Periodo(PeriodoEntity periodo)
-        {
-            var sp = new USP_U_ActualizarPeriodo()
-            {
-                I_PeriodoID = periodo.I_PeriodoID,
-                I_CuotaPagoID = periodo.I_CuotaPagoID,
-                N_Anio = periodo.N_Anio,
-                D_FecIni = periodo.D_FecIni,
-                D_FecFin = periodo.D_FecFin,
-                B_Habilitado = periodo.B_Habilitado
-            };
+                case SaveOption.Update:
+                    var actualizarPeriodo = new USP_U_ActualizarPeriodo()
+                    {
+                        I_PeriodoID = periodo.I_PeriodoID,
+                        I_TipoPeriodoID = periodo.I_TipoPeriodoID,
+                        I_Anio = periodo.I_Anio,
+                        D_FecVencto = periodo.D_FecVencto,
+                        I_Prioridad = periodo.I_Prioridad,
+                        B_Habilitado = periodo.B_Habilitado,
+                        I_UsuarioMod = periodo.I_UsuarioMod.GetValueOrDefault()
+                    };
 
-            var result = sp.Execute();
+                    result = actualizarPeriodo.Execute();
 
+                    break;
+
+                default:
+                    throw new NotSupportedException("Acción no válida.");
+            }
+            
             return new Response(result);
         }
 
@@ -122,10 +148,10 @@ namespace Domain.Services
                     result = new PeriodoEntity()
                     {
                         I_PeriodoID = periodo.I_PeriodoID,
-                        I_CuotaPagoID = periodo.I_CuotaPagoID.GetValueOrDefault(),
-                        N_Anio = periodo.N_Anio.GetValueOrDefault(),
-                        D_FecIni = periodo.D_FecIni.GetValueOrDefault(),
-                        D_FecFin = periodo.D_FecFin.GetValueOrDefault(),
+                        I_TipoPeriodoID = periodo.I_TipoPeriodoID,
+                        I_Anio = periodo.I_Anio,
+                        D_FecVencto = periodo.D_FecVencto,
+                        I_Prioridad = periodo.I_Prioridad,
                         B_Habilitado = periodo.B_Habilitado
                     };
                 }

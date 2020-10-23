@@ -5,8 +5,8 @@ GO
 /*------------------------------------------ Correos ---------------------------------------------------*/
 
 
-INSERT INTO [dbo].[TS_CorreoAplicacion](T_DireccionCorreo, T_PasswordCorreo, T_Seguridad, T_HostName, I_Puerto, D_FecUpdate, B_Habilitado)
-	 VALUES (N'wgamarra@unfv.edu.pe', N'WABIAFMATwBuAG8ASwAyAEAAMgAwADEANgA=', 'TLS', 'smtp.office365.com', 587, GETDATE(), 1)
+INSERT INTO [dbo].[TS_CorreoAplicacion](T_DireccionCorreo, T_PasswordCorreo, T_Seguridad, T_HostName, I_Puerto, D_FecUpdate, B_Habilitado, B_Eliminado)
+	 VALUES (N'wgamarra@unfv.edu.pe', N'WABIAFMATwBuAG8ASwAyAEAAMgAwADEANgA=', 'TLS', 'smtp.office365.com', 587, GETDATE(), 1, 0)
 GO
 
 
@@ -37,19 +37,14 @@ GO
 
 
 /* -------------------------------- TC_CuotaPago ------------------------------------ */
-INSERT INTO TC_CuotaPago (T_CuotaPagoDesc,B_Habilitado) VALUES (N'MATRICULA INGRESANTE', 1)
-INSERT INTO TC_CuotaPago (T_CuotaPagoDesc,B_Habilitado) VALUES (N'MATRICULA REGULAR', 1)
-INSERT INTO TC_CuotaPago (T_CuotaPagoDesc,B_Habilitado) VALUES (N'PEN.MA-ING-EUPG', 1)
-INSERT INTO TC_CuotaPago (T_CuotaPagoDesc,B_Habilitado) VALUES (N'PEN.MA-ING-EUPG', 1)
-INSERT INTO TC_CuotaPago (T_CuotaPagoDesc,B_Habilitado) VALUES (N'PEN.MA-REG-EUPG', 1)
-INSERT INTO TC_CuotaPago (T_CuotaPagoDesc,B_Habilitado) VALUES (N'PEN.DO-ING-EUPG', 1)
-INSERT INTO TC_CuotaPago (T_CuotaPagoDesc,B_Habilitado) VALUES (N'PEN.DO-REG-EUPG', 1)
+INSERT INTO TC_TipoPeriodo (T_TipoPerDesc, I_Prioridad, B_Habilitado, B_Eliminado) VALUES (N'MATRICULA INGRESANTE', 1, 1, 0)
+INSERT INTO TC_TipoPeriodo (T_TipoPerDesc, I_Prioridad, B_Habilitado, B_Eliminado) VALUES (N'MATRICULA REGULAR', 1, 1, 0)
+INSERT INTO TC_TipoPeriodo (T_TipoPerDesc, I_Prioridad, B_Habilitado, B_Eliminado) VALUES (N'PEN.MA-ING-EUPG', 1, 1, 0)
+INSERT INTO TC_TipoPeriodo (T_TipoPerDesc, I_Prioridad, B_Habilitado, B_Eliminado) VALUES (N'PEN.MA-ING-EUPG', 1, 1, 0)
+INSERT INTO TC_TipoPeriodo (T_TipoPerDesc, I_Prioridad, B_Habilitado, B_Eliminado) VALUES (N'PEN.MA-REG-EUPG', 1, 1, 0)
+INSERT INTO TC_TipoPeriodo (T_TipoPerDesc, I_Prioridad, B_Habilitado, B_Eliminado) VALUES (N'PEN.DO-ING-EUPG', 1, 1, 0)
+INSERT INTO TC_TipoPeriodo (T_TipoPerDesc, I_Prioridad, B_Habilitado, B_Eliminado) VALUES (N'PEN.DO-REG-EUPG', 1, 1, 0)
 GO
 
 
-INSERT dbo.TC_CuotaPago(T_CuotaPagoDesc, B_Habilitado) VALUES('ADM.ORD.UNFV', 1)
-INSERT dbo.TC_CuotaPago(T_CuotaPagoDesc, B_Habilitado) VALUES('MAT.REG.UNFV', 1)
-INSERT dbo.TC_CuotaPago(T_CuotaPagoDesc, B_Habilitado) VALUES('MAT.REG.EUPG', 1)
-
-INSERT dbo.TC_Periodo(I_CuotaPagoID, N_Anio, D_FecIni, D_FecFin, B_Habilitado) values(1, 2020, GETDATE(), GETDATE(), 1)
 

@@ -8,8 +8,8 @@ namespace Domain.Entities
 {
     public class CuotaPago
     {
-        public int I_CuotaPagoID { get; set; }
-        public string T_CuotaPagoDesc { get; set; }
-        public bool B_Habilitado { get; set; }
+        public int I_TipoPeriodoID { get; set; }
+        public string T_TipoPerDesc { get; set; }
+        public int I_Prioridad { get; set; }
     }
 }

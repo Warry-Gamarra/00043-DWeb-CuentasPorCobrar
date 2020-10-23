@@ -13,11 +13,16 @@ namespace Data.Tables
     public class TC_Periodo
     {
         public int I_PeriodoID { get; set; }
-        public int? I_CuotaPagoID { get; set; }
-        public short? N_Anio { get; set; }
-        public DateTime? D_FecIni { get; set; }
-        public DateTime? D_FecFin { get; set; }
+        public int I_TipoPeriodoID { get; set; }
+        public short? I_Anio { get; set; }
+        public DateTime? D_FecVencto { get; set; }
+        public byte? I_Prioridad { get; set; }
         public bool B_Habilitado { get; set; }
+        public bool B_Eliminado { get; set; }
+        public int? I_UsuarioCre { get; set; }
+        public DateTime? D_FecCre { get; set; }
+        public int? I_UsuarioMod { get; set; }
+        public DateTime? D_FecMod { get; set; }
 
         public static TC_Periodo FindByID(int I_PeriodoID)
         {
@@ -25,7 +30,7 @@ namespace Data.Tables
 
             try
             {
-                string s_command = @"select p.I_PeriodoID, p.I_CuotaPagoID, p.N_Anio, p.D_FecIni, p.D_FecFin, p.B_Habilitado from dbo.TC_Periodo p where p.I_PeriodoID = @I_PeriodoID";
+                string s_command = @"select p.* from dbo.TC_Periodo p where p.I_PeriodoID = @I_PeriodoID";
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
