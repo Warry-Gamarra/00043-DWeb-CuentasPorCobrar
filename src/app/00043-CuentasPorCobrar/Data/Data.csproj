@@ -68,6 +68,7 @@
   <ItemGroup>
     <Compile Include="Connection\Database.cs" />
     <Compile Include="Connection\ResponseData.cs" />
+    <Compile Include="Procedures\USP_IU_GrabarAlumnosAptos.cs" />
     <Compile Include="Procedures\USP_I_GrabarPeriodo.cs" />
     <Compile Include="Procedures\USP_I_GrabarPeriodo_CuentaDeposito.cs" />
     <Compile Include="Procedures\USP_S_ConceptoPago_Periodo.cs" />

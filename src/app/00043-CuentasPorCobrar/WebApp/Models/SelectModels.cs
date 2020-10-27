@@ -32,5 +32,22 @@ namespace WebApp.Models
 
             return result;
         }
+
+
+        public List<SelectViewModel> GetAnios(int anioMinimo)
+        {
+            List<SelectViewModel> result = new List<SelectViewModel>();
+
+            for (int anio = DateTime.Now.Year; anio >= anioMinimo; anio--)
+            {
+                result.Add(new SelectViewModel()
+                {
+                    Value = anio.ToString(),
+                    TextDisplay = anio.ToString()
+                });
+            }
+
+            return result;
+        }
     }
 }

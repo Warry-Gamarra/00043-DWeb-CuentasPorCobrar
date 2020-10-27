@@ -467,3 +467,44 @@ CREATE TABLE TC_ClasificadorIngreso
 go
 
 
+CREATE TABLE TC_Alumno
+( 
+	C_CodAlu             varchar(20)  NOT NULL ,
+	T_ApePaterno         varchar(50)  NOT NULL ,
+	T_ApeMaterno         varchar(50)  NULL ,
+	T_Nombre             varchar(50)  NULL ,
+	T_NomAlu             varchar(200)  NULL ,
+	C_CodRc              varchar(10)  NULL ,
+	I_IdPlan             int  NULL ,
+	B_Habilitado         bit  NOT NULL ,
+	B_Eliminado          bit  NOT NULL ,
+	I_UsuarioCre         int  NULL ,
+	D_FecCre             datetime  NULL ,
+	I_UsuarioMod         int  NULL ,
+	D_FecMod             datetime  NULL ,
+	CONSTRAINT PK_Alumno PRIMARY KEY  CLUSTERED (C_CodAlu ASC)
+)
+go
+
+
+
+CREATE TABLE TC_MatriculaAlumno
+( 
+	I_MatAluID           bigint IDENTITY ( 1,1 ) ,
+	N_Anio               varchar(250)  NOT NULL ,
+	C_CodAlu             varchar(20)  NULL ,
+	C_EstMat             char(18)  NULL ,
+	C_Nivel              char(18)  NULL ,
+	B_Habilitado         bit  NOT NULL ,
+	B_Eliminado          bit  NOT NULL ,
+	I_UsuarioCre         int  NULL ,
+	D_FecCre             datetime  NULL ,
+	I_UsuarioMod         int  NULL ,
+	D_FecMod             datetime  NULL ,
+	CONSTRAINT PK_MatriculaAlumno PRIMARY KEY  CLUSTERED (I_MatAluID ASC),
+	CONSTRAINT FK_Alumno_MatriculaAlumno FOREIGN KEY (C_CodAlu) REFERENCES TC_Alumno(C_CodAlu)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+)
+go
+

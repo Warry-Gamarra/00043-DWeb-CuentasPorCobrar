@@ -916,3 +916,114 @@ BEGIN
 	END CATCH
 END
 GO
+
+
+/*-----------------------------------------------------------*/
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_IU_GrabarAlumnosAptos')
+	DROP PROCEDURE [dbo].[USP_IU_GrabarAlumnosAptos]
+GO
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.DOMAINS WHERE DOMAIN_NAME = 'type_dataAlumno')
+	DROP TYPE [dbo].[type_dataAlumno]
+GO
+
+CREATE TYPE [dbo].[type_dataAlumno] AS TABLE(
+	C_Anio	  varchar(4)  NULL,
+	C_CodAlu  varchar(10) NULL,
+	C_CodRC	  varchar(5)  NULL,
+	I_IdPlan  int	 NULL,
+	C_EstMat  varchar(2)  NULL,
+	C_Nivel	  varchar(2)  NULL,
+	T_ApmAlu  varchar(50) NULL,
+	T_AppAlu  varchar(50) NULL,
+	T_Nombre  varchar(50) NULL,
+	T_NomAlu  varchar(200) NULL
+)
+GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_IU_GrabarAlumnosAptos')
+	DROP PROCEDURE [dbo].[USP_IU_GrabarAlumnosAptos]
+GO
+
+CREATE PROCEDURE [dbo].[USP_IU_GrabarAlumnosAptos]
+(
+	 @Tbl_Alumno	[dbo].[type_dataAlumno]	READONLY
+	,@D_FecRegistro datetime
+
+	,@UserID			int
+	,@B_Result		bit				OUTPUT
+	,@T_Message		nvarchar(4000)	OUTPUT
+)
+AS
+BEGIN
+	SET NOCOUNT ON
+	BEGIN TRY
+
+		DECLARE @errors int = 0
+		DECLARE @Codigos varchar(500) 
+
+		-- comprobar que el archivo no tiene filas con codigos de alumno repetidos
+		IF EXISTS (SELECT C_CodAlu FROM @Tbl_Alumno GROUP BY C_CodAlu HAVING COUNT(C_CodAlu) > 1)
+		BEGIN
+			SET @errors += 1
+					
+			SELECT @Codigos = COALESCE(@Codigos + ', ', '') + C_CodAlu  
+			FROM @Tbl_Alumno GROUP BY C_CodAlu HAVING COUNT(C_CodAlu) > 1
+
+			SET @T_Message = 'El archivo tiene codigos repetidos: ' + @Codigos + '.'
+		END
+		
+		IF(@errors = 0)
+		BEGIN
+			BEGIN TRANSACTION
+			
+			DECLARE @Tbl_Actions AS TABLE( T_Action varchar(10), T_Codigo varchar(10))
+
+			MERGE INTO TC_Alumno A 
+			USING @Tbl_Alumno AS T
+			ON A.C_CodAlu = T.C_CodAlu
+			WHEN MATCHED THEN
+					UPDATE SET  T_ApePaterno = T.T_AppAlu
+								,T_ApeMaterno = T.T_ApmAlu
+								,T_Nombre = T.T_Nombre
+								,T_NomAlu = T.T_NomAlu
+								,C_CodRc = T.C_CodRc
+								,I_IdPlan = T.I_IdPlan
+								,I_UsuarioMod = @UserID
+								,D_FecMod = @D_FecRegistro
+			WHEN NOT MATCHED BY TARGET THEN INSERT (C_CodAlu, T_ApePaterno, T_ApeMaterno, T_Nombre, T_NomAlu, C_CodRc, I_IdPlan, B_Habilitado, I_UsuarioCre, D_FecCre, B_Eliminado)
+											VALUES (T.C_CodAlu, T.T_AppAlu, T.T_ApmAlu, T.T_Nombre, T.T_NomAlu, T.C_CodRc, T.I_IdPlan, 1, @UserID, @D_FecRegistro, 0)
+			OUTPUT $action AS accion, inserted.C_CodAlu as codigo INTO @Tbl_Actions;
+
+
+			MERGE INTO TC_MatriculaAlumno AS TRG
+			USING @Tbl_Alumno AS SRC
+			ON TRG.C_CodAlu = SRC.C_CodAlu AND TRG.N_Anio = SRC.C_Anio 
+			WHEN MATCHED THEN
+			 		UPDATE SET   C_EstMat = SRC.C_EstMat
+			 	  				, C_Nivel = SRC.C_Nivel
+								, I_UsuarioMod = @UserID
+								, D_FecMod = @D_FecRegistro
+			WHEN NOT MATCHED BY TARGET THEN INSERT (N_Anio, C_CodAlu, C_Nivel, C_EstMat, B_Habilitado, I_UsuarioCre, D_FecCre, B_Eliminado)
+			 	  							VALUES (SRC.C_Anio, SRC.C_CodAlu, SRC.C_Nivel, SRC.C_EstMat, 1, @UserID, @D_FecRegistro, 0)
+			OUTPUT $action AS accion, inserted.C_CodAlu as codigo INTO @Tbl_Actions;
+
+			COMMIT TRANSACTION
+
+			SET @B_Result = 1
+			SET @T_Message = 'La importación de datos de alumno finalizó de manera exitosa'
+		END
+		ELSE
+		BEGIN
+			SET @B_Result = 0
+			SET @T_Message = 'Se encontraron problemas en el archivo. <ul>' + @T_Message + '</ul>'
+		END
+	END TRY
+	BEGIN CATCH
+		ROLLBACK TRANSACTION
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+END
