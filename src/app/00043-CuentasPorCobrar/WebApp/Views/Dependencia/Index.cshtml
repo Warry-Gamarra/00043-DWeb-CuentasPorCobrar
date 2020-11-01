@@ -1,0 +1,49 @@
+﻿@model IEnumerable<WebApp.ViewModels.DependenciaViewModel>
+@using GridMvc.Html
+
+<div class="container-fluid">
+    <div class="col-12">
+        <section class="content-header">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb float-right small d-none d-sm-inline-flex">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")"><i class="fa fa-home">&nbsp;</i>Inicio</a></li>
+                    <li class="breadcrumb-item"><span><i class="fa fa-wrench">&nbsp;</i>Mantenimiento </span></li>
+                    <li class="breadcrumb-item active"><span><i class="fa fa-book">&nbsp;</i>@ViewBag.Title </span></li>
+                </ol>
+            </nav>
+            <h1 class="">@ViewBag.Title <small></small></h1>
+        </section>
+    </div>
+    <br />
+
+    <div class="col-12">
+        <a href="@Url.Action("PredioAgregar", "Configuracion")" class="btn btn-primary float-right modal-link">
+            <i class="fa fa-fort-awesome"></i> Agregar Dependendencia
+        </a>
+
+        <p class="h3"><small>DEPENDENCIAS REGISTRADAS</small></p>
+        <br />
+
+        <br />
+        <div class="table-responsive" style="min-height:300px">
+            @Html.Grid(Model).Columns(columns =>
+                                    {
+                                        columns.Add(c => c.CodDep).Titled("Código").Filterable(true);
+                                        columns.Add(c => c.DependDesc).Titled("Descripción").Filterable(true);
+                                        columns.Add(c => c.TipoDependencia).Filterable(true).Titled("Tipo de dependencia");
+
+                                        columns.Add(c => c.B_Habilitado).SetWidth(180).Css("text-center").Encoded(false).Sanitized(false).RenderValueAs(model => model.B_Habilitado
+                                                                                                                                                    ? @Html.Raw("<span id=\"td" + @model.DependenciaID + "\"><button type=\"submit\" class=\"btn btn-xs btn-success\" onclick=\"ModificarEstadoReloadPage(" + @model.DependenciaID + ", " + @model.B_Habilitado.ToString().ToLower() + ", '" + Url.Action("ChangeState", "Dependencia") + "');\"><i class=\"fa fa-check-circle-o\">&nbsp;</i><span class=\"hidden-xs hidden-sm\">Habilitado</span></button></span>")
+                                                                                                                                                    : @Html.Raw("<span id=\"td" + @model.DependenciaID + "\"><button type=\"submit\" class=\"btn btn-xs btn-secondary\" onclick=\"ModificarEstadoReloadPage(" + @model.DependenciaID + ", " + @model.B_Habilitado.ToString().ToLower() + ", '" + Url.Action("ChangeState", "Dependencia") + "');\"><i class=\"fa fa-minus-circle\">&nbsp;</i><span class=\"hidden-xs hidden-sm\">Deshabilitado</span></button></span>")).Filterable(true).Titled("Estado");
+                                        columns.Add().SetWidth(200).Css("text-center").Encoded(false).Sanitized(false).RenderValueAs(model => model.Academico
+                                                                                                                                                    ? @Html.Raw("<a class=\"btn btn-xs btn-info\" href=\"" + Url.Action("ConfigFacultad", "Dependencia") + "\"><i class=\"fa fa-cog\">&nbsp;</i> Ajustes</a>")
+                                                                                                                                                    : @Html.Raw(""));
+                                        columns.Add().SetWidth(150).Css("text-right").Encoded(false).Sanitized(false).RenderValueAs(model => @<a href="@Url.Action("Edit", "Dependencia", new { id = model.DependenciaID, area = "" })" class="modal-link"><i class="fa fa-pencil-square-o" aria-hidden="true">&nbsp;</i><span class="hidden-xs hidden-sm">Editar</span></a>);
+                                         }
+            ).WithPaging(15).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
+
+        </div>
+
+    </div>
+</div>
+

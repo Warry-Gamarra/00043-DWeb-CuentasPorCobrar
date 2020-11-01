@@ -13,8 +13,10 @@ namespace Data.Tables
     public class TC_DependenciaUNFV
     {
         public int I_DependenciaID { get; set; }
-        public string T_DependDesc { get; set; }
-        public int I_DepAgrupaID { get; set; }
+        public string T_DepDesc { get; set; }
+        public string C_DepCod { get; set; }
+        public string C_DepCodPl { get; set; }
+        public int? I_FacultadID { get; set; }
         public bool B_Habilitado { get; set; }
         public bool B_Eliminado { get; set; }
         public int I_UsuarioCre { get; set; }
@@ -22,13 +24,14 @@ namespace Data.Tables
         public int I_UsuarioMod { get; set; }
         public DateTime D_FecMod { get; set; }
 
-        public static List<TC_DependenciaUNFV> FindAll()
+
+        public List<TC_DependenciaUNFV> Find()
         {
             List<TC_DependenciaUNFV> result;
 
             try
             {
-                string s_command = @"SELECT d.* FROM dbo.TC_DependenciaUNFV d";
+                string s_command = @"SELECT * FROM dbo.TC_DependenciaUNFV D LEFT JOIN TC_Facultad F ON D.I_DependenciaID = F.I_DependenciaID";
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
@@ -42,5 +45,6 @@ namespace Data.Tables
 
             return result;
         }
+
     }
 }

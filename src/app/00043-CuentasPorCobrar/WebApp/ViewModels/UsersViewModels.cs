@@ -58,7 +58,7 @@ namespace WebApp.ViewModels
 
 
         [Display(Name = "Dependencia")]
-        public string Dependenciacod { get; set; }
+        public int DependenciaId { get; set; }
 
         public int? PersonId { get; set; }
 
@@ -90,7 +90,7 @@ namespace WebApp.ViewModels
             this.PersonId = user.Person.Id;
             this.PersonName = user.Person.Nombre;
             this.Email = user.Person.correo;
-            this.Dependenciacod = user.Dependencia.Code;
+            this.DependenciaId = user.Dependencia.Id;
             this.RoleId = user.Rol.Id;
             this.RoleName = user.Rol.NombreRol;
         }
