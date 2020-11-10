@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace Data.Tables
 {
-    public class TC_TipoPeriodo
+    public class TI_CtaDepo_Periodo
     {
-        public int I_TipoPeriodoID { get; set; }
-        public string T_TipoPerDesc { get; set; }
-        public int I_Prioridad { get; set; }
+        public int I_CtaDepoPerID { get; set; }
+        public int I_CtaDepositoID { get; set; }
+        public int I_PeriodoID { get; set; }
         public bool B_Habilitado { get; set; }
         public bool B_Eliminado { get; set; }
         public int? I_UsuarioCre { get; set; }
@@ -22,17 +22,17 @@ namespace Data.Tables
         public int? I_UsuarioMod { get; set; }
         public DateTime? D_FecMod { get; set; }
 
-        public static List<TC_TipoPeriodo> FindAll()
+        public static List<TI_CtaDepo_Periodo> FindAll()
         {
-            List<TC_TipoPeriodo> result;
+            List<TI_CtaDepo_Periodo> result;
 
             try
             {
-                string s_command = @"select t.* from dbo.TC_TipoPeriodo t";
+                string s_command = @"SELECT c.* FROM dbo.TI_CtaDepo_Periodo c";
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    result = _dbConnection.Query<TC_TipoPeriodo>(s_command, commandType: CommandType.Text).ToList();
+                    result = _dbConnection.Query<TI_CtaDepo_Periodo>(s_command, commandType: CommandType.Text).ToList();
                 }
             }
             catch (Exception ex)
@@ -43,17 +43,17 @@ namespace Data.Tables
             return result;
         }
 
-        public static TC_TipoPeriodo FindByID(int I_TipoPeriodoID)
+        public static List<TI_CtaDepo_Periodo> FindByPeriodo(int I_PeriodoID)
         {
-            TC_TipoPeriodo result;
+            List<TI_CtaDepo_Periodo> result;
 
             try
             {
-                string s_command = @"select t.* from dbo.TC_TipoPeriodo t where t.I_TipoPeriodoID = @I_TipoPeriodoID";
+                string s_command = @"select c.* from TI_CtaDepo_Periodo c where c.I_PeriodoID = @I_PeriodoID and c.B_Eliminado = 0";
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    result = _dbConnection.Query<TC_TipoPeriodo>(s_command, new { I_TipoPeriodoID  = I_TipoPeriodoID }, commandType: CommandType.Text).FirstOrDefault();
+                    result = _dbConnection.Query<TI_CtaDepo_Periodo>(s_command, new { I_PeriodoID = I_PeriodoID }, commandType: CommandType.Text).ToList();
                 }
             }
             catch (Exception ex)

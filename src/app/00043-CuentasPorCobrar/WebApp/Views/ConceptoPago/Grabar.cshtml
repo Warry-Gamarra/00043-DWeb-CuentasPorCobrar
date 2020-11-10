@@ -1,0 +1,208 @@
+﻿@model WebApp.ViewModels.MantenimientoConceptoPagoPeriodoViewModel
+
+@{ 
+    int id = (int)ViewBag.id;
+}
+<div class="container-fluid">
+    <div class="col-12">
+        <section class="content-header">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb float-right small d-none d-sm-inline-flex">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "ConceptoPago")"><i class="fa fa-home">&nbsp;</i>Inicio</a></li>
+                    <li class="breadcrumb-item"><span><i class="fa fa-wrench">&nbsp;</i>Mantenimiento </span></li>
+                    <li class="breadcrumb-item"><span><i class="fa fa-wrench">&nbsp;</i>Conceptos de Pago </span></li>
+                    <li class="breadcrumb-item active"><span><i class="fa fa-envelope">&nbsp;</i>@ViewBag.Title </span></li>
+                </ol>
+            </nav>
+            <h1 class="">Concepto de Pago <small></small></h1>
+        </section>
+    </div>
+    <br />
+
+    <div class="col-12" id="ajaxFormContainer">
+        @if (id == 0)
+        {
+            Html.RenderAction("Create");
+        }
+        else
+        {
+            Html.RenderAction("Edit", new { id = id });
+        }
+    </div>
+
+    <div class="col-12 pb-2">
+        @Html.ActionLink("Regresar", "Index")
+    </div>
+</div>
+
+<div class="modal fade" id="systemMessageModal" tabindex="-1" role="dialog" aria-labelledby="systemMessageModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="systemMessageModalLabel">Procesando</h5>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                <a class="btn btn-primary" href="@Url.Action("Index","ConceptoPago")" role="button">Cerrar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(document).on("click", '#B_Calculado', function (event) {
+            let opciones = $('input[name=I_Calculado]');
+
+            if (this.checked) {
+                opciones.prop('disabled', false);
+            } else {
+                opciones.prop('disabled', true);
+                opciones.prop('checked', false);
+            }
+        });
+
+        $(document).on("click", '#B_AnioPeriodo', function (event) {
+            let anio = $('#I_Anio');
+            cambiarEstadoCombo(this.checked, anio);
+
+            let periodo = $('#I_Periodo');
+            cambiarEstadoCombo(this.checked, periodo);
+
+            retirarMensajeError('I_Anio');
+            retirarMensajeError('I_Periodo');
+        });
+
+        $(document).on("click", '#B_Especialidad', function (event) {
+            let combo = $('#C_CodRc');
+            cambiarEstadoCombo(this.checked, combo);
+
+            if (this.checked) {
+                $('#B_Dependencia').prop('checked', false);
+
+                let comboDep = $('#C_DepCod');
+                cambiarEstadoCombo(false, comboDep);
+            }
+
+            retirarMensajeError('C_CodRc');
+            retirarMensajeError('C_DepCod');
+        });
+
+        $(document).on("click", '#B_Dependencia', function (event) {
+            let combo = $('#C_DepCod');
+            cambiarEstadoCombo(this.checked, combo);
+
+            if (this.checked) {
+                $('#B_Especialidad').prop('checked', false);
+
+                let comboEsp = $('#C_CodRc');
+                cambiarEstadoCombo(false, comboEsp);
+            }
+
+            retirarMensajeError('C_CodRc');
+            retirarMensajeError('C_DepCod');
+        });
+
+        $(document).on("click", '#B_GrupoCodRc', function (event) {
+            let combo = $('#I_GrupoCodRc');
+            cambiarEstadoCombo(this.checked, combo);
+            retirarMensajeError('I_GrupoCodRc');
+        });
+
+        $(document).on("click", '#B_ModalidadIngreso', function (event) {
+            let combo = $('#I_ModalidadIngresoID');
+            cambiarEstadoCombo(this.checked, combo);
+            retirarMensajeError('I_ModalidadIngresoID');
+        });
+
+        $(document).on("click", '#B_ConceptoAgrupa', function (event) {
+            let combo = $('#I_ConceptoAgrupaID');
+            cambiarEstadoCombo(this.checked, combo);
+            retirarMensajeError('I_ConceptoAgrupaID');
+        });
+
+        $(document).on("click", '#B_ConceptoAfecta', function (event) {
+            let combo = $('#I_ConceptoAfectaID');
+            cambiarEstadoCombo(this.checked, combo);
+            retirarMensajeError('I_ConceptoAfectaID');
+        });
+
+        function cambiarEstadoCombo(checked, combo) {
+            if (checked) {
+                combo.prop('disabled', false);
+            } else {
+                combo.prop('disabled', true);
+                combo.val('');
+            }
+        }
+
+        function retirarMensajeError(fieldName) {
+            let errorLabel = $('span[data-valmsg-for=' + fieldName + ']');
+            let field = $('#' + fieldName);
+            errorLabel.html('');
+            errorLabel.removeClass('field-validation-error').addClass('field-validation-valid');
+            field.removeClass('input-validation-error').addClass('valid');
+        }
+
+        function onBegin(xhr) {
+            let modal = $('#systemMessageModal');
+
+            modal.find('.modal-body').html('<h6>Espere un momento...</h6>' +
+                '<div class="progress"><div class="indeterminate"></div></div>');
+
+            modal.find('.modal-footer').css('display', 'none');
+
+            modal.modal('show');
+        }
+
+        function onSuccess(data, status, xhr) {
+            setTimeout(function () {
+                $("#ajaxFormContainer").html(data.View);
+
+                let modal = $('#systemMessageModal');
+
+                let result = data.Result;
+
+                if (result.Value) {
+                    modal.find('.modal-body').html('<div class="col-12 text-center alert alert-success">' +
+                        result.Message + '</div>');
+
+                    modal.find('.modal-footer').css('display', 'flex');
+                } else {
+                    modal.modal('hide');
+                }
+            }, 1000);
+        }
+
+        if ($.validator && $.validator.unobtrusive) {
+            $.validator.addMethod('amountgreaterthanzero', function (value, element, params) {
+                if (value === null || isNaN(value) || value.trim() === "")
+                    return true;
+                return value > 0;
+            });
+
+            $.validator.unobtrusive.adapters.add('amountgreaterthanzero', {}, function (options) {
+                options.rules['amountgreaterthanzero'] = {};
+                options.messages['amountgreaterthanzero'] = options.message;
+            });
+
+            $.validator.addMethod('requiredwhenboolenistrue', function (value, element, params) {
+                let checkField = $('#' + params.booleanpropertyname);
+
+                if (checkField[0].checked && (value === null || value.trim() === "")) {
+                    return false;
+                } else {
+                    return true;
+                }
+            });
+
+            $.validator.unobtrusive.adapters.add('requiredwhenboolenistrue', ['booleanpropertyname'], function (options) {
+                options.rules['requiredwhenboolenistrue'] = options.params;
+                options.messages['requiredwhenboolenistrue'] = options.message;
+            });
+        }
+    </script>
+    
+}

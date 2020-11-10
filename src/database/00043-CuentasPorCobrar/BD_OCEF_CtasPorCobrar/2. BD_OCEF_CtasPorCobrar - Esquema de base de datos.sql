@@ -248,26 +248,22 @@ GO
 
 
 
-CREATE TABLE TI_Dependencia_CtaDepo_Periodo
+CREATE TABLE TI_CtaDepo_Periodo
 ( 
-	I_DepCtaDepoPerID    int IDENTITY ( 1,1 ) ,
+	I_CtaDepoPerID    int IDENTITY ( 1,1 ) ,
 	I_CtaDepositoID      int  NOT NULL ,
-	I_PeriodoID          int  NULL ,
-	I_DependenciaID      int  NULL ,
+	I_PeriodoID          int  NOT NULL,
 	B_Habilitado         bit  NOT NULL ,
 	B_Eliminado          bit  NOT NULL ,
 	I_UsuarioCre         int  NULL ,
 	D_FecCre             datetime  NULL ,
 	I_UsuarioMod         int  NULL ,
 	D_FecMod             datetime  NULL ,
-	CONSTRAINT XPKTI_Dependencia_CtaDepo_Periodo PRIMARY KEY  CLUSTERED (I_DepCtaDepoPerID ASC),
-	CONSTRAINT FK_Periodo_DependenciaCtaPagoPeriodo FOREIGN KEY (I_PeriodoID) REFERENCES TC_Periodo(I_PeriodoID)
+	CONSTRAINT XPKTI_CtaDepo_Periodo PRIMARY KEY  CLUSTERED (I_CtaDepoPerID ASC),
+	CONSTRAINT FK_Periodo_CtaPagoPeriodo FOREIGN KEY (I_PeriodoID) REFERENCES TC_Periodo(I_PeriodoID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION,
-	CONSTRAINT FK_DependenciaUNFV_DependenciaCtaDepoPeriodo FOREIGN KEY (I_DependenciaID) REFERENCES TC_DependenciaUNFV(I_DependenciaID)
-		ON DELETE NO ACTION
-		ON UPDATE NO ACTION,
-	CONSTRAINT FK_CuentaDeposito_DependenciaCtaDepoPeriodo FOREIGN KEY (I_CtaDepositoID) REFERENCES TC_CuentaDeposito(I_CtaDepositoID)
+	CONSTRAINT FK_CuentaDeposito_CtaDepoPeriodo FOREIGN KEY (I_CtaDepositoID) REFERENCES TC_CuentaDeposito(I_CtaDepositoID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 )
@@ -448,3 +444,36 @@ CREATE TABLE TI_ConceptoPago_Periodo
 		ON UPDATE NO ACTION
 )
 GO
+
+
+CREATE TABLE TC_Parametro(
+	I_ParametroID	int IDENTITY (1, 1),
+	T_ParametroDesc		varchar(250) NOT NULL,
+	B_Habilitado		bit NOT NULL,
+	B_Eliminado			bit NOT NULL,
+	I_UsuarioCre        int  NULL ,
+	D_FecCre            datetime  NULL ,
+	I_UsuarioMod        int  NULL ,
+	D_FecMod            datetime  NULL ,
+	CONSTRAINT PK_Parametro PRIMARY KEY  CLUSTERED (I_ParametroID ASC)
+)
+GO
+
+CREATE TABLE TC_CatalogoOpcion(
+	I_OpcionID			int IDENTITY (1, 1),
+	I_ParametroID		int NOT NULL,
+	T_OpcionCod			varchar(50),
+	T_OpcionDesc		varchar(250) NOT NULL,
+	B_Habilitado		bit NOT NULL,
+	B_Eliminado			bit NOT NULL,
+	I_UsuarioCre        int  NULL ,
+	D_FecCre            datetime  NULL ,
+	I_UsuarioMod        int  NULL ,
+	D_FecMod            datetime  NULL ,
+	CONSTRAINT PK_CatalogoOpcion PRIMARY KEY  CLUSTERED (I_OpcionID ASC),
+	CONSTRAINT FK_Parametro_CatalogoOpcion FOREIGN KEY (I_ParametroID) REFERENCES TC_Parametro(I_ParametroID)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+)
+GO
+

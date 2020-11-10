@@ -12,7 +12,7 @@ namespace Data.Procedures
 {
     public class USP_S_CuentaDeposito_Habilitadas
     {
-        public int I_CtaDepID { get; set; }
+        public int I_CtaDepositoID { get; set; }
         public string C_NumeroCuenta { get; set; }
         public string T_EntidadDesc { get; set; }
 

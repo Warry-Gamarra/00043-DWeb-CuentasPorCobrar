@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class CuotaPago
+    public class TipoPeriodo
     {
         public int I_TipoPeriodoID { get; set; }
         public string T_TipoPerDesc { get; set; }

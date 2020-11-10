@@ -31,7 +31,7 @@
                 {
                     columns.Add(c => c.T_TipoPerDesc).Titled("Descripción").Filterable(true);
                     columns.Add(c => c.I_Anio).Titled("Año").Filterable(true);
-                    columns.Add(c => c.D_FecVencto).Titled("Fecha inicio").Filterable(true);
+                    columns.Add(c => c.D_FecVencto).Format("{0:dd/MM/yyyy}").Titled("Fch. Vencimiento").Filterable(true);
                     columns.Add(c => c.I_Prioridad).Titled("Prioridad").Filterable(true);
                     columns.Add().SetWidth(200).Css("text-right").Encoded(false).Sanitized(false).
                         RenderValueAs(model => @<a href="@Url.Action("Edit", "Periodos", new { id = model.I_PeriodoID })" class="modal-link"><i class="fa fa-pencil-square-o" aria-hidden="true">&nbsp;</i><span class="d-none d-md-inline-block">Editar</span></a>);
@@ -63,15 +63,41 @@
         });
 
         $(document).on("change", '#I_TipoPeriodoID', function (event) {
+            let txtPrioridad = $('#I_Prioridad');
+            let cmbCtaDeposito = $('#I_CtaDepositoID');
+
+            txtPrioridad.val('');
+            cmbCtaDeposito.empty();
+
             $.ajax({
-                url: ('/api/Service/GetPrioridad/1'),
+                url: ('/api/Service/GetPrioridad/' + this.value),
                 type: 'GET',
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
                 cache: false,
                 beforeSend: function () { },
                 success: function (data) {
-                    $('#I_Prioridad').val(data);
+                    if (data && !isNaN(data)) {
+                        txtPrioridad.val(data);
+                    }
+                },
+                error: function () { },
+                complete: function () { }
+            });
+
+            $.ajax({
+                url: ('/api/Service/GetCuentasDeposito/' + this.value),
+                type: 'GET',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                cache: false,
+                beforeSend: function () { },
+                success: function (data) {
+                    if (data && data.length > 0) {
+                        for (let i = 0; i < data.length; i++) {
+                            $('#I_CtaDepositoID').append('<option value="' + data[i].I_CtaDepositoID + '">' + data[i].NumeroCuenta+'</option>');
+                        }
+                    }
                 },
                 error: function () { },
                 complete: function () { }

@@ -10,11 +10,13 @@ using System.Threading.Tasks;
 
 namespace Data.Procedures
 {
-    public class USP_I_GrabarPeriodo_CuentaDeposito
+    public class USP_U_ActualizarPeriodo_CuentaDeposito
     {
+        public int I_CtaDepoPerID { get; set; }
         public int I_CtaDepositoID { get; set; }
         public int I_PeriodoID { get; set; }
-        public int I_UsuarioCre { get; set; }
+        public bool B_Habilitado { get; set; }
+        public int I_UsuarioMod { get; set; }
 
         public ResponseData Execute()
         {
@@ -23,22 +25,22 @@ namespace Data.Procedures
 
             try
             {
-                string s_command = @"USP_I_GrabarPeriodo_CuentaDeposito";
+                string s_command = @"USP_U_ActualizarPeriodo_CuentaDeposito";
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
+                    parameters.Add(name: "I_CtaDepoPerID", dbType: DbType.Int32, value: this.I_CtaDepoPerID);
                     parameters.Add(name: "I_CtaDepositoID", dbType: DbType.Int32, value: this.I_CtaDepositoID);
                     parameters.Add(name: "I_PeriodoID", dbType: DbType.Int32, value: this.I_PeriodoID);
-                    parameters.Add(name: "I_UsuarioCre", dbType: DbType.Int32, value: this.I_UsuarioCre);
+                    parameters.Add(name: "B_Habilitado", dbType: DbType.Boolean, value: this.B_Habilitado);
+                    parameters.Add(name: "I_UsuarioMod", dbType: DbType.Int32, value: this.I_UsuarioMod);
 
-                    parameters.Add(name: "I_CtaDepoPerID", dbType: DbType.Int32, direction: ParameterDirection.Output);
                     parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);
                     parameters.Add(name: "T_Message", dbType: DbType.String, size: 4000, direction: ParameterDirection.Output);
 
                     _dbConnection.Execute(s_command, parameters, commandType: CommandType.StoredProcedure);
 
-                    int id = parameters.Get<int>("I_CtaDepoPerID");
-                    result.CurrentID = id.ToString();
+                    result.CurrentID = this.I_CtaDepoPerID.ToString();
                     result.Value = parameters.Get<bool>("B_Result");
                     result.Message = parameters.Get<string>("T_Message");
                 }

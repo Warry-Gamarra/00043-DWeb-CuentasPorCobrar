@@ -1,0 +1,316 @@
+﻿@model WebApp.ViewModels.MantenimientoConceptoPagoPeriodoViewModel
+
+@using (Ajax.BeginForm("Save", "ConceptoPago", new AjaxOptions
+{
+    HttpMethod = "POST",
+    InsertionMode = InsertionMode.Replace,
+    OnBegin = "onBegin(xhr)",
+    OnSuccess = "onSuccess(data, status, xhr)"
+}))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.I_ConcPagPerID)
+    @Html.HiddenFor(model => model.B_Habilitado)
+
+    <div class="form-horizontal">
+        <h4>@ViewBag.Title</h4>
+
+        <hr />
+
+        <div class="form-group row">
+            @Html.LabelFor(model => model.I_ConceptoID, new { @class = "control-label col-md-2" })
+            <div class="col-md-8">
+                @Html.DropDownListFor(model => model.I_ConceptoID, new SelectList(ViewBag.Listar_Combo_ConceptoPago, "Value", "TextDisplay"), "[ SELECCIONAR ]", new { @class = "form-control" })
+                <p class="text-danger">@Html.ValidationMessageFor(model => model.I_ConceptoID)</p>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-md-8 offset-md-2">
+                <div class="form-check form-check-inline">
+                    @Html.CheckBoxFor(model => model.B_Fraccionable)
+                    <label class="form-check-label" for="B_Fraccionable">&nbsp;Fraccionable</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    @Html.CheckBoxFor(model => model.B_ConceptoGeneral)
+                    <label class="form-check-label" for="B_ConceptoGeneral">&nbsp;Concepto General</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    @Html.CheckBoxFor(model => model.B_AgrupaConcepto)
+                    <label class="form-check-label" for="B_AgrupaConcepto">&nbsp;Agrupa Conceptos</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="control-label col-md-2" for="I_AlumnosDestino">Se aplica a</label>
+            <div class="col-md-8">
+                @foreach (var item in (List<WebApp.ViewModels.SelectViewModel>)ViewBag.Lista_Opciones_TipoAlumno)
+                {
+                    var id = "I_AlumnosDestino_" + item.Value;
+                    <div class="form-check form-check-inline">
+                        @Html.RadioButtonFor(model => model.I_AlumnosDestino, item.Value, new { @id = id })
+                        <label class="form-check-label" for="@id">&nbsp;@item.TextDisplay</label>
+                    </div>
+                }
+                <p class="text-danger">@Html.ValidationMessageFor(model => model.I_AlumnosDestino)</p>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-md-8 offset-md-2">
+                @foreach (var item in (List<WebApp.ViewModels.SelectViewModel>)ViewBag.Lista_Opciones_Grado)
+                {
+                    var id = "I_GradoDestino_" + item.Value;
+                    <div class="form-check form-check-inline">
+                        @Html.RadioButtonFor(model => model.I_GradoDestino, item.Value, new { @id = id })
+                        <label class="form-check-label" for="@id">&nbsp;@item.TextDisplay</label>
+                    </div>
+                }
+                <p class="text-danger">@Html.ValidationMessageFor(model => model.I_GradoDestino)</p>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="control-label col-md-2" for="I_TipoObligacion">Tipo de Obligación</label>
+            <div class="col-md-8">
+                @foreach (var item in (List<WebApp.ViewModels.SelectViewModel>)ViewBag.Lista_Opciones_TipoObligacion)
+                {
+                    var id = "I_TipoObligacion_" + item.Value;
+                    <div class="form-check form-check-inline">
+                        @Html.RadioButtonFor(model => model.I_TipoObligacion, item.Value, new { @id = id })
+                        <label class="form-check-label" for="@id">&nbsp;@item.TextDisplay</label>
+                    </div>
+                }
+                <p class="text-danger">@Html.ValidationMessageFor(model => model.I_TipoObligacion)</p>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="control-label col-md-2" for="I_PeriodoID">Cuota de Pago (Bnco)</label>
+            <div class="col-md-8">
+                @Html.DropDownListFor(model => model.I_PeriodoID, new SelectList(ViewBag.Lista_Combo_CuotaPago, "Value", "TextDisplay"), "[ SELECCIONAR ]", new { @class = "form-control" })
+                <p class="text-danger">@Html.ValidationMessageFor(model => model.I_PeriodoID)</p>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            @Html.LabelFor(model => model.T_Clasificador, new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.TextBoxFor(model => model.T_Clasificador, new { @class = "form-control" })
+                <p class="text-danger">@Html.ValidationMessageFor(model => model.T_Clasificador)</p>
+            </div>
+            @Html.LabelFor(model => model.T_Clasificador5, new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.TextBoxFor(model => model.T_Clasificador5, new { @class = "form-control" })
+                <p class="text-danger">@Html.ValidationMessageFor(model => model.T_Clasificador5)</p>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-md-2">
+                @Html.CheckBoxFor(model => model.B_Calculado)
+                <label class="form-check-label control-label" for="B_Calculado">Calculado</label>
+            </div>
+            <div class="col-md-8">
+                @foreach (var item in (List<WebApp.ViewModels.SelectViewModel>)ViewBag.Lista_Opciones_CampoCalculado)
+                {
+                    var id = "I_Calculado_" + item.Value;
+                    <div class="form-check form-check-inline">
+                        @Html.RadioButtonFor(model => model.I_Calculado, item.Value, new { @id = id, @disabled = "disabled" })
+                        <label class="form-check-label" for="@id">&nbsp;@item.TextDisplay</label>
+                    </div>
+                }
+                <p class="text-danger">@Html.ValidationMessageFor(model => model.I_Calculado)</p>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-md-2">
+                @Html.CheckBoxFor(model => model.B_AnioPeriodo)
+                <label class="form-check-label control-label" for="B_AnioPeriodo">Año y Período</label>
+            </div>
+            <div class="col-md-2">
+                @if (Model != null && Model.B_AnioPeriodo)
+                {
+                    @Html.DropDownListFor(model => model.I_Anio, new SelectList(ViewBag.Lista_Anios), "", new { @class = "form-control" })
+                }
+                else
+                {
+                    @Html.DropDownListFor(model => model.I_Anio, new SelectList(ViewBag.Lista_Anios), "", new { @class = "form-control", @disabled = "disabled" })
+                }
+                <p class="text-danger">@Html.ValidationMessageFor(model => model.I_Anio)</p>
+            </div>
+            <div class="col-md-4">
+                @if (Model != null && Model.B_AnioPeriodo)
+                {
+                    @Html.DropDownListFor(model => model.I_Periodo, new SelectList(ViewBag.Lista_Combo_Periodo, "Value", "TextDisplay"), "", new { @class = "form-control" })
+                }
+                else
+                {
+                    @Html.DropDownListFor(model => model.I_Periodo, new SelectList(ViewBag.Lista_Combo_Periodo, "Value", "TextDisplay"), "", new { @class = "form-control", @disabled = "false" })
+                }
+                <p class="text-danger">@Html.ValidationMessageFor(model => model.I_Periodo)</p>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-md-2">
+                @Html.CheckBoxFor(model => model.B_Especialidad)
+                <label class="form-check-label control-label" for="B_Especialidad">Cód. Especialidad</label>
+            </div>
+            <div class="col-md-10">
+                @if (Model != null && Model.B_Especialidad)
+                {
+                    @Html.DropDownListFor(model => model.C_CodRc, (SelectList)ViewBag.Lista_Vacia, new { @class = "form-control" })
+                }
+                else
+                {
+                    @Html.DropDownListFor(model => model.C_CodRc, (SelectList)ViewBag.Lista_Vacia, new { @class = "form-control", @disabled = "disabled" })
+                }
+                <p class="text-danger">@Html.ValidationMessageFor(model => model.C_CodRc)</p>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-md-2">
+                @Html.CheckBoxFor(model => model.B_Dependencia)
+                <label class="form-check-label control-label" for="B_Dependencia">Cód. Dependencia</label>
+            </div>
+            <div class="col-md-10">
+                @if (Model != null && Model.B_Dependencia)
+                {
+                    @Html.DropDownListFor(model => model.C_DepCod, (SelectList)ViewBag.Lista_Vacia, new { @class = "form-control" })
+                }
+                else
+                {
+                    @Html.DropDownListFor(model => model.C_DepCod, (SelectList)ViewBag.Lista_Vacia, new { @class = "form-control", @disabled = "disabled" })
+                }
+                <p class="text-danger">@Html.ValidationMessageFor(model => model.C_DepCod)</p>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-md-2">
+                @Html.CheckBoxFor(model => model.B_GrupoCodRc)
+                <label class="form-check-label control-label" for="B_GrupoCodRc">Grupo Cod_Rc</label>
+            </div>
+            <div class="col-md-10">
+                @if (Model != null && Model.B_GrupoCodRc)
+                {
+                    @Html.DropDownListFor(model => model.I_GrupoCodRc, new SelectList(ViewBag.Lista_Combo_GrupoCodRc, "Value", "TextDisplay"), "", new { @class = "form-control" })
+                }
+                else
+                {
+                    @Html.DropDownListFor(model => model.I_GrupoCodRc, new SelectList(ViewBag.Lista_Combo_GrupoCodRc, "Value", "TextDisplay"), "", new { @class = "form-control", @disabled = "disabled" })
+                }
+                <p class="text-danger">@Html.ValidationMessageFor(model => model.I_GrupoCodRc)</p>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-md-2">
+                @Html.CheckBoxFor(model => model.B_ModalidadIngreso)
+                <label class="form-check-label control-label" for="B_ModalidadIngreso">Cód. Ingreso</label>
+            </div>
+            <div class="col-md-10">
+                @if (Model != null && Model.B_ModalidadIngreso)
+                {
+                    @Html.DropDownListFor(model => model.I_ModalidadIngresoID, new SelectList(ViewBag.Lista_Combo_CodIngreso, "Value", "TextDisplay"), "", new { @class = "form-control" })
+                }
+                else
+                {
+                    @Html.DropDownListFor(model => model.I_ModalidadIngresoID, new SelectList(ViewBag.Lista_Combo_CodIngreso, "Value", "TextDisplay"), "", new { @class = "form-control", @disabled = "disabled" })
+                }
+                <p class="text-danger">@Html.ValidationMessageFor(model => model.I_ModalidadIngresoID)</p>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-md-2">
+                @Html.CheckBoxFor(model => model.B_ConceptoAgrupa)
+                <label class="form-check-label control-label" for="B_ConceptoAgrupa">Concepto Agrupa</label>
+            </div>
+            <div class="col-md-10">
+                @if (Model != null && Model.B_ConceptoAgrupa)
+                {
+                    @Html.DropDownListFor(model => model.I_ConceptoAgrupaID, (SelectList)ViewBag.Lista_Vacia, "", new { @class = "form-control" })
+                }
+                else
+                {
+                    @Html.DropDownListFor(model => model.I_ConceptoAgrupaID, (SelectList)ViewBag.Lista_Vacia, "", new { @class = "form-control", @disabled = "disabled" })
+                }
+                <p class="text-danger">@Html.ValidationMessageFor(model => model.I_ConceptoAgrupaID)</p>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-md-2">
+                @Html.CheckBoxFor(model => model.B_ConceptoAfecta)
+                <label class="form-check-label control-label" for="B_ConceptoAfecta">Concepto Afecta</label>
+            </div>
+            <div class="col-md-10">
+                @if (Model != null && Model.B_ConceptoAfecta)
+                {
+                    @Html.DropDownListFor(model => model.I_ConceptoAfectaID, (SelectList)ViewBag.Lista_Vacia, "", new { @class = "form-control" })
+                }
+                else
+                {
+                    @Html.DropDownListFor(model => model.I_ConceptoAfectaID, (SelectList)ViewBag.Lista_Vacia, "", new { @class = "form-control", @disabled = "disabled" })
+                }
+                <p class="text-danger">@Html.ValidationMessageFor(model => model.I_ConceptoAfectaID)</p>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            @Html.LabelFor(model => model.N_NroPagos, new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.TextBoxFor(model => model.N_NroPagos, new { @class = "form-control" })
+                <p class="text-danger">@Html.ValidationMessageFor(model => model.N_NroPagos)</p>
+            </div>
+            <div class="col-md-3">
+                @Html.CheckBoxFor(model => model.B_Porcentaje)
+                @Html.LabelFor(model => model.B_Porcentaje, new { @class = "form-check-label control-label" })
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="control-label col-md-2" for="Monto">Monto</label>
+            <div class="col-md-3">
+                @Html.TextBoxFor(model => model.M_Monto, "{0:f4}", new { @class = "form-control" })
+                <p class="text-danger">@Html.ValidationMessageFor(model => model.M_Monto)</p>
+            </div>
+            <label class="control-label col-md-2" for="Monto_Minimo">Monto Mínimo</label>
+            <div class="col-md-3">
+                @Html.TextBoxFor(model => model.M_MontoMinimo, "{0:f4}", new { @class = "form-control" })
+                <p class="text-danger">@Html.ValidationMessageFor(model => model.M_MontoMinimo)</p>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="control-label col-md-2" for="T_DescripcionLarga">Descripción Larga</label>
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.T_DescripcionLarga, new { @class = "form-control" })
+                <p class="text-danger">@Html.ValidationMessageFor(model => model.T_DescripcionLarga)</p>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="control-label col-md-2" for="T_Documento">Sustento / Observación</label>
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.T_Documento, new { @class = "form-control" })
+                <p class="text-danger">@Html.ValidationMessageFor(model => model.T_Documento)</p>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group row">
+            <div class="col-md-offset-2 col-md-10">
+                <button type="submit" class="btn btn-primary" id="btnsubmit"><i class="fa fa-save"></i>&nbsp;Guardar</button>
+            </div>
+        </div>
+    </div>
+}

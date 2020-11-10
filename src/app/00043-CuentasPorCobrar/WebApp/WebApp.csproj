@@ -288,16 +288,12 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\ClasificadoresController.cs" />
     <Compile Include="Controllers\CuentaDepositoController.cs" />
-    <Compile Include="Controllers\DependenciaController.cs" />
     <Compile Include="Controllers\EntidadFinancieraController.cs" />
-    <Compile Include="Controllers\EstudiantesController.cs" />
     <Compile Include="Controllers\HelpCenterController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\CorreoController.cs" />
-    <Compile Include="Controllers\MigracionesController.cs" />
-    <Compile Include="Controllers\ObligacionesController.cs" />
+    <Compile Include="Controllers\ConceptoPagoController.cs" />
     <Compile Include="Controllers\PeriodosController.cs" />
     <Compile Include="Controllers\ServiceController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
@@ -305,11 +301,12 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AnnexeModel.cs" />
-    <Compile Include="Models\ClasificadorModel.cs" />
     <Compile Include="Models\CuentaDepositoModel.cs" />
+    <Compile Include="Models\CustomAttribute.cs" />
     <Compile Include="Models\EntidadFinancieraModel.cs" />
     <Compile Include="Models\SelectModels.cs" />
     <Compile Include="Models\PeriodoModel.cs" />
+    <Compile Include="Models\ConceptoPagoModel.cs" />
     <Compile Include="Models\UsersModel.cs" />
     <Compile Include="Models\CorreoAplicacionModel.cs" />
     <Compile Include="Models\ResponseModel.cs" />
@@ -318,10 +315,8 @@
     <Compile Include="ViewModels\AnnexeViewModels.cs" />
     <Compile Include="ViewModels\EntidadFinancieraViewModels.cs" />
     <Compile Include="ViewModels\CuentaDepositoViewModels.cs" />
-    <Compile Include="ViewModels\ClasificadoresViewModels.cs" />
     <Compile Include="ViewModels\CorreoAplicacionViewModel.cs" />
-    <Compile Include="ViewModels\MigracionTablasViewModel.cs" />
-    <Compile Include="ViewModels\ObligacionViewModel.cs" />
+    <Compile Include="ViewModels\ConceptoPagoPeriodoViewModel.cs" />
     <Compile Include="ViewModels\PeriodoViewModel.cs" />
     <Compile Include="ViewModels\SelectViewModel.cs" />
     <Compile Include="ViewModels\UserManualViewModel.cs" />
@@ -366,9 +361,8 @@
     <Content Include="Views\Shared\_Grid.cshtml" />
     <Content Include="Views\Periodos\Index.cshtml" />
     <Content Include="Views\Periodos\_MantenimientoPeriodo.cshtml" />
-    <Content Include="Views\Obligaciones\Index.cshtml" />
-    <Content Include="Views\Obligaciones\Create.cshtml" />
-    <Content Include="Views\Obligaciones\Edit.cshtml" />
+    <Content Include="Views\ConceptoPago\Index.cshtml" />
+    <Content Include="Views\ConceptoPago\Grabar.cshtml" />
     <Content Include="Views\Estudiantes\ArchivosImportados.cshtml" />
     <Content Include="Views\Estudiantes\ImportacionArchivo.cshtml" />
     <Content Include="Views\Estudiantes\_ResultadoBuscarAlumno.cshtml" />
@@ -381,6 +375,8 @@
     <Content Include="Views\EntidadFinanciera\Index.cshtml" />
     <Content Include="Views\CuentaDeposito\Index.cshtml" />
     <Content Include="Views\EntidadFinanciera\_RegistrarEntidadFinanciera.cshtml" />
+    <Content Include="Views\ConceptoPago\Edit.cshtml" />
+    <Content Include="Views\ConceptoPago\_MantenimientoConceptoPago.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

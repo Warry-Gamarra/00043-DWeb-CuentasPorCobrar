@@ -30,10 +30,17 @@
                     </div>
                 </div>
                 <div class="form-group row">
+                    @Html.LabelFor(model => model.I_CtaDepositoID, new { @class = "col-md-4" })
+                    <div class="col-md-8">
+                        @Html.DropDownListFor(model => model.I_CtaDepositoID, new SelectList(ViewBag.Lista_CtaDepoPeriodo, "I_CtaDepositoID", "NumeroCuenta"), "", new { @class = "form-control", @readonly = "readonly" })
+                        <p class="text-danger small">@Html.ValidationMessageFor(model => model.I_CtaDepositoID)</p>
+                    </div>
+                </div>
+                <div class="form-group row">
                     @Html.LabelFor(model => model.D_FecVencto, new { @class = "col-md-4" })
                     <div class="col-md-8">
                         <div class='input-group date' id='datepicker_fecvento'>
-                            @Html.TextBoxFor(model => model.D_FecVencto, new { @class = "form-control" })
+                            @Html.TextBoxFor(model => model.D_FecVencto, "{0:dd/MM/yyyy}", new { @class = "form-control" })
                             <span class="input-group-addon"><i class="fa fa-calendar-o"></i></span>
                             <p class="text-danger small">@Html.ValidationMessageFor(model => model.D_FecVencto)</p>
                         </div>
@@ -42,11 +49,10 @@
                 <div class="form-group row">
                     @Html.LabelFor(model => model.I_Prioridad, new { @class = "col-md-4" })
                     <div class="col-md-8">
-                        @Html.TextBoxFor(model => model.I_Prioridad, new { @class = "form-control" })
+                        @Html.TextBoxFor(model => model.I_Prioridad, new { @class = "form-control", @readonly = "readonly" })
                         <p class="text-danger small">@Html.ValidationMessageFor(model => model.I_Prioridad)</p>
                     </div>
                 </div>
-
             </fieldset>
         </div>
 
