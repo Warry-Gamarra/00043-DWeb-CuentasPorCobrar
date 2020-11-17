@@ -18,7 +18,7 @@ namespace WebApp.Controllers
         public PeriodosController()
         {
             periodoModel = new PeriodoModel();
-        } 
+        }
 
         public ActionResult Index()
         {
@@ -33,11 +33,11 @@ namespace WebApp.Controllers
         {
             ViewBag.Title = "Nuevo registro";
 
-            ViewBag.Lista_Tipo_Periodo = periodoModel.Listar_Tipo_Periodo_Habilitados();
+            Cargar_Listas();
 
-            ViewBag.Lista_Anios = periodoModel.Listar_Anios();
+            ViewBag.Lista_CtaDepoHabilitadas = new List<SelectViewModel>();
 
-            ViewBag.Lista_CtaDepoPeriodo = new List<CuentaDepositoApiModel>();
+            ViewBag.Lista_CtaDepoPeriodo = new List<SelectViewModel>();
 
             return PartialView("_MantenimientoPeriodo");
         }
@@ -46,13 +46,13 @@ namespace WebApp.Controllers
         {
             ViewBag.Title = "Editar registro";
 
-            ViewBag.Lista_Tipo_Periodo = periodoModel.Listar_Tipo_Periodo_Habilitados();
-
-            ViewBag.Lista_Anios = periodoModel.Listar_Anios();
+            Cargar_Listas();
 
             var model = periodoModel.Obtener_Periodo(id);
 
-            ViewBag.Lista_CtaDepoPeriodo = periodoModel.Listar_Cuenta_Deposito_Habilitadas(model.I_TipoPeriodoID);
+            ViewBag.Lista_CtaDepoHabilitadas = periodoModel.Listar_Combo_CtaDepositoHabilitadas(model.I_TipoPeriodoID);
+
+            ViewBag.Lista_CtaDepoPeriodo = periodoModel.Listar_Combo_CtasDepoPeriodo(id);
 
             return PartialView("_MantenimientoPeriodo", model);
         }
@@ -83,6 +83,13 @@ namespace WebApp.Controllers
             }
 
             return PartialView("_MsgPartialWR", result);
+        }
+
+        private void Cargar_Listas()
+        {
+            ViewBag.Lista_TipoPeriodo = periodoModel.Listar_Combo_TipoPeriodo();
+
+            ViewBag.Lista_Anios = periodoModel.Listar_Anios();
         }
     }
 }

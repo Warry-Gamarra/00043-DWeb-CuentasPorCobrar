@@ -47,8 +47,13 @@ GO
 
 
 INSERT TC_EntidadFinanciera(T_EntidadDesc, B_Habilitado, B_Eliminado)values('BANCO DE COMERCIO', 1, 0)
+INSERT TC_EntidadFinanciera(T_EntidadDesc, B_Habilitado, B_Eliminado)values('BANCO DE CRÉDITO', 1, 0)
+
 INSERT TC_CuentaDeposito(I_EntidadFinanID, C_NumeroCuenta, B_Habilitado, B_Eliminado) VALUES(1, '110-01-0414438', 1, 0)
+INSERT TC_CuentaDeposito(I_EntidadFinanID, C_NumeroCuenta, B_Habilitado, B_Eliminado) VALUES(2, '119-104146435-1-01', 1, 0)
+
 INSERT TC_CuentaDeposito_TipoPeriodo(I_CtaDepositoID, I_TipoPeriodoID, B_Habilitado, B_Eliminado) VALUES(1,1,1,0)
+INSERT TC_CuentaDeposito_TipoPeriodo(I_CtaDepositoID, I_TipoPeriodoID, B_Habilitado, B_Eliminado) VALUES(2,1,1,0)
 
 
 INSERT TC_Parametro(T_ParametroDesc, B_Habilitado, B_Eliminado) VALUES('TIPO ALUMNO', 1, 0)
@@ -209,3 +214,4 @@ SELECT * FROM TC_CatalogoOpcion WHERE I_ParametroID = 7
 SELECT * FROM TC_ConceptoPago
 SELECT c.* FROM TI_ConceptoPago_Periodo c where c.B_Eliminado = 0 
 
+USP_S_CuentaDeposito_Habilitadas 1

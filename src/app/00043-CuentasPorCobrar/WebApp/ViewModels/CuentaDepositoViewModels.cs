@@ -53,11 +53,4 @@ namespace WebApp.ViewModels
         }
 
     }
-
-    public class CuentaDepositoApiModel
-    {
-        public int I_CtaDepositoID { get; set; }
-        public string EntidadFinanciera { get; set; }
-        public string NumeroCuenta { get; set; }
-    }
 }

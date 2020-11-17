@@ -20,7 +20,7 @@
         <div class="form-group row">
             @Html.LabelFor(model => model.I_ConceptoID, new { @class = "control-label col-md-2" })
             <div class="col-md-8">
-                @Html.DropDownListFor(model => model.I_ConceptoID, new SelectList(ViewBag.Listar_Combo_ConceptoPago, "Value", "TextDisplay"), "[ SELECCIONAR ]", new { @class = "form-control" })
+                @Html.DropDownListFor(model => model.I_ConceptoID, new SelectList(ViewBag.Lista_Combo_ConceptoPago, "Value", "TextDisplay"), "[ SELECCIONAR ]", new { @class = "form-control" })
                 <p class="text-danger">@Html.ValidationMessageFor(model => model.I_ConceptoID)</p>
             </div>
         </div>

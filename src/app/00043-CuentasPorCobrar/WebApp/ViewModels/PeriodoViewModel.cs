@@ -32,7 +32,7 @@ namespace WebApp.ViewModels
         public byte? I_Prioridad { get; set; }
 
         [Display(Name = "Nro de Cta.Cte")]
-        public int I_CtaDepositoID { get; set; }
+        public int[] Arr_CtaDepositoID { get; set; }
 
         public bool? B_Habilitado { get; set; }
     }

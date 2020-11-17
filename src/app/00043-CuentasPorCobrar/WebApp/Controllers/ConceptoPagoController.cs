@@ -114,7 +114,7 @@ namespace WebApp.Controllers
 
         private void Cargar_Listas()
         {
-            ViewBag.Listar_Combo_ConceptoPago = conceptoPagoModel.Listar_Combo_ConceptoPago();
+            ViewBag.Lista_Combo_ConceptoPago = conceptoPagoModel.Listar_Combo_ConceptoPago();
 
             ViewBag.Lista_Opciones_TipoAlumno = conceptoPagoModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.TipoAlumno);
 

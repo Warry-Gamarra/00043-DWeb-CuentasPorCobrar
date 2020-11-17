@@ -231,5 +231,29 @@ namespace Domain.Services
                 return null;
             }
         }
+
+        public List<CtaDepoPeriodo> Obtener_CtasDepo_X_Periodo(int I_PeriodoID)
+        {
+            try
+            {
+                var lista = USP_S_CtaDepo_Periodo.Execute(I_PeriodoID);
+
+                var result = lista.Select(x => new CtaDepoPeriodo()
+                {
+                    I_CtaDepoPerID = x.I_CtaDepoPerID,
+                    I_CtaDepositoID = x.I_CtaDepositoID,
+                    I_PeriodoID = x.I_PeriodoID,
+                    B_Habilitado = x.B_Habilitado,
+                    C_NumeroCuenta = x.C_NumeroCuenta,
+                    T_EntidadDesc = x.T_EntidadDesc
+                }).ToList();
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
     }
 }

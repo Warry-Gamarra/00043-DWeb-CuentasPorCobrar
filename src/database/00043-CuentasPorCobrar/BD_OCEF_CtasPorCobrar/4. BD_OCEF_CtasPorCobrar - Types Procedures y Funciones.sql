@@ -338,6 +338,22 @@ BEGIN
 END
 GO
 
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_CtaDepo_Periodo')
+	DROP PROCEDURE dbo.USP_S_CtaDepo_Periodo
+GO
+
+
+CREATE PROCEDURE dbo.USP_S_CtaDepo_Periodo
+@I_PeriodoID int
+AS
+BEGIN
+	SET NOCOUNT ON
+  	SELECT cp.I_CtaDepoPerID, cp.I_CtaDepositoID, cp.I_PeriodoID, cp.B_Habilitado, c.C_NumeroCuenta, e.T_EntidadDesc FROM dbo.TI_CtaDepo_Periodo cp
+	INNER JOIN dbo.TC_CuentaDeposito c ON c.I_CtaDepositoID = cp.I_CtaDepositoID
+	INNER JOIN dbo.TC_EntidadFinanciera e ON e.I_EntidadFinanID = c.I_EntidadFinanID
+	WHERE cp.B_Eliminado = 0 AND cp.I_PeriodoID = @I_PeriodoID
+END
+GO
 
 
 

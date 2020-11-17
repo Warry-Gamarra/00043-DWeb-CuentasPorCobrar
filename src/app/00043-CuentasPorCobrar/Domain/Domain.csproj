@@ -77,6 +77,7 @@
     <Compile Include="Entities\ConceptoPagoEntity.cs" />
     <Compile Include="Entities\ConceptoPagoPeriodo.cs" />
     <Compile Include="Entities\ConceptoPagoPeriodoEntity.cs" />
+    <Compile Include="Entities\CtaDepoPeriodo.cs" />
     <Compile Include="Entities\CuentaDeposito.cs" />
     <Compile Include="Entities\CatalogoOpcionEntity.cs" />
     <Compile Include="Entities\TipoPeriodo.cs" />

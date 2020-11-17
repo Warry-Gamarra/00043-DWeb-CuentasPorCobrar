@@ -375,7 +375,6 @@
     <Content Include="Views\EntidadFinanciera\Index.cshtml" />
     <Content Include="Views\CuentaDeposito\Index.cshtml" />
     <Content Include="Views\EntidadFinanciera\_RegistrarEntidadFinanciera.cshtml" />
-    <Content Include="Views\ConceptoPago\Edit.cshtml" />
     <Content Include="Views\ConceptoPago\_MantenimientoConceptoPago.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

@@ -36,7 +36,7 @@ namespace WebApp.Controllers
         }
 
         // GET: api/Service/5
-        public List<CuentaDepositoApiModel> GetCuentasDeposito(int id)
+        public List<SelectViewModel> GetCuentasDeposito(int id)
         {
             if (id == 0)
             {
@@ -48,7 +48,7 @@ namespace WebApp.Controllers
                 throw new HttpResponseException(error);
             }
 
-            var lista = periodoModel.Listar_Cuenta_Deposito_Habilitadas(id);
+            var lista = periodoModel.Listar_Combo_CtaDepositoHabilitadas(id);
             
             return lista;
         }
