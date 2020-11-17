@@ -1,6 +1,117 @@
 USE [BD_OCEF_CtasPorCobrar]
 GO
 
+/*	-----------------------  Dependencias	-----------------------  */
+
+CREATE TABLE TC_DependenciaUNFV
+( 
+	I_DependenciaID      int IDENTITY ( 1,1 ) ,
+	T_DepDesc            varchar(150)  NULL ,
+	C_DepCod             varchar(20)  NOT NULL ,
+	C_DepCodPl           varchar(20)  NULL ,
+	T_DepAbrev           varchar(10)  NULL ,
+	B_Habilitado         bit  NOT NULL ,
+	B_Eliminado          bit  NOT NULL ,
+	I_UsuarioCre         int  NULL ,
+	D_FecCre             datetime  NULL ,
+	I_UsuarioMod         int  NULL ,
+	D_FecMod             datetime  NULL ,
+	CONSTRAINT PK_DependenciaUNFV PRIMARY KEY  CLUSTERED (I_DependenciaID ASC)
+)
+go
+
+
+CREATE TABLE TC_Facultad
+( 
+	I_FacultadID         int IDENTITY ( 1,1 ) ,
+	C_CodFac             varchar(2)  NULL ,
+	T_FacDesc            varchar(80)  NULL ,
+	T_FacAbrev           varchar(10)  NULL ,
+	I_DependenciaID      int  NULL ,
+	B_Habilitado         bit  NOT NULL ,
+	B_Eliminado          bit  NOT NULL ,
+	I_UsuarioCre         int  NULL ,
+	D_FecCre             datetime  NULL ,
+	I_UsuarioMod         int  NULL ,
+	D_FecMod             datetime  NULL ,
+	CONSTRAINT PK_Facultad PRIMARY KEY  CLUSTERED (I_FacultadID ASC),
+	CONSTRAINT FK_DependenciaUNFV_Facultad FOREIGN KEY (I_DependenciaID) REFERENCES TC_DependenciaUNFV(I_DependenciaID)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+)
+go
+
+
+
+CREATE TABLE TC_Escuela
+( 
+	I_EscuelaID          int IDENTITY ( 1,1 ) ,
+	C_CodEsc             varchar(2)  NULL ,
+	T_EscDesc            varchar(80)  NOT NULL ,
+	T_EscAbrev           varchar(10)  NULL ,
+	C_Tipo				 varchar(1)  NULL ,
+	B_Habilitado         bit  NOT NULL ,
+	B_Eliminado          bit  NOT NULL ,
+	I_UsuarioCre         int  NULL ,
+	D_FecCre             datetime  NULL ,
+	I_UsuarioMod         int  NULL ,
+	D_FecMod             datetime  NULL ,
+	CONSTRAINT PK_Escuela PRIMARY KEY  CLUSTERED (I_EscuelaID ASC)
+)
+go
+
+
+
+CREATE TABLE TC_Especialidad
+( 
+	I_EspecialID         int IDENTITY ( 1,1 ) ,
+	C_CodEsp             varchar(2)  NULL ,
+	T_EspDesc            varchar(150)  NOT NULL ,
+	T_EspAbrev           varchar(10)  NULL ,
+	B_Habilitado         bit  NOT NULL ,
+	B_Eliminado          bit  NOT NULL ,
+	I_UsuarioCre         int  NULL ,
+	D_FecCre             datetime  NULL ,
+	I_UsuarioMod         int  NULL ,
+	D_FecMod             datetime  NULL ,
+	CONSTRAINT PK_Especialidad PRIMARY KEY  CLUSTERED (I_EspecialID ASC)
+)
+go
+
+
+
+CREATE TABLE TI_TabRC
+( 
+	I_TabRcId            int IDENTITY ( 1,1 ) ,
+	C_RcCod              varchar(3)  NULL ,
+	I_FacultadID         int  NOT NULL ,
+	I_EscuelaID          int  NOT NULL ,
+	I_EspecialID         int  NULL ,
+	C_Tipo               char(1)  NULL ,
+	I_Duracion           integer  NULL ,
+	B_Anual              bit  NULL ,
+	N_Grupo              char(1)  NULL ,
+	N_Grado              char(1)  NULL ,
+	I_IdAplica           int  NULL ,
+	B_Habilitado         integer  NOT NULL ,
+	B_Eliminado          integer  NOT NULL ,
+	I_UsuarioCre         int  NULL ,
+	D_FecCre             datetime  NULL ,
+	I_UsuarioMod         int  NULL ,
+	D_FecMod             datetime  NULL ,
+	CONSTRAINT PK_TabRC PRIMARY KEY  CLUSTERED (I_TabRcId ASC),
+	CONSTRAINT FK_Facultad_TabRC FOREIGN KEY (I_FacultadID) REFERENCES TC_Facultad(I_FacultadID)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION,
+	CONSTRAINT FK_Escuela_TabRC FOREIGN KEY (I_EscuelaID) REFERENCES TC_Escuela(I_EscuelaID)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION,
+	CONSTRAINT FK_Especialidad_TabRC FOREIGN KEY (I_EspecialID) REFERENCES TC_Especialidad(I_EspecialID)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+)
+go
+
 
 /*	-----------------------  Autenticacion	-----------------------  */
 
@@ -18,6 +129,7 @@ CREATE TABLE TC_Usuarios
 ( 
 	UserId               int IDENTITY ( 1,1 ) ,
 	UserName             varchar(20)  NOT NULL ,
+	I_DependenciaID      int ,
 	I_UsuarioCrea        int  NULL ,
 	D_FecActualiza       datetime  NULL ,
 	B_CambiaPassword     bit  NOT NULL ,
@@ -28,7 +140,10 @@ CREATE TABLE TC_Usuarios
 	I_UsuarioMod         int  NULL ,
 	D_FecMod             datetime  NULL ,
 	CONSTRAINT PK_Usuarios PRIMARY KEY  NONCLUSTERED (UserId ASC),
-	CONSTRAINT FK_Usuarios_Usuarios_UsuarioCrea FOREIGN KEY (I_UsuarioCrea) REFERENCES TC_Usuarios(UserId)
+	CONSTRAINT FK_Usuarios_UsuarioCrea FOREIGN KEY (I_UsuarioCrea) REFERENCES TC_Usuarios(UserId)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION,
+	CONSTRAINT FK_DependenciaUNFV_Usuario FOREIGN KEY (I_DependenciaID) REFERENCES TC_DependenciaUNFV(I_DependenciaID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 )
@@ -190,23 +305,6 @@ CREATE TABLE TC_Periodo
 	CONSTRAINT FK_TipoPeriodo_Periodo FOREIGN KEY (I_TipoPeriodoID) REFERENCES TC_TipoPeriodo(I_TipoPeriodoID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
-)
-GO
-
-
-
-CREATE TABLE TC_DependenciaUNFV
-( 
-	I_DependenciaID      int IDENTITY ( 1,1 ) ,
-	T_DependDesc         varchar(250)  NULL ,
-	I_DepAgrupaID        int  NOT NULL ,
-	B_Habilitado         bit  NOT NULL ,
-	B_Eliminado          bit  NOT NULL ,
-	I_UsuarioCre         int  NULL ,
-	D_FecCre             datetime  NULL ,
-	I_UsuarioMod         int  NULL ,
-	D_FecMod             datetime  NULL ,
-	CONSTRAINT PK_DependenciaUNFV PRIMARY KEY  CLUSTERED (I_DependenciaID ASC)
 )
 GO
 
@@ -444,6 +542,70 @@ CREATE TABLE TI_ConceptoPago_Periodo
 		ON UPDATE NO ACTION
 )
 GO
+
+
+CREATE TABLE TC_ClasificadorIngreso
+( 
+	I_ClasificadorID     int IDENTITY ( 1,1 ) ,
+	T_ClasificadorDesc   varchar(250)  NOT NULL ,
+	T_ClasificadorCod    varchar(50)  NULL ,
+	T_ClasificadorUnfv   varchar(50)  NULL ,
+	B_Habilitado         bit  NOT NULL ,
+	B_Eliminado          bit  NOT NULL ,
+	I_UsuarioCre         int  NULL ,
+	D_FecCre             datetime  NULL ,
+	I_UsuarioMod         int  NULL ,
+	D_FecMod             datetime  NULL ,
+	CONSTRAINT PK_ClasificadorIngreso PRIMARY KEY  CLUSTERED (I_ClasificadorID ASC)
+)
+go
+
+
+CREATE TABLE TC_Alumno
+( 
+	C_CodAlu             varchar(20)  NOT NULL ,
+	T_ApePaterno         varchar(50)  NOT NULL ,
+	T_ApeMaterno         varchar(50)  NULL ,
+	T_Nombre             varchar(50)  NULL ,
+	T_NomAlu             varchar(200)  NULL ,
+	C_CodRc              varchar(10)  NULL ,
+	I_TabRcId            int  NULL ,
+	I_IdPlan             int  NULL ,
+	B_Habilitado         bit  NOT NULL ,
+	B_Eliminado          bit  NOT NULL ,
+	I_UsuarioCre         int  NULL ,
+	D_FecCre             datetime  NULL ,
+	I_UsuarioMod         int  NULL ,
+	D_FecMod             datetime  NULL ,
+	CONSTRAINT PK_Alumno PRIMARY KEY  CLUSTERED (C_CodAlu ASC),
+	CONSTRAINT FK_TabRC_Alumno FOREIGN KEY (I_TabRcId) REFERENCES TI_TabRC(I_TabRcId)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+)
+go
+
+
+
+CREATE TABLE TC_MatriculaAlumno
+( 
+	I_MatAluID           bigint IDENTITY ( 1,1 ) ,
+	N_Anio               varchar(250)  NOT NULL ,
+	C_CodAlu             varchar(20)  NULL ,
+	C_EstMat             char(18)  NULL ,
+	C_Nivel              char(18)  NULL ,
+	B_Habilitado         bit  NOT NULL ,
+	B_Eliminado          bit  NOT NULL ,
+	I_UsuarioCre         int  NULL ,
+	D_FecCre             datetime  NULL ,
+	I_UsuarioMod         int  NULL ,
+	D_FecMod             datetime  NULL ,
+	CONSTRAINT PK_MatriculaAlumno PRIMARY KEY  CLUSTERED (I_MatAluID ASC),
+	CONSTRAINT FK_Alumno_MatriculaAlumno FOREIGN KEY (C_CodAlu) REFERENCES TC_Alumno(C_CodAlu)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+)
+go
+
 
 
 CREATE TABLE TC_Parametro(

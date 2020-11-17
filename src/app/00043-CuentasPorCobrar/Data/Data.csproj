@@ -71,6 +71,7 @@
     <Compile Include="Procedures\USP_S_CtaDepo_Periodo.cs" />
     <Compile Include="Procedures\USP_U_ActualizarConceptoPago_Periodo.cs" />
     <Compile Include="Procedures\USP_I_GrabarConceptoPago_Periodo.cs" />
+    <Compile Include="Procedures\USP_IU_GrabarAlumnosAptos.cs" />
     <Compile Include="Procedures\USP_I_GrabarPeriodo.cs" />
     <Compile Include="Procedures\USP_I_GrabarPeriodo_CuentaDeposito.cs" />
     <Compile Include="Procedures\USP_S_ConceptoPago_Periodo_Habilitados.cs" />

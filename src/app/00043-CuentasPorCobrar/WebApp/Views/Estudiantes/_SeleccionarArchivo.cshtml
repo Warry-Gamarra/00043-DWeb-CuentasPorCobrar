@@ -1,0 +1,89 @@
+﻿@model WebApp.ViewModels.SeleccionarArchivoViewModel
+
+<link href="~/Assets/fileInput/css/fileinput.min.css" rel="stylesheet" />
+<script src="~/Assets/fileInput/js/fileinput.min.js"></script>
+<script src="~/Assets/fileInput/js/locales/es.js"></script>
+<script src="~/Assets/jquery/jquery.form.js"></script>
+
+@using (Html.BeginForm(Model.Action, "Estudiantes", FormMethod.Post, new { id = "form-upload", enctype = "multipart/form-data" }))
+{
+    <div class="modal-header">
+        <h5 class="modal-title"><i class="fa fa-table text-primary">&nbsp;</i>Adjuntar archivo @Model.TipoAlumno</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-12">
+                <input type="hidden" name="tipoAlumno" value="@Model.TipoAlumno" />
+                <div class="form-group" id="div-file">
+                    <label class="control-label">Seleccione archivo</label>
+                    <div class="file-loading">
+                        <input id="input_file" type="file" name="file" required>
+                    </div>
+                    <div id="error-matricula"></div>
+                    <br />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-@Model.Color"><i id="icon-submit" class="fa fa-cloud-upload">&nbsp;</i>Subir archivo de </button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+    </div>
+
+}
+
+
+<script>
+
+    $("#input_file").fileinput({
+        showCaption: true,
+        dropZoneEnabled: false,
+        language: 'es',
+        allowedFileExtensions: ["dbf", "xls", "xlsx"],
+        showPreview: false,
+        showUpload: false,
+        elErrorContainer: '#error-matricula'
+    }).on('change', function () {
+        $('#div-nom-mat').show();
+    }).on('filecleared', function () {
+        $('#div-nom-mat').hide();
+    });
+
+    $(".btn-file").removeClass("btn-primary").addClass("btn-" + '@Model.Color');
+    $(".btn-file>i").removeClass("glyphicon glyphicon-folder-open").addClass("fa fa-folder-open");
+    $("button.fileinput-remove>i").removeClass("glyphicon glyphicon-trash").addClass("fa fa-trash");
+
+    $('#form-upload').on('submit', function (event) {
+        event.preventDefault();
+        var form = $(this);
+
+        form.ajaxSubmit({
+            cache: false,
+            url: form.attr('action'),
+            type: "POST",
+            processData: false,
+            dataType: "json",
+            beforeSend: function () {
+                $('#icon-submit').removeClass('fa-cloud-upload').addClass('fa-spin fa-cog');
+
+            },
+            success: function (result) {
+                debugger
+                if (result['Value']) {
+                    $('.modal-footer').html('<p class="alert alert-success">' + result['Message'] + '</p><button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>')
+                }
+
+                $('#icon-submit').addClass('fa-cloud-upload').removeClass('fa-spin fa-cog');
+
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                toastr.error(errorThrown);
+                $('#icon-submit').addClass('fa-cloud-upload').removeClass('fa-spin fa-cog');
+            }
+        });
+    })
+
+</script>

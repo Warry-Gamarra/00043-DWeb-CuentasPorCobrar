@@ -81,7 +81,7 @@
     <Compile Include="Entities\CuentaDeposito.cs" />
     <Compile Include="Entities\CatalogoOpcionEntity.cs" />
     <Compile Include="Entities\TipoPeriodo.cs" />
-    <Compile Include="Entities\FinancialEntity.cs" />
+    <Compile Include="Entities\Estudiante.cs" />
     <Compile Include="Entities\EntidadFinanciera.cs" />
     <Compile Include="Entities\CorreoAplicacion.cs" />
     <Compile Include="Entities\Periodo.cs" />
@@ -101,6 +101,7 @@
     <Compile Include="Services\ICorreoAplicacion.cs" />
     <Compile Include="Services\ICuentaDeposito.cs" />
     <Compile Include="Services\IEntidadFinanciera.cs" />
+    <Compile Include="Services\IEstudiante.cs" />
     <Compile Include="Services\IHelpResources.cs" />
     <Compile Include="Services\IDependencia.cs" />
     <Compile Include="Services\IRoles.cs" />

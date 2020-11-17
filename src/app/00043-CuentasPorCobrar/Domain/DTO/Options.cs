@@ -11,4 +11,18 @@ namespace Domain.DTO
         Insert,
         Update
     }
+
+    public enum TipoAlumno
+    {
+        Pregrado,
+        Posgrado,
+        Euded
+    }
+
+    public enum TablaMigracion
+    {
+        Dependencias,
+        Tasas,
+        Obligaciones
+    }
 }
