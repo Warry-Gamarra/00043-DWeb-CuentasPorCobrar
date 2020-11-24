@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# SQL Server Management Studio Solution File, Format Version 18.00
+VisualStudioVersion = 15.0.28307.421
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{4F2E2C19-372F-40D8-9FA7-9D2138C6997A}") = "BD_UNFV_Repositorio", "..\UnfvRepositorio\BD_UNFV_Repositorio\BD_UNFV_Repositorio.ssmssqlproj", "{C56DAE09-D8E8-45D6-9C1A-E76F6DD1B1A5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Default|Default = Default|Default
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C56DAE09-D8E8-45D6-9C1A-E76F6DD1B1A5}.Default|Default.ActiveCfg = Default
+		{CAAC8145-BA86-4BA6-ADC4-81FA13E451DB}.Default|Default.ActiveCfg = Default
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7639BBA8-0AAF-482D-88EC-EAF54B760D92}
+	EndGlobalSection
+EndGlobal
