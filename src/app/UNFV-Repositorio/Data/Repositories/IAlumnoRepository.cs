@@ -13,6 +13,8 @@ namespace Data.Repositories
     {
         IEnumerable<TC_Alumno> GetAll();
 
+        TC_Alumno GetByID(string C_RcCod, string C_CodAlu);
+
         ResponseData Create(TC_Alumno alumno);
 
         ResponseData Edit(TC_Alumno alumno);

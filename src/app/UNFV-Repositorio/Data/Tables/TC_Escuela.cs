@@ -34,7 +34,7 @@ namespace Data.Tables
 
         public DateTime? D_FecMod { get; set; }
 
-        public IEnumerable<TC_Escuela> GetAll()
+        public static IEnumerable<TC_Escuela> GetAll()
         {
             IEnumerable<TC_Escuela> result;
             string command;
@@ -46,6 +46,50 @@ namespace Data.Tables
                     command = "SELECT * FROM TC_Escuela WHERE B_Eliminado = 0";
 
                     result = _dbConnection.Query<TC_Escuela>(command, commandType: CommandType.Text);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
+
+        public static IEnumerable<TC_Escuela> GetByFac(string C_CodFac)
+        {
+            IEnumerable<TC_Escuela> result;
+            string command;
+
+            try
+            {
+                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
+                {
+                    command = "SELECT * FROM TC_Escuela WHERE B_Eliminado = 0 AND C_CodFac = @C_CodFac";
+
+                    result = _dbConnection.Query<TC_Escuela>(command, new { C_CodFac = C_CodFac }, commandType: CommandType.Text);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
+
+        public TC_Escuela GetByID(string C_CodEsc, string C_CodFac)
+        {
+            TC_Escuela result;
+            string command;
+
+            try
+            {
+                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
+                {
+                    command = "SELECT * FROM TC_Escuela WHERE B_Eliminado = 0 AND C_CodEsc = @C_CodEsc AND C_CodFac = @C_CodFac";
+
+                    result = _dbConnection.QueryFirstOrDefault<TC_Escuela>(command, new { C_CodEsc = C_CodEsc, C_CodFac = C_CodFac }, commandType: CommandType.Text);
                 }
             }
             catch (Exception ex)

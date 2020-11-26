@@ -47,6 +47,7 @@
     <Compile Include="CoreLibModule.cs" />
     <Compile Include="Entities\Alumno.cs" />
     <Compile Include="Entities\AlumnoEntity.cs" />
+    <Compile Include="Entities\Mapper.cs" />
     <Compile Include="Entities\ProgramaUnfv.cs" />
     <Compile Include="Entities\ProgramaUnfvEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

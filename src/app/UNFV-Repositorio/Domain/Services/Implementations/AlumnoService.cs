@@ -22,27 +22,61 @@ namespace Domain.Services.Implementations
 
         public ResponseData Create(AlumnoEntity alumnoEntity)
         {
-            throw new NotImplementedException();
+            ResponseData responsePersona;
+            ResponseData responseAlumno;
+            
+            var persona = Mapper.AlumnoEntityToTC_Persona(alumnoEntity);
+
+            var alumno = Mapper.AlumnoEntityToTC_Alumno(alumnoEntity);
+
+            responsePersona = _personaRepository.Create(persona);
+
+            if (responsePersona.Value)
+            {
+                alumno.I_PersonaID = int.Parse(responsePersona.CurrentID);
+
+                responseAlumno = _alumnoRepository.Create(alumno);
+
+                return responseAlumno;
+            }
+
+            return responsePersona;
         }
 
         public ResponseData Edit(AlumnoEntity alumnoEntity)
         {
-            throw new NotImplementedException();
+            ResponseData responsePersona;
+            ResponseData responseAlumno;
+
+            var persona = Mapper.AlumnoEntityToTC_Persona(alumnoEntity);
+
+            var alumno = Mapper.AlumnoEntityToTC_Alumno(alumnoEntity);
+
+            responsePersona = _personaRepository.Edit(persona);
+
+            if (responsePersona.Value)
+            {
+                responseAlumno = _alumnoRepository.Edit(alumno);
+
+                return responseAlumno;
+            }
+
+            return responsePersona;
         }
 
-        public IEnumerable<Alumno> GetAll()
+        public IEnumerable<AlumnoEntity> GetAll()
         {
-            IEnumerable<Alumno> result;
+            IEnumerable<AlumnoEntity> result;
 
             var alumnos = _alumnoRepository.GetAll();
 
             if (alumnos == null)
             {
-                result = new List<Alumno>();
+                result = new List<AlumnoEntity>();
             }
             else
             {
-                result = alumnos.Select(a => new Alumno()
+                result = alumnos.Select(a => new AlumnoEntity()
                 {
 
                 });

@@ -11,10 +11,14 @@ namespace Data.Repositories
 {
     public interface IPersonaRepository
     {
-        IEnumerable<TC_Persona> GetAll();
-
         ResponseData Create(TC_Persona persona);
 
         ResponseData Edit(TC_Persona persona);
+
+        IEnumerable<TC_Persona> GetAll();
+
+        TC_Persona GetByID(int I_PersonaID);
+
+        TC_Persona GetByDocIdent(string C_NumDNI, string C_CodTipDoc);
     }
 }

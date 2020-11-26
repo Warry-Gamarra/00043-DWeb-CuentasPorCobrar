@@ -57,10 +57,12 @@
     <Compile Include="Procedures\USP_U_ActualizarProgramaUnfv.cs" />
     <Compile Include="Procedures\USP_I_GrabarProgramaUnfv.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\IFacultadRepository.cs" />
     <Compile Include="Repositories\Implementations\CarreraProfesionalRepository.cs" />
     <Compile Include="Repositories\Implementations\AlumnoRepository.cs" />
     <Compile Include="Repositories\ICarreraProfesionalRepository.cs" />
     <Compile Include="Repositories\IAlumnoRepository.cs" />
+    <Compile Include="Repositories\Implementations\FacultadRepository.cs" />
     <Compile Include="Repositories\IPersonaRepository.cs" />
     <Compile Include="Repositories\IProgramaUnfvRepository.cs" />
     <Compile Include="Repositories\Implementations\PersonaRepository.cs" />

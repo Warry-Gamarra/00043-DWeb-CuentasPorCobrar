@@ -61,5 +61,49 @@ namespace Data.Tables
 
             return result;
         }
+
+        public static TC_Persona GetByDocIdent(string C_NumDNI, string C_CodTipDoc)
+        {
+            TC_Persona result;
+            string command;
+
+            try
+            {
+                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
+                {
+                    command = "SELECT * FROM TC_Persona WHERE B_Eliminado = 0 AND C_NumDNI = @C_NumDNI AND C_CodTipDoc = @C_CodTipDoc";
+
+                    result = _dbConnection.QueryFirstOrDefault<TC_Persona>(command, new { C_NumDNI = C_NumDNI , C_CodTipDoc  = C_CodTipDoc }, commandType: CommandType.Text);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
+
+        public static TC_Persona GetByID(int I_PersonaID)
+        {
+            TC_Persona result;
+            string command;
+
+            try
+            {
+                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
+                {
+                    command = "SELECT * FROM TC_Persona WHERE B_Eliminado = 0 AND I_PersonaID = @I_PersonaID";
+
+                    result = _dbConnection.QueryFirstOrDefault<TC_Persona>(command, new { I_PersonaID = I_PersonaID }, commandType: CommandType.Text);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
     }
 }

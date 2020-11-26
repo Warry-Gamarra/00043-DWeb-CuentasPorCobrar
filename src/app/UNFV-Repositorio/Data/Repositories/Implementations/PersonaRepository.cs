@@ -74,5 +74,29 @@ namespace Data.Repositories.Implementations
                 return null;
             }
         }
+
+        public TC_Persona GetByDocIdent(string C_NumDNI, string C_CodTipDoc)
+        {
+            try
+            {
+                return TC_Persona.GetByDocIdent(C_NumDNI, C_CodTipDoc);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        public TC_Persona GetByID(int I_PersonaID)
+        {
+            try
+            {
+                return TC_Persona.GetByID(I_PersonaID);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
     }
 }

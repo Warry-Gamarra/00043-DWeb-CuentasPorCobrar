@@ -32,7 +32,7 @@ namespace Data.Tables
 
         public DateTime? D_FecMod { get; set; }
 
-        public IEnumerable<TC_Facultad> GetAll()
+        public static IEnumerable<TC_Facultad> GetAll()
         {
             IEnumerable<TC_Facultad> result;
             string command;
@@ -44,6 +44,28 @@ namespace Data.Tables
                     command = "SELECT * FROM TC_Facultad WHERE B_Eliminado = 0";
 
                     result = _dbConnection.Query<TC_Facultad>(command, commandType: CommandType.Text);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
+
+        public static TC_Facultad GetByID(string C_CodFac)
+        {
+            TC_Facultad result;
+            string command;
+
+            try
+            {
+                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
+                {
+                    command = "SELECT * FROM TC_Facultad WHERE B_Eliminado = 0 AND C_CodFac = @C_CodFac";
+
+                    result = _dbConnection.QueryFirstOrDefault<TC_Facultad>(command, new { C_CodFac = C_CodFac }, commandType: CommandType.Text);
                 }
             }
             catch (Exception ex)

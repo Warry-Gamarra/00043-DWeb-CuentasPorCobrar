@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -9,6 +10,13 @@ namespace WebApi.Controllers
 {
     public class ValuesController : ApiController
     {
+        public IAlumnoService _alumnoService;
+
+        public ValuesController(IAlumnoService alumnoService)
+        {
+            _alumnoService = alumnoService;
+        }
+
         // GET api/values
         public IEnumerable<string> Get()
         {
