@@ -1,0 +1,82 @@
+﻿<link href="~/Assets/fileInput/css/fileinput.min.css" rel="stylesheet" />
+<script src="~/Assets/fileInput/js/fileinput.min.js"></script>
+<script src="~/Assets/fileInput/js/locales/es.js"></script>
+<script src="~/Assets/jquery/jquery.form.js"></script>
+
+@using (Html.BeginForm("CargarArchivo", "Migraciones", FormMethod.Post, new { id = "form-mat", enctype = "multipart/form-data" }))
+{
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"><i class="fa fa-table text-primary">&nbsp;</i>Tabla de @ViewBag.Tabla</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-12">
+                <input type="hidden" name="tabla" value="@ViewBag.Tabla" />
+                <div class="form-group" id="div-file">
+                    <label class="control-label">Seleccione archivo</label>
+                    <div class="file-loading">
+                        <input id="matricula_file" type="file" name="file" required>
+                    </div>
+                    <div id="error-matricula"></div>
+                    <br />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary"><i id="icon-submit" class="fa fa-cloud-upload">&nbsp;</i>Subir archivo de </button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+    </div>
+
+}
+
+
+<script>
+    $("#matricula_file").fileinput({
+        showCaption: true,
+        dropZoneEnabled: false,
+        language: 'es',
+        allowedFileExtensions: ["dbf", "xls", "xlsx"],
+        showPreview: false,
+        showUpload: false,
+        elErrorContainer: '#error-matricula'
+    }).on('change', function () {
+        $('#div-nom-mat').show();
+    }).on('filecleared', function () {
+        $('#div-nom-mat').hide();
+    });
+
+    $('#form-mat').on('submit', function (event) {
+        event.preventDefault();
+        var form = $(this);
+
+        form.ajaxSubmit({
+            cache: false,
+            url: form.attr('action'),
+            type: "POST",
+            processData: false,
+            dataType: "json",
+            beforeSend: function () {
+                $('#icon-submit').removeClass('fa-cloud-upload').addClass('fa-spin fa-cog');
+                
+            },
+            success: function (result) {
+                debugger
+                if (result['Value']) {
+                    $('.modal-footer').html('<p class="alert alert-success">' + result['Message'] + '</p><button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>')
+                }
+
+                $('#icon-submit').addClass('fa-cloud-upload').removeClass('fa-spin fa-cog');
+
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                toastr.error(errorThrown);
+                $('#icon-submit').addClass('fa-cloud-upload').removeClass('fa-spin fa-cog');
+            }
+        });
+    })
+
+</script>

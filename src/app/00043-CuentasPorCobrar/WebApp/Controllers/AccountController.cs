@@ -215,7 +215,7 @@ namespace WebApp.Controllers
 
                 if (result.Value)
                 {
-                    ResponseModel.Success(result, false);
+                    ResponseModel.Success(result, "Contraseña actualizada correctamente.", false);
                 }
                 else
                 {

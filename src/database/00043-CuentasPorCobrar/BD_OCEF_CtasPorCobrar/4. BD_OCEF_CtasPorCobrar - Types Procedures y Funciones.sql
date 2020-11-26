@@ -26,8 +26,8 @@ BEGIN
 			SET	B_Habilitado = 0
 				, D_FecUpdate = @D_FecUpdate
 			
-		INSERT INTO TS_CorreoAplicacion (T_DireccionCorreo, T_PasswordCorreo, T_Seguridad, T_HostName, I_Puerto, B_Habilitado, D_FecUpdate)
-								VALUES	 (@T_DireccionCorreo, @T_PasswordCorreo, @T_Seguridad, @T_HostName, @I_Puerto, 1, @D_FecUpdate)
+		INSERT INTO TS_CorreoAplicacion (T_DireccionCorreo, T_PasswordCorreo, T_Seguridad, T_HostName, I_Puerto, B_Habilitado, D_FecUpdate, B_Eliminado)
+								VALUES	 (@T_DireccionCorreo, @T_PasswordCorreo, @T_Seguridad, @T_HostName, @I_Puerto, 1, @D_FecUpdate, 0)
 		
 
 		SET @B_Result = 1
@@ -1075,3 +1075,182 @@ BEGIN
 		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
 	END CATCH
 END
+GO
+
+
+
+
+/*-----------------------------------------------------------*/
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.DOMAINS WHERE DOMAIN_NAME = 'type_roles' AND DATA_TYPE = 'table type')
+BEGIN
+	IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'USP_I_GrabarDocumentacionUsuario' AND ROUTINE_TYPE = 'PROCEDURE')
+		DROP PROCEDURE [dbo].[USP_I_GrabarDocumentacionUsuario]
+
+	IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'USP_U_GrabarDocumentacionUsuario' AND ROUTINE_TYPE = 'PROCEDURE')
+		DROP PROCEDURE [dbo].[USP_U_GrabarDocumentacionUsuario]
+
+	DROP TYPE [dbo].[type_roles]
+END
+GO
+
+
+CREATE TYPE [dbo].[type_roles] AS TABLE(
+	RoleId			int  NULL ,
+	RoleName		varchar(50)  NULL ,
+	B_Habilitado	bit  NULL
+)
+GO
+
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'USP_I_GrabarDocumentacionUsuario' AND ROUTINE_TYPE = 'PROCEDURE')
+	DROP PROCEDURE [dbo].[USP_I_GrabarDocumentacionUsuario]
+GO
+
+CREATE PROCEDURE [dbo].[USP_I_GrabarDocumentacionUsuario]
+(
+	@I_RutaDocID		int
+	,@T_DocDesc			varchar(200)
+	,@T_RutaDocumento	nvarchar(4000)
+	,@Tbl_Roles			[dbo].[type_roles] READONLY
+	,@I_UserID			int
+
+	,@B_Result			bit OUTPUT
+	,@T_Message			nvarchar(4000) OUTPUT
+)
+AS
+BEGIN
+	
+	BEGIN TRANSACTION
+	BEGIN TRY
+		
+		INSERT INTO [dbo].[TS_RutaDocumentacion] (T_DocDesc, T_RutaDocumento, B_Habilitado) VALUES ( @T_DocDesc, @T_RutaDocumento, 1)
+			
+		SET @I_RutaDocID = IDENT_CURRENT('TS_RutaDocumentacion')
+
+		--EXEC USP_U_GrabarHistorialRegistroUsuario @I_UserID, 17, 'TS_RutaDocumentacion'
+
+		INSERT INTO [dbo].[TS_DocumentosRoles] (I_RutaDocID, RoleId, B_Habilitado)
+				SELECT	@I_RutaDocID, RoleId, B_Habilitado
+				FROM @Tbl_Roles
+
+		--EXEC USP_U_GrabarHistorialRegistroUsuario @I_UserID, 17, 'TS_DocumentosRoles'
+
+		SET @B_Result = 1
+		SET @T_Message = 'La operación se realizó correctamente.'
+
+		COMMIT TRANSACTION
+	END TRY
+	BEGIN CATCH
+		ROLLBACK TRANSACTION
+		SET @B_Result = 1
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10))
+	END CATCH
+END
+GO
+
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'USP_U_GrabarDocumentacionUsuario' AND ROUTINE_TYPE = 'PROCEDURE')
+	DROP PROCEDURE [dbo].[USP_U_GrabarDocumentacionUsuario]
+GO
+
+CREATE PROCEDURE [dbo].[USP_U_GrabarDocumentacionUsuario]
+(
+	@I_RutaDocID		tinyint
+	,@T_DocDesc			varchar(200)
+	,@T_RutaDocumento	nvarchar(4000)
+	,@Tbl_Roles			[dbo].[type_roles] READONLY
+	,@I_UserID			int
+
+	,@B_Result			bit OUTPUT
+	,@T_Message			nvarchar(4000) OUTPUT
+)
+AS
+BEGIN
+	
+	BEGIN TRANSACTION
+	BEGIN TRY
+
+		UPDATE [dbo].[TS_RutaDocumentacion]
+			SET T_DocDesc = @T_DocDesc
+				,T_RutaDocumento = @T_RutaDocumento
+			WHERE I_RutaDocID = @I_RutaDocID
+
+		--EXEC USP_U_GrabarHistorialRegistroUsuario @I_UserID, 17, 'TS_RutaDocumentacion'
+
+
+		UPDATE [dbo].[TS_DocumentosRoles]
+			SET [dbo].[TS_DocumentosRoles].[B_Habilitado] = roles.B_Habilitado
+			FROM (SELECT [RoleId], [B_Habilitado] FROM @Tbl_Roles) AS roles
+			WHERE roles.RoleId = [dbo].[TS_DocumentosRoles].[RoleId]
+				AND [dbo].[TS_DocumentosRoles].[I_RutaDocID] = @I_RutaDocID
+
+		--EXEC USP_U_GrabarHistorialRegistroUsuario @I_UserID, 17, 'TS_DocumentosRoles'
+
+
+		SET @B_Result = 1
+		SET @T_Message = 'La operación se realizó correctamente.'
+
+		COMMIT TRANSACTION
+	END TRY
+	BEGIN CATCH
+		ROLLBACK TRANSACTION
+		SET @B_Result = 1
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10))
+	END CATCH
+END
+GO
+
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'USP_U_ActualizarEstadoArchivo' AND ROUTINE_TYPE = 'PROCEDURE')
+	DROP PROCEDURE [dbo].[USP_U_ActualizarEstadoArchivo]
+GO
+
+
+CREATE PROCEDURE [dbo].[USP_U_ActualizarEstadoArchivo]
+	 @I_RutaDocID	int
+	,@B_Habilitado	bit
+
+	,@IdUser int
+	,@B_Result bit OUTPUT
+	,@T_Message nvarchar(4000) OUTPUT
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	BEGIN TRANSACTION
+	BEGIN TRY
+
+		UPDATE	TS_RutaDocumentacion 
+		SET		B_Habilitado = @B_Habilitado
+		WHERE	I_RutaDocID = @I_RutaDocID
+
+--		EXEC USP_U_GrabarHistorialRegistroUsuario @IdUser, 17, 'TS_RutaDocumentacion'
+
+	COMMIT TRANSACTION
+		SET @B_Result = 1
+		SET @T_Message = 'La operación se realizó con éxito'
+	END TRY
+	BEGIN CATCH
+		ROLLBACK TRANSACTION
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10))
+	END CATCH
+END
+GO
+
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'USP_S_DocumentacionUsuarioRoles' AND ROUTINE_TYPE = 'PROCEDURE')
+	DROP PROCEDURE [dbo].[USP_S_DocumentacionUsuarioRoles]
+GO
+
+
+CREATE PROCEDURE [dbo].[USP_S_DocumentacionUsuarioRoles]
+AS
+BEGIN
+	SET NOCOUNT ON
+	SELECT RD.I_RutaDocID, RD.T_DocDesc, RD.T_RutaDocumento, RD.B_Habilitado, DR.RoleId, DR.B_Habilitado As B_DocRolHabilitado
+	FROM TS_RutaDocumentacion RD
+		 INNER JOIN TS_DocumentosRoles DR ON RD.[I_RutaDocID] = DR.[I_RutaDocID]
+END
+GO

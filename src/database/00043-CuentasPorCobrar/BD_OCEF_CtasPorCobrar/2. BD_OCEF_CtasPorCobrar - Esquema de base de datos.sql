@@ -249,6 +249,36 @@ CREATE TABLE TS_CorreoAplicacion
 go
 
 
+/*	-----------------------  Documentacion	-----------------------  */
+
+
+CREATE TABLE TS_RutaDocumentacion
+( 
+	I_RutaDocID          int IDENTITY ( 1,1 ) ,
+	T_DocDesc            varchar(200)  NULL ,
+	T_RutaDocumento      nvarchar(4000)  NULL ,
+	B_Habilitado         bit  NULL ,
+	CONSTRAINT PK_RutaDocumentacion PRIMARY KEY (I_RutaDocID ASC)
+)
+GO
+
+
+
+CREATE TABLE TS_DocumentosRoles
+( 
+	I_RutaDocID          int  NOT NULL ,
+	RoleId               int  NOT NULL ,
+	B_Habilitado         bit  NOT NULL ,
+	CONSTRAINT PK_DocumentosRoles PRIMARY KEY (I_RutaDocID ASC,RoleId ASC),
+	CONSTRAINT FK_RutaDocumentacion_DocumentosRoles FOREIGN KEY (I_RutaDocID) REFERENCES TS_RutaDocumentacion(I_RutaDocID)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION,
+	CONSTRAINT FK_Roles_DocumentosRoles FOREIGN KEY (RoleId) REFERENCES webpages_Roles(RoleId)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+)
+GO
+
 /*	-----------------------  Mantenimientos	-----------------------  */
 
 

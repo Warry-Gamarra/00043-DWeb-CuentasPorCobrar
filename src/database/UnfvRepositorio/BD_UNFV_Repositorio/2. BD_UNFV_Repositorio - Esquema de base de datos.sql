@@ -92,13 +92,13 @@ CREATE TABLE TI_CarreraProfesional
 	C_CodEsc             varchar(2)  NOT NULL ,
 	C_CodFac             varchar(2)  NOT NULL ,
 	C_Tipo               char(1)  NULL ,
-	I_Duracion           int  NULL ,
+	I_Duracion           integer  NULL ,
 	B_Anual              bit  NULL ,
 	N_Grupo              char(1)  NULL ,
 	N_Grado              char(1)  NULL ,
 	I_IdAplica           int  NULL ,
-	B_Habilitado         int  NOT NULL ,
-	B_Eliminado          int  NOT NULL ,
+	B_Habilitado         integer  NOT NULL ,
+	B_Eliminado          integer  NOT NULL ,
 	I_UsuarioCre         int  NULL ,
 	D_FecCre             datetime  NULL ,
 	I_UsuarioMod         int  NULL ,
@@ -107,7 +107,7 @@ CREATE TABLE TI_CarreraProfesional
 	CONSTRAINT FK_Especialidad_CarreraProfesional FOREIGN KEY (C_CodEsp,C_CodEsc,C_CodFac) REFERENCES TC_Especialidad(C_CodEsp,C_CodEsc,C_CodFac)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION,
-CONSTRAINT FK_Escuela_CarreraProfesional FOREIGN KEY (C_CodEsc,C_CodFac) REFERENCES TC_Escuela(C_CodEsc,C_CodFac)
+	CONSTRAINT FK_Escuela_CarreraProfesional FOREIGN KEY (C_CodEsc,C_CodFac) REFERENCES TC_Escuela(C_CodEsc,C_CodFac)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 )
@@ -185,13 +185,13 @@ CREATE TABLE TC_ProgramaUnfv
 	CONSTRAINT FK_CarreraProfesional_ProgramaPregrado FOREIGN KEY (C_RcCod) REFERENCES TI_CarreraProfesional(C_RcCod)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION,
-CONSTRAINT TC_GradoAcademico_ProgramaUnfv FOREIGN KEY (C_CodGrado) REFERENCES TC_GradoAcademico(C_CodGrado)
+	CONSTRAINT TC_GradoAcademico_ProgramaUnfv FOREIGN KEY (C_CodGrado) REFERENCES TC_GradoAcademico(C_CodGrado)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION,
-CONSTRAINT FK_ModalidadEstudio_ProgramaUnfv FOREIGN KEY (C_CodModEst) REFERENCES TC_ModalidadEstudio(C_CodModEst)
+	CONSTRAINT FK_ModalidadEstudio_ProgramaUnfv FOREIGN KEY (C_CodModEst) REFERENCES TC_ModalidadEstudio(C_CodModEst)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION,
-CONSTRAINT FK_RegimenEstudio_ProgramaUnfv FOREIGN KEY (C_CodRegimenEst) REFERENCES TC_RegimenEstudio(C_CodRegimenEst)
+	CONSTRAINT FK_RegimenEstudio_ProgramaUnfv FOREIGN KEY (C_CodRegimenEst) REFERENCES TC_RegimenEstudio(C_CodRegimenEst)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 )
@@ -218,7 +218,7 @@ go
 CREATE TABLE TC_Persona
 ( 
 	I_PersonaID          int  IDENTITY (1,1),
-	C_NumDNI             varchar(20)  NOT NULL ,
+	C_NumDNI             varchar(20)  NULL ,
 	C_CodTipDoc          varchar(5)  NULL ,
 	T_ApePaterno         varchar(50)  NOT NULL ,
 	T_ApeMaterno         varchar(50)  NULL ,
@@ -263,7 +263,7 @@ CREATE TABLE TC_Alumno
 	C_CodAlu             varchar(20)  NOT NULL ,
 	I_PersonaID          int  NOT NULL ,
 	C_CodModIng          varchar(2)  NULL ,
-	C_AnioIngreso        smallint  NULL ,
+	C_AnioIngreso        int  NULL ,
 	I_IdPlan             int  NULL ,
 	B_Habilitado         bit  NOT NULL ,
 	B_Eliminado          bit  NOT NULL ,
@@ -275,10 +275,10 @@ CREATE TABLE TC_Alumno
 	CONSTRAINT FK_Persona_Alumno FOREIGN KEY (I_PersonaID) REFERENCES TC_Persona(I_PersonaID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION,
-CONSTRAINT FK_CarreraProfesional_Alumno FOREIGN KEY (C_RcCod) REFERENCES TI_CarreraProfesional(C_RcCod)
+	CONSTRAINT FK_CarreraProfesional_Alumno FOREIGN KEY (C_RcCod) REFERENCES TI_CarreraProfesional(C_RcCod)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION,
-CONSTRAINT FK_ModalidadIngreso_Alumno FOREIGN KEY (C_CodModIng) REFERENCES TC_ModalidadIngreso(C_CodModIng)
+	CONSTRAINT FK_ModalidadIngreso_Alumno FOREIGN KEY (C_CodModIng) REFERENCES TC_ModalidadIngreso(C_CodModIng)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 )
