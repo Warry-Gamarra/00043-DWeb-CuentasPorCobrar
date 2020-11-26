@@ -11,10 +11,10 @@ namespace Data.Repositories
 {
     public interface IProgramaUnfvRepository
     {
-        IEnumerable<TC_ProgramaUnfv> GetAll();
-
         ResponseData Create(TC_ProgramaUnfv programaUnfv);
 
         ResponseData Edit(TC_ProgramaUnfv programaUnfv);
+
+        IEnumerable<TC_ProgramaUnfv> GetAll();
     }
 }

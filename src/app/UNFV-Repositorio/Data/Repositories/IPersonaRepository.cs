@@ -11,14 +11,8 @@ namespace Data.Repositories
 {
     public interface IPersonaRepository
     {
-        ResponseData Create(TC_Persona persona);
+        TC_Persona GetByDocIdent(string numDNI, string codTipDoc);
 
-        ResponseData Edit(TC_Persona persona);
-
-        IEnumerable<TC_Persona> GetAll();
-
-        TC_Persona GetByID(int I_PersonaID);
-
-        TC_Persona GetByDocIdent(string C_NumDNI, string C_CodTipDoc);
+        TC_Persona GetByID(int personaID);
     }
 }

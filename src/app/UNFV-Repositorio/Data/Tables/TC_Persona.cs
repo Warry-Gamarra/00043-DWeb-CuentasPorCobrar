@@ -40,29 +40,7 @@ namespace Data.Tables
 
         public DateTime? D_FecMod { get; set; }
 
-        public static IEnumerable<TC_Persona> GetAll()
-        {
-            IEnumerable<TC_Persona> result;
-            string command;
-
-            try
-            {
-                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
-                {
-                    command = "SELECT * FROM TC_Persona WHERE B_Eliminado = 0";
-
-                    result = _dbConnection.Query<TC_Persona>(command, commandType: CommandType.Text);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return result;
-        }
-
-        public static TC_Persona GetByDocIdent(string C_NumDNI, string C_CodTipDoc)
+        public static TC_Persona GetByDocIdent(string numDNI, string codTipDoc)
         {
             TC_Persona result;
             string command;
@@ -73,7 +51,7 @@ namespace Data.Tables
                 {
                     command = "SELECT * FROM TC_Persona WHERE B_Eliminado = 0 AND C_NumDNI = @C_NumDNI AND C_CodTipDoc = @C_CodTipDoc";
 
-                    result = _dbConnection.QueryFirstOrDefault<TC_Persona>(command, new { C_NumDNI = C_NumDNI , C_CodTipDoc  = C_CodTipDoc }, commandType: CommandType.Text);
+                    result = _dbConnection.QueryFirstOrDefault<TC_Persona>(command, new { C_NumDNI = numDNI, C_CodTipDoc  = codTipDoc }, commandType: CommandType.Text);
                 }
             }
             catch (Exception ex)
@@ -84,7 +62,7 @@ namespace Data.Tables
             return result;
         }
 
-        public static TC_Persona GetByID(int I_PersonaID)
+        public static TC_Persona GetByID(int personaID)
         {
             TC_Persona result;
             string command;
@@ -95,7 +73,7 @@ namespace Data.Tables
                 {
                     command = "SELECT * FROM TC_Persona WHERE B_Eliminado = 0 AND I_PersonaID = @I_PersonaID";
 
-                    result = _dbConnection.QueryFirstOrDefault<TC_Persona>(command, new { I_PersonaID = I_PersonaID }, commandType: CommandType.Text);
+                    result = _dbConnection.QueryFirstOrDefault<TC_Persona>(command, new { I_PersonaID = personaID }, commandType: CommandType.Text);
                 }
             }
             catch (Exception ex)

@@ -34,7 +34,7 @@ namespace Data.Tables
 
         public DateTime? D_FecMod { get; set; }
 
-        public IEnumerable<TC_Especialidad> GetAll()
+        public static IEnumerable<TC_Especialidad> GetAll()
         {
             IEnumerable<TC_Especialidad> result;
             string command;
@@ -56,7 +56,7 @@ namespace Data.Tables
             return result;
         }
 
-        public IEnumerable<TC_Especialidad> GetByEsc(string C_CodEsc, string C_CodFac)
+        public static IEnumerable<TC_Especialidad> GetByEsc(string codEsc, string codFac)
         {
             IEnumerable<TC_Especialidad> result;
             string command;
@@ -67,7 +67,7 @@ namespace Data.Tables
                 {
                     command = "SELECT * FROM TC_Especialidad WHERE B_Eliminado = 0 AND C_CodEsc = @C_CodEsc AND C_CodFac = @C_CodFac";
 
-                    result = _dbConnection.Query<TC_Especialidad>(command, new { C_CodEsc = C_CodEsc , C_CodFac = C_CodFac }, commandType: CommandType.Text);
+                    result = _dbConnection.Query<TC_Especialidad>(command, new { C_CodEsc = codEsc, C_CodFac = codFac }, commandType: CommandType.Text);
                 }
             }
             catch (Exception ex)
@@ -78,7 +78,7 @@ namespace Data.Tables
             return result;
         }
 
-        public TC_Especialidad GetByID(string C_CodEsp, string C_CodEsc, string C_CodFac)
+        public static TC_Especialidad GetByID(string codEsp, string codEsc, string codFac)
         {
             TC_Especialidad result;
             string command;
@@ -89,7 +89,7 @@ namespace Data.Tables
                 {
                     command = "SELECT * FROM TC_Especialidad WHERE B_Eliminado = 0 AND C_CodEsp = @C_CodEsp AND C_CodEsc = @C_CodEsc AND C_CodFac = @C_CodFac";
 
-                    result = _dbConnection.QueryFirstOrDefault<TC_Especialidad>(command, new { C_CodEsp = C_CodEsp, C_CodEsc = C_CodEsc, C_CodFac = C_CodFac }, commandType: CommandType.Text);
+                    result = _dbConnection.QueryFirstOrDefault<TC_Especialidad>(command, new { C_CodEsp = codEsp, C_CodEsc = codEsc, C_CodFac = codFac }, commandType: CommandType.Text);
                 }
             }
             catch (Exception ex)

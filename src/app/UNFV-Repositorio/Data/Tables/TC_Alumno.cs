@@ -58,7 +58,7 @@ namespace Data.Tables
             return result;
         }
 
-        public static TC_Alumno GetByID(string C_RcCod, string C_CodAlu)
+        public static TC_Alumno GetByID(string codRc, string codAlu)
         {
             TC_Alumno result;
             string command;
@@ -69,7 +69,7 @@ namespace Data.Tables
                 {
                     command = "SELECT * FROM TC_Alumno WHERE B_Eliminado = 0 AND C_RcCod = @C_RcCod AND C_CodAlu = @C_CodAlu";
 
-                    result = _dbConnection.QueryFirstOrDefault<TC_Alumno>(command, new { C_RcCod = C_RcCod, C_CodAlu = C_CodAlu }, commandType: CommandType.Text);
+                    result = _dbConnection.QueryFirstOrDefault<TC_Alumno>(command, new { C_RcCod = codRc, C_CodAlu = codAlu }, commandType: CommandType.Text);
                 }
             }
             catch (Exception ex)

@@ -23,12 +23,12 @@ namespace Data.Repositories.Implementations
             return result;
         }
 
-        public TC_Facultad GetByID(string C_CodFac)
+        public TC_Facultad GetByID(string codFac)
         {
             TC_Facultad result;
             try
             {
-                result = TC_Facultad.GetByID(C_CodFac);
+                result = TC_Facultad.GetByID(codFac);
             }
             catch (Exception)
             {

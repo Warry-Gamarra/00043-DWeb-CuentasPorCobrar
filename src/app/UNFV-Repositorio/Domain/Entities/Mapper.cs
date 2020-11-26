@@ -22,5 +22,26 @@ namespace Domain.Entities
 
             return alumno;
         }
+
+        public static FacultadDTO TC_FacultadToFacultadDTO(TC_Facultad facultad)
+        {
+            FacultadDTO facultadDTO = new FacultadDTO();
+
+            return facultadDTO;
+        }
+
+        public static EscuelaDTO TC_EscuelaToEscuelaDTO(TC_Escuela escuela)
+        {
+            EscuelaDTO escuelaDTO = new EscuelaDTO();
+
+            return escuelaDTO;
+        }
+
+        public static EspecialidadDTO TC_EspecialidadToEspecialidadDTO(TC_Especialidad especialidad)
+        {
+            EspecialidadDTO especialidadDTO = new EspecialidadDTO();
+
+            return especialidadDTO;
+        }
     }
 }

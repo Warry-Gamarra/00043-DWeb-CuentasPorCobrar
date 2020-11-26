@@ -10,10 +10,10 @@ namespace Domain.Services
 {
     public interface IProgramaUnfvService
     {
-        IEnumerable<ProgramaUnfv> GetAll();
-
         ResponseData Create(ProgramaUnfvEntity programaUnfvEntity);
 
         ResponseData Edit(ProgramaUnfvEntity programaUnfvEntity);
+
+        IEnumerable<ProgramaUnfv> GetAll();
     }
 }

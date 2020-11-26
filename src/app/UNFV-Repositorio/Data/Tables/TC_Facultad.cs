@@ -54,7 +54,7 @@ namespace Data.Tables
             return result;
         }
 
-        public static TC_Facultad GetByID(string C_CodFac)
+        public static TC_Facultad GetByID(string codFac)
         {
             TC_Facultad result;
             string command;
@@ -65,7 +65,7 @@ namespace Data.Tables
                 {
                     command = "SELECT * FROM TC_Facultad WHERE B_Eliminado = 0 AND C_CodFac = @C_CodFac";
 
-                    result = _dbConnection.QueryFirstOrDefault<TC_Facultad>(command, new { C_CodFac = C_CodFac }, commandType: CommandType.Text);
+                    result = _dbConnection.QueryFirstOrDefault<TC_Facultad>(command, new { C_CodFac = codFac }, commandType: CommandType.Text);
                 }
             }
             catch (Exception ex)

@@ -11,63 +11,11 @@ namespace Data.Repositories.Implementations
 {
     public class PersonaRepository : IPersonaRepository
     {
-        public ResponseData Create(TC_Persona persona)
-        {
-            USP_I_GrabarPersona procedimiento;
-            ResponseData result;
-
-            try
-            {
-                procedimiento = new USP_I_GrabarPersona()
-                {
-
-                };
-
-                result = procedimiento.Execute();
-            }
-            catch (Exception ex)
-            {
-                result = new ResponseData()
-                {
-                    Value = false,
-                    Message = ex.Message
-                };
-            }
-
-            return result;
-        }
-
-        public ResponseData Edit(TC_Persona persona)
-        {
-            USP_U_ActualizarPersona procedimiento;
-            ResponseData result;
-
-            try
-            {
-                procedimiento = new USP_U_ActualizarPersona()
-                {
-
-                };
-
-                result = procedimiento.Execute();
-            }
-            catch (Exception ex)
-            {
-                result = new ResponseData()
-                {
-                    Value = false,
-                    Message = ex.Message
-                };
-            }
-
-            return result;
-        }
-
-        public IEnumerable<TC_Persona> GetAll()
+        public TC_Persona GetByDocIdent(string numDNI, string codTipDoc)
         {
             try
             {
-                return TC_Persona.GetAll();
+                return TC_Persona.GetByDocIdent(numDNI, codTipDoc);
             }
             catch (Exception)
             {
@@ -75,23 +23,11 @@ namespace Data.Repositories.Implementations
             }
         }
 
-        public TC_Persona GetByDocIdent(string C_NumDNI, string C_CodTipDoc)
+        public TC_Persona GetByID(int personaID)
         {
             try
             {
-                return TC_Persona.GetByDocIdent(C_NumDNI, C_CodTipDoc);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-
-        public TC_Persona GetByID(int I_PersonaID)
-        {
-            try
-            {
-                return TC_Persona.GetByID(I_PersonaID);
+                return TC_Persona.GetByID(personaID);
             }
             catch (Exception)
             {

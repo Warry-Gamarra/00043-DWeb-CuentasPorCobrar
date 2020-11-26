@@ -11,10 +11,10 @@ namespace Data.Repositories
 {
     public interface ICarreraProfesionalRepository
     {
-        IEnumerable<TI_CarreraProfesional> GetAll();
-
         ResponseData Create(TI_CarreraProfesional carreraProfesional);
 
         ResponseData Edit(TI_CarreraProfesional carreraProfesional);
+
+        IEnumerable<TI_CarreraProfesional> GetAll();
     }
 }

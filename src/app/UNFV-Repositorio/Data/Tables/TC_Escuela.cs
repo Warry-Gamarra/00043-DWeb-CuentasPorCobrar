@@ -56,7 +56,7 @@ namespace Data.Tables
             return result;
         }
 
-        public static IEnumerable<TC_Escuela> GetByFac(string C_CodFac)
+        public static IEnumerable<TC_Escuela> GetByFac(string codFac)
         {
             IEnumerable<TC_Escuela> result;
             string command;
@@ -67,7 +67,7 @@ namespace Data.Tables
                 {
                     command = "SELECT * FROM TC_Escuela WHERE B_Eliminado = 0 AND C_CodFac = @C_CodFac";
 
-                    result = _dbConnection.Query<TC_Escuela>(command, new { C_CodFac = C_CodFac }, commandType: CommandType.Text);
+                    result = _dbConnection.Query<TC_Escuela>(command, new { C_CodFac = codFac }, commandType: CommandType.Text);
                 }
             }
             catch (Exception ex)
@@ -78,7 +78,7 @@ namespace Data.Tables
             return result;
         }
 
-        public TC_Escuela GetByID(string C_CodEsc, string C_CodFac)
+        public static TC_Escuela GetByID(string codEsc, string codFac)
         {
             TC_Escuela result;
             string command;
@@ -89,7 +89,7 @@ namespace Data.Tables
                 {
                     command = "SELECT * FROM TC_Escuela WHERE B_Eliminado = 0 AND C_CodEsc = @C_CodEsc AND C_CodFac = @C_CodFac";
 
-                    result = _dbConnection.QueryFirstOrDefault<TC_Escuela>(command, new { C_CodEsc = C_CodEsc, C_CodFac = C_CodFac }, commandType: CommandType.Text);
+                    result = _dbConnection.QueryFirstOrDefault<TC_Escuela>(command, new { C_CodEsc = codEsc, C_CodFac = codFac }, commandType: CommandType.Text);
                 }
             }
             catch (Exception ex)

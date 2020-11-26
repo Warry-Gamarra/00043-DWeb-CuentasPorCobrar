@@ -78,12 +78,12 @@ namespace Data.Repositories.Implementations
             return result;
         }
 
-        public TC_Alumno GetByID(string C_RcCod, string C_CodAlu)
+        public TC_Alumno GetByID(string codRc, string codAlu)
         {
             TC_Alumno result;
             try
             {
-                result = TC_Alumno.GetByID(C_RcCod, C_CodAlu);
+                result = TC_Alumno.GetByID(codRc, codAlu);
             }
             catch (Exception)
             {

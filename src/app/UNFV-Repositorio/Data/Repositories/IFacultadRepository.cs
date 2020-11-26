@@ -11,6 +11,6 @@ namespace Data.Repositories
     {
         IEnumerable<TC_Facultad> GetAll();
 
-        TC_Facultad GetByID(string C_CodFac);
+        TC_Facultad GetByID(string codFac);
     }
 }

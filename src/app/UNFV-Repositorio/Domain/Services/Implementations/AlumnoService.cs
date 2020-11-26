@@ -22,46 +22,28 @@ namespace Domain.Services.Implementations
 
         public ResponseData Create(AlumnoEntity alumnoEntity)
         {
-            ResponseData responsePersona;
-            ResponseData responseAlumno;
+            ResponseData response;
             
             var persona = Mapper.AlumnoEntityToTC_Persona(alumnoEntity);
 
             var alumno = Mapper.AlumnoEntityToTC_Alumno(alumnoEntity);
 
-            responsePersona = _personaRepository.Create(persona);
+            response = _alumnoRepository.Create(alumno);
 
-            if (responsePersona.Value)
-            {
-                alumno.I_PersonaID = int.Parse(responsePersona.CurrentID);
-
-                responseAlumno = _alumnoRepository.Create(alumno);
-
-                return responseAlumno;
-            }
-
-            return responsePersona;
+            return response;
         }
 
         public ResponseData Edit(AlumnoEntity alumnoEntity)
         {
-            ResponseData responsePersona;
-            ResponseData responseAlumno;
+            ResponseData response;
 
             var persona = Mapper.AlumnoEntityToTC_Persona(alumnoEntity);
 
             var alumno = Mapper.AlumnoEntityToTC_Alumno(alumnoEntity);
 
-            responsePersona = _personaRepository.Edit(persona);
+            response = _alumnoRepository.Edit(alumno);
 
-            if (responsePersona.Value)
-            {
-                responseAlumno = _alumnoRepository.Edit(alumno);
-
-                return responseAlumno;
-            }
-
-            return responsePersona;
+            return response;
         }
 
         public IEnumerable<AlumnoEntity> GetAll()
