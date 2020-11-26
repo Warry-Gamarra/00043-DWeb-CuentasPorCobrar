@@ -289,9 +289,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\ClasificadoresController.cs" />
     <Compile Include="Controllers\CuentaDepositoController.cs" />
-    <Compile Include="Controllers\DependenciaController.cs" />
     <Compile Include="Controllers\EntidadFinancieraController.cs" />
     <Compile Include="Controllers\EstadosCuentaController.cs" />
     <Compile Include="Controllers\EstructuraArchivoController.cs" />
@@ -308,6 +306,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\AnnexeModel.cs" />
     <Compile Include="Models\DependenciaModel.cs" />
     <Compile Include="Models\ClasificadorModel.cs" />
     <Compile Include="Models\CuentaDepositoModel.cs" />
@@ -326,7 +325,6 @@
     <Compile Include="ViewModels\DependenciaViewModels.cs" />
     <Compile Include="ViewModels\EntidadFinancieraViewModels.cs" />
     <Compile Include="ViewModels\CuentaDepositoViewModels.cs" />
-    <Compile Include="ViewModels\ClasificadoresViewModels.cs" />
     <Compile Include="ViewModels\CorreoAplicacionViewModel.cs" />
     <Compile Include="ViewModels\ConceptoPagoPeriodoViewModel.cs" />
     <Compile Include="ViewModels\EstudiantesViewModels.cs" />
