@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class RolAplicacion: IRoles
+    public class RolAplicacion : IRoles
     {
         public int Id { get; set; }
         public string NombreRol { get; set; }
@@ -34,7 +34,13 @@ namespace Domain.Entities
             {
                 result.Add(new RolAplicacion(item));
             }
+
             return result;
+        }
+
+        public RolAplicacion FindByUser(int userId)
+        {
+            return new RolAplicacion(_roleReposeitory.FindByUserId(userId));
         }
     }
 }

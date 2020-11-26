@@ -1,5 +1,5 @@
-
-SELECT * FROM TC_Persona
+use BD_UNFV_Repositorio
+go
 
 ALTER TABLE TC_Persona
 	ADD COD_ALU varchar(20) NULL
@@ -33,3 +33,5 @@ go
 ALTER TABLE TC_Persona
 	DROP COLUMN COD_RC
 go
+
+DROP TABLE ##tmp_codigosRepetidos

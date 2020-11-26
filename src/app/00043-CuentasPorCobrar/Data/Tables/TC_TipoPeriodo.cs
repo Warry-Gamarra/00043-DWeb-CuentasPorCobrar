@@ -17,10 +17,10 @@ namespace Data.Tables
         public int I_Prioridad { get; set; }
         public bool B_Habilitado { get; set; }
         public bool B_Eliminado { get; set; }
-        public int I_UsuarioCre { get; set; }
-        public DateTime D_FecCre { get; set; }
-        public int I_UsuarioMod { get; set; }
-        public DateTime D_FecMod { get; set; }
+        public int? I_UsuarioCre { get; set; }
+        public DateTime? D_FecCre { get; set; }
+        public int? I_UsuarioMod { get; set; }
+        public DateTime? D_FecMod { get; set; }
 
         public static List<TC_TipoPeriodo> FindAll()
         {

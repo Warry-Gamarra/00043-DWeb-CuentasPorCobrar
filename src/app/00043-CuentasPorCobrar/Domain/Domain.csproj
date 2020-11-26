@@ -72,16 +72,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DTO\Options.cs" />
+    <Compile Include="DTO\Parametro.cs" />
     <Compile Include="Entities\AccountNumber.cs" />
-    <Compile Include="Entities\ClasificadorDeIngreso.cs" />
+    <Compile Include="Entities\ConceptoPagoEntity.cs" />
+    <Compile Include="Entities\ConceptoPagoPeriodo.cs" />
+    <Compile Include="Entities\ConceptoPagoPeriodoEntity.cs" />
+    <Compile Include="Entities\CtaDepoPeriodo.cs" />
     <Compile Include="Entities\CuentaDeposito.cs" />
+    <Compile Include="Entities\HelperResources.cs" />
+    <Compile Include="Entities\CatalogoOpcionEntity.cs" />
     <Compile Include="Entities\TipoPeriodo.cs" />
     <Compile Include="Entities\Estudiante.cs" />
     <Compile Include="Entities\EntidadFinanciera.cs" />
     <Compile Include="Entities\CorreoAplicacion.cs" />
     <Compile Include="Entities\Periodo.cs" />
     <Compile Include="Entities\PeriodoEntity.cs" />
-    <Compile Include="Entities\Periodo_CuentaDeposito.cs" />
+    <Compile Include="Entities\CtaDepoPeriodoEntity.cs" />
     <Compile Include="Entities\Persona.cs" />
     <Compile Include="Entities\ResolutionType.cs" />
     <Compile Include="Entities\DocumentType.cs" />
@@ -93,7 +99,6 @@
     <Compile Include="Helpers\Crypto.cs" />
     <Compile Include="Helpers\RandomPassword.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\IClasificadores.cs" />
     <Compile Include="Services\ICorreoAplicacion.cs" />
     <Compile Include="Services\ICuentaDeposito.cs" />
     <Compile Include="Services\IEntidadFinanciera.cs" />
@@ -103,6 +108,7 @@
     <Compile Include="Services\IRoles.cs" />
     <Compile Include="Services\IUser.cs" />
     <Compile Include="Services\PeriodoService.cs" />
+    <Compile Include="Services\ConceptoPagoService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Entities\Financial\" />

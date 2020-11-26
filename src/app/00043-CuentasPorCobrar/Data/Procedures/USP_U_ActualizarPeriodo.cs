@@ -44,6 +44,7 @@ namespace Data.Procedures
 
                     _dbConnection.Execute(s_command, parameters, commandType: CommandType.StoredProcedure);
 
+                    result.CurrentID = this.I_PeriodoID.ToString();
                     result.Value = parameters.Get<bool>("B_Result");
                     result.Message = parameters.Get<string>("T_Message");
                 }

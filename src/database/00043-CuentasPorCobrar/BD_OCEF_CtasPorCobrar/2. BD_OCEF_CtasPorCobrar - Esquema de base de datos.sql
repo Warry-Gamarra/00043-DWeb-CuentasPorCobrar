@@ -249,6 +249,36 @@ CREATE TABLE TS_CorreoAplicacion
 go
 
 
+/*	-----------------------  Documentacion	-----------------------  */
+
+
+CREATE TABLE TS_RutaDocumentacion
+( 
+	I_RutaDocID          int IDENTITY ( 1,1 ) ,
+	T_DocDesc            varchar(200)  NULL ,
+	T_RutaDocumento      nvarchar(4000)  NULL ,
+	B_Habilitado         bit  NULL ,
+	CONSTRAINT PK_RutaDocumentacion PRIMARY KEY (I_RutaDocID ASC)
+)
+GO
+
+
+
+CREATE TABLE TS_DocumentosRoles
+( 
+	I_RutaDocID          int  NOT NULL ,
+	RoleId               int  NOT NULL ,
+	B_Habilitado         bit  NOT NULL ,
+	CONSTRAINT PK_DocumentosRoles PRIMARY KEY (I_RutaDocID ASC,RoleId ASC),
+	CONSTRAINT FK_RutaDocumentacion_DocumentosRoles FOREIGN KEY (I_RutaDocID) REFERENCES TS_RutaDocumentacion(I_RutaDocID)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION,
+	CONSTRAINT FK_Roles_DocumentosRoles FOREIGN KEY (RoleId) REFERENCES webpages_Roles(RoleId)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+)
+GO
+
 /*	-----------------------  Mantenimientos	-----------------------  */
 
 
@@ -346,26 +376,22 @@ GO
 
 
 
-CREATE TABLE TI_Dependencia_CtaDepo_Periodo
+CREATE TABLE TI_CtaDepo_Periodo
 ( 
-	I_DepCtaDepoPerID    int IDENTITY ( 1,1 ) ,
+	I_CtaDepoPerID    int IDENTITY ( 1,1 ) ,
 	I_CtaDepositoID      int  NOT NULL ,
-	I_PeriodoID          int  NULL ,
-	I_DependenciaID      int  NULL ,
+	I_PeriodoID          int  NOT NULL,
 	B_Habilitado         bit  NOT NULL ,
 	B_Eliminado          bit  NOT NULL ,
 	I_UsuarioCre         int  NULL ,
 	D_FecCre             datetime  NULL ,
 	I_UsuarioMod         int  NULL ,
 	D_FecMod             datetime  NULL ,
-	CONSTRAINT XPKTI_Dependencia_CtaDepo_Periodo PRIMARY KEY  CLUSTERED (I_DepCtaDepoPerID ASC),
-	CONSTRAINT FK_Periodo_DependenciaCtaPagoPeriodo FOREIGN KEY (I_PeriodoID) REFERENCES TC_Periodo(I_PeriodoID)
+	CONSTRAINT XPKTI_CtaDepo_Periodo PRIMARY KEY  CLUSTERED (I_CtaDepoPerID ASC),
+	CONSTRAINT FK_Periodo_CtaPagoPeriodo FOREIGN KEY (I_PeriodoID) REFERENCES TC_Periodo(I_PeriodoID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION,
-	CONSTRAINT FK_DependenciaUNFV_DependenciaCtaDepoPeriodo FOREIGN KEY (I_DependenciaID) REFERENCES TC_DependenciaUNFV(I_DependenciaID)
-		ON DELETE NO ACTION
-		ON UPDATE NO ACTION,
-	CONSTRAINT FK_CuentaDeposito_DependenciaCtaDepoPeriodo FOREIGN KEY (I_CtaDepositoID) REFERENCES TC_CuentaDeposito(I_CtaDepositoID)
+	CONSTRAINT FK_CuentaDeposito_CtaDepoPeriodo FOREIGN KEY (I_CtaDepositoID) REFERENCES TC_CuentaDeposito(I_CtaDepositoID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 )
@@ -609,4 +635,37 @@ CREATE TABLE TC_MatriculaAlumno
 		ON UPDATE NO ACTION
 )
 go
+
+
+
+CREATE TABLE TC_Parametro(
+	I_ParametroID	int IDENTITY (1, 1),
+	T_ParametroDesc		varchar(250) NOT NULL,
+	B_Habilitado		bit NOT NULL,
+	B_Eliminado			bit NOT NULL,
+	I_UsuarioCre        int  NULL ,
+	D_FecCre            datetime  NULL ,
+	I_UsuarioMod        int  NULL ,
+	D_FecMod            datetime  NULL ,
+	CONSTRAINT PK_Parametro PRIMARY KEY  CLUSTERED (I_ParametroID ASC)
+)
+GO
+
+CREATE TABLE TC_CatalogoOpcion(
+	I_OpcionID			int IDENTITY (1, 1),
+	I_ParametroID		int NOT NULL,
+	T_OpcionCod			varchar(50),
+	T_OpcionDesc		varchar(250) NOT NULL,
+	B_Habilitado		bit NOT NULL,
+	B_Eliminado			bit NOT NULL,
+	I_UsuarioCre        int  NULL ,
+	D_FecCre            datetime  NULL ,
+	I_UsuarioMod        int  NULL ,
+	D_FecMod            datetime  NULL ,
+	CONSTRAINT PK_CatalogoOpcion PRIMARY KEY  CLUSTERED (I_OpcionID ASC),
+	CONSTRAINT FK_Parametro_CatalogoOpcion FOREIGN KEY (I_ParametroID) REFERENCES TC_Parametro(I_ParametroID)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+)
+GO
 

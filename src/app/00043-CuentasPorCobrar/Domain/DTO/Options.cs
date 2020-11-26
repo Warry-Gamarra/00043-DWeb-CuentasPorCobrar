@@ -19,6 +19,9 @@ namespace Domain.DTO
         Euded
     }
 
+
+
+
     public enum TablaMigracion
     {
         Dependencias,

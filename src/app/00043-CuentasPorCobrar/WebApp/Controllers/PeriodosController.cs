@@ -18,7 +18,7 @@ namespace WebApp.Controllers
         public PeriodosController()
         {
             periodoModel = new PeriodoModel();
-        } 
+        }
 
         public ActionResult Index()
         {
@@ -31,29 +31,32 @@ namespace WebApp.Controllers
 
         public ActionResult Create()
         {
-            ViewBag.Lista_Tipo_Periodo = periodoModel.Listar_Tipo_Periodo_Habilitados();
-
-            ViewBag.Lista_Anios = periodoModel.Listar_Anios();
-
             ViewBag.Title = "Nuevo registro";
+
+            Cargar_Listas();
+
+            ViewBag.Lista_CtaDepoHabilitadas = new List<SelectViewModel>();
+
+            ViewBag.Lista_CtaDepoPeriodo = new List<SelectViewModel>();
 
             return PartialView("_MantenimientoPeriodo");
         }
 
         public ActionResult Edit(int id)
         {
-            ViewBag.Lista_Tipo_Periodo = periodoModel.Listar_Tipo_Periodo_Habilitados();
-
-            ViewBag.Lista_Anios = periodoModel.Listar_Anios();
-
             ViewBag.Title = "Editar registro";
 
+            Cargar_Listas();
+
             var model = periodoModel.Obtener_Periodo(id);
+
+            ViewBag.Lista_CtaDepoHabilitadas = periodoModel.Listar_Combo_CtaDepositoHabilitadas(model.I_TipoPeriodoID);
+
+            ViewBag.Lista_CtaDepoPeriodo = periodoModel.Listar_Combo_CtasDepoPeriodo(id);
 
             return PartialView("_MantenimientoPeriodo", model);
         }
 
-        // POST: Periodos_Academicos/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Save(MantenimientoPeriodoViewModel model)
@@ -81,33 +84,12 @@ namespace WebApp.Controllers
 
             return PartialView("_MsgPartialWR", result);
         }
-        
-        //// GET: Periodos_Academicos/Delete/5
-        //public ActionResult Delete(int id)
-        //{
-        //    var lista = (List<PeriodoViewModel>)Session["lista_periodo"];
 
-        //    var model = lista.FirstOrDefault(x => x.Id == id);
+        private void Cargar_Listas()
+        {
+            ViewBag.Lista_TipoPeriodo = periodoModel.Listar_Combo_TipoPeriodo();
 
-        //    return View(model);
-        //}
-
-        //// POST: Periodos_Academicos/Delete/5
-        //[HttpPost]
-        //public ActionResult Delete(int id, FormCollection collection)
-        //{
-        //    try
-        //    {
-        //        var lista = (List<PeriodoViewModel>)Session["lista_periodo"];
-
-        //        lista.RemoveAll(x => x.Id == id);
-
-        //        return RedirectToAction("Index");
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
+            ViewBag.Lista_Anios = periodoModel.Listar_Anios();
+        }
     }
 }

@@ -16,37 +16,55 @@
                 @Html.HiddenFor(model => model.B_Habilitado)
 
                 <div class="form-group row">
-                    @Html.LabelFor(model => model.I_TipoPeriodoID, new { @class = "col-md-4" })
+                    @Html.LabelFor(model => model.I_TipoPeriodoID, new { @class = "col-md-3" })
                     <div class="col-md-8">
-                        @Html.DropDownListFor(model => model.I_TipoPeriodoID, new SelectList(ViewBag.Lista_Tipo_Periodo, "I_TipoPeriodoID", "T_TipoPerDesc"), "[ SELECCIONAR ]", new { @class = "form-control" })
+                        @Html.DropDownListFor(model => model.I_TipoPeriodoID, new SelectList(ViewBag.Lista_TipoPeriodo, "Value", "TextDisplay"), "[ SELECCIONAR ]", new { @class = "form-control" })
                         <p class="text-danger small">@Html.ValidationMessageFor(model => model.I_TipoPeriodoID)</p>
                     </div>
                 </div>
                 <div class="form-group row">
-                    @Html.LabelFor(model => model.I_Anio, new { @class = "col-md-4" })
+                    @Html.LabelFor(model => model.I_Anio, new { @class = "col-md-3" })
                     <div class="col-md-8">
                         @Html.DropDownListFor(model => model.I_Anio, new SelectList(ViewBag.Lista_Anios), "[ SELECCIONAR ]", new { @class = "form-control" })
                         <p class="text-danger small">@Html.ValidationMessageFor(model => model.I_Anio)</p>
                     </div>
                 </div>
                 <div class="form-group row">
-                    @Html.LabelFor(model => model.D_FecVencto, new { @class = "col-md-4" })
+                    @Html.LabelFor(model => model.D_FecVencto, new { @class = "col-md-3" })
                     <div class="col-md-8">
                         <div class='input-group date' id='datepicker_fecvento'>
-                            @Html.TextBoxFor(model => model.D_FecVencto, new { @class = "form-control" })
+                            @Html.TextBoxFor(model => model.D_FecVencto, "{0:dd/MM/yyyy}", new { @class = "form-control" })
                             <span class="input-group-addon"><i class="fa fa-calendar-o"></i></span>
                             <p class="text-danger small">@Html.ValidationMessageFor(model => model.D_FecVencto)</p>
                         </div>
                     </div>
                 </div>
                 <div class="form-group row">
-                    @Html.LabelFor(model => model.I_Prioridad, new { @class = "col-md-4" })
+                    @Html.LabelFor(model => model.I_Prioridad, new { @class = "col-md-3" })
                     <div class="col-md-8">
-                        @Html.TextBoxFor(model => model.I_Prioridad, new { @class = "form-control" })
+                        @Html.TextBoxFor(model => model.I_Prioridad, new { @class = "form-control", @readonly = "readonly" })
                         <p class="text-danger small">@Html.ValidationMessageFor(model => model.I_Prioridad)</p>
                     </div>
                 </div>
-
+                <div class="form-group row">
+                    <label class="col-md-3">Cuentas Habilitadas</label>
+                    <div class="col-md-8">
+                        @Html.DropDownList("cmbCuentasHabilitadas", new SelectList(ViewBag.Lista_CtaDepoHabilitadas, "Value", "TextDisplay"), new { @class = "form-control", @multiple = "multiple" })
+                    </div>
+                    <div class="col-md-1">
+                        <button id="btnAddCtaDeposito" type="button" class="btn btn-link"><i class="fa fa-plus-circle"></i></button>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    @Html.LabelFor(model => model.Arr_CtaDepositoID, new { @class = "col-md-3" })
+                    <div class="col-md-8">
+                        @Html.DropDownListFor(model => model.Arr_CtaDepositoID, new SelectList(ViewBag.Lista_CtaDepoPeriodo, "Value", "TextDisplay"), new { @class = "form-control", @multiple = "multiple" })
+                        <p class="text-danger small">@Html.ValidationMessageFor(model => model.Arr_CtaDepositoID)</p>
+                    </div>
+                    <div class="col-md-1">
+                        <button id="btnRemoveCtaDeposito" type="button" class="btn btn-link"><i class="fa fa-trash-o"></i></button>
+                    </div>
+                </div>
             </fieldset>
         </div>
 
@@ -75,6 +93,10 @@
             calendarWeeks: true
         }).on('hide', function (e) {
             e.stopPropagation();
+        });
+
+        $('form').submit(function () {
+            $('#Arr_CtaDepositoID option').prop('selected', true);
         });
     </script>
 }

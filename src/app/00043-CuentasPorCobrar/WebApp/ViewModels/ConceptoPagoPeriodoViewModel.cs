@@ -1,0 +1,85 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Web;
+
+namespace WebApp.ViewModels
+{
+    public class ConceptoPagoPeriodoViewModel
+    {
+        public int I_ConcPagPerID { get; set; }
+        public string T_TipoPerDesc { get; set; }
+        public string T_ConceptoDesc { get; set; }
+        public int I_Anio { get; set; }
+        public int I_Periodo { get; set; }
+        public decimal M_Monto { get; set; }
+    }
+
+    public class MantenimientoConceptoPagoPeriodoViewModel
+    {
+        public int? I_ConcPagPerID { get; set; }
+        [Display(Name = "Descripción")]
+        [Required]
+        public int I_ConceptoID { get; set; }
+        public bool B_Fraccionable { get; set; }
+        public bool B_ConceptoGeneral { get; set; }
+        public bool B_AgrupaConcepto { get; set; }
+        public int? I_AlumnosDestino { get; set; }
+        public int? I_GradoDestino { get; set; }
+        public int? I_TipoObligacion { get; set; }
+        [Display(Name = "Cuota de Pago")]
+        public int I_PeriodoID { get; set; }
+        [Display(Name = "Clasificador")]
+        public string T_Clasificador { get; set; }
+        [Display(Name = "Clasificador (5 dígitos)")]
+        public string T_Clasificador5 { get; set; }
+        public bool B_Calculado { get; set; }
+        public int? I_Calculado { get; set; }
+        public bool B_AnioPeriodo { get; set; }
+        [Display(Name = "Año")]
+        [RequiredWhenBoolenIsTrue("B_AnioPeriodo")]
+        public int? I_Anio { get; set; }
+        [Display(Name = "Periodo")]
+        [RequiredWhenBoolenIsTrue("B_AnioPeriodo")]
+        public int? I_Periodo { get; set; }
+        public bool B_Especialidad { get; set; }
+        [Display(Name = "Especialidad")]
+        [RequiredWhenBoolenIsTrue("B_Especialidad")]
+        public char? C_CodRc { get; set; }
+        public bool B_Dependencia { get; set; }
+        [Display(Name = "Dependencia")]
+        [RequiredWhenBoolenIsTrue("B_Dependencia")]
+        public int? C_DepCod { get; set; }
+        public bool B_GrupoCodRc { get; set; }
+        [Display(Name = "Grupo Cod_Rc")]
+        [RequiredWhenBoolenIsTrue("B_GrupoCodRc")]
+        public int? I_GrupoCodRc { get; set; }
+        public bool B_ModalidadIngreso { get; set; }
+        [Display(Name = "Cód. Ingreso")]
+        [RequiredWhenBoolenIsTrue("B_ModalidadIngreso")]
+        public int? I_ModalidadIngresoID { get; set; }
+        public bool B_ConceptoAgrupa { get; set; }
+        [Display(Name = "Concepto Agrupa")]
+        [RequiredWhenBoolenIsTrue("B_ConceptoAgrupa")]
+        public int? I_ConceptoAgrupaID { get; set; }
+        public bool B_ConceptoAfecta { get; set; }
+        [Display(Name = "Concepto Afecta")]
+        [RequiredWhenBoolenIsTrue("B_ConceptoAfecta")]
+        public int? I_ConceptoAfectaID { get; set; }
+        [Display(Name = "Nro de Pagos")]
+        public int? N_NroPagos { get; set; }
+        [Display(Name = "Porcentaje")]
+        public bool B_Porcentaje { get; set; }
+        [Required]
+        [Display(Name = "Monto")]
+        [AmountGreaterThanZero]
+        public decimal? M_Monto { get; set; }
+        [Display(Name = "Monto Mínimo")]
+        [AmountGreaterThanZero]
+        public decimal? M_MontoMinimo { get; set; }
+        public string T_DescripcionLarga { get; set; }
+        public string T_Documento { get; set; }
+        public bool? B_Habilitado { get; set; }
+    }
+}

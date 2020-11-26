@@ -37,5 +37,30 @@ namespace Data.Tables
             return result;
 
         }
+
+
+        public Webpages_Roles FindByUserId(int userId)
+        {
+            Webpages_Roles result = new Webpages_Roles();
+
+            try
+            {
+                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
+                {
+                    string s_command = @"SELECT R.RoleId, R.RoleName FROM webpages_UsersInRoles UR 
+                                        INNER JOIN  webpages_Roles R ON UR.RoleId = R.RoleId 
+                                        WHERE UR.UserId = @UserId;";
+
+                    result = _dbConnection.QueryFirstOrDefault<Webpages_Roles>(s_command, new { UserId = userId }, commandType: CommandType.Text);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+
+        }
     }
 }

@@ -26,8 +26,8 @@ BEGIN
 			SET	B_Habilitado = 0
 				, D_FecUpdate = @D_FecUpdate
 			
-		INSERT INTO TS_CorreoAplicacion (T_DireccionCorreo, T_PasswordCorreo, T_Seguridad, T_HostName, I_Puerto, B_Habilitado, D_FecUpdate)
-								VALUES	 (@T_DireccionCorreo, @T_PasswordCorreo, @T_Seguridad, @T_HostName, @I_Puerto, 1, @D_FecUpdate)
+		INSERT INTO TS_CorreoAplicacion (T_DireccionCorreo, T_PasswordCorreo, T_Seguridad, T_HostName, I_Puerto, B_Habilitado, D_FecUpdate, B_Eliminado)
+								VALUES	 (@T_DireccionCorreo, @T_PasswordCorreo, @T_Seguridad, @T_HostName, @I_Puerto, 1, @D_FecUpdate, 0)
 		
 
 		SET @B_Result = 1
@@ -189,7 +189,7 @@ BEGIN
 	SET NOCOUNT ON;
 	SELECT p.I_PeriodoID, cp.T_TipoPerDesc, p.I_Anio, p.D_FecVencto, p.I_Prioridad FROM dbo.TC_Periodo p
 	INNER JOIN dbo.TC_TipoPeriodo cp ON p.I_TipoPeriodoID = cp.I_TipoPeriodoID
-	WHERE p.B_Habilitado = 1
+	WHERE p.B_Habilitado = 1 AND p.B_Eliminado = 0
 END
 GO
 
@@ -278,18 +278,20 @@ GO
 
 
 CREATE PROCEDURE dbo.USP_I_GrabarPeriodo_CuentaDeposito
-@I_CtaDepID int,
+@I_CtaDepositoID int,
 @I_PeriodoID int,
-@C_DepCod int,
+@I_UsuarioCre int,
+@I_CtaDepoPerID int OUTPUT,
 @B_Result bit OUTPUT,
 @T_Message nvarchar(4000) OUTPUT	
 AS
 BEGIN
 	SET NOCOUNT ON
   	BEGIN TRY
-		INSERT dbo.TI_Dependencia_CtaDepo_Periodo(I_CtaDepositoID, I_PeriodoID, I_DependenciaID)
-		VALUES(@I_CtaDepID, @I_PeriodoID, @C_DepCod)
+		INSERT dbo.TI_CtaDepo_Periodo(I_CtaDepositoID, I_PeriodoID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
+		VALUES(@I_CtaDepositoID, @I_PeriodoID, 1, 0, @I_UsuarioCre, getdate())
 		
+		SET @I_CtaDepoPerID = SCOPE_IDENTITY()
 		SET @B_Result = 1
 		SET @T_Message = 'Inserción de datos correcta.'
 	END TRY
@@ -301,36 +303,73 @@ END
 GO
 
 
-
-
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_ConceptoPago')
-	DROP PROCEDURE dbo.USP_S_ConceptoPago
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarPeriodo_CuentaDeposito')
+	DROP PROCEDURE dbo.USP_U_ActualizarPeriodo_CuentaDeposito
 GO
 
-CREATE PROCEDURE dbo.USP_S_ConceptoPago
+
+CREATE PROCEDURE dbo.USP_U_ActualizarPeriodo_CuentaDeposito
+@I_CtaDepoPerID int,
+@I_CtaDepositoID int,
+@I_PeriodoID int,
+@B_Habilitado bit,
+@I_UsuarioMod int,
+@B_Result bit OUTPUT,
+@T_Message nvarchar(4000) OUTPUT	
 AS
 BEGIN
-	SET NOCOUNT ON;
-	SELECT cp.I_ConceptoID, cp.T_ConceptoDesc FROM dbo.TC_ConceptoPago cp
-	where cp.B_Habilitado = 1
+	SET NOCOUNT ON
+  	BEGIN TRY
+		UPDATE dbo.TI_CtaDepo_Periodo SET
+		I_CtaDepositoID = @I_CtaDepositoID, 
+		I_PeriodoID = @I_PeriodoID, 
+		B_Habilitado = @B_Habilitado,
+		I_UsuarioMod = @I_UsuarioMod,
+		D_FecMod = getdate()
+		WHERE I_CtaDepoPerID = @I_CtaDepoPerID
+		
+		SET @B_Result = 1
+		SET @T_Message = 'Actualización de datos correcta.'
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+END
+GO
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_CtaDepo_Periodo')
+	DROP PROCEDURE dbo.USP_S_CtaDepo_Periodo
+GO
+
+
+CREATE PROCEDURE dbo.USP_S_CtaDepo_Periodo
+@I_PeriodoID int
+AS
+BEGIN
+	SET NOCOUNT ON
+  	SELECT cp.I_CtaDepoPerID, cp.I_CtaDepositoID, cp.I_PeriodoID, cp.B_Habilitado, c.C_NumeroCuenta, e.T_EntidadDesc FROM dbo.TI_CtaDepo_Periodo cp
+	INNER JOIN dbo.TC_CuentaDeposito c ON c.I_CtaDepositoID = cp.I_CtaDepositoID
+	INNER JOIN dbo.TC_EntidadFinanciera e ON e.I_EntidadFinanID = c.I_EntidadFinanID
+	WHERE cp.B_Eliminado = 0 AND cp.I_PeriodoID = @I_PeriodoID
 END
 GO
 
 
 
-
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_ConceptoPago_Periodo')
-	DROP PROCEDURE dbo.USP_S_ConceptoPago_Periodo
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_ConceptoPago_Periodo_Habilitados')
+	DROP PROCEDURE dbo.USP_S_ConceptoPago_Periodo_Habilitados
 GO
 
-CREATE PROCEDURE dbo.USP_S_ConceptoPago_Periodo
+CREATE PROCEDURE dbo.USP_S_ConceptoPago_Periodo_Habilitados
 AS
 BEGIN
 	SET NOCOUNT ON;
-	SELECT c.I_ConcPagPerID, c.I_ConceptoID, c.B_Fraccionable, c.B_ConceptoGeneral, c.B_AgrupaConcepto, c.I_AlumnosDestino, c.I_GradoDestino, 
-	c.I_TipoObligacion, c.I_PeriodoID, c.T_Clasificador, c.T_Clasificador5, c.B_Calculado, c.I_Calculado, c.B_AnioPeriodo, c.I_Anio, c.I_Periodo, 
-	c.B_Especialidad, c.C_CodRc, c.B_Dependencia, c.C_DepCod, c.B_GrupoCodRc, c.I_GrupoCodRc, c.B_ModalidadIngreso, c.I_ModalidadIngresoID, c.B_ConceptoAgrupa, c.I_ConceptoAgrupaID, 
-	c.B_ConceptoAfecta, c.I_ConceptoAfectaID, c.N_NroPagos, c.B_Porcentaje, c.M_Monto, c.M_MontoMinimo, c.T_DescripcionLarga, c.T_Documento, c.B_Habilitado FROM dbo.TI_ConceptoPago_Periodo c
+	SELECT c.I_ConcPagPerID, t.T_TipoPerDesc, cp.T_ConceptoDesc, c.I_Anio, c.I_Periodo, c.M_Monto FROM dbo.TI_ConceptoPago_Periodo c
+	INNER JOIN dbo.TC_Periodo p ON p.I_PeriodoID = c.I_PeriodoID
+	INNER JOIN dbo.TC_TipoPeriodo t ON t.I_TipoPeriodoID = p.I_TipoPeriodoID
+	INNER JOIN dbo.TC_ConceptoPago cp ON cp.I_ConceptoID = c.I_ConceptoID
+	WHERE c.B_Habilitado = 1 AND c.B_Eliminado = 0
 END
 GO
 
@@ -341,39 +380,40 @@ IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCE
 GO
 
 CREATE PROCEDURE dbo.USP_I_GrabarConceptoPago_Periodo
-@I_ConceptoID int,
-@B_Fraccionable int,
-@B_ConceptoGeneral int,
-@B_AgrupaConcepto int,
-@I_AlumnosDestino int,
-@I_GradoDestino int,
-@I_TipoObligacion int,
 @I_PeriodoID int,
-@T_Clasificador int,
-@T_Clasificador5 int,
-@B_Calculado int,
-@I_Calculado int,
-@B_AnioPeriodo int,
-@I_Anio int,
-@I_Periodo int,
-@B_Especialidad int,
-@C_CodRc int,
-@B_Dependencia int,
-@C_DepCod int,
-@B_GrupoCodRc int,
-@I_GrupoCodRc int,
-@B_ModalidadIngreso int,
-@I_ModalidadIngresoID int,
-@B_ConceptoAgrupa int,
-@I_ConceptoAgrupaID int,
-@B_ConceptoAfecta int,
-@I_ConceptoAfectaID int,
-@N_NroPagos int,
-@B_Porcentaje int,
-@M_Monto int,
-@M_MontoMinimo int,
-@T_DescripcionLarga int,
-@T_Documento int,
+@I_ConceptoID int,
+@B_Fraccionable bit = null,
+@B_ConceptoGeneral bit = null,
+@B_AgrupaConcepto bit = null,
+@I_AlumnosDestino int = null,
+@I_GradoDestino int = null,
+@I_TipoObligacion int = null,
+@T_Clasificador varchar(250) = null,
+@T_Clasificador5 varchar(250) = null,
+@B_Calculado bit = null,
+@I_Calculado int = null,
+@B_AnioPeriodo bit = null,
+@I_Anio int = null,
+@I_Periodo int = null,
+@B_Especialidad bit = null,
+@C_CodRc char(3) = null,
+@B_Dependencia bit = null,
+@C_DepCod int = null,
+@B_GrupoCodRc bit = null,
+@I_GrupoCodRc int = null,
+@B_ModalidadIngreso bit = null,
+@I_ModalidadIngresoID int = null,
+@B_ConceptoAgrupa bit = null,
+@I_ConceptoAgrupaID int = null,
+@B_ConceptoAfecta bit = null,
+@I_ConceptoAfectaID int = null,
+@N_NroPagos int = null,
+@B_Porcentaje bit = null,
+@M_Monto decimal(10,4) = null,
+@M_MontoMinimo decimal(10,4) = null,
+@T_DescripcionLarga varchar(250) = null,
+@T_Documento varchar(250) = null,
+@I_UsuarioCre int,
 @I_ConcPagPerID int OUTPUT,
 @B_Result bit OUTPUT,
 @T_Message nvarchar(4000) OUTPUT
@@ -381,12 +421,17 @@ AS
 BEGIN
 	SET NOCOUNT ON
   	BEGIN TRY
-		INSERT dbo.TI_ConceptoPago_Periodo(I_ConcPagPerID, I_ConceptoID, B_Fraccionable, B_ConceptoGeneral, B_AgrupaConcepto, I_AlumnosDestino, I_GradoDestino, I_TipoObligacion, I_PeriodoID, 
-			T_Clasificador, T_Clasificador5, B_Calculado, I_Calculado, B_AnioPeriodo, I_Anio, I_Periodo, B_Especialidad, C_CodRc, B_Dependencia, C_DepCod, B_GrupoCodRc, I_GrupoCodRc, 
-			B_ModalidadIngreso, I_ModalidadIngresoID, B_ConceptoAgrupa, I_ConceptoAgrupaID, B_ConceptoAfecta, I_ConceptoAfectaID, N_NroPagos, B_Porcentaje, M_Monto, M_MontoMinimo, T_DescripcionLarga, T_Documento, B_Habilitado)
-		VALUES(@I_ConcPagPerID, @I_ConceptoID, @B_Fraccionable, @B_ConceptoGeneral, @B_AgrupaConcepto, @I_AlumnosDestino, @I_GradoDestino, @I_TipoObligacion, @I_PeriodoID, 
-			@T_Clasificador, @T_Clasificador5, @B_Calculado, @I_Calculado, @B_AnioPeriodo, @I_Anio, @I_Periodo, @B_Especialidad, @C_CodRc, @B_Dependencia, @C_DepCod, @B_GrupoCodRc, @I_GrupoCodRc, 
-			@B_ModalidadIngreso, @I_ModalidadIngresoID, @B_ConceptoAgrupa, @I_ConceptoAgrupaID, @B_ConceptoAfecta, @I_ConceptoAfectaID, @N_NroPagos, @B_Porcentaje, @M_Monto, @M_MontoMinimo, @T_DescripcionLarga, @T_Documento, 1)
+		INSERT dbo.TI_ConceptoPago_Periodo(I_PeriodoID, I_ConceptoID, B_Fraccionable, B_ConceptoGeneral, B_AgrupaConcepto, 
+			I_AlumnosDestino, I_GradoDestino, I_TipoObligacion, T_Clasificador, T_Clasificador5, B_Calculado, I_Calculado, 
+			B_AnioPeriodo, I_Anio, I_Periodo, B_Especialidad, C_CodRc, B_Dependencia, C_DepCod, B_GrupoCodRc, I_GrupoCodRc, 
+			B_ModalidadIngreso, I_ModalidadIngresoID, B_ConceptoAgrupa, I_ConceptoAgrupaID, B_ConceptoAfecta, I_ConceptoAfectaID, 
+			N_NroPagos, B_Porcentaje, M_Monto, M_MontoMinimo, T_DescripcionLarga, T_Documento, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
+		
+		VALUES(@I_PeriodoID, @I_ConceptoID, @B_Fraccionable, @B_ConceptoGeneral, @B_AgrupaConcepto, 
+			@I_AlumnosDestino, @I_GradoDestino, @I_TipoObligacion, @T_Clasificador, @T_Clasificador5, @B_Calculado, @I_Calculado, 
+			@B_AnioPeriodo, @I_Anio, @I_Periodo, @B_Especialidad, @C_CodRc, @B_Dependencia, @C_DepCod, @B_GrupoCodRc, @I_GrupoCodRc,
+			@B_ModalidadIngreso, @I_ModalidadIngresoID, @B_ConceptoAgrupa, @I_ConceptoAgrupaID, @B_ConceptoAfecta, @I_ConceptoAfectaID, 
+			@N_NroPagos, @B_Porcentaje, @M_Monto, @M_MontoMinimo, @T_DescripcionLarga, @T_Documento, 1, 0, @I_UsuarioCre, getdate())
 		
 		SET @I_ConcPagPerID = SCOPE_IDENTITY()
 		SET @B_Result = 1
@@ -402,46 +447,47 @@ GO
 
 
 
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_GrabarConceptoPago_Periodo')
-	DROP PROCEDURE dbo.USP_I_GrabarConceptoPago_Periodo
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarConceptoPago_Periodo')
+	DROP PROCEDURE dbo.USP_U_ActualizarConceptoPago_Periodo
 GO
 
-CREATE PROCEDURE dbo.USP_I_GrabarConceptoPago_Periodo
+CREATE PROCEDURE dbo.USP_U_ActualizarConceptoPago_Periodo
 @I_ConcPagPerID int,
-@I_ConceptoID int,
-@B_Fraccionable int,
-@B_ConceptoGeneral int,
-@B_AgrupaConcepto int,
-@I_AlumnosDestino int,
-@I_GradoDestino int,
-@I_TipoObligacion int,
 @I_PeriodoID int,
-@T_Clasificador int,
-@T_Clasificador5 int,
-@B_Calculado int,
-@I_Calculado int,
-@B_AnioPeriodo int,
-@I_Anio int,
-@I_Periodo int,
-@B_Especialidad int,
-@C_CodRc int,
-@B_Dependencia int,
-@C_DepCod int,
-@B_GrupoCodRc int,
-@I_GrupoCodRc int,
-@B_ModalidadIngreso int,
-@I_ModalidadIngresoID int,
-@B_ConceptoAgrupa int,
-@I_ConceptoAgrupaID int,
-@B_ConceptoAfecta int,
-@I_ConceptoAfectaID int,
-@N_NroPagos int,
-@B_Porcentaje int,
-@M_Monto int,
-@M_MontoMinimo int,
-@T_DescripcionLarga int,
-@T_Documento int,
+@I_ConceptoID int,
+@B_Fraccionable bit = null,
+@B_ConceptoGeneral bit = null,
+@B_AgrupaConcepto bit = null,
+@I_AlumnosDestino int = null,
+@I_GradoDestino int = null,
+@I_TipoObligacion int = null,
+@T_Clasificador varchar(250) = null,
+@T_Clasificador5 varchar(250) = null,
+@B_Calculado bit = null,
+@I_Calculado int = null,
+@B_AnioPeriodo bit = null,
+@I_Anio int = null,
+@I_Periodo int = null,
+@B_Especialidad bit = null,
+@C_CodRc char(3) = null,
+@B_Dependencia bit = null,
+@C_DepCod int = null,
+@B_GrupoCodRc bit = null,
+@I_GrupoCodRc int = null,
+@B_ModalidadIngreso bit = null,
+@I_ModalidadIngresoID int = null,
+@B_ConceptoAgrupa bit = null,
+@I_ConceptoAgrupaID int = null,
+@B_ConceptoAfecta bit = null,
+@I_ConceptoAfectaID int = null,
+@N_NroPagos int = null,
+@B_Porcentaje bit = null,
+@M_Monto decimal(10,4) = null,
+@M_MontoMinimo decimal(10,4) = null,
+@T_DescripcionLarga varchar(250) = null,
+@T_Documento varchar(250) = null,
 @B_Habilitado bit,
+@I_UsuarioMod int,
 @B_Result bit OUTPUT,
 @T_Message nvarchar(4000) OUTPUT
 AS
@@ -449,6 +495,7 @@ BEGIN
 	SET NOCOUNT ON
   	BEGIN TRY
 		UPDATE dbo.TI_ConceptoPago_Periodo SET
+			I_PeriodoID = @I_PeriodoID,
 			I_ConceptoID = @I_ConceptoID,
 			B_Fraccionable = @B_Fraccionable,
 			B_ConceptoGeneral = @B_ConceptoGeneral,
@@ -456,7 +503,6 @@ BEGIN
 			I_AlumnosDestino = @I_AlumnosDestino,
 			I_GradoDestino = @I_GradoDestino,
 			I_TipoObligacion = @I_TipoObligacion,
-			I_PeriodoID = @I_PeriodoID,
 			T_Clasificador = @T_Clasificador,
 			T_Clasificador5 = @T_Clasificador5,
 			B_Calculado = @B_Calculado,
@@ -482,7 +528,9 @@ BEGIN
 			M_MontoMinimo = @M_MontoMinimo,
 			T_DescripcionLarga = @T_DescripcionLarga,
 			T_Documento = @T_Documento,
-			B_Habilitado = @B_Habilitado
+			B_Habilitado = @B_Habilitado,
+			I_UsuarioMod = @I_UsuarioMod,
+			D_FecMod = getdate()
 		WHERE I_ConcPagPerID = @I_ConcPagPerID
 		
 		SET @B_Result = 1
@@ -1027,3 +1075,182 @@ BEGIN
 		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
 	END CATCH
 END
+GO
+
+
+
+
+/*-----------------------------------------------------------*/
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.DOMAINS WHERE DOMAIN_NAME = 'type_roles' AND DATA_TYPE = 'table type')
+BEGIN
+	IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'USP_I_GrabarDocumentacionUsuario' AND ROUTINE_TYPE = 'PROCEDURE')
+		DROP PROCEDURE [dbo].[USP_I_GrabarDocumentacionUsuario]
+
+	IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'USP_U_GrabarDocumentacionUsuario' AND ROUTINE_TYPE = 'PROCEDURE')
+		DROP PROCEDURE [dbo].[USP_U_GrabarDocumentacionUsuario]
+
+	DROP TYPE [dbo].[type_roles]
+END
+GO
+
+
+CREATE TYPE [dbo].[type_roles] AS TABLE(
+	RoleId			int  NULL ,
+	RoleName		varchar(50)  NULL ,
+	B_Habilitado	bit  NULL
+)
+GO
+
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'USP_I_GrabarDocumentacionUsuario' AND ROUTINE_TYPE = 'PROCEDURE')
+	DROP PROCEDURE [dbo].[USP_I_GrabarDocumentacionUsuario]
+GO
+
+CREATE PROCEDURE [dbo].[USP_I_GrabarDocumentacionUsuario]
+(
+	@I_RutaDocID		int
+	,@T_DocDesc			varchar(200)
+	,@T_RutaDocumento	nvarchar(4000)
+	,@Tbl_Roles			[dbo].[type_roles] READONLY
+	,@I_UserID			int
+
+	,@B_Result			bit OUTPUT
+	,@T_Message			nvarchar(4000) OUTPUT
+)
+AS
+BEGIN
+	
+	BEGIN TRANSACTION
+	BEGIN TRY
+		
+		INSERT INTO [dbo].[TS_RutaDocumentacion] (T_DocDesc, T_RutaDocumento, B_Habilitado) VALUES ( @T_DocDesc, @T_RutaDocumento, 1)
+			
+		SET @I_RutaDocID = IDENT_CURRENT('TS_RutaDocumentacion')
+
+		--EXEC USP_U_GrabarHistorialRegistroUsuario @I_UserID, 17, 'TS_RutaDocumentacion'
+
+		INSERT INTO [dbo].[TS_DocumentosRoles] (I_RutaDocID, RoleId, B_Habilitado)
+				SELECT	@I_RutaDocID, RoleId, B_Habilitado
+				FROM @Tbl_Roles
+
+		--EXEC USP_U_GrabarHistorialRegistroUsuario @I_UserID, 17, 'TS_DocumentosRoles'
+
+		SET @B_Result = 1
+		SET @T_Message = 'La operación se realizó correctamente.'
+
+		COMMIT TRANSACTION
+	END TRY
+	BEGIN CATCH
+		ROLLBACK TRANSACTION
+		SET @B_Result = 1
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10))
+	END CATCH
+END
+GO
+
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'USP_U_GrabarDocumentacionUsuario' AND ROUTINE_TYPE = 'PROCEDURE')
+	DROP PROCEDURE [dbo].[USP_U_GrabarDocumentacionUsuario]
+GO
+
+CREATE PROCEDURE [dbo].[USP_U_GrabarDocumentacionUsuario]
+(
+	@I_RutaDocID		tinyint
+	,@T_DocDesc			varchar(200)
+	,@T_RutaDocumento	nvarchar(4000)
+	,@Tbl_Roles			[dbo].[type_roles] READONLY
+	,@I_UserID			int
+
+	,@B_Result			bit OUTPUT
+	,@T_Message			nvarchar(4000) OUTPUT
+)
+AS
+BEGIN
+	
+	BEGIN TRANSACTION
+	BEGIN TRY
+
+		UPDATE [dbo].[TS_RutaDocumentacion]
+			SET T_DocDesc = @T_DocDesc
+				,T_RutaDocumento = @T_RutaDocumento
+			WHERE I_RutaDocID = @I_RutaDocID
+
+		--EXEC USP_U_GrabarHistorialRegistroUsuario @I_UserID, 17, 'TS_RutaDocumentacion'
+
+
+		UPDATE [dbo].[TS_DocumentosRoles]
+			SET [dbo].[TS_DocumentosRoles].[B_Habilitado] = roles.B_Habilitado
+			FROM (SELECT [RoleId], [B_Habilitado] FROM @Tbl_Roles) AS roles
+			WHERE roles.RoleId = [dbo].[TS_DocumentosRoles].[RoleId]
+				AND [dbo].[TS_DocumentosRoles].[I_RutaDocID] = @I_RutaDocID
+
+		--EXEC USP_U_GrabarHistorialRegistroUsuario @I_UserID, 17, 'TS_DocumentosRoles'
+
+
+		SET @B_Result = 1
+		SET @T_Message = 'La operación se realizó correctamente.'
+
+		COMMIT TRANSACTION
+	END TRY
+	BEGIN CATCH
+		ROLLBACK TRANSACTION
+		SET @B_Result = 1
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10))
+	END CATCH
+END
+GO
+
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'USP_U_ActualizarEstadoArchivo' AND ROUTINE_TYPE = 'PROCEDURE')
+	DROP PROCEDURE [dbo].[USP_U_ActualizarEstadoArchivo]
+GO
+
+
+CREATE PROCEDURE [dbo].[USP_U_ActualizarEstadoArchivo]
+	 @I_RutaDocID	int
+	,@B_Habilitado	bit
+
+	,@IdUser int
+	,@B_Result bit OUTPUT
+	,@T_Message nvarchar(4000) OUTPUT
+AS
+BEGIN
+	SET NOCOUNT ON
+
+	BEGIN TRANSACTION
+	BEGIN TRY
+
+		UPDATE	TS_RutaDocumentacion 
+		SET		B_Habilitado = @B_Habilitado
+		WHERE	I_RutaDocID = @I_RutaDocID
+
+--		EXEC USP_U_GrabarHistorialRegistroUsuario @IdUser, 17, 'TS_RutaDocumentacion'
+
+	COMMIT TRANSACTION
+		SET @B_Result = 1
+		SET @T_Message = 'La operación se realizó con éxito'
+	END TRY
+	BEGIN CATCH
+		ROLLBACK TRANSACTION
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10))
+	END CATCH
+END
+GO
+
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'USP_S_DocumentacionUsuarioRoles' AND ROUTINE_TYPE = 'PROCEDURE')
+	DROP PROCEDURE [dbo].[USP_S_DocumentacionUsuarioRoles]
+GO
+
+
+CREATE PROCEDURE [dbo].[USP_S_DocumentacionUsuarioRoles]
+AS
+BEGIN
+	SET NOCOUNT ON
+	SELECT RD.I_RutaDocID, RD.T_DocDesc, RD.T_RutaDocumento, RD.B_Habilitado, DR.RoleId, DR.B_Habilitado As B_DocRolHabilitado
+	FROM TS_RutaDocumentacion RD
+		 INNER JOIN TS_DocumentosRoles DR ON RD.[I_RutaDocID] = DR.[I_RutaDocID]
+END
+GO

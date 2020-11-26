@@ -293,11 +293,15 @@
     <Compile Include="Controllers\CuentaDepositoController.cs" />
     <Compile Include="Controllers\DependenciaController.cs" />
     <Compile Include="Controllers\EntidadFinancieraController.cs" />
+    <Compile Include="Controllers\EstadosCuentaController.cs" />
+    <Compile Include="Controllers\EstructuraArchivoController.cs" />
     <Compile Include="Controllers\EstudiantesController.cs" />
     <Compile Include="Controllers\HelpCenterController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\CorreoController.cs" />
     <Compile Include="Controllers\ObligacionesController.cs" />
+    <Compile Include="Controllers\PagosController.cs" />
+    <Compile Include="Controllers\ConceptoPagoController.cs" />
     <Compile Include="Controllers\PeriodosController.cs" />
     <Compile Include="Controllers\ServiceController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
@@ -307,10 +311,13 @@
     <Compile Include="Models\DependenciaModel.cs" />
     <Compile Include="Models\ClasificadorModel.cs" />
     <Compile Include="Models\CuentaDepositoModel.cs" />
+    <Compile Include="Models\CustomAttribute.cs" />
     <Compile Include="Models\EntidadFinancieraModel.cs" />
     <Compile Include="Models\EstudianteModels.cs" />
+    <Compile Include="Models\ManualUsuarioModel.cs" />
     <Compile Include="Models\SelectModels.cs" />
     <Compile Include="Models\PeriodoModel.cs" />
+    <Compile Include="Models\ConceptoPagoModel.cs" />
     <Compile Include="Models\UsersModel.cs" />
     <Compile Include="Models\CorreoAplicacionModel.cs" />
     <Compile Include="Models\ResponseModel.cs" />
@@ -321,9 +328,10 @@
     <Compile Include="ViewModels\CuentaDepositoViewModels.cs" />
     <Compile Include="ViewModels\ClasificadoresViewModels.cs" />
     <Compile Include="ViewModels\CorreoAplicacionViewModel.cs" />
+    <Compile Include="ViewModels\ConceptoPagoPeriodoViewModel.cs" />
     <Compile Include="ViewModels\EstudiantesViewModels.cs" />
-    <Compile Include="ViewModels\ObligacionViewModel.cs" />
     <Compile Include="ViewModels\PeriodoViewModel.cs" />
+    <Compile Include="ViewModels\RolesViewModel.cs" />
     <Compile Include="ViewModels\SelectViewModel.cs" />
     <Compile Include="ViewModels\UserManualViewModel.cs" />
     <Compile Include="ViewModels\UsersViewModels.cs" />
@@ -348,9 +356,7 @@
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Shared\_Sidebar.cshtml" />
     <Content Include="Views\HelpCenter\Index.cshtml" />
-    <Content Include="Views\HelpCenter\FAQs.cshtml" />
     <Content Include="Views\HelpCenter\Manual.cshtml" />
-    <Content Include="Views\HelpCenter\Contacts.cshtml" />
     <Content Include="Views\Shared\_MsgPartial.cshtml" />
     <Content Include="Views\Shared\_MsgPartialWR.cshtml" />
     <Content Include="Views\Account\_ChangePassword.cshtml" />
@@ -365,9 +371,10 @@
     <Content Include="Views\Shared\_Grid.cshtml" />
     <Content Include="Views\Periodos\Index.cshtml" />
     <Content Include="Views\Periodos\_MantenimientoPeriodo.cshtml" />
-    <Content Include="Views\Obligaciones\Index.cshtml" />
-    <Content Include="Views\Obligaciones\Create.cshtml" />
-    <Content Include="Views\Obligaciones\Edit.cshtml" />
+    <Content Include="Views\ConceptoPago\Index.cshtml" />
+    <Content Include="Views\ConceptoPago\Grabar.cshtml" />
+    <Content Include="Views\Estudiantes\ArchivosImportados.cshtml" />
+    <Content Include="Views\Estudiantes\ImportacionArchivo.cshtml" />
     <Content Include="Views\Estudiantes\Index.cshtml" />
     <Content Include="Views\Periodos\Ejemplo.cshtml" />
     <Content Include="Views\Clasificadores\Index.cshtml" />
@@ -375,9 +382,14 @@
     <Content Include="Views\EntidadFinanciera\Index.cshtml" />
     <Content Include="Views\CuentaDeposito\Index.cshtml" />
     <Content Include="Views\EntidadFinanciera\_RegistrarEntidadFinanciera.cshtml" />
+    <Content Include="Views\ConceptoPago\_MantenimientoConceptoPago.cshtml" />
     <Content Include="Views\CuentaDeposito\_RegistrarCuentaDeposito.cshtml" />
     <Content Include="Views\Dependencia\Index.cshtml" />
     <Content Include="Views\Dependencia\_RegistrarDependencia.cshtml" />
+    <Content Include="Views\HelpCenter\ManualesListado.cshtml" />
+    <Content Include="Views\HelpCenter\_ManualesRegistrar.cshtml" />
+    <Content Include="Views\EstadosCuenta\Index.cshtml" />
+    <Content Include="Views\Pagos\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -391,6 +403,7 @@
     <Folder Include="Assets\datatables\js\" />
     <Folder Include="Upload\Alumnos\" />
     <Folder Include="Upload\Tablas\" />
+    <Folder Include="Views\EstructuraArchivo\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />

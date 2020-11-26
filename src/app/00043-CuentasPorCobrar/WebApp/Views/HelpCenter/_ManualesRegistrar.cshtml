@@ -1,0 +1,62 @@
+﻿@model WebApp.ViewModels.UserManualViewModel
+
+@Scripts.Render("~/bundles/jqueryval")
+
+<div class="modal-header bg-dark-primary" style="border-radius: 5px 5px 0px 0px">
+    <h5 class="modal-title text-center">@ViewBag.Title</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+@using (Ajax.BeginForm("Save", "HelpCenter", new { area = "" }, new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "div_msg", OnBegin = "Load", OnComplete = "Stop" }))
+{
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-12">
+                <br />
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.RutaID)
+                <div class="form-group">
+                    @Html.LabelFor(m => m.FileName, new { @class = "col-md-12" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.FileName, new { @class = "form-control", size = "50" })
+                        <span class="text-danger">@Html.ValidationMessageFor(m => m.FileName)</span>
+                    </div>
+                </div>
+                <div class="col-md-12">&nbsp;</div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.FilePath, new { @class = "col-md-12" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.FilePath, new { @class = "form-control", size = "50" })
+                        <span class="text-danger">@Html.ValidationMessageFor(m => m.FilePath)</span>
+                    </div>
+                </div>
+                <div class="col-md-12">&nbsp;</div>
+
+                <div class="form-group col-md-12">
+                    <h5><b>Compartido con roles:</b></h5>
+                    @for (int i = 0; i < Model.Roles.Count(); i++)
+                    {
+                        <div class="col-xs-offset-1">
+                            <label class="checkbox col-md-6">
+                                @Html.HiddenFor(m => m.Roles[i].RoleId)
+                                @Html.CheckBoxFor(m => m.Roles[i].Habilitado) @Model.Roles[i].RoleName
+                            </label>
+                        </div>
+                    }
+                </div>
+                <br />
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer" id="div_msg">
+        <div class="col-md-12" style="display:none" id="loading">
+            <h6>Grabando cambios...</h6>
+            <div class="progress">
+                <div class="indeterminate"></div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="btnsubmit"><i class="fa fa-save"></i>&nbsp;Grabar</button>
+        <button type="button" class="btn btn-secondary" id="btnCancel" data-dismiss="modal"><i class="fa fa-times-circle-o">&nbsp;</i>Cancelar</button>
+    </div>
+}

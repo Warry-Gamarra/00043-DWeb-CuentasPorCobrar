@@ -10,5 +10,6 @@ namespace Domain.Services
     public interface IRoles
     {
         List<RolAplicacion> Find();
+        RolAplicacion FindByUser(int userId);
     }
 }

@@ -18,9 +18,21 @@ namespace WebApp.Models
             periodoService = new PeriodoService();
         }
 
-        public List<CuotaPago> Listar_Tipo_Periodo_Habilitados()
+        public List<SelectViewModel> Listar_Combo_TipoPeriodo()
         {
-            return periodoService.Listar_Tipo_Periodo_Habilitados();
+            List<SelectViewModel> result = new List<SelectViewModel>();
+
+            var lista = periodoService.Listar_Tipo_Periodo_Habilitados();
+
+            if (lista != null)
+            {
+                result = lista.Select(x => new SelectViewModel() {
+                    Value = x.I_TipoPeriodoID.ToString(),
+                    TextDisplay = x.T_TipoPerDesc
+                }).ToList();
+            }
+
+            return result;
         }
 
         public int Obtener_Prioridad_Tipo_Periodo(int I_TipoPeriodoID)
@@ -28,9 +40,22 @@ namespace WebApp.Models
             return periodoService.Obtener_Prioridad_Tipo_Periodo(I_TipoPeriodoID);
         }
 
-        public List<CuentaDeposito> Listar_Cuenta_Deposito_Habilitadas(int I_TipoPeriodoID)
+        public List<SelectViewModel> Listar_Combo_CtaDepositoHabilitadas(int I_TipoPeriodoID)
         {
-            return periodoService.Listar_Cuenta_Deposito_Habilitadas(I_TipoPeriodoID);
+            List<SelectViewModel> result = new List<SelectViewModel>();
+
+            var lista = periodoService.Listar_Cuenta_Deposito_Habilitadas(I_TipoPeriodoID);
+
+            if (lista != null)
+            {
+                result = lista.Select(x => new SelectViewModel()
+                {
+                    Value = x.I_CtaDepID.ToString(),
+                    TextDisplay = String.Format("{0}: {1}", x.T_EntidadDesc, x.C_NumeroCuenta),
+                }).ToList();
+            }
+
+            return result;
         }
 
         public List<PeriodoViewModel> Listar_Periodos_Habilitados()
@@ -56,11 +81,12 @@ namespace WebApp.Models
 
         public Response Grabar_Periodo(MantenimientoPeriodoViewModel model, int currentUserId)
         {
-            PeriodoEntity periodo;
+            PeriodoEntity periodoEntity;
+            CtaDepoPeriodoEntity ctaDepoPeriodoEntity;
 
-            var saveOption = (!model.I_PeriodoID.HasValue) ? SaveOption.Insert : SaveOption.Update;
+            var periodoSaveOption = (!model.I_PeriodoID.HasValue) ? SaveOption.Insert : SaveOption.Update;
 
-            periodo  = new PeriodoEntity()
+            periodoEntity = new PeriodoEntity()
             {
                 I_PeriodoID = model.I_PeriodoID.GetValueOrDefault(),
                 I_TipoPeriodoID = model.I_TipoPeriodoID,
@@ -72,7 +98,94 @@ namespace WebApp.Models
                 I_UsuarioMod = currentUserId
             };
 
-            return periodoService.Grabar_Periodo(periodo, saveOption);
+            var resultPeriodo = periodoService.Grabar_Periodo(periodoEntity, periodoSaveOption);
+
+            if (resultPeriodo.Value)
+            {
+                periodoEntity.I_PeriodoID = int.Parse(resultPeriodo.CurrentID);
+
+                var ctasDeposito = periodoService.Obtener_CtasDepoPeriodo(periodoEntity.I_PeriodoID);
+
+                if (ctasDeposito != null && ctasDeposito.Count > 0)
+                {
+                    if (model.Arr_CtaDepositoID != null)
+                    {
+                        for (int i = 0; i < model.Arr_CtaDepositoID.Length; i++)
+                        {
+                            int ctaDepositoID = model.Arr_CtaDepositoID[i];
+
+                            if (ctasDeposito.Exists(x => x.I_CtaDepositoID == ctaDepositoID))
+                            {
+                                ctaDepoPeriodoEntity = ctasDeposito.FirstOrDefault(x => x.I_CtaDepositoID == ctaDepositoID);
+
+                                if (!ctaDepoPeriodoEntity.B_Habilitado)
+                                {
+                                    ctaDepoPeriodoEntity.B_Habilitado = true;
+                                    ctaDepoPeriodoEntity.I_UsuarioMod = currentUserId;
+                                    periodoService.Grabar_CtaDepoPeriodo(ctaDepoPeriodoEntity, SaveOption.Update);
+                                }
+                            }
+                            else
+                            {
+                                ctaDepoPeriodoEntity = new CtaDepoPeriodoEntity()
+                                {
+                                    I_PeriodoID = periodoEntity.I_PeriodoID,
+                                    I_CtaDepositoID = ctaDepositoID,
+                                    I_UsuarioCre = currentUserId,
+                                    B_Habilitado = true
+                                };
+
+                                periodoService.Grabar_CtaDepoPeriodo(ctaDepoPeriodoEntity, SaveOption.Insert);
+                            }
+                        }
+
+                        var listaDeshabilitar = ctasDeposito.FindAll(x => !model.Arr_CtaDepositoID.Contains(x.I_CtaDepositoID));
+
+                        foreach (var item in listaDeshabilitar)
+                        {
+                            if (item.B_Habilitado)
+                            {
+                                item.I_UsuarioMod = currentUserId;
+                                item.B_Habilitado = false;
+
+                                periodoService.Grabar_CtaDepoPeriodo(item, SaveOption.Update);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        foreach (var item in ctasDeposito)
+                        {
+                            if (item.B_Habilitado)
+                            {
+                                item.I_UsuarioMod = currentUserId;
+                                item.B_Habilitado = false;
+                                periodoService.Grabar_CtaDepoPeriodo(item, SaveOption.Update);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    if (model.Arr_CtaDepositoID != null)
+                    {
+                        foreach (var item in model.Arr_CtaDepositoID)
+                        {
+                            ctaDepoPeriodoEntity = new CtaDepoPeriodoEntity()
+                            {
+                                I_PeriodoID = periodoEntity.I_PeriodoID,
+                                I_CtaDepositoID = item,
+                                I_UsuarioCre = currentUserId,
+                                B_Habilitado = true
+                            };
+
+                            periodoService.Grabar_CtaDepoPeriodo(ctaDepoPeriodoEntity, SaveOption.Insert);
+                        }
+                    }
+                }
+            }
+
+            return resultPeriodo;
         }
 
         public MantenimientoPeriodoViewModel Obtener_Periodo(int I_PeriodoID)
@@ -90,6 +203,24 @@ namespace WebApp.Models
             };
 
             return model;
+        }
+
+        public List<SelectViewModel> Listar_Combo_CtasDepoPeriodo(int I_PeriodoID)
+        {
+            List<SelectViewModel> result = new List<SelectViewModel>();
+
+            var lista = periodoService.Obtener_CtasDepo_X_Periodo(I_PeriodoID);
+
+            if (lista != null)
+            {
+                result = lista.Where(x => x.B_Habilitado).Select(x => new SelectViewModel()
+                {
+                    Value = x.I_CtaDepositoID.ToString(),
+                    TextDisplay = String.Format("{0}: {1}", x.T_EntidadDesc, x.C_NumeroCuenta),
+                }).ToList();
+            }
+
+            return result;
         }
 
         public List<short> Listar_Anios()

@@ -3,13 +3,24 @@
     <ul class="nav side-nav">
         <li class="nav-item"><a href="@Url.Action("Index", "Home")" class="nav-link"><i class="fa fa-fw fa-home"></i> Dashboard</a></li>
         <li class="nav-item">
+            <a href="javascript:;" class="nav-link" data-toggle="collapse" data-target="#inquiries">
+                <i class="fa fa-fw fa-search"></i> Consultas<span class="pull-right"><i class="fa fa-fw fa-caret-down"></i></span>
+            </a>
+            <ul id="inquiries" class="collapse">
+                <li><a href="@Url.Action("Index", "EstadosCuenta")"><i class="fa fa-fw fa-tasks"></i>&nbsp; Estados de Cuenta</a></li>
+                <li><a href="@Url.Action("Index", "Pagos")"><i class="fa fa-fw fa-database"></i>&nbsp; Pagos Registrados</a></li>
+                <li><a href="@Url.Action("Index", "Deudas")"><i class="fa fa-fw fa-sign-out"></i>&nbsp; Deudas Registradas</a></li>
+                <li><a href="@Url.Action("Generar", "Obligaciones")"><i class="fa fa-fw fa-th-large"></i>&nbsp; Consolidado por clasificador</a></li>
+            </ul>
+        </li>
+        <li class="nav-item">
             <a href="javascript:;" class="nav-link" data-toggle="collapse" data-target="#operations">
-                <i class="fa fa-fw fa-paste"></i> Operaciones<span class="pull-right"><i class="fa fa-fw fa-caret-down"></i></span>
+                <i class="fa fa-fw fa-refresh"></i> Operaciones<span class="pull-right"><i class="fa fa-fw fa-caret-down"></i></span>
             </a>
             <ul id="operations" class="collapse">
                 <li><a href="@Url.Action("Index", "Estudiantes")"><i class="fa fa-fw fa-upload"></i>&nbsp; Cargar alumnos aptos</a></li>
                 <li><a href="@Url.Action("Generar", "Obligaciones")"><i class="fa fa-fw fa-file-text-o"></i>&nbsp; Generar obligaciones</a></li>
-                <li><a href="@Url.Action("Generar", "Tasas")"><i class="fa fa-fw fa-file-text-o"></i>&nbsp; Generar Tasas</a></li>
+                <li><a href="@Url.Action("Generar", "Tasas")"><i class="fa fa-fw fa-percent"></i>&nbsp; Generar Tasas</a></li>
                 <li><a href="@Url.Action("ArchivoPago", "Exportar")"><i class="fa fa-fw fa-file-text-o"></i>&nbsp; Generar Archivos Pago</a></li>
             </ul>
         </li>
@@ -18,9 +29,10 @@
                 <i class="fa fa-fw fa-cogs"></i> Configuración<span class="pull-right"><i class="fa fa-fw fa-caret-down"></i></span>
             </a>
             <ul id="settings" class="collapse">
-                <li><a href="@Url.Action("Index", "ConceptoPago")"><i class="fa fa-fw fa-list"></i>&nbsp; Conceptos de pago</a></li>
-                <li><a href="@Url.Action("Index", "CuotaPago")"><i class="fa fa-fw fa-file-text-o"></i>&nbsp; Desc. cuota de pago</a></li>
+                <li><a href="@Url.Action("Index", "ConceptoPago")"><i class="fa fa-fw fa-database"></i>&nbsp; Conceptos de pago</a></li>
+                <li><a href="@Url.Action("Index", "CuotaPago")"><i class="fa fa-fw fa-list"></i>&nbsp; Desc. cuota de pago</a></li>
                 <li><a href="@Url.Action("Index", "CuentaDeposito")"><i class="fa fa-fw fa-credit-card"></i>&nbsp; Números de Cuenta</a></li>
+                <li><a href="@Url.Action("Index", "EstructuraArchivo")"><i class="fa fa-fw fa-file-text"></i>&nbsp; Estructura de Archivos TXT</a></li>
                 <li><a href="@Url.Action("Index", "Clasificadores")"><i class="fa fa-fw fa-list-ol"></i>&nbsp; Clasificadores de ingreso</a></li>
             </ul>
         </li>
@@ -35,6 +47,7 @@
                 <li><a href="@Url.Action("Index", "Dependencia")"><i class="fa fa-fw fa-fort-awesome"></i>&nbsp; Dependencias</a></li>
                 <li><a href="@Url.Action("Index", "EntidadFinanciera")"><i class="fa fa-fw fa-bank"></i>&nbsp; Entidades Financieras</a></li>
                 <li><a href="@Url.Action("Index", "Users")"><i class="fa fa-fw fa-users"></i>&nbsp; Usuarios </a></li>
+                <li><a href="@Url.Action("Manage", "HelpCenter")"><i class="fa fa-fw fa-bookmark"></i>&nbsp; Documentación </a></li>
             </ul>
         </li>
         <li class="nav-item">
@@ -43,8 +56,6 @@
             </a>
             <ul id="help" class="collapse">
                 <li><a href="@Url.Action("Manual", "HelpCenter")"><i class="fa fa-fw fa-book"></i>&nbsp; Manual de Usuario</a></li>
-                @*<li><a href="@Url.Action("FAQs", "HelpCenter")"><i class="fa fa-fw fa-question-circle-o"></i>&nbsp; Preguntas frecuentes</a></li>
-                    <li><a href="@Url.Action("Contacts", "HelpCenter")"><i class="fa fa-fw fa-phone-square"></i>&nbsp; Contactos</a></li>*@
             </ul>
         </li>
     </ul>
@@ -58,8 +69,13 @@
             </a>
         </li>
         <li class="nav-item">
+            <a href="javascript:;" class="nav-link" data-toggle="collapse" title="Consultas" data-target="#inquiries">
+                <i class="fa fa-3x fa-search"></i><br />Consultas
+            </a>
+        </li>
+        <li class="nav-item">
             <a href="javascript:;" class="nav-link" data-toggle="collapse" title="Operaciones" data-target="#operations">
-                <i class="fa fa-3x fa-clipboard"></i><br />Operaciones
+                <i class="fa fa-3x fa-refresh"></i><br />Operaciones
             </a>
         </li>
         <li class="nav-item">
@@ -69,7 +85,7 @@
         </li>
         <li class="nav-item">
             <a href="javascript:;" class="nav-link" data-toggle="collapse" title="Configuración" data-target="#maintenance">
-                <i class="fa fa-3x fa-fw fa-cogs"></i><br />Mantenimiento
+                <i class="fa fa-3x fa-fw fa-wrench"></i><br />Mantenimiento
             </a>
         </li>
         <li class="nav-item">
