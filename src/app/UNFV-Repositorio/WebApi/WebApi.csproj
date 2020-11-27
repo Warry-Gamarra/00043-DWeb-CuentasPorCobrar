@@ -173,6 +173,12 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\EscuelaModel.cs" />
+    <Compile Include="Models\EspecialidadModel.cs" />
+    <Compile Include="Models\FacultadModel.cs" />
+    <Compile Include="Models\IServiceFacade.cs" />
+    <Compile Include="Models\Mapper.cs" />
+    <Compile Include="Models\ServiceFacade.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -228,7 +234,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

@@ -9,8 +9,6 @@ namespace Domain.Services
 {
     public interface IEspecialidadService
     {
-        IEnumerable<EspecialidadDTO> GetAll();
-
         IEnumerable<EspecialidadDTO> GetByEsc(string codEsc, string codFac);
 
         EspecialidadDTO GetByID(string codEsp, string codEsc, string codFac);

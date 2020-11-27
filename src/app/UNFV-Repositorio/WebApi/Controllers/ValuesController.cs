@@ -1,48 +1,50 @@
-﻿using Domain.Entities;
-using Domain.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using WebApi.Models;
 
 namespace WebApi.Controllers
 {
     public class ValuesController : ApiController
     {
-        public IFacultadService _facultadService;
+        public IServiceFacade _service;
 
-        public ValuesController(IFacultadService facultadService)
+        public ValuesController(IServiceFacade service)
         {
-            _facultadService = facultadService;
+            _service = service;
         }
 
-        // GET api/values
-        public IEnumerable<FacultadDTO> Get()
+        public IEnumerable<FacultadModel> GetFacultades()
         {
-            return _facultadService.GetAll();
+            return _service.GetFacultades();
         }
 
-        // GET api/values/5
-        public string Get(int id)
+        public FacultadModel GetFacultadByID(string codFac)
         {
-            return "value";
+            return _service.GetFacultadByID(codFac);
         }
 
-        // POST api/values
-        public void Post([FromBody]string value)
+        public IEnumerable<EscuelaModel> GetEscuelasByFac(string codFac)
         {
+            return _service.GetEscuelasByFac(codFac);
         }
 
-        // PUT api/values/5
-        public void Put(int id, [FromBody]string value)
+        public EscuelaModel GetEscuelaByID(string codEsc, string codFac)
         {
+            return _service.GetEscuelaByID(codEsc, codFac);
         }
 
-        // DELETE api/values/5
-        public void Delete(int id)
+        public IEnumerable<EspecialidadModel> GetEspecialidadesByEsc(string codEsc, string codFac)
         {
+            return _service.GetEspecialidadesByEsc(codEsc, codFac);
         }
+
+        public EspecialidadModel GetEspecialidadByID(string codEsp, string codEsc, string codFac)
+        {
+            return _service.GetEspecialidadByID(codEsp, codEsc, codFac);
+        }   
     }
 }

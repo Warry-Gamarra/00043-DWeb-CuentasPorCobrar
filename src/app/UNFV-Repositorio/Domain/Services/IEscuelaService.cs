@@ -9,8 +9,6 @@ namespace Domain.Services
 {
     public interface IEscuelaService
     {
-        IEnumerable<EscuelaDTO> GetAll();
-
         IEnumerable<EscuelaDTO> GetByFac(string codFac);
 
         EscuelaDTO GetByID(string codEsc, string codFac);

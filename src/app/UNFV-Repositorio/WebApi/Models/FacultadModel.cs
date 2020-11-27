@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Web;
 
-namespace Domain.Entities
+namespace WebApi.Models
 {
-    public class FacultadDTO
+    public class FacultadModel
     {
         public string CodFac { get; set; }
         public string FacDesc { get; set; }

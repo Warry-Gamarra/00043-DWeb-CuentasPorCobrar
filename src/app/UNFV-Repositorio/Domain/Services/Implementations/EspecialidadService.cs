@@ -17,24 +17,6 @@ namespace Domain.Services.Implementations
             _especialidadRepository = especialidadRepository;
         }
 
-        public IEnumerable<EspecialidadDTO> GetAll()
-        {
-            IEnumerable<EspecialidadDTO> result;
-
-            var especialidades = _especialidadRepository.GetAll();
-
-            if (especialidades == null)
-            {
-                result = new List<EspecialidadDTO>();
-            }
-            else
-            {
-                result = especialidades.Select(e => Mapper.TC_EspecialidadToEspecialidadDTO(e));
-            }
-
-            return result;
-        }
-
         public IEnumerable<EspecialidadDTO> GetByEsc(string codEsc, string codFac)
         {
             IEnumerable<EspecialidadDTO> result;

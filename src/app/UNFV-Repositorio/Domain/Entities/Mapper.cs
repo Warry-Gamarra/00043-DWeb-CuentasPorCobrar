@@ -25,21 +25,42 @@ namespace Domain.Entities
 
         public static FacultadDTO TC_FacultadToFacultadDTO(TC_Facultad facultad)
         {
-            FacultadDTO facultadDTO = new FacultadDTO();
+            FacultadDTO facultadDTO = new FacultadDTO()
+            {
+                CodFac = facultad.C_CodFac,
+                FacDesc = facultad.T_FacDesc,
+                FacAbrev = facultad.T_FacAbrev,
+                Habilitado = facultad.B_Habilitado
+            };
 
             return facultadDTO;
         }
 
         public static EscuelaDTO TC_EscuelaToEscuelaDTO(TC_Escuela escuela)
         {
-            EscuelaDTO escuelaDTO = new EscuelaDTO();
+            EscuelaDTO escuelaDTO = new EscuelaDTO()
+            {
+                CodEsc = escuela.C_CodEsc,
+                CodFac = escuela.C_CodFac,
+                EscDesc = escuela.T_EscDesc,
+                EscAbrev = escuela.T_EscAbrev,
+                Habilitado = escuela.B_Habilitado
+            };
 
             return escuelaDTO;
         }
 
         public static EspecialidadDTO TC_EspecialidadToEspecialidadDTO(TC_Especialidad especialidad)
         {
-            EspecialidadDTO especialidadDTO = new EspecialidadDTO();
+            EspecialidadDTO especialidadDTO = new EspecialidadDTO()
+            {
+                CodEsp = especialidad.C_CodEsp,
+                CodEsc = especialidad.C_CodEsc,
+                CodFac = especialidad.C_CodFac,
+                EspDesc = especialidad.T_EspDesc,
+                EspAbrev = especialidad.T_EspAbrev,
+                Habilitado = especialidad.B_Habilitado
+            };
 
             return especialidadDTO;
         }

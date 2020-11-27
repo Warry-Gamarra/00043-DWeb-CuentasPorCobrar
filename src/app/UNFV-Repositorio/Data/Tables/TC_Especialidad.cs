@@ -34,28 +34,6 @@ namespace Data.Tables
 
         public DateTime? D_FecMod { get; set; }
 
-        public static IEnumerable<TC_Especialidad> GetAll()
-        {
-            IEnumerable<TC_Especialidad> result;
-            string command;
-
-            try
-            {
-                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
-                {
-                    command = "SELECT * FROM TC_Especialidad WHERE B_Eliminado = 0";
-
-                    result = _dbConnection.Query<TC_Especialidad>(command, commandType: CommandType.Text);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return result;
-        }
-
         public static IEnumerable<TC_Especialidad> GetByEsc(string codEsc, string codFac)
         {
             IEnumerable<TC_Especialidad> result;

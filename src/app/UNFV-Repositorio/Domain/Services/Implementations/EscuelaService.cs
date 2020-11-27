@@ -17,24 +17,6 @@ namespace Domain.Services.Implementations
             _escuelaRepository = escuelaRepository;
         }
 
-        public IEnumerable<EscuelaDTO> GetAll()
-        {
-            IEnumerable<EscuelaDTO> result;
-
-            var escuelas = _escuelaRepository.GetAll();
-
-            if (escuelas == null)
-            {
-                result = new List<EscuelaDTO>();
-            }
-            else
-            {
-                result = escuelas.Select(e => Mapper.TC_EscuelaToEscuelaDTO(e));
-            }
-
-            return result;
-        }
-
         public IEnumerable<EscuelaDTO> GetByFac(string codFac)
         {
             IEnumerable<EscuelaDTO> result;

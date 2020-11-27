@@ -9,8 +9,6 @@ namespace Data.Repositories
 {
     public interface IEscuelaRepository
     {
-        IEnumerable<TC_Escuela> GetAll();
-
         IEnumerable<TC_Escuela> GetByFac(string codFac);
 
         TC_Escuela GetByID(string codEsc, string C_CodFac);

@@ -9,20 +9,6 @@ namespace Data.Repositories.Implementations
 {
     public class EscuelaRepository : IEscuelaRepository
     {
-        public IEnumerable<TC_Escuela> GetAll()
-        {
-            IEnumerable<TC_Escuela> result;
-            try
-            {
-                result = TC_Escuela.GetAll();
-            }
-            catch (Exception)
-            {
-                result = null;
-            }
-            return result;
-        }
-
         public IEnumerable<TC_Escuela> GetByFac(string codFac)
         {
             IEnumerable<TC_Escuela> result;

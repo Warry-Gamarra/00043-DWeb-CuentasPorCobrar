@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Web;
 
-namespace Domain.Entities
+namespace WebApi.Models
 {
-    public class EscuelaDTO
+    public class EspecialidadModel
     {
+        public string CodEsp { get; set; }
         public string CodEsc { get; set; }
         public string CodFac { get; set; }
-        public string EscDesc { get; set; }
-        public string EscAbrev { get; set; }
+        public string EspDesc { get; set; }
+        public string EspAbrev { get; set; }
         public bool Habilitado { get; set; }
     }
 }

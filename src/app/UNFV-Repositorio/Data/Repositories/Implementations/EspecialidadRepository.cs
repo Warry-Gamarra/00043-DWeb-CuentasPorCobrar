@@ -9,20 +9,6 @@ namespace Data.Repositories.Implementations
 {
     public class EspecialidadRepository : IEspecialidadRepository
     {
-        public IEnumerable<TC_Especialidad> GetAll()
-        {
-            IEnumerable<TC_Especialidad> result;
-            try
-            {
-                result = TC_Especialidad.GetAll();
-            }
-            catch (Exception)
-            {
-                result = null;
-            }
-            return result;
-        }
-
         public IEnumerable<TC_Especialidad> GetByEsc(string codEsc, string codFac)
         {
             IEnumerable<TC_Especialidad> result;
