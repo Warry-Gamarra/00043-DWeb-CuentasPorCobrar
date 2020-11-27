@@ -13,7 +13,18 @@ namespace Data.Procedures
 {
     public class USP_I_GrabarCarreraProfesional
     {
-        public bool B_Habilitado { get; set; }
+        public string C_RcCod { get; set; }
+        public string C_CodEsp { get; set; }
+        public string C_CodEsc { get; set; }
+        public string C_CodFac { get; set; }
+        public char C_Tipo { get; set; }
+        public Int16 C_AnioIngreso { get; set; }
+        public Int16 I_Duracion { get; set; }
+        public string B_Anual { get; set; }
+        public char N_Grupo { get; set; }
+        public char N_Grado { get; set; }
+        public int I_IdAplica { get; set; }
+        public DateTime D_FecCre { get; set; }
         public int I_UsuarioCre { get; set; }
 
         public ResponseData Execute()
@@ -29,6 +40,18 @@ namespace Data.Procedures
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
                     parameters = new DynamicParameters();
+                    parameters.Add(name: "C_RcCod", dbType: DbType.String, size: 3, value: this.C_RcCod);
+                    parameters.Add(name: "C_CodEsp", dbType: DbType.String, size: 2, value: this.C_CodEsp);
+                    parameters.Add(name: "C_CodEsc", dbType: DbType.String, size: 2, value: this.C_CodEsc);
+                    parameters.Add(name: "C_CodFac", dbType: DbType.String, size: 2, value: this.C_CodFac);
+                    parameters.Add(name: "C_Tipo", dbType: DbType.String, size: 1, value: this.C_Tipo);
+                    parameters.Add(name: "C_AnioIngreso", dbType: DbType.Int16, value: this.C_AnioIngreso);
+                    parameters.Add(name: "I_Duracion", dbType: DbType.Int16, value: this.I_Duracion);
+                    parameters.Add(name: "B_Anual", dbType: DbType.Boolean, value: this.B_Anual);
+                    parameters.Add(name: "N_Grupo", dbType: DbType.String, size: 1, value: this.N_Grupo);
+                    parameters.Add(name: "N_Grado", dbType: DbType.String, size: 1, value: this.N_Grado);
+                    parameters.Add(name: "I_IdAplica", dbType: DbType.Int32, value: this.I_IdAplica);
+                    parameters.Add(name: "D_FecCre", dbType: DbType.DateTime, value: this.D_FecCre);
                     parameters.Add(name: "I_UsuarioCre", dbType: DbType.Int32, value: this.I_UsuarioCre);
                     parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);
                     parameters.Add(name: "T_Message", dbType: DbType.String, size: 4000, direction: ParameterDirection.Output);

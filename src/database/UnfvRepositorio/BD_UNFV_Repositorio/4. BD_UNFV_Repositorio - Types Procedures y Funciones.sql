@@ -1,0 +1,360 @@
+USE BD_UNFV_Repositorio
+GO
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_GrabarAlumno')
+	DROP PROCEDURE [dbo].[USP_I_GrabarAlumno]
+GO
+
+CREATE PROCEDURE [dbo].[USP_I_GrabarAlumno]
+	 @I_PersonaID	int
+	,@C_RcCod		varchar(3)
+	,@C_CodAlu		varchar(50)
+	,@C_CodModIng	varchar(50)
+	,@C_AnioIngreso	smallint
+	,@I_IdPlan		int
+	,@D_FecCre		datetime
+	,@I_UsuarioCre	int
+	,@B_Result		bit OUTPUT
+	,@T_Message		nvarchar(4000) OUTPUT	
+AS
+BEGIN
+	SET NOCOUNT OFF;
+	
+	BEGIN TRY
+		INSERT INTO TC_Alumno(C_RcCod, C_CodAlu, I_PersonaID, C_CodModIng, C_AnioIngreso, I_IdPlan, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) 
+			VALUES (@C_RcCod, @C_CodAlu, @I_PersonaID, @C_CodModIng, @C_AnioIngreso, @I_IdPlan, 1, 0, @I_UsuarioCre, @D_FecCre);
+
+		SET @B_Result = 1;
+		SET @T_Message = 'Alumno registrado.'; 
+
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0;
+		SET @T_Message = ERROR_MESSAGE() + '. LINEA: ' + ERROR_LINE() + '.'; 
+	END CATCH
+END
+GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_GrabarCarreraProfesional')
+	DROP PROCEDURE [dbo].[USP_I_GrabarCarreraProfesional]
+GO
+
+CREATE PROCEDURE [dbo].[USP_I_GrabarCarreraProfesional]
+	@C_RcCod		varchar(3)
+	,@C_CodEsp		varchar(2)
+	,@C_CodEsc		varchar(2)
+	,@C_CodFac		varchar(2)
+	,@C_Tipo		char(1)
+	,@C_AnioIngreso	smallint
+	,@I_Duracion	smallint
+	,@B_Anual		bit
+	,@N_Grupo		char(1)
+	,@N_Grado		char(1)
+	,@I_IdAplica	int
+	,@D_FecCre		datetime
+	,@I_UsuarioCre	int
+	,@B_Result		bit OUTPUT
+	,@T_Message		nvarchar(4000) OUTPUT	
+AS
+BEGIN
+	SET NOCOUNT OFF;
+	
+	BEGIN TRY
+		INSERT INTO TI_CarreraProfesional (C_RcCod, C_CodEsp, C_CodEsc, C_CodFac, C_Tipo, I_Duracion, B_Anual, N_Grupo, N_Grado, I_IdAplica, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) 
+			VALUES (@C_RcCod, @C_CodEsp, @C_CodEsc, @C_CodFac, @C_Tipo, @I_Duracion, @B_Anual, @N_Grupo, @N_Grado, @I_IdAplica, 1, 0, @I_UsuarioCre, @D_FecCre);
+
+		SET @B_Result = 1;
+		SET @T_Message = 'Carrera Profesional registrada.'; 
+
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0;
+		SET @T_Message = ERROR_MESSAGE() + '. LINEA: ' + ERROR_LINE() + '.'; 
+	END CATCH
+END
+GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_GrabarPersona')
+	DROP PROCEDURE [dbo].[USP_I_GrabarPersona]
+GO
+
+CREATE PROCEDURE [dbo].[USP_I_GrabarPersona]
+	 @C_NumDNI		varchar(20)
+	,@C_CodTipDoc	varchar(5)
+	,@T_ApePaterno	varchar(50)
+	,@T_ApeMaterno  varchar(50)
+	,@T_Nombre		varchar(50)
+	,@D_FecNac		date
+	,@C_Sexo		char(1)
+	,@D_FecCre		datetime
+	,@I_UsuarioCre	int
+	,@I_PersonaID	int OUTPUT
+	,@B_Result		bit OUTPUT
+	,@T_Message		nvarchar(4000) OUTPUT	
+AS
+BEGIN
+	SET NOCOUNT OFF;
+	
+	BEGIN TRY
+		INSERT INTO TC_Persona (C_NumDNI, C_CodTipDoc, T_ApePaterno, T_ApeMaterno, T_Nombre, D_FecNac, C_Sexo, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) 
+			VALUES (@C_NumDNI, @C_CodTipDoc, @T_ApePaterno, @T_ApeMaterno, @T_Nombre, @D_FecNac, @C_Sexo, 1, 0, @I_UsuarioCre, @D_FecCre);
+
+		SET @I_PersonaID = SCOPE_IDENTITY();
+		SET @B_Result = 1;
+		SET @T_Message = 'Nueva persona registrada.'; 
+
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0;
+		SET @T_Message = ERROR_MESSAGE() + '. LINEA: ' + ERROR_LINE() + '.'; 
+	END CATCH
+END
+GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_GrabarProgramaUnfv')
+	DROP PROCEDURE [dbo].[USP_I_GrabarProgramaUnfv]
+GO
+
+CREATE PROCEDURE [dbo].[USP_I_GrabarProgramaUnfv]
+	 @C_CodProg		varchar(10)
+	,@C_RcCod		varchar(3)
+	,@T_DenomProg	varchar(250)
+	,@T_Resolucion	varchar(250)
+	,@C_CodGrado	varchar(5)
+	,@T_DenomGrado	varchar(250)
+	,@T_DenomTitulo	varchar(500)
+	,@C_CodRegimenEst	varchar(5)
+	,@C_CodModEst	varchar(5)
+	,@B_SegundaEsp	bit
+	,@D_FecCre		datetime
+	,@I_UsuarioCre	int
+	,@B_Result		bit OUTPUT
+	,@T_Message		nvarchar(4000) OUTPUT	
+AS
+BEGIN
+	SET NOCOUNT OFF;
+	
+	BEGIN TRY
+		INSERT INTO TC_ProgramaUnfv(C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, T_DenomTitulo, C_CodRegimenEst, C_CodModEst, B_SegundaEsp, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) 
+			VALUES (@C_CodProg, @C_RcCod, @T_DenomProg, @T_Resolucion, @C_CodGrado, @T_DenomGrado, @T_DenomTitulo, @C_CodRegimenEst, @C_CodModEst, @B_SegundaEsp, 1, 0, @I_UsuarioCre, @D_FecCre);
+
+		SET @B_Result = 1;
+		SET @T_Message = 'Nuevo programa registrado.'; 
+
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0;
+		SET @T_Message = ERROR_MESSAGE() + '. LINEA: ' + ERROR_LINE() + '.'; 
+	END CATCH
+END
+GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarAlumno')
+	DROP PROCEDURE [dbo].[USP_U_ActualizarAlumno]
+GO
+
+CREATE PROCEDURE [dbo].[USP_U_ActualizarAlumno]
+	@C_RcCod		varchar(3)
+	,@C_CodAlu		varchar(50)
+	,@C_CodModIng	varchar(5)
+	,@C_AnioIngreso	smallint
+	,@I_IdPlan		int
+	,@I_PersonaID	int
+	,@B_Habilitado  bit
+	,@B_Eliminado   bit
+	,@D_FecMod		datetime
+	,@I_UsuarioMod	int
+	,@B_Result		bit OUTPUT
+	,@T_Message		nvarchar(4000) OUTPUT	
+AS
+BEGIN
+	SET NOCOUNT OFF;
+	
+	BEGIN TRY
+		UPDATE TC_Alumno
+		   SET C_CodModIng = @C_CodModIng
+		   , C_AnioIngreso = @C_AnioIngreso
+		   , I_IdPlan	   = @I_IdPlan
+		   , I_PersonaID   = @I_PersonaID
+		   , B_Habilitado  = @B_Habilitado
+		   , B_Eliminado   = @B_Eliminado 
+		   , I_UsuarioMod  = @I_UsuarioMod
+		   , D_FecMod	   = @D_FecMod
+		WHERE C_CodAlu = @C_CodAlu
+			AND C_RcCod = @C_RcCod
+
+		SET @B_Result = 1;
+		SET @T_Message = 'Datos de alumno actualizados.'; 
+
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0;
+		SET @T_Message = ERROR_MESSAGE() + '. LINEA: ' + ERROR_LINE() + '.'; 
+	END CATCH
+END
+GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarCarreraProfesional')
+	DROP PROCEDURE [dbo].[USP_U_ActualizarCarreraProfesional]
+GO
+
+CREATE PROCEDURE [dbo].[USP_U_ActualizarCarreraProfesional]
+	@C_RcCod		varchar(3)
+	,@C_CodEsp		varchar(2)
+	,@C_CodEsc		varchar(2)
+	,@C_CodFac		varchar(2)
+	,@C_Tipo		char(1)
+	,@C_AnioIngreso	smallint
+	,@I_Duracion	smallint
+	,@B_Anual		bit
+	,@N_Grupo		char(1)
+	,@N_Grado		char(1)
+	,@I_IdAplica	int
+	,@B_Habilitado 	bit
+	,@B_Eliminado	bit
+	,@D_FecMod		datetime
+	,@I_UsuarioMod	int
+	,@B_Result		bit OUTPUT
+	,@T_Message		nvarchar(4000) OUTPUT	
+AS
+BEGIN
+	SET NOCOUNT OFF;
+	
+	BEGIN TRY
+		
+		UPDATE TI_CarreraProfesional
+		SET	C_CodEsp	= @C_CodEsp
+			, C_CodEsc	= @C_CodEsc
+			, C_CodFac	= @C_CodFac
+			, C_Tipo	= @C_Tipo
+			, I_Duracion  = @I_Duracion
+			, B_Anual	= @B_Anual
+			, N_Grupo	= @N_Grupo
+			, N_Grado	= @N_Grado
+			, I_IdAplica = @I_IdAplica
+			, B_Habilitado = @B_Habilitado
+			, B_Eliminado  = @B_Eliminado
+			, I_UsuarioMod = @I_UsuarioMod
+			, D_FecMod	   = @D_FecMod
+		WHERE 
+			C_RcCod = @C_RcCod
+
+		SET @B_Result = 1;
+		SET @T_Message = 'Carrera Profesional actualizada.'; 
+
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0;
+		SET @T_Message = ERROR_MESSAGE() + '. LINEA: ' + ERROR_LINE() + '.'; 
+	END CATCH
+END
+GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarPersona')
+	DROP PROCEDURE [dbo].[USP_U_ActualizarPersona]
+GO
+
+CREATE PROCEDURE [dbo].[USP_U_ActualizarPersona]
+	@I_PersonaID	int
+	,@C_NumDNI		varchar(20)
+	,@C_CodTipDoc	varchar(5)
+	,@T_ApePaterno	varchar(50)
+	,@T_ApeMaterno  varchar(50)
+	,@T_Nombre		varchar(50)
+	,@D_FecNac		date
+	,@C_Sexo		char(1)
+	,@B_Habilitado 	bit
+	,@B_Eliminado	bit
+	,@D_FecMod		datetime
+	,@I_UsuarioMod	int
+	,@B_Result		bit OUTPUT
+	,@T_Message		nvarchar(4000) OUTPUT	
+AS
+BEGIN
+	SET NOCOUNT OFF;
+	
+	BEGIN TRY
+		UPDATE TC_Persona
+		SET	C_NumDNI	= @C_NumDNI 
+		  ,C_CodTipDoc	= @C_CodTipDoc
+		  ,T_ApePaterno	= @T_ApePaterno
+		  ,T_ApeMaterno	= @T_ApeMaterno
+		  ,T_Nombre		= @T_Nombre
+		  ,D_FecNac		= @D_FecNac
+		  ,C_Sexo		= @C_Sexo
+		  ,B_Habilitado	= @B_Habilitado
+		  ,B_Eliminado	= @B_Eliminado
+		  ,I_UsuarioMod	= @I_UsuarioMod
+		  ,D_FecMod		= @D_FecMod
+		WHERE I_PersonaID = @I_PersonaID
+
+		SET @B_Result = 1;
+		SET @T_Message = 'Los datos de persona actualizados.'; 
+
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0;
+		SET @T_Message = ERROR_MESSAGE() + '. LINEA: ' + ERROR_LINE() + '.'; 
+	END CATCH
+END
+GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarProgramaUnfv')
+	DROP PROCEDURE [dbo].[USP_U_ActualizarProgramaUnfv]
+GO
+
+CREATE PROCEDURE [dbo].[USP_U_ActualizarProgramaUnfv]
+	 @C_CodProg		varchar(10)
+	,@C_RcCod		varchar(3)
+	,@T_DenomProg	varchar(250)
+	,@T_Resolucion	varchar(250)
+	,@C_CodGrado	varchar(5)
+	,@T_DenomGrado	varchar(250)
+	,@T_DenomTitulo	varchar(500)
+	,@C_CodRegimenEst	varchar(5)
+	,@C_CodModEst	varchar(5)
+	,@B_SegundaEsp	bit
+	,@B_Habilitado 	bit
+	,@B_Eliminado	bit
+	,@D_FecMod		datetime
+	,@I_UsuarioMod	int
+	,@B_Result		bit OUTPUT
+	,@T_Message		nvarchar(4000) OUTPUT	
+AS
+BEGIN
+	SET NOCOUNT OFF;
+	
+	BEGIN TRY
+		UPDATE TC_ProgramaUnfv
+		SET	C_RcCod	= @C_RcCod
+			,T_DenomProg  = @T_DenomProg
+			,T_Resolucion = @T_Resolucion
+			,C_CodGrado	  = @C_CodGrado
+			,T_DenomGrado = @T_DenomGrado
+			,T_DenomTitulo   = @T_DenomTitulo
+			,C_CodRegimenEst = @C_CodRegimenEst
+			,C_CodModEst	= @C_CodModEst
+			,B_SegundaEsp	= @B_SegundaEsp
+			,B_Habilitado	= @B_Habilitado
+			,B_Eliminado	= @B_Eliminado
+			,I_UsuarioMod	= @I_UsuarioMod
+			,D_FecMod		= @D_FecMod
+		WHERE C_CodProg	= @C_CodProg
+
+		SET @B_Result = 1;
+		SET @T_Message = 'Datos de programa actualizados.'; 
+
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0;
+		SET @T_Message = ERROR_MESSAGE() + '. LINEA: ' + ERROR_LINE() + '.'; 
+	END CATCH
+END
+GO
