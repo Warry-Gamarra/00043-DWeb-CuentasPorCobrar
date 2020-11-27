@@ -15,6 +15,18 @@
           <ConnectionProtocol>NotSpecified</ConnectionProtocol>
           <ApplicationName />
         </ConnectionNode>
+        <ConnectionNode Name="DESKTOP-B34HJML\SQL_2016E:DESKTOP-B34HJML\gamar">
+          <Created>2020-11-26T22:50:12.145138-05:00</Created>
+          <Type>SQL</Type>
+          <Server>DESKTOP-B34HJML\SQL_2016E</Server>
+          <UserName />
+          <Authentication>Windows Authentication</Authentication>
+          <InitialDB>master</InitialDB>
+          <LoginTimeout>30</LoginTimeout>
+          <ExecutionTimeout>0</ExecutionTimeout>
+          <ConnectionProtocol>NotSpecified</ConnectionProtocol>
+          <ApplicationName>Microsoft SQL Server Management Studio - Query</ApplicationName>
+        </ConnectionNode>
         <ConnectionNode Name="localhost\SQLEXPRESS2014:sa">
           <Created>2020-11-24T17:31:27.8257043-05:00</Created>
           <Type>SQL</Type>
@@ -48,6 +60,12 @@
           <AssociatedConnSrvName>localhost\SQLEXPRESS2014</AssociatedConnSrvName>
           <AssociatedConnUserName>sa</AssociatedConnUserName>
           <FullPath>3. BD_UNFV_Repositorio - Carga de datos iniciales.sql</FullPath>
+        </FileNode>
+        <FileNode Name="4. BD_UNFV_Repositorio - Types Procedures y Funciones.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:DESKTOP-B34HJML\SQL_2016E:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>DESKTOP-B34HJML\SQL_2016E</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>4. BD_UNFV_Repositorio - Types Procedures y Funciones.sql</FullPath>
         </FileNode>
         <FileNode Name="Cargar_alumnos_auxiliar.sql">
           <AssociatedConnectionMoniker />
