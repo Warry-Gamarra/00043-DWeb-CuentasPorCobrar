@@ -1,8 +1,9 @@
 const inputs = document.querySelectorAll('.input');
 
+
 function focusFunc() {
   let parent = this.parentNode.parentNode;
-  parent.classList.add('focus');
+    parent.classList.add('focus');
 }
 
 function blurFunc() {
@@ -12,6 +13,11 @@ function blurFunc() {
 }
 
 inputs.forEach(input => {
+  if (input.value !== '') {
+      let parent = input.parentNode.parentNode;
+      parent.classList.add('focus');
+  }
+
   input.addEventListener('focus', focusFunc);
   input.addEventListener('blur', blurFunc);
 });
