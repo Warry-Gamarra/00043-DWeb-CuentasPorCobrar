@@ -1048,13 +1048,13 @@ BEGIN
 
 			MERGE INTO TC_MatriculaAlumno AS TRG
 			USING @Tbl_Alumno AS SRC
-			ON TRG.C_CodAlu = SRC.C_CodAlu AND TRG.N_Anio = SRC.C_Anio 
+			ON TRG.C_CodAlu = SRC.C_CodAlu AND TRG.I_Anio = SRC.C_Anio 
 			WHEN MATCHED THEN
 			 		UPDATE SET   C_EstMat = SRC.C_EstMat
 			 	  				, C_Nivel = SRC.C_Nivel
 								, I_UsuarioMod = @UserID
 								, D_FecMod = @D_FecRegistro
-			WHEN NOT MATCHED BY TARGET THEN INSERT (N_Anio, C_CodAlu, C_Nivel, C_EstMat, B_Habilitado, I_UsuarioCre, D_FecCre, B_Eliminado)
+			WHEN NOT MATCHED BY TARGET THEN INSERT (I_Anio, C_CodAlu, C_Nivel, C_EstMat, B_Habilitado, I_UsuarioCre, D_FecCre, B_Eliminado)
 			 	  							VALUES (SRC.C_Anio, SRC.C_CodAlu, SRC.C_Nivel, SRC.C_EstMat, 1, @UserID, @D_FecRegistro, 0)
 			OUTPUT $action AS accion, inserted.C_CodAlu as codigo INTO @Tbl_Actions;
 
