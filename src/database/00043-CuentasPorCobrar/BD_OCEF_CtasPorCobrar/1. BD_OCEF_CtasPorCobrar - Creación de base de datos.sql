@@ -6,9 +6,11 @@ GO
 CREATE DATABASE [BD_OCEF_CtasPorCobrar]
  CONTAINMENT = NONE
  ON  PRIMARY 
-( NAME = N'BD_OCEF_CtasPorCobrar', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL12.SQLEXPRESS2014\MSSQL\DATA\BD_OCEF_CtasPorCobrar.mdf' , SIZE = 10240KB , FILEGROWTH = 1024KB )
+--( NAME = N'BD_OCEF_CtasPorCobrar', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL12.SQLEXPRESS2014\MSSQL\DATA\BD_OCEF_CtasPorCobrar.mdf' , SIZE = 10240KB , FILEGROWTH = 1024KB )
+( NAME = N'BD_OCEF_CtasPorCobrar', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL13.SQL_2016E\MSSQL\DATA\BD_OCEF_CtasPorCobrar.mdf' , SIZE = 10240KB , FILEGROWTH = 1024KB )
  LOG ON 
-( NAME = N'BD_OCEF_CtasPorCobrar_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL12.SQLEXPRESS2014\MSSQL\DATA\BD_OCEF_CtasPorCobrar.ldf' , SIZE = 6144KB , FILEGROWTH = 10%)
+--( NAME = N'BD_OCEF_CtasPorCobrar_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL12.SQLEXPRESS2014\MSSQL\DATA\BD_OCEF_CtasPorCobrar.ldf' , SIZE = 6144KB , FILEGROWTH = 10%)
+( NAME = N'BD_OCEF_CtasPorCobrar_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL13.SQL_2016E\MSSQL\DATA\BD_OCEF_CtasPorCobrar.ldf' , SIZE = 6144KB , FILEGROWTH = 10%)
  COLLATE Modern_Spanish_CI_AS
 GO
 

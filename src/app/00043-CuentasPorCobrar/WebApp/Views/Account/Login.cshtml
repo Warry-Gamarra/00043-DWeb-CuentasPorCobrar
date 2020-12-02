@@ -60,12 +60,12 @@
                         @Html.CheckBoxFor(m => m.RememberMe) Recordar Cuenta
                     </label>
                 </div>
-                <button type="submit" class="btn">Ingresar</button>
+                <button type="submit" class="btn">
+                    <span id="loading" class="spinner-border spinner-border-md" style="margin-right: .5em; display:none;" role="status" aria-hidden="true"></span>
+                    Ingresar
+                </button>
                 <a href="@Url.Action("RecuperarPassword", "Account")">¿Olvidó su contraseña?</a>
                 <br />
-                <div class="lds-css" style="display: none;">
-                    <div class="lds-microsoft" style="width:100%;height:100%"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
-                </div>
             }
         </div>
         <div class="img">
@@ -81,7 +81,10 @@
 
     <script>
         $('form').on('submit', function () {
-            $('.lds-css').show();
+            $('#loading').show();
+            if ($('#UserName').val() === '' || $('#Password').val() === '') {
+                $('#loading').hide();
+            }
         });
     </script>
 
