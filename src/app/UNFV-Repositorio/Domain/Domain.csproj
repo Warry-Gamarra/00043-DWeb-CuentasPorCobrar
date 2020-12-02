@@ -45,7 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CoreLibModule.cs" />
-    <Compile Include="Entities\Alumno.cs" />
+    <Compile Include="Entities\AlumnoDTO.cs" />
     <Compile Include="Entities\AlumnoEntity.cs" />
     <Compile Include="Entities\EscuelaDTO.cs" />
     <Compile Include="Entities\EspecialidadDTO.cs" />
@@ -53,6 +53,7 @@
     <Compile Include="Entities\Mapper.cs" />
     <Compile Include="Entities\ProgramaUnfv.cs" />
     <Compile Include="Entities\ProgramaUnfvEntity.cs" />
+    <Compile Include="Entities\ServiceResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\IEscuelaService.cs" />
     <Compile Include="Services\IEspecialidadService.cs" />

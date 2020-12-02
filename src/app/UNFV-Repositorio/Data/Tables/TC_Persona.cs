@@ -40,9 +40,9 @@ namespace Data.Tables
 
         public DateTime? D_FecMod { get; set; }
 
-        public static TC_Persona GetByDocIdent(string numDNI, string codTipDoc)
+        public static IEnumerable<TC_Persona> GetByDocIdent(string codTipDoc, string numDNI)
         {
-            TC_Persona result;
+            IEnumerable<TC_Persona> result;
             string command;
 
             try
@@ -51,7 +51,7 @@ namespace Data.Tables
                 {
                     command = "SELECT * FROM TC_Persona WHERE B_Eliminado = 0 AND C_NumDNI = @C_NumDNI AND C_CodTipDoc = @C_CodTipDoc";
 
-                    result = _dbConnection.QueryFirstOrDefault<TC_Persona>(command, new { C_NumDNI = numDNI, C_CodTipDoc  = codTipDoc }, commandType: CommandType.Text);
+                    result = _dbConnection.Query<TC_Persona>(command, new { C_NumDNI = numDNI, C_CodTipDoc  = codTipDoc }, commandType: CommandType.Text);
                 }
             }
             catch (Exception ex)
@@ -71,7 +71,7 @@ namespace Data.Tables
             {
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    command = "SELECT * FROM TC_Persona WHERE B_Eliminado = 0 AND I_PersonaID = @I_PersonaID";
+                    command = "SELECT * FROM TC_Persona WHERE I_PersonaID = @I_PersonaID";
 
                     result = _dbConnection.QueryFirstOrDefault<TC_Persona>(command, new { I_PersonaID = personaID }, commandType: CommandType.Text);
                 }

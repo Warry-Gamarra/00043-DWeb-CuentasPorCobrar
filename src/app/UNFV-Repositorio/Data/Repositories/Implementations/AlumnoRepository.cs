@@ -1,29 +1,49 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Data.Connection;
 using Data.DTO;
 using Data.Procedures;
 using Data.Tables;
+using Data.Views;
 
 namespace Data.Repositories.Implementations
 {
     public class AlumnoRepository : IAlumnoRepository
     {
-        public ResponseData Create(TC_Alumno alumno)
+        public ResponseData Create(USP_I_GrabarPersona paramGrabarPersona, USP_I_GrabarAlumno paramGrabarAlumno)
         {
-            USP_I_GrabarAlumno procedimiento;
             ResponseData result;
 
             try
             {
-                procedimiento = new USP_I_GrabarAlumno()
+                using (var dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    
-                };
+                    dbConnection.Open();
 
-                result = procedimiento.Execute();
+                    using (var dbTransaction = dbConnection.BeginTransaction())
+                    {
+                        if (paramGrabarAlumno.I_PersonaID == 0)
+                        {
+                            var resultGrabarPersona = USP_I_GrabarPersona.Execute(dbConnection, dbTransaction, paramGrabarPersona);
+
+                            paramGrabarAlumno.I_PersonaID = int.Parse(resultGrabarPersona.CurrentID);
+                        }
+
+                        var resultGrabarAlumno = USP_I_GrabarAlumno.Execute(dbConnection, dbTransaction, paramGrabarAlumno);
+
+                        dbTransaction.Commit();
+                    }
+                }
+
+                result = new ResponseData()
+                {
+                    Value = true,
+                    Message = "Los datos del alumno fueron grabados correctamente."
+                };
             }
             catch (Exception ex)
             {
@@ -37,19 +57,31 @@ namespace Data.Repositories.Implementations
             return result;
         }
 
-        public ResponseData Edit(TC_Alumno alumno)
+        public ResponseData Edit(USP_U_ActualizarPersona paramActualizarPersona, USP_U_ActualizarAlumno paramActualizarAlumno)
         {
-            USP_U_ActualizarAlumno procedimiento;
             ResponseData result;
 
             try
             {
-                procedimiento = new USP_U_ActualizarAlumno()
+                using (var dbConnection = new SqlConnection(Database.ConnectionString))
                 {
+                    dbConnection.Open();
 
+                    using (var dbTransaction = dbConnection.BeginTransaction())
+                    {
+                        var resultGrabarPersona = USP_U_ActualizarPersona.Execute(dbConnection, dbTransaction, paramActualizarPersona);
+
+                        var resultGrabarAlumno = USP_U_ActualizarAlumno.Execute(dbConnection, dbTransaction, paramActualizarAlumno);
+
+                        dbTransaction.Commit();
+                    }
+                }
+
+                result = new ResponseData()
+                {
+                    Value = true,
+                    Message = "Los datos del alumno fueron actualizados correctamente."
                 };
-
-                result = procedimiento.Execute();
             }
             catch (Exception ex)
             {
@@ -63,12 +95,12 @@ namespace Data.Repositories.Implementations
             return result;
         }
 
-        public IEnumerable<TC_Alumno> GetAll()
+        public IEnumerable<VW_Alumnos> GetAll()
         {
-            IEnumerable<TC_Alumno> result;
+            IEnumerable<VW_Alumnos> result;
             try
             {
-                result = TC_Alumno.GetAll();
+                result = VW_Alumnos.GetAll();
             }
             catch (Exception)
             {
@@ -78,12 +110,27 @@ namespace Data.Repositories.Implementations
             return result;
         }
 
-        public TC_Alumno GetByID(string codRc, string codAlu)
+        public VW_Alumnos GetByID(string codRc, string codAlu)
         {
-            TC_Alumno result;
+            VW_Alumnos result;
             try
             {
-                result = TC_Alumno.GetByID(codRc, codAlu);
+                result = VW_Alumnos.GetByID(codRc, codAlu);
+            }
+            catch (Exception)
+            {
+                result = null;
+            }
+
+            return result;
+        }
+
+        public IEnumerable<VW_Alumnos> GetByDocIdent(string codTipDoc, string numDNI)
+        {
+            IEnumerable<VW_Alumnos> result;
+            try
+            {
+                result = VW_Alumnos.GetByDocIdent(codTipDoc, numDNI);
             }
             catch (Exception)
             {

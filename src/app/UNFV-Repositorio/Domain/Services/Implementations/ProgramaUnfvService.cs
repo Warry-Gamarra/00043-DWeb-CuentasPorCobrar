@@ -22,12 +22,12 @@ namespace Domain.Services.Implementations
             _carreraProfesionalRepository = carreraProfesionalRepository;
         }
 
-        public ResponseData Create(ProgramaUnfvEntity programaUnfvEntity)
+        public ServiceResponse Create(ProgramaUnfvEntity programaUnfvEntity)
         {
             throw new NotImplementedException();
         }
 
-        public ResponseData Edit(ProgramaUnfvEntity programaUnfvEntity)
+        public ServiceResponse Edit(ProgramaUnfvEntity programaUnfvEntity)
         {
             throw new NotImplementedException();
         }

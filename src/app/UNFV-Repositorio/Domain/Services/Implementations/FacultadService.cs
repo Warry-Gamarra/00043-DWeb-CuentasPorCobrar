@@ -29,7 +29,7 @@ namespace Domain.Services.Implementations
             }
             else
             {
-                result = facultades.Select(a => Mapper.TC_FacultadToFacultadDTO(a));
+                result = facultades.Select(a => Mapper.TC_Facultad_To_FacultadDTO(a));
             }
 
             return result;
@@ -39,7 +39,7 @@ namespace Domain.Services.Implementations
         {
             var facultad = _facultadRepository.GetByID(codFac);
 
-            var result = (facultad == null) ? null : Mapper.TC_FacultadToFacultadDTO(facultad);
+            var result = (facultad == null) ? null : Mapper.TC_Facultad_To_FacultadDTO(facultad);
 
             return result;
         }

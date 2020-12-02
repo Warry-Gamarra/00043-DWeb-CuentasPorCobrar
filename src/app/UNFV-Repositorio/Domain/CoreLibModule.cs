@@ -13,8 +13,8 @@ namespace Domain
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<AlumnoRepository>().As<IAlumnoRepository>().SingleInstance();
             builder.RegisterType<PersonaRepository>().As<IPersonaRepository>().SingleInstance();
+            builder.RegisterType<AlumnoRepository>().As<IAlumnoRepository>().SingleInstance();
             builder.RegisterType<ProgramaUnfvRepository>().As<IProgramaUnfvRepository>().SingleInstance();
             builder.RegisterType<CarreraProfesionalRepository>().As<ICarreraProfesionalRepository>().SingleInstance();
             builder.RegisterType<FacultadRepository>().As<IFacultadRepository>().SingleInstance();

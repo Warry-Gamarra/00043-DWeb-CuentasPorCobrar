@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <SqlWorkbenchSqlProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="BD_UNFV_Repositorio">
   <Items>
-    <LogicalFolder Name="Connections" Type="2" Sorted="true">
+    <LogicalFolder Name="Conexiones" Type="2" Sorted="true">
       <Items>
         <ConnectionNode Name="DESKTOP-B34HJML\SQL_2016E:">
           <Created>2020-11-22T08:16:47.3370103-05:00</Created>
@@ -15,17 +15,29 @@
           <ConnectionProtocol>NotSpecified</ConnectionProtocol>
           <ApplicationName />
         </ConnectionNode>
-        <ConnectionNode Name="DESKTOP-B34HJML\SQL_2016E:DESKTOP-B34HJML\gamar">
+        <ConnectionNode Name="DESKTOP-B34HJML\SQL_2016E:">
           <Created>2020-11-26T22:50:12.145138-05:00</Created>
           <Type>SQL</Type>
           <Server>DESKTOP-B34HJML\SQL_2016E</Server>
           <UserName />
-          <Authentication>Windows Authentication</Authentication>
+          <Authentication>SQL</Authentication>
           <InitialDB>master</InitialDB>
           <LoginTimeout>30</LoginTimeout>
           <ExecutionTimeout>0</ExecutionTimeout>
           <ConnectionProtocol>NotSpecified</ConnectionProtocol>
           <ApplicationName>Microsoft SQL Server Management Studio - Query</ApplicationName>
+        </ConnectionNode>
+        <ConnectionNode Name="HUMBERTO-PC\SQLEXPRESS2014:HUMBERTO-PC\HUMBERTO">
+          <Created>2020-11-27T15:33:36.4470767-05:00</Created>
+          <Type>SQL</Type>
+          <Server>HUMBERTO-PC\SQLEXPRESS2014</Server>
+          <UserName />
+          <Authentication>Autenticación de Windows</Authentication>
+          <InitialDB />
+          <LoginTimeout>15</LoginTimeout>
+          <ExecutionTimeout>0</ExecutionTimeout>
+          <ConnectionProtocol>NotSpecified</ConnectionProtocol>
+          <ApplicationName>Microsoft SQL Server Management Studio - Consulta</ApplicationName>
         </ConnectionNode>
         <ConnectionNode Name="localhost\SQLEXPRESS2014:sa">
           <Created>2020-11-24T17:31:27.8257043-05:00</Created>
@@ -41,18 +53,18 @@
         </ConnectionNode>
       </Items>
     </LogicalFolder>
-    <LogicalFolder Name="Queries" Type="0" Sorted="true">
+    <LogicalFolder Name="Consultas" Type="0" Sorted="true">
       <Items>
         <FileNode Name="1. BD_UNFV_Repositorio - Creación de base de datos.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:localhost\SQLEXPRESS2014:False:sa</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>localhost\SQLEXPRESS2014</AssociatedConnSrvName>
-          <AssociatedConnUserName>sa</AssociatedConnUserName>
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:HUMBERTO-PC\SQLEXPRESS2014:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>HUMBERTO-PC\SQLEXPRESS2014</AssociatedConnSrvName>
+          <AssociatedConnUserName />
           <FullPath>1. BD_UNFV_Repositorio - Creación de base de datos.sql</FullPath>
         </FileNode>
         <FileNode Name="2. BD_UNFV_Repositorio - Esquema de base de datos.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:localhost\SQLEXPRESS2014:False:sa</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>localhost\SQLEXPRESS2014</AssociatedConnSrvName>
-          <AssociatedConnUserName>sa</AssociatedConnUserName>
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:HUMBERTO-PC\SQLEXPRESS2014:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>HUMBERTO-PC\SQLEXPRESS2014</AssociatedConnSrvName>
+          <AssociatedConnUserName />
           <FullPath>2. BD_UNFV_Repositorio - Esquema de base de datos.sql</FullPath>
         </FileNode>
         <FileNode Name="3. BD_UNFV_Repositorio - Carga de datos iniciales.sql">
@@ -62,8 +74,8 @@
           <FullPath>3. BD_UNFV_Repositorio - Carga de datos iniciales.sql</FullPath>
         </FileNode>
         <FileNode Name="4. BD_UNFV_Repositorio - Types Procedures y Funciones.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:DESKTOP-B34HJML\SQL_2016E:True</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>DESKTOP-B34HJML\SQL_2016E</AssociatedConnSrvName>
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:HUMBERTO-PC\SQLEXPRESS2014:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>HUMBERTO-PC\SQLEXPRESS2014</AssociatedConnSrvName>
           <AssociatedConnUserName />
           <FullPath>4. BD_UNFV_Repositorio - Types Procedures y Funciones.sql</FullPath>
         </FileNode>
@@ -75,7 +87,7 @@
         </FileNode>
       </Items>
     </LogicalFolder>
-    <LogicalFolder Name="Miscellaneous" Type="3" Sorted="true">
+    <LogicalFolder Name="Varios" Type="3" Sorted="true">
       <Items />
     </LogicalFolder>
   </Items>

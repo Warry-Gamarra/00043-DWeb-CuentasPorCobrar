@@ -10,10 +10,14 @@ namespace Domain.Services
 {
     public interface IAlumnoService
     {
-        ResponseData Create(AlumnoEntity alumnoEntity);
+        ServiceResponse Create(AlumnoEntity alumnoEntity);
 
-        ResponseData Edit(AlumnoEntity alumnoEntity);
+        ServiceResponse Edit(AlumnoEntity alumnoEntity);
 
-        IEnumerable<AlumnoEntity> GetAll();
+        IEnumerable<AlumnoDTO> GetAll();
+
+        IEnumerable<AlumnoDTO> GetByDocIdent(string codTipDoc, string numDNI);
+
+        AlumnoDTO GetByID(string codRc, string codAlu);
     }
 }

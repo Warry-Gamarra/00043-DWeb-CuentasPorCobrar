@@ -1,6 +1,7 @@
 ﻿using Data.DTO;
 using Data.Procedures;
 using Data.Tables;
+using Data.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,12 +12,14 @@ namespace Data.Repositories
 {
     public interface IAlumnoRepository
     {
-        ResponseData Create(TC_Alumno alumno);
+        ResponseData Create(USP_I_GrabarPersona paramGrabarPersona, USP_I_GrabarAlumno paramGrabarAlumno);
 
-        ResponseData Edit(TC_Alumno alumno);
+        ResponseData Edit(USP_U_ActualizarPersona paramActualizarPersona, USP_U_ActualizarAlumno paramActualizarAlumno);
 
-        IEnumerable<TC_Alumno> GetAll();
+        IEnumerable<VW_Alumnos> GetAll();
 
-        TC_Alumno GetByID(string codRc, string codAlu);
+        VW_Alumnos GetByID(string codRc, string codAlu);
+
+        IEnumerable<VW_Alumnos> GetByDocIdent(string codTipDoc, string numDNI);
     }
 }

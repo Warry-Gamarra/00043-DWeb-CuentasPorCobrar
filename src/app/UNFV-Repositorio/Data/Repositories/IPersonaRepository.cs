@@ -1,6 +1,4 @@
-﻿using Data.DTO;
-using Data.Procedures;
-using Data.Tables;
+﻿using Data.Tables;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +9,7 @@ namespace Data.Repositories
 {
     public interface IPersonaRepository
     {
-        TC_Persona GetByDocIdent(string numDNI, string codTipDoc);
+        IEnumerable<TC_Persona> GetByDocIdent(string codTipDoc, string numDNI);
 
         TC_Persona GetByID(int personaID);
     }

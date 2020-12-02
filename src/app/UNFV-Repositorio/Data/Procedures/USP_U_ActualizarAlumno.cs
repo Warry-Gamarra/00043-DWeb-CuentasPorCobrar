@@ -24,9 +24,7 @@ namespace Data.Procedures
         public DateTime D_FecMod { get; set; }
         public int I_UsuarioMod { get; set; }
 
-
-
-        public ResponseData Execute()
+        public static ResponseData Execute(IDbConnection dbConnection, IDbTransaction dbTransaction, USP_U_ActualizarAlumno paramActualizarAlumno)
         {
             ResponseData result;
             DynamicParameters parameters;
@@ -36,28 +34,25 @@ namespace Data.Procedures
             {
                 command = "USP_U_ActualizarAlumno";
 
-                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
-                {
-                    parameters = new DynamicParameters();
-                    parameters.Add(name: "C_RcCod", dbType: DbType.String, size: 3, value: this.C_RcCod);
-                    parameters.Add(name: "C_CodAlu", dbType: DbType.String, size: 20, value: this.C_CodAlu);
-                    parameters.Add(name: "C_CodModIng", dbType: DbType.String, size: 5, value: this.C_CodModIng);
-                    parameters.Add(name: "C_AnioIngreso", dbType: DbType.Int16, value: this.C_AnioIngreso);
-                    parameters.Add(name: "I_IdPlan", dbType: DbType.Int32, value: this.I_IdPlan);
-                    parameters.Add(name: "I_PersonaID", dbType: DbType.Int32, value: this.I_PersonaID);
-                    parameters.Add(name: "B_Habilitado", dbType: DbType.Boolean, value: this.B_Habilitado);
-                    parameters.Add(name: "B_Eliminado", dbType: DbType.Boolean, value: this.B_Eliminado);
-                    parameters.Add(name: "D_FecMod", dbType: DbType.Date, value: this.D_FecMod);
-                    parameters.Add(name: "I_UsuarioMod", dbType: DbType.Int32, value: this.I_UsuarioMod);
-                    parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);
-                    parameters.Add(name: "T_Message", dbType: DbType.String, size: 4000, direction: ParameterDirection.Output);
+                parameters = new DynamicParameters();
+                parameters.Add(name: "C_RcCod", dbType: DbType.String, size: 3, value: paramActualizarAlumno.C_RcCod);
+                parameters.Add(name: "C_CodAlu", dbType: DbType.String, size: 20, value: paramActualizarAlumno.C_CodAlu);
+                parameters.Add(name: "C_CodModIng", dbType: DbType.String, size: 2, value: paramActualizarAlumno.C_CodModIng);
+                parameters.Add(name: "C_AnioIngreso", dbType: DbType.Int16, value: paramActualizarAlumno.C_AnioIngreso);
+                parameters.Add(name: "I_IdPlan", dbType: DbType.Int32, value: paramActualizarAlumno.I_IdPlan);
+                parameters.Add(name: "I_PersonaID", dbType: DbType.Int32, value: paramActualizarAlumno.I_PersonaID);
+                parameters.Add(name: "B_Habilitado", dbType: DbType.Boolean, value: paramActualizarAlumno.B_Habilitado);
+                parameters.Add(name: "B_Eliminado", dbType: DbType.Boolean, value: paramActualizarAlumno.B_Eliminado);
+                parameters.Add(name: "D_FecMod", dbType: DbType.Date, value: paramActualizarAlumno.D_FecMod);
+                parameters.Add(name: "I_UsuarioMod", dbType: DbType.Int32, value: paramActualizarAlumno.I_UsuarioMod);
+                parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);
+                parameters.Add(name: "T_Message", dbType: DbType.String, size: 4000, direction: ParameterDirection.Output);
 
-                    _dbConnection.Execute(command, parameters, commandType: CommandType.StoredProcedure);
+                dbConnection.Execute(command, parameters, dbTransaction, commandType: CommandType.StoredProcedure);
 
-                    result = new ResponseData();
-                    result.Value = parameters.Get<bool>("B_Result");
-                    result.Message = parameters.Get<string>("T_Message");
-                }
+                result = new ResponseData();
+                result.Value = parameters.Get<bool>("B_Result");
+                result.Message = parameters.Get<string>("T_Message");   
             }
             catch (Exception ex)
             {

@@ -67,9 +67,9 @@
     <Compile Include="Repositories\Implementations\EscuelaRepository.cs" />
     <Compile Include="Repositories\Implementations\EspecialidadRepository.cs" />
     <Compile Include="Repositories\Implementations\FacultadRepository.cs" />
+    <Compile Include="Repositories\Implementations\PersonaRepository.cs" />
     <Compile Include="Repositories\IPersonaRepository.cs" />
     <Compile Include="Repositories\IProgramaUnfvRepository.cs" />
-    <Compile Include="Repositories\Implementations\PersonaRepository.cs" />
     <Compile Include="Repositories\Implementations\ProgramaUnfvRepository.cs" />
     <Compile Include="Tables\TC_Alumno.cs" />
     <Compile Include="Tables\TC_DependenciaUnfv.cs" />
@@ -84,12 +84,11 @@
     <Compile Include="Tables\TC_RegimenEstudio.cs" />
     <Compile Include="Tables\TC_TipoDocumentoIdentidad.cs" />
     <Compile Include="Tables\TI_CarreraProfesional.cs" />
+    <Compile Include="Views\VW_Alumnos.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

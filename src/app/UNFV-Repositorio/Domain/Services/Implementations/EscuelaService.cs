@@ -29,7 +29,7 @@ namespace Domain.Services.Implementations
             }
             else
             {
-                result = escuelas.Select(e => Mapper.TC_EscuelaToEscuelaDTO(e));
+                result = escuelas.Select(e => Mapper.TC_Escuela_To_EscuelaDTO(e));
             }
 
             return result;
@@ -39,7 +39,7 @@ namespace Domain.Services.Implementations
         {
             var escuela = _escuelaRepository.GetByID(codEsc, codFac);
 
-            var result = (escuela == null) ? null : Mapper.TC_EscuelaToEscuelaDTO(escuela);
+            var result = (escuela == null) ? null : Mapper.TC_Escuela_To_EscuelaDTO(escuela);
 
             return result;
         }

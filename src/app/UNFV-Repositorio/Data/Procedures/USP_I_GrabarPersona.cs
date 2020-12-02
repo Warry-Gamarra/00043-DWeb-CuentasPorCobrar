@@ -18,12 +18,12 @@ namespace Data.Procedures
         public string T_ApePaterno { get; set; }
         public string T_ApeMaterno { get; set; }
         public string T_Nombre { get; set; }
-        public DateTime D_FecNac { get; set; }
+        public DateTime? D_FecNac { get; set; }
         public string C_Sexo { get; set; }
         public DateTime D_FecCre { get; set; }
         public int I_UsuarioCre { get; set; }
 
-        public ResponseData Execute()
+        public static ResponseData Execute(IDbConnection dbConnection, IDbTransaction dbTransaction, USP_I_GrabarPersona paramGrabarPersona)
         {
             ResponseData result;
             DynamicParameters parameters;
@@ -32,32 +32,29 @@ namespace Data.Procedures
             try
             {
                 command = "USP_I_GrabarPersona";
+                
+                parameters = new DynamicParameters();
+                parameters.Add(name: "C_NumDNI", dbType: DbType.String, size: 20, value: paramGrabarPersona.C_NumDNI);
+                parameters.Add(name: "C_CodTipDoc", dbType: DbType.String, size: 5, value: paramGrabarPersona.C_CodTipDoc);
+                parameters.Add(name: "T_ApePaterno", dbType: DbType.String, size: 50, value: paramGrabarPersona.T_ApePaterno);
+                parameters.Add(name: "T_ApeMaterno", dbType: DbType.String, size: 50, value: paramGrabarPersona.T_ApeMaterno);
+                parameters.Add(name: "T_Nombre", dbType: DbType.String, size: 50, value: paramGrabarPersona.T_Nombre);
+                parameters.Add(name: "D_FecNac", dbType: DbType.Date, value: paramGrabarPersona.D_FecNac);
+                parameters.Add(name: "C_Sexo", dbType: DbType.String, size: 1, value: paramGrabarPersona.C_Sexo);
+                parameters.Add(name: "D_FecCre", dbType: DbType.DateTime, value: paramGrabarPersona.D_FecCre);
+                parameters.Add(name: "I_UsuarioCre", dbType: DbType.Int32, value: paramGrabarPersona.I_UsuarioCre);
+                parameters.Add(name: "I_PersonaID", dbType: DbType.Int32, direction: ParameterDirection.Output);
+                parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);
+                parameters.Add(name: "T_Message", dbType: DbType.String, size: 4000, direction: ParameterDirection.Output);
 
-                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
+                dbConnection.Execute(command, parameters, dbTransaction, commandType: CommandType.StoredProcedure);
+
+                result = new ResponseData
                 {
-                    parameters = new DynamicParameters();
-                    parameters.Add(name: "C_NumDNI", dbType: DbType.String, size: 20, value: this.C_NumDNI);
-                    parameters.Add(name: "C_CodTipDoc", dbType: DbType.String, size: 5, value: this.C_CodTipDoc);
-                    parameters.Add(name: "T_ApePaterno", dbType: DbType.String, size: 50, value: this.T_ApePaterno);
-                    parameters.Add(name: "T_ApeMaterno", dbType: DbType.String, size: 50, value: this.T_ApeMaterno);
-                    parameters.Add(name: "T_Nombre", dbType: DbType.String, size: 50, value: this.T_Nombre);
-                    parameters.Add(name: "D_FecNac", dbType: DbType.Date, value: this.D_FecNac);
-                    parameters.Add(name: "C_Sexo", dbType: DbType.String, size: 1, value: this.C_Sexo);
-                    parameters.Add(name: "D_FecCre", dbType: DbType.DateTime, value: this.D_FecCre);
-                    parameters.Add(name: "I_UsuarioCre", dbType: DbType.Int32, value: this.I_UsuarioCre);
-                    parameters.Add(name: "I_PersonaID", dbType: DbType.Int32, direction: ParameterDirection.Output);
-                    parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);
-                    parameters.Add(name: "T_Message", dbType: DbType.String, size: 4000, direction: ParameterDirection.Output);
-
-                    _dbConnection.Execute(command, parameters, commandType: CommandType.StoredProcedure);
-
-                    result = new ResponseData
-                    {
-                        CurrentID = parameters.Get<int>("I_PersonaID").ToString(),
-                        Value = parameters.Get<bool>("B_Result"),
-                        Message = parameters.Get<string>("T_Message")
-                    };
-                }
+                    CurrentID = parameters.Get<int>("I_PersonaID").ToString(),
+                    Value = parameters.Get<bool>("B_Result"),
+                    Message = parameters.Get<string>("T_Message")
+                };   
             }
             catch (Exception ex)
             {

@@ -29,7 +29,7 @@ namespace Domain.Services.Implementations
             }
             else
             {
-                result = especialidades.Select(e => Mapper.TC_EspecialidadToEspecialidadDTO(e));
+                result = especialidades.Select(e => Mapper.TC_Especialidad_To_EspecialidadDTO(e));
             }
 
             return result;
@@ -39,7 +39,7 @@ namespace Domain.Services.Implementations
         {
             var especialidad = _especialidadRepository.GetByID(codEsp, codEsc, codFac);
 
-            var result = (especialidad == null) ? null : Mapper.TC_EspecialidadToEspecialidadDTO(especialidad);
+            var result = (especialidad == null) ? null : Mapper.TC_Especialidad_To_EspecialidadDTO(especialidad);
 
             return result;
         }
