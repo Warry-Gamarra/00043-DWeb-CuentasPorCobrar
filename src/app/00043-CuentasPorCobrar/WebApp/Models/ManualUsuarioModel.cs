@@ -124,9 +124,13 @@ namespace WebApp.Models
             return result;
         }
 
-        internal object ChangeState(int rowID, bool b_habilitado, int currentUserId, string v)
+        public Response ChangeState(int documentoID, bool currentState, int currentUserId, string returnUrl)
         {
-            throw new NotImplementedException();
+            Response result = _userManual.ChangeState(documentoID, currentState, currentUserId);
+
+            result.Redirect = returnUrl;
+
+            return result;
         }
     }
 }
