@@ -46,12 +46,11 @@ CREATE PROCEDURE [dbo].[USP_I_GrabarCarreraProfesional]
 	,@C_CodEsc		varchar(2)
 	,@C_CodFac		varchar(2)
 	,@C_Tipo		char(1)
-	,@C_AnioIngreso	smallint
-	,@I_Duracion	smallint
+	,@I_Duracion	int
 	,@B_Anual		bit
 	,@N_Grupo		char(1)
 	,@N_Grado		char(1)
-	,@I_IdAplica	int
+	,@I_IdAplica	int = null
 	,@D_FecCre		datetime
 	,@I_UsuarioCre	int
 	,@B_Result		bit OUTPUT
@@ -209,12 +208,11 @@ CREATE PROCEDURE [dbo].[USP_U_ActualizarCarreraProfesional]
 	,@C_CodEsc		varchar(2)
 	,@C_CodFac		varchar(2)
 	,@C_Tipo		char(1)
-	,@C_AnioIngreso	smallint
-	,@I_Duracion	smallint
+	,@I_Duracion	int
 	,@B_Anual		bit
 	,@N_Grupo		char(1)
 	,@N_Grado		char(1)
-	,@I_IdAplica	int
+	,@I_IdAplica	int = null
 	,@B_Habilitado 	bit
 	,@B_Eliminado	bit
 	,@D_FecMod		datetime
@@ -379,3 +377,37 @@ INNER JOIN dbo.TI_CarreraProfesional car ON car.C_RcCod = a.C_RcCod
 LEFT JOIN dbo.TC_ProgramaUnfv prog ON prog.C_RcCod = car.C_RcCod
 GO
 
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_CarreraProfesional')
+	DROP VIEW [dbo].[VW_CarreraProfesional]
+GO
+
+
+CREATE VIEW [dbo].[VW_CarreraProfesional]
+AS
+SELECT
+	cprof.C_RcCod, cprof.C_CodEsp, cprof.C_CodEsc, cprof.C_CodFac, esp.T_EspDesc, esc.T_EscDesc, fac.T_FacDesc,
+	cprof.C_Tipo, cprof.I_Duracion, cprof.B_Anual, cprof.N_Grupo, cprof.N_Grado, cprof.I_IdAplica, cprof.B_Habilitado, cprof.B_Eliminado 
+FROM dbo.TI_CarreraProfesional cprof
+LEFT JOIN dbo.TC_Especialidad esp ON 
+	esp.C_CodEsp = cprof.C_CodEsp AND esp.C_CodEsc = cprof.C_CodEsc AND esp.C_CodFac = cprof.C_CodFac AND esp.B_Eliminado = 0
+INNER JOIN dbo.TC_Escuela esc ON esc.C_CodEsc = cprof.C_CodEsc AND esc.C_CodFac = cprof.C_CodFac AND esc.B_Eliminado = 0
+INNER JOIN dbo.TC_Facultad fac ON fac.C_CodFac = cprof.C_CodFac AND fac.B_Eliminado = 0
+GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_ProgramaUnfv')
+	DROP VIEW [dbo].[VW_ProgramaUnfv]
+GO
+
+
+CREATE VIEW [dbo].[VW_ProgramaUnfv]
+AS
+SELECT 
+	prog.C_CodProg, prog.C_RcCod, c.C_CodEsp, c.C_CodEsc, c.C_CodFac, c.T_EspDesc, c.T_EscDesc, c.T_FacDesc, 
+	prog.T_DenomProg, prog.T_Resolucion, prog.T_DenomGrado, prog.T_DenomTitulo, prog.C_CodRegimenEst, prog.C_CodModEst, prog.B_SegundaEsp, prog.C_CodGrado,
+	c.C_Tipo, c.I_Duracion, c.B_Anual, c.N_Grupo, c.N_Grado, c.I_IdAplica, prog.B_Habilitado, prog.B_Eliminado 
+FROM dbo.TC_ProgramaUnfv prog
+LEFT JOIN dbo.VW_CarreraProfesional c ON c.C_RcCod = prog.C_RcCod AND c.B_Eliminado = 0
+GO

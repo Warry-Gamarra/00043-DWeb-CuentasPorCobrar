@@ -51,7 +51,7 @@
     <Compile Include="Entities\EspecialidadDTO.cs" />
     <Compile Include="Entities\FacultadDTO.cs" />
     <Compile Include="Entities\Mapper.cs" />
-    <Compile Include="Entities\ProgramaUnfv.cs" />
+    <Compile Include="Entities\ProgramaUnfvDTO.cs" />
     <Compile Include="Entities\ProgramaUnfvEntity.cs" />
     <Compile Include="Entities\ServiceResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

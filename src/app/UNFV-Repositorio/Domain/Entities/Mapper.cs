@@ -153,5 +153,125 @@ namespace Domain.Entities
 
             return especialidadDTO;
         }
+
+        public static USP_I_GrabarCarreraProfesional AlumnoEntity_To_USP_I_GrabarCarreraProfesional(ProgramaUnfvEntity programaUnfvEntity)
+        {
+            USP_I_GrabarCarreraProfesional alumno = new USP_I_GrabarCarreraProfesional()
+            {
+                C_RcCod = programaUnfvEntity.C_RcCod,
+                C_CodEsp = programaUnfvEntity.C_CodEsp,
+                C_CodEsc = programaUnfvEntity.C_CodEsc,
+                C_CodFac = programaUnfvEntity.C_CodFac,
+                C_Tipo = programaUnfvEntity.C_Tipo,
+                I_Duracion = programaUnfvEntity.I_Duracion.Value,
+                B_Anual = programaUnfvEntity.B_Anual.Value,
+                N_Grupo = programaUnfvEntity.N_Grupo,
+                N_Grado = programaUnfvEntity.N_Grado,
+                I_IdAplica = programaUnfvEntity.I_IdAplica,
+                I_UsuarioCre = programaUnfvEntity.CurrentUserID,
+                D_FecCre = programaUnfvEntity.CurrentDateTime
+            };
+
+            return alumno;
+        }
+
+        public static USP_I_GrabarProgramaUnfv AlumnoEntity_To_USP_I_GrabarProgramaUnfv(ProgramaUnfvEntity programaUnfvEntity)
+        {
+            USP_I_GrabarProgramaUnfv alumno = new USP_I_GrabarProgramaUnfv()
+            {
+                C_CodProg = programaUnfvEntity.C_CodProg,
+                C_RcCod = programaUnfvEntity.C_RcCod,
+                T_DenomProg = programaUnfvEntity.T_DenomProg,
+                T_Resolucion = programaUnfvEntity.T_Resolucion,
+                C_CodGrado = programaUnfvEntity.C_CodGrado,
+                T_DenomGrado = programaUnfvEntity.T_DenomGrado,
+                T_DenomTitulo = programaUnfvEntity.T_DenomTitulo,
+                C_CodRegimenEst = programaUnfvEntity.C_CodRegimenEst,
+                C_CodModEst = programaUnfvEntity.C_CodModEst,
+                B_SegundaEsp = programaUnfvEntity.B_SegundaEsp,
+                I_UsuarioCre = programaUnfvEntity.CurrentUserID,
+                D_FecCre = programaUnfvEntity.CurrentDateTime
+            };
+
+            return alumno;
+        }
+
+        public static USP_U_ActualizarCarreraProfesional AlumnoEntity_To_USP_U_ActualizarCarreraProfesional(ProgramaUnfvEntity programaUnfvEntity)
+        {
+            USP_U_ActualizarCarreraProfesional alumno = new USP_U_ActualizarCarreraProfesional()
+            {
+                C_RcCod = programaUnfvEntity.C_RcCod,
+                C_CodEsp = programaUnfvEntity.C_CodEsp,
+                C_CodEsc = programaUnfvEntity.C_CodEsc,
+                C_CodFac = programaUnfvEntity.C_CodFac,
+                C_Tipo = programaUnfvEntity.C_Tipo,
+                I_Duracion = programaUnfvEntity.I_Duracion.Value,
+                B_Anual = programaUnfvEntity.B_Anual.Value,
+                N_Grupo = programaUnfvEntity.N_Grupo,
+                N_Grado = programaUnfvEntity.N_Grado,
+                I_IdAplica = programaUnfvEntity.I_IdAplica,
+                B_Habilitado = programaUnfvEntity.B_Habilitado,
+                B_Eliminado = programaUnfvEntity.B_Habilitado,
+                I_UsuarioMod = programaUnfvEntity.CurrentUserID,
+                D_FecMod = programaUnfvEntity.CurrentDateTime
+            };
+
+            return alumno;
+        }
+
+        public static USP_U_ActualizarProgramaUnfv AlumnoEntity_To_USP_U_ActualizarProgramaUnfv(ProgramaUnfvEntity programaUnfvEntity)
+        {
+            USP_U_ActualizarProgramaUnfv alumno = new USP_U_ActualizarProgramaUnfv()
+            {
+                C_CodProg = programaUnfvEntity.C_CodProg,
+                C_RcCod = programaUnfvEntity.C_RcCod,
+                T_DenomProg = programaUnfvEntity.T_DenomProg,
+                T_Resolucion = programaUnfvEntity.T_Resolucion,
+                C_CodGrado = programaUnfvEntity.C_CodGrado,
+                T_DenomGrado = programaUnfvEntity.T_DenomGrado,
+                T_DenomTitulo = programaUnfvEntity.T_DenomTitulo,
+                C_CodRegimenEst = programaUnfvEntity.C_CodRegimenEst,
+                C_CodModEst = programaUnfvEntity.C_CodModEst,
+                B_SegundaEsp = programaUnfvEntity.B_SegundaEsp,
+                B_Habilitado = programaUnfvEntity.B_Habilitado,
+                B_Eliminado = programaUnfvEntity.B_Eliminado,
+                I_UsuarioMod = programaUnfvEntity.CurrentUserID,
+                D_FecMod = programaUnfvEntity.CurrentDateTime
+            };
+
+            return alumno;
+        }
+
+        public static ProgramaUnfvDTO VW_ProgramaUnfv_To_ProgramaUnfvDTO(VW_ProgramaUnfv programaUnfv)
+        {
+            ProgramaUnfvDTO programaUnfvDTO = new ProgramaUnfvDTO()
+            {
+                C_CodProg = programaUnfv.C_CodProg,
+                C_RcCod = programaUnfv.C_RcCod,
+                C_CodEsp = programaUnfv.C_CodEsp,
+                C_CodEsc = programaUnfv.C_CodEsc,
+                C_CodFac = programaUnfv.C_CodFac,
+                T_EspDesc = programaUnfv.T_EspDesc,
+                T_EscDesc = programaUnfv.T_EscDesc,
+                T_FacDesc = programaUnfv.T_FacDesc,
+                T_DenomProg = programaUnfv.T_DenomProg,
+                T_Resolucion = programaUnfv.T_Resolucion,
+                T_DenomGrado = programaUnfv.T_DenomGrado,
+                T_DenomTitulo = programaUnfv.T_DenomTitulo,
+                C_CodRegimenEst = programaUnfv.C_CodRegimenEst,
+                C_CodModEst = programaUnfv.C_CodModEst,
+                B_SegundaEsp = programaUnfv.B_SegundaEsp,
+                C_CodGrado = programaUnfv.C_CodGrado,
+                C_Tipo = programaUnfv.C_Tipo,
+                I_Duracion = programaUnfv.I_Duracion,
+                B_Anual = programaUnfv.B_Anual,
+                N_Grupo = programaUnfv.N_Grupo,
+                N_Grado = programaUnfv.N_Grado,
+                I_IdAplica = programaUnfv.I_IdAplica,
+                B_Habilitado = programaUnfv.B_Habilitado
+            };
+
+            return programaUnfvDTO;
+        }
     }
 }

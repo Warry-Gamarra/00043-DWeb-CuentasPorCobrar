@@ -39,6 +39,7 @@ namespace WebApi.App_Start
             builder.RegisterModule<CoreLibModule>();
 
             builder.RegisterType<AlumnoService>().As<IAlumnoService>().InstancePerRequest();
+            builder.RegisterType<ProgramaUnfvService>().As<IProgramaUnfvService>().InstancePerRequest();
             builder.RegisterType<FacultadService>().As<IFacultadService>().InstancePerRequest();
             builder.RegisterType<EscuelaService>().As<IEscuelaService>().InstancePerRequest();
             builder.RegisterType<EspecialidadService>().As<IEspecialidadService>().InstancePerRequest();

@@ -40,7 +40,7 @@ namespace Domain.Services.Implementations
 
                 if (alumnos != null)
                 {
-                    throw new Exception("El Alumno ya existe en el sistema.");
+                    throw new Exception("El Código de Alumno se repite  en el sistema.");
                 }
 
                 paramGrabarPersona = Mapper.AlumnoEntity_To_USP_I_GrabarPersona(alumnoEntity);

@@ -15,8 +15,8 @@ namespace Domain
         {
             builder.RegisterType<PersonaRepository>().As<IPersonaRepository>().SingleInstance();
             builder.RegisterType<AlumnoRepository>().As<IAlumnoRepository>().SingleInstance();
-            builder.RegisterType<ProgramaUnfvRepository>().As<IProgramaUnfvRepository>().SingleInstance();
             builder.RegisterType<CarreraProfesionalRepository>().As<ICarreraProfesionalRepository>().SingleInstance();
+            builder.RegisterType<ProgramaUnfvRepository>().As<IProgramaUnfvRepository>().SingleInstance();
             builder.RegisterType<FacultadRepository>().As<IFacultadRepository>().SingleInstance();
             builder.RegisterType<EscuelaRepository>().As<IEscuelaRepository>().SingleInstance();
             builder.RegisterType<EspecialidadRepository>().As<IEspecialidadRepository>().SingleInstance();
