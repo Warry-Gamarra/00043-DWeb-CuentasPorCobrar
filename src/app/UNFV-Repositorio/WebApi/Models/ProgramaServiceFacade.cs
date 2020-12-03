@@ -12,16 +12,18 @@ namespace WebApi.Models
         IFacultadService _facultadService;
         IEscuelaService _escuelaService;
         IEspecialidadService _especialidadService;
-        
+        IProgramaUnfvService _programaUnfvService;
 
         public ProgramaServiceFacade(
             IFacultadService facultadService,
             IEscuelaService escuelaService,
-            IEspecialidadService especialidadService)
+            IEspecialidadService especialidadService,
+            IProgramaUnfvService programaUnfvService)
         {
             _facultadService = facultadService;
             _escuelaService = escuelaService;
             _especialidadService = especialidadService;
+            _programaUnfvService = programaUnfvService;
         }
 
         public IEnumerable<FacultadModel> GetFacultades()
@@ -58,6 +60,39 @@ namespace WebApi.Models
             var especialidadDTO = _especialidadService.GetByID(codEsp, codEsc, codFac);
 
             return Mapper.EspecialidadDTO_To_EspecialidadModel(especialidadDTO);
+        }
+
+        public ServiceResponse GrabarProgramaUnfv(MantenimientoProgramaUnfvModel programaUnfvModel, int currentUserID)
+        {
+            var programaUnfvEntity = Mapper.ProgramaUnfvModel_To_ProgramaUnfvEntity(programaUnfvModel, currentUserID);
+
+            return _programaUnfvService.Create(programaUnfvEntity);
+        }
+
+        public ServiceResponse EditarProgramaUnfv(MantenimientoProgramaUnfvModel programaUnfvModel, int currentUserID)
+        {
+            var programaUnfvEntity = Mapper.ProgramaUnfvModel_To_ProgramaUnfvEntity(programaUnfvModel, currentUserID);
+
+            return _programaUnfvService.Edit(programaUnfvEntity);
+        }
+
+        public IEnumerable<ProgramaUnfvModel> GetProgramasUnfv()
+        {
+            return _programaUnfvService.GetAll().Select(p => Mapper.ProgramaUnfvDTO_To_ProgramaUnfvModel(p)); ;
+        }
+
+        public ProgramaUnfvModel GetProgramaUnfvByID(string codProg)
+        {
+            var programaUnfvDTO = _programaUnfvService.GetByID(codProg);
+
+            return Mapper.ProgramaUnfvDTO_To_ProgramaUnfvModel(programaUnfvDTO);
+        }
+
+        public ProgramaUnfvModel GetProgramaUnfvByCodRc(string codRc)
+        {
+            var programaUnfvDTO = _programaUnfvService.GetByCodRc(codRc);
+
+            return Mapper.ProgramaUnfvDTO_To_ProgramaUnfvModel(programaUnfvDTO);
         }
     }
 }

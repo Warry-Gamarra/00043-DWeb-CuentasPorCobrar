@@ -19,5 +19,15 @@ namespace WebApi.Models
         IEnumerable<EspecialidadModel> GetEspecialidadesByEsc(string codEsc, string codFac);
 
         EspecialidadModel GetEspecialidadByID(string codEsp, string codEsc, string codFac);
+
+        ServiceResponse GrabarProgramaUnfv(MantenimientoProgramaUnfvModel programaUnfvModel, int currentUserID);
+
+        ServiceResponse EditarProgramaUnfv(MantenimientoProgramaUnfvModel programaUnfvModel, int currentUserID);
+
+        IEnumerable<ProgramaUnfvModel> GetProgramasUnfv();
+
+        ProgramaUnfvModel GetProgramaUnfvByID(string codProg);
+
+        ProgramaUnfvModel GetProgramaUnfvByCodRc(string codRc);
     }
 }

@@ -54,7 +54,7 @@ namespace Data.Procedures
                     CurrentID = parameters.Get<int>("I_PersonaID").ToString(),
                     Value = parameters.Get<bool>("B_Result"),
                     Message = parameters.Get<string>("T_Message")
-                };   
+                };
             }
             catch (Exception ex)
             {

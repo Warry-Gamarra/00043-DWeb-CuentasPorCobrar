@@ -54,5 +54,85 @@ namespace WebApi.Controllers
         {
             return Ok(_service.GetEspecialidadByID(codEsp, codEsc, codFac));
         }
+
+        [HttpPost]
+        public IHttpActionResult GrabarProgramaUnfv(MantenimientoProgramaUnfvModel programaUnfvModel, int currentUserID)
+        {
+            ServiceResponse response;
+
+            if (ModelState.IsValid)
+            {
+                response = _service.GrabarProgramaUnfv(programaUnfvModel, currentUserID);
+            }
+            else
+            {
+                string errorDetails = "";
+
+                foreach (ModelState modelState in ModelState.Values)
+                {
+                    foreach (ModelError error in modelState.Errors)
+                    {
+                        errorDetails += error.ErrorMessage + " / ";
+                    }
+                }
+
+                response = new ServiceResponse()
+                {
+                    Success = false,
+                    Message = errorDetails
+                };
+            }
+
+            return Ok(response);
+        }
+
+        [HttpPost]
+        public IHttpActionResult EditarProgramaUnfv(MantenimientoProgramaUnfvModel programaUnfvModel, int currentUserID)
+        {
+            ServiceResponse response;
+
+            if (ModelState.IsValid)
+            {
+                response = _service.EditarProgramaUnfv(programaUnfvModel, currentUserID);
+            }
+            else
+            {
+                string errorDetails = "";
+
+                foreach (ModelState modelState in ModelState.Values)
+                {
+                    foreach (ModelError error in modelState.Errors)
+                    {
+                        errorDetails += error.ErrorMessage + " / ";
+                    }
+                }
+
+                response = new ServiceResponse()
+                {
+                    Success = false,
+                    Message = errorDetails
+                };
+            }
+
+            return Ok(response);
+        }
+
+        [HttpGet]
+        public IHttpActionResult GetProgramasUnfv()
+        {
+            return Ok(_service.GetProgramasUnfv());
+        }
+
+        [HttpGet]
+        public IHttpActionResult GetProgramaUnfvByCodProg(string codProg)
+        {
+            return Ok(_service.GetProgramaUnfvByID(codProg));
+        }
+
+        [HttpGet]
+        public IHttpActionResult GetProgramaUnfvByCodRc(string codRc)
+        {
+            return Ok(_service.GetProgramaUnfvByCodRc(codRc));
+        }
     }
 }

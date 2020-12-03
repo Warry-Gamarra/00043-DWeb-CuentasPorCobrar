@@ -1,6 +1,4 @@
-﻿using Data.DTO;
-using Data.Procedures;
-using Data.Tables;
+﻿using Data.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +9,8 @@ namespace Data.Repositories
 {
     public interface ICarreraProfesionalRepository
     {
-        ResponseData Create(TI_CarreraProfesional carreraProfesional);
+        IEnumerable<VW_CarreraProfesional> GetAll(string codRc);
 
-        ResponseData Edit(TI_CarreraProfesional carreraProfesional);
-
-        IEnumerable<TI_CarreraProfesional> GetAll();
+        VW_CarreraProfesional GetByID(string codRc);
     }
 }

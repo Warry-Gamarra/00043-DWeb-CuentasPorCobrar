@@ -20,7 +20,6 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-
         public IHttpActionResult GrabarAlumno(MantenimientoAlumnoModel alumnoModel, int currentUserID)
         {
             ServiceResponse response;
@@ -52,7 +51,6 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-
         public IHttpActionResult EditarAlumno(MantenimientoAlumnoModel alumnoModel, int currentUserID)
         {
             ServiceResponse response;

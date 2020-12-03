@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Web;
 
-namespace Domain.Entities
+namespace WebApi.Models
 {
-    public class ProgramaUnfvEntity
+    public class MantenimientoProgramaUnfvModel
     {
+        [Required]
         public string C_RcCod { get; set; }
 
         public string C_CodEsp { get; set; }
 
         public string C_CodEsc { get; set; }
 
+        [Required]
         public string C_CodFac { get; set; }
 
         public string C_Tipo { get; set; }
@@ -28,8 +30,10 @@ namespace Domain.Entities
 
         public int? I_IdAplica { get; set; }
 
+        [Required]
         public string C_CodProg { get; set; }
 
+        [Required]
         public string T_DenomProg { get; set; }
 
         public string T_Resolucion { get; set; }
@@ -40,6 +44,7 @@ namespace Domain.Entities
 
         public string C_CodModEst { get; set; }
 
+        [Required]
         public bool B_SegundaEsp { get; set; }
 
         public string C_CodRegimenEst { get; set; }
@@ -50,13 +55,11 @@ namespace Domain.Entities
 
         public bool B_Eliminado { get; set; }
 
-        public int CurrentUserID { get; set; }
-
-        public DateTime CurrentDateTime { get; }
-
-        public ProgramaUnfvEntity()
+        public MantenimientoProgramaUnfvModel()
         {
-            CurrentDateTime = DateTime.Now;
+            B_Habilitado = true;
+
+            B_Eliminado = false;
         }
     }
 }

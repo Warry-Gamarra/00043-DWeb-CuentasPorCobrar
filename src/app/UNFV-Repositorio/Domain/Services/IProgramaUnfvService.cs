@@ -14,6 +14,10 @@ namespace Domain.Services
 
         ServiceResponse Edit(ProgramaUnfvEntity programaUnfvEntity);
 
-        IEnumerable<ProgramaUnfv> GetAll();
+        IEnumerable<ProgramaUnfvDTO> GetAll();
+
+        ProgramaUnfvDTO GetByID(string codProg);
+
+        ProgramaUnfvDTO GetByCodRc(string codRc);
     }
 }

@@ -184,6 +184,8 @@
     <Compile Include="Models\IProgramaServiceFacade.cs" />
     <Compile Include="Models\Mapper.cs" />
     <Compile Include="Models\ProgramaServiceFacade.cs" />
+    <Compile Include="Models\MantenimientoProgramaUnfvModel.cs" />
+    <Compile Include="Models\ProgramaUnfvModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

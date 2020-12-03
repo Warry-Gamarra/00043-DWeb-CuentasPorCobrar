@@ -1,29 +1,47 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Data.Connection;
 using Data.DTO;
 using Data.Procedures;
 using Data.Tables;
+using Data.Views;
 
 namespace Data.Repositories.Implementations
 {
     public class ProgramaUnfvRepository : IProgramaUnfvRepository
     {
-        public ResponseData Create(TC_ProgramaUnfv programaUnfv)
+        public ResponseData Create(USP_I_GrabarCarreraProfesional paramGrabarCarreraProfesional, USP_I_GrabarProgramaUnfv paramGrabarProgramaUnfv)
         {
-            USP_I_GrabarProgramaUnfv procedimiento;
             ResponseData result;
 
             try
             {
-                procedimiento = new USP_I_GrabarProgramaUnfv()
+                using (var dbConnection = new SqlConnection(Database.ConnectionString))
                 {
+                    dbConnection.Open();
 
+                    using (var dbTransaction = dbConnection.BeginTransaction())
+                    {
+                        if (paramGrabarCarreraProfesional != null)
+                        {
+                            USP_I_GrabarCarreraProfesional.Execute(dbConnection, dbTransaction, paramGrabarCarreraProfesional);
+                        }
+
+                        USP_I_GrabarProgramaUnfv.Execute(dbConnection, dbTransaction, paramGrabarProgramaUnfv);
+
+                        dbTransaction.Commit();
+                    }
+                }
+
+                result = new ResponseData()
+                {
+                    Value = true,
+                    Message = "Los datos del Programa fueron grabados correctamente."
                 };
-
-                result = procedimiento.Execute();
             }
             catch (Exception ex)
             {
@@ -37,19 +55,31 @@ namespace Data.Repositories.Implementations
             return result;
         }
 
-        public ResponseData Edit(TC_ProgramaUnfv programaUnfv)
+        public ResponseData Edit(USP_U_ActualizarCarreraProfesional paramActualizarCarreraProfesional, USP_U_ActualizarProgramaUnfv paramActualizarProgramaUnfv)
         {
-            USP_U_ActualizarProgramaUnfv procedimiento;
             ResponseData result;
 
             try
             {
-                procedimiento = new USP_U_ActualizarProgramaUnfv()
+                using (var dbConnection = new SqlConnection(Database.ConnectionString))
                 {
+                    dbConnection.Open();
 
+                    using (var dbTransaction = dbConnection.BeginTransaction())
+                    {
+                        var resultGrabarCarreraProfesional = USP_U_ActualizarCarreraProfesional.Execute(dbConnection, dbTransaction, paramActualizarCarreraProfesional);
+
+                        var resultGrabarProgramaUnfv = USP_U_ActualizarProgramaUnfv.Execute(dbConnection, dbTransaction, paramActualizarProgramaUnfv);
+
+                        dbTransaction.Commit();
+                    }
+                }
+
+                result = new ResponseData()
+                {
+                    Value = true,
+                    Message = "Los datos del Programa fueron actualizados correctamente."
                 };
-
-                result = procedimiento.Execute();
             }
             catch (Exception ex)
             {
@@ -63,12 +93,42 @@ namespace Data.Repositories.Implementations
             return result;
         }
 
-        public IEnumerable<TC_ProgramaUnfv> GetAll()
+        public IEnumerable<VW_ProgramaUnfv> GetAll()
         {
-            IEnumerable<TC_ProgramaUnfv> result;
+            IEnumerable<VW_ProgramaUnfv> result;
             try
             {
-                result = TC_ProgramaUnfv.GetAll();
+                result = VW_ProgramaUnfv.GetAll();
+            }
+            catch (Exception)
+            {
+                result = null;
+            }
+
+            return result;
+        }
+
+        public VW_ProgramaUnfv GetByID(string codProg)
+        {
+            VW_ProgramaUnfv result;
+            try
+            {
+                result = VW_ProgramaUnfv.GetByID(codProg);
+            }
+            catch (Exception)
+            {
+                result = null;
+            }
+
+            return result;
+        }
+
+        public VW_ProgramaUnfv GetByCodRc(string codRc)
+        {
+            VW_ProgramaUnfv result;
+            try
+            {
+                result = VW_ProgramaUnfv.GetByCodRc(codRc);
             }
             catch (Exception)
             {

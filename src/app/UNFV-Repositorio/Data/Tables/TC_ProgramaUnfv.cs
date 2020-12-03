@@ -43,27 +43,5 @@ namespace Data.Tables
         public string C_CodRegimenEst { get; set; }
 
         public string C_CodGrado { get; set; }
-
-        public static IEnumerable<TC_ProgramaUnfv> GetAll()
-        {
-            IEnumerable<TC_ProgramaUnfv> result;
-            string command;
-
-            try
-            {
-                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
-                {
-                    command = "SELECT * FROM TC_ProgramaUnfv WHERE B_Eliminado = 0";
-
-                    result = _dbConnection.Query<TC_ProgramaUnfv>(command, commandType: CommandType.Text);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return result;
-        }
     }
 }

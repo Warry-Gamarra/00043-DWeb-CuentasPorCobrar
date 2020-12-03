@@ -1,74 +1,35 @@
-﻿using System;
+﻿using Data.Views;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Data.DTO;
-using Data.Procedures;
-using Data.Tables;
 
 namespace Data.Repositories.Implementations
 {
     public class CarreraProfesionalRepository : ICarreraProfesionalRepository
     {
-        public ResponseData Create(TI_CarreraProfesional carreraProfesional)
+        public IEnumerable<VW_CarreraProfesional> GetAll(string codRc)
         {
-            USP_I_GrabarCarreraProfesional procedimiento;
-            ResponseData result;
-
+            IEnumerable<VW_CarreraProfesional> result;
             try
             {
-                procedimiento = new USP_I_GrabarCarreraProfesional()
-                {
-                    
-                };
-
-                result = procedimiento.Execute();
+                result = VW_CarreraProfesional.GetAll();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                result = new ResponseData()
-                {
-                    Value = false,
-                    Message = ex.Message
-                };
+                result = null;
             }
 
             return result;
         }
 
-        public ResponseData Edit(TI_CarreraProfesional carreraProfesional)
+        public VW_CarreraProfesional GetByID(string codRc)
         {
-            USP_U_ActualizarCarreraProfesional procedimiento;
-            ResponseData result;
-
+            VW_CarreraProfesional result;
             try
             {
-                procedimiento = new USP_U_ActualizarCarreraProfesional()
-                {
-
-                };
-
-                result = procedimiento.Execute();
-            }
-            catch (Exception ex)
-            {
-                result = new ResponseData()
-                {
-                    Value = false,
-                    Message = ex.Message
-                };
-            }
-
-            return result;
-        }
-
-        public IEnumerable<TI_CarreraProfesional> GetAll()
-        {
-            IEnumerable<TI_CarreraProfesional> result;
-            try
-            {
-                result = TI_CarreraProfesional.GetAll();
+                result = VW_CarreraProfesional.GetByID(codRc);
             }
             catch (Exception)
             {
