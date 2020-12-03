@@ -29,7 +29,7 @@
                     <ul class="list-group">
                         @foreach (var item in Model)
                         {
-                            <li class="list-group-item"><a href="@Url.Content(item.FilePath)" target="_blank" class="list-group-item"><b><span class="glyphicon glyphicon-download">&nbsp;</span>@item.FileName</b></a></li>
+                            <li class="list-group-item"><a href="@item.FilePath" target="_blank" class="list-group-item"><b><span class="glyphicon glyphicon-download">&nbsp;</span>@item.FileName</b></a></li>
                         }
                     </ul>
                 }

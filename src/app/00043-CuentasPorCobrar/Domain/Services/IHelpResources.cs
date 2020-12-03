@@ -2,6 +2,7 @@
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,8 +15,8 @@ namespace Domain.Services
 
         List<HelperResources> Find();
 
-        HelperResources Find(int rutaDocumentoId);
+        List<HelperResources> Find(int rutaDocumentoId);
 
-        Response Save(HelperResources manual, int currentUserId, SaveOption saveOption);
+        Response Save(HelperResources manual, DataTable dtRoles, int currentUserId, SaveOption saveOption);
     }
 }

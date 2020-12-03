@@ -28,13 +28,7 @@ namespace WebApp.ViewModels
 
         public UserManualViewModel()
         {
-            this.Roles = new List<RolesAsociadosViewModel>();
-            var roles = new RolAplicacion();
-
-            foreach (var rol in roles.Find())
-            {
-                this.Roles.Add(new RolesAsociadosViewModel(rol, false));
-            }
+            this.Roles = RolesAsociadosViewModel.ListarRoles();
         }
 
         public UserManualViewModel(HelperResources helpResources)
@@ -44,8 +38,7 @@ namespace WebApp.ViewModels
             this.FilePath = helpResources.Url;
             this.Habilitado = helpResources.Habilitado;
 
-            this.Roles = new List<RolesAsociadosViewModel>();
-
+            this.Roles = RolesAsociadosViewModel.ListarRoles();
         }
 
     }

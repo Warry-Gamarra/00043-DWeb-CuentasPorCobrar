@@ -3,6 +3,7 @@ using Domain.DTO;
 using Domain.Services;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,7 +26,6 @@ namespace Domain.Entities
         public HelperResources()
         {
             _docUsuarioRepository = new USP_S_DocumentacionUsuarioRoles();
-            this.Response = new Response() { Value = true };
         }
 
         public HelperResources(USP_S_DocumentacionUsuarioRoles table)
@@ -36,7 +36,6 @@ namespace Domain.Entities
             this.Habilitado = table.B_Habilitado;
             this.Rol = table.RoleId;
             this.RolHabilitado = table.B_DocRolHabilitado;
-            this.Response = new Response() { Value = true };
         }
 
 
@@ -61,41 +60,40 @@ namespace Domain.Entities
             return result;
         }
 
-        public HelperResources Find(int rutaDocumentoId)
+        public List<HelperResources> Find(int rutaDocumentoId)
         {
-            var data = _docUsuarioRepository.Execute().Find(x => x.I_RutaDocID == rutaDocumentoId);
+            var result = new List<HelperResources>();
+            var data = _docUsuarioRepository.Execute().Where(x => x.I_RutaDocID == rutaDocumentoId);
             if (data != null)
             {
-                return new HelperResources(data);
-            }
-            return new HelperResources()
-            {
-                Response = new Response()
+                foreach (var item in data)
                 {
-                    Value = false,
-                    Message = "No se encontraron resultados para el identificador de correo"
+                    result.Add(new HelperResources(item));
                 }
-            };
+
+                return result;
+            }
+            return new List<HelperResources>();
+
         }
 
-        public Response Save(HelperResources manualUsuario, int currentUserId, SaveOption saveOption)
+        public Response Save(HelperResources manualUsuario, DataTable dtRoles, int currentUserId, SaveOption saveOption)
         {
             _docUsuarioRepository.I_RutaDocID = manualUsuario.Id;
             _docUsuarioRepository.T_DocDesc = manualUsuario.Documento;
             _docUsuarioRepository.T_RutaDocumento = manualUsuario.Url;
             _docUsuarioRepository.B_Habilitado = manualUsuario.Habilitado;
-            _docUsuarioRepository.RoleId = manualUsuario.Rol;
-            _docUsuarioRepository.B_DocRolHabilitado = manualUsuario.RolHabilitado;
+
 
             switch (saveOption)
             {
                 case SaveOption.Insert:
                     //_docUsuarioRepository.D_FecCre = DateTime.Now;
-                    return new Response(_docUsuarioRepository.Insert(currentUserId));
+                    return new Response(_docUsuarioRepository.Insert(dtRoles, currentUserId));
 
                 case SaveOption.Update:
                     //_docUsuarioRepository.D_FecMod = DateTime.Now;
-                    return new Response(_docUsuarioRepository.Update(currentUserId));
+                    return new Response(_docUsuarioRepository.Update(dtRoles, currentUserId));
             }
 
             return new Response()

@@ -20,5 +20,18 @@ namespace WebApp.ViewModels
             this.RoleName = rolAplicacion.NombreRol;
             this.Habilitado = Habilitado;
         }
+
+        public static List<RolesAsociadosViewModel> ListarRoles()
+        {
+            var roles = new RolAplicacion();
+            var result = new List<RolesAsociadosViewModel>();
+
+            foreach (var rol in roles.Find())
+            {
+                result.Add(new RolesAsociadosViewModel(rol, false));
+            }
+
+            return result;
+        }
     }
 }

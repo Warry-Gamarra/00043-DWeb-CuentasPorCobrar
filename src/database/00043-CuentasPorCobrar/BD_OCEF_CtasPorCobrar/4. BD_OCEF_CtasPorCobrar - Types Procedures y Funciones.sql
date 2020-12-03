@@ -229,8 +229,6 @@ END
 GO
 
 
-
-
 IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarPeriodo')
 	DROP PROCEDURE dbo.USP_U_ActualizarPeriodo
 GO
@@ -1029,23 +1027,6 @@ BEGIN
 			
 			DECLARE @Tbl_Actions AS TABLE( T_Action varchar(10), T_Codigo varchar(10))
 
-			MERGE INTO TC_Alumno A 
-			USING @Tbl_Alumno AS T
-			ON A.C_CodAlu = T.C_CodAlu
-			WHEN MATCHED THEN
-					UPDATE SET  T_ApePaterno = T.T_AppAlu
-								,T_ApeMaterno = T.T_ApmAlu
-								,T_Nombre = T.T_Nombre
-								,T_NomAlu = T.T_NomAlu
-								,C_CodRc = T.C_CodRc
-								,I_IdPlan = T.I_IdPlan
-								,I_UsuarioMod = @UserID
-								,D_FecMod = @D_FecRegistro
-			WHEN NOT MATCHED BY TARGET THEN INSERT (C_CodAlu, T_ApePaterno, T_ApeMaterno, T_Nombre, T_NomAlu, C_CodRc, I_IdPlan, B_Habilitado, I_UsuarioCre, D_FecCre, B_Eliminado)
-											VALUES (T.C_CodAlu, T.T_AppAlu, T.T_ApmAlu, T.T_Nombre, T.T_NomAlu, T.C_CodRc, T.I_IdPlan, 1, @UserID, @D_FecRegistro, 0)
-			OUTPUT $action AS accion, inserted.C_CodAlu as codigo INTO @Tbl_Actions;
-
-
 			MERGE INTO TC_MatriculaAlumno AS TRG
 			USING @Tbl_Alumno AS SRC
 			ON TRG.C_CodAlu = SRC.C_CodAlu AND TRG.I_Anio = SRC.C_Anio 
@@ -1124,14 +1105,15 @@ BEGIN
 	BEGIN TRANSACTION
 	BEGIN TRY
 		
-		INSERT INTO [dbo].[TS_RutaDocumentacion] (T_DocDesc, T_RutaDocumento, B_Habilitado) VALUES ( @T_DocDesc, @T_RutaDocumento, 1)
+		INSERT INTO [dbo].[TS_RutaDocumentacion] (T_DocDesc, T_RutaDocumento, B_Habilitado, B_Eliminado, D_FecCre, I_UsuarioCre) 
+			VALUES ( @T_DocDesc, @T_RutaDocumento, 1, 0, GETDATE(), @I_UserID)
 			
 		SET @I_RutaDocID = IDENT_CURRENT('TS_RutaDocumentacion')
 
 		--EXEC USP_U_GrabarHistorialRegistroUsuario @I_UserID, 17, 'TS_RutaDocumentacion'
 
-		INSERT INTO [dbo].[TS_DocumentosRoles] (I_RutaDocID, RoleId, B_Habilitado)
-				SELECT	@I_RutaDocID, RoleId, B_Habilitado
+		INSERT INTO [dbo].[TS_DocumentosRoles] (I_RutaDocID, RoleId, B_Habilitado, B_Eliminado, D_FecCre, I_UsuarioCre)
+				SELECT	@I_RutaDocID, RoleId, B_Habilitado,  0, GETDATE(), @I_UserID
 				FROM @Tbl_Roles
 
 		--EXEC USP_U_GrabarHistorialRegistroUsuario @I_UserID, 17, 'TS_DocumentosRoles'
@@ -1143,7 +1125,7 @@ BEGIN
 	END TRY
 	BEGIN CATCH
 		ROLLBACK TRANSACTION
-		SET @B_Result = 1
+		SET @B_Result = 0
 		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10))
 	END CATCH
 END
@@ -1174,19 +1156,26 @@ BEGIN
 		UPDATE [dbo].[TS_RutaDocumentacion]
 			SET T_DocDesc = @T_DocDesc
 				,T_RutaDocumento = @T_RutaDocumento
+				,D_FecMod = GETDATE()
+				,I_UsuarioMod = @I_UserID
 			WHERE I_RutaDocID = @I_RutaDocID
 
 		--EXEC USP_U_GrabarHistorialRegistroUsuario @I_UserID, 17, 'TS_RutaDocumentacion'
 
+		MERGE  [dbo].[TS_DocumentosRoles]
+		USING  @Tbl_Roles AS roles
+		ON	roles.RoleId = [dbo].[TS_DocumentosRoles].[RoleId]
+			AND [dbo].[TS_DocumentosRoles].[I_RutaDocID] = @I_RutaDocID
+		WHEN MATCHED THEN
+			UPDATE SET [dbo].[TS_DocumentosRoles].[B_Habilitado] = roles.B_Habilitado
+				,[dbo].[TS_DocumentosRoles].[D_FecMod] = GETDATE()
+				,[dbo].[TS_DocumentosRoles].[I_UsuarioMod] = @I_UserID
 
-		UPDATE [dbo].[TS_DocumentosRoles]
-			SET [dbo].[TS_DocumentosRoles].[B_Habilitado] = roles.B_Habilitado
-			FROM (SELECT [RoleId], [B_Habilitado] FROM @Tbl_Roles) AS roles
-			WHERE roles.RoleId = [dbo].[TS_DocumentosRoles].[RoleId]
-				AND [dbo].[TS_DocumentosRoles].[I_RutaDocID] = @I_RutaDocID
+		WHEN NOT MATCHED BY TARGET THEN
+			INSERT (I_RutaDocID, RoleId, B_Habilitado, B_Eliminado, D_FecCre, I_UsuarioCre)
+			VALUES (@I_RutaDocID, roles.RoleId, roles.B_Habilitado,  0, GETDATE(), @I_UserID);
 
 		--EXEC USP_U_GrabarHistorialRegistroUsuario @I_UserID, 17, 'TS_DocumentosRoles'
-
 
 		SET @B_Result = 1
 		SET @T_Message = 'La operación se realizó correctamente.'
@@ -1195,7 +1184,7 @@ BEGIN
 	END TRY
 	BEGIN CATCH
 		ROLLBACK TRANSACTION
-		SET @B_Result = 1
+		SET @B_Result = 0
 		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10))
 	END CATCH
 END
@@ -1251,6 +1240,6 @@ BEGIN
 	SET NOCOUNT ON
 	SELECT RD.I_RutaDocID, RD.T_DocDesc, RD.T_RutaDocumento, RD.B_Habilitado, DR.RoleId, DR.B_Habilitado As B_DocRolHabilitado
 	FROM TS_RutaDocumentacion RD
-		 INNER JOIN TS_DocumentosRoles DR ON RD.[I_RutaDocID] = DR.[I_RutaDocID]
+		 LEFT JOIN TS_DocumentosRoles DR ON RD.[I_RutaDocID] = DR.[I_RutaDocID]
 END
 GO

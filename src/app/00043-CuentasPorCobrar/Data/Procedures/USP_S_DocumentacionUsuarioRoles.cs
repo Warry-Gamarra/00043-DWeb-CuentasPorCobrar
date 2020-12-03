@@ -32,7 +32,7 @@ namespace Data.Procedures
             return result;
         }
 
-        public ResponseData Update(int currentUserId)
+        public ResponseData Update(DataTable dtRoles, int currentUserId)
         {
             ResponseData result = new ResponseData();
             DynamicParameters parameters = new DynamicParameters();
@@ -44,6 +44,7 @@ namespace Data.Procedures
                     parameters.Add(name: "I_RutaDocID", dbType: DbType.Byte, value: this.I_RutaDocID);
                     parameters.Add(name: "T_DocDesc", dbType: DbType.String, size: 50, value: this.T_DocDesc);
                     parameters.Add(name: "T_RutaDocumento", dbType: DbType.String, size: 500, value: this.T_RutaDocumento);
+                    parameters.Add(name: "Tbl_Roles", value: dtRoles.AsTableValuedParameter("dbo.type_roles"));
                     parameters.Add(name: "I_UserID", dbType: DbType.Int32, value: currentUserId);
 
                     parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);
@@ -94,7 +95,7 @@ namespace Data.Procedures
             return result;
         }
 
-        public ResponseData Insert(int currentUserId)
+        public ResponseData Insert(DataTable dtRoles, int currentUserId)
         {
             ResponseData result = new ResponseData();
             DynamicParameters parameters = new DynamicParameters();
@@ -106,6 +107,7 @@ namespace Data.Procedures
                     parameters.Add(name: "I_RutaDocID", dbType: DbType.Byte, value: this.I_RutaDocID);
                     parameters.Add(name: "T_DocDesc", dbType: DbType.String, size: 50, value: this.T_DocDesc);
                     parameters.Add(name: "T_RutaDocumento", dbType: DbType.String, size: 500, value: this.T_RutaDocumento);
+                    parameters.Add(name: "Tbl_Roles", value: dtRoles.AsTableValuedParameter("dbo.type_roles"));
                     parameters.Add(name: "I_UserID", dbType: DbType.Int32, value: currentUserId);
 
                     parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);

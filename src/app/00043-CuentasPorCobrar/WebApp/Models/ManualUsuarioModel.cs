@@ -3,6 +3,7 @@ using Domain.Entities;
 using Domain.Services;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 using WebApp.ViewModels;
@@ -25,8 +26,8 @@ namespace WebApp.Models
             int? roleId = _roles.FindByUser(currentUserId).Id;
             List<UserManualViewModel> result = new List<UserManualViewModel>();
 
-            foreach (var item in _userManual.Find().Where(x => x.Rol == roleId))
-            {
+            foreach (var item in _userManual.Find().Where(x => x.Rol == roleId && x.RolHabilitado))
+            { 
                 result.Add(new UserManualViewModel(item));
             }
 
@@ -37,9 +38,29 @@ namespace WebApp.Models
         {
             List<UserManualViewModel> result = new List<UserManualViewModel>();
 
-            foreach (var item in _userManual.Find())
+            var data = _userManual.Find();
+
+            foreach (var item in data.Select(x => new { x.Id, x.Documento, x.Url, x.Habilitado }).Distinct())
             {
-                result.Add(new UserManualViewModel(item));
+                var userManual = new UserManualViewModel()
+                {
+                    RutaID = item.Id,
+                    FileName = item.Documento,
+                    FilePath = item.Url,
+                    Habilitado = item.Habilitado
+                };
+
+                for (int i = 0; i < userManual.Roles.Count(); i++)
+                {
+                    foreach (var docItem in data.Where(x => x.Id == item.Id))
+                    {
+                        if (docItem.Rol == userManual.Roles[i].RoleId)
+                        {
+                            userManual.Roles[i].Habilitado = docItem.RolHabilitado;
+                        }
+                    }
+                }
+                result.Add(userManual);
             }
 
             return result;
@@ -47,24 +68,26 @@ namespace WebApp.Models
 
         public UserManualViewModel ObtenerManualUsuario(int manualUsuarioId)
         {
-            UserManualViewModel result = new UserManualViewModel(_userManual.Find(manualUsuarioId));
-
-            foreach (var rol in _roles.Find())
+            var data = _userManual.Find(manualUsuarioId);
+            if (data.Count > 0)
             {
-                foreach (var item in result.Roles)
+                var result = new UserManualViewModel(data.First());
+
+                for (int i = 0; i < result.Roles.Count(); i++)
                 {
-                    if (item.RoleId == rol.Id)
+                    foreach (var item in data)
                     {
-                        result.Roles.Add(new RolesAsociadosViewModel(rol, true));
-                    }
-                    else
-                    {
-                        result.Roles.Add(new RolesAsociadosViewModel(rol, false));
+                        if (item.Rol == result.Roles[i].RoleId)
+                        {
+                            result.Roles[i].Habilitado = item.RolHabilitado;
+                        }
+
                     }
                 }
+                return result;
             }
 
-            return result;
+            return new UserManualViewModel();
         }
 
         public Response Save(UserManualViewModel model, int currentUserId)
@@ -77,7 +100,18 @@ namespace WebApp.Models
                 Habilitado = model.Habilitado,
             };
 
-            Response result = _userManual.Save(manualUsuario, currentUserId, (model.RutaID == 0 ? SaveOption.Insert : SaveOption.Update));
+            DataTable dtRoles = new DataTable();
+
+            dtRoles.Columns.Add("RoleID");
+            dtRoles.Columns.Add("RoleName");
+            dtRoles.Columns.Add("CheckValue");
+
+            foreach (var role in model.Roles)
+            {
+                dtRoles.Rows.Add(role.RoleId, role.RoleName, role.Habilitado);
+            }
+
+            Response result = _userManual.Save(manualUsuario, dtRoles, currentUserId, (model.RutaID == 0 ? SaveOption.Insert : SaveOption.Update));
 
             if (result.Value)
             {

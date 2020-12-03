@@ -26,7 +26,7 @@ namespace WebApp.Controllers
             return RedirectToAction("Manual", "HelpCenter");
         }
 
-        [Route("ayuda/manuales")]
+        [Route("ayuda/manual-usuario")]
         public ActionResult Manual()
         {
             ViewBag.Title = "Manual de usuario";
@@ -35,7 +35,7 @@ namespace WebApp.Controllers
 
 
         [Authorize(Roles = "Administrador")]
-        [Route("mantenimiento/ayuda/manuales")]
+        [Route("mantenimiento/ayuda/manuales-listado")]
         public ActionResult Manage()
         {
             ViewBag.Title = "Registrar Documentación";
