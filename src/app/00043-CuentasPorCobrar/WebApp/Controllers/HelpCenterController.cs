@@ -67,7 +67,7 @@ namespace WebApp.Controllers
         [HttpPost]
         public JsonResult ChangeState(int RowID, bool B_habilitado)
         {
-            var result = _manualUsuarioModel.ChangeState(RowID, B_habilitado, WebSecurity.CurrentUserId, Url.Action("", ""));
+            var result = _manualUsuarioModel.ChangeState(RowID, B_habilitado, WebSecurity.CurrentUserId, Url.Action("ChangeState", "HelpCenter"));
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
