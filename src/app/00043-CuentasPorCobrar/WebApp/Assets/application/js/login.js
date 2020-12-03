@@ -1,5 +1,8 @@
 const inputs = document.querySelectorAll('.input');
+const inputUserName = document.getElementById("UserName");
 
+inputUserName.focus();
+inputUserName.parentNode.parentNode.classList.add('focus')
 
 function focusFunc() {
   let parent = this.parentNode.parentNode;

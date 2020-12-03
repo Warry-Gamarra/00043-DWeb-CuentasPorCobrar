@@ -5,12 +5,11 @@
 }
 
 body {
-    font-family: "Poppins", sans-serif;
-    overflow: hidden;
-    background: #000000; /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #434343, #000000); /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #434343, #000000); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    );
+  font-family: "Poppins", sans-serif;
+  min-height: 100%;
+  background: #000000; /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #434343, #000000); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #434343, #000000); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
 .container {
@@ -20,6 +19,9 @@ body {
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 7rem;
   padding: 0 2rem;
+  background: #000000; /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #434343, #000000); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #434343, #000000); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
 .login-content {
@@ -27,8 +29,10 @@ body {
   align-items: center;
   text-align: center;
   background:#f5f5f5;
-  margin:2rem 3rem;
+  margin:auto;
   border-radius: 5px;
+  padding: 20px 40px;
+  max-width: 530px;
 }
 
 .img {
