@@ -51,6 +51,7 @@ namespace WebApp.Models
                 Id = model.Id.HasValue ? model.Id.Value : 0,
                 Nombre = model.NombreEntidad,
                 Habilitado = model.Habilitado,
+                
                 FechaActualiza =  DateTime.Now
             };
 
@@ -64,6 +65,16 @@ namespace WebApp.Models
             {
                 result.Error(true);
             }
+            return result;
+        }
+
+
+        public Response HabilitarArchivos(int entidadFinancieraId, int currentUserId, string returnUrl)
+        {
+            Response result = _entidadFinanciera.HabilitarArchivos(entidadFinancieraId, currentUserId);
+
+            result.Redirect = returnUrl;
+
             return result;
         }
 

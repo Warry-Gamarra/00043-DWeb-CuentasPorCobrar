@@ -28,18 +28,21 @@
         <br />
         <div class="table-responsive" style="min-height:350px">
             @Html.Grid(Model).Columns(columns =>
-                            {
-                                columns.Add(c => c.NombreEntidad).SetWidth(350).Titled("Entidad").Filterable(true);
-                                columns.Add(c => c.FechaActualiza).RenderValueAs(c => c.FechaActualiza.ToShortDateString()).Titled("Fecha actualización").Filterable(true);
-                                columns.Add(c => c.Habilitado).SetWidth(100).Css("text-center").Encoded(false).Sanitized(false)
-                                       .RenderValueAs(model => model.Habilitado ?
-                                                                            @Html.Raw("<span id=\"td" + @model.Id + "\"><button type=\"submit\" class=\"btn btn-xs btn-success\" onclick=\"ChangeStateReloadPage(" + @model.Id + ", " + @model.Habilitado.ToString().ToLower() + ", '" + @Url.Action("ChangeState", "EntidadFinanciera") + "');\"><i class=\"fa fa-check-circle-o\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Habilitado</span></button></span>")
-                                                                            : @Html.Raw("<span id=\"td" + @model.Id + "\"><button type=\"submit\" class=\"btn btn-xs btn-secondary\" onclick=\"ChangeStateReloadPage(" + @model.Id + ", " + @model.Habilitado.ToString().ToLower() + ", '" + @Url.Action("ChangeState", "EntidadFinanciera") + "');\"><i class=\"fa fa-minus-circle\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Deshabilitado</span></button></span>"))
-                                       .Filterable(true).SetWidth(160).Titled("Estado");
-                                columns.Add().SetWidth(200).Css("text-right").Encoded(false).Sanitized(false).RenderValueAs(model => @<a href="@Url.Action("Edit", "EntidadFinanciera", new { id = model.Id, area = "" })" class="modal-link"><i class="fa fa-pencil-square-o" aria-hidden="true">&nbsp;</i><span class="d-none d-md-inline-block">Editar</span></a>);
-                            }).WithPaging(10).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
+       {
+       columns.Add(c => c.NombreEntidad).SetWidth(350).Titled("Entidad").Filterable(true);
+       columns.Add(c => c.FechaActualiza).SetWidth(250).Css("text-center").RenderValueAs(c => c.FechaActualiza.ToShortDateString()).Titled("Fecha actualización").Filterable(true);
+       columns.Add(c => c.Habilitado).SetWidth(100).Css("text-center").Encoded(false).Sanitized(false)
+              .RenderValueAs(model => model.Habilitado ?
+                                                   @Html.Raw("<span id=\"td2" + @model.Id + "\"><button type=\"submit\" class=\"btn btn-xs btn-success\" onclick=\"ChangeStateReloadPage(" + @model.Id + ", " + @model.Habilitado.ToString().ToLower() + ", '" + @Url.Action("ChangeState", "EntidadFinanciera") + "');\"><i class=\"fa fa-check-circle-o\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Habilitado</span></button></span>")
+                                                   : @Html.Raw("<span id=\"td2" + @model.Id + "\"><button type=\"submit\" class=\"btn btn-xs btn-secondary\" onclick=\"ChangeStateReloadPage(" + @model.Id + ", " + @model.Habilitado.ToString().ToLower() + ", '" + @Url.Action("ChangeState", "EntidadFinanciera") + "');\"><i class=\"fa fa-minus-circle\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Deshabilitado</span></button></span>"))
+              .Filterable(true).SetWidth(160).Titled("Estado");
+       columns.Add(c => c.ArchivosHabilitados).SetWidth(100).Css("text-center").Encoded(false).Sanitized(false)
+              .RenderValueAs(model => model.ArchivosHabilitados ?
+                                                   @Html.Raw("<span id=\"td1" + @model.Id + "\"><a class=\"btn btn-xs btn-warning\" href=\"" + @Url.Action("Banco", "EstructuraArchivo", new { id = model.Id}) + "\"><i class=\"fa fa-cog\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Configurar</span></button></span>")
+                                                   : @Html.Raw("<span id=\"td1" + @model.Id + "\"><button type=\"submit\" class=\"btn btn-xs btn-secondary\" onclick=\"ChangeStateReloadPage(" + @model.Id + ", " + @model.Habilitado.ToString().ToLower() + ", '" + @Url.Action("HabilitarArchivos", "EntidadFinanciera") + "');\"><i class=\"fa fa-minus-circle\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Deshabilitado</span></button></span>"))
+              .Filterable(true).SetWidth(160).Titled("Archivos de intercambio");
+       columns.Add().SetWidth(200).Css("text-right").Encoded(false).Sanitized(false).RenderValueAs(model => @<a href="@Url.Action("Edit", "EntidadFinanciera", new { id = model.Id, area = "" })" class="modal-link"><i class="fa fa-pencil-square-o" aria-hidden="true">&nbsp;</i><span class="d-none d-md-inline-block">Editar</span></a>);
+                                 }).WithPaging(10).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
         </div>
     </div>
 </div>
-
-

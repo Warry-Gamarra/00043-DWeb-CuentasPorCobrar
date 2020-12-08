@@ -677,18 +677,28 @@ CREATE PROCEDURE [dbo].[USP_I_GrabarEntidadFinanciera]
 AS
 BEGIN
   SET NOCOUNT ON
+	BEGIN TRANSACTION
   	BEGIN TRY
+		
 		INSERT INTO TC_EntidadFinanciera(T_EntidadDesc, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
 								VALUES	 (@T_EntidadDesc, @B_Habilitado, 0, @CurrentUserId, @D_FecCre)
+
+		SET @I_EntidadFinanID = SCOPE_IDENTITY();
+
+		INSERT INTO TI_TipoArchivo_EntidadFinanciera(I_EntidadFinanID, I_TipoArchivoID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
+							SELECT @I_EntidadFinanID, I_TipoArchivoID, 0, 0, @CurrentUserId, @D_FecCre
+							FROM TC_TipoArchivo
+
+		COMMIT TRANSACTION
 
 		SET @B_Result = 1
 		SET @T_Message = 'Nuevo registro agregado.'
 	END TRY
 	BEGIN CATCH
+		ROLLBACK TRANSACTION
 		SET @B_Result = 0
 		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
 	END CATCH
-
 END
 GO
 
@@ -750,6 +760,35 @@ BEGIN
 			
 		SET @B_Result = 1
 		SET @T_Message = 'Actualización de datos de correo correcta'
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+END
+GO
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_GrabarTipoArchivosEntidadFinanciera')
+	DROP PROCEDURE [dbo].[USP_I_GrabarTipoArchivosEntidadFinanciera]
+GO
+
+CREATE PROCEDURE [dbo].[USP_I_GrabarTipoArchivosEntidadFinanciera]
+	 @I_EntidadFinanID	int
+	,@D_FecCre			datetime
+	,@CurrentUserId		int
+
+	,@B_Result bit OUTPUT
+	,@T_Message nvarchar(4000) OUTPUT	
+AS
+BEGIN
+  SET NOCOUNT ON
+  	BEGIN TRY
+		INSERT INTO TI_TipoArchivo_EntidadFinanciera(I_EntidadFinanID, I_TipoArchivoID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
+							SELECT @I_EntidadFinanID, I_TipoArchivoID, 0, 0, @CurrentUserId, @D_FecCre
+							FROM TC_TipoArchivo
+
+		SET @B_Result = 1
+		SET @T_Message = 'Nuevo registro agregado.'
 	END TRY
 	BEGIN CATCH
 		SET @B_Result = 0

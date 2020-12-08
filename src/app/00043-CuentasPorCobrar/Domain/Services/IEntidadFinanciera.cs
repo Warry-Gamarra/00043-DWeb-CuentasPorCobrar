@@ -14,6 +14,7 @@ namespace Domain.Services
         EntidadFinanciera Find(int entidadFinanId);
         Response Save(EntidadFinanciera entidadFinanciera, int currentUserId, SaveOption saveOption);
         Response ChangeState(int entidadFinanId, bool currentState, int currentUserId);
+        Response HabilitarArchivos(int entidadFinanId, int currentUserId);
 
     }
 }

@@ -232,3 +232,12 @@ INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado,
 
 INSERT TC_ConceptoPago(T_ConceptoDesc, B_Habilitado, B_Eliminado) VALUES('MATRICULA PREGRADO REGULAR', 1, 0)
 GO
+
+SET IDENTITY_INSERT TC_TipoArchivo ON;
+
+INSERT INTO TC_TipoArchivo (I_TipoArchivoID, T_TipoArchivDesc, B_ArchivoEntrada, B_ArchivoSalida, B_Habilitado, B_Eliminado) VALUES (1, 'DATOS DE ALUMNO', 0, 1, 1, 0)
+INSERT INTO TC_TipoArchivo (I_TipoArchivoID, T_TipoArchivDesc, B_ArchivoEntrada, B_ArchivoSalida, B_Habilitado, B_Eliminado) VALUES (2, 'RELACIÓN DE OBLIGACIONES', 0, 1, 1, 0)
+INSERT INTO TC_TipoArchivo (I_TipoArchivoID, T_TipoArchivDesc, B_ArchivoEntrada, B_ArchivoSalida, B_Habilitado, B_Eliminado) VALUES (3, 'PAGO DE OBLIGACIONES ', 1, 0, 1, 0)
+INSERT INTO TC_TipoArchivo (I_TipoArchivoID, T_TipoArchivDesc, B_ArchivoEntrada, B_ArchivoSalida, B_Habilitado, B_Eliminado) VALUES (4, 'PAGO DE TASAS SIN OBLIGACIONES', 1, 0, 1, 0)
+
+SET IDENTITY_INSERT TC_TipoArchivo OFF;

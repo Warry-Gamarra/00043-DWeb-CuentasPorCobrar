@@ -14,25 +14,29 @@ namespace Domain.Entities
         public int Id { get; set; }
         public string Nombre { get; set; }
         public bool Habilitado { get; set; }
+        public bool ArchivosEntidad { get; set; }
         public DateTime? FechaActualiza { get; set; }
         public Response Response { get; set; }
 
 
 
         private readonly TC_EntidadFinanciera _entFinanRepository;
+        private readonly TI_TipoArchivo_EntidadFinanciera _archivoEntFinanRepository;
 
         public EntidadFinanciera()
         {
             _entFinanRepository = new TC_EntidadFinanciera();
+            _archivoEntFinanRepository = new TI_TipoArchivo_EntidadFinanciera();
             this.Response = new Response() { Value = true };
         }
 
-        public EntidadFinanciera(TC_EntidadFinanciera table)
+        public EntidadFinanciera(TC_EntidadFinanciera table, bool tieneArchivos)
         {
             this.Id = table.I_EntidadFinanID;
             this.Nombre = table.T_EntidadDesc;
             this.Habilitado = table.B_Habilitado;
-            this.FechaActualiza = table.D_FecMod.HasValue ? table.D_FecMod.Value : table.D_FecCre.Value;
+            this.ArchivosEntidad = tieneArchivos;
+            this.FechaActualiza = table.D_FecMod.HasValue ? table.D_FecMod.Value : table.D_FecCre;
             this.Response = new Response() { Value = true };
         }
 
@@ -50,9 +54,16 @@ namespace Domain.Entities
         public List<EntidadFinanciera> Find()
         {
             var result = new List<EntidadFinanciera>();
+            var archivosEntidad = _archivoEntFinanRepository.Find();
             foreach (var item in _entFinanRepository.Find())
             {
-                result.Add(new EntidadFinanciera(item));
+                bool tieneArchivos = false;
+                if (archivosEntidad.Where(x => x.I_EntidadFinanID == item.I_EntidadFinanID).Count() > 0)
+                {
+                    tieneArchivos = true;
+                }
+
+                result.Add(new EntidadFinanciera(item, tieneArchivos));
             }
 
             return result;
@@ -61,16 +72,24 @@ namespace Domain.Entities
         public EntidadFinanciera Find(int entidadFinanId)
         {
             var data = _entFinanRepository.Find(entidadFinanId);
+            var archivosEntidad = _archivoEntFinanRepository.FindByEntityID(entidadFinanId);
+
             if (data != null)
             {
-                return new EntidadFinanciera(data);
+                bool tieneArchivos = false;
+                if (archivosEntidad.Where(x => x.I_EntidadFinanID == data.I_EntidadFinanID).Count() > 0)
+                {
+                    tieneArchivos = true;
+                }
+
+                return new EntidadFinanciera(data, tieneArchivos);
             }
             return new EntidadFinanciera()
             {
                 Response = new Response()
                 {
                     Value = false,
-                    Message = "No se encontraron resultados para el identificador de correo"
+                    Message = "No se encontraron resultados para el identificador de la entidad financiera."
                 }
             };
         }
@@ -97,6 +116,15 @@ namespace Domain.Entities
                 Value = false,
                 Message = "Operación Inváiida."
             };
+        }
+
+        public Response HabilitarArchivos(int entidadFinanId, int currentUserId)
+        {
+            _archivoEntFinanRepository.I_EntidadFinanID = entidadFinanId;
+            _archivoEntFinanRepository.I_UsuarioCre = currentUserId;
+            _archivoEntFinanRepository.D_FecCre = DateTime.Now;
+
+            return new Response(_archivoEntFinanRepository.HabilitarArchivosEntidadFinanciera());
         }
     }
 }
