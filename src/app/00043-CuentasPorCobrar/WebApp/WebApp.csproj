@@ -272,6 +272,7 @@
     <Content Include="Assets\toastr\css\toastr.min.css" />
     <Content Include="Assets\toastr\js\toastr.config.js" />
     <Content Include="Assets\toastr\js\toastr.min.js" />
+    <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Assets\jquery\modernizr-2.6.2.js" />
     <Content Include="Assets\grid-mvc\js\gridmvc.js" />
@@ -292,6 +293,7 @@
     <Compile Include="Controllers\ClasificadoresController.cs" />
     <Compile Include="Controllers\CuentaDepositoController.cs" />
     <Compile Include="Controllers\DependenciaController.cs" />
+    <Compile Include="Controllers\DeudasController.cs" />
     <Compile Include="Controllers\EntidadFinancieraController.cs" />
     <Compile Include="Controllers\EstadosCuentaController.cs" />
     <Compile Include="Controllers\EstructuraArchivoController.cs" />
@@ -389,6 +391,9 @@
     <Content Include="Views\HelpCenter\_ManualesRegistrar.cshtml" />
     <Content Include="Views\EstadosCuenta\Index.cshtml" />
     <Content Include="Views\Pagos\Index.cshtml" />
+    <Content Include="Views\Deudas\Index.cshtml" />
+    <Content Include="Views\EstructuraArchivo\Banco.cshtml" />
+    <Content Include="Views\EstructuraArchivo\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -402,7 +407,6 @@
     <Folder Include="Assets\datatables\js\" />
     <Folder Include="Upload\Alumnos\" />
     <Folder Include="Upload\Tablas\" />
-    <Folder Include="Views\EstructuraArchivo\" />
     <Folder Include="Views\Obligaciones\" />
     <Folder Include="Views\Obligacion\" />
   </ItemGroup>
