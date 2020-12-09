@@ -31,7 +31,7 @@ namespace Data.Tables
 
             try
             {
-                string s_command = @"SELECT * FROM dbo.TC_DependenciaUNFV D LEFT JOIN TC_Facultad F ON D.I_DependenciaID = F.I_DependenciaID";
+                string s_command = @"SELECT * FROM dbo.TC_DependenciaUNFV D B_Eliminado = 0";
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
