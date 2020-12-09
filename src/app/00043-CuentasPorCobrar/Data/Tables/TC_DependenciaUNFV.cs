@@ -46,5 +46,27 @@ namespace Data.Tables
             return result;
         }
 
+        public TC_DependenciaUNFV Find(int dependenciaID)
+        {
+            TC_DependenciaUNFV result;
+
+            try
+            {
+                string s_command = @"SELECT * FROM dbo.TC_DependenciaUNFV D WHERE I_DependenciaID = @I_Dependencia AND B_Eliminado = 0";
+
+                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
+                {
+                    result = _dbConnection.QuerySingleOrDefault<TC_DependenciaUNFV>(s_command, new { I_Dependencia  = dependenciaID }, commandType: CommandType.Text);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
+
+
     }
 }

@@ -91,6 +91,7 @@ namespace WebApp.ViewModels
             this.PersonName = user.Person.Nombre;
             this.Email = user.Person.correo;
             this.DependenciaId = user.Dependencia.Id;
+            this.Dependencia = user.Dependencia.Descripcion;
             this.RoleId = user.Rol.Id;
             this.RoleName = user.Rol.NombreRol;
         }

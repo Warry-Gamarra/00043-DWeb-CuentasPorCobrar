@@ -93,7 +93,6 @@
     <Compile Include="Entities\ResolutionType.cs" />
     <Compile Include="Entities\DocumentType.cs" />
     <Compile Include="Entities\Dependencia.cs" />
-    <Compile Include="Entities\Liabilities.cs" />
     <Compile Include="Entities\RolAplicacion.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="DTO\Response.cs" />

@@ -49,6 +49,10 @@
     <Reference Include="Antlr3.Runtime, Version=3.4.1.9004, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="CL_CustomMail, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\CL_CustomMail.dll</HintPath>
+    </Reference>
     <Reference Include="GridMvc, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Grid.Mvc.3.1.0-ci1036\lib\net40\GridMvc.dll</HintPath>
     </Reference>
@@ -272,6 +276,8 @@
     <Content Include="Assets\toastr\css\toastr.min.css" />
     <Content Include="Assets\toastr\js\toastr.config.js" />
     <Content Include="Assets\toastr\js\toastr.min.js" />
+    <Content Include="bin\CL_CustomMail.dll" />
+    <Content Include="bin\CL_CustomMail.pdb" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Assets\jquery\modernizr-2.6.2.js" />
@@ -309,6 +315,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\AccountModel.cs" />
     <Compile Include="Models\DependenciaModel.cs" />
     <Compile Include="Models\ClasificadorModel.cs" />
     <Compile Include="Models\CuentaDepositoModel.cs" />
@@ -394,6 +401,8 @@
     <Content Include="Views\Deudas\Index.cshtml" />
     <Content Include="Views\EstructuraArchivo\Banco.cshtml" />
     <Content Include="Views\EstructuraArchivo\Index.cshtml" />
+    <Content Include="Views\Account\_AdminResetPassword.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

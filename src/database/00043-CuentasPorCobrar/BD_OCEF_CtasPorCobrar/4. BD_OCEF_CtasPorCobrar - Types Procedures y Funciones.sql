@@ -564,8 +564,8 @@ BEGIN
 	BEGIN TRANSACTION
 	BEGIN TRY
 
-		INSERT INTO TC_DatosUsuario(N_NumDoc, T_NomPersona, T_CorreoUsuario, D_FecRegistro, B_Habilitado)
-			VALUES(@N_NumDoc, @T_NomPersona, @T_CorreoUsuario, @D_FecRegistro, 1)
+		INSERT INTO TC_DatosUsuario(N_NumDoc, T_NomPersona, T_CorreoUsuario, D_FecRegistro, B_Habilitado, B_Eliminado)
+			VALUES(@N_NumDoc, @T_NomPersona, @T_CorreoUsuario, @D_FecRegistro, 1, 0)
 
 		SET @I_DatosUsuarioID = SCOPE_IDENTITY()
 
@@ -594,6 +594,7 @@ CREATE PROCEDURE [dbo].[USP_U_GrabarDatosUsuario]
 	,@N_NumDoc			varchar(15)
 	,@T_NomPersona		varchar(250)
 	,@T_CorreoUsuario	varchar(100)
+	,@I_DependenciaID	int
 	,@D_FecRegistro		datetime
 	,@B_Habilitado		bit
 	,@UserId			int = NULL
@@ -607,6 +608,13 @@ BEGIN
 
 	BEGIN TRANSACTION
 	BEGIN TRY
+		UPDATE  TC_Usuarios
+			SET I_DependenciaID = @I_DependenciaID,
+				D_FecActualiza = @D_FecRegistro,
+				I_UsuarioMod = @CurrentUserId
+		  WHERE	
+				UserId = @UserId
+
 		UPDATE  TC_DatosUsuario 
 			SET	N_NumDoc = @N_NumDoc, 
 				T_NomPersona = @T_NomPersona, 
@@ -620,12 +628,6 @@ BEGIN
 		BEGIN
 			IF NOT EXISTS(SELECT * FROM TI_UsuarioDatosUsuario WHERE UserId = @UserId AND I_DatosUsuarioID = @I_DatosUsuarioID)
 			BEGIN
-				UPDATE	TI_UsuarioDatosUsuario
-					SET	B_Habilitado = 0,
-						D_FecBaja = @D_FecRegistro					
-					WHERE	UserId = @UserId
-						AND B_Habilitado = 1
-
 				INSERT INTO TI_UsuarioDatosUsuario(UserId, I_DatosUsuarioID, D_FecAlta, D_FecBaja, B_Habilitado)
 					VALUES(@UserId, @I_DatosUsuarioID, @D_FecRegistro, NULL, 1)
 			END
