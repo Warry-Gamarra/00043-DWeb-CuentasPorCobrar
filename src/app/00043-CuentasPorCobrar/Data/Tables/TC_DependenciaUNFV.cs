@@ -31,7 +31,7 @@ namespace Data.Tables
 
             try
             {
-                string s_command = @"SELECT * FROM dbo.TC_DependenciaUNFV D B_Eliminado = 0";
+                string s_command = @"SELECT * FROM dbo.TC_DependenciaUNFV D WHERE B_Eliminado = 0";
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
