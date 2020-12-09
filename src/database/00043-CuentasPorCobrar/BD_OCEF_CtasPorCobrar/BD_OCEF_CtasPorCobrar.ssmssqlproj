@@ -16,12 +16,12 @@
           <ApplicationName>Microsoft SQL Server Management Studio - Query</ApplicationName>
         </ConnectionNode>
         <ConnectionNode Name="DESKTOP-B34HJML\SQL_2016E:DESKTOP-B34HJML\gamar">
-          <Created>2020-12-01T04:06:27.3114235-05:00</Created>
+          <Created>2020-12-07T22:08:44.2875749-05:00</Created>
           <Type>SQL</Type>
           <Server>DESKTOP-B34HJML\SQL_2016E</Server>
           <UserName />
           <Authentication>Windows Authentication</Authentication>
-          <InitialDB>BD_UNFV_Repositorio</InitialDB>
+          <InitialDB />
           <LoginTimeout>30</LoginTimeout>
           <ExecutionTimeout>0</ExecutionTimeout>
           <ConnectionProtocol>NotSpecified</ConnectionProtocol>

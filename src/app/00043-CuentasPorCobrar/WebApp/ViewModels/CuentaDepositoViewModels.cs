@@ -12,6 +12,7 @@ namespace WebApp.ViewModels
         public int? Id { get; set; }
         public string EntidadFinanciera { get; set; }
         public string NumeroCuenta { get; set; }
+        public string Observacion { get; set; }
 
         public bool Habilitado { get; set; }
 
@@ -21,6 +22,7 @@ namespace WebApp.ViewModels
             this.Id = cuentaDeposito.I_CtaDepID;
             this.NumeroCuenta = cuentaDeposito.C_NumeroCuenta;
             this.EntidadFinanciera = cuentaDeposito.T_EntidadDesc;
+            this.Observacion = cuentaDeposito.T_Observacion;
             this.Habilitado = cuentaDeposito.Habilitado;
         }
 

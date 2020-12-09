@@ -52,7 +52,7 @@ namespace WebApp.Controllers
 
         public JsonResult ChangeState(int RowID, bool B_habilitado)
         {
-            var result = _cuentaDeposito.ChangeState(RowID, B_habilitado, WebSecurity.CurrentUserId, Url.Action("", ""));
+            var result = _cuentaDeposito.ChangeState(RowID, B_habilitado, WebSecurity.CurrentUserId, Url.Action("ChangeState", "CuentaDeposito"));
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }

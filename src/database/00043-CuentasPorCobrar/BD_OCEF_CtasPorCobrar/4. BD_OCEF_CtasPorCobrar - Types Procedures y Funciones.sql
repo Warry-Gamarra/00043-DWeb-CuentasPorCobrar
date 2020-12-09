@@ -808,6 +808,7 @@ CREATE PROCEDURE [dbo].[USP_I_GrabarCuentaDeposito]
 	 @I_CtaDepositoID	int
 	,@I_EntidadFinanID	int
 	,@C_NumeroCuenta	varchar(50)
+	,@T_Observacion		varchar(500)
 	,@D_FecCre			datetime
 	,@CurrentUserId		int
 
@@ -817,8 +818,8 @@ AS
 BEGIN
   SET NOCOUNT ON
   	BEGIN TRY
-		INSERT INTO TC_CuentaDeposito(I_EntidadFinanID, C_NumeroCuenta, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
-								VALUES	 (@I_EntidadFinanID, @C_NumeroCuenta, 1, 0, @CurrentUserId, @D_FecCre)
+		INSERT INTO TC_CuentaDeposito(I_EntidadFinanID, C_NumeroCuenta, T_Observacion, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
+								VALUES	 (@I_EntidadFinanID, @C_NumeroCuenta, @T_Observacion, 1, 0, @CurrentUserId, @D_FecCre)
 
 		SET @B_Result = 1
 		SET @T_Message = 'Nuevo registro agregado.'
@@ -840,6 +841,7 @@ CREATE PROCEDURE [dbo].[USP_U_GrabarCuentaDeposito]
 	 @I_CtaDepositoID	int
 	,@I_EntidadFinanID	int
 	,@C_NumeroCuenta	varchar(50)
+	,@T_Observacion		varchar(500)
 	,@D_FecMod			datetime
 	,@CurrentUserId		int
 
@@ -852,6 +854,7 @@ BEGIN
 	UPDATE	TC_CuentaDeposito 
 		SET	C_NumeroCuenta = @C_NumeroCuenta
 			, I_EntidadFinanID = @I_EntidadFinanID
+			, T_Observacion = @T_Observacion
 		WHERE I_CtaDepositoID = @I_CtaDepositoID
 			
 		SET @B_Result = 1
