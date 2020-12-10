@@ -6,6 +6,7 @@ using System.Web.Mvc;
 
 namespace WebApp.Controllers
 {
+    [Authorize]
     [Route("consultas/estados-de-cuenta/{action}")]
     public class EstadosCuentaController : Controller
     {

@@ -7,12 +7,13 @@ using System.Web.Mvc;
 namespace WebApp.Controllers
 {
     [Authorize]
-    public class PagosController : Controller
+    public class DeudasController : Controller
     {
-        // GET: Pagos
+        // GET: Deudas
+        [Route("consultas/deudas-registradas")]
         public ActionResult Index()
         {
-            ViewBag.Title = "Pagos Registrados";
+            ViewBag.Title = "Deudas Registradas";
             return View();
         }
     }
