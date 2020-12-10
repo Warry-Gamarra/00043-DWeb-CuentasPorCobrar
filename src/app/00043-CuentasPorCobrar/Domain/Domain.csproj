@@ -73,7 +73,6 @@
   <ItemGroup>
     <Compile Include="DTO\Options.cs" />
     <Compile Include="DTO\Parametro.cs" />
-    <Compile Include="Entities\AccountNumber.cs" />
     <Compile Include="Entities\ClasificadorDeIngreso.cs" />
     <Compile Include="Entities\ConceptoPagoEntity.cs" />
     <Compile Include="Entities\ConceptoPagoPeriodo.cs" />
@@ -90,8 +89,6 @@
     <Compile Include="Entities\PeriodoEntity.cs" />
     <Compile Include="Entities\CtaDepoPeriodoEntity.cs" />
     <Compile Include="Entities\Persona.cs" />
-    <Compile Include="Entities\ResolutionType.cs" />
-    <Compile Include="Entities\DocumentType.cs" />
     <Compile Include="Entities\Dependencia.cs" />
     <Compile Include="Entities\RolAplicacion.cs" />
     <Compile Include="Entities\User.cs" />
