@@ -966,10 +966,6 @@ GO
 
 /*-----------------------------------------------------------*/
 
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_IU_GrabarAlumnosAptos')
-	DROP PROCEDURE [dbo].[USP_IU_GrabarAlumnosAptos]
-GO
-
 IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.DOMAINS WHERE DOMAIN_NAME = 'type_dataAlumno')
 	DROP TYPE [dbo].[type_dataAlumno]
 GO

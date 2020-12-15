@@ -307,7 +307,7 @@ go
 CREATE TABLE TR_Pago_CuentaDeposito
 ( 
 	I_PagoCtaDepID       int IDENTITY ( 1,1 ) ,
-	I_TipPerCtaDepoID    int  NOT NULL ,
+	I_CtaDepositoID      int  NOT NULL ,
 	C_CodOperacion       varchar(50)  NULL ,
 	C_Referencia         varchar(50)  NULL ,
 	C_CodAgencia         varchar(50)  NULL ,
@@ -322,7 +322,7 @@ CREATE TABLE TR_Pago_CuentaDeposito
 	I_UsuarioMod         int  NULL ,
 	D_FecMod             datetime  NULL ,
 	CONSTRAINT PK_PagoCuentaDeposito PRIMARY KEY  CLUSTERED (I_PagoCtaDepID ASC),
-	CONSTRAINT FK_CuentaDepositoTipoPeriodo_PagoCuentaDeposito FOREIGN KEY (I_TipPerCtaDepoID) REFERENCES TC_CuentaDeposito_TipoPeriodo(I_TipPerCtaDepoID)
+	CONSTRAINT FK_CuentaDeposito_PagoCuentaDeposito FOREIGN KEY (I_CtaDepositoID) REFERENCES TC_CuentaDeposito(I_CtaDepositoID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 )
