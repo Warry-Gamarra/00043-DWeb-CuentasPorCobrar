@@ -7,9 +7,9 @@
     <h5 class="modal-title text-center"><i class="fa fa-credit-card">&nbsp;</i> @ViewBag.Title</h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 </div>
-@using (Ajax.BeginForm("Save", "CuentaDeposito", new { area = "" }, new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "div_msg", OnBegin = "Load", OnComplete = "Stop" }))
+@using (Ajax.BeginForm("Save", "CuentaDeposito", new { area = "" }, new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "div_msg", OnBegin = "Load", OnSuccess = "Submited", OnComplete = "Stop" }))
 {
-    @Html.Hidden("Submited", 0)
+    @Html.Hidden("submited", 0)
     @Html.AntiForgeryToken()
     <div class="modal-body">
         <div class="container-fluid">
@@ -53,22 +53,14 @@
     </div>
 }
 
-@section scripts  {
-    <script>
-        $(document).on('ready', function () {
-            $('#btnsubmit').removeClass('disabled');
-        });
+<script>
+    $(document).on('ready', function () {
+        $('#btnsubmit').removeClass('disabled');
+    });
 
-        $("form").submit(function () {
-            var submited = parseInt($("#Submited").val());
-            $(this).submit(function () {
-                if (submited > 0) {
-                    return false;
-                }
-                return true;
-            });
-            $("#Submited").val(submited + 1);
-            return true;
-        });
-    </script>
-}
+    $("form").submit(function () {
+        if (parseInt($("#submited").val()) > 0) {
+            return false;
+        }
+    });
+</script>

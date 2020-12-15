@@ -36,6 +36,12 @@ namespace WebApp.Models
             return new UserRegisterViewModel(_user.Get(userId));
         }
 
+        public Response GetUserState(string username)
+        {
+            return _user.GetUserState(username);
+        }
+
+
         public Response ChangeState(int userId, bool stateValue, int currentUserId, string returnUrl)
         {
             User userRegister = new User()
@@ -76,6 +82,9 @@ namespace WebApp.Models
                     Id = userRegisterViewModel.RoleId,
                 },
                 Dependencia = new Dependencia()
+                {
+                    Id = userRegisterViewModel.DependenciaId
+                }
             };
 
             Response result = _user.Save(user, currentUserId, userRegisterViewModel.UserId.HasValue ? SaveOption.Update : SaveOption.Insert);

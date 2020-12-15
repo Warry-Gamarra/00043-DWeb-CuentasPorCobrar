@@ -17,6 +17,12 @@ function Stop() {
     $('#modal-container').removeAttr('data-backdrop');
 }
 
+function Submited() {
+    console.log("here!!!")
+    var submited = parseInt($("#submited").val());
+    $("#submited").val(submited + 1);
+}
+
 function Begin() {
     $('#loading').show();
     $('#div-resultado').html('');
@@ -56,7 +62,7 @@ function ChangeStateReloadPage(RowID, B_habilitado, ActionName) {
         error: function () {
             $('#loader' + RowID).css("display", "none");
 
-            toastr.error("No se pudo actualizar el estado del usuario. Intente nuevamente en unos segundos.<br /> Si el problema persiste comuníquese con el área de soporte de la aplicación.");
+            toastr.error("No se pudo actualizar el estado. Intente nuevamente en unos segundos.<br /> Si el problema persiste comuníquese con el área de soporte de la aplicación.");
         }
     });
 

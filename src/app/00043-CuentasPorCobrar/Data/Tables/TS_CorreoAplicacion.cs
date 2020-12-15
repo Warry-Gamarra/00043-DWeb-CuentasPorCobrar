@@ -33,7 +33,7 @@ namespace Data.Tables
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
                     string s_command = @"SELECT I_CorreoID, T_DireccionCorreo, T_PasswordCorreo, T_Seguridad, T_HostName, I_Puerto, D_FecUpdate, B_Habilitado 
-                                        FROM TS_CorreoAplicacion;";
+                                        FROM TS_CorreoAplicacion WHERE B_Eliminado = 0;";
 
                     result = _dbConnection.Query<TS_CorreoAplicacion>(s_command, commandType: CommandType.Text).ToList();
                 }

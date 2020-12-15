@@ -15,6 +15,7 @@ namespace Domain.Entities
         public string C_NumeroCuenta { get; set; }
         public int I_EntidadFinanId { get; set; }
         public string T_EntidadDesc { get; set; }
+        public string T_Observacion { get; set; }
         public bool Habilitado { get; set; }
 
         public DateTime? FechaActualiza { get; set; }
@@ -28,14 +29,16 @@ namespace Domain.Entities
             _ctaDepRepository = new TC_CuentaDeposito();
             this.Response = new Response() { Value = true };
         }
+
         public CuentaDeposito(TC_CuentaDeposito table)
         {
             this.I_CtaDepID = table.I_CtaDepositoID;
             this.C_NumeroCuenta = table.C_NumeroCuenta;
             this.I_EntidadFinanId = table.I_EntidadFinanID;
             this.T_EntidadDesc = table.T_EntidadDesc;
+            this.T_Observacion = table.T_Observacion;
             this.Habilitado = table.B_Habilitado;
-            this.FechaActualiza = table.D_FecMod.HasValue ? table.D_FecMod.Value : table.D_FecCre.Value;
+            this.FechaActualiza = table.D_FecMod.HasValue ? table.D_FecMod.Value : table.D_FecCre;
             this.Response = new Response() { Value = true };
         }
 
@@ -72,7 +75,7 @@ namespace Domain.Entities
                 Response = new Response()
                 {
                     Value = false,
-                    Message = "No se encontraron resultados para el identificador de correo"
+                    Message = "No se encontraron resultados para el identificador de la cuenta"
                 }
             };
         }
@@ -82,6 +85,7 @@ namespace Domain.Entities
             _ctaDepRepository.I_CtaDepositoID = cuentaDeposito.I_CtaDepID;
             _ctaDepRepository.I_EntidadFinanID = cuentaDeposito.I_EntidadFinanId;
             _ctaDepRepository.C_NumeroCuenta = cuentaDeposito.C_NumeroCuenta;
+            _ctaDepRepository.T_Observacion = cuentaDeposito.T_Observacion;
             _ctaDepRepository.B_Habilitado = cuentaDeposito.Habilitado;
 
             switch (saveOption)

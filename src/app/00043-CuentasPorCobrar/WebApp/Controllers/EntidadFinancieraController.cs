@@ -51,7 +51,7 @@ namespace WebApp.Controllers
 
         public JsonResult ChangeState(int RowID, bool B_habilitado)
         {
-            var result = _entidadFinanciera.ChangeState(RowID, B_habilitado, WebSecurity.CurrentUserId, Url.Action("", ""));
+            var result = _entidadFinanciera.ChangeState(RowID, B_habilitado, WebSecurity.CurrentUserId, Url.Action("ChangeState", "EntidadFinanciera"));
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
@@ -80,6 +80,14 @@ namespace WebApp.Controllers
             }
             return PartialView("_MsgPartialWR", result);
         }
+
+        public JsonResult HabilitarArchivos(int RowID)
+        {
+            var result = _entidadFinanciera.HabilitarArchivos(RowID, WebSecurity.CurrentUserId, Url.Action("Banco", "EstructuraArchivo", new { id = RowID }));
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
 
     }
 }

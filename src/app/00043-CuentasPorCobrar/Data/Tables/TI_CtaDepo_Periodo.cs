@@ -28,7 +28,7 @@ namespace Data.Tables
 
             try
             {
-                string s_command = @"SELECT c.* FROM dbo.TI_CtaDepo_Periodo c";
+                string s_command = @"SELECT c.* FROM dbo.TI_CtaDepo_Periodo c  WHERE B_Eliminado = 0;";
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {

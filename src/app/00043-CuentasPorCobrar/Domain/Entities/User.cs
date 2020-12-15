@@ -17,6 +17,7 @@ namespace Domain.Entities
     {
         private readonly Webpages_Roles _roleRepository;
         private readonly VW_Usuario _userRepository;
+        private readonly TC_DependenciaUNFV _dependenciaRepository;
 
         public int? UserId { get; set; }
         public string UserName { get; set; }
@@ -30,6 +31,7 @@ namespace Domain.Entities
         {
             _userRepository = new VW_Usuario();
             _roleRepository = new Webpages_Roles();
+            _dependenciaRepository = new TC_DependenciaUNFV();
 
             this.Person = new Persona();
             this.Dependencia = new Dependencia();
@@ -61,9 +63,19 @@ namespace Domain.Entities
         public List<User> Find()
         {
             List<User> users = new List<User>();
+
             foreach (var item in _userRepository.Find())
             {
-                users.Add(new User(item));
+                var tc_dependencia = _dependenciaRepository.Find(item.I_DependenciaID.HasValue ? item.I_DependenciaID.Value : 0);
+
+                if (tc_dependencia != null)
+                {
+                    users.Add(new User(item) { Dependencia = new Dependencia(tc_dependencia) });
+                }
+                else
+                {
+                    users.Add(new User(item));
+                }
             }
 
             return users;
@@ -71,7 +83,18 @@ namespace Domain.Entities
 
         public User Get(int userId)
         {
-            return new User(_userRepository.Find(userId));
+            var vw_usuario = _userRepository.Find(userId);
+            var tc_dependencia = _dependenciaRepository.Find(vw_usuario.I_DependenciaID.HasValue ? vw_usuario.I_DependenciaID.Value : 0);
+
+            if (tc_dependencia != null)
+            {
+                return new User(vw_usuario) { Dependencia = new Dependencia(tc_dependencia) };
+            }
+            else
+            {
+                return new User(vw_usuario);
+            }
+
         }
 
         public Response ChangeState(User userRegister, int currentUserId)
@@ -95,6 +118,7 @@ namespace Domain.Entities
             _userRepository.I_UsuarioCrea = currentUserId;
             _userRepository.D_FecActualiza = DateTime.Now;
             _userRepository.B_Habilitado = true;
+            _userRepository.I_DependenciaID = user.Dependencia.Id;
 
             _userRepository.I_DatosUsuarioID = user.Person.Id;
             _userRepository.T_NomPersona = user.Person.Nombre;
@@ -132,8 +156,10 @@ namespace Domain.Entities
                 new
                 {
                     I_UsuarioCrea = user.I_UsuarioCrea,
+                    I_DependenciaID = user.I_DependenciaID,
                     B_CambiaPassword = false,
-                    B_Habilitado = true
+                    B_Habilitado = true,
+                    B_Eliminado = false
                 });
             string roleName = _roleRepository.Find().SingleOrDefault(x => x.RoleId == roleId).RoleName;
             if (!Roles.IsUserInRole(user.UserName, roleName))
@@ -153,17 +179,25 @@ namespace Domain.Entities
             else
             {
                 ((SimpleMembershipProvider)Membership.Provider).DeleteAccount(user.UserName);
+                Roles.RemoveUserFromRole(user.UserName, roleName);
                 ((SimpleMembershipProvider)Membership.Provider).DeleteUser(user.UserName, true);
 
                 result.Value = false;
-                result.Message = "Ocurrio un error durante la creación de la cuenta";
+                result.Message = "Ocurrio un error durante la creación de la cuenta. " + result.Message;
             }
-            return result; 
+            return result;
         }
 
         private Response UpdateAccount(VW_Usuario user)
         {
-            return new Response(_userRepository.Update());
+            if (user.I_DatosUsuarioID == 0 || !user.I_DatosUsuarioID.HasValue)
+            {
+                return new Response(_userRepository.Insert());
+            }
+            else
+            {
+                return new Response(_userRepository.Update());
+            }
         }
 
 

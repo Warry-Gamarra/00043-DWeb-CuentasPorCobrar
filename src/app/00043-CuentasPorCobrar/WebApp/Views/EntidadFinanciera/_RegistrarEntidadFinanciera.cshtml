@@ -7,12 +7,12 @@
     <h5 class="modal-title text-center"><i class="fa fa-bank">&nbsp;</i> @ViewBag.Title</h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 </div>
-@using (Ajax.BeginForm("Save", "EntidadFinanciera", new { area = "" }, new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "div_msg", OnBegin = "Load", OnComplete = "Stop" }))
+@using (Ajax.BeginForm("Save", "EntidadFinanciera", new { area = "" }, new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "div_msg", OnBegin = "Load", OnSuccess="Submited", OnComplete = "Stop" }))
 {
-    @Html.Hidden("Submited", 0)
     @Html.AntiForgeryToken()
     <div class="modal-body">
-        <div class="container-fluid">
+        <div class="container-fluid mt-3">
+            @Html.Hidden("submited", 0)
             @Html.HiddenFor(model => model.Id)
 
             <div class="form-group row">
@@ -23,16 +23,27 @@
                 </div>
             </div>
             <div class="form-group row">
-                <div class="col-md-12 text-right">
-                    <div class="form-check">
-                        @Html.CheckBoxFor(model => model.Habilitado, new { @class = "form-check-input" })
-                        <label class="form-check-label" for="Habilitado">
-                            Habilitado
-                        </label>
-                    </div>
+                <label class="col-md-4 control-label">@Html.DisplayNameFor(model => model.Habilitado)</label>
+                <div class="col-md-8">
+                    @Html.CheckBoxFor(model => model.Habilitado)
+                    <label class="form-check-label" for="Habilitado">
+                        Habilitar
+                    </label>
                 </div>
             </div>
 
+            <fieldset>
+                <legend class="fa-1x">Archivos de intercambio</legend>
+                <div class="form-group row">
+                    <label class="col-md-4 control-label">@Html.DisplayNameFor(model => model.HabilitarArchivos)</label>
+                    <div class="col-md-8">
+                        @Html.CheckBoxFor(model => model.HabilitarArchivos)
+                        <label class="form-check-label" for="HabilitarArchivos">
+                            Habilitar
+                        </label>
+                    </div>
+                </div>
+            </fieldset>
         </div>
     </div>
 
@@ -44,28 +55,19 @@
                 <div class="indeterminate"></div>
             </div>
         </div>
-
         <button type="submit" class="btn btn-primary" id="btnsubmit"><i class="fa fa-save"></i>&nbsp;Guardar</button>
         <button type="button" class="btn btn-secondary" id="btnCancel" data-dismiss="modal"><i class="fa fa-times-circle-o">&nbsp;</i>Cancelar</button>
     </div>
 }
 
-@section scripts  {
-    <script>
-        $(document).on('ready', function () {
-            $('#btnsubmit').removeClass('disabled');
-        });
+<script>
+    $(document).on('ready', function () {
+        $('#btnsubmit').removeClass('disabled');
+    });
 
-        $("form").submit(function () {
-            var submited = parseInt($("#Submited").val());
-            $(this).submit(function () {
-                if (submited > 0) {
-                    return false;
-                }
-                return true;
-            });
-            $("#Submited").val(submited + 1);
-            return true;
-        });
-    </script>
-}
+    $("form").submit(function () {
+        if (parseInt($("#submited").val()) > 0) {
+            return false;
+        }
+    });
+</script>

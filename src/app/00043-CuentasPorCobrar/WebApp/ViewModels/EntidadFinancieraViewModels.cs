@@ -11,6 +11,7 @@ namespace WebApp.ViewModels
     {
         public int? Id { get; set; }
         public string NombreEntidad { get; set; }
+        public bool ArchivosHabilitados { get; set; }
         public bool Habilitado { get; set; }
         public DateTime FechaActualiza { get; set; }
 
@@ -21,7 +22,8 @@ namespace WebApp.ViewModels
             this.Id = entidadFinanciera.Id;
             this.NombreEntidad = entidadFinanciera.Nombre;
             this.Habilitado = entidadFinanciera.Habilitado;
-            this.FechaActualiza = entidadFinanciera.FechaActualiza.Value.Date;
+            this.ArchivosHabilitados = entidadFinanciera.ArchivosEntidad;
+            this.FechaActualiza = entidadFinanciera.FechaActualiza.HasValue ? entidadFinanciera.FechaActualiza.Value.Date : DateTime.Now.Date;
         }
 
     }
@@ -30,10 +32,16 @@ namespace WebApp.ViewModels
     public class EntidadFinancieraRegistroViewModel
     {
         public int? Id { get; set; }
-        [Display(Name = "Nombre de la Entidad")]
+        [Display(Name = "Nombre de la entidad")]
         [Required]
         public string NombreEntidad { get; set; }
+
+        [Display(Name = "Estado")]
         public bool Habilitado { get; set; }
+
+        [Display(Name = "Tipos de archivo")]
+        public bool HabilitarArchivos { get; set; }
+
 
         public EntidadFinancieraRegistroViewModel() { }
 

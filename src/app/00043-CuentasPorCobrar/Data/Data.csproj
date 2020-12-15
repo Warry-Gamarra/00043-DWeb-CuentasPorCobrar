@@ -92,6 +92,7 @@
     <Compile Include="Tables\TC_Usuario.cs" />
     <Compile Include="Tables\TI_ConceptoPago_Periodo.cs" />
     <Compile Include="Tables\TI_CtaDepo_Periodo.cs" />
+    <Compile Include="Tables\TI_TipoArchivo_EntidadFinanciera.cs" />
     <Compile Include="Tables\Webpages_Roles.cs" />
     <Compile Include="Views\VW_Usuario.cs" />
     <Compile Include="Tables\TS_CorreoAplicacion.cs" />

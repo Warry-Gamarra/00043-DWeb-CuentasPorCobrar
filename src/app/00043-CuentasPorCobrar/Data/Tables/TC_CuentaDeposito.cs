@@ -16,6 +16,7 @@ namespace Data.Tables
         public int I_EntidadFinanID { get; set; }
         public string T_EntidadDesc { get; set; }
         public string C_NumeroCuenta { get; set; }
+        public string T_Observacion { get; set; }
         public bool B_Habilitado { get; set; }
         public bool B_Eliminado { get; set; }
         public int? I_UsuarioCre { get; set; }
@@ -33,8 +34,8 @@ namespace Data.Tables
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
                     var s_command = @"SELECT CD.I_CtaDepositoID, CD.C_NumeroCuenta, CD.I_EntidadFinanID, CD.B_Habilitado, CD.B_Eliminado, CD.I_UsuarioCre, CD.D_FecCre, CD.I_UsuarioMod, 
-                                        CD.D_FecMod, EF.T_EntidadDesc 
-                                        FROM TC_CuentaDeposito CD INNER JOIN TC_EntidadFinanciera EF ON CD.I_EntidadFinanID = EF.I_EntidadFinanID ;";
+                                        CD.D_FecMod, EF.T_EntidadDesc, CD.T_Observacion  
+                                        FROM TC_CuentaDeposito CD INNER JOIN TC_EntidadFinanciera EF ON CD.I_EntidadFinanID = EF.I_EntidadFinanID  WHERE B_Eliminado = 0;";
 
                     result = _dbConnection.Query<TC_CuentaDeposito>(s_command, commandType: CommandType.Text).ToList();
                 }
@@ -56,9 +57,9 @@ namespace Data.Tables
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
                     var s_command = @"SELECT CD.I_CtaDepositoID, CD.C_NumeroCuenta, CD.I_EntidadFinanID, CD.B_Habilitado, CD.B_Eliminado, CD.I_UsuarioCre, CD.D_FecCre, CD.I_UsuarioMod,
-                                        CD.D_FecMod, EF.T_EntidadDesc 
+                                        CD.D_FecMod, EF.T_EntidadDesc, CD.T_Observacion 
                                       FROM TC_CuentaDeposito CD INNER JOIN TC_EntidadFinanciera EF ON CD.I_EntidadFinanID = EF.I_EntidadFinanID
-                                      WHERE CD.I_CtaDepositoID = @I_CtaDepositoID ;";
+                                      WHERE CD.I_CtaDepositoID = @I_CtaDepositoID AND B_Eliminado = 0;";
 
                     result = _dbConnection.QueryFirstOrDefault<TC_CuentaDeposito>(s_command, new { I_CtaDepositoID = cuentaDepositoId }, commandType: CommandType.Text);
                 }
@@ -114,6 +115,7 @@ namespace Data.Tables
                     parameters.Add(name: "I_CtaDepositoID", dbType: DbType.Int32, value: this.I_CtaDepositoID);
                     parameters.Add(name: "I_EntidadFinanID", dbType: DbType.Int32, value: this.I_EntidadFinanID);
                     parameters.Add(name: "C_NumeroCuenta", dbType: DbType.String, size: 50, value: this.C_NumeroCuenta);
+                    parameters.Add(name: "T_Observacion", dbType: DbType.String, size: 500, value: this.T_Observacion);
                     parameters.Add(name: "D_FecCre", dbType: DbType.DateTime, value: this.D_FecCre);
                     parameters.Add(name: "CurrentUserId", dbType: DbType.Int32, value: currentUserId);
 
@@ -147,6 +149,7 @@ namespace Data.Tables
                     parameters.Add(name: "I_CtaDepositoID", dbType: DbType.Int32, value: this.I_CtaDepositoID);
                     parameters.Add(name: "I_EntidadFinanID", dbType: DbType.Int32, value: this.I_EntidadFinanID);
                     parameters.Add(name: "C_NumeroCuenta", dbType: DbType.String, size: 50, value: this.C_NumeroCuenta);
+                    parameters.Add(name: "T_Observacion", dbType: DbType.String, size: 500, value: this.T_Observacion);
                     parameters.Add(name: "D_FecMod", dbType: DbType.DateTime, value: this.D_FecMod);
                     parameters.Add(name: "CurrentUserId", dbType: DbType.Int32, value: currentUserId);
 

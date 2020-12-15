@@ -12,7 +12,7 @@ body {
   background: linear-gradient(to right, #434343, #000000); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
-.container {
+.login-container {
   width: 100vw;
   height: 100vh;
   display: grid;
@@ -45,12 +45,12 @@ body {
   margin-right: -2rem;
 }
 
-form {
+.login-container form {
   width: 360px;
   margin: auto;
 }
 
-form h1 {
+.login-container form h1 {
   font-size: 1.5rem;
   text-transform: uppercase;
   margin: 25px 0;
@@ -118,7 +118,7 @@ form h1 {
   font-size: 16px;
   transition: 0.3s;
 }
-.input {
+.login-container .input {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -171,7 +171,7 @@ a {
 a:hover {
   color: #ff8330;
 }
-.btn {
+.login-container .btn {
   display: block;
   width: 100%;
   height: 50px;
@@ -188,7 +188,7 @@ a:hover {
   font-family: "Poppins", sans-serif;
   transition: 0.5s;
 }
-.btn:hover {
+.login-container .btn:hover {
   background-position: right;
   background: #ff6016;
 }
@@ -211,12 +211,17 @@ a:hover {
   }
 }
 
+.modal {
+    font-family: "Calibri", sans-serif;
+}
+
+
 @media screen and (max-width: 1000px) {
-  form {
+  .login-container form {
     width: 290px;
   }
 
-  form h1 {
+  .login-container form h1 {
     font-size: 1.4rem;
     margin: 8px 0;
   }

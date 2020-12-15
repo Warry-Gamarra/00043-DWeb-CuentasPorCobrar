@@ -1,5 +1,5 @@
 ﻿using Domain.DTO;
-using Domain.Entities;
+using Domain.Helpers;
 using Domain.Services;
 using System;
 using System.Collections.Generic;
@@ -16,11 +16,13 @@ namespace WebApp.Controllers
     [Authorize]
     public class AccountController : Controller
     {
-        private readonly IUser _users;
+        private readonly UsersModel _usersModel;
+        private readonly AccountModel _accountModel;
 
         public AccountController()
         {
-            _users = new User();
+            _usersModel = new UsersModel();
+            _accountModel = new AccountModel();
         }
 
 
@@ -43,6 +45,7 @@ namespace WebApp.Controllers
         }
 
         [AllowAnonymous]
+        [Route("account/login")]
         public ActionResult Login(string returnUrl)
         {
             if (User.Identity.IsAuthenticated)
@@ -66,6 +69,7 @@ namespace WebApp.Controllers
             return View();
         }
 
+        [Route("logout")]
         public ActionResult LogOut()
         {
             WebSecurity.Logout();
@@ -77,6 +81,8 @@ namespace WebApp.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
+        [Route("account/login")]
+
         public ActionResult Login(LoginViewModel model, string returnUrl)
         {
             if (User.Identity.IsAuthenticated)
@@ -84,7 +90,7 @@ namespace WebApp.Controllers
                 WebSecurity.Logout();
             }
 
-            var usuarioResponse = _users.GetUserState(model.UserName);
+            var usuarioResponse = _usersModel.GetUserState(model.UserName);
             if (string.IsNullOrEmpty(usuarioResponse.Message))
             {
                 if (ModelState.IsValid && WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe))
@@ -102,6 +108,7 @@ namespace WebApp.Controllers
 
 
         [AllowAnonymous]
+        [Route("seguridad/recuperar-password")]
         public ActionResult RecuperarPassword()
         {
             return PartialView("_ResetPassword");
@@ -111,6 +118,7 @@ namespace WebApp.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AllowAnonymous]
+        [Route("seguridad/recuperar-password")]
         public ActionResult RecuperarPassword(ResetPasswordViewModel model)
         {
             var result = new Response();
@@ -118,7 +126,7 @@ namespace WebApp.Controllers
             if (WebSecurity.UserExists(model.UserName))
             {
                 var s_token = WebSecurity.GeneratePasswordResetToken(model.UserName);
-                //result = BL_Accounts.SendPasswordTokenMail(model, Url.Action("ResetPassword", "Account", new { token = s_token }, "http"));
+                result = _accountModel.SendPasswordTokenMail(model, Url.Action("ResetPassword", "Account", new { token = s_token }, "http"));
 
                 result.CurrentID = "display:none;";
             }
@@ -139,7 +147,7 @@ namespace WebApp.Controllers
             if (TokenOwnerID != -1)
             {
                 ViewBag.Token = token;
-                //ViewBag.Usuario = BL_Users.ObtenerUsuarios(TokenOwnerID).usuario;
+                ViewBag.Usuario = _usersModel.Find(TokenOwnerID).UserName;
                 return View();
             }
             else
@@ -162,7 +170,7 @@ namespace WebApp.Controllers
             {
                 try
                 {
-                    //result = BL_Accounts.ResetPassword(TokenOwnerID, ReturnToken, model.NewPassword, true, Url.Action("Index", "Home", new { area = "" }, "http"));
+                    result = _accountModel.ResetPassword(TokenOwnerID, ReturnToken, model.NewPassword, true, Url.Action("Index", "Home", new { area = "" }, "http"));
                     result.CurrentID = "display:none;";
                 }
                 catch (Exception ex)
@@ -188,6 +196,7 @@ namespace WebApp.Controllers
         }
 
 
+        [Route("seguridad/cambiar-password")]
         public ActionResult CambiarPassword()
         {
             return PartialView("_ChangePassword");
@@ -251,55 +260,56 @@ namespace WebApp.Controllers
 
 
         [Authorize(Roles = "Administrador")]
+        [Route("seguridad/reiniciar-password")]
         public ActionResult AdminResetPassword(int id)
         {
-            var model = _users.Get(id);
+            var model = _usersModel.Find().Find(x => x.UserId == id);
             return PartialView("_AdminResetPassword", model);
         }
 
 
-        //[HttpPost]
-        //[Authorize(Roles = "Administrador")]
-        //public ActionResult GrabarAdminResetPassword(UsuarioViewModel model, int rbtnTipReset, string NewPass, bool chkSendMail)
-        //{
-        //    var result = new ResponseViewModel();
+        [HttpPost]
+        [Authorize(Roles = "Administrador")]
+        public ActionResult GrabarAdminResetPassword(UserViewModel model, int rbtnTipReset, string NewPass, bool chkSendMail)
+        {
+            var result = new Response();
 
-        //    if (WebSecurity.UserExists(model.usuario))
-        //    {
-        //        string s_token = WebSecurity.GeneratePasswordResetToken(model.usuario);
-        //        string newpass = "ocrh@unfv";
+            if (WebSecurity.UserExists(model.UserName))
+            {
+                string s_token = WebSecurity.GeneratePasswordResetToken(model.UserName);
+                string newpass = "ocef@unfv";
 
-        //        switch (rbtnTipReset)
-        //        {
-        //            case 1:
-        //                newpass = RandomPassword.Generate(8, RandomPassword.PASSWORD_CHARS_ALPHANUMERIC);
-        //                break;
-        //            case 2:
-        //                newpass = string.IsNullOrEmpty(NewPass) ? newpass : NewPass;
-        //                break;
-        //            default:
-        //                break;
-        //        }
+                switch (rbtnTipReset)
+                {
+                    case 1:
+                        newpass = RandomPassword.Generate(8, RandomPassword.PASSWORD_CHARS_ALPHANUMERIC);
+                        break;
+                    case 2:
+                        newpass = string.IsNullOrEmpty(NewPass) ? newpass : NewPass;
+                        break;
+                    default:
+                        break;
+                }
 
-        //        if (!chkSendMail)
-        //        {
-        //            model.correo = "";
-        //        }
+                if (!chkSendMail)
+                {
+                    model.Email = "";
+                }
 
-        //        result = BL_Accounts.ResetPassword(WebSecurity.GetUserIdFromPasswordResetToken(s_token), s_token, newpass, chkSendMail, Url.Action("ResetPassword", "Account", new { token = s_token }, "http"));
+                result = _accountModel.ResetPassword(WebSecurity.GetUserIdFromPasswordResetToken(s_token), s_token, newpass, chkSendMail, Url.Action("ResetPassword", "Account", new { token = s_token }, "http"));
 
-        //        result.CurrentID = "display:none;";
-        //    }
-        //    else
-        //    {
-        //        result.color = "danger";
-        //        result.icon = "fa-times-circle";
-        //        result.message = "No pudo identificarse al usuario.";
-        //        result.CurrentID = "display:none;";
-        //    }
+                result.CurrentID = "display:none;";
+            }
+            else
+            {
+                result.Color = "danger";
+                result.Icon = "fa-times-circle";
+                result.Message = "No pudo identificarse al usuario.";
+                result.CurrentID = "display:none;";
+            }
 
-        //    return PartialView("_MsgModalBodyPartial", result);
-        //}
+            return PartialView("_MsgModalBodyPartial", result);
+        }
 
 
     }

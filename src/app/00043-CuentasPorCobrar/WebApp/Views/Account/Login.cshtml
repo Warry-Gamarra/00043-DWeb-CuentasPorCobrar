@@ -13,16 +13,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="shortcut icon" href="~/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="favicon.ico">
+    <link rel="icon" href="~/favicon.ico">
     <title>.:: UNFV - Sistema de Cuentas Por Cobrar ::.</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet" />
+    <link href="@Url.Content("~/Assets/bootstrap/css/bootstrap.min.css")" rel="stylesheet" />
     <link href="@Url.Content("~/Assets/font-awesome/css/font-awesome.css")" rel="stylesheet" />
     <link href="@Url.Content("~/Assets/application/css/login.css")" rel="stylesheet" />
     <link href="@Url.Content("~/Assets/application/css/loaders.css")" rel="stylesheet" />
 </head>
 <body>
-    <div class="container">
+    <div class="login-container">
         <div class="login-content">
             @using (Html.BeginForm("Login", "Account", new { returnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-signin" }))
             {
@@ -64,7 +65,7 @@
                     <span id="loading" class="spinner-border spinner-border-md" style="margin-right: .5em; display:none;" role="status" aria-hidden="true"></span>
                     Ingresar
                 </button>
-                <a href="@Url.Action("RecuperarPassword", "Account")">¿Olvidó su contraseña?</a>
+                <a href="@Url.Action("RecuperarPassword", "Account")" class="modal-link">¿Olvidó su contraseña?</a>
                 <br />
             }
         </div>
@@ -73,20 +74,48 @@
         </div>
     </div>
 
+    <div class="modal fade" id="modal-container" tabindex="-1" role="dialog" aria-labelledby="modal-container-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <p style="margin:50px;" class="text-center text-muted"><i class="fa fa-spin fa-3x fa-cog"></i></p>
+            </div>
+        </div>
+    </div>
+
+
     <script src="@Url.Content("~/Assets/jquery/jquery-3.3.1.min.js")"></script>
     <script src="@Url.Content("~/Assets/jquery/jquery.validate.js")"></script>
     <script src="@Url.Content("~/Assets/jquery/jquery.validate.unobtrusive.js")"></script>
     <script src="@Url.Content("~/Assets/jquery/jquery.unobtrusive-ajax.js")"></script>
+    <script src="@Url.Content("~/Assets/bootstrap/js/bootstrap.min.js")"></script>
     <script src="@Url.Content("~/Assets/application/js/login.js")"></script>
 
     <script>
-        $('form').on('submit', function () {
+        $('form.form-signin').on('submit', function () {
             $('#loading').show();
             if ($('#UserName').val() === '' || $('#Password').val() === '') {
                 $('#loading').hide();
             }
         });
-    </script>
 
+        $('body').on('click', '.modal-link', function (e) {
+            e.preventDefault();
+            $(this).attr('data-target', '#modal-container');
+            $(this).attr('data-toggle', 'modal');
+        });
+
+        $('#modal-container').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var url = button.attr("href");
+            var modal = $(this);
+            modal.find('.modal-content').load(url);
+        });
+
+        $('#modal-container').on('hide.bs.modal', function () {
+            $(this).removeData('bs.modal');
+            $('#modal-container .modal-content').html('<p style="margin:50px;" class="text-center text-muted"><i class="fa fa-spin fa-3x fa-cog"></i></p>');
+        });
+
+    </script>
 </body>
 </html>

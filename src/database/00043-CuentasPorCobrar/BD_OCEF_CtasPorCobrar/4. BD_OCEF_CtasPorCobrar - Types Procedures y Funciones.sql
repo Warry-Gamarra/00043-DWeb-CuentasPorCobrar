@@ -564,8 +564,8 @@ BEGIN
 	BEGIN TRANSACTION
 	BEGIN TRY
 
-		INSERT INTO TC_DatosUsuario(N_NumDoc, T_NomPersona, T_CorreoUsuario, D_FecRegistro, B_Habilitado)
-			VALUES(@N_NumDoc, @T_NomPersona, @T_CorreoUsuario, @D_FecRegistro, 1)
+		INSERT INTO TC_DatosUsuario(N_NumDoc, T_NomPersona, T_CorreoUsuario, D_FecRegistro, B_Habilitado, B_Eliminado)
+			VALUES(@N_NumDoc, @T_NomPersona, @T_CorreoUsuario, @D_FecRegistro, 1, 0)
 
 		SET @I_DatosUsuarioID = SCOPE_IDENTITY()
 
@@ -594,6 +594,7 @@ CREATE PROCEDURE [dbo].[USP_U_GrabarDatosUsuario]
 	,@N_NumDoc			varchar(15)
 	,@T_NomPersona		varchar(250)
 	,@T_CorreoUsuario	varchar(100)
+	,@I_DependenciaID	int
 	,@D_FecRegistro		datetime
 	,@B_Habilitado		bit
 	,@UserId			int = NULL
@@ -607,6 +608,13 @@ BEGIN
 
 	BEGIN TRANSACTION
 	BEGIN TRY
+		UPDATE  TC_Usuarios
+			SET I_DependenciaID = @I_DependenciaID,
+				D_FecActualiza = @D_FecRegistro,
+				I_UsuarioMod = @CurrentUserId
+		  WHERE	
+				UserId = @UserId
+
 		UPDATE  TC_DatosUsuario 
 			SET	N_NumDoc = @N_NumDoc, 
 				T_NomPersona = @T_NomPersona, 
@@ -620,12 +628,6 @@ BEGIN
 		BEGIN
 			IF NOT EXISTS(SELECT * FROM TI_UsuarioDatosUsuario WHERE UserId = @UserId AND I_DatosUsuarioID = @I_DatosUsuarioID)
 			BEGIN
-				UPDATE	TI_UsuarioDatosUsuario
-					SET	B_Habilitado = 0,
-						D_FecBaja = @D_FecRegistro					
-					WHERE	UserId = @UserId
-						AND B_Habilitado = 1
-
 				INSERT INTO TI_UsuarioDatosUsuario(UserId, I_DatosUsuarioID, D_FecAlta, D_FecBaja, B_Habilitado)
 					VALUES(@UserId, @I_DatosUsuarioID, @D_FecRegistro, NULL, 1)
 			END
@@ -677,18 +679,28 @@ CREATE PROCEDURE [dbo].[USP_I_GrabarEntidadFinanciera]
 AS
 BEGIN
   SET NOCOUNT ON
+	BEGIN TRANSACTION
   	BEGIN TRY
+		
 		INSERT INTO TC_EntidadFinanciera(T_EntidadDesc, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
 								VALUES	 (@T_EntidadDesc, @B_Habilitado, 0, @CurrentUserId, @D_FecCre)
+
+		SET @I_EntidadFinanID = SCOPE_IDENTITY();
+
+		INSERT INTO TI_TipoArchivo_EntidadFinanciera(I_EntidadFinanID, I_TipoArchivoID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
+							SELECT @I_EntidadFinanID, I_TipoArchivoID, 0, 0, @CurrentUserId, @D_FecCre
+							FROM TC_TipoArchivo
+
+		COMMIT TRANSACTION
 
 		SET @B_Result = 1
 		SET @T_Message = 'Nuevo registro agregado.'
 	END TRY
 	BEGIN CATCH
+		ROLLBACK TRANSACTION
 		SET @B_Result = 0
 		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
 	END CATCH
-
 END
 GO
 
@@ -758,6 +770,35 @@ BEGIN
 END
 GO
 
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_GrabarTipoArchivosEntidadFinanciera')
+	DROP PROCEDURE [dbo].[USP_I_GrabarTipoArchivosEntidadFinanciera]
+GO
+
+CREATE PROCEDURE [dbo].[USP_I_GrabarTipoArchivosEntidadFinanciera]
+	 @I_EntidadFinanID	int
+	,@D_FecCre			datetime
+	,@CurrentUserId		int
+
+	,@B_Result bit OUTPUT
+	,@T_Message nvarchar(4000) OUTPUT	
+AS
+BEGIN
+  SET NOCOUNT ON
+  	BEGIN TRY
+		INSERT INTO TI_TipoArchivo_EntidadFinanciera(I_EntidadFinanID, I_TipoArchivoID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
+							SELECT @I_EntidadFinanID, I_TipoArchivoID, 0, 0, @CurrentUserId, @D_FecCre
+							FROM TC_TipoArchivo
+
+		SET @B_Result = 1
+		SET @T_Message = 'Nuevo registro agregado.'
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+END
+GO
+
 
 /*-------------------------- */
 
@@ -769,6 +810,7 @@ CREATE PROCEDURE [dbo].[USP_I_GrabarCuentaDeposito]
 	 @I_CtaDepositoID	int
 	,@I_EntidadFinanID	int
 	,@C_NumeroCuenta	varchar(50)
+	,@T_Observacion		varchar(500)
 	,@D_FecCre			datetime
 	,@CurrentUserId		int
 
@@ -778,8 +820,8 @@ AS
 BEGIN
   SET NOCOUNT ON
   	BEGIN TRY
-		INSERT INTO TC_CuentaDeposito(I_EntidadFinanID, C_NumeroCuenta, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
-								VALUES	 (@I_EntidadFinanID, @C_NumeroCuenta, 1, 0, @CurrentUserId, @D_FecCre)
+		INSERT INTO TC_CuentaDeposito(I_EntidadFinanID, C_NumeroCuenta, T_Observacion, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
+								VALUES	 (@I_EntidadFinanID, @C_NumeroCuenta, @T_Observacion, 1, 0, @CurrentUserId, @D_FecCre)
 
 		SET @B_Result = 1
 		SET @T_Message = 'Nuevo registro agregado.'
@@ -801,6 +843,7 @@ CREATE PROCEDURE [dbo].[USP_U_GrabarCuentaDeposito]
 	 @I_CtaDepositoID	int
 	,@I_EntidadFinanID	int
 	,@C_NumeroCuenta	varchar(50)
+	,@T_Observacion		varchar(500)
 	,@D_FecMod			datetime
 	,@CurrentUserId		int
 
@@ -813,6 +856,7 @@ BEGIN
 	UPDATE	TC_CuentaDeposito 
 		SET	C_NumeroCuenta = @C_NumeroCuenta
 			, I_EntidadFinanID = @I_EntidadFinanID
+			, T_Observacion = @T_Observacion
 		WHERE I_CtaDepositoID = @I_CtaDepositoID
 			
 		SET @B_Result = 1

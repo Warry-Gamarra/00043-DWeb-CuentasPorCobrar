@@ -15,6 +15,7 @@ namespace Data.Tables
         public int UserId { get; set; }
         public string UserName { get; set; }
         public int? I_UsuarioCrea { get; set; }
+        public int? I_DependenciaID { get; set; }
         public DateTime? D_FecActualiza { get; set; }
         public bool B_CambiaPassword { get; set; }
         public bool B_Habilitado { get; set; }

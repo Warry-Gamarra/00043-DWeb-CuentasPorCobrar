@@ -1,0 +1,33 @@
+﻿@*@model IEnumerable<WebApp.ViewModels.EntidadFinancieraViewModel>*@
+@using GridMvc.Html
+
+<div class="container-fluid">
+    <div class="col-12">
+        <section class="content-header">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb float-right small d-none d-sm-inline-flex">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")"><i class="fa fa-home">&nbsp;</i>Inicio</a></li>
+                    <li class="breadcrumb-item"><span><i class="fa fa-cogs">&nbsp;</i>Configuración </span></li>
+                    <li class="breadcrumb-item active"><span><i class="fa fa-file-text">&nbsp;</i>@ViewBag.Title </span></li>
+                </ol>
+            </nav>
+            <h1 class="">@ViewBag.Title <small></small></h1>
+        </section>
+    </div>
+    <br />
+
+    <div class="col-12">
+        <a href="@Url.Action("Create", "EntidadFinanciera")" class="btn btn-primary float-right modal-link">
+            <i class="fa fa-plus-circle"></i> Agregar Entidad Financiera
+        </a>
+
+        <p class="h3"><small>Entidades Financieras Registradas</small></p>
+        <br />
+
+        <br />
+        <div class="table-responsive" style="min-height:350px">
+
+        </div>
+    </div>
+</div>
+

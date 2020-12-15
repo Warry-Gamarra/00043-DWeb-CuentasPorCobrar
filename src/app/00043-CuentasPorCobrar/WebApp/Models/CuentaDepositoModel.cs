@@ -24,7 +24,10 @@ namespace WebApp.Models
 
             foreach (var item in _cuentaDeposito.Find())
             {
-                result.Add(new CuentaDepositoViewModel(item));
+                result.Add(new CuentaDepositoViewModel(item)
+                {
+                    Observacion = string.IsNullOrEmpty(item.T_Observacion) ? "(Ninguna)" : item.T_Observacion
+                });
             }
 
             return result;
@@ -52,6 +55,7 @@ namespace WebApp.Models
                 I_CtaDepID = model.Id.HasValue ? model.Id.Value : 0,
                 C_NumeroCuenta = model.NumeroCuenta,
                 I_EntidadFinanId = model.EntidadFinancieraId,
+                T_Observacion = model.Observacion,
                 Habilitado = true,
                 FechaActualiza = DateTime.Now
             };

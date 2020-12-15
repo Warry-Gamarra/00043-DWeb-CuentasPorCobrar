@@ -30,7 +30,7 @@ namespace Data.Views
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
                     string s_command = @"SELECT U.UserId, U.UserName, U.I_UsuarioCrea, U.D_FecActualiza, U.B_CambiaPassword, U.B_Habilitado, DU.I_DatosUsuarioID, DU.N_NumDoc, 
-                                                DU.T_NomPersona, DU.T_CorreoUsuario, UDU.D_FecAlta, UIR.RoleId, R.RoleName
+                                                DU.T_NomPersona, DU.T_CorreoUsuario, UDU.D_FecAlta, UIR.RoleId, R.RoleName, U.I_DependenciaID
                                            FROM [dbo].[TC_Usuarios] U
                                                 INNER JOIN [dbo].[webpages_UsersInRoles] UIR ON U.UserId = UIR.UserId
 	                                            INNER JOIN [dbo].[webpages_Roles] R ON UIR.RoleId = R.RoleId
@@ -56,7 +56,7 @@ namespace Data.Views
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
                     string s_command = @"SELECT U.UserId, U.UserName, U.I_UsuarioCrea, U.D_FecActualiza, U.B_CambiaPassword, U.B_Habilitado, DU.I_DatosUsuarioID, DU.N_NumDoc, 
-                                                DU.T_NomPersona, DU.T_CorreoUsuario, UDU.D_FecAlta, UIR.RoleId, R.RoleName
+                                                DU.T_NomPersona, DU.T_CorreoUsuario, UDU.D_FecAlta, UIR.RoleId, R.RoleName, U.I_DependenciaID
                                            FROM [dbo].[TC_Usuarios] U
                                                 INNER JOIN [dbo].[webpages_UsersInRoles] UIR ON U.UserId = UIR.UserId
 	                                            INNER JOIN [dbo].[webpages_Roles] R ON UIR.RoleId = R.RoleId
@@ -84,10 +84,11 @@ namespace Data.Views
             {
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    parameters.Add(name: "I_DatosUsuarioID", dbType: DbType.Int16, value: this.I_DatosUsuarioID);
+                    parameters.Add(name: "I_DatosUsuarioID", dbType: DbType.Int32, value: this.I_DatosUsuarioID);
                     parameters.Add(name: "N_NumDoc", dbType: DbType.String, size: 50, value: this.N_NumDoc);
                     parameters.Add(name: "T_NomPersona", dbType: DbType.String, size: 500, value: this.T_NomPersona);
                     parameters.Add(name: "T_CorreoUsuario", dbType: DbType.String, size: 50, value: this.T_CorreoUsuario);
+                    parameters.Add(name: "I_DependenciaID", dbType: DbType.Int32, value: this.I_DependenciaID);
                     parameters.Add(name: "D_FecRegistro", dbType: DbType.DateTime, size: 500, value: this.D_FecActualiza);
                     parameters.Add(name: "B_Habilitado", dbType: DbType.Boolean, value: this.B_Habilitado);
                     parameters.Add(name: "UserId", dbType: DbType.Int32, value: this.UserId);

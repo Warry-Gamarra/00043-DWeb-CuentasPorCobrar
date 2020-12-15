@@ -32,7 +32,7 @@ namespace Data.Tables
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
                     string s_command = @"SELECT I_EntidadFinanID, T_EntidadDesc, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, I_UsuarioMod, D_FecMod 
-                                        FROM TC_EntidadFinanciera;";
+                                        FROM TC_EntidadFinanciera WHERE B_Eliminado = 0;";
 
                     result = _dbConnection.Query<TC_EntidadFinanciera>(s_command, commandType: CommandType.Text).ToList();
                 }

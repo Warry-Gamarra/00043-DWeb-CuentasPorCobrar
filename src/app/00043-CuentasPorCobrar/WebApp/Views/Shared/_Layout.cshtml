@@ -3,6 +3,9 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="shortcut icon" href="~/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="~/favicon.ico">
     <title>.:: @ViewBag.Title - Sistema de Cuentas por Cobrar ::.</title>
     @Styles.Render("~/content/css")
     @Styles.Render("~/content/datetime")
@@ -15,51 +18,61 @@
 <body class="sidebar-collapse">
     <header>
         <nav class="navbar navbar-expand navbar-light bg-light-gray">
-            <a class="sidebar-toggle" href="javascript:;" id="toggle-menu"><i class="fa fa-bars"></i></a>
-            <a class="navbar-brand" href="#">
-                <img class="img-fluid" style="max-width: 130px;" src="~/Assets/images/logo.png" alt="UNFV">
-            </a>
-            <a class="navbar-brand navbar-title d-none d-sm-inline-block" href="" rel="home" title="Universidad Nacional Federico Villarreal">
-                Sistema de Cuentas por Cobrar
-            </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            @if (Request.IsAuthenticated)
+            {
+                <a class="sidebar-toggle" href="javascript:;" id="toggle-menu"><i class="fa fa-bars"></i></a>
+            }
 
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav ml-auto">
-                    <!-- <li class="nav-item">
+            <a class="navbar-brand" href="#">
+                    <img class="img-fluid" style="max-width: 130px;" src="~/Assets/images/logo.png" alt="UNFV">
+                </a>
+                <a class="navbar-brand navbar-title d-none d-sm-inline-block" href="" rel="home" title="Universidad Nacional Federico Villarreal">
+                    Sistema de Cuentas por Cobrar
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                @if (Request.IsAuthenticated)
+                {
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav ml-auto">
+                            <!-- <li class="nav-item">
                       <a class="nav-link" href="#"><i class="fa fa-bell"></i></a>
                     </li> -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-                           aria-haspopup="true" aria-expanded="false">
-                            <i class="fa fa-user-circle-o">&nbsp;</i> @User.Identity.Name
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item modal-link" href="@Url.Action("CambiarPassword", "Account", new { area = "" })"><i class="fa fa-fw fa-key">&nbsp;</i>Cambiar Contraseña</a>
-                            <a class="dropdown-item" href="@Url.Action("Index","HelpCenter")"><i class="fa fa-fw fa-life-ring">&nbsp;</i>Ayuda</a>
-                            <div class="dropdown-divider"></div>
-                            @using (Html.BeginForm("LogOut", "Account", new { area = "" }, FormMethod.Post, new { id = "LogOutForm", @class = "text-center" }))
-                            {
-                                @Html.AntiForgeryToken()
-                                <a class="dropdown-item" href="javascript:document.getElementById('LogOutForm').submit()">
-                                    <i class="fa fa-fw fa-power-off">&nbsp;</i>Cerrar Sesión
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                                   aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-user-circle-o">&nbsp;</i> @User.Identity.Name
                                 </a>
-                            }
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item modal-link" href="@Url.Action("CambiarPassword", "Account", new { area = "" })"><i class="fa fa-fw fa-key">&nbsp;</i>Cambiar Contraseña</a>
+                                    <a class="dropdown-item" href="@Url.Action("Index", "HelpCenter")"><i class="fa fa-fw fa-life-ring">&nbsp;</i>Ayuda</a>
+                                    <div class="dropdown-divider"></div>
+                                    @using (Html.BeginForm("LogOut", "Account", new { area = "" }, FormMethod.Post, new { id = "LogOutForm", @class = "text-center" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <a class="dropdown-item" href="javascript:document.getElementById('LogOutForm').submit()">
+                                            <i class="fa fa-fw fa-power-off">&nbsp;</i>Cerrar Sesión
+                                        </a>
+                                    }
 
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                }
+            </nav>
     </header>
 
     <main class="wrapper">
-        <div id="sidebar">
-            @Html.Partial("_Sidebar")
-        </div>
+        @if (Request.IsAuthenticated)
+        {
+            <div id="sidebar">
+                @Html.Partial("_Sidebar")
+            </div>
+        }
         <div class="content-wrapper pt-3">
             @RenderBody()
         </div>
@@ -99,6 +112,8 @@
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/datetime")
     @Scripts.Render("~/bundles/app")
+
+    @RenderSection("scripts", required: false)
 
     <script type="text/javascript">
         $(function () {
@@ -160,8 +175,5 @@
             $('[data-toggle="tooltip"]').tooltip()
         });
     </script>
-
-    @RenderSection("scripts", required: false)
-
 </body>
 </html>

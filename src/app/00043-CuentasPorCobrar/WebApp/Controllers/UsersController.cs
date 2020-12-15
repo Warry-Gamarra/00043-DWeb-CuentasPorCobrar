@@ -11,21 +11,23 @@ using WebMatrix.WebData;
 namespace WebApp.Controllers
 {
     [Authorize]
-    [Route("Mantenimiento/usuarios/{action}")]
+    [Route("mantenimiento/usuarios/{action}")]
     public class UsersController : Controller
     {
         public readonly UsersModel _usersModel;
         public readonly SelectModels _selectControl;
+        public readonly DependenciaModel _dependenciaModel;
 
         public UsersController()
         {
             _usersModel = new UsersModel();
             _selectControl = new SelectModels();
+            _dependenciaModel = new DependenciaModel();
         }
 
         // GET: Users
         [HttpGet]
-        [Route("Mantenimiento/usuarios")]
+        [Route("mantenimiento/usuarios")]
         public ActionResult Index()
         {
             ViewBag.Title = "Usuarios";
@@ -35,7 +37,7 @@ namespace WebApp.Controllers
         }
 
 
-        [Route("Mantenimiento/usuarios/ver/{id}")]
+        [Route("mantenimiento/usuarios/ver/{id}")]
         public ActionResult Show(int id)
         {
             ViewBag.Title = "Detalle Usuario";
@@ -44,21 +46,23 @@ namespace WebApp.Controllers
             return PartialView("_DetailUser", model);
         }
 
-        [Route("Mantenimiento/usuarios/nuevo")]
+        [Route("mantenimiento/usuarios/nuevo")]
         public ActionResult Create()
         {
             ViewBag.Title = "Agregar Usuario";
             ViewBag.Roles = new SelectList(_selectControl.GetRoles(), dataValueField: "Value", dataTextField: "TextDisplay");
-
+            ViewBag.Dependencias = new SelectList(_dependenciaModel.Find(), dataValueField: "DependenciaID", dataTextField: "DependDesc");
+                 
             UserRegisterViewModel model = new UserRegisterViewModel();
             return PartialView("_RegisterUser", model);
         }
 
-        [Route("Mantenimiento/usuarios/editar/{id}")]
+        [Route("mantenimiento/usuarios/editar/{id}")]
         public ActionResult Edit(int id)
         {
             ViewBag.Title = "Editar Usuario";
             ViewBag.Roles = new SelectList(_selectControl.GetRoles(), dataValueField: "Value", dataTextField: "TextDisplay");
+            ViewBag.Dependencias = new SelectList(_dependenciaModel.Find(), dataValueField: "DependenciaID", dataTextField: "DependDesc");
 
             var model = _usersModel.Find(id);
 

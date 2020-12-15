@@ -29,8 +29,16 @@
                     <div class="row form-group">
                         @Html.LabelFor(m => m.RoleId, new { @class = "col-md-3 control-label" })
                         <div class="col-md-9">
-                            @Html.DropDownListFor(m => m.RoleId, ViewBag.Roles as SelectList, " Seleccione un Rol ", new { @class = "form-control form-inline" })
+                            @Html.DropDownListFor(m => m.RoleId, ViewBag.Roles as SelectList, " Seleccionar rol ", new { @class = "form-control form-inline" })
                             <p class="col-md-12 small text-danger">@Html.ValidationMessageFor(model => model.RoleId)</p>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        @Html.LabelFor(m => m.DependenciaId, new { @class = "col-md-3 control-label" })
+                        <div class="col-md-9">
+                            @Html.DropDownListFor(m => m.DependenciaId, ViewBag.Dependencias as SelectList, " Seleccionar dependencia", new { @class = "form-control form-inline" })
+                            <p class="col-md-12 small text-danger">@Html.ValidationMessageFor(model => model.DependenciaId)</p>
                         </div>
                     </div>
                 </fieldset>
