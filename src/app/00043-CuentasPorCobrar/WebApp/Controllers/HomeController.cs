@@ -12,11 +12,15 @@ namespace WebApp.Controllers
         // GET: Home
         public ActionResult Index()
         {
+            ViewBag.Title = "Dashboard";
+
             return View();
         }
 
         public ActionResult Dashboard()
         {
+            ViewBag.Title = "Dashboard";
+
             return View("Index");
         }
 

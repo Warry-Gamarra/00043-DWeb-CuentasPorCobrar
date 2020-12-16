@@ -51,7 +51,7 @@ namespace WebApp.ViewModels
             this.Id = cuentaDeposito.I_CtaDepID;
             this.NumeroCuenta = cuentaDeposito.C_NumeroCuenta;
             this.EntidadFinancieraId = cuentaDeposito.I_EntidadFinanId;
-            this.Observacion = "";
+            this.Observacion = cuentaDeposito.T_Observacion;
         }
 
     }

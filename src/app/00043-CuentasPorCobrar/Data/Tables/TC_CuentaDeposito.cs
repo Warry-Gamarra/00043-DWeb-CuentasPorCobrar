@@ -35,7 +35,7 @@ namespace Data.Tables
                 {
                     var s_command = @"SELECT CD.I_CtaDepositoID, CD.C_NumeroCuenta, CD.I_EntidadFinanID, CD.B_Habilitado, CD.B_Eliminado, CD.I_UsuarioCre, CD.D_FecCre, CD.I_UsuarioMod, 
                                         CD.D_FecMod, EF.T_EntidadDesc, CD.T_Observacion  
-                                        FROM TC_CuentaDeposito CD INNER JOIN TC_EntidadFinanciera EF ON CD.I_EntidadFinanID = EF.I_EntidadFinanID  WHERE B_Eliminado = 0;";
+                                        FROM TC_CuentaDeposito CD INNER JOIN TC_EntidadFinanciera EF ON CD.I_EntidadFinanID = EF.I_EntidadFinanID  WHERE CD.B_Eliminado = 0;";
 
                     result = _dbConnection.Query<TC_CuentaDeposito>(s_command, commandType: CommandType.Text).ToList();
                 }
@@ -59,7 +59,7 @@ namespace Data.Tables
                     var s_command = @"SELECT CD.I_CtaDepositoID, CD.C_NumeroCuenta, CD.I_EntidadFinanID, CD.B_Habilitado, CD.B_Eliminado, CD.I_UsuarioCre, CD.D_FecCre, CD.I_UsuarioMod,
                                         CD.D_FecMod, EF.T_EntidadDesc, CD.T_Observacion 
                                       FROM TC_CuentaDeposito CD INNER JOIN TC_EntidadFinanciera EF ON CD.I_EntidadFinanID = EF.I_EntidadFinanID
-                                      WHERE CD.I_CtaDepositoID = @I_CtaDepositoID AND B_Eliminado = 0;";
+                                      WHERE CD.I_CtaDepositoID = @I_CtaDepositoID AND CD.B_Eliminado = 0;";
 
                     result = _dbConnection.QueryFirstOrDefault<TC_CuentaDeposito>(s_command, new { I_CtaDepositoID = cuentaDepositoId }, commandType: CommandType.Text);
                 }
