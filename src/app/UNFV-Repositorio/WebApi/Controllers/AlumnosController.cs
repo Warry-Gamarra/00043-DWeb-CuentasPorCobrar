@@ -10,6 +10,7 @@ using WebApi.Models;
 
 namespace WebApi.Controllers
 {
+    [RoutePrefix("api")]
     public class AlumnosController : ApiController
     {
         public IAlumnoServiceFacade _service;
@@ -19,7 +20,29 @@ namespace WebApi.Controllers
             _service = service;
         }
 
+        [HttpGet]
+        [Route("alumnos")]
+        public IHttpActionResult GetAlumnos()
+        {
+            return Ok(_service.GetAll());
+        }
+
+        [HttpGet]
+        [Route("alumnos")]
+        public IHttpActionResult GetAlumnosPorDocIdent(string codTipDoc, string numDNI)
+        {
+            return Ok(_service.GetByDocIdent(codTipDoc, numDNI));
+        }
+
+        [HttpGet]
+        [Route("alumnos")]
+        public IHttpActionResult GetByID(string codRc, string codAlu)
+        {
+            return Ok(_service.GetByID(codRc, codAlu));
+        }
+
         [HttpPost]
+        [Route("alumnos")]
         public IHttpActionResult GrabarAlumno(MantenimientoAlumnoModel alumnoModel, int currentUserID)
         {
             ServiceResponse response;
@@ -50,7 +73,8 @@ namespace WebApi.Controllers
             return Ok(response);
         }
 
-        [HttpPost]
+        [HttpPut]
+        [Route("alumnos")]
         public IHttpActionResult EditarAlumno(MantenimientoAlumnoModel alumnoModel, int currentUserID)
         {
             ServiceResponse response;
@@ -79,24 +103,6 @@ namespace WebApi.Controllers
             }
 
             return Ok(response);
-        }
-
-        [HttpGet]
-        public IHttpActionResult GetAlumnos()
-        {
-            return Ok(_service.GetAll());
-        }
-
-        [HttpGet]
-        public IHttpActionResult GetAlumnosPorDocIdent(string codTipDoc, string numDNI)
-        {
-            return Ok(_service.GetByDocIdent(codTipDoc, numDNI));
-        }
-
-        [HttpGet]
-        public IHttpActionResult GetByID(string codRc, string codAlu)
-        {
-            return Ok(_service.GetByID(codRc, codAlu));
         }
     }
 }

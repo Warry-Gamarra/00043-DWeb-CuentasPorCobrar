@@ -10,6 +10,7 @@ using WebApi.Models;
 
 namespace WebApi.Controllers
 {
+    [RoutePrefix("api")]
     public class ProgramasController : ApiController
     {
         public IProgramaServiceFacade _service;
@@ -18,44 +19,30 @@ namespace WebApi.Controllers
         {
             _service = service;
         }
-        
+
         [HttpGet]
-        public IHttpActionResult GetFacultades()
+        [Route("programas")]
+        public IHttpActionResult GetProgramasUnfv()
         {
-            return Ok(_service.GetFacultades());
+            return Ok(_service.GetProgramasUnfv());
         }
 
         [HttpGet]
-        public IHttpActionResult GetFacultadByID(string codFac)
+        [Route("programas")]
+        public IHttpActionResult GetProgramaUnfvByCodProg(string codProg)
         {
-            return Ok(_service.GetFacultadByID(codFac));
+            return Ok(_service.GetProgramaUnfvByID(codProg));
         }
 
         [HttpGet]
-        public IHttpActionResult GetEscuelasByFac(string codFac)
+        [Route("programas")]
+        public IHttpActionResult GetProgramaUnfvByCodRc(string codRc)
         {
-            return Ok(_service.GetEscuelasByFac(codFac));
-        }
-
-        [HttpGet]
-        public IHttpActionResult GetEscuelaByID(string codEsc, string codFac)
-        {
-            return Ok(_service.GetEscuelaByID(codEsc, codFac));
-        }
-
-        [HttpGet]
-        public IHttpActionResult GetEspecialidadesByEsc(string codEsc, string codFac)
-        {
-            return Ok(_service.GetEspecialidadesByEsc(codEsc, codFac));
-        }
-
-        [HttpGet]
-        public IHttpActionResult GetEspecialidadByID(string codEsp, string codEsc, string codFac)
-        {
-            return Ok(_service.GetEspecialidadByID(codEsp, codEsc, codFac));
+            return Ok(_service.GetProgramaUnfvByCodRc(codRc));
         }
 
         [HttpPost]
+        [Route("programas")]
         public IHttpActionResult GrabarProgramaUnfv(MantenimientoProgramaUnfvModel programaUnfvModel, int currentUserID)
         {
             ServiceResponse response;
@@ -86,7 +73,8 @@ namespace WebApi.Controllers
             return Ok(response);
         }
 
-        [HttpPost]
+        [HttpPut]
+        [Route("programas")]
         public IHttpActionResult EditarProgramaUnfv(MantenimientoProgramaUnfvModel programaUnfvModel, int currentUserID)
         {
             ServiceResponse response;
@@ -118,21 +106,45 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
-        public IHttpActionResult GetProgramasUnfv()
+        [Route("facultades")]
+        public IHttpActionResult GetFacultades()
         {
-            return Ok(_service.GetProgramasUnfv());
+            return Ok(_service.GetFacultades());
         }
 
         [HttpGet]
-        public IHttpActionResult GetProgramaUnfvByCodProg(string codProg)
+        [Route("facultades/{codFac}")]
+        public IHttpActionResult GetFacultadByID(string codFac)
         {
-            return Ok(_service.GetProgramaUnfvByID(codProg));
+            return Ok(_service.GetFacultadByID(codFac));
         }
 
         [HttpGet]
-        public IHttpActionResult GetProgramaUnfvByCodRc(string codRc)
+        [Route("facultades/{codFac}/escuelas")]
+        public IHttpActionResult GetEscuelasByFac(string codFac)
         {
-            return Ok(_service.GetProgramaUnfvByCodRc(codRc));
+            return Ok(_service.GetEscuelasByFac(codFac));
+        }
+
+        [HttpGet]
+        [Route("facultades/{codFac}/escuelas/{codEsc}")]
+        public IHttpActionResult GetEscuelaByID(string codEsc, string codFac)
+        {
+            return Ok(_service.GetEscuelaByID(codEsc, codFac));
+        }
+
+        [HttpGet]
+        [Route("facultades/{codFac}/escuelas/{codEsc}/especialidades")]
+        public IHttpActionResult GetEspecialidadesByEsc(string codEsc, string codFac)
+        {
+            return Ok(_service.GetEspecialidadesByEsc(codEsc, codFac));
+        }
+
+        [HttpGet]
+        [Route("facultades/{codFac}/escuelas/{codEsc}/especialidades/{codEsp}")]
+        public IHttpActionResult GetEspecialidadByID(string codEsp, string codEsc, string codFac)
+        {
+            return Ok(_service.GetEspecialidadByID(codEsp, codEsc, codFac));
         }
     }
 }
