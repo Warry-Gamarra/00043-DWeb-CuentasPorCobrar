@@ -41,7 +41,8 @@ CREATE TABLE TC_DependenciaUNFV
 go
 
 
-CREATE TABLE TC_Parametro(
+CREATE TABLE TC_Parametro
+(
 	I_ParametroID	int IDENTITY (1, 1),
 	T_ParametroDesc		varchar(250) NOT NULL,
 	B_Habilitado		bit NOT NULL,
@@ -54,7 +55,8 @@ CREATE TABLE TC_Parametro(
 )
 GO
 
-CREATE TABLE TC_CatalogoOpcion(
+CREATE TABLE TC_CatalogoOpcion
+(
 	I_OpcionID			int IDENTITY (1, 1),
 	I_ParametroID		int NOT NULL,
 	T_OpcionCod			varchar(50),
@@ -491,24 +493,19 @@ CREATE TABLE TRI_ObligacionConceptoPago
 go
 
 
-CREATE TABLE TI_Dependencia_CtaDepo_Periodo
+CREATE TABLE TI_CtaDepo_Periodo
 ( 
-	I_DepCtaDepoPerID    int IDENTITY ( 1,1 ) ,
+	I_CtaDepoPerID    int IDENTITY ( 1,1 ) ,
 	I_CtaDepositoID      int  NOT NULL ,
 	I_PeriodoID          int  NULL ,
-	I_DependenciaID      int  NULL ,
 	B_Habilitado         bit  NOT NULL ,
 	B_Eliminado          bit  NOT NULL ,
 	I_UsuarioCre         int  NULL ,
 	D_FecCre             datetime  NULL ,
 	I_UsuarioMod         int  NULL ,
 	D_FecMod             datetime  NULL ,
-	C_CodServicio        varchar(10)  NULL ,
-	CONSTRAINT PK_Dependencia_CtaDepo_Periodo PRIMARY KEY  CLUSTERED (I_DepCtaDepoPerID ASC),
+	CONSTRAINT PK_Dependencia_CtaDepo_Periodo PRIMARY KEY  CLUSTERED (I_CtaDepoPerID ASC),
 	CONSTRAINT FK_Periodo_DependenciaCtaPagoPeriodo FOREIGN KEY (I_PeriodoID) REFERENCES TC_Periodo(I_PeriodoID)
-		ON DELETE NO ACTION
-		ON UPDATE NO ACTION,
-	CONSTRAINT FK_DependenciaUNFV_DependenciaCtaDepoPeriodo FOREIGN KEY (I_DependenciaID) REFERENCES TC_DependenciaUNFV(I_DependenciaID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION,
 	CONSTRAINT FK_CuentaDeposito_DependenciaCtaDepoPeriodo FOREIGN KEY (I_CtaDepositoID) REFERENCES TC_CuentaDeposito(I_CtaDepositoID)
