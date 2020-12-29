@@ -165,31 +165,31 @@ IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCE
 GO
 
 CREATE PROCEDURE dbo.USP_S_CuentaDeposito_Habilitadas
-@I_TipoPeriodoID int
+@I_CatPagoID int
 AS
 BEGIN
 	SET NOCOUNT ON;
-	SELECT cd.I_CtaDepositoID, cd.C_NumeroCuenta, ef.T_EntidadDesc FROM dbo.TC_CuentaDeposito_TipoPeriodo cp
+	SELECT cd.I_CtaDepositoID, cd.C_NumeroCuenta, ef.T_EntidadDesc FROM dbo.TC_CuentaDeposito_CategoriaPago cp
 	INNER JOIN dbo.TC_CuentaDeposito cd ON cp.I_CtaDepositoID = cd.I_CtaDepositoID
 	INNER JOIN dbo.TC_EntidadFinanciera ef ON ef.I_EntidadFinanID = cd.I_EntidadFinanID
 	WHERE cp.B_Habilitado = 1 AND cp.B_Eliminado = 0 AND 
 	cd.B_Habilitado = 1 AND cd.B_Eliminado = 0 AND
 	ef.B_Habilitado = 1 AND ef.B_Eliminado = 0 AND
-	cp.I_TipoPeriodoID = @I_TipoPeriodoID
+	cp.I_CatPagoID = @I_CatPagoID
 END
 GO
 
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_Periodos_Habilitados')
-	DROP PROCEDURE dbo.USP_S_Periodos_Habilitados
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_Procesos')
+	DROP PROCEDURE dbo.USP_S_Procesos
 GO
 
-CREATE PROCEDURE dbo.USP_S_Periodos_Habilitados
+CREATE PROCEDURE dbo.USP_S_Procesos
 AS
 BEGIN
 	SET NOCOUNT ON;
-	SELECT p.I_PeriodoID, cp.T_TipoPerDesc, p.I_Anio, p.D_FecVencto, p.I_Prioridad FROM dbo.TC_Periodo p
-	INNER JOIN dbo.TC_TipoPeriodo cp ON p.I_TipoPeriodoID = cp.I_TipoPeriodoID
-	WHERE p.B_Habilitado = 1 AND p.B_Eliminado = 0
+	SELECT p.I_ProcesoID, cp.T_CatPagoDesc, p.I_Anio, p.D_FecVencto, p.I_Prioridad FROM dbo.TC_Proceso p
+	INNER JOIN dbo.TC_CategoriaPago cp ON p.I_CatPagoID = cp.I_CatPagoID
+	WHERE p.B_Eliminado = 0
 END
 GO
 
