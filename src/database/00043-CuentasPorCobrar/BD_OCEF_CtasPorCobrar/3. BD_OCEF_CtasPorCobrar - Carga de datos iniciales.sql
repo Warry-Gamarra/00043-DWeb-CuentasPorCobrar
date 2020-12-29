@@ -12,12 +12,12 @@ GO
 
 
 /* -------------------------------- TC_TipoPeriodo ------------------------------------ */
-INSERT INTO TC_TipoPeriodo (T_TipoPerDesc, I_Prioridad, B_Habilitado, B_Eliminado) VALUES (N'MATRICULA INGRESANTE PRE', 1, 1, 0)
-INSERT INTO TC_TipoPeriodo (T_TipoPerDesc, I_Prioridad, B_Habilitado, B_Eliminado) VALUES (N'MATRICULA REGULAR PRE', 1, 1, 0)
-INSERT INTO TC_TipoPeriodo (T_TipoPerDesc, I_Prioridad, B_Habilitado, B_Eliminado) VALUES (N'PEN.MA-ING-EUPG', 1, 1, 0)
-INSERT INTO TC_TipoPeriodo (T_TipoPerDesc, I_Prioridad, B_Habilitado, B_Eliminado) VALUES (N'PEN.MA-REG-EUPG', 1, 1, 0)
-INSERT INTO TC_TipoPeriodo (T_TipoPerDesc, I_Prioridad, B_Habilitado, B_Eliminado) VALUES (N'PEN.DO-ING-EUPG', 1, 1, 0)
-INSERT INTO TC_TipoPeriodo (T_TipoPerDesc, I_Prioridad, B_Habilitado, B_Eliminado) VALUES (N'PEN.DO-REG-EUPG', 1, 1, 0)
+INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Habilitado, B_Eliminado) VALUES (N'MATRICULA INGRESANTE PRE', 1, 1, 0)
+INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Habilitado, B_Eliminado) VALUES (N'MATRICULA REGULAR PRE', 1, 1, 0)
+INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Habilitado, B_Eliminado) VALUES (N'PEN.MA-ING-EUPG', 1, 1, 0)
+INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Habilitado, B_Eliminado) VALUES (N'PEN.MA-REG-EUPG', 1, 1, 0)
+INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Habilitado, B_Eliminado) VALUES (N'PEN.DO-ING-EUPG', 1, 1, 0)
+INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Habilitado, B_Eliminado) VALUES (N'PEN.DO-REG-EUPG', 1, 1, 0)
 GO
 
 
@@ -27,8 +27,8 @@ INSERT TC_EntidadFinanciera(T_EntidadDesc, B_Habilitado, B_Eliminado)values('BAN
 INSERT TC_CuentaDeposito(I_EntidadFinanID, C_NumeroCuenta, B_Habilitado, B_Eliminado) VALUES(1, '110-01-0414438', 1, 0)
 INSERT TC_CuentaDeposito(I_EntidadFinanID, C_NumeroCuenta, B_Habilitado, B_Eliminado) VALUES(2, '119-104146435-1-01', 1, 0)
 
-INSERT TC_CuentaDeposito_TipoPeriodo(I_CtaDepositoID, I_TipoPeriodoID, B_Habilitado, B_Eliminado) VALUES(1,1,1,0)
-INSERT TC_CuentaDeposito_TipoPeriodo(I_CtaDepositoID, I_TipoPeriodoID, B_Habilitado, B_Eliminado) VALUES(2,1,1,0)
+INSERT TC_CuentaDeposito_CategoriaPago(I_CtaDepositoID, I_CatPagoID, B_Habilitado, B_Eliminado) VALUES(1,1,1,0)
+INSERT TC_CuentaDeposito_CategoriaPago(I_CtaDepositoID, I_CatPagoID, B_Habilitado, B_Eliminado) VALUES(2,1,1,0)
 
 
 INSERT TC_Parametro(T_ParametroDesc, B_Habilitado, B_Eliminado) VALUES('TIPO ALUMNO', 1, 0)
@@ -230,8 +230,8 @@ INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado,
 INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(7, 'REGULARIZ.DE INGRESO', 'RI', 1, 0)
 
 
-INSERT TC_ConceptoPago(T_ConceptoDesc, B_Habilitado, B_Eliminado) VALUES('MATRICULA PREGRADO REGULAR', 1, 0)
-GO
+--INSERT TC_ConceptoPago(T_ConceptoDesc, B_Habilitado, B_Eliminado) VALUES('MATRICULA PREGRADO REGULAR', 1, 0)
+--GO
 
 SET IDENTITY_INSERT TC_TipoArchivo ON;
 
