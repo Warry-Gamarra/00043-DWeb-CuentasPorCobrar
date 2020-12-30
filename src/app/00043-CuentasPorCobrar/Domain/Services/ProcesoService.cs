@@ -11,18 +11,18 @@ using System.Threading.Tasks;
 
 namespace Domain.Services
 {
-    public class PeriodoService
+    public class ProcesoService
     {
-        public List<TipoPeriodo> Listar_Tipo_Periodo_Habilitados()
+        public List<CategoriaPago> Listar_CategoriaPago_Habilitados()
         {
             try
             {
-                var lista = TC_TipoPeriodo.FindAll();
+                var lista = TC_CategoriaPago.FindAll();
 
-                var result = lista.Where(x => x.B_Habilitado && !x.B_Eliminado).Select(x => new TipoPeriodo()
+                var result = lista.Where(x => x.B_Habilitado && !x.B_Eliminado).Select(x => new CategoriaPago()
                 {
-                    I_TipoPeriodoID = x.I_TipoPeriodoID,
-                    T_TipoPerDesc = x.T_TipoPerDesc,
+                    I_CatPagoID = x.I_CatPagoID,
+                    T_CatPagoDesc = x.T_CatPagoDesc,
                     I_Prioridad = x.I_Prioridad
                 }).ToList();
 
@@ -34,11 +34,11 @@ namespace Domain.Services
             }
         }
 
-        public int Obtener_Prioridad_Tipo_Periodo(int I_TipoPeriodoID)
+        public int Obtener_Prioridad_CategoriaPago(int I_CatPagoID)
         {
             try
             {
-                var result = TC_TipoPeriodo.FindByID(I_TipoPeriodoID);
+                var result = TC_CategoriaPago.FindByID(I_CatPagoID);
 
                 return result.I_Prioridad;
             }
@@ -48,11 +48,11 @@ namespace Domain.Services
             }
         }
 
-        public List<CuentaDeposito> Listar_Cuenta_Deposito_Habilitadas(int I_TipoPeriodoID)
+        public List<CuentaDeposito> Listar_Cuenta_Deposito_Habilitadas(int I_CatPagoID)
         {
             try
             {
-                var lista = USP_S_CuentaDeposito_Habilitadas.Execute(I_TipoPeriodoID);
+                var lista = USP_S_CuentaDeposito_Habilitadas.Execute(I_CatPagoID);
 
                 var result = lista.Select(x => new CuentaDeposito()
                 {
@@ -69,16 +69,16 @@ namespace Domain.Services
             }
         }
 
-        public List<Periodo> Listar_Periodos_Habilitados()
+        public List<Proceso> Listar_Procesos()
         {
             try
             {
-                var lista = USP_S_Periodos_Habilitados.Execute();
+                var lista = USP_S_Procesos.Execute();
 
-                var result = lista.Select(x => new Periodo()
+                var result = lista.Select(x => new Proceso()
                 {
-                    I_PeriodoID = x.I_PeriodoID,
-                    T_TipoPerDesc = x.T_TipoPerDesc,
+                    I_ProcesoID = x.I_ProcesoID,
+                    T_CatPagoDesc = x.T_CatPagoDesc,
                     I_Anio = x.I_Anio,
                     D_FecVencto = x.D_FecVencto,
                     I_Prioridad = x.I_Prioridad
@@ -92,20 +92,20 @@ namespace Domain.Services
             }
         }
 
-        public Response Grabar_Periodo(PeriodoEntity periodo, SaveOption saveOption)
+        public Response Grabar_Proceso(ProcesoEntity proceso, SaveOption saveOption)
         {
             ResponseData result;
 
             switch (saveOption)
             {
                 case SaveOption.Insert:
-                    var grabarPeriodo = new USP_I_GrabarPeriodo()
+                    var grabarPeriodo = new USP_I_GrabarProceso()
                     {
-                        I_TipoPeriodoID = periodo.I_TipoPeriodoID,
-                        I_Anio = periodo.I_Anio,
-                        D_FecVencto = periodo.D_FecVencto,
-                        I_Prioridad = periodo.I_Prioridad,
-                        I_UsuarioCre = periodo.I_UsuarioCre.GetValueOrDefault()
+                        I_CatPagoID = proceso.I_CatPagoID,
+                        I_Anio = proceso.I_Anio,
+                        D_FecVencto = proceso.D_FecVencto,
+                        I_Prioridad = proceso.I_Prioridad,
+                        I_UsuarioCre = proceso.I_UsuarioCre.GetValueOrDefault()
                     };
 
                     result = grabarPeriodo.Execute();
@@ -113,15 +113,15 @@ namespace Domain.Services
                     break;
 
                 case SaveOption.Update:
-                    var actualizarPeriodo = new USP_U_ActualizarPeriodo()
+                    var actualizarPeriodo = new USP_U_ActualizarProceso()
                     {
-                        I_PeriodoID = periodo.I_PeriodoID,
-                        I_TipoPeriodoID = periodo.I_TipoPeriodoID,
-                        I_Anio = periodo.I_Anio,
-                        D_FecVencto = periodo.D_FecVencto,
-                        I_Prioridad = periodo.I_Prioridad,
-                        B_Habilitado = periodo.B_Habilitado,
-                        I_UsuarioMod = periodo.I_UsuarioMod.GetValueOrDefault()
+                        I_ProcesoID = proceso.I_ProcesoID,
+                        I_CatPagoID = proceso.I_CatPagoID,
+                        I_Anio = proceso.I_Anio,
+                        D_FecVencto = proceso.D_FecVencto,
+                        I_Prioridad = proceso.I_Prioridad,
+                        B_Habilitado = proceso.B_Habilitado,
+                        I_UsuarioMod = proceso.I_UsuarioMod.GetValueOrDefault()
                     };
 
                     result = actualizarPeriodo.Execute();
@@ -141,18 +141,18 @@ namespace Domain.Services
             return new Response(result);
         }
 
-        public Response Grabar_CtaDepoPeriodo(CtaDepoPeriodoEntity periodo, SaveOption saveOption)
+        public Response Grabar_CtaDepoProceso(CtaDepoProcesoEntity proceso, SaveOption saveOption)
         {
             ResponseData result;
 
             switch (saveOption)
             {
                 case SaveOption.Insert:
-                    var grabarCtaDepoPeriodo = new USP_I_GrabarPeriodo_CuentaDeposito()
+                    var grabarCtaDepoPeriodo = new USP_I_GrabarCtaDeposito_Proceso()
                     {
-                        I_CtaDepositoID = periodo.I_CtaDepositoID,
-                        I_PeriodoID = periodo.I_PeriodoID,
-                        I_UsuarioCre = periodo.I_UsuarioCre.GetValueOrDefault()
+                        I_CtaDepositoID = proceso.I_CtaDepositoID,
+                        I_ProcesoID = proceso.I_ProcesoID,
+                        I_UsuarioCre = proceso.I_UsuarioCre.GetValueOrDefault()
                     };
 
                     result = grabarCtaDepoPeriodo.Execute();
@@ -160,13 +160,13 @@ namespace Domain.Services
                     break;
 
                 case SaveOption.Update:
-                    var actualizarCtaDepoPeriodo = new USP_U_ActualizarPeriodo_CuentaDeposito()
+                    var actualizarCtaDepoPeriodo = new USP_U_ActualizarCtaDeposito_Proceso()
                     {
-                        I_CtaDepoPerID = periodo.I_CtaDepoPerID,
-                        I_CtaDepositoID = periodo.I_CtaDepositoID,
-                        I_PeriodoID = periodo.I_PeriodoID,
-                        B_Habilitado = periodo.B_Habilitado,
-                        I_UsuarioMod = periodo.I_UsuarioMod.GetValueOrDefault()
+                        I_CtaDepoProID = proceso.I_CtaDepoProID,
+                        I_CtaDepositoID = proceso.I_CtaDepositoID,
+                        I_ProcesoID = proceso.I_ProcesoID,
+                        B_Habilitado = proceso.B_Habilitado,
+                        I_UsuarioMod = proceso.I_UsuarioMod.GetValueOrDefault()
                     };
 
                     result = actualizarCtaDepoPeriodo.Execute();
@@ -180,20 +180,20 @@ namespace Domain.Services
             return new Response(result);
         }
 
-        public PeriodoEntity Obtener_Periodo(int I_PeriodoID)
+        public ProcesoEntity Obtener_Proceso(int I_ProcesoID)
         {
-            PeriodoEntity result = null;
+            ProcesoEntity result = null;
 
             try
             {
-                var periodo = TC_Periodo.FindByID(I_PeriodoID);
+                var periodo = TC_Proceso.FindByID(I_ProcesoID);
 
                 if (periodo != null)
                 {
-                    result = new PeriodoEntity()
+                    result = new ProcesoEntity()
                     {
-                        I_PeriodoID = periodo.I_PeriodoID,
-                        I_TipoPeriodoID = periodo.I_TipoPeriodoID,
+                        I_ProcesoID = periodo.I_ProcesoID,
+                        I_CatPagoID = periodo.I_CatPagoID,
                         I_Anio = periodo.I_Anio,
                         D_FecVencto = periodo.D_FecVencto,
                         I_Prioridad = periodo.I_Prioridad,
@@ -209,16 +209,16 @@ namespace Domain.Services
             return result;
         }
 
-        public List<CtaDepoPeriodoEntity> Obtener_CtasDepoPeriodo(int I_PeriodoID)
+        public List<CtaDepoProcesoEntity> Obtener_CtasDepoProceso(int I_PeriodoID)
         {
             try
             {
-                var lista = TI_CtaDepo_Periodo.FindByPeriodo(I_PeriodoID);
+                var lista = TI_CtaDepo_Proceso.FindByPeriodo(I_PeriodoID);
 
-                var result = lista.Select(x => new CtaDepoPeriodoEntity() {
-                    I_CtaDepoPerID = x.I_CtaDepoPerID,
+                var result = lista.Select(x => new CtaDepoProcesoEntity() {
+                    I_CtaDepoProID = x.I_CtaDepoProID,
                     I_CtaDepositoID = x.I_CtaDepositoID,
-                    I_PeriodoID = x.I_PeriodoID,
+                    I_ProcesoID = x.I_ProcesoID,
                     B_Habilitado = x.B_Habilitado,
                     I_UsuarioCre = x.I_UsuarioCre,
                     I_UsuarioMod = x.I_UsuarioMod
@@ -232,17 +232,17 @@ namespace Domain.Services
             }
         }
 
-        public List<CtaDepoPeriodo> Obtener_CtasDepo_X_Periodo(int I_PeriodoID)
+        public List<CtaDepoProceso> Obtener_CtasDepo_X_Periodo(int I_ProcesoID)
         {
             try
             {
-                var lista = USP_S_CtaDepo_Periodo.Execute(I_PeriodoID);
+                var lista = USP_S_CtaDepo_Proceso.Execute(I_ProcesoID);
 
-                var result = lista.Select(x => new CtaDepoPeriodo()
+                var result = lista.Select(x => new CtaDepoProceso()
                 {
-                    I_CtaDepoPerID = x.I_CtaDepoPerID,
+                    I_CtaDepoProID = x.I_CtaDepoProID,
                     I_CtaDepositoID = x.I_CtaDepositoID,
-                    I_PeriodoID = x.I_PeriodoID,
+                    I_ProcesoID = x.I_ProcesoID,
                     B_Habilitado = x.B_Habilitado,
                     C_NumeroCuenta = x.C_NumeroCuenta,
                     T_EntidadDesc = x.T_EntidadDesc

@@ -10,10 +10,9 @@ using System.Threading.Tasks;
 
 namespace Data.Procedures
 {
-    public class USP_U_ActualizarConceptoPago_Periodo
+    public class USP_I_GrabarConceptoPago
     {
-        public int I_ConcPagPerID { get; set; }
-        public int I_PeriodoID { get; set; }
+        public int I_ProcesoID { get; set; }
         public int I_ConceptoID { get; set; }
         public bool? B_Fraccionable { get; set; }
         public bool? B_ConceptoGeneral { get; set; }
@@ -22,7 +21,7 @@ namespace Data.Procedures
         public int? I_GradoDestino { get; set; }
         public int? I_TipoObligacion { get; set; }
         public string T_Clasificador { get; set; }
-        public string T_Clasificador5 { get; set; }
+        public string C_CodTasa { get; set; }
         public bool? B_Calculado { get; set; }
         public int? I_Calculado { get; set; }
         public bool? B_AnioPeriodo { get; set; }
@@ -46,8 +45,7 @@ namespace Data.Procedures
         public decimal? M_MontoMinimo { get; set; }
         public string T_DescripcionLarga { get; set; }
         public string T_Documento { get; set; }
-        public bool B_Habilitado { get; set; }
-        public int I_UsuarioMod { get; set; }
+        public int I_UsuarioCre { get; set; }
 
         public ResponseData Execute()
         {
@@ -56,12 +54,11 @@ namespace Data.Procedures
 
             try
             {
-                string s_command = @"USP_U_ActualizarConceptoPago_Periodo";
+                string s_command = @"USP_I_GrabarConceptoPago";
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    parameters.Add(name: "I_ConcPagPerID", dbType: DbType.Int32, value: this.I_ConcPagPerID);
-                    parameters.Add(name: "I_PeriodoID", dbType: DbType.Int32, value: this.I_PeriodoID);
+                    parameters.Add(name: "I_ProcesoID", dbType: DbType.Int32, value: this.I_ProcesoID);
                     parameters.Add(name: "I_ConceptoID", dbType: DbType.Int32, value: this.I_ConceptoID);
                     parameters.Add(name: "B_Fraccionable", dbType: DbType.Boolean, value: this.B_Fraccionable);
                     parameters.Add(name: "B_ConceptoGeneral", dbType: DbType.Boolean, value: this.B_ConceptoGeneral);
@@ -70,7 +67,7 @@ namespace Data.Procedures
                     parameters.Add(name: "I_GradoDestino", dbType: DbType.Int32, value: this.I_GradoDestino);
                     parameters.Add(name: "I_TipoObligacion", dbType: DbType.Int32, value: this.I_TipoObligacion);
                     parameters.Add(name: "T_Clasificador", dbType: DbType.String, value: this.T_Clasificador);
-                    parameters.Add(name: "T_Clasificador5", dbType: DbType.String, value: this.T_Clasificador5);
+                    parameters.Add(name: "C_CodTasa", dbType: DbType.String, value: this.C_CodTasa);
                     parameters.Add(name: "B_Calculado", dbType: DbType.Boolean, value: this.B_Calculado);
                     parameters.Add(name: "I_Calculado", dbType: DbType.Int32, value: this.I_Calculado);
                     parameters.Add(name: "B_AnioPeriodo", dbType: DbType.Boolean, value: this.B_AnioPeriodo);
@@ -94,14 +91,16 @@ namespace Data.Procedures
                     parameters.Add(name: "M_MontoMinimo", dbType: DbType.Decimal, value: this.M_MontoMinimo);
                     parameters.Add(name: "T_DescripcionLarga", dbType: DbType.String, value: this.T_DescripcionLarga);
                     parameters.Add(name: "T_Documento", dbType: DbType.String, value: this.T_Documento);
-                    parameters.Add(name: "B_Habilitado", dbType: DbType.Boolean, value: this.B_Habilitado);
-                    parameters.Add(name: "I_UsuarioMod", dbType: DbType.Int32, value: this.I_UsuarioMod);
+                    parameters.Add(name: "I_UsuarioCre", dbType: DbType.Int32, value: this.I_UsuarioCre);
 
+                    parameters.Add(name: "I_ConcPagPerID", dbType: DbType.Int32, direction: ParameterDirection.Output);
                     parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);
                     parameters.Add(name: "T_Message", dbType: DbType.String, size: 4000, direction: ParameterDirection.Output);
 
                     _dbConnection.Execute(s_command, parameters, commandType: CommandType.StoredProcedure);
 
+                    int id = parameters.Get<int>("I_ConcPagID");
+                    result.CurrentID = id.ToString();
                     result.Value = parameters.Get<bool>("B_Result");
                     result.Message = parameters.Get<string>("T_Message");
                 }

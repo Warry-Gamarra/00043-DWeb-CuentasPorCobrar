@@ -32,7 +32,6 @@ namespace Domain.Entities
             this.Codigo = tablaDependencia.C_DepCod;
             this.CodigoPl = tablaDependencia.C_DepCodPl;
             this.Descripcion = tablaDependencia.T_DepDesc;
-            this.EsAcademico = tablaDependencia.I_FacultadID.HasValue ? true : false;
             this.Habilitado = tablaDependencia.B_Habilitado;
         }
 

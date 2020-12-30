@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class CtaDepoPeriodo
+    public class CtaDepoProceso
     {
-        public int I_CtaDepoPerID { get; set; }
+        public int I_CtaDepoProID { get; set; }
         public int I_CtaDepositoID { get; set; }
-        public int I_PeriodoID { get; set; }
+        public int I_ProcesoID { get; set; }
         public bool B_Habilitado { get; set; }
         public string C_NumeroCuenta { get; set; }
         public string T_EntidadDesc { get; set; }

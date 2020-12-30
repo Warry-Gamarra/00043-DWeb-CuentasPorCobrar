@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace Data.Procedures
 {
-    public class USP_I_GrabarPeriodo
+    public class USP_I_GrabarProceso
     {
-        public int I_TipoPeriodoID { get; set; }
+        public int I_CatPagoID { get; set; }
         public short? I_Anio { get; set; }
         public DateTime? D_FecVencto { get; set; }
         public byte? I_Prioridad { get; set; }
@@ -25,11 +25,11 @@ namespace Data.Procedures
 
             try
             {
-                string s_command = @"USP_I_GrabarPeriodo";
+                string s_command = @"USP_I_GrabarProceso";
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    parameters.Add(name: "I_TipoPeriodoID", dbType: DbType.Int32, value: this.I_TipoPeriodoID);
+                    parameters.Add(name: "I_CatPagoID", dbType: DbType.Int32, value: this.I_CatPagoID);
                     parameters.Add(name: "I_Anio", dbType: DbType.Int16, value: this.I_Anio);
                     parameters.Add(name: "D_FecVencto", dbType: DbType.DateTime, value: this.D_FecVencto);
                     parameters.Add(name: "I_Prioridad", dbType: DbType.Byte, value: this.I_Prioridad);

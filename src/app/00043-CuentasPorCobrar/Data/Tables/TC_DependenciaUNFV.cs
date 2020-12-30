@@ -16,7 +16,7 @@ namespace Data.Tables
         public string T_DepDesc { get; set; }
         public string C_DepCod { get; set; }
         public string C_DepCodPl { get; set; }
-        public int? I_FacultadID { get; set; }
+        public string T_DepAbrev { get; set; }
         public bool B_Habilitado { get; set; }
         public bool B_Eliminado { get; set; }
         public int I_UsuarioCre { get; set; }

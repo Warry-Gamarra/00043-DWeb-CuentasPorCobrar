@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Data.Tables
 {
-    public class TC_ConceptoPago
+    public class TC_Concepto
     {
         public int I_ConceptoID { get; set; }
         public string T_ConceptoDesc { get; set; }
@@ -21,17 +21,17 @@ namespace Data.Tables
         public int? I_UsuarioMod { get; set; }
         public DateTime? D_FecMod { get; set; }
 
-        public static List<TC_ConceptoPago> Find()
+        public static List<TC_Concepto> Find()
         {
-            List<TC_ConceptoPago> result;
+            List<TC_Concepto> result;
 
             try
             {
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    var s_command = @"SELECT c.* FROM TC_ConceptoPago c WHERE c.B_Eliminado = 0";
+                    var s_command = @"SELECT c.* FROM TC_Concepto c WHERE c.B_Eliminado = 0";
 
-                    result = _dbConnection.Query<TC_ConceptoPago>(s_command, commandType: CommandType.Text).ToList();
+                    result = _dbConnection.Query<TC_Concepto>(s_command, commandType: CommandType.Text).ToList();
                 }
             }
             catch (Exception ex)

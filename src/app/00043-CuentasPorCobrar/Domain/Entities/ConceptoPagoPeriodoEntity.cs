@@ -8,8 +8,8 @@ namespace Domain.Entities
 {
     public class ConceptoPagoPeriodoEntity
     {
-        public int I_ConcPagPerID { get; set; }
-        public int I_PeriodoID { get; set; }
+        public int I_ConcPagID { get; set; }
+        public int I_ProcesoID { get; set; }
         public int I_ConceptoID { get; set; }
         public bool? B_Fraccionable { get; set; }
         public bool? B_ConceptoGeneral { get; set; }
@@ -18,7 +18,7 @@ namespace Domain.Entities
         public int? I_GradoDestino { get; set; }
         public int? I_TipoObligacion { get; set; }
         public string T_Clasificador { get; set; }
-        public string T_Clasificador5 { get; set; }
+        public string C_CodTasa { get; set; }
         public bool? B_Calculado { get; set; }
         public int? I_Calculado { get; set; }
         public bool? B_AnioPeriodo { get; set; }

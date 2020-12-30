@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 
 namespace Data.Tables
 {
-    public class TI_ConceptoPago_Periodo
+    public class TI_ConceptoPago
     {
-        public int I_ConcPagPerID { get; set; }
-        public int I_PeriodoID { get; set; }
+        public int I_ConcPagID { get; set; }
+        public int I_ProcesoID { get; set; }
         public int I_ConceptoID { get; set; }
         public bool? B_Fraccionable { get; set; }
         public bool? B_ConceptoGeneral { get; set; }
@@ -22,7 +22,7 @@ namespace Data.Tables
         public int? I_GradoDestino { get; set; }
         public int? I_TipoObligacion { get; set; }
         public string T_Clasificador { get; set; }
-        public string T_Clasificador5 { get; set; }
+        public string C_CodTasa { get; set; }
         public bool? B_Calculado { get; set; }
         public int? I_Calculado { get; set; }
         public bool? B_AnioPeriodo { get; set; }
@@ -53,17 +53,17 @@ namespace Data.Tables
         public int? I_UsuarioMod { get; set; }
         public DateTime? D_FecMod { get; set; }
 
-        public static TI_ConceptoPago_Periodo FindByID(int I_ConcPagPerID)
+        public static TI_ConceptoPago FindByID(int I_ConcPagID)
         {
-            TI_ConceptoPago_Periodo result;
+            TI_ConceptoPago result;
 
             try
             {
-                string s_command = @"SELECT c.* FROM TI_ConceptoPago_Periodo c where c.I_ConcPagPerID = @I_ConcPagPerID AND c.B_Eliminado = 0";
+                string s_command = @"SELECT c.* FROM TI_ConceptoPago c where c.I_ConcPagID = @I_ConcPagID AND c.B_Eliminado = 0";
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    result = _dbConnection.Query<TI_ConceptoPago_Periodo>(s_command, new { I_ConcPagPerID = I_ConcPagPerID }, commandType: CommandType.Text).FirstOrDefault();
+                    result = _dbConnection.Query<TI_ConceptoPago>(s_command, new { I_ConcPagID = I_ConcPagID }, commandType: CommandType.Text).FirstOrDefault();
                 }
             }
             catch (Exception ex)

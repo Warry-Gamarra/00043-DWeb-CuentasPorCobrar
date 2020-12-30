@@ -1,19 +1,43 @@
 <?xml version="1.0"?>
 <SqlWorkbenchSqlProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="BD_OCEF_CtasPorCobrar">
   <Items>
-    <LogicalFolder Name="Connections" Type="2" Sorted="true">
+    <LogicalFolder Name="Conexiones" Type="2" Sorted="true">
       <Items>
-        <ConnectionNode Name="14-CEUC-DESA-05\SQL_2016E:UNFV\wgamarra">
+        <ConnectionNode Name="14-CEUC-DESA-05\SQL_2016E:">
           <Created>2020-12-21T11:53:21.2703004-05:00</Created>
           <Type>SQL</Type>
           <Server>14-CEUC-DESA-05\SQL_2016E</Server>
           <UserName />
-          <Authentication>Windows Authentication</Authentication>
+          <Authentication>SQL</Authentication>
           <InitialDB />
           <LoginTimeout>0</LoginTimeout>
           <ExecutionTimeout>0</ExecutionTimeout>
           <ConnectionProtocol>NotSpecified</ConnectionProtocol>
           <ApplicationName>Microsoft SQL Server Management Studio - Query</ApplicationName>
+        </ConnectionNode>
+        <ConnectionNode Name="16-CEUC-DESA-01:UNFV\hmanyari">
+          <Created>2020-12-29T17:24:04.1455172-05:00</Created>
+          <Type>SQL</Type>
+          <Server>16-CEUC-DESA-01</Server>
+          <UserName />
+          <Authentication>Autenticación de Windows</Authentication>
+          <InitialDB />
+          <LoginTimeout>30</LoginTimeout>
+          <ExecutionTimeout>0</ExecutionTimeout>
+          <ConnectionProtocol>NotSpecified</ConnectionProtocol>
+          <ApplicationName>Microsoft SQL Server Management Studio - Consulta</ApplicationName>
+        </ConnectionNode>
+        <ConnectionNode Name="172.17.14.137\SQL_2016E:UserOCEF">
+          <Created>2020-12-29T17:28:19.9701117-05:00</Created>
+          <Type>SQL</Type>
+          <Server>172.17.14.137\SQL_2016E</Server>
+          <UserName>UserOCEF</UserName>
+          <Authentication>SQL</Authentication>
+          <InitialDB>BD_OCEF_CtasPorCobrar</InitialDB>
+          <LoginTimeout>30</LoginTimeout>
+          <ExecutionTimeout>0</ExecutionTimeout>
+          <ConnectionProtocol>NotSpecified</ConnectionProtocol>
+          <ApplicationName>Microsoft SQL Server Management Studio - Consulta</ApplicationName>
         </ConnectionNode>
         <ConnectionNode Name="DESKTOP-B34HJML\SQL_2016E:">
           <Created>2020-10-13T15:12:28.6651684-05:00</Created>
@@ -27,12 +51,12 @@
           <ConnectionProtocol>NotSpecified</ConnectionProtocol>
           <ApplicationName>Microsoft SQL Server Management Studio - Query</ApplicationName>
         </ConnectionNode>
-        <ConnectionNode Name="DESKTOP-B34HJML\SQL_2016E:UNFV\wgamarra">
+        <ConnectionNode Name="DESKTOP-B34HJML\SQL_2016E:">
           <Created>2020-12-07T22:08:44.2875749-05:00</Created>
           <Type>SQL</Type>
           <Server>DESKTOP-B34HJML\SQL_2016E</Server>
           <UserName />
-          <Authentication>Windows Authentication</Authentication>
+          <Authentication>SQL</Authentication>
           <InitialDB />
           <LoginTimeout>30</LoginTimeout>
           <ExecutionTimeout>0</ExecutionTimeout>
@@ -65,41 +89,41 @@
         </ConnectionNode>
       </Items>
     </LogicalFolder>
-    <LogicalFolder Name="Queries" Type="0" Sorted="true">
+    <LogicalFolder Name="Consultas" Type="0" Sorted="true">
       <Items>
         <FileNode Name="1. BD_OCEF_CtasPorCobrar - Creación de base de datos.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:14-CEUC-DESA-05\SQL_2016E:True</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>14-CEUC-DESA-05\SQL_2016E</AssociatedConnSrvName>
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:16-CEUC-DESA-01:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>16-CEUC-DESA-01</AssociatedConnSrvName>
           <AssociatedConnUserName />
           <FullPath>1. BD_OCEF_CtasPorCobrar - Creación de base de datos.sql</FullPath>
         </FileNode>
         <FileNode Name="2. BD_OCEF_CtasPorCobrar - Esquema de base de datos.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:14-CEUC-DESA-05\SQL_2016E:True</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>14-CEUC-DESA-05\SQL_2016E</AssociatedConnSrvName>
-          <AssociatedConnUserName />
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:172.17.14.137\SQL_2016E:False:UserOCEF</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>172.17.14.137\SQL_2016E</AssociatedConnSrvName>
+          <AssociatedConnUserName>UserOCEF</AssociatedConnUserName>
           <FullPath>2. BD_OCEF_CtasPorCobrar - Esquema de base de datos.sql</FullPath>
         </FileNode>
         <FileNode Name="3. BD_OCEF_CtasPorCobrar - Carga de datos iniciales.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:14-CEUC-DESA-05\SQL_2016E:True</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>14-CEUC-DESA-05\SQL_2016E</AssociatedConnSrvName>
-          <AssociatedConnUserName />
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:172.17.14.137\SQL_2016E:False:UserOCEF</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>172.17.14.137\SQL_2016E</AssociatedConnSrvName>
+          <AssociatedConnUserName>UserOCEF</AssociatedConnUserName>
           <FullPath>3. BD_OCEF_CtasPorCobrar - Carga de datos iniciales.sql</FullPath>
         </FileNode>
         <FileNode Name="4. BD_OCEF_CtasPorCobrar - Types Procedures y Funciones.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:14-CEUC-DESA-05\SQL_2016E:True</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>14-CEUC-DESA-05\SQL_2016E</AssociatedConnSrvName>
-          <AssociatedConnUserName />
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:172.17.14.137\SQL_2016E:False:UserOCEF</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>172.17.14.137\SQL_2016E</AssociatedConnSrvName>
+          <AssociatedConnUserName>UserOCEF</AssociatedConnUserName>
           <FullPath>4. BD_OCEF_CtasPorCobrar - Types Procedures y Funciones.sql</FullPath>
         </FileNode>
         <FileNode Name="SQLQuery1.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:14-CEUC-DESA-05\SQL_2016E:True</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>14-CEUC-DESA-05\SQL_2016E</AssociatedConnSrvName>
-          <AssociatedConnUserName />
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:172.17.14.137\SQL_2016E:False:UserOCEF</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>172.17.14.137\SQL_2016E</AssociatedConnSrvName>
+          <AssociatedConnUserName>UserOCEF</AssociatedConnUserName>
           <FullPath>SQLQuery1.sql</FullPath>
         </FileNode>
       </Items>
     </LogicalFolder>
-    <LogicalFolder Name="Miscellaneous" Type="3" Sorted="true">
+    <LogicalFolder Name="Varios" Type="3" Sorted="true">
       <Items />
     </LogicalFolder>
   </Items>

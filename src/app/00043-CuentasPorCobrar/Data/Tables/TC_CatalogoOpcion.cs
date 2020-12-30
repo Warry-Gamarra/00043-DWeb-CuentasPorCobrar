@@ -14,6 +14,7 @@ namespace Data.Tables
     {
         public int I_OpcionID { get; set; }
         public int I_ParametroID { get; set; }
+        public string T_OpcionCod { get; set; }
         public string T_OpcionDesc { get; set; }
         public bool B_Habilitado { get; set; }
         public bool B_Eliminado { get; set; }

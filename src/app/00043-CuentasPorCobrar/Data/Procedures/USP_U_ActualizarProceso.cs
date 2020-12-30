@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 
 namespace Data.Procedures
 {
-    public class USP_U_ActualizarPeriodo
+    public class USP_U_ActualizarProceso
     {
-        public int I_PeriodoID { get; set; }
-        public int I_TipoPeriodoID { get; set; }
+        public int I_ProcesoID { get; set; }
+        public int I_CatPagoID { get; set; }
         public short? I_Anio { get; set; }
         public DateTime? D_FecVencto { get; set; }
         public byte? I_Prioridad { get; set; }
@@ -27,12 +27,12 @@ namespace Data.Procedures
 
             try
             {
-                string s_command = @"USP_U_ActualizarPeriodo";
+                string s_command = @"USP_U_ActualizarProceso";
             
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    parameters.Add(name: "I_PeriodoID", dbType: DbType.Int32, value: this.I_PeriodoID);
-                    parameters.Add(name: "I_TipoPeriodoID", dbType: DbType.Int32, value: this.I_TipoPeriodoID);
+                    parameters.Add(name: "I_ProcesoID", dbType: DbType.Int32, value: this.I_ProcesoID);
+                    parameters.Add(name: "I_CatPagoID", dbType: DbType.Int32, value: this.I_CatPagoID);
                     parameters.Add(name: "I_Anio", dbType: DbType.Int16, value: this.I_Anio);
                     parameters.Add(name: "D_FecVencto", dbType: DbType.DateTime, value: this.D_FecVencto);
                     parameters.Add(name: "I_Prioridad", dbType: DbType.Byte, value: this.I_Prioridad);
@@ -44,7 +44,7 @@ namespace Data.Procedures
 
                     _dbConnection.Execute(s_command, parameters, commandType: CommandType.StoredProcedure);
 
-                    result.CurrentID = this.I_PeriodoID.ToString();
+                    result.CurrentID = this.I_ProcesoID.ToString();
                     result.Value = parameters.Get<bool>("B_Result");
                     result.Message = parameters.Get<string>("T_Message");
                 }
