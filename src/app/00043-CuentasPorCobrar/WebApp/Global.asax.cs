@@ -24,7 +24,7 @@ namespace WebApp
             
             if (!WebSecurity.Initialized)
             {
-                WebSecurity.InitializeDatabaseConnection("BD_CtasPorCobrarConnection", "TC_Usuarios", "UserId", "UserName", autoCreateTables: false);
+                WebSecurity.InitializeDatabaseConnection("BD_CtasPorCobrarConnection", "TC_Usuario", "UserId", "UserName", autoCreateTables: false);
                 if (Roles.Enabled)
                 {
                     if (!Roles.RoleExists("Administrador"))

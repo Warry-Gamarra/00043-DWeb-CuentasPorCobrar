@@ -5,25 +5,6 @@ GO
 /*	-----------------------  Mantenimientos	-----------------------  */
 
 
-CREATE TABLE TC_DependenciaUNFV
-( 
-	I_DependenciaID      int IDENTITY ( 1,1 ) ,
-	T_DepDesc            varchar(150)  NULL ,
-	C_DepCod             varchar(20)  NOT NULL ,
-	C_DepCodPl           varchar(20)  NULL ,
-	T_DepAbrev           varchar(10)  NULL ,
-	B_Habilitado         bit  NOT NULL ,
-	B_Eliminado          bit  NOT NULL ,
-	I_UsuarioCre         int  NULL ,
-	D_FecCre             datetime  NULL ,
-	I_UsuarioMod         int  NULL ,
-	D_FecMod             datetime  NULL ,
-	CONSTRAINT PK_DependenciaUNFV PRIMARY KEY  CLUSTERED (I_DependenciaID ASC)
-)
-go
-
-
-
 CREATE TABLE TS_CorreoAplicacion
 ( 
 	I_CorreoID           tinyint IDENTITY ( 1,1 ) ,
@@ -45,19 +26,67 @@ CREATE TABLE TS_CorreoAplicacion
 go
 
 
-/*	-----------------------  Autenticacion	-----------------------  */
 
-
-CREATE TABLE webpages_Roles
+CREATE TABLE TC_DependenciaUNFV
 ( 
-	RoleId               int IDENTITY ( 1,1 ) ,
-	RoleName             varchar(50)  NOT NULL ,
-	CONSTRAINT PK_Roles PRIMARY KEY  NONCLUSTERED (RoleId ASC)
+	I_DependenciaID      int IDENTITY ( 1,1 ) ,
+	T_DepDesc            varchar(150)  NULL ,
+	C_DepCod             varchar(20)  NOT NULL ,
+	C_DepCodPl           varchar(20)  NULL ,
+	T_DepAbrev           varchar(10)  NULL ,
+	B_Habilitado         bit  NOT NULL ,
+	B_Eliminado          bit  NOT NULL ,
+	I_UsuarioCre         int  NULL ,
+	D_FecCre             datetime  NULL ,
+	I_UsuarioMod         int  NULL ,
+	D_FecMod             datetime  NULL ,
+	CONSTRAINT PK_DependenciaUNFV PRIMARY KEY  CLUSTERED (I_DependenciaID ASC)
 )
 go
 
 
-CREATE TABLE TC_Usuarios
+
+CREATE TABLE TC_Parametro
+( 
+	I_ParametroID        int IDENTITY ( 1,1 ) ,
+	T_ParametroDesc      varchar(250)  NULL ,
+	B_Habilitado         bit  NOT NULL ,
+	B_Eliminado          bit  NOT NULL ,
+	I_UsuarioCre         int  NULL ,
+	D_FecCre             datetime  NULL ,
+	I_UsuarioMod         int  NULL ,
+	D_FecMod             datetime  NULL ,
+	CONSTRAINT PK_Parametro PRIMARY KEY  CLUSTERED (I_ParametroID ASC)
+)
+go
+
+
+
+CREATE TABLE TC_CatalogoOpcion
+( 
+	I_OpcionID           int IDENTITY ( 1,1 ) ,
+	I_ParametroID        int  NOT NULL ,
+	T_OpcionCod          varchar(50)  NULL ,
+	T_OpcionDesc         varchar(250)  NULL ,
+	B_Habilitado         bit  NOT NULL ,
+	B_Eliminado          bit  NOT NULL ,
+	I_UsuarioCre         int  NULL ,
+	D_FecCre             datetime  NULL ,
+	I_UsuarioMod         int  NULL ,
+	D_FecMod             datetime  NULL ,
+	CONSTRAINT PK_CatalogoOpcion PRIMARY KEY  CLUSTERED (I_OpcionID ASC),
+	CONSTRAINT FK_Parametro_CatalogoOpcion FOREIGN KEY (I_ParametroID) REFERENCES TC_Parametro(I_ParametroID)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+)
+go
+
+
+
+/*	-----------------------  Autenticacion	-----------------------  */
+
+
+CREATE TABLE TC_Usuario
 ( 
 	UserId               int IDENTITY ( 1,1 ) ,
 	UserName             varchar(20)  NOT NULL ,
@@ -71,8 +100,8 @@ CREATE TABLE TC_Usuarios
 	I_UsuarioMod         int  NULL ,
 	D_FecMod             datetime  NULL ,
 	I_DependenciaID      int  NULL ,
-	CONSTRAINT PK_Usuarios PRIMARY KEY  NONCLUSTERED (UserId ASC),
-	CONSTRAINT FK_Usuarios_Usuarios_UsuarioCrea FOREIGN KEY (I_UsuarioCrea) REFERENCES TC_Usuarios(UserId)
+	CONSTRAINT PK_Usuario PRIMARY KEY  NONCLUSTERED (UserId ASC),
+	CONSTRAINT FK_Usuario_Usuario_UsuarioCrea FOREIGN KEY (I_UsuarioCrea) REFERENCES TC_Usuario(UserId)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION,
 CONSTRAINT FK_DependenciaUNFV_Usuario FOREIGN KEY (I_DependenciaID) REFERENCES TC_DependenciaUNFV(I_DependenciaID)
@@ -91,12 +120,21 @@ CREATE TABLE webpages_UsersInRoles
 	CONSTRAINT FK_Roles_UserInRoles FOREIGN KEY (RoleId) REFERENCES webpages_Roles(RoleId)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION,
-CONSTRAINT FK_Usuarios_UsersInRoles FOREIGN KEY (UserId) REFERENCES TC_Usuarios(UserId)
+CONSTRAINT FK_Usuario_UsersInRoles FOREIGN KEY (UserId) REFERENCES TC_Usuario(UserId)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 )
 go
 
+
+
+CREATE TABLE webpages_Roles
+( 
+	RoleId               int IDENTITY ( 1,1 ) ,
+	RoleName             varchar(50)  NOT NULL ,
+	CONSTRAINT PK_Roles PRIMARY KEY  NONCLUSTERED (RoleId ASC)
+)
+go
 
 
 CREATE TABLE webpages_Membership
@@ -113,7 +151,7 @@ CREATE TABLE webpages_Membership
 	PasswordVerificationToken nvarchar(max)  NULL ,
 	PasswordVerificationTokenExpirationDate datetime  NULL ,
 	CONSTRAINT PK_Membership PRIMARY KEY  NONCLUSTERED (UserId ASC),
-	CONSTRAINT FK_Usuarios_Membership FOREIGN KEY (UserId) REFERENCES TC_Usuarios(UserId)
+	CONSTRAINT FK_Usuario_Membership FOREIGN KEY (UserId) REFERENCES TC_Usuario(UserId)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 )
@@ -149,7 +187,7 @@ CREATE TABLE TI_UsuarioDatosUsuario
 	D_FecBaja            datetime  NULL ,
 	B_Habilitado         bit  NOT NULL ,
 	CONSTRAINT PK_UsuarioDatosUsuario PRIMARY KEY  NONCLUSTERED (UserId ASC,I_DatosUsuarioID ASC),
-	CONSTRAINT FK_Usuarios_UsuarioDatosUsuario FOREIGN KEY (UserId) REFERENCES TC_Usuarios(UserId)
+	CONSTRAINT FK_Usuario_UsuarioDatosUsuario FOREIGN KEY (UserId) REFERENCES TC_Usuario(UserId)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION,
 CONSTRAINT FK_DatosUsuario_UsuarioDatosUsuario FOREIGN KEY (I_DatosUsuarioID) REFERENCES TC_DatosUsuario(I_DatosUsuarioID)
@@ -161,6 +199,7 @@ go
 
 
 /*	-----------------------  Documentacion	-----------------------  */
+
 
 
 CREATE TABLE TS_RutaDocumentacion
@@ -202,43 +241,9 @@ go
 
 
 
+
+
 /*	-----------------------  Obligaciones y pagos	-----------------------  */
-
-
-CREATE TABLE TC_Parametro
-( 
-	I_ParametroID        int IDENTITY ( 1,1 ) ,
-	T_ParametroDesc      varchar(250)  NULL ,
-	B_Habilitado         bit  NOT NULL ,
-	B_Eliminado          bit  NOT NULL ,
-	I_UsuarioCre         int  NULL ,
-	D_FecCre             datetime  NULL ,
-	I_UsuarioMod         int  NULL ,
-	D_FecMod             datetime  NULL ,
-	CONSTRAINT PK_Parametro PRIMARY KEY  CLUSTERED (I_ParametroID ASC)
-)
-go
-
-
-
-CREATE TABLE TC_CatalogoOpcion
-( 
-	I_OpcionID           int IDENTITY ( 1,1 ) ,
-	I_ParametroID        int  NOT NULL ,
-	T_OpcionCod          varchar(50)  NULL ,
-	T_OpcionDesc         varchar(250)  NULL ,
-	B_Habilitado         bit  NOT NULL ,
-	B_Eliminado          bit  NOT NULL ,
-	I_UsuarioCre         int  NULL ,
-	D_FecCre             datetime  NULL ,
-	I_UsuarioMod         int  NULL ,
-	D_FecMod             datetime  NULL ,
-	CONSTRAINT PK_CatalogoOpcion PRIMARY KEY  CLUSTERED (I_OpcionID ASC),
-	CONSTRAINT FK_Parametro_CatalogoOpcion FOREIGN KEY (I_ParametroID) REFERENCES TC_Parametro(I_ParametroID)
-		ON DELETE NO ACTION
-		ON UPDATE NO ACTION
-)
-go
 
 
 
@@ -302,7 +307,7 @@ CREATE TABLE TC_Proceso
 	I_UsuarioMod         int  NULL ,
 	D_FecMod             datetime  NULL ,
 	CONSTRAINT PK_Proceso PRIMARY KEY  CLUSTERED (I_ProcesoID ASC),
-	CONSTRAINT FK_TipoPeriodo_Periodo FOREIGN KEY (I_CatPagoID) REFERENCES TC_CategoriaPago(I_CatPagoID)
+	CONSTRAINT FK_CategoriaPago_Periodo FOREIGN KEY (I_CatPagoID) REFERENCES TC_CategoriaPago(I_CatPagoID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 )
@@ -349,7 +354,7 @@ CREATE TABLE TR_ObligacionAluCab
 	CONSTRAINT FK_Proceso_ObligacionAluCab FOREIGN KEY (I_ProcesoID) REFERENCES TC_Proceso(I_ProcesoID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION,
-CONSTRAINT FK_MatriculaAlumnoObligacionAluCab FOREIGN KEY (I_MatAluID) REFERENCES TC_MatriculaAlumno(I_MatAluID)
+CONSTRAINT FK_MatriculaAlumno_ObligacionAluCab FOREIGN KEY (I_MatAluID) REFERENCES TC_MatriculaAlumno(I_MatAluID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 )
@@ -394,7 +399,7 @@ CREATE TABLE TI_ConceptoPago
 	I_ConcPagID          int IDENTITY ( 1,1 ) ,
 	I_ProcesoID          int  NOT NULL ,
 	I_ConceptoID         int  NOT NULL ,
-	T_ConceptoPagoDesc   char(18)  NULL ,
+	T_ConceptoPagoDesc   varchar(250)  NULL ,
 	B_Fraccionable       bit  NULL ,
 	B_ConceptoGeneral    bit  NULL ,
 	B_AgrupaConcepto     bit  NULL ,
@@ -436,7 +441,7 @@ CREATE TABLE TI_ConceptoPago
 	D_FecMod             datetime  NULL ,
 	I_TipoDescuentoID    int  NULL ,
 	CONSTRAINT PK_ConceptoPago PRIMARY KEY  CLUSTERED (I_ConcPagID ASC),
-	CONSTRAINT FK_ConceptoPago_Periodo FOREIGN KEY (I_ConceptoID) REFERENCES TC_Concepto(I_ConceptoID),
+	CONSTRAINT FK_Concepto_ConceptoPago FOREIGN KEY (I_ConceptoID) REFERENCES TC_Concepto(I_ConceptoID),
 CONSTRAINT FK_Periodo_ConceptoPagoPeriodo FOREIGN KEY (I_ProcesoID) REFERENCES TC_Proceso(I_ProcesoID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION,
@@ -460,7 +465,7 @@ CREATE TABLE TR_TasaUnfv
 	D_FecCre             datetime  NULL ,
 	I_ConcPagID          int  NOT NULL ,
 	CONSTRAINT PK_TasaUnfv PRIMARY KEY  CLUSTERED (I_TasaUnfvID ASC),
-	CONSTRAINT FK_ConceptoPagoTasaUnfv FOREIGN KEY (I_ConcPagID) REFERENCES TI_ConceptoPago(I_ConcPagID)
+	CONSTRAINT FK_ConceptoPago_TasaUnfv FOREIGN KEY (I_ConcPagID) REFERENCES TI_ConceptoPago(I_ConcPagID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 )
@@ -482,13 +487,13 @@ CREATE TABLE TRI_PagoProcesadoUnfv
 	I_UsuarioCre         int  NULL ,
 	B_Anulado            bit  NOT NULL ,
 	CONSTRAINT PK_PagoProcesadoUnfv PRIMARY KEY  CLUSTERED (I_PagoProcesID ASC),
-	CONSTRAINT FK_PagoCuentaDeposito_ObligacionConceptoPago FOREIGN KEY (I_PagoBancoID) REFERENCES TR_PagoBanco(I_PagoBancoID)
+	CONSTRAINT FK_PagoBanco_PagoProcesadoUnfv FOREIGN KEY (I_PagoBancoID) REFERENCES TR_PagoBanco(I_PagoBancoID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION,
 CONSTRAINT FK_ObligacionAluCab_PagoProcesadoUnfv FOREIGN KEY (I_ObligacionAluID) REFERENCES TR_ObligacionAluCab(I_ObligacionAluID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION,
-CONSTRAINT FK_TasaUnfvPagoProcesadoUnfv FOREIGN KEY (I_TasaUnfvID) REFERENCES TR_TasaUnfv(I_TasaUnfvID)
+CONSTRAINT FK_TasaUnfv_PagoProcesadoUnfv FOREIGN KEY (I_TasaUnfvID) REFERENCES TR_TasaUnfv(I_TasaUnfvID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 )
@@ -509,7 +514,7 @@ CREATE TABLE TR_ObligacionAluDet
 	I_UsuarioMod         int  NULL ,
 	D_FecMod             datetime  NULL ,
 	CONSTRAINT PK_ObligacionAluDet PRIMARY KEY  CLUSTERED (I_ObligacionAluID ASC,I_ConcPagID ASC),
-	CONSTRAINT FK_ConceptoPago_ObligacionAlumno FOREIGN KEY (I_ConcPagID) REFERENCES TI_ConceptoPago(I_ConcPagID)
+	CONSTRAINT FK_ConceptoPago_ObligacionAluDet FOREIGN KEY (I_ConcPagID) REFERENCES TI_ConceptoPago(I_ConcPagID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION,
 CONSTRAINT FK_ObligacionAluCab_ObligacionAluDet FOREIGN KEY (I_ObligacionAluID) REFERENCES TR_ObligacionAluCab(I_ObligacionAluID)
@@ -526,6 +531,7 @@ CREATE TABLE TC_ClasificadorIngreso
 	T_ClasificadorDesc   varchar(250)  NOT NULL ,
 	T_ClasificadorCod    varchar(50)  NULL ,
 	T_ClasificadorUnfv   varchar(50)  NULL ,
+	N_Anio				 varchar(4)  NULL,
 	B_Habilitado         bit  NOT NULL ,
 	B_Eliminado          bit  NOT NULL ,
 	I_UsuarioCre         int  NULL ,
@@ -587,10 +593,10 @@ CREATE TABLE TI_CtaDepo_Proceso
 	I_UsuarioMod         int  NULL ,
 	D_FecMod             datetime  NULL ,
 	CONSTRAINT PK_CtaDepo_Proceso PRIMARY KEY  CLUSTERED (I_CtaDepoProID ASC),
-	CONSTRAINT FK_Periodo_DependenciaCtaPagoPeriodo FOREIGN KEY (I_ProcesoID) REFERENCES TC_Proceso(I_ProcesoID)
+	CONSTRAINT FK_Proceso_CuentaDepoProceso FOREIGN KEY (I_ProcesoID) REFERENCES TC_Proceso(I_ProcesoID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION,
-CONSTRAINT FK_CuentaDeposito_DependenciaCtaDepoPeriodo FOREIGN KEY (I_CtaDepositoID) REFERENCES TC_CuentaDeposito(I_CtaDepositoID)
+CONSTRAINT FK_CuentaDeposito_CtaDepoProceso FOREIGN KEY (I_CtaDepositoID) REFERENCES TC_CuentaDeposito(I_CtaDepositoID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 )
@@ -642,8 +648,8 @@ go
 
 CREATE TABLE TC_SeccionArchivo
 ( 
-	I_SeccionArchivoID   int IDENTITY ( 1,1 ) ,
-	T_EstructFilDesc     varchar(50)  NOT NULL ,
+	I_SecArchivoID       int IDENTITY ( 1,1 ) ,
+	T_SecArchivoDesc     varchar(50)  NOT NULL ,
 	I_FilaInicio         smallint  NOT NULL ,
 	I_FilaFin            smallint  NULL ,
 	B_Habilitado         bit  NOT NULL ,
@@ -653,8 +659,8 @@ CREATE TABLE TC_SeccionArchivo
 	I_UsuarioMod         int  NULL ,
 	D_FecMod             datetime  NULL ,
 	I_TipArchivoEntFinanID int  NULL ,
-	CONSTRAINT PK_SeccionArchivo PRIMARY KEY  CLUSTERED (I_SeccionArchivoID ASC),
-	CONSTRAINT FK_TipoArchivoEntidadFinanciera_EstructFilasArchivo FOREIGN KEY (I_TipArchivoEntFinanID) REFERENCES TI_TipoArchivo_EntidadFinanciera(I_TipArchivoEntFinanID)
+	CONSTRAINT PK_SeccionArchivo PRIMARY KEY  CLUSTERED (I_SecArchivoID ASC),
+	CONSTRAINT FK_TipoArchivoEntidadFinanciera_SeccionArchivo FOREIGN KEY (I_TipArchivoEntFinanID) REFERENCES TI_TipoArchivo_EntidadFinanciera(I_TipArchivoEntFinanID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 )
@@ -664,19 +670,19 @@ go
 
 CREATE TABLE TC_ColumnaSeccion
 ( 
-	I_ColumnSeccID       int IDENTITY ( 1,1 ) ,
+	I_ColSecID           int IDENTITY ( 1,1 ) ,
 	T_ColSecDesc         varchar(50)  NOT NULL ,
-	I_ColumnaInicio      char(18)  NULL ,
-	I_ColumnaFin         char(18)  NULL ,
+	I_ColumnaInicio      smallint  NULL ,
+	I_ColumnaFin         smallint  NULL ,
 	B_Habilitado         bit  NOT NULL ,
 	B_Eliminado          bit  NOT NULL ,
 	I_UsuarioCre         int  NULL ,
 	D_FecCre             datetime  NULL ,
 	I_UsuarioMod         int  NULL ,
 	D_FecMod             datetime  NULL ,
-	I_SeccionArchivoID   int  NULL ,
-	CONSTRAINT PK_ColumnaSeccion PRIMARY KEY  CLUSTERED (I_ColumnSeccID ASC),
-	CONSTRAINT FK_EstructFilasArchivo_EstructColumnasArchivo FOREIGN KEY (I_SeccionArchivoID) REFERENCES TC_SeccionArchivo(I_SeccionArchivoID)
+	I_SecArchivoID       int  NULL ,
+	CONSTRAINT PK_ColumnaSeccion PRIMARY KEY  CLUSTERED (I_ColSecID ASC),
+	CONSTRAINT FK_SeccionArchivo_ColumnasSeccion FOREIGN KEY (I_SecArchivoID) REFERENCES TC_SeccionArchivo(I_SecArchivoID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 )
@@ -696,12 +702,17 @@ CREATE TABLE TC_CuentaDeposito_CategoriaPago
 	I_UsuarioMod         int  NULL ,
 	D_FecMod             datetime  NULL ,
 	CONSTRAINT PK_CuentaDeposito_CategoriaPago PRIMARY KEY  CLUSTERED (I_TipPerCtaDepoID ASC),
-	CONSTRAINT FK_CuentaDeposito_CuentaDepositoTipoPeriodo FOREIGN KEY (I_CtaDepositoID) REFERENCES TC_CuentaDeposito(I_CtaDepositoID)
+	CONSTRAINT FK_CuentaDeposito_CuentaDepositoCategoriaPago FOREIGN KEY (I_CtaDepositoID) REFERENCES TC_CuentaDeposito(I_CtaDepositoID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION,
-CONSTRAINT FK_TipoPeriodo_CuentaDepositoTipoPeriodo FOREIGN KEY (I_CatPagoID) REFERENCES TC_CategoriaPago(I_CatPagoID)
+CONSTRAINT FK_CategoriaPago_CuentaDepositoCategoriaPago FOREIGN KEY (I_CatPagoID) REFERENCES TC_CategoriaPago(I_CatPagoID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 )
 go
+
+
+
+
+
 
