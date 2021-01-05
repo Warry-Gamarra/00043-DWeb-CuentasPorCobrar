@@ -74,9 +74,9 @@
     <Compile Include="DTO\Options.cs" />
     <Compile Include="DTO\Parametro.cs" />
     <Compile Include="Entities\ClasificadorDeIngreso.cs" />
+    <Compile Include="Entities\ConceptoEntity.cs" />
+    <Compile Include="Entities\ConceptoPago.cs" />
     <Compile Include="Entities\ConceptoPagoEntity.cs" />
-    <Compile Include="Entities\ConceptoPagoPeriodo.cs" />
-    <Compile Include="Entities\ConceptoPagoPeriodoEntity.cs" />
     <Compile Include="Entities\CtaDepoProceso.cs" />
     <Compile Include="Entities\CuentaDeposito.cs" />
     <Compile Include="Entities\HelperResources.cs" />

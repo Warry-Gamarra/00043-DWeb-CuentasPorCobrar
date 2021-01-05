@@ -1,4 +1,4 @@
-﻿@model WebApp.ViewModels.MantenimientoConceptoPagoPeriodoViewModel
+﻿@model WebApp.ViewModels.MantenimientoConceptoPagoViewModel
 
 @using (Ajax.BeginForm("Save", "ConceptoPago", new AjaxOptions
 {
@@ -9,7 +9,7 @@
 }))
 {
     @Html.AntiForgeryToken()
-    @Html.HiddenFor(model => model.I_ConcPagPerID)
+    @Html.HiddenFor(model => model.I_ConcPagID)
     @Html.HiddenFor(model => model.B_Habilitado)
 
     <div class="form-horizontal">
@@ -87,10 +87,10 @@
         </div>
 
         <div class="form-group row">
-            <label class="control-label col-md-2" for="I_PeriodoID">Cuota de Pago (Bnco)</label>
+            <label class="control-label col-md-2" for="I_ProcesoID">Cuota de Pago (Bnco)</label>
             <div class="col-md-8">
-                @Html.DropDownListFor(model => model.I_PeriodoID, new SelectList(ViewBag.Lista_Combo_CuotaPago, "Value", "TextDisplay"), "[ SELECCIONAR ]", new { @class = "form-control" })
-                <p class="text-danger">@Html.ValidationMessageFor(model => model.I_PeriodoID)</p>
+                @Html.DropDownListFor(model => model.I_ProcesoID, new SelectList(ViewBag.Lista_Combo_Procesos, "Value", "TextDisplay"), "[ SELECCIONAR ]", new { @class = "form-control" })
+                <p class="text-danger">@Html.ValidationMessageFor(model => model.I_ProcesoID)</p>
             </div>
         </div>
 
@@ -100,10 +100,10 @@
                 @Html.TextBoxFor(model => model.T_Clasificador, new { @class = "form-control" })
                 <p class="text-danger">@Html.ValidationMessageFor(model => model.T_Clasificador)</p>
             </div>
-            @Html.LabelFor(model => model.T_Clasificador5, new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.C_CodTasa, new { @class = "control-label col-md-2" })
             <div class="col-md-3">
-                @Html.TextBoxFor(model => model.T_Clasificador5, new { @class = "form-control" })
-                <p class="text-danger">@Html.ValidationMessageFor(model => model.T_Clasificador5)</p>
+                @Html.TextBoxFor(model => model.C_CodTasa, new { @class = "form-control" })
+                <p class="text-danger">@Html.ValidationMessageFor(model => model.C_CodTasa)</p>
             </div>
         </div>
 

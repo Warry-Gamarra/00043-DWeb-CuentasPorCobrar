@@ -6,19 +6,18 @@ using System.Web;
 
 namespace WebApp.ViewModels
 {
-    public class ConceptoPagoPeriodoViewModel
+    public class ConceptoPagoViewModel
     {
-        public int I_ConcPagPerID { get; set; }
-        public string T_TipoPerDesc { get; set; }
+        public int I_ConcPagID { get; set; }
         public string T_ConceptoDesc { get; set; }
         public int I_Anio { get; set; }
         public int I_Periodo { get; set; }
         public decimal M_Monto { get; set; }
     }
 
-    public class MantenimientoConceptoPagoPeriodoViewModel
+    public class MantenimientoConceptoPagoViewModel
     {
-        public int? I_ConcPagPerID { get; set; }
+        public int? I_ConcPagID { get; set; }
         [Display(Name = "Descripción")]
         [Required]
         public int I_ConceptoID { get; set; }
@@ -29,11 +28,11 @@ namespace WebApp.ViewModels
         public int? I_GradoDestino { get; set; }
         public int? I_TipoObligacion { get; set; }
         [Display(Name = "Cuota de Pago")]
-        public int I_PeriodoID { get; set; }
+        public int I_ProcesoID { get; set; }
         [Display(Name = "Clasificador")]
         public string T_Clasificador { get; set; }
         [Display(Name = "Clasificador (5 dígitos)")]
-        public string T_Clasificador5 { get; set; }
+        public string C_CodTasa { get; set; }
         public bool B_Calculado { get; set; }
         public int? I_Calculado { get; set; }
         public bool B_AnioPeriodo { get; set; }

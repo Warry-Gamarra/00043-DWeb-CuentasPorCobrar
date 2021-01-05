@@ -43,7 +43,7 @@ namespace Data.Tables
             return result;
         }
 
-        public static List<TI_CtaDepo_Proceso> FindByPeriodo(int I_ProcesoID)
+        public static List<TI_CtaDepo_Proceso> FindByProceso(int I_ProcesoID)
         {
             List<TI_CtaDepo_Proceso> result;
 

@@ -12,26 +12,25 @@ namespace WebApp.Models
     public class ConceptoPagoModel
     {
         ConceptoPagoService conceptoPagoService;
-        PeriodoService periodoService;
+        ProcesoService procesoService;
 
         public ConceptoPagoModel()
         {
             conceptoPagoService = new ConceptoPagoService();
-            periodoService = new PeriodoService();
+            procesoService = new ProcesoService();
         }
 
-        public List<ConceptoPagoPeriodoViewModel> Listar_ConceptoPagoPeriodo_Habilitados()
+        public List<ConceptoPagoViewModel> Listar_ConceptoPago_Habilitados()
         {
-            List<ConceptoPagoPeriodoViewModel> result = new List<ConceptoPagoPeriodoViewModel>();
+            List<ConceptoPagoViewModel> result = new List<ConceptoPagoViewModel>();
 
-            var lista = conceptoPagoService.Listar_ConceptoPagoPeriodo_Habilitados();
+            var lista = conceptoPagoService.Listar_ConceptoPago_Habilitados();
 
             if (lista != null)
             {
-                result = lista.Select(x => new ConceptoPagoPeriodoViewModel()
+                result = lista.Select(x => new ConceptoPagoViewModel()
                 {
-                    I_ConcPagPerID = x.I_ConcPagPerID,
-                    T_TipoPerDesc = x.T_TipoPerDesc,
+                    I_ConcPagID = x.I_ConcPagID,
                     T_ConceptoDesc = x.T_ConceptoDesc,
                     I_Anio = x.I_Anio,
                     I_Periodo = x.I_Periodo,
@@ -42,11 +41,11 @@ namespace WebApp.Models
             return result;
         }
 
-        public List<SelectViewModel> Listar_Combo_ConceptoPago()
+        public List<SelectViewModel> Listar_Combo_Concepto()
         {
             List<SelectViewModel> result = new List<SelectViewModel>();
 
-            var lista = conceptoPagoService.Listar_ConceptoPago_Habilitados();
+            var lista = conceptoPagoService.Listar_Concepto_Habilitados();
 
             if (lista != null)
             {
@@ -78,34 +77,34 @@ namespace WebApp.Models
             return result;
         }
 
-        public List<SelectViewModel> Listar_Combo_CuotaPago()
+        public List<SelectViewModel> Listar_Combo_Procesos()
         {
             List<SelectViewModel> result = new List<SelectViewModel>();
 
-            var lista = periodoService.Listar_Periodos_Habilitados();
+            var lista = procesoService.Listar_Procesos();
 
             if (lista != null)
             {
                 result = lista.Select(x => new SelectViewModel()
                 {
-                    Value = x.I_PeriodoID.ToString(),
-                    TextDisplay = x.T_TipoPerDesc
+                    Value = x.I_ProcesoID.ToString(),
+                    TextDisplay = x.T_CatPagoDesc
                 }).ToList();
             }
 
             return result;
         }
 
-        public Response Grabar_ConceptoPagoPeriodo(MantenimientoConceptoPagoPeriodoViewModel model, int currentUserId)
+        public Response Grabar_ConceptoPago(MantenimientoConceptoPagoViewModel model, int currentUserId)
         {
-            ConceptoPagoPeriodoEntity conceptoPagoPeriodoEntity;
+            ConceptoPagoEntity conceptoPagoEntity;
             
-            var saveOption = (!model.I_ConcPagPerID.HasValue) ? SaveOption.Insert : SaveOption.Update;
+            var saveOption = (!model.I_ConcPagID.HasValue) ? SaveOption.Insert : SaveOption.Update;
 
-            conceptoPagoPeriodoEntity = new ConceptoPagoPeriodoEntity()
+            conceptoPagoEntity = new ConceptoPagoEntity()
             {
-                I_ConcPagPerID = model.I_ConcPagPerID.GetValueOrDefault(),
-                I_PeriodoID = model.I_PeriodoID,
+                I_ConcPagID = model.I_ConcPagID.GetValueOrDefault(),
+                I_ProcesoID = model.I_ProcesoID,
                 I_ConceptoID = model.I_ConceptoID,
                 B_Fraccionable = model.B_Fraccionable,
                 B_ConceptoGeneral = model.B_ConceptoGeneral,
@@ -114,7 +113,7 @@ namespace WebApp.Models
                 I_GradoDestino = model.I_GradoDestino,
                 I_TipoObligacion = model.I_TipoObligacion,
                 T_Clasificador = model.T_Clasificador,
-                T_Clasificador5 = model.T_Clasificador5,
+                C_CodTasa = model.C_CodTasa,
                 B_Calculado = model.B_Calculado,
                 I_Calculado = model.I_Calculado,
                 B_AnioPeriodo = model.B_AnioPeriodo,
@@ -143,19 +142,19 @@ namespace WebApp.Models
                 I_UsuarioMod = currentUserId
             };
 
-            var result = conceptoPagoService.Grabar_ConceptoPagoPeriodo(conceptoPagoPeriodoEntity, saveOption);
+            var result = conceptoPagoService.Grabar_ConceptoPago(conceptoPagoEntity, saveOption);
 
             return result;
         }
 
-        public MantenimientoConceptoPagoPeriodoViewModel Obtener_ConceptoPagoPeriodo(int I_ConcPagPerID)
+        public MantenimientoConceptoPagoViewModel Obtener_ConceptoPago(int I_ConcPagID)
         {
-            var conceptoPago = conceptoPagoService.Obtener_ConceptoPagoPeriodo(I_ConcPagPerID);
+            var conceptoPago = conceptoPagoService.Obtener_ConceptoPago(I_ConcPagID);
 
-            var model = new MantenimientoConceptoPagoPeriodoViewModel()
+            var model = new MantenimientoConceptoPagoViewModel()
             {
-                I_ConcPagPerID = conceptoPago.I_ConcPagPerID,
-                I_PeriodoID = conceptoPago.I_PeriodoID,
+                I_ConcPagID = conceptoPago.I_ConcPagID,
+                I_ProcesoID = conceptoPago.I_ProcesoID,
                 I_ConceptoID = conceptoPago.I_ConceptoID,
                 B_Fraccionable = conceptoPago.B_Fraccionable.HasValue ? conceptoPago.B_Fraccionable.Value : false,
                 B_ConceptoGeneral = conceptoPago.B_ConceptoGeneral.HasValue ? conceptoPago.B_ConceptoGeneral.Value : false,
@@ -164,7 +163,7 @@ namespace WebApp.Models
                 I_GradoDestino = conceptoPago.I_GradoDestino,
                 I_TipoObligacion = conceptoPago.I_TipoObligacion,
                 T_Clasificador = conceptoPago.T_Clasificador,
-                T_Clasificador5 = conceptoPago.T_Clasificador5,
+                C_CodTasa = conceptoPago.C_CodTasa,
                 B_Calculado = conceptoPago.B_Calculado.HasValue ? conceptoPago.B_Calculado.Value : false,
                 I_Calculado = conceptoPago.I_Calculado,
                 B_AnioPeriodo = conceptoPago.B_AnioPeriodo.HasValue ? conceptoPago.B_AnioPeriodo.Value : false,

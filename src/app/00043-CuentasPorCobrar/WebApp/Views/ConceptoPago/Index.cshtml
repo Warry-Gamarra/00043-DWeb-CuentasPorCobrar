@@ -1,4 +1,4 @@
-﻿@model IEnumerable<WebApp.ViewModels.ConceptoPagoPeriodoViewModel>
+﻿@model IEnumerable<WebApp.ViewModels.ConceptoPagoViewModel>
 
 @using GridMvc.Html
 
@@ -29,7 +29,6 @@
         <div class="table-responsive" style="min-height:300px">
             @Html.Grid(Model).Columns(columns =>
             {
-                columns.Add(c => c.T_TipoPerDesc).Titled("Cuota Pago").Filterable(true);
                 columns.Add(c => c.T_ConceptoDesc).Titled("Descripción").Filterable(true);
                 columns.Add(c => c.I_Anio).Titled("Año").Filterable(true);
                 columns.Add(c => c.I_Periodo).Titled("Periodo").Filterable(true);
