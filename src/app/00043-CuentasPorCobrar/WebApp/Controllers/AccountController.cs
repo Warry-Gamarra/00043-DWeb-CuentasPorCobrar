@@ -205,6 +205,7 @@ namespace WebApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("seguridad/cambiar-password")]
         public ActionResult CambiarPassword(ChangePasswordViewModel model)
         {
             Response result = new Response();
