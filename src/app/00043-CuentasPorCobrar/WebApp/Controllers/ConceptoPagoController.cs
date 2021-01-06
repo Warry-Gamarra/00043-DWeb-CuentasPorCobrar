@@ -122,7 +122,7 @@ namespace WebApp.Controllers
 
             ViewBag.Lista_Opciones_TipoObligacion = conceptoPagoModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.TipoObligacion);
 
-            ViewBag.Listar_Combo_Procesos = conceptoPagoModel.Listar_Combo_Procesos();
+            ViewBag.Lista_Combo_Procesos = conceptoPagoModel.Listar_Combo_Procesos();
 
             ViewBag.Lista_Opciones_CampoCalculado = conceptoPagoModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.CampoCalculado);
 

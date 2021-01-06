@@ -31,7 +31,7 @@ namespace Data.Views
                 {
                     string s_command = @"SELECT U.UserId, U.UserName, U.I_UsuarioCrea, U.D_FecActualiza, U.B_CambiaPassword, U.B_Habilitado, DU.I_DatosUsuarioID, DU.N_NumDoc, 
                                                 DU.T_NomPersona, DU.T_CorreoUsuario, UDU.D_FecAlta, UIR.RoleId, R.RoleName, U.I_DependenciaID
-                                           FROM [dbo].[TC_Usuarios] U
+                                           FROM [dbo].[TC_Usuario] U
                                                 INNER JOIN [dbo].[webpages_UsersInRoles] UIR ON U.UserId = UIR.UserId
 	                                            INNER JOIN [dbo].[webpages_Roles] R ON UIR.RoleId = R.RoleId
 												LEFT JOIN [dbo].[TI_UsuarioDatosUsuario] UDU ON UDU.UserId = U.UserId AND UDU.B_Habilitado = 1
@@ -57,7 +57,7 @@ namespace Data.Views
                 {
                     string s_command = @"SELECT U.UserId, U.UserName, U.I_UsuarioCrea, U.D_FecActualiza, U.B_CambiaPassword, U.B_Habilitado, DU.I_DatosUsuarioID, DU.N_NumDoc, 
                                                 DU.T_NomPersona, DU.T_CorreoUsuario, UDU.D_FecAlta, UIR.RoleId, R.RoleName, U.I_DependenciaID
-                                           FROM [dbo].[TC_Usuarios] U
+                                           FROM [dbo].[TC_Usuario] U
                                                 INNER JOIN [dbo].[webpages_UsersInRoles] UIR ON U.UserId = UIR.UserId
 	                                            INNER JOIN [dbo].[webpages_Roles] R ON UIR.RoleId = R.RoleId
 												LEFT JOIN [dbo].[TI_UsuarioDatosUsuario] UDU ON UDU.UserId = U.UserId AND UDU.B_Habilitado = 1
