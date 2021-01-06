@@ -50,6 +50,7 @@ namespace WebApp.ViewModels
             this.Id = entidadFinanciera.Id;
             this.NombreEntidad = entidadFinanciera.Nombre;
             this.Habilitado = entidadFinanciera.Habilitado;
+            this.HabilitarArchivos = entidadFinanciera.ArchivosEntidad;
         }
 
     }
