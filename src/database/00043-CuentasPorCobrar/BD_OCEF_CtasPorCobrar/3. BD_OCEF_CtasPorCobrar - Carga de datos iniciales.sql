@@ -10,27 +10,6 @@ INSERT INTO [dbo].[TS_CorreoAplicacion](T_DireccionCorreo, T_PasswordCorreo, T_S
 GO
 
 
-
-/* -------------------------------- TC_TipoPeriodo ------------------------------------ */
-INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Habilitado, B_Eliminado) VALUES (N'MATRICULA INGRESANTE PRE', 1, 1, 0)
-INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Habilitado, B_Eliminado) VALUES (N'MATRICULA REGULAR PRE', 1, 1, 0)
-INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Habilitado, B_Eliminado) VALUES (N'PEN.MA-ING-EUPG', 1, 1, 0)
-INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Habilitado, B_Eliminado) VALUES (N'PEN.MA-REG-EUPG', 1, 1, 0)
-INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Habilitado, B_Eliminado) VALUES (N'PEN.DO-ING-EUPG', 1, 1, 0)
-INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Habilitado, B_Eliminado) VALUES (N'PEN.DO-REG-EUPG', 1, 1, 0)
-GO
-
-
-INSERT TC_EntidadFinanciera(T_EntidadDesc, B_Habilitado, B_Eliminado)values('BANCO DE COMERCIO', 1, 0)
-INSERT TC_EntidadFinanciera(T_EntidadDesc, B_Habilitado, B_Eliminado)values('BANCO DE CRÉDITO', 1, 0)
-
-INSERT TC_CuentaDeposito(I_EntidadFinanID, C_NumeroCuenta, B_Habilitado, B_Eliminado) VALUES(1, '110-01-0414438', 1, 0)
-INSERT TC_CuentaDeposito(I_EntidadFinanID, C_NumeroCuenta, B_Habilitado, B_Eliminado) VALUES(2, '119-104146435-1-01', 1, 0)
-
-INSERT TC_CuentaDeposito_CategoriaPago(I_CtaDepositoID, I_CatPagoID, B_Habilitado, B_Eliminado) VALUES(1,1,1,0)
-INSERT TC_CuentaDeposito_CategoriaPago(I_CtaDepositoID, I_CatPagoID, B_Habilitado, B_Eliminado) VALUES(2,1,1,0)
-
-
 INSERT TC_Parametro(T_ParametroDesc, B_Habilitado, B_Eliminado) VALUES('TIPO ALUMNO', 1, 0)
 INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(1, 'Alum. Regulares', '1', 1, 0)
 INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(1, 'Alumn. Ingresantes', '2', 1, 0)
@@ -50,12 +29,47 @@ INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, B_Habilitado, B_Eliminado)
 INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, B_Habilitado, B_Eliminado) VALUES(3, 'Otros pagos', 1, 0)
 
 
-
 INSERT TC_Parametro(T_ParametroDesc, B_Habilitado, B_Eliminado) VALUES('CAMPO CALCULADO', 1, 0)
 INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(4, 'Crd. Desaprobados', '1', 1, 0)
 INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(4, 'Deudas Anteriores', '2', 1, 0)
 INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(4, 'Pensión de enseñanza', '3', 1, 0)
 INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(4, 'No Voto', '4', 1, 0)
+
+
+
+/* -------------------------------- TC_CategoriaPago ------------------------------------ */
+
+INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (N'MIGRADO (CATEGORIA TEMPORAL)', 10, 1, 8, 3, 0, 0)
+
+INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (N'MATRÍCULA PREGRADO INGRESANTE', 1, 1, 4, 2, 1, 0)
+INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (N'MATRÍCULA PREGRADO REGULAR', 1, 1, 4, 1, 1, 0)
+INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (N'MATRÍCULA EUPG MAESTRÍA INGRESANTE', 1, 1, 5, 2, 1, 0)
+INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (N'MATRÍCULA EUPG MAESTRÍA REGULAR', 1, 1, 5, 1, 1, 0)
+INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (N'MATRÍCULA EUPG DOCTORADO INGRESANTE', 1, 1, 6, 2, 1, 0)
+INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (N'MATRÍCULA EUPG DOCTORADO REGULAR', 1, 1, 6, 1, 1, 0)
+INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (N'PENSIÓN EUPG MAESTRÍA INGRESANTE', 2, 1, 5, 2, 1, 0)
+INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (N'PENSIÓN EUPG MAESTRÍA REGULAR', 2, 1, 5, 1, 1, 0)
+INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (N'PENSIÓN EUPG DOCTORADO INGRESANTE', 2, 1, 6, 2, 1, 0)
+INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (N'PENSIÓN EUPG DOCTORADO REGULAR', 2, 1, 6, 1, 1, 0)
+
+INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (N'OTROS PAGOS PREGRADO INGRESANTE', 2, 1, 4, 2, 1, 0)
+INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (N'OTROS PAGOS PREGRADO REGULAR', 2, 1, 4, 1, 1, 0)
+INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (N'OTROS PAGOS EUPG INGRESANTE', 2, 1, 7, 2, 1, 0)
+INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (N'OTROS PAGOS EUPG REGULAR', 2, 1, 7, 1, 1, 0)
+
+INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (N'SERVICIO DE SALUD', 2, 1, 6, 1, 1, 0)
+
+GO
+
+
+INSERT TC_EntidadFinanciera(T_EntidadDesc, B_Habilitado, B_Eliminado)values('BANCO DE COMERCIO', 1, 0)
+INSERT TC_EntidadFinanciera(T_EntidadDesc, B_Habilitado, B_Eliminado)values('BANCO DE CRÉDITO', 1, 0)
+
+INSERT TC_CuentaDeposito(I_EntidadFinanID, C_NumeroCuenta, B_Habilitado, B_Eliminado) VALUES(1, '110-01-0414438', 1, 0)
+INSERT TC_CuentaDeposito(I_EntidadFinanID, C_NumeroCuenta, B_Habilitado, B_Eliminado) VALUES(2, '119-104146435-1-01', 1, 0)
+
+INSERT TC_CuentaDeposito_CategoriaPago(I_CtaDepositoID, I_CatPagoID, B_Habilitado, B_Eliminado) VALUES(1,1,1,0)
+INSERT TC_CuentaDeposito_CategoriaPago(I_CtaDepositoID, I_CatPagoID, B_Habilitado, B_Eliminado) VALUES(2,1,1,0)
 
 
 
@@ -241,3 +255,34 @@ INSERT INTO TC_TipoArchivo (I_TipoArchivoID, T_TipoArchivDesc, B_ArchivoEntrada,
 INSERT INTO TC_TipoArchivo (I_TipoArchivoID, T_TipoArchivDesc, B_ArchivoEntrada, B_ArchivoSalida, B_Habilitado, B_Eliminado) VALUES (4, 'PAGO DE TASAS SIN OBLIGACIONES', 1, 0, 1, 0)
 
 SET IDENTITY_INSERT TC_TipoArchivo OFF;
+
+
+/*---------------------------------------------------------------------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------------------------------------------------------------------*/
+/*														MIGRACION DE DATOS DEL TEMPORAL DE PAGOS										 */
+/*---------------------------------------------------------------------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------------------------------------------------------------------*/
+
+SET IDENTITY_INSERT TC_Proceso ON
+
+INSERT INTO TC_Proceso (I_ProcesoID, I_CatPagoID, T_ProcesoDesc, I_Anio, I_Periodo, N_CodBanco, D_FecVencto, I_Prioridad, B_Mora, B_Migrado, B_Habilitado, B_Eliminado)
+		SELECT CAST(CUOTA_PAGO AS INT), 1, DESCRIPCIO, CASE ISNUMERIC(LTRIM(SUBSTRING(LTRIM(DESCRIPCIO),1,4))) WHEN 1 THEN SUBSTRING(LTRIM(DESCRIPCIO),1,4) ELSE 0 END, NULL, 
+				CODIGO_BNC, FCH_VENC, PRIORIDAD, CASE C_MORA WHEN 'VERDADERO' THEN 1 ELSE 0 END, 1, 1, ELIMINADO
+		FROM temporal_pagos.dbo.cp_des
+		WHERE CUOTA_PAGO NOT IN (143, 330, 331, 438, 439)
+		UNION 
+		SELECT CAST(CUOTA_PAGO AS INT), 1, DESCRIPCIO, CASE ISNUMERIC(LTRIM(SUBSTRING(LTRIM(DESCRIPCIO),1,4))) WHEN 1 THEN SUBSTRING(LTRIM(DESCRIPCIO),1,4) ELSE 0 END, NULL, 
+				CODIGO_BNC, FCH_VENC, PRIORIDAD, CASE C_MORA WHEN 'VERDADERO' THEN 1 ELSE 0 END, 1, 1, ELIMINADO
+		FROM temporal_pagos.dbo.cp_des
+		WHERE CUOTA_PAGO IN (143, 330, 331, 438, 439) AND ELIMINADO = 0
+
+SET IDENTITY_INSERT TC_Proceso OFF
+GO
+
+
+SET IDENTITY_INSERT TC_Concepto ON
+
+INSERT INTO TC_Concepto (I_ConceptoID, T_ConceptoDesc, B_Habilitado, B_Eliminado) VALUES (0, 'MIGRADO', 0, 0)
+
+SET IDENTITY_INSERT TC_Concepto OFF
+GO
