@@ -12,11 +12,11 @@ namespace WebApp.Controllers
 {
     public class ServiceController : ApiController
     {
-        PeriodoModel periodoModel;
+        ProcesoModel procesoModel;
 
         public ServiceController()
         {
-            periodoModel = new PeriodoModel();
+            procesoModel = new ProcesoModel();
         }
 
         // GET: api/Service/5
@@ -32,7 +32,7 @@ namespace WebApp.Controllers
                 throw new HttpResponseException(error);
             }
 
-            return periodoModel.Obtener_Prioridad_Tipo_Periodo(id);
+            return procesoModel.Obtener_Prioridad_Tipo_Proceso(id);
         }
 
         // GET: api/Service/5
@@ -48,7 +48,7 @@ namespace WebApp.Controllers
                 throw new HttpResponseException(error);
             }
 
-            var lista = periodoModel.Listar_Combo_CtaDepositoHabilitadas(id);
+            var lista = procesoModel.Listar_Combo_CtaDepositoHabilitadas(id);
             
             return lista;
         }

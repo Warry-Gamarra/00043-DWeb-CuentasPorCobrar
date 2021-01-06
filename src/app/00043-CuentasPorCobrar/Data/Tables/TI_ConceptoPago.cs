@@ -1,15 +1,19 @@
-﻿using System;
+﻿using Dapper;
+using Data.Connection;
+using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Entities
+namespace Data.Tables
 {
-    public class ConceptoPagoPeriodoEntity
+    public class TI_ConceptoPago
     {
-        public int I_ConcPagPerID { get; set; }
-        public int I_PeriodoID { get; set; }
+        public int I_ConcPagID { get; set; }
+        public int I_ProcesoID { get; set; }
         public int I_ConceptoID { get; set; }
         public bool? B_Fraccionable { get; set; }
         public bool? B_ConceptoGeneral { get; set; }
@@ -18,7 +22,7 @@ namespace Domain.Entities
         public int? I_GradoDestino { get; set; }
         public int? I_TipoObligacion { get; set; }
         public string T_Clasificador { get; set; }
-        public string T_Clasificador5 { get; set; }
+        public string C_CodTasa { get; set; }
         public bool? B_Calculado { get; set; }
         public int? I_Calculado { get; set; }
         public bool? B_AnioPeriodo { get; set; }
@@ -42,8 +46,32 @@ namespace Domain.Entities
         public decimal? M_MontoMinimo { get; set; }
         public string T_DescripcionLarga { get; set; }
         public string T_Documento { get; set; }
-        public bool B_Habilitado { get; set; }
+        public bool? B_Habilitado { get; set; }
+        public bool? B_Eliminado { get; set; }
         public int? I_UsuarioCre { get; set; }
+        public DateTime? D_FecCre { get; set; }
         public int? I_UsuarioMod { get; set; }
+        public DateTime? D_FecMod { get; set; }
+
+        public static TI_ConceptoPago FindByID(int I_ConcPagID)
+        {
+            TI_ConceptoPago result;
+
+            try
+            {
+                string s_command = @"SELECT c.* FROM TI_ConceptoPago c where c.I_ConcPagID = @I_ConcPagID AND c.B_Eliminado = 0";
+
+                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
+                {
+                    result = _dbConnection.Query<TI_ConceptoPago>(s_command, new { I_ConcPagID = I_ConcPagID }, commandType: CommandType.Text).FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
     }
 }

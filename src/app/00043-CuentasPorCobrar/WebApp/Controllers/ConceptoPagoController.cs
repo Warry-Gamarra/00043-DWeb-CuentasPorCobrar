@@ -14,19 +14,19 @@ namespace WebApp.Controllers
     public class ConceptoPagoController : Controller
     {
         ConceptoPagoModel conceptoPagoModel;
-        PeriodoModel periodoModel;
+        ProcesoModel procesoModel;
 
         public ConceptoPagoController()
         {
             conceptoPagoModel = new ConceptoPagoModel();
-            periodoModel = new PeriodoModel();
+            procesoModel = new ProcesoModel();
         }
 
         public ActionResult Index()
         {
             ViewBag.Title = "Conceptos de Pago";
 
-            var lista = conceptoPagoModel.Listar_ConceptoPagoPeriodo_Habilitados();
+            var lista = conceptoPagoModel.Listar_ConceptoPago_Habilitados();
 
             return View(lista);
         }
@@ -57,20 +57,20 @@ namespace WebApp.Controllers
 
             Cargar_Listas();
 
-            var model = conceptoPagoModel.Obtener_ConceptoPagoPeriodo(id);
+            var model = conceptoPagoModel.Obtener_ConceptoPago(id);
 
             return PartialView("_MantenimientoConceptoPago", model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult Save(MantenimientoConceptoPagoPeriodoViewModel model)
+        public JsonResult Save(MantenimientoConceptoPagoViewModel model)
         {
             Response result = new Response();
 
             if (ModelState.IsValid)
             {
-                result = conceptoPagoModel.Grabar_ConceptoPagoPeriodo(model, WebSecurity.CurrentUserId);
+                result = conceptoPagoModel.Grabar_ConceptoPago(model, WebSecurity.CurrentUserId);
 
                 if (!result.Value)
                 {
@@ -78,7 +78,7 @@ namespace WebApp.Controllers
                 }
             }
 
-            ViewBag.Title = model.I_ConcPagPerID.HasValue ? "Editar registro" : "Nuevo registro";
+            ViewBag.Title = model.I_ConcPagID.HasValue ? "Editar registro" : "Nuevo registro";
 
             Cargar_Listas();
 
@@ -114,7 +114,7 @@ namespace WebApp.Controllers
 
         private void Cargar_Listas()
         {
-            ViewBag.Lista_Combo_ConceptoPago = conceptoPagoModel.Listar_Combo_ConceptoPago();
+            ViewBag.Lista_Combo_ConceptoPago = conceptoPagoModel.Listar_Combo_Concepto();
 
             ViewBag.Lista_Opciones_TipoAlumno = conceptoPagoModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.TipoAlumno);
 
@@ -122,11 +122,11 @@ namespace WebApp.Controllers
 
             ViewBag.Lista_Opciones_TipoObligacion = conceptoPagoModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.TipoObligacion);
 
-            ViewBag.Lista_Combo_CuotaPago = conceptoPagoModel.Listar_Combo_CuotaPago();
+            ViewBag.Listar_Combo_Procesos = conceptoPagoModel.Listar_Combo_Procesos();
 
             ViewBag.Lista_Opciones_CampoCalculado = conceptoPagoModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.CampoCalculado);
 
-            ViewBag.Lista_Anios = periodoModel.Listar_Anios();
+            ViewBag.Lista_Anios = procesoModel.Listar_Anios();
 
             ViewBag.Lista_Combo_Periodo = conceptoPagoModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.Periodo);
 

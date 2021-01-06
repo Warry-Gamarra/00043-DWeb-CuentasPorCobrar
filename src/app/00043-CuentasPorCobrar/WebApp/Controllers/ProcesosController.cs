@@ -11,20 +11,20 @@ using WebMatrix.WebData;
 
 namespace WebApp.Controllers
 {
-    public class PeriodosController : Controller
+    public class ProcesosController : Controller
     {
-        PeriodoModel periodoModel;
+        ProcesoModel procesoModel;
 
-        public PeriodosController()
+        public ProcesosController()
         {
-            periodoModel = new PeriodoModel();
+            procesoModel = new ProcesoModel();
         }
 
         public ActionResult Index()
         {
             ViewBag.Title = "Desc. Cuota de Pago";
 
-            var lista = periodoModel.Listar_Periodos_Habilitados();
+            var lista = procesoModel.Listar_Procesos();
 
             return View(lista);
         }
@@ -37,9 +37,9 @@ namespace WebApp.Controllers
 
             ViewBag.Lista_CtaDepoHabilitadas = new List<SelectViewModel>();
 
-            ViewBag.Lista_CtaDepoPeriodo = new List<SelectViewModel>();
+            ViewBag.Lista_CtaDepoProceso = new List<SelectViewModel>();
 
-            return PartialView("_MantenimientoPeriodo");
+            return PartialView("_MantenimientoProceso");
         }
 
         public ActionResult Edit(int id)
@@ -48,24 +48,24 @@ namespace WebApp.Controllers
 
             Cargar_Listas();
 
-            var model = periodoModel.Obtener_Periodo(id);
+            var model = procesoModel.Obtener_Proceso(id);
 
-            ViewBag.Lista_CtaDepoHabilitadas = periodoModel.Listar_Combo_CtaDepositoHabilitadas(model.I_TipoPeriodoID);
+            ViewBag.Lista_CtaDepoHabilitadas = procesoModel.Listar_Combo_CtaDepositoHabilitadas(model.I_CatPagoID);
 
-            ViewBag.Lista_CtaDepoPeriodo = periodoModel.Listar_Combo_CtasDepoPeriodo(id);
+            ViewBag.Lista_CtaDepoProceso = procesoModel.Listar_Combo_CtasDepoProceso(id);
 
-            return PartialView("_MantenimientoPeriodo", model);
+            return PartialView("_MantenimientoProceso", model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Save(MantenimientoPeriodoViewModel model)
+        public ActionResult Save(MantenimientoProcesoViewModel model)
         {
             Response result = new Response();
 
             if (ModelState.IsValid)
             {
-                result = periodoModel.Grabar_Periodo(model, WebSecurity.CurrentUserId);
+                result = procesoModel.Grabar_Proceso(model, WebSecurity.CurrentUserId);
             }
             else
             {
@@ -87,9 +87,9 @@ namespace WebApp.Controllers
 
         private void Cargar_Listas()
         {
-            ViewBag.Lista_TipoPeriodo = periodoModel.Listar_Combo_TipoPeriodo();
+            ViewBag.Lista_CategoriaPago = procesoModel.Listar_Combo_CategoriaPago();
 
-            ViewBag.Lista_Anios = periodoModel.Listar_Anios();
+            ViewBag.Lista_Anios = procesoModel.Listar_Anios();
         }
     }
 }

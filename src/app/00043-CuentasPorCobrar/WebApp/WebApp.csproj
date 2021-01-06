@@ -309,7 +309,7 @@
     <Compile Include="Controllers\CorreoController.cs" />
     <Compile Include="Controllers\PagosController.cs" />
     <Compile Include="Controllers\ConceptoPagoController.cs" />
-    <Compile Include="Controllers\PeriodosController.cs" />
+    <Compile Include="Controllers\ProcesosController.cs" />
     <Compile Include="Controllers\ServiceController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
@@ -324,7 +324,7 @@
     <Compile Include="Models\EstudianteModels.cs" />
     <Compile Include="Models\ManualUsuarioModel.cs" />
     <Compile Include="Models\SelectModels.cs" />
-    <Compile Include="Models\PeriodoModel.cs" />
+    <Compile Include="Models\ProcesoModel.cs" />
     <Compile Include="Models\ConceptoPagoModel.cs" />
     <Compile Include="Models\UsersModel.cs" />
     <Compile Include="Models\CorreoAplicacionModel.cs" />
@@ -336,9 +336,9 @@
     <Compile Include="ViewModels\EntidadFinancieraViewModels.cs" />
     <Compile Include="ViewModels\CuentaDepositoViewModels.cs" />
     <Compile Include="ViewModels\CorreoAplicacionViewModel.cs" />
-    <Compile Include="ViewModels\ConceptoPagoPeriodoViewModel.cs" />
+    <Compile Include="ViewModels\ConceptoPagoViewModel.cs" />
     <Compile Include="ViewModels\EstudiantesViewModels.cs" />
-    <Compile Include="ViewModels\PeriodoViewModel.cs" />
+    <Compile Include="ViewModels\ProcesoViewModel.cs" />
     <Compile Include="ViewModels\RolesViewModel.cs" />
     <Compile Include="ViewModels\SelectViewModel.cs" />
     <Compile Include="ViewModels\UserManualViewModel.cs" />
@@ -377,14 +377,13 @@
     <Content Include="Views\Users\_DetailUser.cshtml" />
     <Content Include="Views\Shared\_GridPager.cshtml" />
     <Content Include="Views\Shared\_Grid.cshtml" />
-    <Content Include="Views\Periodos\Index.cshtml" />
-    <Content Include="Views\Periodos\_MantenimientoPeriodo.cshtml" />
+    <Content Include="Views\Procesos\Index.cshtml" />
+    <Content Include="Views\Procesos\_MantenimientoProceso.cshtml" />
     <Content Include="Views\ConceptoPago\Index.cshtml" />
     <Content Include="Views\ConceptoPago\Grabar.cshtml" />
     <Content Include="Views\Estudiantes\ArchivosImportados.cshtml" />
     <Content Include="Views\Estudiantes\ImportacionArchivo.cshtml" />
     <Content Include="Views\Estudiantes\Index.cshtml" />
-    <Content Include="Views\Periodos\Ejemplo.cshtml" />
     <Content Include="Views\Clasificadores\Index.cshtml" />
     <Content Include="Views\Clasificadores\_RegistrarClasificador.cshtml" />
     <Content Include="Views\EntidadFinanciera\Index.cshtml" />

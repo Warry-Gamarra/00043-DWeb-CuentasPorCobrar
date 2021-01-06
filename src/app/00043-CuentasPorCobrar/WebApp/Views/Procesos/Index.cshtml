@@ -1,4 +1,4 @@
-﻿@model IEnumerable<WebApp.ViewModels.PeriodoViewModel>
+﻿@model IEnumerable<WebApp.ViewModels.ProcesoViewModel>
 
 @using GridMvc.Html
 
@@ -18,7 +18,7 @@
     <br />
 
     <div class="col-12">
-        <a href="@Url.Action("Create", "Periodos")" class="btn btn-primary pull-right modal-link">
+        <a href="@Url.Action("Create", "Procesos")" class="btn btn-primary pull-right modal-link">
             <i class="fa fa-envelope"></i> Nuevo
         </a>
 
@@ -29,12 +29,12 @@
         <div class="table-responsive" style="min-height:300px">
             @Html.Grid(Model).Columns(columns =>
                 {
-                    columns.Add(c => c.T_TipoPerDesc).Titled("Descripción").Filterable(true);
+                    columns.Add(c => c.T_CatPagoDesc).Titled("Descripción").Filterable(true);
                     columns.Add(c => c.I_Anio).Titled("Año").Filterable(true);
                     columns.Add(c => c.D_FecVencto).Format("{0:dd/MM/yyyy}").Titled("Fch. Vencimiento").Filterable(true);
                     columns.Add(c => c.I_Prioridad).Titled("Prioridad").Filterable(true);
                     columns.Add().SetWidth(200).Css("text-right").Encoded(false).Sanitized(false).
-                        RenderValueAs(model => @<a href="@Url.Action("Edit", "Periodos", new { id = model.I_PeriodoID })" class="modal-link"><i class="fa fa-pencil-square-o" aria-hidden="true">&nbsp;</i><span class="d-none d-md-inline-block">Editar</span></a>);
+                        RenderValueAs(model => @<a href="@Url.Action("Edit", "Procesos", new { id = model.I_ProcesoID })" class="modal-link"><i class="fa fa-pencil-square-o" aria-hidden="true">&nbsp;</i><span class="d-none d-md-inline-block">Editar</span></a>);
                      }).WithPaging(10).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
         </div>
 
@@ -61,7 +61,7 @@
             return true;
         });
 
-        $(document).on("change", '#I_TipoPeriodoID', function (event) {
+        $(document).on("change", '#I_CatPagoID', function (event) {
             let txtPrioridad = $('#I_Prioridad');
             let cmbCtaDepositoHabilitadas = $('#cmbCuentasHabilitadas');
             let cmbCtaDeposito = $('#Arr_CtaDepositoID');

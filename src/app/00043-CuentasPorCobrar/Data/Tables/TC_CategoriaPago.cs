@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 
 namespace Data.Tables
 {
-    public class TC_TipoPeriodo
+    public class TC_CategoriaPago
     {
-        public int I_TipoPeriodoID { get; set; }
-        public string T_TipoPerDesc { get; set; }
+        public int I_CatPagoID { get; set; }
+        public string T_CatPagoDesc { get; set; }
         public int I_Prioridad { get; set; }
         public bool B_Habilitado { get; set; }
         public bool B_Eliminado { get; set; }
@@ -22,17 +22,17 @@ namespace Data.Tables
         public int? I_UsuarioMod { get; set; }
         public DateTime? D_FecMod { get; set; }
 
-        public static List<TC_TipoPeriodo> FindAll()
+        public static List<TC_CategoriaPago> FindAll()
         {
-            List<TC_TipoPeriodo> result;
+            List<TC_CategoriaPago> result;
 
             try
             {
-                string s_command = @"select t.* from dbo.TC_TipoPeriodo t  WHERE B_Eliminado = 0;";
+                string s_command = @"select t.* from dbo.TC_CategoriaPago t  WHERE B_Eliminado = 0;";
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    result = _dbConnection.Query<TC_TipoPeriodo>(s_command, commandType: CommandType.Text).ToList();
+                    result = _dbConnection.Query<TC_CategoriaPago>(s_command, commandType: CommandType.Text).ToList();
                 }
             }
             catch (Exception ex)
@@ -43,17 +43,17 @@ namespace Data.Tables
             return result;
         }
 
-        public static TC_TipoPeriodo FindByID(int I_TipoPeriodoID)
+        public static TC_CategoriaPago FindByID(int I_CatPagoID)
         {
-            TC_TipoPeriodo result;
+            TC_CategoriaPago result;
 
             try
             {
-                string s_command = @"select t.* from dbo.TC_TipoPeriodo t where t.I_TipoPeriodoID = @I_TipoPeriodoID";
+                string s_command = @"select t.* from dbo.TC_CategoriaPago t where t.I_CatPagoID = @I_CatPagoID";
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    result = _dbConnection.Query<TC_TipoPeriodo>(s_command, new { I_TipoPeriodoID  = I_TipoPeriodoID }, commandType: CommandType.Text).FirstOrDefault();
+                    result = _dbConnection.Query<TC_CategoriaPago>(s_command, new { I_CatPagoID = I_CatPagoID }, commandType: CommandType.Text).FirstOrDefault();
                 }
             }
             catch (Exception ex)

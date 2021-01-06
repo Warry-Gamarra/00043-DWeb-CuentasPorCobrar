@@ -16,7 +16,7 @@ namespace Data.Procedures
         public string C_NumeroCuenta { get; set; }
         public string T_EntidadDesc { get; set; }
 
-        public static List<USP_S_CuentaDeposito_Habilitadas> Execute(int I_TipoPeriodoID)
+        public static List<USP_S_CuentaDeposito_Habilitadas> Execute(int I_CatPagoID)
         {
             List<USP_S_CuentaDeposito_Habilitadas> lista;
             DynamicParameters parameters = new DynamicParameters();
@@ -27,7 +27,7 @@ namespace Data.Procedures
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    parameters.Add(name: "I_TipoPeriodoID", dbType: DbType.Int32, value: I_TipoPeriodoID);
+                    parameters.Add(name: "I_CatPagoID", dbType: DbType.Int32, value: I_CatPagoID);
 
                     lista = _dbConnection.Query<USP_S_CuentaDeposito_Habilitadas>(s_command, parameters, commandType: CommandType.StoredProcedure).ToList();
                 }

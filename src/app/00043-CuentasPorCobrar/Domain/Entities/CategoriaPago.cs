@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class TipoPeriodo
+    public class CategoriaPago
     {
-        public int I_TipoPeriodoID { get; set; }
-        public string T_TipoPerDesc { get; set; }
+        public int I_CatPagoID { get; set; }
+        public string T_CatPagoDesc { get; set; }
         public int I_Prioridad { get; set; }
     }
 }

@@ -13,16 +13,15 @@ namespace Domain.Services
 {
     public class ConceptoPagoService
     {
-        public List<ConceptoPagoPeriodo> Listar_ConceptoPagoPeriodo_Habilitados()
+        public List<ConceptoPago> Listar_ConceptoPago_Habilitados()
         {
             try
             {
-                var lista = USP_S_ConceptoPago_Periodo_Habilitados.Execute();
+                var lista = USP_S_ConceptoPago.Execute();
 
-                var result = lista.Select(x => new ConceptoPagoPeriodo()
+                var result = lista.Select(x => new ConceptoPago()
                 {
-                    I_ConcPagPerID = x.I_ConcPagPerID,
-                    T_TipoPerDesc = x.T_TipoPerDesc,
+                    I_ConcPagID = x.I_ConcPagID,
                     T_ConceptoDesc = x.T_ConceptoDesc,
                     I_Anio = x.I_Anio,
                     I_Periodo = x.I_Periodo,
@@ -37,13 +36,13 @@ namespace Domain.Services
             }
         }
 
-        public List<ConceptoPagoEntity> Listar_ConceptoPago_Habilitados()
+        public List<ConceptoEntity> Listar_Concepto_Habilitados()
         {
             try
             {
-                var lista = TC_ConceptoPago.Find();
+                var lista = TC_Concepto.Find();
 
-                var result = lista.Where(x => x.B_Habilitado).Select(x => new ConceptoPagoEntity()
+                var result = lista.Where(x => x.B_Habilitado).Select(x => new ConceptoEntity()
                 {
                     I_ConceptoID = x.I_ConceptoID,
                     T_ConceptoDesc = x.T_ConceptoDesc,
@@ -83,16 +82,16 @@ namespace Domain.Services
             }
         }
 
-        public Response Grabar_ConceptoPagoPeriodo(ConceptoPagoPeriodoEntity conceptoPago, SaveOption saveOption)
+        public Response Grabar_ConceptoPago(ConceptoPagoEntity conceptoPago, SaveOption saveOption)
         {
             ResponseData result;
 
             switch (saveOption)
             {
                 case SaveOption.Insert:
-                    var grabarConceptoPagoPeriodo = new USP_I_GrabarConceptoPago_Periodo()
+                    var grabarConceptoPago = new USP_I_GrabarConceptoPago()
                     {
-                        I_PeriodoID = conceptoPago.I_PeriodoID,
+                        I_ProcesoID = conceptoPago.I_ProcesoID,
                         I_ConceptoID = conceptoPago.I_ConceptoID,
                         B_Fraccionable = conceptoPago.B_Fraccionable,
                         B_ConceptoGeneral = conceptoPago.B_ConceptoGeneral,
@@ -101,7 +100,7 @@ namespace Domain.Services
                         I_GradoDestino = conceptoPago.I_GradoDestino,
                         I_TipoObligacion = conceptoPago.I_TipoObligacion,
                         T_Clasificador = conceptoPago.T_Clasificador,
-                        T_Clasificador5 = conceptoPago.T_Clasificador5,
+                        C_CodTasa = conceptoPago.C_CodTasa,
                         B_Calculado = conceptoPago.B_Calculado,
                         I_Calculado = conceptoPago.I_Calculado,
                         B_AnioPeriodo = conceptoPago.B_AnioPeriodo,
@@ -128,15 +127,15 @@ namespace Domain.Services
                         I_UsuarioCre = conceptoPago.I_UsuarioCre.GetValueOrDefault()
                     };
 
-                    result = grabarConceptoPagoPeriodo.Execute();
+                    result = grabarConceptoPago.Execute();
 
                     break;
 
                 case SaveOption.Update:
-                    var actualizarConceptoPagoPeriodo = new USP_U_ActualizarConceptoPago_Periodo()
+                    var actualizarConceptoPago = new USP_U_ActualizarConceptoPago()
                     {
-                        I_ConcPagPerID = conceptoPago.I_ConcPagPerID,
-                        I_PeriodoID = conceptoPago.I_PeriodoID,
+                        I_ConcPagID = conceptoPago.I_ConcPagID,
+                        I_ProcesoID = conceptoPago.I_ProcesoID,
                         I_ConceptoID = conceptoPago.I_ConceptoID,
                         B_Fraccionable = conceptoPago.B_Fraccionable,
                         B_ConceptoGeneral = conceptoPago.B_ConceptoGeneral,
@@ -145,7 +144,7 @@ namespace Domain.Services
                         I_GradoDestino = conceptoPago.I_GradoDestino,
                         I_TipoObligacion = conceptoPago.I_TipoObligacion,
                         T_Clasificador = conceptoPago.T_Clasificador,
-                        T_Clasificador5 = conceptoPago.T_Clasificador5,
+                        C_CodTasa = conceptoPago.C_CodTasa,
                         B_Calculado = conceptoPago.B_Calculado,
                         I_Calculado = conceptoPago.I_Calculado,
                         B_AnioPeriodo = conceptoPago.B_AnioPeriodo,
@@ -173,7 +172,7 @@ namespace Domain.Services
                         I_UsuarioMod = conceptoPago.I_UsuarioMod.GetValueOrDefault()
                     };
 
-                    result = actualizarConceptoPagoPeriodo.Execute();
+                    result = actualizarConceptoPago.Execute();
 
                     break;
 
@@ -190,20 +189,20 @@ namespace Domain.Services
             return new Response(result);
         }
 
-        public ConceptoPagoPeriodoEntity Obtener_ConceptoPagoPeriodo(int I_ConcPagPerID)
+        public ConceptoPagoEntity Obtener_ConceptoPago(int I_ConcPagID)
         {
-            ConceptoPagoPeriodoEntity result = null;
+            ConceptoPagoEntity result = null;
 
             try
             {
-                var conceptoPago = TI_ConceptoPago_Periodo.FindByID(I_ConcPagPerID);
+                var conceptoPago = TI_ConceptoPago.FindByID(I_ConcPagID);
 
                 if (conceptoPago != null)
                 {
-                    result = new ConceptoPagoPeriodoEntity()
+                    result = new ConceptoPagoEntity()
                     {
-                        I_ConcPagPerID = conceptoPago.I_ConcPagPerID,
-                        I_PeriodoID = conceptoPago.I_PeriodoID,
+                        I_ConcPagID = conceptoPago.I_ConcPagID,
+                        I_ProcesoID = conceptoPago.I_ProcesoID,
                         I_ConceptoID = conceptoPago.I_ConceptoID,
                         B_Fraccionable = conceptoPago.B_Fraccionable,
                         B_ConceptoGeneral = conceptoPago.B_ConceptoGeneral,
@@ -212,7 +211,7 @@ namespace Domain.Services
                         I_GradoDestino = conceptoPago.I_GradoDestino,
                         I_TipoObligacion = conceptoPago.I_TipoObligacion,
                         T_Clasificador = conceptoPago.T_Clasificador,
-                        T_Clasificador5 = conceptoPago.T_Clasificador5,
+                        C_CodTasa = conceptoPago.C_CodTasa,
                         B_Calculado = conceptoPago.B_Calculado,
                         I_Calculado = conceptoPago.I_Calculado,
                         B_AnioPeriodo = conceptoPago.B_AnioPeriodo,
