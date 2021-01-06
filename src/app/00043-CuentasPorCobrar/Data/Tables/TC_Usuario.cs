@@ -28,7 +28,7 @@ namespace Data.Tables
             {
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    string s_command = @"SELECT UserId, UserName, I_UsuarioCrea, B_CambiaPassword, B_Habilitado FROM TC_Usuarios WHERE UserName = @Username;";
+                    string s_command = @"SELECT UserId, UserName, I_UsuarioCrea, B_CambiaPassword, B_Habilitado FROM TC_Usuario WHERE UserName = @Username;";
 
                     result = _dbConnection.QuerySingleOrDefault<TC_Usuario>(s_command, new { UserName = username }, commandType: CommandType.Text);
                 }
