@@ -112,6 +112,16 @@ go
 
 
 
+CREATE TABLE webpages_Roles
+( 
+	RoleId               int IDENTITY ( 1,1 ) ,
+	RoleName             varchar(50)  NOT NULL ,
+	CONSTRAINT PK_Roles PRIMARY KEY  NONCLUSTERED (RoleId ASC)
+)
+go
+
+
+
 CREATE TABLE webpages_UsersInRoles
 ( 
 	UserId               int  NOT NULL ,
@@ -126,15 +136,6 @@ CONSTRAINT FK_Usuario_UsersInRoles FOREIGN KEY (UserId) REFERENCES TC_Usuario(Us
 )
 go
 
-
-
-CREATE TABLE webpages_Roles
-( 
-	RoleId               int IDENTITY ( 1,1 ) ,
-	RoleName             varchar(50)  NOT NULL ,
-	CONSTRAINT PK_Roles PRIMARY KEY  NONCLUSTERED (RoleId ASC)
-)
-go
 
 
 CREATE TABLE webpages_Membership
@@ -431,7 +432,7 @@ CREATE TABLE TI_ConceptoPago
 	M_Monto              decimal(15,2)  NULL ,
 	M_MontoMinimo        decimal(10,4)  NULL ,
 	T_DescripcionLarga   varchar(250)  NULL ,
-	T_Documento          varchar(250)  NULL ,
+	T_Documento          varchar(500)  NULL ,
 	B_Migrado            bit  NOT NULL ,
 	B_Habilitado         bit  NOT NULL ,
 	B_Eliminado          bit  NOT NULL ,

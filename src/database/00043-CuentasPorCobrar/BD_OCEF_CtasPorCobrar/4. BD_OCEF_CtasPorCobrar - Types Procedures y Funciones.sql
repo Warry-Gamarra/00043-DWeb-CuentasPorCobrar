@@ -213,8 +213,8 @@ AS
 BEGIN
 	SET NOCOUNT ON
   	BEGIN TRY
-		INSERT dbo.TC_Proceso(I_CatPagoID, I_Anio, D_FecVencto, I_Prioridad, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
-		VALUES(@I_CatPagoID, @I_Anio, @D_FecVencto, @I_Prioridad, 1, 0, @I_UsuarioCre, getdate())
+		INSERT dbo.TC_Proceso(I_CatPagoID, I_Anio, D_FecVencto, I_Prioridad, B_Migrado, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
+		VALUES(@I_CatPagoID, @I_Anio, @D_FecVencto, @I_Prioridad, 0, 1, 0, @I_UsuarioCre, getdate())
 		
 		SET @I_ProcesoID = SCOPE_IDENTITY()
 		SET @B_Result = 1
@@ -422,13 +422,13 @@ BEGIN
 			I_AlumnosDestino, I_GradoDestino, I_TipoObligacion, T_Clasificador, C_CodTasa, B_Calculado, I_Calculado, 
 			B_AnioPeriodo, I_Anio, I_Periodo, B_Especialidad, C_CodRc, B_Dependencia, C_DepCod, B_GrupoCodRc, I_GrupoCodRc, 
 			B_ModalidadIngreso, I_ModalidadIngresoID, B_ConceptoAgrupa, I_ConceptoAgrupaID, B_ConceptoAfecta, I_ConceptoAfectaID, 
-			N_NroPagos, B_Porcentaje, M_Monto, M_MontoMinimo, T_DescripcionLarga, T_Documento, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
+			N_NroPagos, B_Porcentaje, M_Monto, M_MontoMinimo, T_DescripcionLarga, T_Documento, B_Migrado, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
 		
 		VALUES(@I_ProcesoID, @I_ConceptoID, @B_Fraccionable, @B_ConceptoGeneral, @B_AgrupaConcepto, 
 			@I_AlumnosDestino, @I_GradoDestino, @I_TipoObligacion, @T_Clasificador, @C_CodTasa, @B_Calculado, @I_Calculado, 
 			@B_AnioPeriodo, @I_Anio, @I_Periodo, @B_Especialidad, @C_CodRc, @B_Dependencia, @C_DepCod, @B_GrupoCodRc, @I_GrupoCodRc,
 			@B_ModalidadIngreso, @I_ModalidadIngresoID, @B_ConceptoAgrupa, @I_ConceptoAgrupaID, @B_ConceptoAfecta, @I_ConceptoAfectaID, 
-			@N_NroPagos, @B_Porcentaje, @M_Monto, @M_MontoMinimo, @T_DescripcionLarga, @T_Documento, 1, 0, @I_UsuarioCre, getdate())
+			@N_NroPagos, @B_Porcentaje, @M_Monto, @M_MontoMinimo, @T_DescripcionLarga, @T_Documento, 0, 1, 0, @I_UsuarioCre, getdate())
 		
 		SET @I_ConcPagID = SCOPE_IDENTITY()
 		SET @B_Result = 1
@@ -1017,32 +1017,29 @@ GO
 
 /*-----------------------------------------------------------*/
 
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.DOMAINS WHERE DOMAIN_NAME = 'type_dataAlumno')
-	DROP TYPE [dbo].[type_dataAlumno]
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.DOMAINS WHERE DOMAIN_NAME = 'type_dataMatricula')
+	DROP TYPE [dbo].[type_dataMatricula]
 GO
 
-CREATE TYPE [dbo].[type_dataAlumno] AS TABLE(
-	C_Anio	  varchar(4)  NULL,
-	C_CodAlu  varchar(10) NULL,
-	C_CodRC	  varchar(5)  NULL,
-	I_IdPlan  int	 NULL,
-	C_EstMat  varchar(2)  NULL,
-	C_Nivel	  varchar(2)  NULL,
-	T_ApmAlu  varchar(50) NULL,
-	T_AppAlu  varchar(50) NULL,
-	T_Nombre  varchar(50) NULL,
-	T_NomAlu  varchar(200) NULL
+CREATE TYPE [dbo].[type_dataMatricula] AS TABLE(
+	C_CodRC			varchar(3)  NULL,
+	C_CodAlu		varchar(10) NULL,
+	I_Anio			int			NULL,
+	C_Periodo		char(1)		NULL,
+	C_EstMat		varchar(2)  NULL,
+	C_Ciclo			varchar(2)  NULL,
+	B_Ingresante	bit	NULL
 )
 GO
 
 
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_IU_GrabarAlumnosAptos')
-	DROP PROCEDURE [dbo].[USP_IU_GrabarAlumnosAptos]
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_IU_GrabarMatricula')
+	DROP PROCEDURE [dbo].[USP_IU_GrabarMatricula]
 GO
 
-CREATE PROCEDURE [dbo].[USP_IU_GrabarAlumnosAptos]
+CREATE PROCEDURE [dbo].[USP_IU_GrabarMatricula]
 (
-	 @Tbl_Alumno	[dbo].[type_dataAlumno]	READONLY
+	 @Tbl_Matricula	[dbo].[type_dataMatricula]	READONLY
 	,@D_FecRegistro datetime
 
 	,@UserID			int
@@ -1058,32 +1055,37 @@ BEGIN
 		DECLARE @Codigos varchar(500) 
 
 		-- comprobar que el archivo no tiene filas con codigos de alumno repetidos
-		IF EXISTS (SELECT C_CodAlu FROM @Tbl_Alumno GROUP BY C_CodAlu HAVING COUNT(C_CodAlu) > 1)
+		IF EXISTS (SELECT C_CodAlu FROM @Tbl_Matricula GROUP BY C_CodAlu HAVING COUNT(C_CodAlu) > 1)
 		BEGIN
 			SET @errors += 1
 					
 			SELECT @Codigos = COALESCE(@Codigos + ', ', '') + C_CodAlu  
-			FROM @Tbl_Alumno GROUP BY C_CodAlu HAVING COUNT(C_CodAlu) > 1
+			FROM @Tbl_Matricula GROUP BY C_CodAlu HAVING COUNT(C_CodAlu) > 1
 
 			SET @T_Message = 'El archivo tiene codigos repetidos: ' + @Codigos + '.'
 		END
-		
+
 		IF(@errors = 0)
 		BEGIN
 			BEGIN TRANSACTION
 			
 			DECLARE @Tbl_Actions AS TABLE( T_Action varchar(10), T_Codigo varchar(10))
 
+			SELECT m.C_CodRC, m.C_CodAlu, m.I_Anio, c.I_OpcionID AS I_Periodo, m.C_EstMat, m.C_Ciclo, m.B_Ingresante
+			INTO #Tmp_Matricula FROM @Tbl_Matricula AS m
+			INNER JOIN dbo.TC_CatalogoOpcion c ON c.I_ParametroID = 5 AND c.T_OpcionCod = m.C_Periodo
+
 			MERGE INTO TC_MatriculaAlumno AS TRG
-			USING @Tbl_Alumno AS SRC
-			ON TRG.C_CodAlu = SRC.C_CodAlu AND TRG.I_Anio = SRC.C_Anio 
+			USING #Tmp_Matricula AS SRC
+			ON TRG.C_CodRc = SRC.C_CodRc AND TRG.C_CodAlu = SRC.C_CodAlu AND TRG.I_Anio = SRC.I_Anio AND TRG.I_Periodo = SRC.I_Periodo
 			WHEN MATCHED THEN
 			 		UPDATE SET   C_EstMat = SRC.C_EstMat
-			 	  				, C_Ciclo = SRC.C_Nivel
+			 	  				, C_Ciclo = SRC.C_Ciclo
+								, B_Ingresante = SRC.B_Ingresante
 								, I_UsuarioMod = @UserID
 								, D_FecMod = @D_FecRegistro
-			WHEN NOT MATCHED BY TARGET THEN INSERT (I_Anio, C_CodAlu, C_Ciclo, C_EstMat, B_Habilitado, I_UsuarioCre, D_FecCre, B_Eliminado)
-			 	  							VALUES (SRC.C_Anio, SRC.C_CodAlu, SRC.C_Nivel, SRC.C_EstMat, 1, @UserID, @D_FecRegistro, 0)
+			WHEN NOT MATCHED BY TARGET THEN INSERT (C_CodRc, C_CodAlu, I_Anio, I_Periodo, C_EstMat, C_Ciclo, B_Ingresante, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
+			 	  							VALUES (SRC.C_CodRc, SRC.C_CodAlu, SRC.I_Anio, SRC.I_Periodo, SRC.C_EstMat, SRC.C_Ciclo, SRC.B_Ingresante, 1, 0, @UserID, @D_FecRegistro)
 			OUTPUT $action AS accion, inserted.C_CodAlu as codigo INTO @Tbl_Actions;
 
 			COMMIT TRANSACTION

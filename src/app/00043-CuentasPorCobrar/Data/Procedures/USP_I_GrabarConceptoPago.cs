@@ -93,7 +93,7 @@ namespace Data.Procedures
                     parameters.Add(name: "T_Documento", dbType: DbType.String, value: this.T_Documento);
                     parameters.Add(name: "I_UsuarioCre", dbType: DbType.Int32, value: this.I_UsuarioCre);
 
-                    parameters.Add(name: "I_ConcPagPerID", dbType: DbType.Int32, direction: ParameterDirection.Output);
+                    parameters.Add(name: "I_ConcPagID", dbType: DbType.Int32, direction: ParameterDirection.Output);
                     parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);
                     parameters.Add(name: "T_Message", dbType: DbType.String, size: 4000, direction: ParameterDirection.Output);
 

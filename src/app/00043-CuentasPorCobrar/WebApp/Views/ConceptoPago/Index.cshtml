@@ -34,7 +34,7 @@
                 columns.Add(c => c.I_Periodo).Titled("Periodo").Filterable(true);
                 columns.Add(c => c.M_Monto).Titled("Monto").Filterable(true);
                 columns.Add().SetWidth(200).Css("text-right").Encoded(false).Sanitized(false).
-                RenderValueAs(model => @<a href="@Url.Action("Editar", "ConceptoPago", new { id = model.I_ConcPagID })" class=""><i class="fa fa-pencil-square-o" aria-hidden="true">&nbsp;</i><span class="d-none d-md-inline-block">Editar</span></a>);
+                RenderValueAs(model => @<a href="@Url.Action("Grabar", "ConceptoPago", new { id = model.I_ConcPagID })" class=""><i class="fa fa-pencil-square-o" aria-hidden="true">&nbsp;</i><span class="d-none d-md-inline-block">Editar</span></a>);
                     }).WithPaging(10).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
         </div>
 

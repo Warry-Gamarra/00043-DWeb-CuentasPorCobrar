@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Data.Procedures
 {
-    public class USP_IU_GrabarAlumnosAptos
+    public class USP_IU_GrabarMatricula
     {
         public int UserID { get; set; }
         public DateTime D_FecRegistro { get; set; }
@@ -26,14 +26,14 @@ namespace Data.Procedures
             {
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    parameters.Add(name: "Tbl_Alumno", value: dataTable.AsTableValuedParameter("dbo.type_dataAlumno"));
+                    parameters.Add(name: "Tbl_Matricula", value: dataTable.AsTableValuedParameter("dbo.type_dataMatricula"));
                     parameters.Add(name: "D_FecRegistro", dbType: DbType.DateTime, value: this.D_FecRegistro);
 
                     parameters.Add(name: "UserID", dbType: DbType.Int32, value: this.UserID);
                     parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);
                     parameters.Add(name: "T_Message", dbType: DbType.String, size: 4000, direction: ParameterDirection.Output);
 
-                    _dbConnection.Execute("USP_IU_GrabarAlumnosAptos", parameters, commandType: CommandType.StoredProcedure);
+                    _dbConnection.Execute("USP_IU_GrabarMatricula", parameters, commandType: CommandType.StoredProcedure);
 
                     result.Value = parameters.Get<bool>("B_Result");
                     result.Message = parameters.Get<string>("T_Message");

@@ -71,7 +71,7 @@
     <Compile Include="Procedures\USP_S_CtaDepo_Proceso.cs" />
     <Compile Include="Procedures\USP_U_ActualizarConceptoPago.cs" />
     <Compile Include="Procedures\USP_I_GrabarConceptoPago.cs" />
-    <Compile Include="Procedures\USP_IU_GrabarAlumnosAptos.cs" />
+    <Compile Include="Procedures\USP_IU_GrabarMatricula.cs" />
     <Compile Include="Procedures\USP_I_GrabarProceso.cs" />
     <Compile Include="Procedures\USP_I_GrabarCtaDeposito_Proceso.cs" />
     <Compile Include="Procedures\USP_S_ConceptoPago.cs" />

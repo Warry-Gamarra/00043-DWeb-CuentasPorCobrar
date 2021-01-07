@@ -14,11 +14,11 @@ namespace Domain.Entities
 {
     public class Estudiante : IEstudiante
     {
-        private readonly USP_IU_GrabarAlumnosAptos _grabarAptos;
+        private readonly USP_IU_GrabarMatricula _grabarMatricula;
 
         public Estudiante()
         {
-            _grabarAptos = new USP_IU_GrabarAlumnosAptos();
+            _grabarMatricula = new USP_IU_GrabarMatricula();
         }
 
         public Response CargarDataAptos(string serverPath, HttpPostedFileBase file, TipoAlumno tipoAlumno, int currentUserId)
@@ -56,17 +56,14 @@ namespace Domain.Entities
         {
             var dataTable = new DataTable();
 
-            dataTable.Columns.Add("C_Anio");
-            dataTable.Columns.Add("C_CodAlu");
-            dataTable.Columns.Add("C_CodRC");
-            dataTable.Columns.Add("I_IdPlan");
-            dataTable.Columns.Add("C_EstMat");
-            dataTable.Columns.Add("C_Nivel");
-            dataTable.Columns.Add("T_ApmAlu");
-            dataTable.Columns.Add("T_AppAlu");
-            dataTable.Columns.Add("T_Nombre");
-            dataTable.Columns.Add("T_NomAlu");
-
+            dataTable.Columns.Add("c_codrc");
+            dataTable.Columns.Add("c_codalu");
+            dataTable.Columns.Add("I_Anio");
+            dataTable.Columns.Add("C_Periodo");
+            dataTable.Columns.Add("c_estmat");
+            dataTable.Columns.Add("c_ciclo");
+            dataTable.Columns.Add("b_ingresan");
+            
             using (var table = Table.Open(pathFile))
             {
                 var reader = table.OpenReader(Encoding.ASCII);
@@ -76,22 +73,22 @@ namespace Domain.Entities
                     //byte[] encodedBytes = Encoding.Default.GetBytes(reader.GetString("NOM_ALU"));
 
                     dataTable.Rows.Add(
-                        reader.GetString("ANO"),
-                        reader.GetString("COD_ALU"),
                         reader.GetString("COD_RC"),
-                        Convert.ToInt32(reader.GetDecimal("ID_PLAN")),
+                        reader.GetString("COD_ALU"),
+                        reader.GetInt32("ANO"),
+                        reader.GetString("P"),
                         reader.GetString("EST_MAT"),
                         reader.GetString("NIVEL"),
-                        "", "", "",
-                        //utf8.GetString(encodedBytes));
-                        reader.GetString("NOM_ALU"));
+                        reader.GetBoolean("ES_INGRESA")
+                        //utf8.GetString(encodedBytes)
+                    );
                 }
             }
 
-            _grabarAptos.UserID = currentUserId;
-            _grabarAptos.D_FecRegistro = DateTime.Now;
+            _grabarMatricula.UserID = currentUserId;
+            _grabarMatricula.D_FecRegistro = DateTime.Now;
 
-            return new Response(_grabarAptos.Execute(dataTable));
+            return new Response(_grabarMatricula.Execute(dataTable));
         }
 
         private void RemoverArchivo(string serverPath, string fileName)
