@@ -35,13 +35,13 @@ namespace Data.Procedures
                     parameters.Add(name: "I_Prioridad", dbType: DbType.Byte, value: this.I_Prioridad);
                     parameters.Add(name: "I_UsuarioCre", dbType: DbType.Int32, value: this.I_UsuarioCre);
 
-                    parameters.Add(name: "I_PeriodoID", dbType: DbType.Int32, direction: ParameterDirection.Output);
+                    parameters.Add(name: "I_ProcesoID", dbType: DbType.Int32, direction: ParameterDirection.Output);
                     parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);
                     parameters.Add(name: "T_Message", dbType: DbType.String, size: 4000, direction: ParameterDirection.Output);
 
                     _dbConnection.Execute(s_command, parameters, commandType: CommandType.StoredProcedure);
 
-                    int id = parameters.Get<int>("I_PeriodoID");
+                    int id = parameters.Get<int>("I_ProcesoID");
                     result.CurrentID = id.ToString();
                     result.Value = parameters.Get<bool>("B_Result");
                     result.Message = parameters.Get<string>("T_Message");
