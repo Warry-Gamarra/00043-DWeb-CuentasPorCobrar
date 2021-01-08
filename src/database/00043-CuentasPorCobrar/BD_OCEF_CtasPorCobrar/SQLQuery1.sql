@@ -6,6 +6,19 @@ select * from cp_des WHERE DESCRIPCIO LIKE '%EUPG%'
 select * from cp_des WHERE DESCRIPCIO LIKE '%TASAS%' 
 
 
+
+select * from ec_det where concepto in(
+select id_cp from cp_pri p left join cp_des d on p.cuota_pago = d.CUOTA_PAGO where d.cuota_pago is null)
+
+
+
+
+
+
+
+
+
+
 SELECT id_cp, descripcio, * FROM cp_pri WHERE cuota_pago IN (
  '53'
 ,'54'
@@ -129,12 +142,12 @@ FROM cp_des
 WHERE ISNUMERIC(LTRIM(SUBSTRING(LTRIM(DESCRIPCIO),1,4))) = 1
 )
 
+select * from cp_des where CUOTA_PAGO = 491
+
 
 SELECT ID_CP, P.DESCRIPCIO, cD.Cuota_pago, CD.DESCRIPCIO, COUNT(P.Cuota_pago)  FROM cp_pri P 
 INNER JOIN cp_des CD ON CD.CUOTA_PAGO = P.Cuota_pago
 GROUP BY ID_CP, P.DESCRIPCIO, CD.Cuota_pago, CD.DESCRIPCIO ORDER BY 3
-
-
 
 
 
@@ -163,6 +176,16 @@ SELECT LTRIM(DESCRIPCIO), COUNT(*) as repetidos
 FROM cp_pri
 GROUP BY LTRIM(DESCRIPCIO)
 ORDER BY 2 desc
+
+
+SELECT * FROM cp_pri WHERE descripcio = 'DEPORTES'
+
+SELECT id_cp, COUNT(*) as repetidos
+FROM cp_pri
+GROUP BY id_cp
+having COUNT(*) > 1
+ORDER BY 2 desc
+
 
 SELECT DISTINCT LTRIM(DESCRIPCIO), ELIMINADO FROM cp_pri ORDER BY LTRIM(DESCRIPCIO)
 

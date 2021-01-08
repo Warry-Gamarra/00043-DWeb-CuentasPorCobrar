@@ -25,8 +25,8 @@ INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado,
 
 
 INSERT TC_Parametro(T_ParametroDesc, B_Habilitado, B_Eliminado) VALUES('TIPO OBLIGACIÓN', 1, 0)
-INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, B_Habilitado, B_Eliminado) VALUES(3, 'Matrícula', 1, 0)
-INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, B_Habilitado, B_Eliminado) VALUES(3, 'Otros pagos', 1, 0)
+INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, B_Habilitado, B_Eliminado) VALUES(3, 'Matrícula', '1', 1, 0)
+INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, B_Habilitado, B_Eliminado) VALUES(3, 'Otros pagos', '0', 1, 0)
 
 
 INSERT TC_Parametro(T_ParametroDesc, B_Habilitado, B_Eliminado) VALUES('CAMPO CALCULADO', 1, 0)
@@ -127,6 +127,8 @@ INSERT INTO TC_DependenciaUNFV (C_DepCod, C_DepCodPl, T_DepDesc, B_Habilitado, B
 INSERT INTO TC_DependenciaUNFV (C_DepCod, C_DepCodPl, T_DepDesc, B_Habilitado, B_Eliminado) VALUES ('260000','06180OLFAC','TECNOLOGIA MEDICA',1,0)
 INSERT INTO TC_DependenciaUNFV (C_DepCod, C_DepCodPl, T_DepDesc, B_Habilitado, B_Eliminado) VALUES ('270000','06110OLFAC','INGENIERIA ELECTRONICA E INFORMATICA',1,0)
 INSERT INTO TC_DependenciaUNFV (C_DepCod, C_DepCodPl, T_DepDesc, B_Habilitado, B_Eliminado) VALUES ('040000','06000OGVRI','VICERRECTORADO DE INVESTIGACION',1,0)
+
+INSERT INTO TC_DependenciaUNFV (C_DepCod, C_DepCodPl, T_DepDesc, B_Habilitado, B_Eliminado) VALUES ('','03110OLFAC','',0,0)
 GO
 
 
@@ -267,12 +269,12 @@ SET IDENTITY_INSERT TC_Proceso ON
 
 INSERT INTO TC_Proceso (I_ProcesoID, I_CatPagoID, T_ProcesoDesc, I_Anio, I_Periodo, N_CodBanco, D_FecVencto, I_Prioridad, B_Mora, B_Migrado, B_Habilitado, B_Eliminado)
 		SELECT CAST(CUOTA_PAGO AS INT), 1, DESCRIPCIO, CASE ISNUMERIC(LTRIM(SUBSTRING(LTRIM(DESCRIPCIO),1,4))) WHEN 1 THEN SUBSTRING(LTRIM(DESCRIPCIO),1,4) ELSE 0 END, NULL, 
-				CODIGO_BNC, FCH_VENC, PRIORIDAD, CASE C_MORA WHEN 'VERDADERO' THEN 1 ELSE 0 END, 1, 1, ELIMINADO
+				CODIGO_BNC, FCH_VENC, PRIORIDAD, C_MORA, 1, 1, ELIMINADO
 		FROM temporal_pagos.dbo.cp_des
 		WHERE CUOTA_PAGO NOT IN (143, 330, 331, 438, 439)
 		UNION 
 		SELECT CAST(CUOTA_PAGO AS INT), 1, DESCRIPCIO, CASE ISNUMERIC(LTRIM(SUBSTRING(LTRIM(DESCRIPCIO),1,4))) WHEN 1 THEN SUBSTRING(LTRIM(DESCRIPCIO),1,4) ELSE 0 END, NULL, 
-				CODIGO_BNC, FCH_VENC, PRIORIDAD, CASE C_MORA WHEN 'VERDADERO' THEN 1 ELSE 0 END, 1, 1, ELIMINADO
+				CODIGO_BNC, FCH_VENC, PRIORIDAD, C_MORA, 1, 1, ELIMINADO
 		FROM temporal_pagos.dbo.cp_des
 		WHERE CUOTA_PAGO IN (143, 330, 331, 438, 439) AND ELIMINADO = 0
 
@@ -286,3 +288,40 @@ INSERT INTO TC_Concepto (I_ConceptoID, T_ConceptoDesc, B_Habilitado, B_Eliminado
 
 SET IDENTITY_INSERT TC_Concepto OFF
 GO
+
+
+SET IDENTITY_INSERT TI_ConceptoPago ON
+
+INSERT INTO TI_ConceptoPago (I_ConcPagID, I_ProcesoID, I_ConceptoID, T_ConceptoPagoDesc, B_Fraccionable, B_ConceptoGeneral, B_AgrupaConcepto, I_AlumnosDestino, I_GradoDestino, I_TipoObligacion, 
+							 T_Clasificador, C_CodTasa, B_Calculado, I_Calculado, B_AnioPeriodo, I_Anio, I_Periodo, B_Especialidad, C_CodRc, B_Dependencia, C_DepCod, B_GrupoCodRc, I_GrupoCodRc, 
+							 B_ModalidadIngreso, I_ModalidadIngresoID, B_ConceptoAgrupa, I_ConceptoAgrupaID, B_ConceptoAfecta, I_ConceptoAfectaID, N_NroPagos, B_Porcentaje, C_Moneda, M_Monto, 
+							 M_MontoMinimo, T_DescripcionLarga, T_Documento, B_Migrado, B_Habilitado, B_Eliminado, I_TipoDescuentoID) 
+					 SELECT cp.id_cp, cp.cuota_pago, 0, cp.descripcio, cp.fraccionab, cp.concepto_g, cp.agrupa, co_tipoAlumno.I_OpcionID, co_grado.I_OpcionID, co_tipOblg.I_OpcionID,
+							cp.clasificad, cp.clasific_5, CASE WHEN co_calc.I_OpcionID IS NULL THEN 0 ELSE 1 END, co_calc.I_OpcionID, CASE CAST(cp.ano AS int) WHEN 0 THEN 0 ELSE 1 END, 
+							CASE CAST(cp.ano AS int) WHEN 0 THEN NULL ELSE CAST(cp.ano AS int) END, co_periodo.I_OpcionID, CASE LEN(LTRIM(RTRIM(cp.cod_rc))) WHEN 0 THEN 0 ELSE 1 END, 
+							CASE LEN(LTRIM(RTRIM(cp.cod_rc))) WHEN 0 THEN NULL ELSE cp.cod_rc END, CASE LEN(LTRIM(RTRIM(cp.cod_dep_pl))) WHEN 0 THEN 0 ELSE 1 END, unfv_dep.I_DependenciaID, 
+							CASE WHEN co_grpRc.I_OpcionID IS NULL THEN 0 ELSE 1 END, co_grpRc.I_OpcionID, CASE WHEN co_codIng.I_OpcionID IS NULL THEN 0 ELSE 1 END, co_codIng.I_OpcionID, 
+							CASE cp.id_cp_agrp WHEN 0 THEN NULL ELSE 1 END, CASE cp.id_cp_agrp WHEN 0 THEN NULL ELSE cp.id_cp_agrp END, CASE cp.id_cp_afec WHEN 0 THEN NULL ELSE 1 END, 
+							CASE cp.id_cp_afec WHEN 0 THEN NULL ELSE cp.id_cp_afec END, cp.nro_pagos, cp.porcentaje, 'PEN', cp.monto, cp.monto_min, cp.descrip_l, cp.documento, 1, 0, 0, NULL 							
+
+					 FROM	temporal_pagos.dbo.cp_pri cp
+							LEFT JOIN temporal_pagos.dbo.cp_des cd ON cp.cuota_pago = cd.CUOTA_PAGO AND Cd.eliminado = 0 
+							LEFT JOIN TC_CatalogoOpcion co_tipoAlumno ON CAST(co_tipoAlumno.T_OpcionCod AS float) = cp.tip_alumno AND co_tipoAlumno.I_ParametroID = 1
+							LEFT JOIN TC_CatalogoOpcion co_grado ON CAST(co_grado.T_OpcionCod AS float) = cp.grado AND co_grado.I_ParametroID = 2
+							LEFT JOIN TC_CatalogoOpcion co_tipOblg ON CAST(co_tipOblg.T_OpcionCod AS bit) = cp.tipo_oblig AND co_tipOblg.I_ParametroID = 3
+							LEFT JOIN TC_CatalogoOpcion co_calc ON co_calc.T_OpcionCod COLLATE DATABASE_DEFAULT = cp.calcular COLLATE DATABASE_DEFAULT AND co_calc.I_ParametroID = 4
+							LEFT JOIN TC_CatalogoOpcion co_periodo ON co_periodo.T_OpcionCod COLLATE DATABASE_DEFAULT = cp.p COLLATE DATABASE_DEFAULT AND co_periodo.I_ParametroID = 5
+							LEFT JOIN TC_CatalogoOpcion co_grpRc ON co_grpRc.T_OpcionCod COLLATE DATABASE_DEFAULT = cp.grupo_rc COLLATE DATABASE_DEFAULT AND co_grpRc.I_ParametroID = 6
+							LEFT JOIN TC_CatalogoOpcion co_codIng ON co_codIng.T_OpcionCod COLLATE DATABASE_DEFAULT = cp.cod_ing COLLATE DATABASE_DEFAULT AND co_codIng.I_ParametroID = 7
+							LEFT JOIN TC_DependenciaUNFV unfv_dep on unfv_dep.C_DepCodPl COLLATE DATABASE_DEFAULT = cp.cod_dep_pl COLLATE DATABASE_DEFAULT AND LEN(unfv_dep.C_DepCodPl) > 0 
+					 WHERE cd.cuota_pago IS not NULL
+							AND NOT EXISTS (SELECT id_cp, descripcio, 0, ISNULL(eliminado, 0) FROM temporal_pagos.dbo.cp_pri B WHERE cp.ID_CP IN (3899,3898,3897,3896) AND cp.eliminado = 1)
+					 ORDER BY id_cp
+
+SET IDENTITY_INSERT TI_ConceptoPago OFF
+GO
+
+
+SET IDENTITY_INSERT TR_ObligacionAluCab ON
+
+SET IDENTITY_INSERT TR_ObligacionAluCab OFF
