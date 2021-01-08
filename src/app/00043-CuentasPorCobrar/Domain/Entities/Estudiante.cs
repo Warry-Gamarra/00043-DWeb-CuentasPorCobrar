@@ -1,4 +1,5 @@
 ﻿using Data.Procedures;
+using Data.Types;
 using Domain.DTO;
 using Domain.Services;
 using NDbfReader;
@@ -54,41 +55,32 @@ namespace Domain.Entities
 
         private Response GuardarDatosRepositorio(string pathFile, int currentUserId)
         {
-            var dataTable = new DataTable();
-
-            dataTable.Columns.Add("c_codrc");
-            dataTable.Columns.Add("c_codalu");
-            dataTable.Columns.Add("I_Anio");
-            dataTable.Columns.Add("C_Periodo");
-            dataTable.Columns.Add("c_estmat");
-            dataTable.Columns.Add("c_ciclo");
-            dataTable.Columns.Add("b_ingresan");
-            
+            var dataMatricula = new List<DataMatriculaType>();
+                        
             using (var table = Table.Open(pathFile))
             {
                 var reader = table.OpenReader(Encoding.ASCII);
                 while (reader.Read())
                 {
-                    //UTF8Encoding utf8 = new UTF8Encoding();
-                    //byte[] encodedBytes = Encoding.Default.GetBytes(reader.GetString("NOM_ALU"));
-
-                    dataTable.Rows.Add(
-                        reader.GetString("COD_RC"),
-                        reader.GetString("COD_ALU"),
-                        reader.GetInt32("ANO"),
-                        reader.GetString("P"),
-                        reader.GetString("EST_MAT"),
-                        reader.GetString("NIVEL"),
-                        reader.GetBoolean("ES_INGRESA")
-                        //utf8.GetString(encodedBytes)
-                    );
+                    dataMatricula.Add(new DataMatriculaType()
+                    {
+                        C_CodRC = reader.GetString("COD_RC"),
+                        C_CodAlu = reader.GetString("COD_ALU"),
+                        I_Anio = reader.GetInt32("ANO"),
+                        C_Periodo = reader.GetString("P"),
+                        C_EstMat = reader.GetString("EST_MAT"),
+                        C_Ciclo = reader.GetString("NIVEL"),
+                       B_Ingresante = reader.GetBoolean("ES_INGRESA")
+                    });
                 }
             }
+
+            
 
             _grabarMatricula.UserID = currentUserId;
             _grabarMatricula.D_FecRegistro = DateTime.Now;
 
-            return new Response(_grabarMatricula.Execute(dataTable));
+            return new Response(_grabarMatricula.Execute(dataMatricula));
         }
 
         private void RemoverArchivo(string serverPath, string fileName)
