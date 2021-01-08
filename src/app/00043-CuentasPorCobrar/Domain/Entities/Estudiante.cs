@@ -75,12 +75,21 @@ namespace Domain.Entities
                 }
             }
 
-            
+            var listaAgrupada = dataMatricula.GroupBy(x => new { x.C_CodRC, x.C_CodAlu });
+
+            if (listaAgrupada.Any(x => x.Count() > 1))
+            {
+                throw new Exception("Existen Códigos de Alumnos duplicados para un mismo programa.");
+            }
+
+            //listaAgrupada.Where
+
+            DataTable dataTable = new DataTable();
 
             _grabarMatricula.UserID = currentUserId;
             _grabarMatricula.D_FecRegistro = DateTime.Now;
 
-            return new Response(_grabarMatricula.Execute(dataMatricula));
+            return new Response(_grabarMatricula.Execute(dataTable));
         }
 
         private void RemoverArchivo(string serverPath, string fileName)

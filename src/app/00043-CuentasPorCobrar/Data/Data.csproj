@@ -98,7 +98,6 @@
     <Compile Include="Views\VW_Usuario.cs" />
     <Compile Include="Tables\TS_CorreoAplicacion.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
