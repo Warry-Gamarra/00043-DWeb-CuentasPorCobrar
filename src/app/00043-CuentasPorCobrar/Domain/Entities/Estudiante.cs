@@ -82,9 +82,29 @@ namespace Domain.Entities
                 throw new Exception("Existen Códigos de Alumnos duplicados para un mismo programa.");
             }
 
-            //listaAgrupada.Where
+            if (dataMatricula.Any(x => String.IsNullOrWhiteSpace(x.C_Periodo) || x.I_Anio == null))
+            {
+                throw new Exception("Existen registros con campos incompletos.");
+            }
 
             DataTable dataTable = new DataTable();
+            dataTable.Columns.Add("c_codrc");
+            dataTable.Columns.Add("c_codalu");
+            dataTable.Columns.Add("I_Anio");
+            dataTable.Columns.Add("C_Periodo");
+            dataTable.Columns.Add("c_estmat");
+            dataTable.Columns.Add("c_ciclo");
+            dataTable.Columns.Add("b_ingresan");
+
+            dataMatricula.ForEach(x => dataTable.Rows.Add(
+                x.C_CodRC,
+                x.C_CodAlu,
+                x.I_Anio,
+                x.C_Periodo,
+                x.C_EstMat,
+                x.C_Ciclo,
+                x.B_Ingresante
+            ));
 
             _grabarMatricula.UserID = currentUserId;
             _grabarMatricula.D_FecRegistro = DateTime.Now;

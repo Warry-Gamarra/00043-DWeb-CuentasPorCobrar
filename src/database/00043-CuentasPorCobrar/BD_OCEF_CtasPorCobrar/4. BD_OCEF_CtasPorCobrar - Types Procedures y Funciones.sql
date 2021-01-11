@@ -1292,3 +1292,24 @@ BEGIN
 		 LEFT JOIN TS_DocumentosRoles DR ON RD.[I_RutaDocID] = DR.[I_RutaDocID]
 END
 GO
+
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'USP_IU_GenerarObligaciones' AND ROUTINE_TYPE = 'PROCEDURE')
+	DROP PROCEDURE [dbo].[USP_IU_GenerarObligaciones]
+GO
+
+
+CREATE PROCEDURE [dbo].[USP_IU_GenerarObligaciones_X_Ciclo]
+@I_Anio int,
+@I_Periodo int
+AS
+BEGIN
+	SET NOCOUNT ON
+	-- select * from dbo.TC_Parametro
+	-- select * from dbo.TC_CatalogoOpcion where I_ParametroID = 5
+
+	select * from dbo.TC_MatriculaAlumno
+	where I_Anio = @I_Anio and I_Periodo = @I_Periodo
+
+END
+GO

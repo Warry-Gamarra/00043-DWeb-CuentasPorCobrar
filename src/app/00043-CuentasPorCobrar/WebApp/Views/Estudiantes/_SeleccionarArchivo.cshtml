@@ -74,12 +74,15 @@
                 debugger
                 if (result['Value']) {
                     $('.modal-footer').html('<p class="alert alert-success">' + result['Message'] + '</p><button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>')
+                } else {
+                    $('.modal-footer').html('<p class="alert alert-danger">' + result['Message'] + '</p><button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>')
                 }
 
                 $('#icon-submit').addClass('fa-cloud-upload').removeClass('fa-spin fa-cog');
 
             },
             error: function (jqXHR, textStatus, errorThrown) {
+                debugger;
                 toastr.error(errorThrown);
                 $('#icon-submit').addClass('fa-cloud-upload').removeClass('fa-spin fa-cog');
             }
