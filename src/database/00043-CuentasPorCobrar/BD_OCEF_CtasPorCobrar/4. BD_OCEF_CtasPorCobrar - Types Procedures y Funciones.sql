@@ -1294,22 +1294,44 @@ END
 GO
 
 
-IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'USP_IU_GenerarObligaciones' AND ROUTINE_TYPE = 'PROCEDURE')
-	DROP PROCEDURE [dbo].[USP_IU_GenerarObligaciones]
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'USP_IU_GenerarObligacionesPregrado_X_Ciclo' AND ROUTINE_TYPE = 'PROCEDURE')
+	DROP PROCEDURE [dbo].[USP_IU_GenerarObligacionesPregrado_X_Ciclo]
 GO
 
 
-CREATE PROCEDURE [dbo].[USP_IU_GenerarObligaciones_X_Ciclo]
+CREATE PROCEDURE [dbo].[USP_IU_GenerarObligacionesPregrado_X_Ciclo]
 @I_Anio int,
-@I_Periodo int
+@I_Periodo int,
+@I_TipoAlumno int
 AS
 BEGIN
-	SET NOCOUNT ON
-	-- select * from dbo.TC_Parametro
-	-- select * from dbo.TC_CatalogoOpcion where I_ParametroID = 5
+	SET NOCOUNT ON;
+	--select * from dbo.TC_Parametro
+	select * from dbo.TC_CatalogoOpcion where I_ParametroID = 1--tipo alumno
+	select * from dbo.TC_CatalogoOpcion where I_ParametroID = 2--grado (nivel)
+	select * from dbo.TC_CatalogoOpcion where I_ParametroID = 5--periodo
+	select * from dbo.TC_CategoriaPago
 
-	select * from dbo.TC_MatriculaAlumno
-	where I_Anio = @I_Anio and I_Periodo = @I_Periodo
+	--DECLARE @Pregrado int = 4
 
+
+	--1ro Obtener los conceptos según año y periodo
+	select p.I_ProcesoID, p.I_CatPagoID, cp.I_Nivel, cp.I_TipoAlumno, p.I_Anio, p.I_Periodo, c.I_ConcPagID, cp.T_CatPagoDesc
+	into #tmp_conceptos_pregrado
+	from dbo.TC_Proceso p
+	inner join dbo.TC_CategoriaPago cp on cp.I_CatPagoID = p.I_CatPagoID
+	inner join dbo.TI_ConceptoPago c on c.I_ProcesoID = p.I_ProcesoID
+	where p.I_Anio = 2021/*@I_Anio*/ and p.I_Periodo = 15/*@I_Periodo*/ and cp.I_Nivel = 4 and cp.I_TipoAlumno = 2 /*@I_TipoAlumno*/ and
+		p.B_Habilitado = 1 and p.B_Eliminado = 0 and 
+		c.B_Habilitado = 1 and p.B_Eliminado = 0
+
+	--select * from #tmp_conceptos_pregrado
+
+	--2do Generar las oligaciones para alumnos regulares
+	select * from dbo.TC_MatriculaAlumno m
+	cross join #tmp_conceptos_pregrado
+	where m.I_Anio = 2021 and m.I_Periodo = 15
+
+	
 END
 GO
