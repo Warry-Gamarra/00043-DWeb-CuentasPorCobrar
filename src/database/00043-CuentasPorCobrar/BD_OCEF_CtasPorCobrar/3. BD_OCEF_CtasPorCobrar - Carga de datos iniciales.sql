@@ -342,6 +342,7 @@ INSERT INTO TC_MatriculaAlumno (C_CodRc, C_CodAlu, I_Anio, I_Periodo, C_EstMat, 
 	    FROM temporal_pagos.dbo.ec_pri ep  
 			 INNER JOIN TC_CatalogoOpcion co_periodo ON co_periodo.T_OpcionCod COLLATE DATABASE_DEFAULT = ep.P COLLATE DATABASE_DEFAULT AND co_periodo.I_ParametroID = 5
 		WHERE EP.COD_RC IS NOT NULL AND ep.COD_ALU IS NOT NULL
+<<<<<<< Updated upstream
 
 GO
 
@@ -359,6 +360,25 @@ INSERT INTO TR_ObligacionAluCab (I_ProcesoID, I_MatAluID, C_Moneda, I_MontoOblig
 GO
 
 
+=======
+
+GO
+
+
+INSERT INTO TR_ObligacionAluCab (I_ProcesoID, I_MatAluID, C_Moneda, I_MontoOblig, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, I_UsuarioMod, D_FecMod)
+	  SELECT P.I_ProcesoID, I_MatAluID, 'PEN', eo.MONTO, 1, 0, NULL, NULL, NULL, NULL
+		FROM (SELECT * FROM temporal_pagos.dbo.ec_obl WHERE ANO <> 'A') eo 
+			 INNER JOIN TC_Proceso P ON eo.CUOTA_PAGO = P.I_ProcesoID
+			 left JOIN (SELECT M.*, C.T_OpcionCod FROM TC_MatriculaAlumno M 
+						INNER JOIN TC_CatalogoOpcion C ON M.I_Periodo = c.I_OpcionID) AS ma ON eo.COD_ALU COLLATE DATABASE_DEFAULT = ma.C_CodAlu COLLATE DATABASE_DEFAULT 
+																							AND eo.COD_RC COLLATE DATABASE_DEFAULT = ma.C_CodRc COLLATE DATABASE_DEFAULT 
+																							AND CAST(eo.ANO AS INT)  = ma.I_Anio
+																							AND eo.p COLLATE DATABASE_DEFAULT = ma.T_OpcionCod COLLATE DATABASE_DEFAULT 
+
+GO
+
+
+>>>>>>> Stashed changes
 /*----------------------------------
 INSERT INTO TR_ObligacionAluDet (I_ObligacionAluID, I_ConcPagID, I_Monto, B_Pagado, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, I_UsuarioMod, D_FecMod)
 					SELECT * 
