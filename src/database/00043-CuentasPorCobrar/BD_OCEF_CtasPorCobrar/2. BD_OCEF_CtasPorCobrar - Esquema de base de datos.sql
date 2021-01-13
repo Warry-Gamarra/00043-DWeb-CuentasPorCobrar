@@ -345,6 +345,8 @@ CREATE TABLE TR_ObligacionAluCab
 	I_MatAluID           int  NULL ,
 	C_Moneda             varchar(3)  NULL ,
 	I_MontoOblig         decimal(15,2)  NULL ,
+	D_FecVencto	         date  NULL ,
+	B_Pagado			 bit  NULL ,
 	B_Habilitado         bit  NOT NULL ,
 	B_Eliminado          bit  NOT NULL ,
 	I_UsuarioCre         int  NULL ,
