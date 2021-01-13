@@ -506,6 +506,7 @@ go
 
 CREATE TABLE TR_ObligacionAluDet
 ( 
+	I_ObligacionAluDetID int  IDENTITY (1,1) ,
 	I_ObligacionAluID    int  NOT NULL ,
 	I_ConcPagID          int  NOT NULL ,
 	I_Monto              decimal(15,2)  NULL ,
@@ -516,11 +517,11 @@ CREATE TABLE TR_ObligacionAluDet
 	D_FecCre             datetime  NULL ,
 	I_UsuarioMod         int  NULL ,
 	D_FecMod             datetime  NULL ,
-	CONSTRAINT PK_ObligacionAluDet PRIMARY KEY  CLUSTERED (I_ObligacionAluID ASC,I_ConcPagID ASC),
+	CONSTRAINT PK_ObligacionAluDet PRIMARY KEY  CLUSTERED (I_ObligacionAluDetID),
 	CONSTRAINT FK_ConceptoPago_ObligacionAluDet FOREIGN KEY (I_ConcPagID) REFERENCES TI_ConceptoPago(I_ConcPagID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION,
-CONSTRAINT FK_ObligacionAluCab_ObligacionAluDet FOREIGN KEY (I_ObligacionAluID) REFERENCES TR_ObligacionAluCab(I_ObligacionAluID)
+	CONSTRAINT FK_ObligacionAluCab_ObligacionAluDet FOREIGN KEY (I_ObligacionAluID) REFERENCES TR_ObligacionAluCab(I_ObligacionAluID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 )
