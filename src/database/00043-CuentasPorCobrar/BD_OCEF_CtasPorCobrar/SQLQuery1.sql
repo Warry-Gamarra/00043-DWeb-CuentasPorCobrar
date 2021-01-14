@@ -7,17 +7,87 @@ select * from cp_des WHERE DESCRIPCIO LIKE '%TASAS%'
 
 
 
-select * from ec_det where concepto in(
-select id_cp from cp_pri p left join cp_des d on p.cuota_pago = d.CUOTA_PAGO where d.cuota_pago is null)
+select * from ec_det where concepto in (
+select LEN(descrip_l) from cp_pri p left join cp_des d on p.cuota_pago = d.CUOTA_PAGO --order by 1 desc
+--select LEN(documento) from cp_pri p left join cp_des d on p.cuota_pago = d.CUOTA_PAGO order by 1 desc
+)
 
 
 
+--dbcc checkident(TI_ConceptoPago)
+select * from TI_ConceptoPago
+
+SET IDENTITY_INSERT TI_ConceptoPago ON
+
+INSERT INTO TI_ConceptoPago (I_ConcPagID, I_ProcesoID, I_ConceptoID, T_ConceptoPagoDesc, B_Fraccionable, B_ConceptoGeneral, B_AgrupaConcepto, I_AlumnosDestino, I_GradoDestino, I_TipoObligacion, 
+							 T_Clasificador, C_CodTasa, B_Calculado, I_Calculado, B_AnioPeriodo, I_Anio, I_Periodo, B_Especialidad, C_CodRc, B_Dependencia, C_DepCod, B_GrupoCodRc, I_GrupoCodRc, 
+							 B_ModalidadIngreso, I_ModalidadIngresoID, B_ConceptoAgrupa, I_ConceptoAgrupaID, B_ConceptoAfecta, I_ConceptoAfectaID, N_NroPagos, B_Porcentaje, C_Moneda, M_Monto, 
+							 M_MontoMinimo, T_DescripcionLarga, T_Documento, B_Migrado, B_Habilitado, B_Eliminado, I_TipoDescuentoID) 
+					 SELECT cp.id_cp, cp.cuota_pago, 0, cp.descripcio, cp.fraccionab, cp.concepto_g, cp.agrupa, co_tipoAlumno.I_OpcionID, co_grado.I_OpcionID, co_tipOblg.I_OpcionID,
+							cp.clasificad, cp.clasific_5, CASE WHEN co_calc.I_OpcionID IS NULL THEN 0 ELSE 1 END, co_calc.I_OpcionID, CASE CAST(cp.ano AS int) WHEN 0 THEN 0 ELSE 1 END, 
+							CASE CAST(cp.ano AS int) WHEN 0 THEN NULL ELSE CAST(cp.ano AS int) END, co_periodo.I_OpcionID, CASE LEN(LTRIM(RTRIM(cp.cod_rc))) WHEN 0 THEN 0 ELSE 1 END, 
+							CASE LEN(LTRIM(RTRIM(cp.cod_rc))) WHEN 0 THEN NULL ELSE cp.cod_rc END, CASE LEN(LTRIM(RTRIM(cp.cod_dep_pl))) WHEN 0 THEN 0 ELSE 1 END, unfv_dep.I_DependenciaID, 
+							CASE WHEN co_grpRc.I_OpcionID IS NULL THEN 0 ELSE 1 END, co_grpRc.I_OpcionID, CASE WHEN co_codIng.I_OpcionID IS NULL THEN 0 ELSE 1 END, co_codIng.I_OpcionID, 
+							CASE cp.id_cp_agrp WHEN 0 THEN NULL ELSE 1 END, CASE cp.id_cp_agrp WHEN 0 THEN NULL ELSE cp.id_cp_agrp END, CASE cp.id_cp_afec WHEN 0 THEN NULL ELSE 1 END, 
+							CASE cp.id_cp_afec WHEN 0 THEN NULL ELSE cp.id_cp_afec END, cp.nro_pagos, cp.porcentaje, 'PEN', cp.monto, cp.monto_min, cp.descrip_l, cp.documento, 1, 0, 0, NULL 							
+
+					 FROM	temporal_pagos.dbo.cp_pri cp
+							LEFT JOIN temporal_pagos.dbo.cp_des cd ON cp.cuota_pago = cd.CUOTA_PAGO AND Cd.eliminado = 0 
+							LEFT JOIN TC_CatalogoOpcion co_tipoAlumno ON CAST(co_tipoAlumno.T_OpcionCod AS float) = cp.tip_alumno AND co_tipoAlumno.I_ParametroID = 1
+							LEFT JOIN TC_CatalogoOpcion co_grado ON CAST(co_grado.T_OpcionCod AS float) = cp.grado AND co_grado.I_ParametroID = 2
+							LEFT JOIN TC_CatalogoOpcion co_tipOblg ON CAST(co_tipOblg.T_OpcionCod AS bit) = cp.tipo_oblig AND co_tipOblg.I_ParametroID = 3
+							LEFT JOIN TC_CatalogoOpcion co_calc ON co_calc.T_OpcionCod COLLATE DATABASE_DEFAULT = cp.calcular COLLATE DATABASE_DEFAULT AND co_calc.I_ParametroID = 4
+							LEFT JOIN TC_CatalogoOpcion co_periodo ON co_periodo.T_OpcionCod COLLATE DATABASE_DEFAULT = cp.p COLLATE DATABASE_DEFAULT AND co_periodo.I_ParametroID = 5
+							LEFT JOIN TC_CatalogoOpcion co_grpRc ON co_grpRc.T_OpcionCod COLLATE DATABASE_DEFAULT = cp.grupo_rc COLLATE DATABASE_DEFAULT AND co_grpRc.I_ParametroID = 6
+							LEFT JOIN TC_CatalogoOpcion co_codIng ON co_codIng.T_OpcionCod COLLATE DATABASE_DEFAULT = cp.cod_ing COLLATE DATABASE_DEFAULT AND co_codIng.I_ParametroID = 7
+							LEFT JOIN TC_DependenciaUNFV unfv_dep on unfv_dep.C_DepCodPl COLLATE DATABASE_DEFAULT = cp.cod_dep_pl COLLATE DATABASE_DEFAULT AND LEN(unfv_dep.C_DepCodPl) > 0 
+					 WHERE cd.cuota_pago IS not NULL
+							AND NOT EXISTS (SELECT id_cp, descripcio, 0, ISNULL(eliminado, 0) FROM temporal_pagos.dbo.cp_pri B WHERE cp.ID_CP IN (3899,3898,3897,3896) AND cp.eliminado = 1)
+					 ORDER BY id_cp
+
+SET IDENTITY_INSERT TI_ConceptoPago OFF
+GO
 
 
 
+select len(null)
+select * from TC_Parametro
+select * from TC_CatalogoOpcion
+ where I_ParametroID = 3
+
+SELECT * FROM TC_DependenciaUNFV WHERE  C_DepCodPl = '03110OLFAC'
+
+SELECT C_DepCodPl, COUNT(C_DepCodPl) FROM TC_DependenciaUNFV GROUP BY C_DepCodPl HAVING COUNT(C_DepCodPl) > 1
 
 
 
+SELECT *
+FROM	temporal_pagos.dbo.cp_pri cp 
+LEFT JOIN temporal_pagos.dbo.cp_des cd on cp.cuota_pago = cd.CUOTA_PAGO AND Cd.eliminado = 0 
+LEFT JOIN TC_DependenciaUNFV unfv_dep on unfv_dep.C_DepCodPl COLLATE DATABASE_DEFAULT = cp.cod_dep_pl COLLATE DATABASE_DEFAULT AND LEN(unfv_dep.C_DepCodPl) > 0 
+
+WHERE unfv_dep.I_DependenciaID is null
+  AND LEN(cod_dep_pl) > 0 	 
+
+select count(*) from temporal_pagos..ec_pri --369787
+select count(*) from temporal_pagos..ec_obl --708965
+select count(*) from temporal_pagos..ec_det
+
+
+select * from temporal_pagos..ec_pri ep
+inner join temporal_pagos..ec_obl eo ON ep.COD_ALU = eo.COD_ALU and ep.COD_RC = eo.COD_RC AND ep.ANO = eo.ANO and ep.P = eo.p
+--708812
+
+select * from temporal_pagos..ec_pri ep
+right join temporal_pagos..ec_obl eo ON ep.COD_ALU = eo.COD_ALU and ep.COD_RC = eo.COD_RC AND ep.ANO = eo.ANO and ep.P = eo.p
+where ep.COD_ALU IS NULL
+
+
+select * from temporal_pagos..ec_pri ep
+right join temporal_pagos..ec_obl eo ON ep.COD_ALU = eo.COD_ALU and ep.COD_RC = eo.COD_RC AND ep.ANO = eo.ANO
+where ep.COD_ALU IS NULL
+
+select distinct tipo_oblig from temporal_pagos..ec_obl
 
 SELECT id_cp, descripcio, * FROM cp_pri WHERE cuota_pago IN (
  '53'
