@@ -350,22 +350,7 @@ INSERT INTO TR_ObligacionAluCab (I_ProcesoID, I_MatAluID, C_Moneda, I_MontoOblig
 	  SELECT P.I_ProcesoID, I_MatAluID, 'PEN', eo.MONTO, 1, 0, NULL, NULL, NULL, NULL
 		FROM (SELECT * FROM temporal_pagos.dbo.ec_obl WHERE ANO <> 'A') eo 
 			 INNER JOIN TC_Proceso P ON eo.CUOTA_PAGO = P.I_ProcesoID
-			 left JOIN (SELECT M.*, C.T_OpcionCod FROM TC_MatriculaAlumno M 
-						INNER JOIN TC_CatalogoOpcion C ON M.I_Periodo = c.I_OpcionID) AS ma ON eo.COD_ALU COLLATE DATABASE_DEFAULT = ma.C_CodAlu COLLATE DATABASE_DEFAULT 
-																							AND eo.COD_RC COLLATE DATABASE_DEFAULT = ma.C_CodRc COLLATE DATABASE_DEFAULT 
-																							AND CAST(eo.ANO AS INT)  = ma.I_Anio
-																							AND eo.p COLLATE DATABASE_DEFAULT = ma.T_OpcionCod COLLATE DATABASE_DEFAULT 
-
-GO
-
-
-
-
-INSERT INTO TR_ObligacionAluCab (I_ProcesoID, I_MatAluID, C_Moneda, I_MontoOblig, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, I_UsuarioMod, D_FecMod)
-	  SELECT P.I_ProcesoID, I_MatAluID, 'PEN', eo.MONTO, 1, 0, NULL, NULL, NULL, NULL
-		FROM (SELECT * FROM temporal_pagos.dbo.ec_obl WHERE ANO <> 'A') eo 
-			 INNER JOIN TC_Proceso P ON eo.CUOTA_PAGO = P.I_ProcesoID
-			 left JOIN (SELECT M.*, C.T_OpcionCod FROM TC_MatriculaAlumno M 
+			 LEFT JOIN (SELECT M.*, C.T_OpcionCod FROM TC_MatriculaAlumno M 
 						INNER JOIN TC_CatalogoOpcion C ON M.I_Periodo = c.I_OpcionID) AS ma ON eo.COD_ALU COLLATE DATABASE_DEFAULT = ma.C_CodAlu COLLATE DATABASE_DEFAULT 
 																							AND eo.COD_RC COLLATE DATABASE_DEFAULT = ma.C_CodRc COLLATE DATABASE_DEFAULT 
 																							AND CAST(eo.ANO AS INT)  = ma.I_Anio
@@ -389,5 +374,32 @@ INSERT INTO TR_ObligacionAluDet (I_ObligacionAluID, I_ConcPagID, I_Monto, B_Paga
 													AND ED.p COLLATE DATABASE_DEFAULT = OA.P COLLATE DATABASE_DEFAULT
 													AND ED.fch_venc COLLATE DATABASE_DEFAULT = CONVERT(VARCHAR, OA.D_FecVencto, 101) COLLATE DATABASE_DEFAULT
 							INNER JOIN TI_ConceptoPago CP ON CP.I_ConcPagID = CAST(ED.concepto AS INT)
+
+GO
+
+
+INSERT INTO TR_TasaUnfv (C_CodTasa, I_MontoTasa, I_NroPagos, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, I_ConcPagID)
+				SELECT  C_CodTasa, M_Monto, N_NroPagos, 1, 0, NULL, NULL, I_ConcPagID
+				  FROM  TI_ConceptoPago
+				 WHERE  LEN(C_CodTasa) <> 0
+
+GO
+
+
+INSERT INTO TRI_PagoProcesadoUnfv (I_TasaUnfvID, I_PagoBancoID, I_ObligacionAluID, I_MontoPagado, I_SaldoAPagar, I_PagoDemas, B_PagoDemas, D_FecCre, I_UsuarioCre, B_Anulado)
+			SELECT  NULL, NULL, I_ObligacionAluID,  CASE pagado WHEN 1 THEN CAST(EO.monto AS decimal(15,2)) ELSE 0 END, CASE pagado WHEN 1 THEN 0 ELSE CAST(EO.monto AS decimal(15,2)) END, NULL, 0, NULL, NULL, 0
+			  FROM  temporal_pagos.dbo.ec_obl EO 
+					INNER JOIN (SELECT OAC.I_ObligacionAluID, OAC.I_ProcesoID, M.C_CodAlu, M.C_CodRc, P.I_Anio, C.T_OpcionCod as P, OAC.D_FecVencto
+								FROM TC_Proceso P 
+								INNER JOIN TR_ObligacionAluCab OAC ON OAC.I_ProcesoID = P.I_ProcesoID
+								INNER JOIN TC_MatriculaAlumno M ON OAC.I_MatAluID = M.I_MatAluID
+								INNER JOIN TC_CatalogoOpcion C ON M.I_Periodo = c.I_OpcionID ) OA ON EO.cod_alu COLLATE DATABASE_DEFAULT = OA.C_CodAlu COLLATE DATABASE_DEFAULT
+											AND EO.cod_rc COLLATE DATABASE_DEFAULT = OA.C_CodRc COLLATE DATABASE_DEFAULT
+											AND CAST(EO.cuota_pago AS int) = OA.I_ProcesoID
+											AND EO.ano = CAST(OA.I_Anio AS varchar)
+											AND EO.p COLLATE DATABASE_DEFAULT = OA.P COLLATE DATABASE_DEFAULT
+											AND CONVERT(VARCHAR, EO.fch_venc, 101) = CONVERT(VARCHAR, OA.D_FecVencto, 101)
+					INNER JOIN TC_Proceso P ON P.I_ProcesoID = CAST(EO.CUOTA_PAGO AS INT)
+				WHERE tipo_oblig = 1
 
 GO
