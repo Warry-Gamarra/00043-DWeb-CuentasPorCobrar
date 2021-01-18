@@ -30,9 +30,11 @@
             @Html.Grid(Model).Columns(columns =>
             {
                 columns.Add(c => c.T_ConceptoDesc).Titled("Descripción").Filterable(true);
-                columns.Add(c => c.I_Anio).Titled("Año").Filterable(true);
-                columns.Add(c => c.I_Periodo).Titled("Periodo").Filterable(true);
-                columns.Add(c => c.M_Monto).Titled("Monto").Filterable(true);
+                columns.Add(c => c.Habilitado).SetWidth(100).Css("text-center").Encoded(false).Sanitized(false)
+                      .RenderValueAs(model => model.Habilitado ?
+                                                           @Html.Raw("<span id=\"td" + @model.I_ConcPagID + "\"><button type=\"submit\" class=\"btn btn-xs btn-success\" onclick=\"ChangeStateReloadPage(" + @model.I_ConcPagID + ", " + @model.Habilitado.ToString().ToLower() + ", '" + @Url.Action("ChangeState", "ConceptoPago") + "');\"><i class=\"fa fa-check-circle-o\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Habilitado</span></button></span>")
+                                                           : @Html.Raw("<span id=\"td" + @model.I_ConcPagID + "\"><button type=\"submit\" class=\"btn btn-xs btn-secondary\" onclick=\"ChangeStateReloadPage(" + @model.I_ConcPagID + ", " + @model.Habilitado.ToString().ToLower() + ", '" + @Url.Action("ChangeState", "ConceptoPago") + "');\"><i class=\"fa fa-minus-circle\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Deshabilitado</span></button></span>"))
+                      .Filterable(true).SetWidth(160).Titled("Estado");
                 columns.Add().SetWidth(200).Css("text-right").Encoded(false).Sanitized(false).
                 RenderValueAs(model => @<a href="@Url.Action("Grabar", "ConceptoPago", new { id = model.I_ConcPagID })" class=""><i class="fa fa-pencil-square-o" aria-hidden="true">&nbsp;</i><span class="d-none d-md-inline-block">Editar</span></a>);
                     }).WithPaging(10).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
