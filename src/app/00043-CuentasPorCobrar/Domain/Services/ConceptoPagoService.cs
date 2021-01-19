@@ -22,6 +22,7 @@ namespace Domain.Services
                 var result = lista.Select(x => new ConceptoPago()
                 {
                     I_ConcPagID = x.I_ConcPagID,
+                    T_CatPagoDesc = x.T_CatPagoDesc,
                     T_ConceptoDesc = x.T_ConceptoDesc,
                     I_Anio = x.I_Anio,
                     I_Periodo = x.I_Periodo,

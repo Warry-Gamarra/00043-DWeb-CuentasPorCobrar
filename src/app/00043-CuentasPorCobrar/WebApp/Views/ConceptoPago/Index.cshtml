@@ -29,7 +29,7 @@
         <div class="table-responsive" style="min-height:300px">
             @Html.Grid(Model).Columns(columns =>
             {
-                columns.Add(c => c.T_ConceptoDesc).Titled("Descripción").Filterable(true);
+                columns.Add(c => c.T_ConceptoDesc).Titled("Descripción").Filterable(true).RenderValueAs(x => x.T_CatPagoDesc + " - " + x.T_ConceptoDesc);
                 columns.Add(c => c.I_Anio).Titled("Año").Filterable(true);
                 columns.Add(c => c.I_Periodo).Titled("Periodo").Filterable(true);
                 columns.Add(c => c.M_Monto).Titled("Monto").Filterable(true);

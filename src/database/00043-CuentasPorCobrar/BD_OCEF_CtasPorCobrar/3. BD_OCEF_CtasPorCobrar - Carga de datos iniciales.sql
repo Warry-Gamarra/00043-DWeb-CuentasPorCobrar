@@ -25,8 +25,8 @@ INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado,
 
 
 INSERT TC_Parametro(T_ParametroDesc, B_Habilitado, B_Eliminado) VALUES('TIPO OBLIGACIÓN', 1, 0)
-INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, B_Habilitado, B_Eliminado) VALUES(3, 'Matrícula', '1', 1, 0)
-INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, B_Habilitado, B_Eliminado) VALUES(3, 'Otros pagos', '0', 1, 0)
+INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(3, 'Matrícula', '1', 1, 0)
+INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(3, 'Otros pagos', '0', 1, 0)
 
 
 INSERT TC_Parametro(T_ParametroDesc, B_Habilitado, B_Eliminado) VALUES('CAMPO CALCULADO', 1, 0)

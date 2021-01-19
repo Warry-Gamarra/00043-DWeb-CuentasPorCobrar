@@ -13,6 +13,7 @@ namespace Data.Procedures
     public class USP_S_ConceptoPago
     {
         public int I_ConcPagID { get; set; }
+        public string T_CatPagoDesc { get; set; }
         public string T_ConceptoDesc { get; set; }
         public int I_Anio { get; set; }
         public int I_Periodo { get; set; }

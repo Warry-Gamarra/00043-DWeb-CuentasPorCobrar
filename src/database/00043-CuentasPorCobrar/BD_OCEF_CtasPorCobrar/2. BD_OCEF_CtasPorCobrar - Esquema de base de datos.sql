@@ -432,7 +432,7 @@ CREATE TABLE TI_ConceptoPago
 	B_Porcentaje         bit  NULL ,
 	C_Moneda             char(18)  NULL ,
 	M_Monto              decimal(15,2)  NULL ,
-	M_MontoMinimo        decimal(10,4)  NULL ,
+	M_MontoMinimo        decimal(15,2)  NULL ,
 	T_DescripcionLarga   varchar(250)  NULL ,
 	T_Documento          varchar(500)  NULL ,
 	B_Migrado            bit  NOT NULL ,
