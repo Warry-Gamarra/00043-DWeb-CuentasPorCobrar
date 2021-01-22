@@ -11,9 +11,7 @@ namespace WebApp.ViewModels
         public int I_ConcPagID { get; set; }
         public string T_CatPagoDesc { get; set; }
         public string T_ConceptoDesc { get; set; }
-        public int I_Anio { get; set; }
-        public int I_Periodo { get; set; }
-        public decimal M_Monto { get; set; }
+        public bool Habilitado { get; set; }
     }
 
     public class MantenimientoConceptoPagoViewModel

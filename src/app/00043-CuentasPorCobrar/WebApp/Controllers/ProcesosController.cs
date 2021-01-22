@@ -22,7 +22,7 @@ namespace WebApp.Controllers
 
         public ActionResult Index()
         {
-            ViewBag.Title = "Desc. Cuota de Pago";
+            ViewBag.Title = "Procesos y Conceptos";
 
             var lista = procesoModel.Listar_Procesos();
 

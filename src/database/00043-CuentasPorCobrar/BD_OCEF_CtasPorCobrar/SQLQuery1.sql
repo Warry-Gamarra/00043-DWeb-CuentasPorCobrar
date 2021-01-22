@@ -7,15 +7,13 @@ select * from cp_des WHERE DESCRIPCIO LIKE '%TASAS%'
 
 
 
-select * from ec_det where concepto in (
-select LEN(descrip_l) from cp_pri p left join cp_des d on p.cuota_pago = d.CUOTA_PAGO --order by 1 desc
---select LEN(documento) from cp_pri p left join cp_des d on p.cuota_pago = d.CUOTA_PAGO order by 1 desc
-)
+select * from temporal_pagos..ec_det where concepto in (
+select LEN(descrip_l) from cp_pri p left join cp_des d on p.cuota_pago = d.CUOTA_PAGO)
 
 
 
 --dbcc checkident(TI_ConceptoPago)
-select * from TI_ConceptoPago
+select * from TI_ConceptoPago WHERE I_TipoObligacion = 9
 
 SET IDENTITY_INSERT TI_ConceptoPago ON
 
@@ -144,6 +142,7 @@ SELECT * FROM cp_des WHERE CUOTA_PAGO IN(
 ,438
 ,439)
 
+SELECT * FROM TI_ConceptoPago
 
 SELECT * FROM cp_pri ORDER BY id_cp ASC
 
