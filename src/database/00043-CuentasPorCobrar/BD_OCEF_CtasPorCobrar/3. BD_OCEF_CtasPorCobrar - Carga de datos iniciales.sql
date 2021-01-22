@@ -299,7 +299,7 @@ GO
 
 SET IDENTITY_INSERT TC_Concepto ON
 
-INSERT INTO TC_Concepto (I_ConceptoID, T_ConceptoDesc, B_Habilitado, B_Eliminado) VALUES (0, 'MIGRADO', 0, 0)
+INSERT INTO TC_Concepto (I_ConceptoID, T_ConceptoDesc, B_EsPagoMatricula, B_EsPagoExtmp, B_Habilitado, B_Eliminado) VALUES (0, 'MIGRADO', 0, 0, 0, 0)
 
 SET IDENTITY_INSERT TC_Concepto OFF
 GO

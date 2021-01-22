@@ -368,13 +368,15 @@ CREATE VIEW [dbo].[VW_Alumnos]
 AS
 SELECT
 	p.I_PersonaID, p.C_CodTipDoc, tdoc.T_TipDocDesc, p.C_NumDNI, p.T_ApePaterno, p.T_ApeMaterno, p.T_Nombre, 
-	p.D_FecNac, p.C_Sexo, a.C_CodAlu, a.C_RcCod, prog.T_DenomProg, a.C_CodModIng, modIng.T_ModIngDesc, a.C_AnioIngreso, 
+	p.D_FecNac, p.C_Sexo, a.C_CodAlu, a.C_RcCod, prog.T_DenomProg, a.C_CodModIng, modIng.T_ModIngDesc, 
+	car.N_Grado, grad.T_GradoDesc, car.N_Grupo, a.C_AnioIngreso, 
 	a.I_IdPlan, a.B_Habilitado, a.B_Eliminado FROM dbo.TC_Persona p
 INNER JOIN dbo.TC_Alumno a ON a.I_PersonaID = p.I_PersonaID AND p.B_Eliminado = 0
 LEFT JOIN dbo.TC_TipoDocumentoIdentidad tdoc ON tdoc.C_CodTipDoc = p.C_CodTipDoc
 LEFT JOIN dbo.TC_ModalidadIngreso modIng ON  modIng.C_CodModIng = a.C_CodModIng
 INNER JOIN dbo.TI_CarreraProfesional car ON car.C_RcCod = a.C_RcCod
 LEFT JOIN dbo.TC_ProgramaUnfv prog ON prog.C_RcCod = car.C_RcCod
+LEFT JOIN dbo.TC_GradoAcademico grad ON grad.C_CodGrado = car.N_Grado
 GO
 
 
