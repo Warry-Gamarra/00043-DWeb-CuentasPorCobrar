@@ -13,84 +13,79 @@
         </section>
     </div>
     <br />
-    <div class="col-12 mt-4">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card text-center border-info">
-                    <div class="card-body text-info">
-                        <p class="h1 my-5"><i class="fa fa-2x fa-address-card"></i></p>
-                        <p class="h5">Alumnos Pregrado</p>
-                    </div>
-                    <div class="card-footer text-muted p-0">
-                        <a href="@Url.Action("CargarArchivoPregrado", "Estudiantes")" class="btn btn-info btn-block modal-link" style="padding:15px; border:none; border-radius:0px 0px 3px 3px;"><i class="fa fa-paperclip">&nbsp;</i>Adjuntar archivo</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card text-center border-blue">
-                    <div class="card-body text-primary">
-                        <p class="h1 my-5"><i class="fa fa-2x fa-graduation-cap"></i></p>
-                        <p class="h5">Alumnos Posgrado</p>
-                    </div>
-                    <div class="card-footer text-muted p-0">
-                        <a href="@Url.Action("CargarArchivoPosgrado", "Estudiantes")" class="btn btn-primary btn-block modal-link" style="padding:15px; border:none; border-radius:0px 0px 3px 3px;"><i class="fa fa-paperclip">&nbsp;</i>Adjuntar archivo</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
-@*<div class="panel panel-default" id="div-alu" style="border-color: @Model.subirAlumno.color;">
-            <div class="panel-body text-center text-muted">
-                <p style="margin-top:30px;"><i id="alu-icon" class="fa @Model.subirAlumno.icon" style="font-size: 6em; color: @Model.subirAlumno.color;"></i></p>
-                <h4 style="margin:30px 0px 20px">Archivo excel de estudiantes<br /><small id="msg-alu">(datos personales y de estudiante)</small></h4>
-            </div>
-            <div class="panel-footer" style="padding:0px;">
-                <a id="load2-alu" class="btn btn-default btn-block" style="padding:15px; border:none; border-radius:0px 0px 4px 4px; display:none;" onclick="reload('alu')">Volver cargar</a>
-                <a id="load-alu" href="@Url.Action("SubirArchivo", "Matricula", new { id = 1, tmp = Model.esTemporal, anio = Model.anioMatricula, tip = Model.tipoImportacion })" class="btn btn-default btn-block modal-link-md @Model.subirAlumno.action" style="padding:15px; border:none; border-radius:0px 0px 4px 4px;">
-                    <i class="fa fa-paperclip">&nbsp;</i>Adjuntar archivo
+    <div class="col-12">
+        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+            <li class="nav-item w-50" role="presentation">
+                <a class="nav-link h5 text-center active" id="pills-matricula-tab" data-toggle="pill" href="#pills-matricula" role="tab" aria-controls="pills-matricula" aria-selected="true">
+                    <i class="fa fa-fw fa-user-plus">&nbsp;</i> Matrículas
                 </a>
+            </li>
+            <li class="nav-item w-50" role="presentation">
+                <a class="nav-link h5 text-center" id="pills-multa-tab" data-toggle="pill" href="#pills-multa" role="tab" aria-controls="pills-multa" aria-selected="false">
+                    <i class="fa fa-fw fa-cubes">&nbsp;</i> Multa por no votar
+                </a>
+            </li>
+        </ul>
+        <div class="tab-content" id="pills-tabContent">
+            <div class="tab-pane fade show active" id="pills-matricula" role="tabpanel" aria-labelledby="pills-matricula-tab">
+                <div class="row mt-4 d-flex justify-content-center">
+                    <div class="col-12 mb-3">
+                        <h2 class="border-2 text-center">Relación de alumnos matriculados</h2>
+                    </div>
+                    <div class="col-md-5 mb-3">
+                        <div class="card text-center border-info">
+                            <div class="card-body text-info">
+                                <p class="h1 my-5"><i class="fa fa-2x fa-address-card"></i></p>
+                                <p class="h5">Alumnos Pregrado</p>
+                            </div>
+                            <div class="card-footer text-muted p-0">
+                                <a href="@Url.Action("CargarArchivoMatriculaPregrado", "Estudiantes")" class="btn btn-outline-info btn-block modal-link" style="padding:15px; border:none; border-radius:0px 0px 3px 3px;"><i class="fa fa-paperclip">&nbsp;</i>Adjuntar archivo</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5 mb-3">
+                        <div class="card text-center border-blue">
+                            <div class="card-body text-primary">
+                                <p class="h1 my-5"><i class="fa fa-2x fa-graduation-cap"></i></p>
+                                <p class="h5">Alumnos Posgrado</p>
+                            </div>
+                            <div class="card-footer text-muted p-0">
+                                <a href="@Url.Action("CargarArchivoMatriculaPosgrado", "Estudiantes")" class="btn btn-outline-primary btn-block modal-link" style="padding:15px; border:none; border-radius:0px 0px 3px 3px;"><i class="fa fa-paperclip">&nbsp;</i>Adjuntar archivo</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="tab-pane fade" id="pills-multa" role="tabpanel" aria-labelledby="pills-multa-tab">
+                <div class="row mt-4 d-flex justify-content-center">
+                    <div class="col-12 mb-3">
+                        <h2 class="border-2 text-center">Relación ausentes durante las elecciones</h2>
+                    </div>
+                    <div class="col-md-5 mb-3">
+                        <div class="card text-center border-info">
+                            <div class="card-body text-info">
+                                <p class="h1 my-5"><i class="fa fa-2x fa-user-o"></i></p>
+                                <p class="h5">Alumnos Pregrado</p>
+                            </div>
+                            <div class="card-footer text-muted p-0">
+                                <a href="@Url.Action("CargarArchivoMultaPregrado", "Estudiantes")" class="btn btn-outline-info btn-block modal-link" style="padding:15px; border:none; border-radius:0px 0px 3px 3px;"><i class="fa fa-paperclip">&nbsp;</i>Adjuntar archivo</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5 mb-3">
+                        <div class="card text-center border-blue">
+                            <div class="card-body text-primary">
+                                <p class="h1 my-5"><i class="fa fa-2x fa-user-times"></i></p>
+                                <p class="h5">Alumnos Posgrado</p>
+                            </div>
+                            <div class="card-footer text-muted p-0">
+                                <a href="@Url.Action("CargarArchivoMultaPosgrado", "Estudiantes")" class="btn btn-outline-primary btn-block modal-link" style="padding:15px; border:none; border-radius:0px 0px 3px 3px;"><i class="fa fa-paperclip">&nbsp;</i>Adjuntar archivo</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
-            <div class="col-md-6">
-                <div class="panel panel-default" id="div-mat" style="border-color: @Model.subirMatricula.color;">
-                    <div class="panel-body text-center text-muted">
-                        <p style="margin-top:30px;"><i id="mat-icon" class="fa @Model.subirMatricula.icon" style="font-size: 6em; color: @Model.subirMatricula.color;"></i></p>
-                        <h4 style="margin:30px 0px 20px">Archivo excel de matrícula <br /><small id="msg-mat"> (Cursos matriculados y turnos)</small></h4>
-                    </div>
-                    <div class="panel-footer" style="padding:0px;">
-                        <a id="load2-mat" class="btn btn-default btn-block" style="padding:15px; border:none; border-radius:0px 0px 4px 4px; display:none;" onclick="reload('mat')">Volver cargar</a>
-                        <a id="load-mat" href="@Url.Action("SubirArchivo", "Matricula", new { id = 2, tmp = Model.esTemporal, anio = Model.anioMatricula, tip = Model.tipoImportacion })" class="btn btn-default btn-block modal-link-md @Model.subirMatricula.action" style="padding:15px; border:none; border-radius:0px 0px 4px 4px;">
-                            <i class="fa fa-paperclip">&nbsp;</i>Adjuntar archivo
-                        </a>
-                    </div>
-                </div>
-            </div>*@
-
-
-<script>
-
-
-    function reload(tipo) {
-        if (tipo == 'alu') {
-            $('#div-alu').css('border-color', '#67beff');
-            $('#alu-icon').css('color', '#67beff').removeClass('fa-times-circle text-danger').addClass('fa-file-excel-o');
-            $('#load-alu').removeClass('disabled');
-            $('#load2-alu').hide();
-            $('#load-alu').show();
-        }
-
-        if (tipo == 'mat') {
-            $('#div-mat').css('border-color', '#f17171');
-            $('#mat-icon').css('color', '#f17171').removeClass('fa-times-circle text-danger').addClass('fa-file-excel-o');;
-            $('#load-mat').removeClass('disabled');
-            $('#load2-mat').hide();
-            $('#load-mat').show();
-        }
-
-    }
-
-</script>
