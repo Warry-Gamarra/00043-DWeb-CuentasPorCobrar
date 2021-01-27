@@ -377,6 +377,7 @@ LEFT JOIN dbo.TC_ModalidadIngreso modIng ON  modIng.C_CodModIng = a.C_CodModIng
 INNER JOIN dbo.TI_CarreraProfesional car ON car.C_RcCod = a.C_RcCod
 LEFT JOIN dbo.TC_ProgramaUnfv prog ON prog.C_RcCod = car.C_RcCod
 LEFT JOIN dbo.TC_GradoAcademico grad ON grad.C_CodGrado = car.N_Grado
+WHERE a.B_Eliminado = 0
 GO
 
 
