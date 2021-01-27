@@ -11,6 +11,7 @@ using System.IO;
 
 namespace WebApp.Controllers
 {
+    [Authorize]
     public class ConceptoPagoController : Controller
     {
         ConceptoPagoModel conceptoPagoModel;

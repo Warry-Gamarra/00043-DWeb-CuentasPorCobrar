@@ -1,0 +1,180 @@
+﻿@model IEnumerable<WebApp.ViewModels.ProcesoViewModel>
+
+@using GridMvc.Html
+
+<div class="container-fluid">
+    <div class="col-12">
+        <section class="content-header">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb float-right small d-none d-sm-inline-flex">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")"><i class="fa fa-home">&nbsp;</i>Inicio</a></li>
+                    <li class="breadcrumb-item"><span><i class="fa fa-cogs">&nbsp;</i>Configuracion </span></li>
+                    <li class="breadcrumb-item active"><span><i class="fa fa-sitemap">&nbsp;</i>@ViewBag.Title </span></li>
+                </ol>
+            </nav>
+            <h1 class="">@ViewBag.Title <small></small></h1>
+        </section>
+    </div>
+    <div class="col-12 my-4">
+        <div class="card">
+            <div class="card-body bg-light-gray">
+                <form>
+                    <div class="form-row">
+                        <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
+                            <label for="inputAnio">Año</label>
+                            @Html.DropDownList("inputAnio", new SelectList(ViewBag.Anios), new { Class = "form-control form-control-sm" })
+                        </div>
+                        <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
+                            <label for="inputPeriodo">Periodo</label>
+                            @Html.DropDownList("inputPeriodo", new SelectList(ViewBag.Anios), new { Class = "form-control form-control-sm" })
+                        </div>
+                        <div class="form-group col-lg-2 col-sm-3 col-12">
+                            <button type="submit" class="btn btn-block btn-outline-secondary mt-4"><i class="fa fa-fw fa-search-plus">&nbsp;</i> Iniciar consulta</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        @if (Model.Count() == 0)
+        {
+            <div class="card border-warning bg-transparent">
+                <div class="card-body text-center my-5">
+                    <p class="h5 mb-5">
+                        No se encontraron procesos para el año AAAA @ViewBag.AnioProcesos
+                    </p>
+                    <a href="@Url.Action("SeleccionarCategorias", "Procesos")" class="btn btn-lg btn-outline-yellow modal-link-lg">
+                        <i class="fa fa-calendar-plus-o"></i> Agregar Procesos
+                    </a>
+
+                    <a href="@Url.Action("Create", "Procesos")" class="btn btn-lg btn-outline-yellow modal-link-lg">
+                        <i class="fa fa-calendar-plus-o"></i> Agregar Procesos
+                    </a>
+                </div>
+            </div>
+
+        }
+        else
+        {
+            <div class="table-responsive" style="min-height:300px">
+                @Html.Grid(Model).Columns(columns =>
+                    {
+                        columns.Add(c => c.T_CatPagoDesc).Titled("Descripción").Filterable(true);
+                        columns.Add(c => c.I_Anio).Titled("Año").Filterable(true);
+                        columns.Add(c => c.D_FecVencto).Format("{0:dd/MM/yyyy}").Titled("Fch. Vencimiento").Filterable(true);
+                        columns.Add(c => c.I_Prioridad).Titled("Prioridad").Filterable(true);
+                        columns.Add().SetWidth(200).Css("text-right").Encoded(false).Sanitized(false).
+                            RenderValueAs(model => @<a href="@Url.Action("Edit", "Procesos", new { id = model.I_ProcesoID })" class="modal-link"><i class="fa fa-pencil-square-o" aria-hidden="true">&nbsp;</i><span class="d-none d-md-inline-block">Editar</span></a>);
+                         }).WithPaging(10).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
+            </div>
+
+        }
+
+        <br />
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(document).on('ready', function () {
+            $('#btnsubmit').removeClass('disabled');
+        });
+
+        $(document).on("submit", "form", function () {
+            var submited = parseInt($("#Submited").val());
+            $(this).submit(function () {
+                if (submited > 0) {
+                    return false;
+                }
+                return true;
+            });
+            $("#Submited").val(submited + 1);
+            return true;
+        });
+
+        $(document).on("change", '#I_CatPagoID', function (event) {
+            let txtPrioridad = $('#I_Prioridad');
+            let cmbCtaDepositoHabilitadas = $('#cmbCuentasHabilitadas');
+            let cmbCtaDeposito = $('#Arr_CtaDepositoID');
+
+            txtPrioridad.val('');
+            cmbCtaDepositoHabilitadas.empty();
+            cmbCtaDeposito.empty();
+
+            $.ajax({
+                url: ('/api/Service/GetPrioridad/' + this.value),
+                type: 'GET',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                cache: false,
+                beforeSend: function () { },
+                success: function (data) {
+                    if (data && !isNaN(data)) {
+                        txtPrioridad.val(data);
+                    }
+                },
+                error: function () { },
+                complete: function () { }
+            });
+
+            $.ajax({
+                url: ('/api/Service/GetCuentasDeposito/' + this.value),
+                type: 'GET',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                cache: false,
+                beforeSend: function () { },
+                success: function (data) {
+                    if (data && data.length > 0) {
+                        for (let i = 0; i < data.length; i++) {
+                            cmbCtaDepositoHabilitadas.append('<option value="' + data[i].Value + '">' + data[i].TextDisplay + '</option>');
+                        }
+                    }
+                },
+                error: function () { },
+                complete: function () { }
+            });
+        });
+
+        $(document).on("click", "#btnAddCtaDeposito", function () {
+            let comboOrigen = $('#cmbCuentasHabilitadas option:selected');
+            let comboDestino = $('#Arr_CtaDepositoID');
+
+            if (comboOrigen.length > 0) {
+                for (var i = 0; i < comboOrigen.length; i++) {
+                    let option = comboOrigen[i];
+
+                    if (option.selected && !opcionDuplicada(comboDestino, option.value)) {
+                        agregarOpcionCombo(comboDestino, option.value, option.text);
+                    }
+                }
+            }
+        });
+
+        $(document).on("click", "#btnRemoveCtaDeposito", function () {
+            $('#Arr_CtaDepositoID option:selected').remove();
+        });
+
+        function opcionDuplicada(comboBox, searchedValue) {
+            if (comboBox[0].options.length > 0) {
+                let options = comboBox[0].options;
+
+                for (var i = 0; i < options.length; i++) {
+                    let option = options[i];
+
+                    if (option.value == searchedValue) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        function agregarOpcionCombo(comboBox, id, text) {
+            comboBox.append('<option value="' + id + '">' + text + '</option>');
+        }
+    </script>
+}

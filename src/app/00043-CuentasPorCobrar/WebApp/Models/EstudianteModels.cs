@@ -18,26 +18,43 @@ namespace WebApp.Models
             _estudiante = new Estudiante();
         }
 
-        public SeleccionarArchivoViewModel Init(TipoAlumno tipoAlumno)
+        public SeleccionarArchivoViewModel Init(TipoAlumno tipoAlumno, TipoArchivoAlumno tipoArchivoAlumno)
         {
             var result = new SeleccionarArchivoViewModel();
+            string grado = "";
+            string tipo = "";
 
             result.TipoAlumno = tipoAlumno;
+            result.TipoArchivoAlumno = tipoArchivoAlumno;
+
             switch (tipoAlumno)
             {
                 case TipoAlumno.Pregrado:
                     result.Color = "info";
-                    result.Action = "CargarArchivoPregrado";
+                    grado = "Pregrado";
                     break;
                 case TipoAlumno.Posgrado:
                     result.Color = "primary";
-                    result.Action = "CargarArchivoPosgrado";
+                    grado = "Posgrado";
                     break;
                 case TipoAlumno.Euded:
                     result.Color = "secondary";
-                    result.Action = "CargarArchivoPregrado";
+                    grado = "Pregrado";
                     break;
             }
+
+            switch (tipoArchivoAlumno)
+            {
+                case TipoArchivoAlumno.Matricula:
+                    tipo = "Matricula";
+                    break;
+                case TipoArchivoAlumno.MultaNoVotar:
+                    tipo = "Multa";
+                    break;
+            }
+
+            result.Action = "CargarArchivo" + tipo + grado;
+
             return result;
         }
 

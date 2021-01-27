@@ -10,6 +10,7 @@ using WebMatrix.WebData;
 
 namespace WebApp.Controllers
 {
+    [Authorize]
     public class CategoriaPagoController : Controller
     {
         private readonly CategoriaPagoModel _categoriaPago;

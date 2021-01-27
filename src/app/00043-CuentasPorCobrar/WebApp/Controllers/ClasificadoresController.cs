@@ -10,6 +10,7 @@ using WebMatrix.WebData;
 
 namespace WebApp.Controllers
 {
+    [Authorize]
     [Route("configuracion/clasificadores-de-ingreso/{action}")]
     public class ClasificadoresController : Controller
     {
