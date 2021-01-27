@@ -89,6 +89,10 @@ body {
   border-color: var(--cs-dark) !important;
 }
 
+.border-yellow {
+    border-color: var(--cs-yellow) !important;
+}
+
 .bg-white {
   background: #fff !important;
   border: 1px solid #fff !important;
@@ -116,6 +120,12 @@ body {
 .bg-blue {
   background: var(--cs-blue) !important;
   border: 1px solid var(--cs-blue) !important;
+  color: #fff;
+}
+
+.bg-yellow {
+  background: var(--cs-yellow) !important;
+  border: 1px solid var(--cs-yellow) !important;
   color: #fff;
 }
 
@@ -157,6 +167,17 @@ body {
 
 .bg-light-gray {
   background: #b7bfca2e !important;
+}
+
+.btn-outline-yellow {
+    color: var(--cs-yellow);
+    border-color: var(--cs-yellow);
+}
+
+.btn-outline-yellow:hover {
+    color: #fff;
+    background-color: var(--cs-yellow);
+    border-color: var(--cs-yellow);
 }
 
 /* Main content*/
@@ -262,7 +283,7 @@ footer {
 
 @media (min-width: 576px) {
     .modal-dialog {
-        max-width: 580px;
+        /*max-width: 580px;*/
         margin: 1.75rem auto;
     }
 }

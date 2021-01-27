@@ -23,7 +23,8 @@ namespace WebApp.App_Start
                     "~/Assets/bootstrap-datepicker/css/bootstrap-timepicker.css"));
 
             bundles.Add(new StyleBundle("~/content/fonts").Include(
-                "~/Assets/font-awesome/css/font-awesome.min.css"));
+                "~/Assets/font-awesome/css/font-awesome.min.css",
+                "~/Assets/bootstrap/css/bootstrap-icons.css"));
 
 
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
