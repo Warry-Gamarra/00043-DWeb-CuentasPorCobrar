@@ -1296,6 +1296,43 @@ END
 GO
 
 
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'FN_CalcularCuotasDeuda' AND ROUTINE_TYPE = 'FUNCTION')
+	DROP FUNCTION [dbo].[FN_CalcularCuotasDeuda]
+GO
+
+CREATE FUNCTION dbo.FN_CalcularCuotasDeuda (@I_MontoDeuda decimal(15,2), @N_NroPagos tinyint, @I_NroFila int)
+RETURNS DECIMAL (15,2)
+AS
+BEGIN
+	declare @resultado decimal(15,2),
+			--@mod decimal(15,2),
+			@parteEntera decimal(15,2),
+			@parteDecimal decimal(15,2)
+
+	set @parteEntera = FLOOR(@I_MontoDeuda)
+
+	set @parteDecimal = @I_MontoDeuda - @parteEntera
+	 
+	set @resultado = (case when @N_NroPagos = 1
+						then 
+							@I_MontoDeuda 
+						else 
+							case when cast(@I_MontoDeuda / @N_NroPagos as decimal(15,2)) * @N_NroPagos = @I_MontoDeuda
+								then 
+									cast(@I_MontoDeuda / @N_NroPagos as decimal(15,2))
+								else 
+									case when @I_NroFila <= (@I_MontoDeuda % @N_NroPagos) 
+										then FLOOR(@parteEntera / @N_NroPagos) + 1 + (case when @I_NroFila = 1 then @parteDecimal else 0 end)
+										else FLOOR(@parteEntera / @N_NroPagos)
+									end
+							end
+					end)
+	return @resultado
+END
+GO
+
+
 IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'USP_IU_GenerarObligacionesPregrado_X_Ciclo' AND ROUTINE_TYPE = 'PROCEDURE')
 	DROP PROCEDURE [dbo].[USP_IU_GenerarObligacionesPregrado_X_Ciclo]
 GO
@@ -1313,6 +1350,7 @@ BEGIN
 
 	--1ro Obtener los conceptos según año y periodo
 	declare @I_Pregrado int = (select I_OpcionID from dbo.TC_CatalogoOpcion where I_ParametroID = 2 and T_OpcionCod = '1')
+	declare @I_Bachiller int = 1
 
 	select p.I_ProcesoID, p.D_FecVencto, cp.T_CatPagoDesc, conpag.I_ConcPagID, con.T_ConceptoDesc, cp.I_TipoAlumno, conpag.M_Monto, conpag.M_MontoMinimo, conpag.I_TipoObligacion,
 	conpag.B_Calculado, conpag.I_Calculado, conpag.B_GrupoCodRc, conpag.I_GrupoCodRc, conpag.B_ModalidadIngreso, moding.T_OpcionCod AS C_CodModIng, 
@@ -1326,7 +1364,7 @@ BEGIN
 	where p.B_Habilitado = 1 and p.B_Eliminado = 0 and
 		conpag.B_Habilitado = 1 and conpag.B_Eliminado = 0 and
 		cp.B_Obligacion = 1 and p.I_Anio = @I_Anio and p.I_Periodo = @I_Periodo and cp.I_Nivel = @I_Pregrado
-		--cp.B_Obligacion = 1 and p.I_Anio = 2022 and p.I_Periodo = 15 and cp.I_Nivel = 4
+		--cp.B_Obligacion = 1 and p.I_Anio = 2021 and p.I_Periodo = 15 and cp.I_Nivel = 4
 
 	--2do Obtengo la relación de alumnos
 	declare @Tmp_MatriculaAlumno table (id int identity(1,1), I_MatAluID int, C_CodRc varchar(3), C_CodAlu varchar(20), C_EstMat varchar(2), B_Ingresante bit, C_CodModIng varchar(2), N_Grupo char(1), I_CantCredDesaprob tinyint)
@@ -1335,7 +1373,7 @@ BEGIN
 	insert @Tmp_MatriculaAlumno(I_MatAluID, C_CodRc, C_CodAlu, C_EstMat, B_Ingresante, C_CodModIng, N_Grupo, I_CantCredDesaprob)
 	select m.I_MatAluID, m.C_CodRc, m.C_CodAlu, m.C_EstMat, m.B_Ingresante, a.C_CodModIng, a.N_Grupo, ISNULL(m.I_CantCredDesaprob, 0) from dbo.TC_MatriculaAlumno m 
 	inner join BD_UNFV_Repositorio.dbo.VW_Alumnos a ON a.C_CodAlu = m.C_CodAlu and a.C_RcCod = m.C_CodRc
-	where m.B_Habilitado = 1 and m.B_Eliminado = 0 and a.N_Grado = 1 and
+	where m.B_Habilitado = 1 and m.B_Eliminado = 0 and a.N_Grado = @I_Bachiller and
 		m.I_Anio = @I_Anio and m.I_Periodo = @I_Periodo
 
 	declare @C_Moneda varchar(3) = 'PEN',
@@ -1444,13 +1482,8 @@ BEGIN
 					where num < @N_NroPagos
 				)
 				insert @Tmp_Procesos(I_ProcesoID, I_ConcPagID, M_Monto)
-				select I_ProcesoID, I_ConcPagID, 
-					case when (@I_MontoDeuda % @N_NroPagos = 0) 
-						then cast(@I_MontoDeuda / @N_NroPagos as decimal(15,2)) 
-						else 
-							case when (num = 1) then FLOOR(@I_MontoDeuda / @N_NroPagos) + (@I_MontoDeuda % @N_NroPagos) else FLOOR(@I_MontoDeuda / @N_NroPagos) end
-						end as M_Monto 
-				from CTE_Recursivo
+				select I_ProcesoID, I_ConcPagID, dbo.FN_CalcularCuotasDeuda(@I_MontoDeuda, @N_NroPagos, num) AS M_Monto
+				from CTE_Recursivo;
 			end
 
 			--Monto de cursos desaprobados
@@ -1497,25 +1530,25 @@ BEGIN
 				select I_ProcesoID, I_ConcPagID, cast(M_Monto / @N_NroPagos as decimal(15,2)) as M_Monto from CTE_Recursivo
 			end
 
-			--Inserción de Cabecera
-			insert dbo.TR_ObligacionAluCab(I_ProcesoID, I_MatAluID, C_Moneda, I_MontoOblig, B_Pagado, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, D_FecVencto)
-			select distinct p.I_ProcesoID, @I_MatAluID, @C_Moneda, 0, 0, 1, 0, @I_UsuarioCre, @D_CurrentDate, @D_FecVencto from @Tmp_Procesos p
-			left join dbo.TR_ObligacionAluCab cab on cab.I_ProcesoID = p.I_ProcesoID and cab.B_Eliminado = 0
-			where cab.I_ProcesoID is null
+			----Inserción de Cabecera
+			--insert dbo.TR_ObligacionAluCab(I_ProcesoID, I_MatAluID, C_Moneda, I_MontoOblig, B_Pagado, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, D_FecVencto)
+			--select distinct p.I_ProcesoID, @I_MatAluID, @C_Moneda, 0, 0, 1, 0, @I_UsuarioCre, @D_CurrentDate, @D_FecVencto from @Tmp_Procesos p
+			--left join dbo.TR_ObligacionAluCab cab on cab.I_ProcesoID = p.I_ProcesoID and cab.B_Eliminado = 0
+			--where cab.I_ProcesoID is null
 
-			--Inserción de los Detalles
-			insert dbo.TR_ObligacionAluDet(I_ObligacionAluID, I_ConcPagID, I_Monto, B_Pagado, D_FecVencto, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
-			select cab.I_ObligacionAluID, tmp.I_ConcPagID, tmp.M_Monto, 0, @D_FecVencto, 1, 0, @I_UsuarioCre, @D_CurrentDate from dbo.TR_ObligacionAluCab cab
-			inner join @Tmp_Procesos tmp on tmp.I_ProcesoID = cab.I_ProcesoID
-			where cab.B_Eliminado = 0 and cab.I_MatAluID = @I_MatAluID and 
-				not exists(select det.I_ObligacionAluDetID from dbo.TR_ObligacionAluDet det 
-					where det.B_Eliminado = 0 and det.I_ObligacionAluID = cab.I_ObligacionAluID and det.I_ConcPagID = tmp.I_ConcPagID)
+			----Inserción de los Detalles
+			--insert dbo.TR_ObligacionAluDet(I_ObligacionAluID, I_ConcPagID, I_Monto, B_Pagado, D_FecVencto, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
+			--select cab.I_ObligacionAluID, tmp.I_ConcPagID, tmp.M_Monto, 0, @D_FecVencto, 1, 0, @I_UsuarioCre, @D_CurrentDate from dbo.TR_ObligacionAluCab cab
+			--inner join @Tmp_Procesos tmp on tmp.I_ProcesoID = cab.I_ProcesoID
+			--where cab.B_Eliminado = 0 and cab.I_MatAluID = @I_MatAluID and 
+			--	not exists(select det.I_ObligacionAluDetID from dbo.TR_ObligacionAluDet det 
+			--		where det.B_Eliminado = 0 and det.I_ObligacionAluID = cab.I_ObligacionAluID and det.I_ConcPagID = tmp.I_ConcPagID)
 
-			update dbo.TR_ObligacionAluCab set I_MontoOblig = I_Total
-			from (select cab.I_ObligacionAluID, sum(det.I_Monto) as I_Total from dbo.TR_ObligacionAluCab cab
-				inner join dbo.TR_ObligacionAluDet det on det.I_ObligacionAluID = cab.I_ObligacionAluID
-				where cab.B_Eliminado = 0 and det.B_Eliminado = 0 and cab.I_MatAluID = @I_MatAluID
-				group by cab.I_ObligacionAluID) grupo where grupo.I_ObligacionAluID = dbo.TR_ObligacionAluCab.I_ObligacionAluID
+			--update dbo.TR_ObligacionAluCab set I_MontoOblig = I_Total
+			--from (select cab.I_ObligacionAluID, sum(det.I_Monto) as I_Total from dbo.TR_ObligacionAluCab cab
+			--	inner join dbo.TR_ObligacionAluDet det on det.I_ObligacionAluID = cab.I_ObligacionAluID
+			--	where cab.B_Eliminado = 0 and det.B_Eliminado = 0 and cab.I_MatAluID = @I_MatAluID
+			--	group by cab.I_ObligacionAluID) grupo where grupo.I_ObligacionAluID = dbo.TR_ObligacionAluCab.I_ObligacionAluID
 
 			commit tran
 		end try
@@ -1529,6 +1562,7 @@ BEGIN
 	end
 
 /*
+
 declare @B_Result bit,
 		@T_Message nvarchar(4000)
 
