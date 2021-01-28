@@ -172,6 +172,7 @@
     <Content Include="Assets\bootstrap-datepicker\js\bootstrap-datepicker.es.js" />
     <Content Include="Assets\bootstrap-datepicker\js\bootstrap-datepicker.js" />
     <Content Include="Assets\bootstrap-datepicker\js\bootstrap-timepicker.js" />
+    <Content Include="Assets\bootstrap\css\bootstrap-icons.css" />
     <Content Include="Assets\bootstrap\css\bootstrap.min.css" />
     <Content Include="Assets\bootstrap\js\bootstrap.min.js" />
     <Content Include="Assets\bootstrap\js\popper.min.js" />
@@ -252,6 +253,8 @@
     <Content Include="Assets\font-awesome\css\font-awesome.css" />
     <Content Include="Assets\font-awesome\css\font-awesome.min.css" />
     <Content Include="Assets\font-awesome\fonts\fontawesome-webfont.svg" />
+    <Content Include="Assets\bootstrap\fonts\bootstrap-icons.woff" />
+    <Content Include="Assets\bootstrap\fonts\bootstrap-icons.woff2" />
     <None Include="Assets\jquery\jquery-3.3.1.intellisense.js" />
     <Content Include="Assets\grid-mvc\css\font-awesome.css" />
     <Content Include="Assets\grid-mvc\css\font-awesome.min.css" />
@@ -384,8 +387,6 @@
     <Content Include="Views\Procesos\_MantenimientoProceso.cshtml" />
     <Content Include="Views\ConceptoPago\Index.cshtml" />
     <Content Include="Views\ConceptoPago\Grabar.cshtml" />
-    <Content Include="Views\Estudiantes\ArchivosImportados.cshtml" />
-    <Content Include="Views\Estudiantes\ImportacionArchivo.cshtml" />
     <Content Include="Views\Estudiantes\Index.cshtml" />
     <Content Include="Views\Clasificadores\Index.cshtml" />
     <Content Include="Views\Clasificadores\_RegistrarClasificador.cshtml" />
@@ -406,6 +407,9 @@
     <Content Include="Views\Account\_AdminResetPassword.cshtml" />
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\CategoriaPago\Index.cshtml" />
+    <Content Include="Views\Procesos\Obligaciones.cshtml" />
+    <Content Include="Views\Procesos\_CategoriasProceso.cshtml" />
+    <Content Include="Views\Procesos\Tasas.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -418,6 +422,7 @@
     <Folder Include="Assets\datatables\css\" />
     <Folder Include="Assets\datatables\js\" />
     <Folder Include="Upload\Alumnos\" />
+    <Folder Include="Upload\MultaNoVotar\" />
     <Folder Include="Upload\Tablas\" />
   </ItemGroup>
   <ItemGroup>

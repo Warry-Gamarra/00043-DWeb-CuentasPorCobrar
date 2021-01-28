@@ -10,6 +10,7 @@ using WebMatrix.WebData;
 
 namespace WebApp.Controllers
 {
+    [Authorize]
     [Route("mantenimiento/dependencia/{action}")]
     public class DependenciaController : Controller
     {

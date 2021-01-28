@@ -19,6 +19,11 @@ namespace Domain.DTO
         Euded
     }
 
+    public enum TipoArchivoAlumno
+    {
+        Matricula,
+        MultaNoVotar
+    }
 
 
 

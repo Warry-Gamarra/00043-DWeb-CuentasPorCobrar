@@ -10,6 +10,7 @@ namespace WebApp.ViewModels
     {
         public string Color { get; set; }
         public TipoAlumno TipoAlumno { get; set; }
+        public TipoArchivoAlumno TipoArchivoAlumno { get; set; }
         public string Action { get; set; }
     }
 }

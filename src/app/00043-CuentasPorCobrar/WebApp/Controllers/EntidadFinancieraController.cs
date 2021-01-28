@@ -10,6 +10,7 @@ using WebMatrix.WebData;
 
 namespace WebApp.Controllers
 {
+    [Authorize]
     public class EntidadFinancieraController : Controller
     {
         public readonly EntidadFinancieraModel _entidadFinanciera;

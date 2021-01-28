@@ -10,6 +10,7 @@ using WebMatrix.WebData;
 
 namespace WebApp.Controllers
 {
+    [Authorize]
     [Route("Mantenimiento/correo-aplicacion/{action}")]
     public class CorreoController : Controller
     {

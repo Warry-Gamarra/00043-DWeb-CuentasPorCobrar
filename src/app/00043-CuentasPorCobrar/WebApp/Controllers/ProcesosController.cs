@@ -11,6 +11,7 @@ using WebMatrix.WebData;
 
 namespace WebApp.Controllers
 {
+    [Authorize]
     public class ProcesosController : Controller
     {
         ProcesoModel procesoModel;
@@ -20,13 +21,28 @@ namespace WebApp.Controllers
             procesoModel = new ProcesoModel();
         }
 
-        public ActionResult Index()
+        [Route("configuracion/programacion-de-obligaciones")]
+        public ActionResult Obligaciones()
         {
-            ViewBag.Title = "Procesos y Conceptos";
+            ViewBag.Title = "Programación de Obligaciones";
 
             var lista = procesoModel.Listar_Procesos();
+            ViewBag.Anios = procesoModel.Listar_Anios();
 
-            return View(lista);
+
+            return View("Obligaciones", lista);
+        }
+
+
+        [Route("configuracion/servicios-y-tasas")]
+        public ActionResult Tasas()
+        {
+            ViewBag.Title = "Servicios y Tasas";
+
+            var lista = procesoModel.Listar_Procesos();
+            ViewBag.Anios = procesoModel.Listar_Anios();
+
+            return View("Tasas", lista);
         }
 
         public ActionResult Create()
@@ -41,6 +57,23 @@ namespace WebApp.Controllers
 
             return PartialView("_MantenimientoProceso");
         }
+
+
+        public ActionResult SeleccionarCategorias()
+        {
+            ViewBag.Title = "Nuevo Proceso";
+
+            Cargar_Listas();
+
+            ViewBag.Lista_CtaDepoHabilitadas = new List<SelectViewModel>();
+
+            ViewBag.Lista_CtaDepoProceso = new List<SelectViewModel>();
+
+            return PartialView("_CategoriasProceso");
+        }
+
+
+
 
         public ActionResult Edit(int id)
         {
