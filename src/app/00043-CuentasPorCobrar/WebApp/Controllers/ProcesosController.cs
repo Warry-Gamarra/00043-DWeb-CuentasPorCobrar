@@ -15,10 +15,12 @@ namespace WebApp.Controllers
     public class ProcesosController : Controller
     {
         ProcesoModel procesoModel;
+        private readonly SelectModels _selectModel;
 
         public ProcesosController()
         {
             procesoModel = new ProcesoModel();
+            _selectModel = new SelectModels();
         }
 
         [Route("configuracion/programacion-de-obligaciones")]
@@ -27,8 +29,8 @@ namespace WebApp.Controllers
             ViewBag.Title = "Programación de Obligaciones";
 
             var lista = procesoModel.Listar_Procesos();
-            ViewBag.Anios = procesoModel.Listar_Anios();
-
+            ViewBag.Anios = new SelectList(procesoModel.Listar_Anios(), "Value", "TextDisplay", DateTime.Now.Year);
+            ViewBag.PeriodosAcademicos = new SelectList(_selectModel.GetPeriodosAcademicosCatalogo(), "Value", "TextDisplay", 15);
 
             return View("Obligaciones", lista);
         }
@@ -39,8 +41,9 @@ namespace WebApp.Controllers
         {
             ViewBag.Title = "Servicios y Tasas";
 
-            var lista = procesoModel.Listar_Procesos();
-            ViewBag.Anios = procesoModel.Listar_Anios();
+            var lista = procesoModel.Listar_Tasas();
+            ViewBag.Anios = new SelectList(procesoModel.Listar_Anios(), "Value", "TextDisplay", DateTime.Now.Year);
+            ViewBag.PeriodosAcademicos = new SelectList(_selectModel.GetPeriodosAcademicosCatalogo(), "Value", "TextDisplay", 15);
 
             return View("Tasas", lista);
         }
@@ -59,17 +62,15 @@ namespace WebApp.Controllers
         }
 
 
+
         public ActionResult SeleccionarCategorias()
         {
             ViewBag.Title = "Nuevo Proceso";
 
-            Cargar_Listas();
-
             ViewBag.Lista_CtaDepoHabilitadas = new List<SelectViewModel>();
-
             ViewBag.Lista_CtaDepoProceso = new List<SelectViewModel>();
 
-            return PartialView("_CategoriasProceso");
+            return PartialView("MantenimientoProgramacion", procesoModel.Listar_Combo_CategoriaPago());
         }
 
 

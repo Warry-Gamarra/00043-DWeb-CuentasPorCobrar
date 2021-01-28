@@ -408,7 +408,7 @@
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\CategoriaPago\Index.cshtml" />
     <Content Include="Views\Procesos\Obligaciones.cshtml" />
-    <Content Include="Views\Procesos\_CategoriasProceso.cshtml" />
+    <Content Include="Views\Procesos\MantenimientoProgramacion.cshtml" />
     <Content Include="Views\Procesos\Tasas.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

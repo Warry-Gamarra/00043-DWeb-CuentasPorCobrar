@@ -79,6 +79,28 @@ namespace WebApp.Models
             return result;
         }
 
+
+        public List<ProcesoViewModel> Listar_Tasas()
+        {
+            List<ProcesoViewModel> result = new List<ProcesoViewModel>();
+
+            var lista = procesoService.Listar_Procesos();
+
+            if (lista != null)
+            {
+                result = lista.Select(x => new ProcesoViewModel()
+                {
+                    I_ProcesoID = x.I_ProcesoID,
+                    T_CatPagoDesc = x.T_CatPagoDesc,
+                    I_Anio = x.I_Anio,
+                    D_FecVencto = x.D_FecVencto,
+                    I_Prioridad = x.I_Prioridad
+                }).ToList();
+            }
+
+            return result;
+        }
+
         public Response Grabar_Proceso(MantenimientoProcesoViewModel model, int currentUserId)
         {
             ProcesoEntity procesoEntity;
@@ -223,13 +245,13 @@ namespace WebApp.Models
             return result;
         }
 
-        public List<short> Listar_Anios()
+        public List<SelectViewModel> Listar_Anios()
         {
-            var lista = new List<short>();
+            var lista = new List<SelectViewModel>();
 
             for (int i = DateTime.Now.Year + 3; 1963 < i; i--)
             {
-                lista.Add((short)i);
+                lista.Add(new SelectViewModel() { Value = i.ToString(), TextDisplay = i.ToString() });
             }
 
             return lista;

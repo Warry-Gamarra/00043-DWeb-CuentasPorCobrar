@@ -22,14 +22,14 @@
                     <div class="form-row">
                         <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
                             <label for="inputAnio">Año</label>
-                            @Html.DropDownList("inputAnio", new SelectList(ViewBag.Anios), new { Class = "form-control form-control-sm"})
+                            @Html.DropDownList("inputAnio", ViewBag.Anios as SelectList, new { Class = "form-control form-control-sm"})
                         </div>
-                        <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
+                        <div class="form-group col-lg-2 col-md-4 col-sm-8 col-6">
                             <label for="inputPeriodo">Periodo</label>
-                            @Html.DropDownList("inputPeriodo", new SelectList(ViewBag.Anios), new { Class = "form-control form-control-sm" })
+                            @Html.DropDownList("inputPeriodo", ViewBag.PeriodosAcademicos as SelectList, new { Class = "form-control form-control-sm" })
                         </div>
-                        <div class="form-group col-lg-2 col-sm-3 col-12">
-                            <button type="submit" class="btn btn-block btn-outline-secondary mt-4"><i class="fa fa-fw fa-search-plus">&nbsp;</i> Iniciar consulta</button>
+                        <div class="form-group col-lg-1 col-md-2 col-sm-3 col-12">
+                            <button type="submit" class="btn btn-block btn-outline-secondary mt-4"><i class="fa fa-fw fa-filter">&nbsp;</i> Filtrar</button>
                         </div>
                     </div>
                 </form>
@@ -44,14 +44,9 @@
                     <p class="h5 mb-5">
                         No se encontraron procesos para el año AAAA @ViewBag.AnioProcesos
                     </p>
-                    <a href="@Url.Action("SeleccionarCategorias", "Procesos")" class="btn btn-lg btn-outline-yellow modal-link-lg">
-                        <i class="fa fa-calendar-plus-o"></i> Agregar Procesos
+                    <a href="@Url.Action("SeleccionarCategorias", "Procesos")" class="btn btn-lg btn-outline-yellow">
+                        <i class="fa fa-calendar-plus-o"></i> Agregar Programacion
                     </a>
-
-                    <a href="@Url.Action("Create", "Procesos")" class="btn btn-lg btn-outline-yellow modal-link-lg">
-                        <i class="fa fa-calendar-plus-o"></i> Agregar Procesos
-                    </a>
-
                 </div>
             </div>
 

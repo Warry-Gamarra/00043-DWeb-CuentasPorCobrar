@@ -13,7 +13,7 @@ namespace WebApp.Controllers
         [Route("consultas/deudas-registradas")]
         public ActionResult Index()
         {
-            ViewBag.Title = "Deudas Registradas";
+            ViewBag.Title = "Deudas registradas";
             return View();
         }
     }
