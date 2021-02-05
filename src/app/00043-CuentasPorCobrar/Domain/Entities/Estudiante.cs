@@ -70,7 +70,8 @@ namespace Domain.Entities
                         C_Periodo = reader.GetString("P"),
                         C_EstMat = reader.GetString("EST_MAT"),
                         C_Ciclo = reader.GetString("NIVEL"),
-                       B_Ingresante = reader.GetBoolean("ES_INGRESA")
+                       B_Ingresante = reader.GetBoolean("ES_INGRESA"),
+                        I_CreditosDesaprob = reader.GetInt32("CRED_DESAP")
                     });
                 }
             }
@@ -88,13 +89,14 @@ namespace Domain.Entities
             }
 
             DataTable dataTable = new DataTable();
-            dataTable.Columns.Add("c_codrc");
-            dataTable.Columns.Add("c_codalu");
+            dataTable.Columns.Add("C_CodRC");
+            dataTable.Columns.Add("C_CodAlu");
             dataTable.Columns.Add("I_Anio");
             dataTable.Columns.Add("C_Periodo");
-            dataTable.Columns.Add("c_estmat");
-            dataTable.Columns.Add("c_ciclo");
-            dataTable.Columns.Add("b_ingresan");
+            dataTable.Columns.Add("C_EstMat");
+            dataTable.Columns.Add("C_Ciclo");
+            dataTable.Columns.Add("B_Ingresante");
+            dataTable.Columns.Add("I_CredDesaprob");
 
             dataMatricula.ForEach(x => dataTable.Rows.Add(
                 x.C_CodRC,
@@ -103,7 +105,8 @@ namespace Domain.Entities
                 x.C_Periodo,
                 x.C_EstMat,
                 x.C_Ciclo,
-                x.B_Ingresante
+                x.B_Ingresante,
+                x.I_CreditosDesaprob
             ));
 
             _grabarMatricula.UserID = currentUserId;

@@ -23,6 +23,15 @@ namespace WebApp.Controllers
             _selectModel = new SelectModels();
         }
 
+        public ActionResult Index()
+        {
+            ViewBag.Title = "Procesos y Conceptos";
+
+            var lista = procesoModel.Listar_Procesos();
+
+            return View(lista);
+        }
+
         [Route("configuracion/programacion-de-obligaciones")]
         public ActionResult Obligaciones()
         {

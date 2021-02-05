@@ -326,7 +326,7 @@ CREATE TABLE TC_MatriculaAlumno
 	C_EstMat             varchar(2)  NOT NULL ,
 	C_Ciclo              varchar(2)  NULL ,
 	B_Ingresante         bit  NULL ,
-	I_CantCredDesaprob	 tinyint NULL, 
+	I_CredDesaprob		 tinyint NULL, 
 	B_Habilitado         bit  NOT NULL ,
 	B_Eliminado          bit  NOT NULL ,
 	I_UsuarioCre         int  NULL ,
