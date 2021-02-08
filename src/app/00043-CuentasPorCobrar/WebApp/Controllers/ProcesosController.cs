@@ -23,10 +23,10 @@ namespace WebApp.Controllers
             _selectModel = new SelectModels();
         }
 
-        [Route("configuracion/programacion-de-obligaciones")]
+        [Route("configuracion/obligaciones-y-conceptos")]
         public ActionResult Obligaciones()
         {
-            ViewBag.Title = "Programación de Obligaciones";
+            ViewBag.Title = "Obligaciones y conceptos";
 
             var lista = procesoModel.Listar_Procesos();
             ViewBag.Anios = new SelectList(procesoModel.Listar_Anios(), "Value", "TextDisplay", DateTime.Now.Year);
@@ -36,10 +36,10 @@ namespace WebApp.Controllers
         }
 
 
-        [Route("configuracion/servicios-y-tasas")]
+        [Route("configuracion/tasas-y-servicios")]
         public ActionResult Tasas()
         {
-            ViewBag.Title = "Servicios y Tasas";
+            ViewBag.Title = "Tasas y Servicios";
 
             var lista = procesoModel.Listar_Tasas();
             ViewBag.Anios = new SelectList(procesoModel.Listar_Anios(), "Value", "TextDisplay", DateTime.Now.Year);

@@ -38,7 +38,7 @@ namespace WebApp.Controllers
         [Route("mantenimiento/ayuda/manuales-listado")]
         public ActionResult Manage()
         {
-            ViewBag.Title = "Registrar Documentación";
+            ViewBag.Title = "Documentación";
 
             return View("ManualesListado", _manualUsuarioModel.ObtenerManuales());
         }
