@@ -27,6 +27,18 @@
           <ConnectionProtocol>NotSpecified</ConnectionProtocol>
           <ApplicationName>Microsoft SQL Server Management Studio - Query</ApplicationName>
         </ConnectionNode>
+        <ConnectionNode Name="DESKTOP-B34HJML\SQL_2016E:DESKTOP-B34HJML\gamar">
+          <Created>2021-02-04T18:43:19.5767066-05:00</Created>
+          <Type>SQL</Type>
+          <Server>DESKTOP-B34HJML\SQL_2016E</Server>
+          <UserName />
+          <Authentication>Windows Authentication</Authentication>
+          <InitialDB />
+          <LoginTimeout>30</LoginTimeout>
+          <ExecutionTimeout>0</ExecutionTimeout>
+          <ConnectionProtocol>NotSpecified</ConnectionProtocol>
+          <ApplicationName>Microsoft SQL Server Management Studio - Query</ApplicationName>
+        </ConnectionNode>
         <ConnectionNode Name="DESKTOP-BIFTP5M\SQL_2016E:sa">
           <Created>2021-01-20T15:55:15.1372779-05:00</Created>
           <Type>SQL</Type>
@@ -68,27 +80,27 @@
     <LogicalFolder Name="Queries" Type="0" Sorted="true">
       <Items>
         <FileNode Name="1. BD_UNFV_Repositorio - Creación de base de datos.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:HUMBERTO-PC\SQLEXPRESS2014:True</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>HUMBERTO-PC\SQLEXPRESS2014</AssociatedConnSrvName>
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:DESKTOP-B34HJML\SQL_2016E:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>DESKTOP-B34HJML\SQL_2016E</AssociatedConnSrvName>
           <AssociatedConnUserName />
           <FullPath>1. BD_UNFV_Repositorio - Creación de base de datos.sql</FullPath>
         </FileNode>
         <FileNode Name="2. BD_UNFV_Repositorio - Esquema de base de datos.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:HUMBERTO-PC\SQLEXPRESS2014:True</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>HUMBERTO-PC\SQLEXPRESS2014</AssociatedConnSrvName>
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:DESKTOP-B34HJML\SQL_2016E:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>DESKTOP-B34HJML\SQL_2016E</AssociatedConnSrvName>
           <AssociatedConnUserName />
           <FullPath>2. BD_UNFV_Repositorio - Esquema de base de datos.sql</FullPath>
         </FileNode>
         <FileNode Name="3. BD_UNFV_Repositorio - Carga de datos iniciales.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:localhost\SQLEXPRESS2014:False:sa</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>localhost\SQLEXPRESS2014</AssociatedConnSrvName>
-          <AssociatedConnUserName>sa</AssociatedConnUserName>
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:DESKTOP-B34HJML\SQL_2016E:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>DESKTOP-B34HJML\SQL_2016E</AssociatedConnSrvName>
+          <AssociatedConnUserName />
           <FullPath>3. BD_UNFV_Repositorio - Carga de datos iniciales.sql</FullPath>
         </FileNode>
         <FileNode Name="4. BD_UNFV_Repositorio - Types Procedures y Funciones.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:DESKTOP-BIFTP5M\SQL_2016E:False:sa</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>DESKTOP-BIFTP5M\SQL_2016E</AssociatedConnSrvName>
-          <AssociatedConnUserName>sa</AssociatedConnUserName>
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:DESKTOP-B34HJML\SQL_2016E:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>DESKTOP-B34HJML\SQL_2016E</AssociatedConnSrvName>
+          <AssociatedConnUserName />
           <FullPath>4. BD_UNFV_Repositorio - Types Procedures y Funciones.sql</FullPath>
         </FileNode>
         <FileNode Name="Cargar_alumnos_auxiliar.sql">

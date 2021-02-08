@@ -1020,6 +1020,7 @@ GO
 /*-----------------------------------------------------------*/
 
 IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.DOMAINS WHERE DOMAIN_NAME = 'type_dataMatricula')
+	DROP PROCEDURE [dbo].[USP_IU_GrabarMatricula]
 	DROP TYPE [dbo].[type_dataMatricula]
 GO
 
