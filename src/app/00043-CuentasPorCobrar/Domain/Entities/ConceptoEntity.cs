@@ -10,6 +10,9 @@ namespace Domain.Entities
     {
         public int I_ConceptoID { get; set; }
         public string T_ConceptoDesc { get; set; }
+        public bool B_EsPagoMatricula { get; set; }
+        public bool B_EsPagoExtmp { get; set; }
+        public bool B_ConceptoAgrupa { get; set; }
         public bool B_Habilitado { get; set; }
         public int? I_UsuarioCre { get; set; }
         public DateTime? D_FecCre { get; set; }

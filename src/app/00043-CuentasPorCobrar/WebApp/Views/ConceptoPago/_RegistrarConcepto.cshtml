@@ -1,0 +1,112 @@
+﻿
+
+@model WebApp.ViewModels.CatalogoConceptosRegistroViewModel
+
+@Scripts.Render("~/bundles/jqueryval")
+
+<div class="modal-header bg-dark-gray" style="border-radius: .2rem .2rem 0px 0px">
+    <h5 class="modal-title text-center"><i class="fa bi-ui-checks-grid">&nbsp;</i> @ViewBag.Title</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+
+@using (Ajax.BeginForm("Save", "ConceptoPago", new { area = "" }, new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "div_msg", OnBegin = "Load", OnSuccess = "Submited", OnComplete = "Stop" }))
+{
+    @Html.Hidden("submited", 0)
+    @Html.AntiForgeryToken()
+    <div class="modal-body">
+        <div class="container-fluid">
+            @Html.HiddenFor(model => model.Id)
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.NombreConcepto, new { @class = "control-label" })
+
+                @Html.TextBoxFor(model => model.NombreConcepto, new { @class = "form-control" })
+                <p class="text-danger small">@Html.ValidationMessageFor(model => model.NombreConcepto)</p>
+            </div>
+
+            <div class="row form-group">
+                @Html.LabelFor(model => model.EsMatricula, new { @class = "control-label col-12" })
+                <div class="col-md-5 offset-1">
+                    <div class="form-check">
+                        @Html.RadioButtonFor(model => model.EsMatricula, true, new { @Class = "form-check-input", @id = "rbtn_esMat" })
+                        <label class="form-check-label" for="rbtn_esMat">
+                            Sí
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-5 offset-1">
+                    <div class="form-check">
+                        @Html.RadioButtonFor(model => model.EsMatricula, false, new { @Class = "form-check-input", @id = "rbtn_esOtr" })
+                        <label class="form-check-label" for="rbtn_esOtr">
+                            No
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row form-group">
+                @Html.LabelFor(model => model.EsExtemporaneo, new { @class = "control-label col-12" })
+                <div class="col-md-5 offset-1">
+                    <div class="form-check">
+                        @Html.RadioButtonFor(model => model.EsExtemporaneo, true, new { @Class = "form-check-input", @id = "rbtn_extmp" })
+                        <label class="form-check-label" for="rbtn_extmp">
+                            Sí
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-5 offset-1">
+                    <div class="form-check">
+                        @Html.RadioButtonFor(model => model.EsExtemporaneo, false, new { @Class = "form-check-input", @id = "rbtn_normal" })
+                        <label class="form-check-label" for="rbtn_normal">
+                            No
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                @Html.LabelFor(model => model.AgupaConceptos, new { @class = "control-label col-12" })
+                <div class="col-md-5 offset-1">
+                    <div class="form-check">
+                        @Html.RadioButtonFor(model => model.AgupaConceptos, true, new { @Class="form-check-input", @id = "rbtn_agrupa" })
+                        <label class="form-check-label" for="rbtn_agrupa">
+                            Sí
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-5 offset-1">
+                    <div class="form-check">
+                        @Html.RadioButtonFor(model => model.AgupaConceptos, false, new { @Class = "form-check-input", @id = "rbtn_noAgrupa" })
+                        <label class="form-check-label" for="rbtn_noAgrupa">
+                            No
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer" id="div_msg">
+        <div class="col-md-12" style="display:none" id="loading">
+            <h6>Actualizando los datos...</h6>
+
+            <div class="progress">
+                <div class="indeterminate"></div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="btnsubmit"><i class="fa fa-save"></i>&nbsp;Guardar</button>
+        <button type="button" class="btn btn-secondary" id="btnCancel" data-dismiss="modal"><i class="fa fa-times-circle-o">&nbsp;</i>Cancelar</button>
+    </div>
+}
+
+<script>
+    $(document).on('ready', function () {
+        $('#btnsubmit').removeClass('disabled');
+    });
+
+    $("form").submit(function () {
+        if (parseInt($("#submited").val()) > 0) {
+            return false;
+        }
+    });
+</script>

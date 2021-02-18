@@ -14,17 +14,19 @@ namespace WebApp.Controllers
     public class CategoriaPagoController : Controller
     {
         private readonly CategoriaPagoModel _categoriaPago;
+        private readonly ConceptoPagoModel _conceptoPago;
 
         public CategoriaPagoController()
         {
             _categoriaPago = new CategoriaPagoModel();
+            _conceptoPago = new ConceptoPagoModel();
         }
 
         [Route("mantenimiento/categorias-de-pago")]
         public ActionResult Index()
         {
             ViewBag.Title = "Categorías de Pago";
-            var model = new List<CategoriaPagoViewModel>();
+            var model = _categoriaPago.Find();
             return View(model);
         }
 
@@ -33,18 +35,26 @@ namespace WebApp.Controllers
         [HttpGet]
         public ActionResult Create()
         {
-            ViewBag.Title = "Agregar Categoría de Pago";
+            ViewBag.Title = "Nuevo categoría de pago";
 
-            return PartialView("_RegistrarCategoriaPago", new CategoriaPagoRegistroViewModel());
+            ViewBag.Niveles = new SelectList(_conceptoPago.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.Grado), "Value", "TextDisplay");
+            ViewBag.TiposAlumno = new SelectList(_conceptoPago.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.TipoAlumno), "Value", "TextDisplay");
+            ViewBag.Prioridades = new SelectList(_conceptoPago.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.TipoAlumno), "Value", "TextDisplay");
+
+            return PartialView("_RegistrarCategoria", new CategoriaPagoRegistroViewModel());
         }
 
         [Route("mantenimiento/categorias-de-pago/editar/{id}")]
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            ViewBag.Title = "Editar Clasificador";
+            ViewBag.Title = "Editar categoría de pago";
 
-            return PartialView("_RegistrarEntidadFinanciera", _categoriaPago.Find(id));
+            ViewBag.Niveles = new SelectList(_conceptoPago.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.Grado), "Value", "TextDisplay");
+            ViewBag.TiposAlumno = new SelectList(_conceptoPago.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.TipoAlumno), "Value", "TextDisplay");
+            ViewBag.Prioridades = new SelectList(_conceptoPago.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.TipoAlumno), "Value", "TextDisplay");
+
+            return PartialView("_RegistrarCategoria", _categoriaPago.Find(id));
         }
 
         public JsonResult ChangeState(int RowID, bool B_habilitado)

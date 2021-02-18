@@ -96,6 +96,7 @@
     <Compile Include="Helpers\Crypto.cs" />
     <Compile Include="Helpers\RandomPassword.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ICategoriaPago.cs" />
     <Compile Include="Services\IClasificadores.cs" />
     <Compile Include="Services\ICorreoAplicacion.cs" />
     <Compile Include="Services\ICuentaDeposito.cs" />

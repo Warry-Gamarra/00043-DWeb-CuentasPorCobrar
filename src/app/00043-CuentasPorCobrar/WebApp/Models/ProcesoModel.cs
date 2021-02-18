@@ -27,8 +27,8 @@ namespace WebApp.Models
             if (lista != null)
             {
                 result = lista.Select(x => new SelectViewModel() {
-                    Value = x.I_CatPagoID.ToString(),
-                    TextDisplay = x.T_CatPagoDesc
+                    Value = x.CategoriaId.ToString(),
+                    TextDisplay = x.Descripcion
                 }).ToList();
             }
 

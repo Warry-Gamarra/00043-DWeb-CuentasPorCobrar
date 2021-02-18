@@ -20,6 +20,60 @@ namespace WebApp.Models
             procesoService = new ProcesoService();
         }
 
+
+        public Response ChangeState(int conceptoId, bool currentState, int currentUserId, string returnUrl)
+        {
+            Response result = conceptoPagoService.ChangeState(conceptoId, currentState, currentUserId);
+            result.Redirect = returnUrl;
+
+            return result;
+        }
+
+        public Response Save(CatalogoConceptosRegistroViewModel model, int currentUserId)
+        {
+            ConceptoEntity concepto = new ConceptoEntity()
+            {
+                I_ConceptoID = model.Id ?? 0,
+                T_ConceptoDesc = model.NombreConcepto,
+                B_EsPagoMatricula = model.EsMatricula,
+                B_EsPagoExtmp = model.EsExtemporaneo,
+                B_ConceptoAgrupa = model.AgupaConceptos
+            };
+
+            Response result = conceptoPagoService.Save(concepto, currentUserId, (model.Id.HasValue ? SaveOption.Update : SaveOption.Insert));
+
+            if (result.Value)
+            {
+                result.Success(false);
+            }
+            else
+            {
+                result.Error(true);
+            }
+            return result;
+        }
+
+
+        public List<CatalogoConceptosViewModel> Listar_CatalogoConceptos()
+        {
+            List<CatalogoConceptosViewModel> result = new List<CatalogoConceptosViewModel>();
+
+            foreach (var item in conceptoPagoService.Listar_Concepto_All())
+            {
+                result.Add(new CatalogoConceptosViewModel(item));
+            }
+
+            return result;
+        }
+
+
+        public CatalogoConceptosRegistroViewModel ObtenerConcepto(int conceptoId)
+        {
+            var result = new CatalogoConceptosRegistroViewModel(conceptoPagoService.GetConcepto(conceptoId));
+
+            return result;
+        }
+
         public List<ConceptoPagoViewModel> Listar_ConceptoPago_Habilitados()
         {
             List<ConceptoPagoViewModel> result = new List<ConceptoPagoViewModel>();
