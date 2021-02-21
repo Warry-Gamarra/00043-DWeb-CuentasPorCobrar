@@ -1,4 +1,4 @@
-﻿@model IEnumerable<WebApp.ViewModels.ConceptoPagoViewModel>
+﻿@model IEnumerable<WebApp.ViewModels.CatalogoConceptosViewModel>
 
 @using GridMvc.Html
 
@@ -9,7 +9,7 @@
                 <ol class="breadcrumb float-right small d-none d-sm-inline-flex">
                     <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")"><i class="fa fa-home">&nbsp;</i>Inicio</a></li>
                     <li class="breadcrumb-item"><span><i class="fa fa-wrench">&nbsp;</i>Mantenimiento </span></li>
-                    <li class="breadcrumb-item active"><span><i class="fa fa-envelope">&nbsp;</i>@ViewBag.Title </span></li>
+                    <li class="breadcrumb-item active"><span><i class="fa bi-ui-checks-grid">&nbsp;</i>@ViewBag.Title </span></li>
                 </ol>
             </nav>
             <h1 class="">@ViewBag.Title <small></small></h1>
@@ -18,26 +18,26 @@
     <br />
 
     <div class="col-12">
-        <a href="@Url.Action("Grabar", "ConceptoPago")" class="btn btn-primary pull-right">
-            <i class="fa fa-envelope"></i> Nuevo
+        <a href="@Url.Action("Create", "ConceptoPago")" class="btn btn-primary pull-right modal-link">
+            <i class="fa bi-ui-checks-grid"></i> Agregar concepto
         </a>
 
-        <p class="h3"><small>Conceptos de Pago</small></p>
+        <p class="h3"><small>@ViewBag.Title registrados</small></p>
         <br />
 
         <br />
         <div class="table-responsive" style="min-height:300px">
             @Html.Grid(Model).Columns(columns =>
             {
-                columns.Add(c => c.T_ConceptoDesc).Titled("Descripción").Filterable(true);
+                columns.Add(c => c.NombreConcepto).Titled("Descripción").Filterable(true);
                 columns.Add(c => c.Habilitado).SetWidth(100).Css("text-center").Encoded(false).Sanitized(false)
                       .RenderValueAs(model => model.Habilitado ?
-                                                           @Html.Raw("<span id=\"td" + @model.I_ConcPagID + "\"><button type=\"submit\" class=\"btn btn-xs btn-success\" onclick=\"ChangeStateReloadPage(" + @model.I_ConcPagID + ", " + @model.Habilitado.ToString().ToLower() + ", '" + @Url.Action("ChangeState", "ConceptoPago") + "');\"><i class=\"fa fa-check-circle-o\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Habilitado</span></button></span>")
-                                                           : @Html.Raw("<span id=\"td" + @model.I_ConcPagID + "\"><button type=\"submit\" class=\"btn btn-xs btn-secondary\" onclick=\"ChangeStateReloadPage(" + @model.I_ConcPagID + ", " + @model.Habilitado.ToString().ToLower() + ", '" + @Url.Action("ChangeState", "ConceptoPago") + "');\"><i class=\"fa fa-minus-circle\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Deshabilitado</span></button></span>"))
+                                                           @Html.Raw("<span id=\"td" + @model.Id + "\"><button type=\"submit\" class=\"btn btn-xs btn-success\" onclick=\"ChangeStateReloadPage(" + @model.Id + ", " + @model.Habilitado.ToString().ToLower() + ", '" + @Url.Action("ChangeState", "ConceptoPago") + "');\"><i class=\"fa fa-check-circle-o\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Habilitado</span></button></span>")
+                                                           : @Html.Raw("<span id=\"td" + @model.Id + "\"><button type=\"submit\" class=\"btn btn-xs btn-secondary\" onclick=\"ChangeStateReloadPage(" + @model.Id + ", " + @model.Habilitado.ToString().ToLower() + ", '" + @Url.Action("ChangeState", "ConceptoPago") + "');\"><i class=\"fa fa-minus-circle\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Deshabilitado</span></button></span>"))
                       .Filterable(true).SetWidth(160).Titled("Estado");
                 columns.Add().SetWidth(200).Css("text-right").Encoded(false).Sanitized(false).
-                RenderValueAs(model => @<a href="@Url.Action("Grabar", "ConceptoPago", new { id = model.I_ConcPagID })" class=""><i class="fa fa-pencil-square-o" aria-hidden="true">&nbsp;</i><span class="d-none d-md-inline-block">Editar</span></a>);
-                    }).WithPaging(10).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
+                RenderValueAs(model => @<a href="@Url.Action("Edit", "ConceptoPago", new { id = model.Id })" class="modal-link"><i class="fa fa-pencil-square-o" aria-hidden="true">&nbsp;</i><span class="d-none d-md-inline-block">Editar</span></a>);
+             }).WithPaging(10).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
         </div>
 
     </div>

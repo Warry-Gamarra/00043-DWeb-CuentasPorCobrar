@@ -372,6 +372,7 @@ CREATE TABLE TC_Concepto
 	T_ConceptoDesc       varchar(250)  NULL ,
 	B_EsPagoMatricula    bit  NOT NULL ,
 	B_EsPagoExtmp        bit  NOT NULL ,
+	B_ConceptoAgrupa     bit  NOT NULL ,
 	B_Habilitado         bit  NOT NULL ,
 	B_Eliminado          bit  NOT NULL ,
 	I_UsuarioCre         int  NULL ,

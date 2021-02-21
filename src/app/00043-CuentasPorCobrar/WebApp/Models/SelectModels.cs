@@ -11,11 +11,13 @@ namespace WebApp.Models
     public class SelectModels
     {
         private readonly IRoles _roles;
+        private readonly IDependencia _dependencia;
         private readonly ConceptoPagoService _catalogoOpcionService;
 
         public SelectModels()
         {
             _roles = new RolAplicacion();
+            _dependencia = new Dependencia();
             _catalogoOpcionService = new ConceptoPagoService();
         }
 
@@ -63,5 +65,18 @@ namespace WebApp.Models
 
             return result;
         }
+
+        public List<SelectViewModel> GetDependencias()
+        {
+            List<SelectViewModel> result = new List<SelectViewModel>();
+
+            foreach (var item in _dependencia.Find())
+            {
+                result.Add(new SelectViewModel() { Value = item.Id.ToString(), TextDisplay = item.Descripcion });
+            }
+
+            return result;
+        }
+
     }
 }

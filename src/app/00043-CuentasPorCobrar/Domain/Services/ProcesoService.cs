@@ -21,9 +21,9 @@ namespace Domain.Services
 
                 var result = lista.Where(x => x.B_Habilitado && !x.B_Eliminado).Select(x => new CategoriaPago()
                 {
-                    I_CatPagoID = x.I_CatPagoID,
-                    T_CatPagoDesc = x.T_CatPagoDesc,
-                    I_Prioridad = x.I_Prioridad
+                    CategoriaId = x.I_CatPagoID,
+                    Descripcion = x.T_CatPagoDesc,
+                    Prioridad = x.I_Prioridad
                 }).ToList();
 
                 return result;

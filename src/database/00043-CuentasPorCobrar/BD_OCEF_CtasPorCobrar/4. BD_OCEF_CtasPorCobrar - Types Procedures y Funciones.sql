@@ -148,7 +148,7 @@ BEGIN
 		 WHERE	UserId = @UserId
 
 	 	SET @B_Result = 1
-		SET @T_Message = 'Actualización de datos de correo correcta'
+		SET @T_Message = 'Actualización de datos correcta'
 	END TRY
 	BEGIN CATCH
 		SET @B_Result = 0
@@ -765,7 +765,7 @@ BEGIN
 				WHERE	I_EntidadFinanID = @I_EntidadFinanID
 			
 		SET @B_Result = 1
-		SET @T_Message = 'Actualización de datos de correo correcta'
+		SET @T_Message = 'Actualización de datos correcta'
 	END TRY
 	BEGIN CATCH
 		SET @B_Result = 0
@@ -898,7 +898,7 @@ BEGIN
 				WHERE	I_CtaDepositoID = @I_CtaDepositoID
 			
 		SET @B_Result = 1
-		SET @T_Message = 'Actualización de datos de correo correcta'
+		SET @T_Message = 'Actualización de datos correcta'
 	END TRY
 	BEGIN CATCH
 		SET @B_Result = 0
@@ -909,6 +909,234 @@ GO
 
 
 /*-------------------------- */
+
+
+
+/*-------------------------- */
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_GrabarCategoriaPago')
+	DROP PROCEDURE [dbo].[USP_I_GrabarCategoriaPago]
+GO
+
+CREATE PROCEDURE [dbo].[USP_I_GrabarCategoriaPago]
+	 @I_CatPagoID	int
+	,@T_CatPagoDesc	varchar(250)
+	,@I_Nivel		int
+	,@I_TipoAlumno	int
+	,@I_Prioridad	int
+	,@B_Obligacion	bit
+	,@D_FecCre		datetime
+	,@CurrentUserId	int
+
+	,@B_Result bit OUTPUT
+	,@T_Message nvarchar(4000) OUTPUT	
+AS
+BEGIN
+  SET NOCOUNT ON
+  	BEGIN TRY
+		INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Nivel, I_Prioridad, I_TipoAlumno, B_Obligacion, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
+						  	  VALUES (@T_CatPagoDesc, @I_Nivel, @I_Prioridad, @I_TipoAlumno, @B_Obligacion, 1, 0, @CurrentUserId, @D_FecCre)
+
+		SET @B_Result = 1
+		SET @T_Message = 'Nuevo registro agregado.'
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+
+END
+GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarCategoriaPago')
+	DROP PROCEDURE [dbo].[USP_U_ActualizarCategoriaPago]
+GO
+
+CREATE PROCEDURE [dbo].[USP_U_ActualizarCategoriaPago]
+	 @I_CatPagoID	int
+	,@T_CatPagoDesc	varchar(250)
+	,@I_Nivel		int
+	,@I_TipoAlumno	int
+	,@I_Prioridad	int
+	,@B_Obligacion	bit
+	,@D_FecMod		datetime
+	,@CurrentUserId	int
+
+	,@B_Result	bit OUTPUT
+	,@T_Message nvarchar(4000) OUTPUT	
+AS
+BEGIN
+  SET NOCOUNT ON
+  	BEGIN TRY
+	UPDATE	TC_CategoriaPago 
+		SET	T_CatPagoDesc = @T_CatPagoDesc
+			, I_Nivel = @I_Nivel
+			, I_Prioridad = @I_Prioridad
+			, I_TipoAlumno = @I_TipoAlumno
+			, B_Obligacion = @B_Obligacion
+			, D_FecMod = @D_FecMod
+			, I_UsuarioMod = @CurrentUserId
+
+		WHERE I_CatPagoID = @I_CatPagoID
+			
+		SET @B_Result = 1
+		SET @T_Message = 'Actualización de datos correcta'
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+
+END
+GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarEstadoCategoriaPago')
+	DROP PROCEDURE [dbo].[USP_U_ActualizarEstadoCategoriaPago]
+GO
+
+CREATE PROCEDURE [dbo].[USP_U_ActualizarEstadoCategoriaPago]
+	 @I_CatPagoID	int
+	,@B_Habilitado	bit
+	,@D_FecMod		datetime
+	,@CurrentUserId	int
+
+	,@B_Result	bit OUTPUT
+	,@T_Message nvarchar(4000) OUTPUT	
+AS
+BEGIN
+  SET NOCOUNT ON
+  	BEGIN TRY
+		UPDATE	TC_CategoriaPago 
+		SET		B_Habilitado = @B_Habilitado,
+				D_FecMod = @D_FecMod,
+				I_UsuarioMod = @CurrentUserId
+				WHERE I_CatPagoID = @I_CatPagoID
+			
+		SET @B_Result = 1
+		SET @T_Message = 'Actualización de datos correcta'
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+END
+GO
+
+
+/*-------------------------- */
+
+/*-------------------------- */
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_GrabarConcepto')
+	DROP PROCEDURE [dbo].[USP_I_GrabarConcepto]
+GO
+
+CREATE PROCEDURE [dbo].[USP_I_GrabarConcepto]
+	 @I_ConceptoID		int
+	,@T_ConceptoDesc	varchar(250)
+	,@B_EsPagoMatricula	bit
+	,@B_EsPagoExtmp		bit
+	,@B_ConceptoAgrupa	bit
+	,@D_FecCre		datetime
+	,@CurrentUserId	int
+
+	,@B_Result bit OUTPUT
+	,@T_Message nvarchar(4000) OUTPUT	
+AS
+BEGIN
+  SET NOCOUNT ON
+  	BEGIN TRY
+		INSERT INTO TC_Concepto(T_ConceptoDesc, B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
+						VALUES (@T_ConceptoDesc, @B_EsPagoMatricula, @B_EsPagoExtmp, @B_ConceptoAgrupa, 1, 0, @CurrentUserId, @D_FecCre)
+
+		SET @B_Result = 1
+		SET @T_Message = 'Nuevo registro agregado.'
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+
+END
+GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarConcepto')
+	DROP PROCEDURE [dbo].[USP_U_ActualizarConcepto]
+GO
+
+CREATE PROCEDURE [dbo].[USP_U_ActualizarConcepto]
+	 @I_ConceptoID	int
+	,@T_ConceptoDesc	varchar(250)
+	,@B_EsPagoMatricula	bit
+	,@B_EsPagoExtmp		bit
+	,@B_ConceptoAgrupa	bit
+	,@D_FecMod		datetime
+	,@CurrentUserId	int
+
+	,@B_Result	bit OUTPUT
+	,@T_Message nvarchar(4000) OUTPUT	
+AS
+BEGIN
+  SET NOCOUNT ON
+  	BEGIN TRY
+	UPDATE	TC_Concepto 
+		SET	T_ConceptoDesc = @T_ConceptoDesc
+			, B_EsPagoMatricula = @B_EsPagoMatricula
+			, B_EsPagoExtmp	 = @B_EsPagoExtmp		
+			, B_ConceptoAgrupa = @B_ConceptoAgrupa
+			, D_FecMod = @D_FecMod
+			, I_UsuarioMod = @CurrentUserId
+		WHERE I_ConceptoID = @I_ConceptoID
+			
+		SET @B_Result = 1
+		SET @T_Message = 'Actualización de datos correcta'
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+
+END
+GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarEstadoConcepto')
+	DROP PROCEDURE [dbo].[USP_U_ActualizarEstadoConcepto]
+GO
+
+CREATE PROCEDURE [dbo].[USP_U_ActualizarEstadoConcepto]
+	 @I_ConceptoID	int
+	,@B_Habilitado	bit
+	,@D_FecMod		datetime
+	,@CurrentUserId	int
+
+	,@B_Result	bit OUTPUT
+	,@T_Message nvarchar(4000) OUTPUT	
+AS
+BEGIN
+  SET NOCOUNT ON
+  	BEGIN TRY
+		UPDATE	TC_Concepto 
+		SET		B_Habilitado = @B_Habilitado,
+				D_FecMod = @D_FecMod,
+				I_UsuarioMod = @CurrentUserId
+				WHERE I_ConceptoID = @I_ConceptoID
+			
+		SET @B_Result = 1
+		SET @T_Message = 'Actualización de datos correcta'
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+END
+GO
+
+/*-------------------------- */
+
 
 IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_GrabarClasificadorIngreso')
 	DROP PROCEDURE [dbo].[USP_I_GrabarClasificadorIngreso]
@@ -1007,7 +1235,7 @@ BEGIN
 				WHERE I_ClasificadorID = @I_ClasificadorID
 			
 		SET @B_Result = 1
-		SET @T_Message = 'Actualización de datos de correo correcta'
+		SET @T_Message = 'Actualización de datos correcta'
 	END TRY
 	BEGIN CATCH
 		SET @B_Result = 0

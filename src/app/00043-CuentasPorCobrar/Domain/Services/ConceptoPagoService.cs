@@ -13,6 +13,64 @@ namespace Domain.Services
 {
     public class ConceptoPagoService
     {
+        private readonly TC_Concepto _concepto;
+
+        public ConceptoPagoService()
+        {
+            _concepto = new TC_Concepto();
+        }
+
+        public Response ChangeState(int ConceptoId, bool currentState, int currentUserId)
+        {
+            _concepto.I_ConceptoID = ConceptoId;
+            _concepto.B_Habilitado = !currentState;
+            _concepto.D_FecMod = DateTime.Now;
+
+            return new Response(_concepto.ChangeState(currentUserId));
+        }
+
+        public Response Save(ConceptoEntity concepto, int currentUserId, SaveOption saveOption)
+        {
+            _concepto.I_ConceptoID = concepto.I_ConceptoID;
+            _concepto.T_ConceptoDesc = concepto.T_ConceptoDesc;
+            _concepto.B_EsPagoMatricula = concepto.B_EsPagoMatricula;
+            _concepto.B_EsPagoExtmp = concepto.B_EsPagoExtmp;
+            _concepto.B_ConceptoAgrupa = concepto.B_ConceptoAgrupa;
+            _concepto.B_Habilitado = concepto.B_Habilitado;
+
+            switch (saveOption)
+            {
+                case SaveOption.Insert:
+                    _concepto.D_FecCre = DateTime.Now;
+                    return new Response(_concepto.Insert(currentUserId));
+
+                case SaveOption.Update:
+                    _concepto.D_FecMod = DateTime.Now;
+                    return new Response(_concepto.Update(currentUserId));
+            }
+
+            return new Response()
+            {
+                Value = false,
+                Message = "Operación Inváiida."
+            };
+        }
+
+
+        public ConceptoEntity GetConcepto(int conceptoId)
+        {
+            var result = new ConceptoEntity();
+            TC_Concepto concepto = TC_Concepto.Find(conceptoId);
+
+            result.I_ConceptoID = concepto.I_ConceptoID;
+            result.T_ConceptoDesc = concepto.T_ConceptoDesc.ToUpper();
+            result.B_EsPagoMatricula = concepto.B_EsPagoMatricula;
+            result.B_EsPagoExtmp = concepto.B_EsPagoExtmp;
+            result.B_ConceptoAgrupa = concepto.B_ConceptoAgrupa;
+
+            return result;
+        }
+
         public List<ConceptoPago> Listar_ConceptoPago_Habilitados()
         {
             try
@@ -61,6 +119,32 @@ namespace Domain.Services
                 return null;
             }
         }
+
+        public List<ConceptoEntity> Listar_Concepto_All()
+        {
+            try
+            {
+                var lista = TC_Concepto.Find();
+
+                var result = lista.Select(x => new ConceptoEntity()
+                {
+                    I_ConceptoID = x.I_ConceptoID,
+                    T_ConceptoDesc = x.T_ConceptoDesc,
+                    B_Habilitado = x.B_Habilitado,
+                    I_UsuarioCre = x.I_UsuarioCre,
+                    D_FecCre = x.D_FecCre,
+                    I_UsuarioMod = x.I_UsuarioMod,
+                    D_FecMod = x.D_FecMod
+                }).ToList();
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
 
         public List<CatalogoOpcionEntity> Listar_CatalogoOpcion_Habilitadas_X_Parametro(DTO.Parametro parametroID)
         {

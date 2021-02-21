@@ -26,6 +26,10 @@ namespace WebApp.App_Start
                 "~/Assets/font-awesome/css/font-awesome.min.css",
                 "~/Assets/bootstrap/css/bootstrap-icons.css"));
 
+            bundles.Add(new StyleBundle("~/content/select").Include(
+                "~/Assets/select2/css/select2.min.css",
+                "~/Assets/select2/css/select2-bootstrap4.min.css"));
+
 
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                 "~/Assets/jquery/jquery-3.3.1.min.js"));
@@ -36,6 +40,9 @@ namespace WebApp.App_Start
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                 "~/Assets/bootstrap/js/popper.min.js",
                 "~/Assets/bootstrap/js/bootstrap.min.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/select").Include(
+                "~/Assets/select2/js/select2.min.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/datetime") .Include(
                 "~/Assets/bootstrap-datepicker/js/bootstrap-datepicker.js",

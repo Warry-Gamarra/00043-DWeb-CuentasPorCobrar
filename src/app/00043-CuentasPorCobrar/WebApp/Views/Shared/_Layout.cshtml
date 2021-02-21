@@ -9,6 +9,7 @@
     <title>.:: @ViewBag.Title - Sistema de Cuentas por Cobrar ::.</title>
     @Styles.Render("~/content/css")
     @Styles.Render("~/content/datetime")
+    @Styles.Render("~/content/select")
     @Styles.Render("~/content/fonts")
 
     @Scripts.Render("~/bundles/jquery")
@@ -111,13 +112,13 @@
 
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/datetime")
+    @Scripts.Render("~/bundles/select")
     @Scripts.Render("~/bundles/app")
 
     @RenderSection("scripts", required: false)
 
     <script type="text/javascript">
         $(function () {
-
             $('body').on('click', '.modal-link', function (e) {
                 e.preventDefault();
                 $(this).attr('data-target', '#modal-container');
@@ -170,6 +171,10 @@
             $('#modal-container-xl').on('hide.bs.modal', function () {
                 $(this).removeData('bs.modal');
                 $('#modal-container-lg .modal-content').html('<p style="margin:50px;" class="text-center text-muted"><i class="fa fa-spin fa-3x fa-cog"></i></p>');
+            });
+
+            $('.select-filter').select2({
+                theme: 'bootstrap4',
             });
 
             $('[data-toggle="tooltip"]').tooltip()
