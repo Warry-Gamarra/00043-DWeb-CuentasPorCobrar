@@ -1,11 +1,13 @@
 ﻿using Data.Procedures;
 using Data.Types;
 using Domain.DTO;
+using Domain.Helpers;
 using Domain.Services;
 using NDbfReader;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -53,61 +55,61 @@ namespace Domain.Entities
             return fileName;
         }
 
-        private Response GuardarDatosRepositorio(string pathFile, int currentUserId)
+        private Response GuardarDatosRepositorio(string filePath, int currentUserId)
         {
-            var dataMatricula = new List<DataMatriculaType>();
-                        
-            using (var table = Table.Open(pathFile))
+            var resultados = new List<DataMatriculaResult>();
+
+            var matriculaSource = MatriculaSourceFactory.GetMatriculaSource(Path.GetExtension(filePath));
+
+            var dataMatriculas = matriculaSource.GetList(filePath);
+
+            //Validando códigos duplicados.
+            var codigosRepetidos = dataMatriculas.GroupBy(x => new { x.C_CodRC, x.C_CodAlu }).Where(x => x.Count() > 1);
+
+            if (codigosRepetidos != null && codigosRepetidos.Count() > 0)
             {
-                var reader = table.OpenReader(Encoding.ASCII);
-                while (reader.Read())
-                {
-                    dataMatricula.Add(new DataMatriculaType()
-                    {
-                        C_CodRC = reader.GetString("COD_RC"),
-                        C_CodAlu = reader.GetString("COD_ALU"),
-                        I_Anio = reader.GetInt32("ANO"),
-                        C_Periodo = reader.GetString("P"),
-                        C_EstMat = reader.GetString("EST_MAT"),
-                        C_Ciclo = reader.GetString("NIVEL"),
-                       B_Ingresante = reader.GetBoolean("ES_INGRESA"),
-                        I_CreditosDesaprob = reader.GetInt32("CRED_DESAP")
-                    });
-                }
+                codigosRepetidos.ToList().ForEach(
+                    c => c.ToList().ForEach(rep => {
+                        resultados.Add(Mapper.DataMatriculaType_To_DataMatriculaResult(rep, false, "Código de alumno repetido."));
+
+                        dataMatriculas.RemoveAll(mat => mat.C_CodRC == rep.C_CodRC && mat.C_CodAlu == rep.C_CodAlu);
+                    })
+                );
             }
+            
+            //Validando el campo año.
+            resultados.AddRange(
+                dataMatriculas.Where(CampoAnioIncorrecto).
+                    Select(mat => Mapper.DataMatriculaType_To_DataMatriculaResult(mat, false, "El campo Año es incorrecto."))
+            );
 
-            var listaAgrupada = dataMatricula.GroupBy(x => new { x.C_CodRC, x.C_CodAlu });
+            dataMatriculas.RemoveAll(CampoAnioIncorrecto);
 
-            if (listaAgrupada.Any(x => x.Count() > 1))
-            {
-                throw new Exception("Existen Códigos de Alumnos duplicados para un mismo programa.");
-            }
+            //Validando el campo periodo.
+            resultados.AddRange(
+                dataMatriculas.Where(CampoPeriodoIncorrecto).
+                    Select(mat => Mapper.DataMatriculaType_To_DataMatriculaResult(mat, false, "El campo Periodo es incorrecto."))
+            );
 
-            if (dataMatricula.Any(x => String.IsNullOrWhiteSpace(x.C_Periodo) || x.I_Anio == null))
-            {
-                throw new Exception("Existen registros con campos incompletos.");
-            }
+            dataMatriculas.RemoveAll(CampoPeriodoIncorrecto);
 
-            DataTable dataTable = new DataTable();
-            dataTable.Columns.Add("C_CodRC");
-            dataTable.Columns.Add("C_CodAlu");
-            dataTable.Columns.Add("I_Anio");
-            dataTable.Columns.Add("C_Periodo");
-            dataTable.Columns.Add("C_EstMat");
-            dataTable.Columns.Add("C_Ciclo");
-            dataTable.Columns.Add("B_Ingresante");
-            dataTable.Columns.Add("I_CredDesaprob");
+            //Validando el campo estado.
+            resultados.AddRange(
+                dataMatriculas.Where(CampoEstadoIncorrecto).
+                    Select(mat => Mapper.DataMatriculaType_To_DataMatriculaResult(mat, false, "El campo Estado es incorrecto."))
+            );
 
-            dataMatricula.ForEach(x => dataTable.Rows.Add(
-                x.C_CodRC,
-                x.C_CodAlu,
-                x.I_Anio,
-                x.C_Periodo,
-                x.C_EstMat,
-                x.C_Ciclo,
-                x.B_Ingresante,
-                x.I_CreditosDesaprob
-            ));
+            dataMatriculas.RemoveAll(CampoEstadoIncorrecto);
+
+            //Validando el campo ingresante.
+            resultados.AddRange(
+                dataMatriculas.Where(CampoIngresanteIncorrecto).
+                    Select(mat => Mapper.DataMatriculaType_To_DataMatriculaResult(mat, false, "El campo Ingresante es incorrecto."))
+            );
+
+            dataMatriculas.RemoveAll(CampoIngresanteIncorrecto);
+
+            DataTable dataTable = Mapper.DataMatriculaTypeList_To_DataTable(dataMatriculas);
 
             _grabarMatricula.UserID = currentUserId;
             _grabarMatricula.D_FecRegistro = DateTime.Now;
@@ -120,5 +122,24 @@ namespace Domain.Entities
             System.IO.File.Delete(serverPath + fileName);
         }
 
+        private static bool CampoAnioIncorrecto(DataMatriculaType dataMatricula)
+        {
+            return dataMatricula.I_Anio == null || dataMatricula.I_Anio < 1963;
+        }
+
+        private static bool CampoPeriodoIncorrecto(DataMatriculaType dataMatricula)
+        {
+            return String.IsNullOrWhiteSpace(dataMatricula.C_Periodo);
+        }
+
+        private static bool CampoEstadoIncorrecto(DataMatriculaType dataMatricula)
+        {
+            return String.IsNullOrWhiteSpace(dataMatricula.C_EstMat);
+        }
+
+        private static bool CampoIngresanteIncorrecto(DataMatriculaType dataMatricula)
+        {
+            return dataMatricula.B_Ingresante == null;
+        }
     }
 }

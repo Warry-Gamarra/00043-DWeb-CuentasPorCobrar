@@ -15,7 +15,7 @@
           <ConnectionProtocol>NotSpecified</ConnectionProtocol>
           <ApplicationName>Microsoft SQL Server Management Studio - Query</ApplicationName>
         </ConnectionNode>
-        <ConnectionNode Name="14-CEUC-DESA-05\SQL_2016E:DESKTOP-BIFTP5M\soporte:DESKTOP-B34HJML\gamar:DESKTOP-VPR8UA2\Humberto">
+        <ConnectionNode Name="14-CEUC-DESA-05\SQL_2016E:DESKTOP-VPR8UA2\Humberto">
           <Created>2021-01-11T11:26:48.6725913-05:00</Created>
           <Type>SQL</Type>
           <Server>14-CEUC-DESA-05\SQL_2016E</Server>
@@ -75,7 +75,7 @@
           <ConnectionProtocol>NotSpecified</ConnectionProtocol>
           <ApplicationName>Microsoft SQL Server Management Studio - Query</ApplicationName>
         </ConnectionNode>
-        <ConnectionNode Name="DESKTOP-B34HJML\SQL_2016E:DESKTOP-B34HJML\gamar">
+        <ConnectionNode Name="DESKTOP-B34HJML\SQL_2016E:DESKTOP-VPR8UA2\Humberto">
           <Created>2021-02-04T18:39:22.2198317-05:00</Created>
           <Type>SQL</Type>
           <Server>DESKTOP-B34HJML\SQL_2016E</Server>
@@ -158,8 +158,8 @@
           <FullPath>3. BD_OCEF_CtasPorCobrar - Carga de datos iniciales.sql</FullPath>
         </FileNode>
         <FileNode Name="4. BD_OCEF_CtasPorCobrar - Types Procedures y Funciones.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:DESKTOP-BIFTP5M\SQL_2016E:False:sa</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>DESKTOP-BIFTP5M\SQL_2016E</AssociatedConnSrvName>
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:DESKTOP-VPR8UA2\SQLEXPRESS:False:sa</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>DESKTOP-VPR8UA2\SQLEXPRESS</AssociatedConnSrvName>
           <AssociatedConnUserName>sa</AssociatedConnUserName>
           <FullPath>4. BD_OCEF_CtasPorCobrar - Types Procedures y Funciones.sql</FullPath>
         </FileNode>

@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ExcelDataReader, Version=3.6.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelDataReader.3.6.0\lib\net45\ExcelDataReader.dll</HintPath>
+    </Reference>
     <Reference Include="NDbfReader, Version=2.3.0.0, Culture=neutral, PublicKeyToken=421d1ecd09787b1d, processorArchitecture=MSIL">
       <HintPath>..\packages\NDbfReader.2.3.0\lib\net45\NDbfReader.dll</HintPath>
     </Reference>
@@ -41,6 +44,7 @@
     <Reference Include="System.Core">
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Web">
       <Private>True</Private>
     </Reference>
@@ -85,6 +89,7 @@
     <Compile Include="Entities\Estudiante.cs" />
     <Compile Include="Entities\EntidadFinanciera.cs" />
     <Compile Include="Entities\CorreoAplicacion.cs" />
+    <Compile Include="Entities\Mapper.cs" />
     <Compile Include="Entities\Proceso.cs" />
     <Compile Include="Entities\ProcesoEntity.cs" />
     <Compile Include="Entities\CtaDepoProcesoEntity.cs" />
@@ -94,6 +99,10 @@
     <Compile Include="Entities\User.cs" />
     <Compile Include="DTO\Response.cs" />
     <Compile Include="Helpers\Crypto.cs" />
+    <Compile Include="Helpers\IMatriculaSource.cs" />
+    <Compile Include="Helpers\MatriculaDbfSource.cs" />
+    <Compile Include="Helpers\MatriculaExcelSource.cs" />
+    <Compile Include="Helpers\MatriculaSourceFactory.cs" />
     <Compile Include="Helpers\RandomPassword.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\IClasificadores.cs" />
@@ -109,9 +118,7 @@
     <Compile Include="Services\ConceptoPagoService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Entities\Financial\" />
-    <Folder Include="Entities\Maintenance\" />
-    <Folder Include="Services\Maintenance\" />
+    <Folder Include="Services\Implementations\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Data\Data.csproj">

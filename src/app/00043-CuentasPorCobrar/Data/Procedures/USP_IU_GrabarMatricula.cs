@@ -28,7 +28,6 @@ namespace Data.Procedures
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
                     parameters.Add(name: "Tbl_Matricula", value: dataTable.AsTableValuedParameter("dbo.type_dataMatricula"));
-                    //parameters.Add(name: "Tbl_Matricula", value: dataMatricula.);
                     parameters.Add(name: "D_FecRegistro", dbType: DbType.DateTime, value: this.D_FecRegistro);
 
                     parameters.Add(name: "UserID", dbType: DbType.Int32, value: this.UserID);
