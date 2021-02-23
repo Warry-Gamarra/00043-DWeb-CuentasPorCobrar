@@ -68,11 +68,11 @@
             dataType: "json",
             beforeSend: function () {
                 $('#icon-submit').removeClass('fa-cloud-upload').addClass('fa-spin fa-cog');
-
             },
             success: function (result) {
-                debugger
-                if (result['Value']) {
+                console.log(result);
+                toastr.error(result.Message);
+                if (result.Value) {
                     $('.modal-footer').html('<p class="alert alert-success">' + result['Message'] + '</p><button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>')
                 } else {
                     $('.modal-footer').html('<p class="alert alert-danger">' + result['Message'] + '</p><button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>')
@@ -82,7 +82,6 @@
 
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                debugger;
                 toastr.error(errorThrown);
                 $('#icon-submit').addClass('fa-cloud-upload').removeClass('fa-spin fa-cog');
             }

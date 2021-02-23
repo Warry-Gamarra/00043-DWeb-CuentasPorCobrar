@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Data.Types
+namespace Domain.Entities
 {
-    public class DataMatriculaResult
+    public class DataMatriculaObs
     {
         public string C_CodRC { get; set; }
         public string C_CodAlu { get; set; }

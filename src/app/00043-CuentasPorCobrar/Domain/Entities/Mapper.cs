@@ -23,7 +23,7 @@ namespace Domain.Entities
                 C_EstMat = reader.GetString("EST_MAT"),
                 C_Ciclo = reader.GetString("NIVEL"),
                 B_Ingresante = reader.GetBoolean("ES_INGRESA"),
-                I_CreditosDesaprob = reader.GetInt32("CRED_DESAP")
+                I_CredDesaprob = reader.GetInt32("CRED_DESAP")
             };
 
             return dataMatriculaType;
@@ -66,21 +66,29 @@ namespace Domain.Entities
                 stringValue = reader.GetValue(7).ToString();
 
                 if (stringValue.Trim() == "")
-                    dataMatriculaType.I_CreditosDesaprob = 0;
+                    dataMatriculaType.I_CredDesaprob = 0;
                 else if (int.TryParse(stringValue, out intValue))
-                    dataMatriculaType.I_CreditosDesaprob = intValue;
+                    dataMatriculaType.I_CredDesaprob = intValue;
             }
             else
             {
-                dataMatriculaType.I_CreditosDesaprob = 0;
+                dataMatriculaType.I_CredDesaprob = 0;
             }
-            
+
+            if (reader.FieldCount > 8)
+            {
+                if (reader.GetValue(9) != null)
+                {
+                    dataMatriculaType.B_ActObl = reader.GetValue(9).ToString().Equals("T", StringComparison.OrdinalIgnoreCase);
+                }
+            }
+
             return dataMatriculaType;
         }
 
-        public static DataMatriculaResult DataMatriculaType_To_DataMatriculaResult(DataMatriculaType dataMatricula, bool B_Success, string T_Message)
+        public static DataMatriculaObs DataMatriculaType_To_DataMatriculaObs(DataMatriculaType dataMatricula, bool B_Success, string T_Message)
         {
-            var dataMatriculaResult = new DataMatriculaResult()
+            var dataMatriculaObs = new DataMatriculaObs()
             {
                 C_CodRC = dataMatricula.C_CodRC,
                 C_CodAlu = dataMatricula.C_CodAlu,
@@ -89,12 +97,12 @@ namespace Domain.Entities
                 C_EstMat = dataMatricula.C_EstMat,
                 C_Ciclo = dataMatricula.C_Ciclo,
                 B_Ingresante = dataMatricula.B_Ingresante,
-                I_CreditosDesaprob = dataMatricula.I_CreditosDesaprob,
+                I_CredDesaprob = dataMatricula.I_CredDesaprob,
                 B_Success = B_Success,
                 T_Message = T_Message
             };
 
-            return dataMatriculaResult;
+            return dataMatriculaObs;
         }
 
         public static DataTable DataMatriculaTypeList_To_DataTable(List<DataMatriculaType> dataMatriculas)
@@ -108,6 +116,7 @@ namespace Domain.Entities
             dataTable.Columns.Add("C_Ciclo");
             dataTable.Columns.Add("B_Ingresante");
             dataTable.Columns.Add("I_CredDesaprob");
+            dataTable.Columns.Add("B_ActObl");
 
             dataMatriculas.ForEach(x => dataTable.Rows.Add(
                 x.C_CodRC,
@@ -117,10 +126,27 @@ namespace Domain.Entities
                 x.C_EstMat,
                 x.C_Ciclo,
                 x.B_Ingresante,
-                x.I_CreditosDesaprob
+                x.I_CredDesaprob,
+                x.B_ActObl
             ));
 
             return dataTable;
+        }
+
+        public static List<DataMatriculaObs> DataMatriculaResult_To_DataMatriculaObs(List<DataMatriculaResult> dataMatriculaResult)
+        {
+            return dataMatriculaResult.Select(d  => new DataMatriculaObs() {
+                C_CodRC = d.C_CodRC,
+                C_CodAlu = d.C_CodAlu,
+                I_Anio = d.I_Anio,
+                C_Periodo = d.C_Periodo,
+                C_EstMat = d.C_EstMat,
+                C_Ciclo = d.C_Ciclo,
+                B_Ingresante = d.B_Ingresante,
+                I_CredDesaprob = d.I_CredDesaprob,
+                B_Success = d.B_Success,
+                T_Message = d.T_Message
+            }).ToList();
         }
     }
 }

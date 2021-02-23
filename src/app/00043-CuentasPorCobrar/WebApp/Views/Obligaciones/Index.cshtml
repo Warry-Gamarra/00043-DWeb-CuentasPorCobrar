@@ -1,0 +1,175 @@
+﻿<div class="container-fluid">
+    <div class="col-12">
+        <section class="content-header">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb float-right small d-none d-sm-inline-flex">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")"><i class="fa fa-home">&nbsp;</i>Inicio</a></li>
+                    <li class="breadcrumb-item"><span><i class="fa fa-search">&nbsp;</i>Consultas </span></li>
+                    <li class="breadcrumb-item active"><span><i class="fa fa-tasks">&nbsp;</i>@ViewBag.Title </span></li>
+                </ol>
+            </nav>
+            <h1 class="">@ViewBag.Title <small></small></h1>
+        </section>
+    </div>
+    <br />
+    <div class="col-12 mt-4">
+        <div class="row">
+            <div class="col-12">
+                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                    <li class="nav-item w-50" role="presentation">
+                        <a class="nav-link text-center active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">
+                            <i class="fa fa-fw fa-graduation-cap">&nbsp;</i> Por especialidad
+                        </a>
+                    </li>
+                    <li class="nav-item w-50" role="presentation">
+                        <a class="nav-link text-center" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">
+                            <i class="fa fa-fw fa-user">&nbsp;</i> Por alumno
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="pills-tabContent">
+                    <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                        <div class="card">
+                            <div class="card-body bg-light-gray">
+                                <form action="@Url.Action("GenerarObligacionesPregrado", "Obligaciones")" method="POST">
+                                    <div class="form-row">
+                                        <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
+                                            <label for="cmbAnio">Año</label>
+                                            <select id="cmbAnio" name="cmbAnio" class="form-control form-control-sm">
+                                                <option selected>2021</option>
+                                                <option>2020</option>
+                                                <option>2019</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
+                                            <label for="cmbPeriodo">Periodo</label>
+                                            <select id="cmbPeriodo" name="cmbPeriodo" class="form-control form-control-sm">
+                                                <option selected value="15">Anual</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-lg-2 col-sm-3 col-12">
+                                            <button type="submit" class="btn btn-block btn-outline-primary mt-4"><i class="fa fa-fw fa-engine">&nbsp;</i> Generar obligaciones</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            @if (ViewBag.Success != null)
+                            {
+                                if (ViewBag.Success)
+                                {
+                                    <p class="alert alert-success">@ViewBag.Message</p>
+                                }
+                                else
+                                {
+                                    <p class="alert alert-danger">@ViewBag.Message</p>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                        <div class="card">
+                            <div class="card-body bg-light-gray">
+                                <form>
+                                    <div class="form-row">
+                                        <div class="form-group col-lg-1 col-md-2 col-6">
+                                            <label for="inputPeriodo">Año</label>
+                                            <select id="inputPeriodo" class="form-control form-control-sm">
+                                                <option selected>2020</option>
+                                                <option>2019</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-lg-1 col-md-2 col-6 ">
+                                            <label for="inputPeriodo">Periodo</label>
+                                            <select id="inputPeriodo" class="form-control form-control-sm">
+                                                <option selected>Anual</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-lg-3 col-md-5 col-12">
+                                            <label for="inputState">Especialidad</label>
+                                            <select id="inputState" class="form-control form-control-sm">
+                                                <option selected>[ Seleccionar una opción ]</option>
+                                                <option>...</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-lg-2 col-md-3 col-12">
+                                            <button type="submit" class="btn btn-block btn-outline-primary mt-4"><i class="fa fa-fw fa-search-plus">&nbsp;</i> Iniciar consulta</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="table-responsive mt-4" style="min-height:300px">
+                            <p class="h5">Relación de Alumnos</p>
+
+                            <table class="table table-sm table-hover">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th></th>
+                                        <th>Código</th>
+                                        <th>Nombres y Apellidos</th>
+                                        <th>Tot. a pagar</th>
+                                        <th>Tot. Pagado</th>
+                                        <th>Tot. Saldo</th>
+                                        <th>Pag. de más</th>
+                                        <th>Nro. Formato</th>
+                                        <th>Fec. Formato</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+                            <br />
+                            <br />
+                            <br />
+                            <table class="table table-sm table-hover">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>Concepto</th>
+                                        <th>Cuota pago</th>
+                                        <th></th>
+                                        <th>Monto</th>
+                                        <th>Fec. Vencimiento</th>
+                                        <th>Tipo</th>
+                                        <th>Estado</th>
+                                        <th>Nro Recibo</th>
+                                        <th>Fecha Pago</th>
+                                        <th>Lugar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

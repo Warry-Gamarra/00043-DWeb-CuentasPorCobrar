@@ -75,6 +75,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DTO\DataMatriculaResponse.cs" />
+    <Compile Include="Entities\DataMatriculaObs.cs" />
     <Compile Include="DTO\Options.cs" />
     <Compile Include="DTO\Parametro.cs" />
     <Compile Include="Entities\ClasificadorDeIngreso.cs" />
@@ -115,6 +117,7 @@
     <Compile Include="Services\IDependencia.cs" />
     <Compile Include="Services\IRoles.cs" />
     <Compile Include="Services\IUser.cs" />
+    <Compile Include="Services\ObligacionesService.cs" />
     <Compile Include="Services\ProcesoService.cs" />
     <Compile Include="Services\ConceptoPagoService.cs" />
   </ItemGroup>

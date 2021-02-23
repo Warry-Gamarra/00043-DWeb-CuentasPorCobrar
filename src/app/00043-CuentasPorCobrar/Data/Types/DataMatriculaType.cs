@@ -15,6 +15,7 @@ namespace Data.Types
         public string C_EstMat { get; set; }
         public string C_Ciclo { get; set; }
         public bool? B_Ingresante { get; set; }
-        public int? I_CreditosDesaprob { get; set; }
+        public int? I_CredDesaprob { get; set; }
+        public bool B_ActObl { get; set; }
     }
 }

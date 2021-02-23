@@ -12,7 +12,7 @@ namespace Domain.Helpers
 {
     public class MatriculaExcelSource : IMatriculaSource
     {
-        readonly string[] expectedColNames = { "Cod_rc", "Cod_alu", "Ano", "P", "Est_mat", "Nivel", "Es_ingresa", "Cred_desap" };
+        readonly string[] expectedColNames = { "Cod_rc", "Cod_alu", "Año", "P", "Est_mat", "Nivel", "Es_ingresa", "Cred_desap" };
 
         public List<DataMatriculaType> GetList(string filePath)
         {
