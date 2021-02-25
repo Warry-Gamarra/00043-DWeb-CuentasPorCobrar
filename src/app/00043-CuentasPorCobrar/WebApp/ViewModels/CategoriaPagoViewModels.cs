@@ -11,16 +11,23 @@ namespace WebApp.ViewModels
     {
         public int? Id { get; set; }
         public string Nombre { get; set; }
+        public int NivelGradoId { get; set; }
         public string NivelGrado { get; set; }
         public string TipoAlumno { get; set; }
         public string EsObligacion { get; set; }
         public bool Habilitado { get; set; }
+
+        public CategoriaPagoViewModel()
+        {
+
+        }
 
         public CategoriaPagoViewModel(CategoriaPago categoriaPago)
         {
             this.Id = categoriaPago.CategoriaId;
             this.Nombre = categoriaPago.Descripcion;
             this.NivelGrado = categoriaPago.NivelDesc;
+            this.NivelGradoId = categoriaPago.Nivel;
             this.TipoAlumno = categoriaPago.TipoAlumnoDesc;
             this.EsObligacion = categoriaPago.EsObligacion ? "Obligación" : "Tasas";
             this.Habilitado = categoriaPago.Habilitado;
@@ -46,6 +53,9 @@ namespace WebApp.ViewModels
 
         [Display(Name = "Prioridad")]
         public int Prioridad { get; set; }
+
+        [Display(Name = "Cuentas Habilitadas")]
+        public int[] CuentasDeposito { get; set; }
 
         public CategoriaPagoRegistroViewModel() { }
 

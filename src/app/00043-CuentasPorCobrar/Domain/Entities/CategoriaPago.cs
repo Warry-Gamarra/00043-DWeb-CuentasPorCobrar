@@ -3,6 +3,7 @@ using Domain.DTO;
 using Domain.Services;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +20,7 @@ namespace Domain.Entities
         public int TipoAlumno { get; set; }
         public string TipoAlumnoDesc { get; set; }
         public bool EsObligacion { get; set; }
+        public List<int> CuentasDeposito { get; set; }
         public bool Habilitado { get; set; }
 
 
@@ -81,15 +83,24 @@ namespace Domain.Entities
             _categoriaPago.I_Nivel = categoriaPago.Nivel;
             _categoriaPago.B_Obligacion = categoriaPago.EsObligacion;
 
+            DataTable dataTable = new DataTable();
+            dataTable.Columns.Add("C_ID");
+            dataTable.Columns.Add("B_Habilitado");
+
+            foreach (var item in categoriaPago.CuentasDeposito)
+            {
+                dataTable.Rows.Add(item, true);
+            }
+
             switch (saveOption)
             {
                 case SaveOption.Insert:
                     _categoriaPago.D_FecCre = DateTime.Now;
-                    return new Response(_categoriaPago.Insert(currentUserId));
+                    return new Response(_categoriaPago.Insert(currentUserId, dataTable));
 
                 case SaveOption.Update:
                     _categoriaPago.D_FecMod = DateTime.Now;
-                    return new Response(_categoriaPago.Update(currentUserId));
+                    return new Response(_categoriaPago.Update(currentUserId, dataTable));
             }
 
             return new Response()

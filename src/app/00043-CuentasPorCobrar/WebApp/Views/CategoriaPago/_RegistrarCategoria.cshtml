@@ -31,11 +31,6 @@
                 @Html.DropDownListFor(model => model.TipoAlumnoId, ViewBag.TiposAlumno as SelectList, "[ SELCCIONAR TIPO ALUMNO ]", new { @class = "form-control text-uppercase" })
                 <p class="text-danger small">@Html.ValidationMessageFor(model => model.TipoAlumnoId)</p>
             </div>
-            <div class="form-group">
-                @Html.LabelFor(model => model.Prioridad, new { @class = "control-label" })
-                @Html.DropDownListFor(model => model.Prioridad, ViewBag.Prioridades as SelectList, "[ SELECCIONAR PRIRIODAD ]", new { @class = "form-control text-uppercase" })
-                <p class="text-danger small">@Html.ValidationMessageFor(model => model.Prioridad)</p>
-            </div>
             <div class="row form-group">
                 @Html.LabelFor(model => model.EsObligacion, new { @class = "control-label col-12" })
                 <div class="col-md-5 offset-1">
@@ -54,6 +49,31 @@
                         </label>
                     </div>
                 </div>
+            </div>
+            <div class="row form-group">
+                @Html.LabelFor(model => model.Prioridad, new { @class = "control-label col-12" })
+                <div class="col-md-5 offset-1">
+                    <div class="form-check">
+                        @Html.RadioButtonFor(model => model.Prioridad, 1, new { @Class = "form-check-input", @id = "rbtn_mat" })
+                        <label class="form-check-label" for="rbtn_mat">
+                            Matrícula
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-5 offset-1">
+                    <div class="form-check">
+                        @Html.RadioButtonFor(model => model.Prioridad, 2, new { @Class = "form-check-input", @id = "rbtn_otr" })
+                        <label class="form-check-label" for="rbtn_otr">
+                            Otros pagos
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.CuentasDeposito, new { @class = "control-label" })
+                @Html.DropDownListFor(model => model.CuentasDeposito, ViewBag.CtasDeposito as SelectList, new { @class = "select-multiple form-control text-uppercase", multiple = "true" })
+                <p class="text-danger small">@Html.ValidationMessageFor(model => model.CuentasDeposito)</p>
             </div>
         </div>
     </div>
@@ -75,6 +95,7 @@
 <script>
     $(document).on('ready', function () {
         $('#btnsubmit').removeClass('disabled');
+        
     });
 
     $("form").submit(function () {
@@ -82,4 +103,6 @@
             return false;
         }
     });
+
+    $('.select-multiple').select2();
 </script>
