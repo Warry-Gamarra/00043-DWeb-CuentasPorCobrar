@@ -12,13 +12,13 @@ namespace WebApp.Models
     {
         private readonly IRoles _roles;
         private readonly IDependencia _dependencia;
-        private readonly ConceptoPagoService _catalogoOpcionService;
+        private readonly ConceptoPagoService _conceptoPagoService;
 
         public SelectModels()
         {
             _roles = new RolAplicacion();
             _dependencia = new Dependencia();
-            _catalogoOpcionService = new ConceptoPagoService();
+            _conceptoPagoService = new ConceptoPagoService();
         }
 
         public List<SelectViewModel> GetRoles()
@@ -58,7 +58,7 @@ namespace WebApp.Models
         {
             List<SelectViewModel> result = new List<SelectViewModel>();
 
-            foreach (var item in _catalogoOpcionService.Listar_CatalogoOpcion_Habilitadas_X_Parametro(Domain.DTO.Parametro.Periodo))
+            foreach (var item in _conceptoPagoService.Listar_CatalogoOpcion_Habilitadas_X_Parametro(Domain.DTO.Parametro.Periodo))
             {
                 result.Add(new SelectViewModel() { Value = item.I_OpcionID.ToString(), TextDisplay = item.T_OpcionDesc });
             }
@@ -73,6 +73,18 @@ namespace WebApp.Models
             foreach (var item in _dependencia.Find())
             {
                 result.Add(new SelectViewModel() { Value = item.Id.ToString(), TextDisplay = item.Descripcion });
+            }
+
+            return result;
+        }
+
+        public List<SelectViewModel> GetGradosAcademicos()
+        {
+            List<SelectViewModel> result = new List<SelectViewModel>();
+
+            foreach (var item in _conceptoPagoService.Listar_CatalogoOpcion_Habilitadas_X_Parametro(Domain.DTO.Parametro.Grado))
+            {
+                result.Add(new SelectViewModel() { Value = item.I_OpcionID.ToString(), TextDisplay = item.T_OpcionDesc.ToUpper() });
             }
 
             return result;

@@ -10,7 +10,7 @@ namespace WebApp.ViewModels
 {
     public class DependenciaViewModel
     {
-        public int DependenciaID { get; set; }
+        public int? DependenciaID { get; set; }
 
         public string CodDep { get; set; }
 

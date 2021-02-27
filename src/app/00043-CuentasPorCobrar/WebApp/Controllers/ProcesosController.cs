@@ -15,12 +15,24 @@ namespace WebApp.Controllers
     public class ProcesosController : Controller
     {
         ProcesoModel procesoModel;
+        private readonly int? _dependenciaUsuarioId;
         private readonly SelectModels _selectModel;
+        private readonly ConceptoPagoModel _conceptoModel;
+        private readonly CategoriaPagoModel _categoriaPagoModel;
+        private readonly CuentaDepositoModel _cuentasDeposito;
 
         public ProcesosController()
         {
             procesoModel = new ProcesoModel();
             _selectModel = new SelectModels();
+            _conceptoModel = new ConceptoPagoModel();
+            _categoriaPagoModel = new CategoriaPagoModel();
+            _cuentasDeposito = new CuentaDepositoModel();
+
+            if (WebSecurity.IsAuthenticated)
+            {
+                _dependenciaUsuarioId = new UsersModel().Find(WebSecurity.CurrentUserId).DependenciaId;
+            }
         }
 
 
@@ -34,16 +46,79 @@ namespace WebApp.Controllers
         }
 
         [Route("configuracion/obligaciones-y-conceptos")]
-        public ActionResult Obligaciones()
+        public ActionResult Obligaciones(int? anio, int? grado)
         {
             ViewBag.Title = "Obligaciones y conceptos";
 
-            var lista = procesoModel.Listar_Procesos();
-            ViewBag.Anios = new SelectList(procesoModel.Listar_Anios(), "Value", "TextDisplay", DateTime.Now.Year);
-            ViewBag.PeriodosAcademicos = new SelectList(_selectModel.GetPeriodosAcademicosCatalogo(), "Value", "TextDisplay", 15);
+            anio = anio ?? DateTime.Now.Year;
+            grado = grado ?? 4;
 
-            return View("Obligaciones", lista);
+            ViewBag.Anios = new SelectList(_selectModel.GetAnios(1990), "Value", "TextDisplay", anio);
+            ViewBag.Grados = new SelectList(_selectModel.GetGradosAcademicos(), "Value", "TextDisplay", grado);
+
+            ViewBag.Message = TempData["Message"];
+
+            return View("Obligaciones", procesoModel.ObtenerCategoriasPorAnioGradoAcad(anio.Value, grado.Value));
         }
+
+        [HttpPost]
+        public ActionResult CategoriasEstado(FormCollection formCollection)
+        {
+            int anio = int.Parse(formCollection["inputAnio"]);
+            int gradoId = int.Parse(formCollection["inputGrado"]);
+
+            return PartialView("_CategoriasEstado", procesoModel.ObtenerCategoriasPorAnioGradoAcad(anio, gradoId));
+        }
+
+
+        [Route("configuracion/obligaciones-y-conceptos/{categoriaId}/{aaaa}/{grado}")]
+        public ActionResult ProcesosCategoria(int categoriaId, int? aaaa, int? grado)
+        {
+
+            if (aaaa.HasValue && grado.HasValue)
+            {
+                var categoria = _categoriaPagoModel.Find().Find(x => x.Id == categoriaId);
+
+                ViewBag.Anio = aaaa;
+                ViewBag.PeriodoId = grado;
+                ViewBag.Title = $"{aaaa.ToString()} - {categoria.Nombre}";
+
+                var model = new ProcesoCategoriaViewModel()
+                {
+                    AnioProc = aaaa.Value,
+                    Categoria = categoria,
+                    Procesos = procesoModel.Listar_Procesos()
+                };
+
+                return View("ObligacionesProcesosAnio", model);
+            }
+            else
+            {
+                TempData["Message"] = "Seleccionar <strong>año, periodo académico y categoría </strong> para configurar las obligaciones";
+
+                return RedirectToAction("Obligaciones");
+            }
+        }
+
+        public ActionResult AgregarProcesosObligaciones(int catId, int anio)
+        {
+            ViewBag.Title = "Agregar obligación";
+
+            ViewBag.Lista_CtaDepoHabilitadas = new List<SelectViewModel>();
+            ViewBag.Lista_CtaDepoProceso = new List<SelectViewModel>();
+            ViewBag.Periodos = new SelectList(_selectModel.GetPeriodosAcademicosCatalogo(), "Value", "TextDisplay");
+            ViewBag.CtasDeposito = new SelectList(_cuentasDeposito.Find(), "Id", "NumeroCuenta");
+            ViewBag.Conceptos = new SelectList(_conceptoModel.Listar_CatalogoConceptos(), "Id", "NombreConcepto");
+            ViewBag.Dependencias = new SelectList(_selectModel.GetDependencias(), "Value", "TextDisplay", _dependenciaUsuarioId);
+
+            var model = procesoModel.InitProcesoCategoria(catId, anio);
+
+            return PartialView("_RegistrarProcesoObligacionCocepto", model);
+        }
+
+
+
+
 
 
         [Route("configuracion/tasas-y-servicios")]
@@ -52,8 +127,8 @@ namespace WebApp.Controllers
             ViewBag.Title = "Tasas y Servicios";
 
             var lista = procesoModel.Listar_Tasas();
-            ViewBag.Anios = new SelectList(procesoModel.Listar_Anios(), "Value", "TextDisplay", DateTime.Now.Year);
-            ViewBag.PeriodosAcademicos = new SelectList(_selectModel.GetPeriodosAcademicosCatalogo(), "Value", "TextDisplay", 15);
+            ViewBag.Conceptos = new SelectList(_conceptoModel.Listar_CatalogoConceptos(), "Id", "NombreConcepto");
+            ViewBag.Dependencias = new SelectList(_selectModel.GetDependencias(), "Value", "TextDisplay", _dependenciaUsuarioId);
 
             return View("Tasas", lista);
         }
@@ -69,18 +144,6 @@ namespace WebApp.Controllers
             ViewBag.Lista_CtaDepoProceso = new List<SelectViewModel>();
 
             return PartialView("_MantenimientoProceso");
-        }
-
-
-
-        public ActionResult SeleccionarCategorias()
-        {
-            ViewBag.Title = "Nuevo Proceso";
-
-            ViewBag.Lista_CtaDepoHabilitadas = new List<SelectViewModel>();
-            ViewBag.Lista_CtaDepoProceso = new List<SelectViewModel>();
-
-            return PartialView("MantenimientoProgramacion", procesoModel.Listar_Combo_CategoriaPago());
         }
 
 
@@ -131,8 +194,6 @@ namespace WebApp.Controllers
 
         private void Cargar_Listas()
         {
-            ViewBag.Lista_CategoriaPago = procesoModel.Listar_Combo_CategoriaPago();
-
             ViewBag.Lista_Anios = procesoModel.Listar_Anios();
         }
     }
