@@ -15,37 +15,40 @@ namespace Data.Procedures
     {
         public int UserID { get; set; }
         public DateTime D_FecRegistro { get; set; }
+        private bool B_Result { get; set; }
+        private string T_Message { get; set; }
 
-
-
-        public ResponseData Execute(DataTable dataTable)
+        public List<DataMatriculaResult> Execute(DataTable dataTable)
         {
-            ResponseData result = new ResponseData();
-            DynamicParameters parameters = new DynamicParameters();
+            List<DataMatriculaResult> result;
+            DynamicParameters parameters;
 
             try
             {
+                string s_command = @"USP_IU_GrabarMatricula";
+
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
+                    parameters = new DynamicParameters();
                     parameters.Add(name: "Tbl_Matricula", value: dataTable.AsTableValuedParameter("dbo.type_dataMatricula"));
-                    //parameters.Add(name: "Tbl_Matricula", value: dataMatricula.);
                     parameters.Add(name: "D_FecRegistro", dbType: DbType.DateTime, value: this.D_FecRegistro);
-
                     parameters.Add(name: "UserID", dbType: DbType.Int32, value: this.UserID);
                     parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);
                     parameters.Add(name: "T_Message", dbType: DbType.String, size: 4000, direction: ParameterDirection.Output);
 
-                    _dbConnection.Execute("USP_IU_GrabarMatricula", parameters, commandType: CommandType.StoredProcedure);
+                    result = _dbConnection.Query<DataMatriculaResult>(s_command, param: parameters, commandType: CommandType.StoredProcedure).ToList();
+                    B_Result = parameters.Get<bool>("B_Result");
+                    T_Message = parameters.Get<string>("T_Message");
 
-                    result.Value = parameters.Get<bool>("B_Result");
-                    result.Message = parameters.Get<string>("T_Message");
+                    if (!B_Result)
+                        throw new Exception(T_Message);
                 }
             }
             catch (Exception ex)
             {
-                result.Value = false;
-                result.Message = ex.Message;
+                throw new Exception(ex.Message);
             }
+
             return result;
         }
     }

@@ -1308,7 +1308,8 @@ CREATE TYPE [dbo].[type_dataMatricula] AS TABLE(
 	C_EstMat		varchar(2)  NULL,
 	C_Ciclo			varchar(2)  NULL,
 	B_Ingresante	bit			NULL,
-	I_CredDesaprob  tinyint		NULL
+	I_CredDesaprob  tinyint		NULL,
+	B_ActObl		bit			NULL
 )
 GO
 
@@ -1321,8 +1322,7 @@ CREATE PROCEDURE [dbo].[USP_IU_GrabarMatricula]
 (
 	 @Tbl_Matricula	[dbo].[type_dataMatricula]	READONLY
 	,@D_FecRegistro datetime
-
-	,@UserID			int
+	,@UserID		int
 	,@B_Result		bit				OUTPUT
 	,@T_Message		nvarchar(4000)	OUTPUT
 )
@@ -1330,55 +1330,62 @@ AS
 BEGIN
 	SET NOCOUNT ON
 	BEGIN TRY
-
-		DECLARE @errors int = 0
-		DECLARE @Codigos varchar(500) 
-
-		-- comprobar que el archivo no tiene filas con codigos de alumno repetidos
-		IF EXISTS (SELECT C_CodAlu FROM @Tbl_Matricula GROUP BY C_CodAlu HAVING COUNT(C_CodAlu) > 1)
-		BEGIN
-			SET @errors += 1
-					
-			SELECT @Codigos = COALESCE(@Codigos + ', ', '') + C_CodAlu  
-			FROM @Tbl_Matricula GROUP BY C_CodAlu HAVING COUNT(C_CodAlu) > 1
-
-			SET @T_Message = 'El archivo tiene codigos repetidos: ' + @Codigos + '.'
-		END
-
-		IF(@errors = 0)
-		BEGIN
 			BEGIN TRANSACTION
 			
-			DECLARE @Tbl_Actions AS TABLE( T_Action varchar(10), T_Codigo varchar(10))
+			DECLARE @Tbl_Actions AS TABLE( T_Action varchar(10), T_Codigo varchar(10));
 
-			SELECT m.C_CodRC, m.C_CodAlu, m.I_Anio, c.I_OpcionID AS I_Periodo, m.C_EstMat, m.C_Ciclo, m.B_Ingresante, m.I_CredDesaprob
+			SELECT m.C_CodRC, m.C_CodAlu, m.I_Anio, m.C_Periodo, c.I_OpcionID AS I_Periodo, m.C_EstMat, m.C_Ciclo, m.B_Ingresante, m.I_CredDesaprob, m.B_ActObl
 			INTO #Tmp_Matricula FROM @Tbl_Matricula AS m
 			INNER JOIN dbo.TC_CatalogoOpcion c ON c.I_ParametroID = 5 AND c.T_OpcionCod = m.C_Periodo
+			INNER JOIN BD_UNFV_Repositorio.dbo.VW_Alumnos a ON a.C_CodAlu = m.C_CodAlu and a.C_RcCod = a.C_RcCod
+			WHERE c.B_Eliminado = 0;
 
-			MERGE INTO TC_MatriculaAlumno AS TRG
-			USING #Tmp_Matricula AS SRC
-			ON TRG.C_CodRc = SRC.C_CodRc AND TRG.C_CodAlu = SRC.C_CodAlu AND TRG.I_Anio = SRC.I_Anio AND TRG.I_Periodo = SRC.I_Periodo
+			--Update para alumnos sin obligaciones
+			WITH Tmp_SinObligaciones(I_MatAluID, C_EstMat, C_Ciclo, B_Ingresante, I_CredDesaprob)
+			AS
+			(
+				SELECT mat.I_MatAluID, tmp.C_EstMat, tmp.C_Ciclo, tmp.B_Ingresante, tmp.I_CredDesaprob FROM dbo.TC_MatriculaAlumno mat
+				LEFT JOIN dbo.TR_ObligacionAluCab obl ON obl.I_MatAluID = mat.I_MatAluID AND obl.B_Eliminado = 0
+				INNER JOIN #Tmp_Matricula AS tmp ON tmp.C_CodRc = mat.C_CodRc AND tmp.C_CodAlu = mat.C_CodAlu AND tmp.I_Anio = mat.I_Anio AND tmp.I_Periodo = mat.I_Periodo
+				WHERE mat.B_Eliminado = 0 AND obl.I_MatAluID IS NULL
+			)
+			MERGE INTO dbo.TC_MatriculaAlumno AS trg USING Tmp_SinObligaciones AS src ON trg.I_MatAluID = src.I_MatAluID
 			WHEN MATCHED THEN
-			 		UPDATE SET   C_EstMat = SRC.C_EstMat
-			 	  				, C_Ciclo = SRC.C_Ciclo
-								, B_Ingresante = SRC.B_Ingresante
-								, I_CredDesaprob = SRC.I_CredDesaprob
+			 		UPDATE SET   C_EstMat = src.C_EstMat
+			 	  				, C_Ciclo = src.C_Ciclo
+								, B_Ingresante = src.B_Ingresante
+								, I_CredDesaprob = src.I_CredDesaprob
 								, I_UsuarioMod = @UserID
-								, D_FecMod = @D_FecRegistro
-			WHEN NOT MATCHED BY TARGET THEN INSERT (C_CodRc, C_CodAlu, I_Anio, I_Periodo, C_EstMat, C_Ciclo, B_Ingresante, I_CredDesaprob, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
-			 	  							VALUES (SRC.C_CodRc, SRC.C_CodAlu, SRC.I_Anio, SRC.I_Periodo, SRC.C_EstMat, SRC.C_Ciclo, SRC.B_Ingresante, I_CredDesaprob, 1, 0, @UserID, @D_FecRegistro)
-			OUTPUT $action AS accion, inserted.C_CodAlu as codigo INTO @Tbl_Actions;
+								, D_FecMod = @D_FecRegistro;
+			
+			----Update para alumnos con obligaciones sin pagar ()
+			--SELECT mat.I_MatAluID, tmp.C_EstMat, tmp.C_Ciclo, tmp.B_Ingresante, tmp.I_CredDesaprob FROM dbo.TC_MatriculaAlumno mat
+			--INNER JOIN dbo.TR_ObligacionAluCab obl ON obl.I_MatAluID = mat.I_MatAluID AND obl.B_Eliminado = 0
+			--INNER JOIN #Tmp_Matricula AS tmp ON tmp.C_CodRc = mat.C_CodRc AND tmp.C_CodAlu = mat.C_CodAlu AND tmp.I_Anio = mat.I_Anio AND tmp.I_Periodo = mat.I_Periodo
+			--WHERE mat.B_Eliminado = 0
+
+			--Insert para alumnos nuevos
+			MERGE INTO TC_MatriculaAlumno AS trg USING #Tmp_Matricula AS src
+			ON trg.C_CodRc = src.C_CodRc AND trg.C_CodAlu = src.C_CodAlu AND trg.I_Anio = src.I_Anio AND trg.I_Periodo = src.I_Periodo AND trg.B_Eliminado = 0
+			WHEN NOT MATCHED BY TARGET THEN
+				INSERT (C_CodRc, C_CodAlu, I_Anio, I_Periodo, C_EstMat, C_Ciclo, B_Ingresante, I_CredDesaprob, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
+			 	VALUES (src.C_CodRc, src.C_CodAlu, src.I_Anio, src.I_Periodo, src.C_EstMat, src.C_Ciclo, src.B_Ingresante, src.I_CredDesaprob, 1, 0, @UserID, @D_FecRegistro);
+
+			--Informar los alumnos que ya tienen obligaciones (pagadas y sin pagar).
+			SELECT DISTINCT tmp.C_CodRC, tmp.C_CodAlu, tmp.I_Anio, tmp.C_Periodo, tmp.C_EstMat, tmp.C_Ciclo, tmp.B_Ingresante, tmp.I_CredDesaprob, 0 as B_Success, 'El alumno tiene obligaciones registradas.' AS T_Message FROM dbo.TC_MatriculaAlumno mat
+			INNER JOIN dbo.TR_ObligacionAluCab obl ON obl.I_MatAluID = mat.I_MatAluID AND obl.B_Eliminado = 0
+			INNER JOIN #Tmp_Matricula AS tmp ON tmp.C_CodRc = mat.C_CodRc AND tmp.C_CodAlu = mat.C_CodAlu AND tmp.I_Anio = mat.I_Anio AND tmp.I_Periodo = mat.I_Periodo
+			WHERE mat.B_Eliminado = 0
+			UNION
+			SELECT m.C_CodRC, m.C_CodAlu, m.I_Anio, m.C_Periodo, m.C_EstMat, m.C_Ciclo, m.B_Ingresante, m.I_CredDesaprob, 0 AS B_Success, 'El Código de alumno no existe.' AS T_Message FROM @Tbl_Matricula AS m
+			LEFT JOIN BD_UNFV_Repositorio.dbo.VW_Alumnos a ON a.C_CodAlu = m.C_CodAlu AND a.C_RcCod = m.C_CodRC
+			WHERE a.C_CodAlu IS NULL
 
 			COMMIT TRANSACTION
 
 			SET @B_Result = 1
 			SET @T_Message = 'La importación de datos de alumno finalizó de manera exitosa'
-		END
-		ELSE
-		BEGIN
-			SET @B_Result = 0
-			SET @T_Message = 'Se encontraron problemas en el archivo. <ul>' + @T_Message + '</ul>'
-		END
+		
 	END TRY
 	BEGIN CATCH
 		ROLLBACK TRANSACTION
@@ -1833,13 +1840,16 @@ BEGIN
 		end try
 		begin catch
 			rollback tran
-			print ERROR_MESSAGE()
-			print ERROR_LINE()
+
+			--print ERROR_MESSAGE()
+			--print ERROR_LINE()
 		end catch
 
 		set @I_Posicion = (@I_Posicion +1)
 	end
 
+	set @B_Result = 1
+	set @T_Message = 'El proceso finalizó correctamente.'
 /*
 
 declare @B_Result bit,

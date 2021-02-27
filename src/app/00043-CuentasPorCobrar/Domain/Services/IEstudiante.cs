@@ -10,6 +10,6 @@ namespace Domain.Services
 {
     public interface IEstudiante
     {
-        Response CargarDataAptos(string pathFile, HttpPostedFileBase file, TipoAlumno tipoAlumno, int currentUserId);
+        DataMatriculaResponse CargarDataAptos(string pathFile, HttpPostedFileBase file, TipoAlumno tipoAlumno, int currentUserId);
     }
 }

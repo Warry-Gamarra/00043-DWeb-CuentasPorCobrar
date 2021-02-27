@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Data.Types
 {
-    public class DataMatriculaType
+    public class DataMatriculaResult
     {
         public string C_CodRC { get; set; }
         public string C_CodAlu { get; set; }
@@ -16,6 +16,7 @@ namespace Data.Types
         public string C_Ciclo { get; set; }
         public bool? B_Ingresante { get; set; }
         public int? I_CredDesaprob { get; set; }
-        public bool B_ActObl { get; set; }
+        public bool B_Success { get; set; }
+        public string T_Message { get; set; }
     }
 }

@@ -58,20 +58,17 @@ namespace WebApp.Models
             return result;
         }
 
-        public Response CargarAlumnosAptos(string pathFile, HttpPostedFileBase file, TipoAlumno tipoAlumno, int currentUserId)
+        public DataMatriculaResponse CargarAlumnosAptos(string pathFile, HttpPostedFileBase file, TipoAlumno tipoAlumno, int currentUserId)
         {
             if (file == null)
             {
-                return new Response()
+                return new DataMatriculaResponse()
                 {
-                    Value = false,
-                    Message = "No existe archivo seleccionado"
+                    Message = "No existe archivo seleccionado."
                 };
             }
 
-            Response result = _estudiante.CargarDataAptos(pathFile, file, tipoAlumno, currentUserId);
-
-            return result.Value ? result.Success(false) : result.Error(true);
+            return _estudiante.CargarDataAptos(pathFile, file, tipoAlumno, currentUserId);
         }
     }
 }
