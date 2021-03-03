@@ -1,0 +1,250 @@
+﻿
+<div class="container-fluid">
+    <div class="col-12">
+        <section class="content-header">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb float-right small d-none d-sm-inline-flex">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")"><i class="fa fa-home">&nbsp;</i>Inicio</a></li>
+                    <li class="breadcrumb-item"><span><i class="fa fa-search">&nbsp;</i>Consultas </span></li>
+                    <li class="breadcrumb-item active"><span><i class="fa fa-tasks">&nbsp;</i>@ViewBag.Title </span></li>
+                </ol>
+            </nav>
+            <h1 class="">@ViewBag.Title <small></small></h1>
+        </section>
+    </div>
+    <br />
+    <div class="col-12 mt-4">
+        <div class="row">
+            <div class="col-12">
+                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                    <li class="nav-item w-50" role="presentation">
+                        <a class="nav-link text-center active" id="grupal-tab" data-toggle="pill" href="#grupal" role="tab" aria-controls="grupal" aria-selected="true">
+                            <i class="fa fa-users">&nbsp;</i> Por especialidad
+                        </a>
+                    </li>
+                    <li class="nav-item w-50" role="presentation">
+                        <a class="nav-link text-center" id="individial-tab" data-toggle="pill" href="#individial" role="tab" aria-controls="individial" aria-selected="false">
+
+                            <i class="fa fa-fw fa-user">&nbsp;</i> Por alumno
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="pills-tabContent">
+                    <div class="tab-pane fade show active" id="grupal" role="tabpanel" aria-labelledby="grupal-tab">
+                        <div class="card">
+                            <div class="card-body bg-light-gray">
+                                <form action="@Url.Action("Generar", "Obligaciones")" method="POST">
+                                    <div class="form-row">
+                                        <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
+                                            <label for="cmbAnioGrupal">Año</label>
+                                            @Html.DropDownList("cmbAnioGrupal", new SelectList(ViewBag.Anios, "Value", "TextDisplay", DateTime.Now.Year), new { @class = "form-control form-control-sm" })
+                                        </div>
+                                        <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
+                                            <label for="cmbPeriodoGrupal">Periodo</label>
+                                            @Html.DropDownList("cmbPeriodoGrupal", new SelectList(ViewBag.Periodos, "Value", "TextDisplay", "15"), null, new { @class = "form-control form-control-sm" })
+                                        </div>
+                                        <div class="form-group col-lg-2 col-sm-3 col-12">
+                                            <button type="submit" class="btn btn-block btn-outline-primary mt-4"><i class="fa fa-fw fa-engine">&nbsp;</i> Generar obligaciones</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            @if (ViewBag.Success != null)
+                            {
+                                if (ViewBag.Success)
+                                {
+                                    <p class="alert alert-success">@ViewBag.Message</p>
+                                }
+                                else
+                                {
+                                    <p class="alert alert-danger">@ViewBag.Message</p>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="individial" role="tabpanel" aria-labelledby="individial-tab">
+                        <div class="card">
+                            <div class="card-body bg-light-gray">
+                                <form>
+                                    <div class="form-row">
+                                        <div class="form-group col-lg-1 col-md-2 col-6">
+                                            <label for="cmbAnioIndividual">Año</label>
+                                            @Html.DropDownList("cmbAnioIndividual", new SelectList(ViewBag.Anios, "Value", "TextDisplay", DateTime.Now.Year), new { @class = "form-control form-control-sm" })
+                                        </div>
+                                        <div class="form-group col-lg-1 col-md-2 col-6 ">
+                                            <label for="cmbPeriodoIndividual">Periodo</label>
+                                            @Html.DropDownList("cmbPeriodoIndividual", new SelectList(ViewBag.Periodos, "Value", "TextDisplay", "15"), null, new { @class = "form-control form-control-sm" })
+                                        </div>
+                                        <div class="form-group col-lg-3 col-md-5 col-12">
+                                            <label for="cmbEspecialidad">Especialidad</label>
+                                            <select id="cmbEspecialidad" name="cmbEspecialidad" class="form-control form-control-sm">
+                                                <option selected>[ Seleccionar una opción ]</option>
+                                                <option value="011">INGENIERÍA DE SISTEMAS</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-lg-1 col-md-2 col-6">
+                                            <label for="txtCodAlumno">Código de alumno</label>
+                                            @Html.TextBox("txtCodAlumno", null, new { @class = "form-control form-control-sm" })
+                                        </div>
+                                        <div class="form-group col-lg-2 col-md-3 col-12">
+                                            <button type="button" id="btnConsultarObligacionAlumno" class="btn btn-block btn-outline-primary mt-4"><i class="fa fa-fw fa-search-plus">&nbsp;</i> Iniciar consulta</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="table-responsive mt-4" style="min-height:300px">
+                            <p class="h5">Obligaciones (Conceptos de Pago)</p>
+
+                            <table class="table table-sm table-hover" id="tblDetalleObligaciones">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>Concepto</th>
+                                        <th>Cuota pago</th>
+                                        <th>Monto</th>
+                                        <th>Fec. Vencimiento</th>
+                                        <th>Estado</th>
+                                        <th>Nro Recibo</th>
+                                        <th>Fecha Pago</th>
+                                        <th>Lugar</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                        <div class="table-responsive mt-4" style="min-height:300px">
+                            <p class="h5">Cuotas a pagar en Banco</p>
+
+                            <table class="table table-sm table-hover" id="tblCuotasPago">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>Cuota pago</th>
+                                        <th>Monto</th>
+                                        <th>Fec. Vencimiento</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).on('click', '#btnConsultarObligacionAlumno', function () {
+            let cmbAnioIndividual = $('#cmbAnioIndividual').val();
+            let cmbPeriodoIndividual = $('#cmbPeriodoIndividual').val();
+            let cmbEspecialidad = $('#cmbEspecialidad').val();
+            let txtCodAlumno = $('#txtCodAlumno').val();
+            
+            BuscarObligacion(cmbAnioIndividual, cmbPeriodoIndividual, cmbEspecialidad, txtCodAlumno);
+        });
+
+        function BuscarObligacion(anio, periodo, codRc, codigoAlu) {
+            let parametros = {
+                anio: anio,
+                periodo: periodo,
+                codRc: codRc,
+                codigoAlu: codigoAlu
+            };
+
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("BuscarObligacionesAlumno", "Obligaciones")',
+                data: parametros,
+                dataType: 'json',
+                beforeSend: function () {
+                    GenerarTablaDetalle([]);
+                    GenerarTablaCuotas([]);
+                },
+                success: function (data) {
+                    if (data) {
+                        if (data.detalle_pago.length == 0) {
+                            var r = confirm("El alumno no cuenta con obligaciones generadas para este periodo. " +
+                                "¿Desea generar las obligaciones en este momento ?.");
+
+                            if (r === true) {
+                                GenerarPorAlumno(anio, periodo, codRc, codigoAlu);
+                            }
+                        } else {
+                            GenerarTablaDetalle(data.detalle_pago);
+                            GenerarTablaCuotas(data.cuotas_pago);
+                        }
+                    }
+                }
+            });
+        }
+
+        function GenerarPorAlumno(anio, periodo, codRc, codigoAlu) {
+            let parametros = {
+                anio: anio,
+                periodo: periodo,
+                codRc: codRc,
+                codAlu: codigoAlu
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GenerarPorAlumno", "Obligaciones")',
+                data: parametros,
+                dataType: 'json',
+                success: function (data) {
+                    if (data) {
+                        if (data.Value) {
+                            BuscarObligacion(anio, periodo, codRc, codigoAlu);
+                        } else {
+                            alert("Ha ocurrido un error al generar las obligaciones.");
+                        }
+                    } else {
+                        alert("Ha ocurrido un error al generar las obligaciones.");
+                    }
+                }
+            });
+        }
+
+        function GenerarTablaDetalle(detalle_pago) {
+            let tblDetalleObligaciones = $('#tblDetalleObligaciones').find('tbody');
+            let rows = '';
+
+            tblDetalleObligaciones.html('');
+
+            $.each(detalle_pago, function (i, item) {
+                rows += '<tr>' +
+                    '<td>' + item.T_ConceptoDesc + '</td>' +
+                    '<td>' + item.T_CatPagoDesc + '</td>' +
+                    '<td>' + item.T_Monto + '</td>' +
+                    '<td>' + item.T_FecVencto + '</td>' +
+                    '<td>' + item.T_Pagado + '</td>' +
+                    '<td></td>' +
+                    '<td></td>' +
+                    '<td></td>' +
+                    '</tr>';
+            });
+
+            tblDetalleObligaciones.html(rows);
+        }
+
+        function GenerarTablaCuotas(cuotas_pago) {
+            let tblCuotasPago = $('#tblCuotasPago').find('tbody');
+            let rows = '';
+
+            tblCuotasPago.html('');
+
+            $.each(cuotas_pago, function (i, item) {
+                rows += '<tr>' +
+                    '<td>' + item.I_Anio + '-' + item.T_Periodo + ' ' + item.T_CatPagoDesc + '</td>' +
+                    '<td>' + item.T_MontoTotal + '</td>' +
+                    '<td>' + item.T_FecVencto + '</td>' +
+                    '</tr>';
+            });
+
+            tblCuotasPago.html(rows);
+        }
+    </script>
+}

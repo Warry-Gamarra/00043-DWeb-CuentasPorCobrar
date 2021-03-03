@@ -15,7 +15,7 @@
           <ConnectionProtocol>NotSpecified</ConnectionProtocol>
           <ApplicationName>Microsoft SQL Server Management Studio - Query</ApplicationName>
         </ConnectionNode>
-        <ConnectionNode Name="14-CEUC-DESA-05\SQL_2016E:DESKTOP-B34HJML\gamar">
+        <ConnectionNode Name="14-CEUC-DESA-05\SQL_2016E:HUMBERTO-PC\Humberto">
           <Created>2021-01-11T11:26:48.6725913-05:00</Created>
           <Type>SQL</Type>
           <Server>14-CEUC-DESA-05\SQL_2016E</Server>
@@ -75,7 +75,7 @@
           <ConnectionProtocol>NotSpecified</ConnectionProtocol>
           <ApplicationName>Microsoft SQL Server Management Studio - Query</ApplicationName>
         </ConnectionNode>
-        <ConnectionNode Name="DESKTOP-B34HJML\SQL_2016E:DESKTOP-B34HJML\gamar">
+        <ConnectionNode Name="DESKTOP-B34HJML\SQL_2016E:HUMBERTO-PC\Humberto">
           <Created>2021-02-04T18:39:22.2198317-05:00</Created>
           <Type>SQL</Type>
           <Server>DESKTOP-B34HJML\SQL_2016E</Server>
@@ -103,6 +103,18 @@
           <Created>2021-02-02T11:02:44.2961875-05:00</Created>
           <Type>SQL</Type>
           <Server>DESKTOP-VPR8UA2\SQLEXPRESS</Server>
+          <UserName>sa</UserName>
+          <Authentication>SQL</Authentication>
+          <InitialDB />
+          <LoginTimeout>30</LoginTimeout>
+          <ExecutionTimeout>0</ExecutionTimeout>
+          <ConnectionProtocol>NotSpecified</ConnectionProtocol>
+          <ApplicationName>Microsoft SQL Server Management Studio - Query</ApplicationName>
+        </ConnectionNode>
+        <ConnectionNode Name="HUMBERTO-PC\SQLEXPRESS:sa">
+          <Created>2021-02-23T20:06:16.173324-05:00</Created>
+          <Type>SQL</Type>
+          <Server>HUMBERTO-PC\SQLEXPRESS</Server>
           <UserName>sa</UserName>
           <Authentication>SQL</Authentication>
           <InitialDB />
@@ -146,21 +158,21 @@
           <FullPath>1. BD_OCEF_CtasPorCobrar - Creación de base de datos.sql</FullPath>
         </FileNode>
         <FileNode Name="2. BD_OCEF_CtasPorCobrar - Esquema de base de datos.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:DESKTOP-B34HJML\SQL_2016E:True</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>DESKTOP-B34HJML\SQL_2016E</AssociatedConnSrvName>
-          <AssociatedConnUserName />
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:DESKTOP-BIFTP5M\SQL_2016E:False:sa</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>DESKTOP-BIFTP5M\SQL_2016E</AssociatedConnSrvName>
+          <AssociatedConnUserName>sa</AssociatedConnUserName>
           <FullPath>2. BD_OCEF_CtasPorCobrar - Esquema de base de datos.sql</FullPath>
         </FileNode>
         <FileNode Name="3. BD_OCEF_CtasPorCobrar - Carga de datos iniciales.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:DESKTOP-B34HJML\SQL_2016E:True</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>DESKTOP-B34HJML\SQL_2016E</AssociatedConnSrvName>
-          <AssociatedConnUserName />
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:DESKTOP-BIFTP5M\SQL_2016E:False:sa</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>DESKTOP-BIFTP5M\SQL_2016E</AssociatedConnSrvName>
+          <AssociatedConnUserName>sa</AssociatedConnUserName>
           <FullPath>3. BD_OCEF_CtasPorCobrar - Carga de datos iniciales.sql</FullPath>
         </FileNode>
         <FileNode Name="4. BD_OCEF_CtasPorCobrar - Types Procedures y Funciones.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:DESKTOP-B34HJML\SQL_2016E:True</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>DESKTOP-B34HJML\SQL_2016E</AssociatedConnSrvName>
-          <AssociatedConnUserName />
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:HUMBERTO-PC\SQLEXPRESS:False:sa</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>HUMBERTO-PC\SQLEXPRESS</AssociatedConnSrvName>
+          <AssociatedConnUserName>sa</AssociatedConnUserName>
           <FullPath>4. BD_OCEF_CtasPorCobrar - Types Procedures y Funciones.sql</FullPath>
         </FileNode>
         <FileNode Name="SQLQuery1.sql">

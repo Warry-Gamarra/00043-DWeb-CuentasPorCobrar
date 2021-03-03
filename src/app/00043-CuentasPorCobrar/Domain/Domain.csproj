@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DTO\DataMatriculaResponse.cs" />
+    <Compile Include="Entities\CuotaPagoDTO.cs" />
     <Compile Include="Entities\DataMatriculaObs.cs" />
     <Compile Include="DTO\Options.cs" />
     <Compile Include="DTO\Parametro.cs" />
@@ -92,6 +93,7 @@
     <Compile Include="Entities\EntidadFinanciera.cs" />
     <Compile Include="Entities\CorreoAplicacion.cs" />
     <Compile Include="Entities\Mapper.cs" />
+    <Compile Include="Entities\ObligacionDetalleDTO.cs" />
     <Compile Include="Entities\Proceso.cs" />
     <Compile Include="Entities\ProcesoEntity.cs" />
     <Compile Include="Entities\CtaDepoProcesoEntity.cs" />
@@ -117,7 +119,7 @@
     <Compile Include="Services\IDependencia.cs" />
     <Compile Include="Services\IRoles.cs" />
     <Compile Include="Services\IUser.cs" />
-    <Compile Include="Services\ObligacionesService.cs" />
+    <Compile Include="Services\ObligacionService.cs" />
     <Compile Include="Services\ProcesoService.cs" />
     <Compile Include="Services\ConceptoPagoService.cs" />
   </ItemGroup>
