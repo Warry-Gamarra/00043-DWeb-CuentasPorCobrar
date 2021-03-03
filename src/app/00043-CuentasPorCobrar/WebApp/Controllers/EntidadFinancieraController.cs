@@ -14,12 +14,14 @@ namespace WebApp.Controllers
     public class EntidadFinancieraController : Controller
     {
         public readonly EntidadFinancieraModel _entidadFinanciera;
+        public readonly CuentaDepositoModel _cuentaDeposito;
         public readonly SelectModels _selectModels;
 
         public EntidadFinancieraController()
         {
             _entidadFinanciera = new EntidadFinancieraModel();
             _selectModels = new SelectModels();
+            _cuentaDeposito = new CuentaDepositoModel();
         }
 
 
@@ -89,6 +91,13 @@ namespace WebApp.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
+        [Route("mantenimiento/entidades-financieras/{id}/{banco}/numeros-de-cuenta")]
+        public ActionResult CuentasDeposito(int id, string banco)
+        {
+            ViewBag.Title = $"Números de cuenta: { banco }";
+
+            return PartialView("_CuentasBanco",_cuentaDeposito.Find().Where(x => x.EntidadFinancieraId == id));
+        }
 
     }
 }

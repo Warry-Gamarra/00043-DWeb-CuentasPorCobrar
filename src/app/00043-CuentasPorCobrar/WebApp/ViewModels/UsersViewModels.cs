@@ -58,7 +58,7 @@ namespace WebApp.ViewModels
 
 
         [Display(Name = "Dependencia")]
-        public int DependenciaId { get; set; }
+        public int? DependenciaId { get; set; }
 
         public int? PersonId { get; set; }
 

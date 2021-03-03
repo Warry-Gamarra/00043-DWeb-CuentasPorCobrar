@@ -52,10 +52,11 @@ namespace WebApp.Models
         {
             CuentaDeposito cuentaDeposito = new CuentaDeposito()
             {
-                I_CtaDepID = model.Id.HasValue ? model.Id.Value : 0,
-                C_NumeroCuenta = model.NumeroCuenta,
+                I_CtaDepID = model.Id ?? 0,
+                T_DescCuenta = model.Descripcion.ToUpper(),
+                C_NumeroCuenta = model.NumeroCuenta.ToUpper(),
                 I_EntidadFinanId = model.EntidadFinancieraId,
-                T_Observacion = model.Observacion,
+                T_Observacion = string.IsNullOrEmpty(model.Observacion) ? model.Observacion : model.Observacion.ToUpper(),
                 Habilitado = true,
                 FechaActualiza = DateTime.Now
             };

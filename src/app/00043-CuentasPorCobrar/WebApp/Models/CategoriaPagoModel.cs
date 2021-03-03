@@ -43,7 +43,8 @@ namespace WebApp.Models
                 Nivel = model.NivelId,
                 TipoAlumno = model.TipoAlumnoId,
                 Prioridad = model.Prioridad,
-                EsObligacion = model.EsObligacion
+                EsObligacion = model.EsObligacion,
+                CuentasDeposito = model.CuentasDeposito.ToList()
             };
 
             Response result = _categoriaPago.Save(categoriaPago, currentUserId, (model.Id.HasValue ? SaveOption.Update : SaveOption.Insert));

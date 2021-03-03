@@ -71,7 +71,7 @@ namespace Data.Tables
             return result;
         }
 
-        public ResponseData Insert(int currentUserId)
+        public ResponseData Insert(int currentUserId, DataTable dataTable)
         {
             ResponseData result = new ResponseData();
             DynamicParameters parameters = new DynamicParameters();
@@ -86,6 +86,7 @@ namespace Data.Tables
                     parameters.Add(name: "I_TipoAlumno", dbType: DbType.Int32, value: this.I_TipoAlumno);
                     parameters.Add(name: "I_Prioridad", dbType: DbType.Int32, value: this.I_Prioridad);
                     parameters.Add(name: "B_Obligacion", dbType: DbType.Boolean, value: this.B_Obligacion);
+                    parameters.Add(name: "Tbl_Cuentas", value: dataTable.AsTableValuedParameter("type_SelectItems"));
                     parameters.Add(name: "D_FecCre", dbType: DbType.DateTime, value: this.D_FecCre);
                     parameters.Add(name: "CurrentUserId", dbType: DbType.Int32, value: currentUserId);
 
@@ -107,7 +108,7 @@ namespace Data.Tables
             return result;
         }
 
-        public ResponseData Update(int currentUserId)
+        public ResponseData Update(int currentUserId, DataTable dataTable)
         {
             ResponseData result = new ResponseData();
             DynamicParameters parameters = new DynamicParameters();
@@ -121,6 +122,7 @@ namespace Data.Tables
                     parameters.Add(name: "I_Nivel", dbType: DbType.Int32, value: this.I_Nivel);
                     parameters.Add(name: "I_TipoAlumno", dbType: DbType.Int32, value: this.I_TipoAlumno);
                     parameters.Add(name: "I_Prioridad", dbType: DbType.Int32, value: this.I_Prioridad);
+                    parameters.Add(name: "Tbl_Cuentas", value: dataTable.AsTableValuedParameter("type_SelectItems"));
                     parameters.Add(name: "B_Obligacion", dbType: DbType.Boolean, value: this.B_Obligacion);
                     parameters.Add(name: "D_FecMod", dbType: DbType.DateTime, value: this.D_FecMod);
                     parameters.Add(name: "CurrentUserId", dbType: DbType.Int32, value: currentUserId);

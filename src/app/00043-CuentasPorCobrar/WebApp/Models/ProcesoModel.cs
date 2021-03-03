@@ -18,22 +18,48 @@ namespace WebApp.Models
             procesoService = new ProcesoService();
         }
 
-        public List<SelectViewModel> Listar_Combo_CategoriaPago()
+        public List<CategoriaProcesoViewModel> ObtenerCategoriasPorAnioGradoAcad(int anio, int gradoAcadId)
         {
-            List<SelectViewModel> result = new List<SelectViewModel>();
+            List<CategoriaProcesoViewModel> result = new List<CategoriaProcesoViewModel>();
 
-            var lista = procesoService.Listar_CategoriaPago_Habilitados();
-
-            if (lista != null)
+            foreach (var item in procesoService.Listar_CategoriaPago_Habilitados().Where(x => x.Nivel == gradoAcadId))
             {
-                result = lista.Select(x => new SelectViewModel() {
-                    Value = x.CategoriaId.ToString(),
-                    TextDisplay = x.Descripcion
-                }).ToList();
+                result.Add(new CategoriaProcesoViewModel()
+                {
+                    Id = item.CategoriaId,
+                    Nombre = $"{anio.ToString()} - {item.Descripcion}",
+                    CantidadProcesos = 0,
+                    CantidadConceptos = 0,
+                    TieneProcesos = false,
+                    TieneConceptos = false,
+                    Anio = anio,
+                    PeriodoId = 0
+                });
             }
 
             return result;
         }
+
+        public RegistroProcesoConceptosViewModel InitProcesoCategoria(int categoriaId, int anio)
+        {
+            CategoriaPagoModel categoriaModel = new CategoriaPagoModel();
+            var categoria = categoriaModel.Find(categoriaId);
+            RegistroProcesoConceptosViewModel result = new RegistroProcesoConceptosViewModel()
+            {
+                CategoriaId = categoriaId,
+                DescProceso = $"{anio.ToString()} - {categoria.Nombre}",
+                AnioProceso = anio,
+                PrioridadId = categoria.Prioridad,
+                CtasDepoId = categoria.CuentasDeposito
+            };
+
+            return result;
+        }
+
+
+
+
+
 
         public int Obtener_Prioridad_Tipo_Proceso(int I_CatPagoID)
         {

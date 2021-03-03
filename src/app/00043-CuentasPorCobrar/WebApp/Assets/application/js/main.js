@@ -18,7 +18,6 @@ function Stop() {
 }
 
 function Submited() {
-    console.log("here!!!")
     var submited = parseInt($("#submited").val());
     $("#submited").val(submited + 1);
 }

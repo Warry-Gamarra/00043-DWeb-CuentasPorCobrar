@@ -23,7 +23,9 @@ namespace Domain.Services
                 {
                     CategoriaId = x.I_CatPagoID,
                     Descripcion = x.T_CatPagoDesc,
-                    Prioridad = x.I_Prioridad
+                    Prioridad = x.I_Prioridad,
+                    Nivel = x.I_Nivel,
+                    TipoAlumno = x.I_TipoAlumno
                 }).ToList();
 
                 return result;

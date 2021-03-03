@@ -1,5 +1,6 @@
 ﻿@model IEnumerable<WebApp.ViewModels.ProcesoViewModel>
 
+
 @using GridMvc.Html
 
 <div class="container-fluid">
@@ -20,15 +21,15 @@
             <div class="card-body bg-light-gray">
                 <form>
                     <div class="form-row">
-                        <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
-                            <label for="inputAnio">Año</label>
-                            @Html.DropDownList("inputAnio", ViewBag.Anios as SelectList, new { Class = "form-control form-control-sm" })
+                        <div class="form-group col-lg-3 col-md-5 col-sm-8 col-6">
+                            <label for="inputConcepto">Nombre del concepto</label>
+                            @Html.DropDownList("inputConcepto", ViewBag.Conceptos as SelectList, "SELECCIONAR CONCEPTO", new { Class = "select-filter form-control" })
                         </div>
-                        <div class="form-group col-lg-2 col-md-4 col-sm-8 col-6">
-                            <label for="inputPeriodo">Periodo</label>
-                            @Html.DropDownList("inputPeriodo", ViewBag.PeriodosAcademicos as SelectList, new { Class = "form-control form-control-sm" })
+                        <div class="form-group col-lg-3 col-md-5 col-sm-8 col-6">
+                            <label for="inputDependencia">Dependencias</label>
+                            @Html.DropDownList("inputDependencia", ViewBag.Dependencias as SelectList, "TODAS LAS DEPENDENCIAS", new { Class = "select-filter form-control" })
                         </div>
-                        <div class="form-group col-lg-1 col-md-2 col-sm-3 col-12">
+                        <div class="form-group col-lg-1 col-sm-3 col-12">
                             <button type="submit" class="btn btn-block btn-outline-secondary mt-4"><i class="fa fa-fw fa-filter">&nbsp;</i> Filtrar</button>
                         </div>
                     </div>
@@ -37,41 +38,18 @@
         </div>
     </div>
     <div class="col-12">
-        @if (Model.Count() == 0)
-        {
-            <div class="card border-warning bg-transparent">
-                <div class="card-body text-center my-5">
-                    <p class="h5 mb-5">
-                        No se encontraron procesos para el año AAAA @ViewBag.AnioProcesos
-                    </p>
-                    <a href="@Url.Action("SeleccionarCategorias", "Procesos")" class="btn btn-lg btn-outline-yellow modal-link-lg">
-                        <i class="fa fa-calendar-plus-o"></i> Agregar Procesos
-                    </a>
-                </div>
-            </div>
 
-        }
-        else
-        {
-            <div class="table-responsive" style="min-height:300px">
-                @Html.Grid(Model).Columns(columns =>
-                    {
-                        columns.Add(c => c.T_CatPagoDesc).Titled("Descripción").Filterable(true);
-                        columns.Add(c => c.I_Anio).Titled("Año").Filterable(true);
-                        columns.Add(c => c.D_FecVencto).Format("{0:dd/MM/yyyy}").Titled("Fch. Vencimiento").Filterable(true);
-                        columns.Add(c => c.I_Prioridad).Titled("Prioridad").Filterable(true);
-                        columns.Add().SetWidth(200).Css("text-right").Encoded(false).Sanitized(false).
-                            RenderValueAs(model => @<a href="@Url.Action("Edit", "Procesos", new { id = model.I_ProcesoID })" class="modal-link"><i class="fa fa-pencil-square-o" aria-hidden="true">&nbsp;</i><span class="d-none d-md-inline-block">Editar</span></a>);
-                         }).WithPaging(10).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
-            </div>
-
-        }
-
-        <br />
+        <a href="@Url.Action("SeleccionarCategorias", "Procesos")" class="btn btn-lg btn-outline-yellow modal-link-lg">
+            <i class="fa fa-calendar-plus-o"></i> Agregar Procesos
+        </a>
     </div>
+
+
+
 </div>
 
 @section Scripts {
+
     @Scripts.Render("~/bundles/jqueryval")
 
     <script>

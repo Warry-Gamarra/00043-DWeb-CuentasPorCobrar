@@ -13,7 +13,7 @@ namespace Domain.Entities
     {
         private readonly TC_DependenciaUNFV _dependenciaRepository;
 
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public string Codigo { get; set; }
         public string CodigoPl { get; set; }
         public string Abreviatura { get; set; }

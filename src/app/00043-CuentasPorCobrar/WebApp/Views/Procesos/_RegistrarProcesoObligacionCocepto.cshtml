@@ -1,0 +1,226 @@
+﻿<link href="~/Assets/application/css/wizard-form.css" rel="stylesheet" />
+<script src="~/Assets/application/js/wizard-form.js"></script>
+
+@model WebApp.ViewModels.RegistroProcesoConceptosViewModel
+
+<div class="modal-header bg-dark-gray" style="border-radius: .2rem .2rem 0px 0px">
+    <h5 class="modal-title text-center"><i class="fa fa-tag">&nbsp;</i> @ViewBag.Title</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+
+@using (Ajax.BeginForm("Save", "Procesos", new { area = "" }, new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "div_msg", OnBegin = "Load", OnComplete = "Stop" }))
+{
+    <div class="modal-body">
+        <div class="container-fluid">
+            <!-- Tabs -->
+            <div id="wizard_verticle" class="form_wizard wizard_verticle mt-3">
+                <ul class="list-unstyled wizard_steps">
+                    <li>
+                        <a href="#step-11">
+                            <span class="step_no">1</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#step-22">
+                            <span class="step_no">2</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#step-33">
+                            <span class="step_no">3</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#step-44">
+                            <span class="step_no">4</span>
+                        </a>
+                    </li>
+                </ul>
+
+                @Html.HiddenFor(model => model.CategoriaId)
+
+                <div id="step-11">
+                    <h2 class="StepTitle border-bottom mb-4">Paso 1: Datos de la Cuota de Pago</h2>
+                    <div class="">
+                        @Html.HiddenFor(model => model.ProcesoId)
+                        @Html.HiddenFor(model => model.PrioridadId)
+
+                        <div class="form-group form-row">
+                            @Html.LabelFor(model => model.DescProceso, new { @class = "control-label" })
+                            @Html.TextBoxFor(model => model.DescProceso, new { @class = "form-control" })
+                            <p class="text-danger small">@Html.ValidationMessageFor(model => model.DescProceso)</p>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3 col-4">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.AnioProceso, new { @class = "control-label" })
+                                    @Html.TextBoxFor(model => model.AnioProceso, new { @class = "form-control", @readonly = "true" })
+                                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.AnioProceso)</p>
+                                </div>
+                            </div>
+                            <div class="col-sm-9 col-8">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.PerAcadId, new { @class = "control-label" })
+                                    @Html.DropDownListFor(model => model.PerAcadId, ViewBag.Periodos as SelectList, new { @class = "select-multiple form-control text-uppercase", @multiple = "true" })
+                                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.PerAcadId)</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4 col-12">
+                                <div class="form-group form-row">
+                                    @Html.LabelFor(model => model.FecVencto, new { @class = "control-label" })
+                                    <div class="input-group date" id="datepicker_fecvento">
+                                        @Html.TextBoxFor(model => model.FecVencto, "{0:dd/MM/yyyy}", new { @class = "form-control" })
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="fa fa-calendar-o"></i></span>
+                                        </div>
+                                        <p class="text-danger small">@Html.ValidationMessageFor(model => model.FecVencto)</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-8 col-12">
+                                @Html.LabelFor(model => model.CtasDepoId, new { @class = "control-label" })
+                                @Html.DropDownListFor(model => model.CtasDepoId, ViewBag.CtasDeposito as SelectList, new { @class = "select-multiple form-control text-uppercase", multiple = "true" })
+                                <p class="text-danger small">@Html.ValidationMessageFor(model => model.CtasDepoId)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="step-22">
+                    <h2 class="StepTitle border-bottom mb-4">Paso 2: Agregar Conceptos</h2>
+                    <div class="form-group form-row">
+                        <label for="inputConcepto" class="control-label col-sm-3 text-right">Buscar concepto:</label>
+                        <div class="col-sm-7">
+                            @Html.DropDownList("inputConcepto", ViewBag.Conceptos as SelectList, "", new { Class = "select-concepto form-control" })
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="button" id="btn-agregar" class="btn btn-sm btn-outline-secondary"><i class="fa fa-plus">&nbsp;</i> Agregar</button>
+                        </div>
+                    </div>
+                    <div id="table-conceptos">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Concepto</th>
+                                    <th>Mod. Ing.</th>
+                                    <th>Calculado</th>
+                                    <th style="width:100px;">Monto Mínimo</th>
+                                    <th style="width:100px;">Monto</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div id="step-33">
+                    <h2 class="StepTitle">Paso 3: Seleccionar dependencias </h2>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                    </p>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                    </p>
+                </div>
+                <div id="step-44">
+                    <h2 class="StepTitle">Paso 4: Finalizar</h2>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                    </p>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                    </p>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#wizard_verticle').smartWizard({
+            transitionEffect: 'slide',
+            labelNext: 'Siguiente', // label for Next button
+            labelPrevious: 'Atrás', // label for Previous button
+            labelFinish: 'Finalizar',  // label for Finish button
+        });
+
+        $('.select-multiple, .select-concepto').select2({
+            dropdownParent: $('#modal-container-xl')
+        }).on('hide', function (e) {
+            e.stopPropagation();
+        });
+
+        $().button('toggle');
+
+        $('#datepicker_fecvento .input-group.date').datepicker({
+            todayBtn: 'linked',
+            language: 'es',
+            format: 'dd/MM/yyyy',
+            autoclose: true,
+            startDate: '-0d',
+            weekStart: 0,
+            orientation: 'top left',
+            calendarWeeks: true,
+        }).on('hide', function (e) {
+            e.stopPropagation();
+        });
+
+        let conceptos = [];
+
+        $('#btn-agregar').on('click', function (event) {
+            event.preventDefault();
+
+            let selectedText = $('#inputConcepto option:selected').text();
+            let selectedValue = $('#inputConcepto').val();
+
+            if (selectedValue === "" || selectedValue == null) {
+                return false;
+            }
+
+            conceptos.push({ "id": selectedValue, "descripcion": selectedText });
+
+            $('#inputConcepto option[value="' + selectedValue + '"]').remove();
+            drawTable(conceptos);
+        })
+
+        $('#table-conceptos>table>tbody').on('click', 'button.remove-item', function (event) {
+            event.preventDefault();
+
+            let indexRow = $(this).data('index');
+            let conceptoDesc = conceptos[indexRow]['descripcion'];
+            let opt = new Option(conceptos[indexRow]['id'], conceptoDesc);
+
+            conceptos.splice(indexRow, 1);
+            drawTable(conceptos);
+
+            $(opt).html(conceptoDesc);
+            $('#inputConcepto').append(opt);
+        });
+
+        function drawTable(conceptos) {
+            let rowsTemplate = ''
+            $.each(conceptos, function (index, itemValue) {
+                rowsTemplate += `<tr>
+                                <td> ${itemValue.descripcion} </td>
+                                <td>  </td>
+                                <td><input type="checkbox" class="" id="${itemValue.id}" name="calculado" /></td>
+                                <td><input type="number" class="form-control input-sm" id="monto_min_${index}" name="monto_min" /></td>
+                                <td><input type="number" class="form-control input-sm" id="monto_${index}" name="monto" /></td>
+                                <td><button class="btn btn-sm btn-outline-danger remove-item" data-index="${index}"><i class="fa fa-trash-o"></i></button></td>
+                            </tr>`;
+            })
+
+            $('#table-conceptos>table>tbody').html(rowsTemplate);
+        }
+
+    })
+
+</script>

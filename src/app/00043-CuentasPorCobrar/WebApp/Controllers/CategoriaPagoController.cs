@@ -15,11 +15,13 @@ namespace WebApp.Controllers
     {
         private readonly CategoriaPagoModel _categoriaPago;
         private readonly ConceptoPagoModel _conceptoPago;
+        private readonly CuentaDepositoModel _cuentasDeposito;
 
         public CategoriaPagoController()
         {
             _categoriaPago = new CategoriaPagoModel();
             _conceptoPago = new ConceptoPagoModel();
+            _cuentasDeposito = new CuentaDepositoModel();
         }
 
         [Route("mantenimiento/categorias-de-pago")]
@@ -39,7 +41,7 @@ namespace WebApp.Controllers
 
             ViewBag.Niveles = new SelectList(_conceptoPago.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.Grado), "Value", "TextDisplay");
             ViewBag.TiposAlumno = new SelectList(_conceptoPago.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.TipoAlumno), "Value", "TextDisplay");
-            ViewBag.Prioridades = new SelectList(_conceptoPago.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.TipoAlumno), "Value", "TextDisplay");
+            ViewBag.CtasDeposito = new SelectList(_cuentasDeposito.Find(), "Id", "NumeroCuenta");
 
             return PartialView("_RegistrarCategoria", new CategoriaPagoRegistroViewModel());
         }
@@ -52,7 +54,7 @@ namespace WebApp.Controllers
 
             ViewBag.Niveles = new SelectList(_conceptoPago.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.Grado), "Value", "TextDisplay");
             ViewBag.TiposAlumno = new SelectList(_conceptoPago.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.TipoAlumno), "Value", "TextDisplay");
-            ViewBag.Prioridades = new SelectList(_conceptoPago.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.TipoAlumno), "Value", "TextDisplay");
+            ViewBag.CtasDeposito = new SelectList(_cuentasDeposito.Find(), "Id", "NumeroCuenta");
 
             return PartialView("_RegistrarCategoria", _categoriaPago.Find(id));
         }
