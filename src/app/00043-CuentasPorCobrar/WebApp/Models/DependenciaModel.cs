@@ -30,33 +30,45 @@ namespace WebApp.Models
             return result;
         }
 
-        public List<DependenciaViewModel> Find(int annexeId)
+        public DependenciaRegistroViewModel Find(int dependenciaId)
         {
-            var result = new List<DependenciaViewModel>();
+            var model = _dependencia.Find(dependenciaId);
 
+            return new DependenciaRegistroViewModel(model);
+        }
+
+        public Response ChangeState(int depemdemciaId, bool stateValue, int currentUserId, string returnUrl)
+        {
+            Response result = _dependencia.ChangeState(depemdemciaId, stateValue, currentUserId);
+
+            result.Redirect = returnUrl;
 
             return result;
         }
 
-        public Response ChangeState(int annexeId, bool stateValue, string returnUrl)
+        public Response Save(DependenciaRegistroViewModel model, int currentUserId)
         {
-            var result = new Response();
+            Dependencia dependencia = new Dependencia()
+            {
+                Id = model.DependenciaID,
+                Descripcion = model.DependDesc,
+                Codigo = model.CodDep,
+                CodigoPl = model.CodDepPL,
+                Abreviatura = model.DependAbrev,
+            };
 
+            Response result = _dependencia.Save(dependencia, currentUserId, (model.DependenciaID.HasValue ? SaveOption.Update : SaveOption.Insert));
 
+            if (result.Value)
+            {
+                result.Success(false);
+            }
+            else
+            {
+                result.Error(true);
+            }
             return result;
-        }
-
-        public Response Save(DependenciaViewModel annexeViewModel, int currentUserId)
-        {
-            var result = new Response();
-
-
             return result;
-        }
-
-        internal object ChangeState(int rowID, bool b_habilitado, int currentUserId, string v)
-        {
-            throw new NotImplementedException();
         }
     }
 }

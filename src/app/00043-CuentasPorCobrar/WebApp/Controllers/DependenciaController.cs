@@ -31,20 +31,22 @@ namespace WebApp.Controllers
 
         [Route("mantenimiento/dependencia/nuevo")]
         [HttpGet]
-        public ActionResult New()
+        public ActionResult Create()
         {
             var model = _dependenciaModel.Find();
+            ViewBag.Title = "Agregar Dependencias";
 
-            return PartialView(model);
+            return PartialView("_RegistrarDependencia", model);
         }
 
         [Route("mantenimiento/dependencia/editar/{id}")]
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            var model = _dependenciaModel.Find();
+            ViewBag.Title = "Editar Dependencias";
+            var model = _dependenciaModel.Find(id);
 
-            return PartialView(model);
+            return PartialView("_RegistrarDependencia", model);
         }
 
         public JsonResult ChangeState(int RowID, bool B_habilitado)
@@ -56,7 +58,7 @@ namespace WebApp.Controllers
 
 
         [HttpPost]
-        public ActionResult Save(DependenciaViewModel model)
+        public ActionResult Save(DependenciaRegistroViewModel model)
         {
             Response result = new Response();
 

@@ -965,12 +965,10 @@ BEGIN
 		WHEN NOT MATCHED BY TARGET THEN 
 				INSERT (I_CatPagoID, I_CtaDepositoID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
 				VALUES	(@I_CatPagoID, SRC.C_ID, SRC.B_Habilitado, 0, @CurrentUserId, @D_FecCre)
-		WHEN NOT MATCHED BY SOURCE THEN 
+		WHEN NOT MATCHED BY SOURCE AND TRG.I_CatPagoID = @I_CatPagoID THEN 
 				UPDATE SET TRG.B_Habilitado = 0,
 					       TRG.D_FecMod = @D_FecCre,
 					       TRG.I_UsuarioMod = @CurrentUserId;
-
-
 
 		SET @B_Result = 1
 		SET @T_Message = 'Nuevo registro agregado.'
@@ -1025,11 +1023,11 @@ BEGIN
 					   TRG.I_UsuarioMod = @CurrentUserId
 		WHEN NOT MATCHED BY TARGET THEN 
 			INSERT (I_CatPagoID, I_CtaDepositoID, B_Habilitado,B_Eliminado, I_UsuarioCre, D_FecCre)
-			VALUES	(@I_CatPagoID, SRC.C_ID, SRC.B_Habilitado, 0, @CurrentUserId, @D_FecMod);
-		--WHEN NOT MATCHED BY SOURCE THEN 
-		--	UPDATE SET TRG.B_Habilitado = 0,
-		--			   TRG.D_FecMod = @D_FecMod,
-		--			   TRG.I_UsuarioMod = @CurrentUserId;
+			VALUES	(@I_CatPagoID, SRC.C_ID, SRC.B_Habilitado, 0, @CurrentUserId, @D_FecMod)
+		WHEN NOT MATCHED BY SOURCE AND TRG.I_CatPagoID = @I_CatPagoID THEN 
+				UPDATE SET TRG.B_Habilitado = 0,
+					       TRG.D_FecMod = @D_FecMod,
+					       TRG.I_UsuarioMod = @CurrentUserId;
 
 		SET @B_Result = 1
 		SET @T_Message = 'Actualización de datos correcta'
@@ -1284,6 +1282,120 @@ BEGIN
 				D_FecMod = @D_FecMod,
 				I_UsuarioMod = @CurrentUserId
 				WHERE I_ClasificadorID = @I_ClasificadorID
+			
+		SET @B_Result = 1
+		SET @T_Message = 'Actualización de datos correcta'
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+END
+GO
+
+
+/*-----------------------------------------------------------*/
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_GrabarDependencia')
+	DROP PROCEDURE [dbo].[USP_I_GrabarDependencia]
+GO
+
+CREATE PROCEDURE [dbo].[USP_I_GrabarDependencia]
+	 @I_DependenciaID	int
+	,@C_DepCod			varchar(20)
+	,@C_DepCodPl		varchar(20)
+	,@T_DepDesc			varchar(150)
+	,@T_DepAbrev		varchar(10)
+	,@D_FecCre			datetime
+	,@CurrentUserId		int
+
+	,@B_Result bit OUTPUT
+	,@T_Message nvarchar(4000) OUTPUT	
+AS
+BEGIN
+  SET NOCOUNT ON
+	BEGIN TRANSACTION
+  	BEGIN TRY
+		
+		INSERT INTO TC_DependenciaUNFV(T_DepDesc,T_DepAbrev, C_DepCod, C_DepCodPl, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
+								VALUES	 (@T_DepDesc, @T_DepAbrev, @C_DepCod, @C_DepCodPl, 1, 0, @CurrentUserId, @D_FecCre)
+
+		COMMIT TRANSACTION
+
+		SET @B_Result = 1
+		SET @T_Message = 'Nuevo registro agregado.'
+	END TRY
+	BEGIN CATCH
+		ROLLBACK TRANSACTION
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+END
+GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarDependencia')
+	DROP PROCEDURE [dbo].[USP_U_ActualizarDependencia]
+GO
+
+CREATE PROCEDURE [dbo].[USP_U_ActualizarDependencia]
+	 @I_DependenciaID	int
+	,@C_DepCod			varchar(20)
+	,@C_DepCodPl		varchar(20)
+	,@T_DepDesc			varchar(150)
+	,@T_DepAbrev		varchar(10)
+	,@D_FecMod  		datetime
+	,@CurrentUserId		int
+
+	,@B_Result bit OUTPUT
+	,@T_Message nvarchar(4000) OUTPUT	
+AS
+BEGIN
+  SET NOCOUNT ON
+  	BEGIN TRY
+	UPDATE	TC_DependenciaUNFV 
+		SET	T_DepDesc = @T_DepDesc
+			, T_DepAbrev = @T_DepAbrev
+			, C_DepCod = @C_DepCod
+			, C_DepCodPl = @C_DepCodPl
+			, I_UsuarioMod = @CurrentUserId
+			, D_FecMod = @D_FecMod
+		WHERE I_DependenciaID = @I_DependenciaID
+			
+		SET @B_Result = 1
+		SET @T_Message = 'Actualización de datos correcta'
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+
+END
+GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarEstadoDependencia')
+	DROP PROCEDURE [dbo].[USP_U_ActualizarEstadoDependencia]
+GO
+
+CREATE PROCEDURE [dbo].[USP_U_ActualizarEstadoDependencia]
+	 @I_DependenciaID	int
+	,@B_Habilitado		bit
+	,@D_FecMod			datetime
+	,@CurrentUserId		int
+
+	,@B_Result bit OUTPUT
+	,@T_Message nvarchar(4000) OUTPUT	
+AS
+BEGIN
+  SET NOCOUNT ON
+  	BEGIN TRY
+		UPDATE	TC_DependenciaUNFV 
+		SET		B_Habilitado = @B_Habilitado,
+				I_UsuarioMod = @CurrentUserId,
+				D_FecMod = @D_FecMod
+				WHERE	I_DependenciaID = @I_DependenciaID
 			
 		SET @B_Result = 1
 		SET @T_Message = 'Actualización de datos correcta'
@@ -2101,3 +2213,6 @@ GO
 --@B_Result OUTPUT,
 --@T_Message OUTPUT
 --go
+
+
+

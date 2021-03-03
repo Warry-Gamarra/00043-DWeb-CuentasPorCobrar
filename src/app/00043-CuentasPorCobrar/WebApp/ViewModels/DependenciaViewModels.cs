@@ -11,9 +11,8 @@ namespace WebApp.ViewModels
     public class DependenciaViewModel
     {
         public int? DependenciaID { get; set; }
-
         public string CodDep { get; set; }
-
+        public string CodDepPl { get; set; }
         public string DependDesc { get; set; }
         public string TipoDependencia { get; set; }
 
@@ -27,6 +26,7 @@ namespace WebApp.ViewModels
         {
             this.DependenciaID = model.Id;
             this.CodDep = model.Codigo;
+            this.CodDepPl = model.CodigoPl;
             this.DependDesc = model.Descripcion;
             this.TipoDependencia = model.EsAcademico ? "ACADÉMICO" : "ADMINISTRATIVO";
             this.Academico = model.EsAcademico;
@@ -40,18 +40,25 @@ namespace WebApp.ViewModels
         public int? DependenciaID { get; set; }
 
         [Display(Name = "Código ")]
+        [Required]
+        [StringLength(20)]
         public string CodDep { get; set; }
 
         [Display(Name = "Código PL")]
+        [Required]
+        [StringLength(20)]
         public string CodDepPL { get; set; }
 
         [Display(Name = "Siglas")]
+        [StringLength(10)]
         public string DependAbrev { get; set; }
 
-        [Display(Name = "Nombre")]
+        [Display(Name = "Descripción")]
+        [Required]
+        [StringLength(150)]
         public string DependDesc { get; set; }
 
-        [Display(Name = "Dependencia Académica")]
+        [Display(Name = "Tipo de Dependencia")]
         public bool Academico { get; set; }
 
 
@@ -63,6 +70,7 @@ namespace WebApp.ViewModels
             this.DependenciaID = model.Id;
             this.CodDep = model.Codigo;
             this.CodDepPL = model.CodigoPl;
+            this.DependDesc = model.Descripcion;
             this.DependAbrev = model.Abreviatura;
             this.Academico = model.EsAcademico;
         }

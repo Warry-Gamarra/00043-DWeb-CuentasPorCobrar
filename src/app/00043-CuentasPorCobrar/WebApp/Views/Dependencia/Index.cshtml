@@ -8,7 +8,7 @@
                 <ol class="breadcrumb float-right small d-none d-sm-inline-flex">
                     <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")"><i class="fa fa-home">&nbsp;</i>Inicio</a></li>
                     <li class="breadcrumb-item"><span><i class="fa bi-tools">&nbsp;</i>Mantenimiento </span></li>
-                    <li class="breadcrumb-item active"><span><i class="fa fa-fort-awesome">&nbsp;</i>@ViewBag.Title </span></li>
+                    <li class="breadcrumb-item active"><span><i class="fa bi-building">&nbsp;</i>@ViewBag.Title </span></li>
                 </ol>
             </nav>
             <h1 class="">@ViewBag.Title <small></small></h1>
@@ -17,8 +17,8 @@
     <br />
 
     <div class="col-12">
-        <a href="@Url.Action("PredioAgregar", "Configuracion")" class="btn btn-primary float-right modal-link">
-            <i class="fa fa-fort-awesome"></i> Agregar Dependendencia
+        <a href="@Url.Action("Create", "Dependencia")" class="btn btn-primary float-right modal-link">
+            <i class="fa bi-building"></i> Agregar Dependendencia
         </a>
 
         <p class="h3"><small>Dependencias registradas</small></p>
@@ -29,6 +29,7 @@
             @Html.Grid(Model).Columns(columns =>
                                     {
                                         columns.Add(c => c.CodDep).Titled("Código").Filterable(true);
+                                        columns.Add(c => c.CodDepPl).Titled("Cod. Planif.").Filterable(true);
                                         columns.Add(c => c.DependDesc).Titled("Descripción").Filterable(true);
                                         columns.Add(c => c.TipoDependencia).Filterable(true).Titled("Tipo de dependencia");
 
