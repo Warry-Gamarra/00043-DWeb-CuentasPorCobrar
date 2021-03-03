@@ -573,6 +573,7 @@ CREATE TABLE TC_CuentaDeposito
 ( 
 	I_CtaDepositoID      int IDENTITY ( 1,1 ) ,
 	I_EntidadFinanID     int  NULL ,
+	T_DescCuenta         varchar(150)  NULL ,
 	C_NumeroCuenta       varchar(50)  NOT NULL ,
 	T_Observacion        varchar(500)  NULL ,
 	B_Habilitado         bit  NOT NULL ,

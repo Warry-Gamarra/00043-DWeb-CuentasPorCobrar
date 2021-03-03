@@ -510,6 +510,7 @@
     <Content Include="Views\Pagos\ExportarDatosPago.cshtml" />
     <Content Include="Views\Procesos\ObligacionesProcesosAnio.cshtml" />
     <Content Include="Views\Procesos\_CategoriasEstado.cshtml" />
+    <Content Include="Views\EntidadFinanciera\_CuentasBanco.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

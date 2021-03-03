@@ -169,7 +169,7 @@ CREATE PROCEDURE dbo.USP_S_CuentaDeposito_Habilitadas
 AS
 BEGIN
 	SET NOCOUNT ON;
-	SELECT cd.I_CtaDepositoID, cd.C_NumeroCuenta, ef.T_EntidadDesc FROM dbo.TC_CuentaDeposito_CategoriaPago cp
+	SELECT cd.I_CtaDepositoID, cd.T_DescCuenta, cd.C_NumeroCuenta, ef.T_EntidadDesc FROM dbo.TC_CuentaDeposito_CategoriaPago cp
 	INNER JOIN dbo.TC_CuentaDeposito cd ON cp.I_CtaDepositoID = cd.I_CtaDepositoID
 	INNER JOIN dbo.TC_EntidadFinanciera ef ON ef.I_EntidadFinanID = cd.I_EntidadFinanID
 	WHERE cp.B_Habilitado = 1 AND cp.B_Eliminado = 0 AND 
@@ -813,6 +813,7 @@ GO
 CREATE PROCEDURE [dbo].[USP_I_GrabarCuentaDeposito]
 	 @I_CtaDepositoID	int
 	,@I_EntidadFinanID	int
+	,@T_DescCuenta		varchar(150)
 	,@C_NumeroCuenta	varchar(50)
 	,@T_Observacion		varchar(500)
 	,@D_FecCre			datetime
@@ -824,8 +825,8 @@ AS
 BEGIN
   SET NOCOUNT ON
   	BEGIN TRY
-		INSERT INTO TC_CuentaDeposito(I_EntidadFinanID, C_NumeroCuenta, T_Observacion, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
-								VALUES	 (@I_EntidadFinanID, @C_NumeroCuenta, @T_Observacion, 1, 0, @CurrentUserId, @D_FecCre)
+		INSERT INTO TC_CuentaDeposito(I_EntidadFinanID, T_DescCuenta, C_NumeroCuenta, T_Observacion, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
+								VALUES	 (@I_EntidadFinanID, @T_DescCuenta, @C_NumeroCuenta, @T_Observacion, 1, 0, @CurrentUserId, @D_FecCre)
 
 		SET @B_Result = 1
 		SET @T_Message = 'Nuevo registro agregado.'
@@ -846,6 +847,7 @@ GO
 CREATE PROCEDURE [dbo].[USP_U_ActualizarCuentaDeposito]
 	 @I_CtaDepositoID	int
 	,@I_EntidadFinanID	int
+	,@T_DescCuenta		varchar(150)
 	,@C_NumeroCuenta	varchar(50)
 	,@T_Observacion		varchar(500)
 	,@D_FecMod			datetime
@@ -858,7 +860,8 @@ BEGIN
   SET NOCOUNT ON
   	BEGIN TRY
 	UPDATE	TC_CuentaDeposito 
-		SET	C_NumeroCuenta = @C_NumeroCuenta
+		SET	T_DescCuenta = @T_DescCuenta
+			, C_NumeroCuenta = @C_NumeroCuenta
 			, I_EntidadFinanID = @I_EntidadFinanID
 			, T_Observacion = @T_Observacion
 		WHERE I_CtaDepositoID = @I_CtaDepositoID
@@ -1022,11 +1025,11 @@ BEGIN
 					   TRG.I_UsuarioMod = @CurrentUserId
 		WHEN NOT MATCHED BY TARGET THEN 
 			INSERT (I_CatPagoID, I_CtaDepositoID, B_Habilitado,B_Eliminado, I_UsuarioCre, D_FecCre)
-			VALUES	(@I_CatPagoID, SRC.C_ID, SRC.B_Habilitado, 0, @CurrentUserId, @D_FecMod)
-		WHEN NOT MATCHED BY SOURCE THEN 
-			UPDATE SET TRG.B_Habilitado = 0,
-					   TRG.D_FecMod = @D_FecMod,
-					   TRG.I_UsuarioMod = @CurrentUserId;
+			VALUES	(@I_CatPagoID, SRC.C_ID, SRC.B_Habilitado, 0, @CurrentUserId, @D_FecMod);
+		--WHEN NOT MATCHED BY SOURCE THEN 
+		--	UPDATE SET TRG.B_Habilitado = 0,
+		--			   TRG.D_FecMod = @D_FecMod,
+		--			   TRG.I_UsuarioMod = @CurrentUserId;
 
 		SET @B_Result = 1
 		SET @T_Message = 'Actualización de datos correcta'
@@ -2091,10 +2094,10 @@ END
 GO
 
 
-declare @B_Result bit,
-		@T_Message nvarchar(4000)
+--declare @B_Result bit,
+--		@T_Message nvarchar(4000)
 
-exec USP_IU_GenerarObligacionesPosgrado_X_Ciclo  2021, 15, 1,
-@B_Result OUTPUT,
-@T_Message OUTPUT
-go
+--exec USP_IU_GenerarObligacionesPosgrado_X_Ciclo  2021, 15, 1,
+--@B_Result OUTPUT,
+--@T_Message OUTPUT
+--go

@@ -12,6 +12,7 @@ namespace Domain.Entities
     public class CuentaDeposito: ICuentaDeposito
     {
         public int I_CtaDepID { get; set; }
+        public string T_DescCuenta { get; set; }
         public string C_NumeroCuenta { get; set; }
         public int I_EntidadFinanId { get; set; }
         public string T_EntidadDesc { get; set; }
@@ -33,6 +34,7 @@ namespace Domain.Entities
         public CuentaDeposito(TC_CuentaDeposito table)
         {
             this.I_CtaDepID = table.I_CtaDepositoID;
+            this.T_DescCuenta = table.T_DescCuenta;
             this.C_NumeroCuenta = table.C_NumeroCuenta;
             this.I_EntidadFinanId = table.I_EntidadFinanID;
             this.T_EntidadDesc = table.T_EntidadDesc;
@@ -84,6 +86,7 @@ namespace Domain.Entities
         {
             _ctaDepRepository.I_CtaDepositoID = cuentaDeposito.I_CtaDepID;
             _ctaDepRepository.I_EntidadFinanID = cuentaDeposito.I_EntidadFinanId;
+            _ctaDepRepository.T_DescCuenta = cuentaDeposito.T_DescCuenta;
             _ctaDepRepository.C_NumeroCuenta = cuentaDeposito.C_NumeroCuenta;
             _ctaDepRepository.T_Observacion = cuentaDeposito.T_Observacion;
             _ctaDepRepository.B_Habilitado = cuentaDeposito.Habilitado;

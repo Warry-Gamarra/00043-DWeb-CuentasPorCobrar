@@ -23,7 +23,7 @@ namespace WebApp.Controllers
         }
 
 
-        [Route("configuracion/numeros-de-cuenta")]
+        [Route("mantenimiento/numeros-de-cuenta")]
         public ActionResult Index()
         {
             ViewBag.Title = "Números de cuenta";
@@ -31,7 +31,7 @@ namespace WebApp.Controllers
             return View(_cuentaDeposito.Find());
         }
 
-        [Route("configuracion/numeros-de-cuenta/nuevo")]
+        [Route("mantenimiento/numeros-de-cuenta/nuevo")]
         [HttpGet]
         public ActionResult Create()
         {
@@ -41,7 +41,7 @@ namespace WebApp.Controllers
             return PartialView("_RegistrarCuentaDeposito", new CuentaDepositoRegistroViewModel());
         }
 
-        [Route("configuracion/numeros-de-cuenta/editar/{id}")]
+        [Route("mantenimiento/numeros-de-cuenta/editar/{id}")]
         [HttpGet]
         public ActionResult Edit(int id)
         {

@@ -30,8 +30,8 @@
             @Html.Grid(Model).Columns(columns =>
                             {
                                 columns.Add(c => c.EntidadFinanciera).Titled("Entidad Financiera").Filterable(true);
+                                columns.Add(c => c.Descripcion).Titled("Descripción").Filterable(true);
                                 columns.Add(c => c.NumeroCuenta).Titled("Nro. Cuenta").Filterable(true);
-                                columns.Add(c => c.Observacion).Titled("Observaciones").Filterable(true);
                                 columns.Add(c => c.Habilitado).SetWidth(100).Css("text-center").Encoded(false).Sanitized(false)
                                        .RenderValueAs(model => model.Habilitado ?
                                                                             @Html.Raw("<span id=\"td" + @model.Id + "\"><button type=\"submit\" class=\"btn btn-xs btn-success\" onclick=\"ChangeStateReloadPage(" + @model.Id + ", " + @model.Habilitado.ToString().ToLower() + ", '" + @Url.Action("ChangeState", "CuentaDeposito") + "');\"><i class=\"fa fa-check-circle-o\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Habilitado</span></button></span>")
