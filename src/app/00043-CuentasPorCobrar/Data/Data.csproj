@@ -97,6 +97,8 @@
     <Compile Include="Tables\TI_CtaDepo_Proceso.cs" />
     <Compile Include="Tables\TI_TipoArchivo_EntidadFinanciera.cs" />
     <Compile Include="Tables\Webpages_Roles.cs" />
+    <Compile Include="Views\VW_CuotasPago.cs" />
+    <Compile Include="Views\VW_DetalleObligaciones.cs" />
     <Compile Include="Views\VW_Usuario.cs" />
     <Compile Include="Tables\TS_CorreoAplicacion.cs" />
   </ItemGroup>

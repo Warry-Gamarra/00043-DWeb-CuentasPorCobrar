@@ -1579,6 +1579,8 @@ GO
 CREATE PROCEDURE [dbo].[USP_IU_GenerarObligacionesPregrado_X_Ciclo]
 @I_Anio int,
 @I_Periodo int,
+@C_CodAlu varchar(20) = null,
+@C_CodRc varchar(3) = null,
 @I_UsuarioCre int,
 @B_Result bit OUTPUT,
 @T_Message nvarchar(4000) OUTPUT
@@ -1608,11 +1610,19 @@ BEGIN
 	declare @Tmp_MatriculaAlumno table (id int identity(1,1), I_MatAluID int, C_CodRc varchar(3), C_CodAlu varchar(20), C_EstMat varchar(2), B_Ingresante bit, C_CodModIng varchar(2), N_Grupo char(1), I_CredDesaprob tinyint)
 	declare @Tmp_Procesos table (I_ProcesoID int, I_ConcPagID int, M_Monto decimal(15,2))
 
-	insert @Tmp_MatriculaAlumno(I_MatAluID, C_CodRc, C_CodAlu, C_EstMat, B_Ingresante, C_CodModIng, N_Grupo, I_CredDesaprob)
-	select m.I_MatAluID, m.C_CodRc, m.C_CodAlu, m.C_EstMat, m.B_Ingresante, a.C_CodModIng, a.N_Grupo, ISNULL(m.I_CredDesaprob, 0) from dbo.TC_MatriculaAlumno m 
-	inner join BD_UNFV_Repositorio.dbo.VW_Alumnos a ON a.C_CodAlu = m.C_CodAlu and a.C_RcCod = m.C_CodRc
-	where m.B_Habilitado = 1 and m.B_Eliminado = 0 and a.N_Grado = @I_Bachiller and
-		m.I_Anio = @I_Anio and m.I_Periodo = @I_Periodo
+	if (@C_CodAlu is not null) and (@C_CodRc is not null) begin
+		insert @Tmp_MatriculaAlumno(I_MatAluID, C_CodRc, C_CodAlu, C_EstMat, B_Ingresante, C_CodModIng, N_Grupo, I_CredDesaprob)
+		select m.I_MatAluID, m.C_CodRc, m.C_CodAlu, m.C_EstMat, m.B_Ingresante, a.C_CodModIng, a.N_Grupo, ISNULL(m.I_CredDesaprob, 0) from dbo.TC_MatriculaAlumno m 
+		inner join BD_UNFV_Repositorio.dbo.VW_Alumnos a ON a.C_CodAlu = m.C_CodAlu and a.C_RcCod = m.C_CodRc
+		where m.B_Habilitado = 1 and m.B_Eliminado = 0 and a.N_Grado = @I_Bachiller and
+			m.I_Anio = @I_Anio and m.I_Periodo = @I_Periodo and m.C_CodAlu = @C_CodAlu and m.C_CodRc = @C_CodRc
+	end else begin
+		insert @Tmp_MatriculaAlumno(I_MatAluID, C_CodRc, C_CodAlu, C_EstMat, B_Ingresante, C_CodModIng, N_Grupo, I_CredDesaprob)
+		select m.I_MatAluID, m.C_CodRc, m.C_CodAlu, m.C_EstMat, m.B_Ingresante, a.C_CodModIng, a.N_Grupo, ISNULL(m.I_CredDesaprob, 0) from dbo.TC_MatriculaAlumno m 
+		inner join BD_UNFV_Repositorio.dbo.VW_Alumnos a ON a.C_CodAlu = m.C_CodAlu and a.C_RcCod = m.C_CodRc
+		where m.B_Habilitado = 1 and m.B_Eliminado = 0 and a.N_Grado = @I_Bachiller and
+			m.I_Anio = @I_Anio and m.I_Periodo = @I_Periodo
+	end
 
 	declare @C_Moneda varchar(3) = 'PEN',
 			@D_CurrentDate datetime = getdate(),
@@ -1627,8 +1637,8 @@ BEGIN
 			@I_Pensiones int = 13,
 			----------------------------
 			@I_MatAluID int,
-			@C_CodRc varchar(3),
-			@C_CodAlu varchar(20),
+			--@C_CodRc varchar(3),
+			--@C_CodAlu varchar(20),
 			@C_EstMat varchar(2),
 			@C_CodModIng varchar(2),
 			@N_Grupo char(1),
@@ -2039,10 +2049,8 @@ BEGIN
 
 		set @I_Posicion = (@I_Posicion +1)
 	end
-END
-GO
 
-
+/*
 declare @B_Result bit,
 		@T_Message nvarchar(4000)
 
@@ -2050,3 +2058,43 @@ exec USP_IU_GenerarObligacionesPosgrado_X_Ciclo  2021, 15, 1,
 @B_Result OUTPUT,
 @T_Message OUTPUT
 go
+*/
+END
+GO
+
+
+
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_DetalleObligaciones')
+	DROP VIEW [dbo].[VW_DetalleObligaciones]
+GO
+
+
+CREATE VIEW [dbo].[VW_DetalleObligaciones]
+AS
+SELECT pro.I_ProcesoID, mat.C_CodAlu, mat.C_CodRc, mat.I_Anio, mat.I_Periodo, per.T_OpcionDesc AS T_Periodo, 
+	con.T_ConceptoDesc, cat.T_CatPagoDesc, det.I_Monto, det.B_Pagado, det.D_FecVencto,
+	pro.I_Prioridad
+FROM dbo.TC_MatriculaAlumno mat
+INNER JOIN dbo.TR_ObligacionAluCab cab ON cab.I_MatAluID = mat.I_MatAluID AND cab.B_Eliminado = 0 
+INNER JOIN dbo.TR_ObligacionAluDet det ON det.I_ObligacionAluID = cab.I_ObligacionAluID AND det.B_Eliminado = 0
+INNER JOIN dbo.TI_ConceptoPago cp ON cp.I_ConcPagID = det.I_ConcPagID AND det.B_Eliminado = 0
+INNER JOIN dbo.TC_Concepto con ON con.I_ConceptoID = cp.I_ConceptoID AND con.B_Eliminado = 0
+INNER JOIN dbo.TC_Proceso pro ON pro.I_ProcesoID = cp.I_ProcesoID AND pro.B_Eliminado = 0
+INNER JOIN dbo.TC_CategoriaPago cat ON cat.I_CatPagoID = pro.I_CatPagoID AND cat.B_Eliminado = 0
+INNER JOIN dbo.TC_CatalogoOpcion per ON per.I_OpcionID = mat.I_Periodo
+WHERE mat.B_Eliminado = 0
+GO
+
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_CuotaPago')
+	DROP VIEW [dbo].[VW_CuotaPago]
+GO
+
+CREATE VIEW [dbo].[VW_CuotaPago]
+AS
+SELECT d.I_ProcesoID, d.I_Anio, d.I_Periodo, d.C_CodAlu, d.C_CodRc, d.T_Periodo, d.T_CatPagoDesc, SUM(d.I_Monto) AS I_MontoTotal, d.D_FecVencto FROM VW_DetalleObligaciones d
+GROUP BY d.I_ProcesoID, d.I_Anio, d.I_Periodo, d.C_CodAlu, d.C_CodRc, d.T_Periodo, d.T_CatPagoDesc, d.D_FecVencto
+GO
+
+

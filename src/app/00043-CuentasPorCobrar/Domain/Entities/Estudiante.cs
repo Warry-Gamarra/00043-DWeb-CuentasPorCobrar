@@ -1,4 +1,5 @@
 ﻿using Data.Procedures;
+using Data.Tables;
 using Data.Types;
 using Domain.DTO;
 using Domain.Helpers;
@@ -18,10 +19,12 @@ namespace Domain.Entities
     public class Estudiante : IEstudiante
     {
         private readonly USP_IU_GrabarMatricula _grabarMatricula;
+        private readonly List<TC_CatalogoOpcion> _periodos;
 
         public Estudiante()
         {
             _grabarMatricula = new USP_IU_GrabarMatricula();
+            _periodos = TC_CatalogoOpcion.FindByParametro((int)Parametro.Periodo);
         }
 
         public DataMatriculaResponse CargarDataAptos(string serverPath, HttpPostedFileBase file, TipoAlumno tipoAlumno, int currentUserId)
@@ -149,32 +152,33 @@ namespace Domain.Entities
             System.IO.File.Delete(serverPath + fileName);
         }
 
-        private static bool CampoCodigoAlumnoIncorrecto(DataMatriculaType dataMatricula)
+        private bool CampoCodigoAlumnoIncorrecto(DataMatriculaType dataMatricula)
         {
             return String.IsNullOrWhiteSpace(dataMatricula.C_CodAlu) || dataMatricula.C_CodAlu.Length != 10;
         }
 
-        private static bool CampoCodRcIncorrecto(DataMatriculaType dataMatricula)
+        private bool CampoCodRcIncorrecto(DataMatriculaType dataMatricula)
         {
             return String.IsNullOrWhiteSpace(dataMatricula.C_CodRC) || dataMatricula.C_CodRC.Length != 3;
         }
 
-        private static bool CampoAnioIncorrecto(DataMatriculaType dataMatricula)
+        private bool CampoAnioIncorrecto(DataMatriculaType dataMatricula)
         {
             return dataMatricula.I_Anio == null || dataMatricula.I_Anio < 1963;
         }
 
-        private static bool CampoPeriodoIncorrecto(DataMatriculaType dataMatricula)
+        private bool CampoPeriodoIncorrecto(DataMatriculaType dataMatricula)
         {
-            return String.IsNullOrWhiteSpace(dataMatricula.C_Periodo);
+            //return String.IsNullOrWhiteSpace(dataMatricula.C_Periodo);
+            return !_periodos.Any(p => p.T_OpcionCod.Equals(dataMatricula.C_Periodo));
         }
 
-        private static bool CampoEstadoIncorrecto(DataMatriculaType dataMatricula)
+        private bool CampoEstadoIncorrecto(DataMatriculaType dataMatricula)
         {
             return String.IsNullOrWhiteSpace(dataMatricula.C_EstMat);
         }
 
-        private static bool CampoIngresanteIncorrecto(DataMatriculaType dataMatricula)
+        private bool CampoIngresanteIncorrecto(DataMatriculaType dataMatricula)
         {
             return dataMatricula.B_Ingresante == null;
         }

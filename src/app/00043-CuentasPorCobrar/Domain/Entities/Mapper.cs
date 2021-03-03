@@ -1,4 +1,5 @@
 ﻿using Data.Types;
+using Data.Views;
 using ExcelDataReader;
 using NDbfReader;
 using System;
@@ -147,6 +148,44 @@ namespace Domain.Entities
                 B_Success = d.B_Success,
                 T_Message = d.T_Message
             }).ToList();
+        }
+
+        public static ObligacionDetalleDTO VW_DetalleObligaciones_To_ObligacionDetalleDTO(VW_DetalleObligaciones detalleObligaciones)
+        {
+            var obligacionDetalleDTO = new ObligacionDetalleDTO()
+            {
+                C_CodAlu = detalleObligaciones.C_CodAlu,
+                C_CodRc = detalleObligaciones.C_CodRc,
+                I_Anio = detalleObligaciones.I_Anio,
+                I_Periodo = detalleObligaciones.I_Periodo,
+                T_Periodo = detalleObligaciones.T_Periodo,
+                T_ConceptoDesc = detalleObligaciones.T_ConceptoDesc,
+                T_CatPagoDesc = detalleObligaciones.T_CatPagoDesc,
+                I_Monto = detalleObligaciones.I_Monto,
+                B_Pagado = detalleObligaciones.B_Pagado,
+                D_FecVencto = detalleObligaciones.D_FecVencto,
+                I_Prioridad = detalleObligaciones.I_Prioridad
+            };
+
+            return obligacionDetalleDTO;
+        }
+
+        public static CuotaPagoDTO VW_CuotaPago_To_CuotaPagoDTO(VW_CuotasPago cuotaPago)
+        {
+            var cuotaPagoDTO = new CuotaPagoDTO()
+            {
+                I_ProcesoID = cuotaPago.I_ProcesoID,
+                I_Anio = cuotaPago.I_Anio,
+                I_Periodo = cuotaPago.I_Periodo,
+                C_CodAlu = cuotaPago.C_CodAlu,
+                C_CodRc = cuotaPago.C_CodRc,
+                T_Periodo = cuotaPago.T_Periodo,
+                T_CatPagoDesc = cuotaPago.T_CatPagoDesc,
+                I_MontoTotal = cuotaPago.I_MontoTotal,
+                D_FecVencto = cuotaPago.D_FecVencto
+            };
+
+            return cuotaPagoDTO;
         }
     }
 }

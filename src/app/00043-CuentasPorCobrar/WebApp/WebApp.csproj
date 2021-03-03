@@ -402,6 +402,7 @@
     </Compile>
     <Compile Include="Models\AccountModel.cs" />
     <Compile Include="Models\CategoriaPagoModel.cs" />
+    <Compile Include="Models\CuotaPagoModel.cs" />
     <Compile Include="Models\DependenciaModel.cs" />
     <Compile Include="Models\ClasificadorModel.cs" />
     <Compile Include="Models\CuentaDepositoModel.cs" />
@@ -410,6 +411,8 @@
     <Compile Include="Models\EstudianteModels.cs" />
     <Compile Include="Models\ManualUsuarioModel.cs" />
     <Compile Include="Models\Mapper.cs" />
+    <Compile Include="Models\ObligacionDetalleModel.cs" />
+    <Compile Include="Models\ObligacionFacade.cs" />
     <Compile Include="Models\SelectModels.cs" />
     <Compile Include="Models\ProcesoModel.cs" />
     <Compile Include="Models\ConceptoPagoModel.cs" />
@@ -495,7 +498,7 @@
     <Content Include="Views\Procesos\Tasas.cshtml" />
     <Content Include="Views\CategoriaPago\_RegistrarCategoria.cshtml" />
     <Content Include="Views\ConceptoPago\_RegistrarConcepto.cshtml" />
-    <Content Include="Views\Obligaciones\Index.cshtml" />
+    <Content Include="Views\Obligaciones\Generar.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
