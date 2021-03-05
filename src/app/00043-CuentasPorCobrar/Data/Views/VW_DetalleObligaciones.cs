@@ -12,13 +12,25 @@ namespace Data.Views
 {
     public class VW_DetalleObligaciones
     {
+        public int I_ProcesoID { get; set; }
+
+        public string N_CodBanco { get; set; }
+
         public string C_CodAlu { get; set; }
 
         public string C_CodRc { get; set; }
 
+        public string T_Nombre { get; set; }
+
+        public string T_ApePaterno { get; set; }
+
+        public string T_ApeMaterno { get; set; }
+
         public int I_Anio { get; set; }
 
         public int I_Periodo { get; set; }
+
+        public string C_Periodo { get; set; }
 
         public string T_Periodo { get; set; }
 
@@ -33,6 +45,16 @@ namespace Data.Views
         public DateTime D_FecVencto { get; set; }
 
         public byte? I_Prioridad { get; set; }
+
+        public string C_CodOperacion { get; set; }
+
+        public DateTime? D_FecPago { get; set; }
+
+        public string T_LugarPago { get; set; }
+
+        public string C_Moneda { get; set; }
+
+        public int I_TipoObligacion { get; set; }
 
         public static IEnumerable<VW_DetalleObligaciones> FindByAlumno(int anio, int periodo, string codAlu, string codRc)
         {

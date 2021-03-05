@@ -419,6 +419,7 @@
     <Compile Include="Models\CuentaDepositoModel.cs" />
     <Compile Include="Models\CustomAttribute.cs" />
     <Compile Include="Models\EntidadFinancieraModel.cs" />
+    <Compile Include="Models\EspecialidadesPorAlumnoModel.cs" />
     <Compile Include="Models\EstudianteModels.cs" />
     <Compile Include="Models\ManualUsuarioModel.cs" />
     <Compile Include="Models\Mapper.cs" />
