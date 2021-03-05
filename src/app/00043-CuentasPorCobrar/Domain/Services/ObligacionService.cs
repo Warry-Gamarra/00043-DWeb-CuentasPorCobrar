@@ -73,5 +73,14 @@ namespace Domain.Services
 
             return result;
         }
+
+        public IEnumerable<EspecialidadesPorAlumnoDTO> Obtener_Especialidades_X_Alumno(string codAlu)
+        {
+            var especialidades = VW_EspecialidadesPorAlumno.FindByAlumno(codAlu);
+
+            var result = especialidades.Select(e => Mapper.VW_EspecialidadesPorAlumno_To_EspecialidadesPorAlumnoDTO(e));
+
+            return result;
+        }
     }
 }

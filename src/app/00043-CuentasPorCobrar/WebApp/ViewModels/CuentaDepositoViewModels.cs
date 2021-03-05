@@ -24,7 +24,7 @@ namespace WebApp.ViewModels
         public CuentaDepositoViewModel(CuentaDeposito cuentaDeposito)
         {
             this.Id = cuentaDeposito.I_CtaDepID;
-            this.Descripcion = cuentaDeposito.T_DescCuenta.ToUpper();
+            this.Descripcion = cuentaDeposito.T_DescCuenta == null ? "" : cuentaDeposito.T_DescCuenta.ToUpper();
             this.NumeroCuenta = cuentaDeposito.C_NumeroCuenta;
             this.EntidadFinancieraId = cuentaDeposito.I_EntidadFinanId;
             this.EntidadFinanciera = cuentaDeposito.T_EntidadDesc;

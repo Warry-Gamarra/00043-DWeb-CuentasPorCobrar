@@ -1,4 +1,5 @@
-﻿using Data.Types;
+﻿using Data.Procedures;
+using Data.Types;
 using Data.Views;
 using ExcelDataReader;
 using NDbfReader;
@@ -154,17 +155,28 @@ namespace Domain.Entities
         {
             var obligacionDetalleDTO = new ObligacionDetalleDTO()
             {
+                I_ProcesoID = detalleObligaciones.I_ProcesoID,
+                N_CodBanco = detalleObligaciones.N_CodBanco ?? "",
                 C_CodAlu = detalleObligaciones.C_CodAlu,
                 C_CodRc = detalleObligaciones.C_CodRc,
+                T_Nombre = detalleObligaciones.T_Nombre,
+                T_ApePaterno = detalleObligaciones.T_ApePaterno,
+                T_ApeMaterno = detalleObligaciones.T_ApeMaterno ?? "",
                 I_Anio = detalleObligaciones.I_Anio,
                 I_Periodo = detalleObligaciones.I_Periodo,
+                C_Periodo = detalleObligaciones.C_Periodo,
                 T_Periodo = detalleObligaciones.T_Periodo,
                 T_ConceptoDesc = detalleObligaciones.T_ConceptoDesc,
                 T_CatPagoDesc = detalleObligaciones.T_CatPagoDesc,
                 I_Monto = detalleObligaciones.I_Monto,
                 B_Pagado = detalleObligaciones.B_Pagado,
                 D_FecVencto = detalleObligaciones.D_FecVencto,
-                I_Prioridad = detalleObligaciones.I_Prioridad
+                I_Prioridad = detalleObligaciones.I_Prioridad,
+                C_CodOperacion = detalleObligaciones.C_CodOperacion ?? "",
+                D_FecPago = detalleObligaciones.D_FecPago,
+                T_LugarPago = detalleObligaciones.T_LugarPago ?? "",
+                C_Moneda = detalleObligaciones.C_Moneda,
+                I_TipoObligacion = detalleObligaciones.I_TipoObligacion
             };
 
             return obligacionDetalleDTO;
@@ -174,18 +186,38 @@ namespace Domain.Entities
         {
             var cuotaPagoDTO = new CuotaPagoDTO()
             {
+                I_NroOrden = cuotaPago.I_NroOrden,
                 I_ProcesoID = cuotaPago.I_ProcesoID,
-                I_Anio = cuotaPago.I_Anio,
-                I_Periodo = cuotaPago.I_Periodo,
+                N_CodBanco = cuotaPago.N_CodBanco ?? "",
                 C_CodAlu = cuotaPago.C_CodAlu,
                 C_CodRc = cuotaPago.C_CodRc,
+                T_Nombre = cuotaPago.T_Nombre,
+                T_ApePaterno = cuotaPago.T_ApePaterno,
+                T_ApeMaterno = cuotaPago.T_ApeMaterno ?? "",
+                I_Anio = cuotaPago.I_Anio,
+                I_Periodo = cuotaPago.I_Periodo,
+                C_Periodo = cuotaPago.C_Periodo,
                 T_Periodo = cuotaPago.T_Periodo,
                 T_CatPagoDesc = cuotaPago.T_CatPagoDesc,
-                I_MontoTotal = cuotaPago.I_MontoTotal,
-                D_FecVencto = cuotaPago.D_FecVencto
+                D_FecVencto = cuotaPago.D_FecVencto,
+                C_Moneda = cuotaPago.C_Moneda,
+                I_TipoObligacion = cuotaPago.I_TipoObligacion,
+                I_MontoTotal = cuotaPago.I_MontoTotal
             };
 
             return cuotaPagoDTO;
+        }
+
+        public static EspecialidadesPorAlumnoDTO VW_EspecialidadesPorAlumno_To_EspecialidadesPorAlumnoDTO(VW_EspecialidadesPorAlumno especialidadesPorAlumno)
+        {
+            var especialidadesPorAlumnoDTO = new EspecialidadesPorAlumnoDTO()
+            {
+                C_CodAlu = especialidadesPorAlumno.C_CodAlu,
+                C_RcCod = especialidadesPorAlumno.C_RcCod,
+                T_EspDesc = especialidadesPorAlumno.T_EspDesc
+            };
+
+            return especialidadesPorAlumnoDTO;
         }
     }
 }

@@ -52,5 +52,14 @@ namespace WebApp.Models
 
             return result;
         }
+
+        public List<EspecialidadesPorAlumnoModel> Obtener_Especialidades_X_Alumno(string codAlu)
+        {
+            var especialidades = obligacionService.Obtener_Especialidades_X_Alumno(codAlu);
+
+            var result = especialidades.Select(e => Mapper.EspecialidadesPorAlumnoDTO_To_EspecialidadesPorAlumnoModel(e)).ToList();
+
+            return result;
+        }
     }
 }

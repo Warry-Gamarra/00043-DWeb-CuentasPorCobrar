@@ -70,6 +70,7 @@
     <Compile Include="Connection\ResponseData.cs" />
     <Compile Include="Procedures\USP_IU_GenerarObligacionesPregrado_X_Ciclo.cs" />
     <Compile Include="Procedures\USP_S_CtaDepo_Proceso.cs" />
+    <Compile Include="Views\VW_EspecialidadesPorAlumno.cs" />
     <Compile Include="Procedures\USP_U_ActualizarConceptoPago.cs" />
     <Compile Include="Procedures\USP_I_GrabarConceptoPago.cs" />
     <Compile Include="Procedures\USP_IU_GrabarMatricula.cs" />

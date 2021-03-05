@@ -7,13 +7,25 @@ namespace WebApp.Models
 {
     public class ObligacionDetalleModel
     {
+        public int I_ProcesoID { get; set; }
+
+        public string N_CodBanco { get; set; }
+
         public string C_CodAlu { get; set; }
 
         public string C_CodRc { get; set; }
 
+        public string T_Nombre { get; set; }
+
+        public string T_ApePaterno { get; set; }
+
+        public string T_ApeMaterno { get; set; }
+
         public int I_Anio { get; set; }
 
         public int I_Periodo { get; set; }
+
+        public string C_Periodo { get; set; }
 
         public string T_Periodo { get; set; }
 
@@ -52,5 +64,31 @@ namespace WebApp.Models
         }
 
         public byte? I_Prioridad { get; set; }
+
+        public string C_CodOperacion { get; set; }
+
+        public DateTime? D_FecPago { get; set; }
+        
+        public string T_FecPago
+        {
+            get
+            {
+                return D_FecPago.HasValue ? D_FecPago.Value.ToString("dd/MM/yyyy") : "";
+            }
+        }
+
+        public string T_LugarPago { get; set; }
+
+        public string C_Moneda { get; set; }
+
+        public int I_TipoObligacion { get; set; }
+
+        public string T_TipoObligacion
+        {
+            get
+            {
+                return I_TipoObligacion == 9 ? "Mat" : "Otr" ;
+            }
+        }
     }
 }

@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DTO\DataMatriculaResponse.cs" />
+    <Compile Include="Entities\EspecialidadesPorAlumnoDTO.cs" />
     <Compile Include="Entities\CuotaPagoDTO.cs" />
     <Compile Include="Entities\DataMatriculaObs.cs" />
     <Compile Include="DTO\Options.cs" />

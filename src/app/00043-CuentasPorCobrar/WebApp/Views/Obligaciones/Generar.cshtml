@@ -76,16 +76,17 @@
                                             <label for="cmbPeriodoIndividual">Periodo</label>
                                             @Html.DropDownList("cmbPeriodoIndividual", new SelectList(ViewBag.Periodos, "Value", "TextDisplay", "15"), null, new { @class = "form-control form-control-sm" })
                                         </div>
-                                        <div class="form-group col-lg-3 col-md-5 col-12">
-                                            <label for="cmbEspecialidad">Especialidad</label>
-                                            <select id="cmbEspecialidad" name="cmbEspecialidad" class="form-control form-control-sm">
-                                                <option selected>[ Seleccionar una opción ]</option>
-                                                <option value="011">INGENIERÍA DE SISTEMAS</option>
-                                            </select>
-                                        </div>
                                         <div class="form-group col-lg-1 col-md-2 col-6">
                                             <label for="txtCodAlumno">Código de alumno</label>
                                             @Html.TextBox("txtCodAlumno", null, new { @class = "form-control form-control-sm" })
+                                        </div>
+                                        <div class="form-group col-lg-3 col-md-5 col-12">
+                                            <label for="cmbEspecialidad">Especialidad</label>
+                                            <select id="cmbEspecialidad" name="cmbEspecialidad" class="form-control form-control-sm">
+                                                @*<option selected>[ Seleccionar una opción ]</option>
+                                                <option value="011">INGENIERÍA DE SISTEMAS</option>
+                                                <option value="044">PSICOLOGÍA</option>*@
+                                            </select>
                                         </div>
                                         <div class="form-group col-lg-2 col-md-3 col-12">
                                             <button type="button" id="btnConsultarObligacionAlumno" class="btn btn-block btn-outline-primary mt-4"><i class="fa fa-fw fa-search-plus">&nbsp;</i> Iniciar consulta</button>
@@ -104,6 +105,7 @@
                                         <th>Cuota pago</th>
                                         <th>Monto</th>
                                         <th>Fec. Vencimiento</th>
+                                        <th>Tipo</th>
                                         <th>Estado</th>
                                         <th>Nro Recibo</th>
                                         <th>Fecha Pago</th>
@@ -120,8 +122,10 @@
                                 <thead class="thead-light">
                                     <tr>
                                         <th>Cuota pago</th>
+                                        <th></th>
                                         <th>Monto</th>
                                         <th>Fec. Vencimiento</th>
+                                        <th>Tipo</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -142,8 +146,31 @@
             let cmbPeriodoIndividual = $('#cmbPeriodoIndividual').val();
             let cmbEspecialidad = $('#cmbEspecialidad').val();
             let txtCodAlumno = $('#txtCodAlumno').val();
-            
-            BuscarObligacion(cmbAnioIndividual, cmbPeriodoIndividual, cmbEspecialidad, txtCodAlumno);
+
+            if (txtCodAlumno === null || txtCodAlumno.length !== 10) {
+                alert('El campo Código de Alumno es requerido.');
+            } else if (cmbEspecialidad === null || cmbEspecialidad.length !== 3) {
+                alert('El campo Especialidad es requerido.');
+            } else {
+                BuscarObligacion(cmbAnioIndividual, cmbPeriodoIndividual, cmbEspecialidad, txtCodAlumno);
+            }
+        });
+
+        $(document).on('keypress', '#txtCodAlumno', function (e) {
+            if (e.which === 13) {
+                e.preventDefault();
+
+                GenerarTablaDetalle([]);
+                GenerarTablaCuotas([]);
+
+                let codigoAlu = $('#txtCodAlumno').val();
+
+                if (codigoAlu.length === 10) {
+                    BuscarAlumno(codigoAlu);
+                } else {
+                    llenarComboEspecialidades([]);
+                }
+            }
         });
 
         function BuscarObligacion(anio, periodo, codRc, codigoAlu) {
@@ -217,13 +244,14 @@
             $.each(detalle_pago, function (i, item) {
                 rows += '<tr>' +
                     '<td>' + item.T_ConceptoDesc + '</td>' +
-                    '<td>' + item.T_CatPagoDesc + '</td>' +
+                    '<td>' + item.I_Anio + '-' + item.C_Periodo + ' ' + item.T_CatPagoDesc + '</td>' +
                     '<td>' + item.T_Monto + '</td>' +
-                    '<td>' + item.T_FecVencto + '</td>' +
+                    '<td>' + item.T_FecVencto + '</td>' + 
+                    '<td>' + item.T_TipoObligacion + '</td>' + 
                     '<td>' + item.T_Pagado + '</td>' +
-                    '<td></td>' +
-                    '<td></td>' +
-                    '<td></td>' +
+                    '<td>' + item.C_CodOperacion + '</td>' +
+                    '<td>' + item.T_FecPago + '</td>' +
+                    '<td>' + item.T_LugarPago + '</td>' +
                     '</tr>';
             });
 
@@ -238,13 +266,59 @@
 
             $.each(cuotas_pago, function (i, item) {
                 rows += '<tr>' +
-                    '<td>' + item.I_Anio + '-' + item.T_Periodo + ' ' + item.T_CatPagoDesc + '</td>' +
+                    '<td>' + item.I_Anio + '-' + item.C_Periodo + ' ' + item.T_CatPagoDesc + '</td>' +
+                    '<td>' + item.T_NroOrden + '</td>' +
                     '<td>' + item.T_MontoTotal + '</td>' +
                     '<td>' + item.T_FecVencto + '</td>' +
+                    '<td>' + item.T_TipoObligacion + '</td>' + 
                     '</tr>';
             });
 
             tblCuotasPago.html(rows);
+        }
+
+        function BuscarAlumno(codigoAlu) {
+            let parametros = {
+                codAlu: codigoAlu
+            };
+
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("Obtener_Especialidades_X_Alumno", "Obligaciones")',
+                data: parametros,
+                dataType: 'json',
+                success: function (data) {
+                    if (data) {
+                        llenarComboEspecialidades(data);
+                    }
+                }
+            });
+        }
+
+        function llenarComboEspecialidades(lista) {
+            let cmbEspecialidad = $('#cmbEspecialidad');
+            let html = '';
+            let codRc = null;
+            cmbEspecialidad.empty();
+
+            $.each(lista, function (i, item) {
+                html += '<option value="' + item.C_RcCod + '">' + item.T_EspDesc + '</option>'
+
+                if (i === 0) {
+                    codRc = item.C_RcCod;
+                }
+            });
+
+            cmbEspecialidad.html(html);
+
+            if (codRc !== null) {
+                let cmbAnioIndividual = $('#cmbAnioIndividual').val();
+                let cmbPeriodoIndividual = $('#cmbPeriodoIndividual').val();
+                let cmbEspecialidad = $('#cmbEspecialidad').val();
+                let txtCodAlumno = $('#txtCodAlumno').val();
+
+                BuscarObligacion(cmbAnioIndividual, cmbPeriodoIndividual, cmbEspecialidad, txtCodAlumno);
+            }
         }
     </script>
 }
