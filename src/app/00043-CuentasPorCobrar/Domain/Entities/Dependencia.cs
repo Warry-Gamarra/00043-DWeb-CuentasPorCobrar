@@ -38,7 +38,11 @@ namespace Domain.Entities
 
         public Response ChangeState(int dependenciaId, bool currentState, int currentUserId)
         {
-            throw new NotImplementedException();
+            _dependenciaRepository.I_DependenciaID = dependenciaId;
+            _dependenciaRepository.D_FecMod = DateTime.Now;
+            _dependenciaRepository.B_Habilitado = !currentState;
+
+            return new Response(_dependenciaRepository.ChangeState(currentUserId));
         }
 
         public List<Dependencia> Find()
@@ -54,12 +58,36 @@ namespace Domain.Entities
 
         public Dependencia Find(int dependenciaId)
         {
-            throw new NotImplementedException();
+            var data = _dependenciaRepository.Find(dependenciaId);
+
+            return new Dependencia(data);
         }
+
 
         public Response Save(Dependencia dependencia, int currentUserId, SaveOption saveOption)
         {
-            throw new NotImplementedException();
+            _dependenciaRepository.I_DependenciaID = dependencia.Id;
+            _dependenciaRepository.T_DepDesc = dependencia.Descripcion.ToUpper();
+            _dependenciaRepository.C_DepCod = dependencia.Codigo.ToUpper();
+            _dependenciaRepository.C_DepCodPl = string.IsNullOrEmpty(dependencia.CodigoPl) ? dependencia.CodigoPl : dependencia.CodigoPl.ToUpper();
+            _dependenciaRepository.T_DepAbrev = string.IsNullOrEmpty(dependencia.Abreviatura) ? dependencia.Abreviatura : dependencia.Abreviatura.ToUpper();
+
+            switch (saveOption)
+            {
+                case SaveOption.Insert:
+                    _dependenciaRepository.D_FecCre = DateTime.Now;
+                    return new Response(_dependenciaRepository.Insert(currentUserId));
+
+                case SaveOption.Update:
+                    _dependenciaRepository.D_FecMod = DateTime.Now;
+                    return new Response(_dependenciaRepository.Update(currentUserId));
+            }
+
+            return new Response()
+            {
+                Value = false,
+                Message = "Operación Inváiida."
+            };
         }
     }
 }

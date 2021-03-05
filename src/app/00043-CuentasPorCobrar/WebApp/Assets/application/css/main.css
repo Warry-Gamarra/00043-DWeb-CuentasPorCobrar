@@ -184,7 +184,8 @@ body {
 .navbar {
   padding: 0 0.5rem;
   height: 58px;
-  border-bottom: 0.5px solid var(--cs-orange-border);
+  /*border-bottom: 0.5px solid var(--cs-orange-border);*/
+  border-bottom: 0.5px solid #a7a29f7e;
 }
 
 .navbar > a,
@@ -286,4 +287,10 @@ footer {
         /*max-width: 580px;*/
         margin: 1.75rem auto;
     }
+}
+
+
+strong.select2-results__group {
+    color: #afafaf;
+    font-size: 0.8rem;
 }

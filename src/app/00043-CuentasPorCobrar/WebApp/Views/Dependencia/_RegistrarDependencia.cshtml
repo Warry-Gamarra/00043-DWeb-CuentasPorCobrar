@@ -1,1 +1,94 @@
 ﻿
+
+@model WebApp.ViewModels.DependenciaRegistroViewModel
+
+@Scripts.Render("~/bundles/jqueryval")
+
+<div class="modal-header bg-dark-gray" style="border-radius: .2rem .2rem 0px 0px">
+    <h5 class="modal-title text-center"><i class="fa bi-building">&nbsp;</i> @ViewBag.Title</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+@using (Ajax.BeginForm("Save", "Dependencia", new { area = "" }, new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "div_msg", OnBegin = "Load", OnSuccess = "Submited", OnComplete = "Stop" }))
+{
+    @Html.Hidden("submited", 0)
+    @Html.AntiForgeryToken()
+    <div class="modal-body">
+        <div class="container-fluid">
+            @Html.HiddenFor(model => model.DependenciaID)
+            <div class="row">
+                <div class="col-sm-6 col-12">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.CodDep, new { @class = "control-label" })
+                        @Html.TextBoxFor(model => model.CodDep, new { @class = "form-control text-uppercase" })
+                        <p class="text-danger small">@Html.ValidationMessageFor(model => model.CodDep)</p>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-12">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.CodDepPL, new { @class = "control-label" })
+                        @Html.TextBoxFor(model => model.CodDepPL, new { @class = "form-control text-uppercase" })
+                        <p class="text-danger small">@Html.ValidationMessageFor(model => model.CodDepPL)</p>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.DependDesc, new { @class = "control-label" })
+                @Html.TextBoxFor(model => model.DependDesc, new { @class = "form-control text-uppercase" })
+                <p class="text-danger small">@Html.ValidationMessageFor(model => model.DependDesc)</p>
+            </div>
+            <div class="row">
+                <div class="col-sm-4 col-12">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.DependAbrev, new { @class = "control-label" })
+                        @Html.TextBoxFor(model => model.DependAbrev, new { @class = "form-control text-uppercase" })
+                        <p class="text-danger small">@Html.ValidationMessageFor(model => model.DependAbrev)</p>
+                    </div>
+                </div>
+                @*<div class="col-sm-8 col-12">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Academico, new { @class = "control-label" })
+                        <div class="col-12">
+                            <div class="form-check form-check-inline">
+                                @Html.RadioButtonFor(model => model.Academico, true, new { @Class = "form-check-input", @id = "rbtn_academico" })
+                                <label class="form-check-label" for="rbtn_academico">
+                                    Académico
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                @Html.RadioButtonFor(model => model.Academico, false, new { @Class = "form-check-input", @id = "rbtn_administr" })
+                                <label class="form-check-label" for="rbtn_administr">
+                                    Administradtivo
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>*@
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer" id="div_msg">
+        <div class="col-md-12" style="display:none" id="loading">
+            <h6>Actualizando los datos...</h6>
+
+            <div class="progress">
+                <div class="indeterminate"></div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="btnsubmit"><i class="fa fa-save"></i>&nbsp;Guardar</button>
+        <button type="button" class="btn btn-secondary" id="btnCancel" data-dismiss="modal"><i class="fa fa-times-circle-o">&nbsp;</i>Cancelar</button>
+    </div>
+}
+
+<script>
+    $(document).on('ready', function () {
+        $('#btnsubmit').removeClass('disabled');
+    });
+
+    $("form").submit(function () {
+        if (parseInt($("#submited").val()) > 0) {
+            return false;
+        }
+    });
+</script>
