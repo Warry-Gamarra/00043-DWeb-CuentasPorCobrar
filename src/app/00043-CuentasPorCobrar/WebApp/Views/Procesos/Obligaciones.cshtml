@@ -1,4 +1,4 @@
-﻿@model IEnumerable<WebApp.ViewModels.CategoriaProcesoViewModel>
+﻿@model IEnumerable<WebApp.ViewModels.ProcesoViewModel>
 
 
 @using GridMvc.Html
@@ -17,47 +17,48 @@
         </section>
     </div>
     <div class="col-12">
-        <div class="row my-5">
-            @if (!string.IsNullOrEmpty(ViewBag.Message))
-            {
-                <div class="col-12">
-                    <p class="alert alert-warning"><i class="fa fa-exclamation-triangle">&nbsp;</i> @Html.Raw(ViewBag.Message)</p>
-                </div>
-            }
-
-            <div class="col-md-3 col-sm-4 col-12">
-                <div class="card">
-                    <div class="card-body bg-light-gray">
-                        @using (Ajax.BeginForm("CategoriasEstado", "Procesos", new { area = "" }, new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "categorias-proceso", OnBegin = "Load", OnSuccess = "Submited", OnComplete = "Stop" }))
-                        {
-                            <div class="form-row">
-                                <div class="form-group col-sm-12 col-8">
-                                    <label for="inputGrado">Grado académico</label>
-                                    @Html.DropDownList("inputGrado", ViewBag.Grados as SelectList, new { Class = "form-control" })
-                                </div>
-                                <div class="form-group col-sm-12 col-4">
-                                    <label for="inputAnio">Año</label>
-                                    @Html.DropDownList("inputAnio", ViewBag.Anios as SelectList, new { Class = "form-control" })
-                                </div>
-                                <div class="form-group col-12">
-                                    <button type="submit" class="btn btn-block btn-outline-secondary mt-4"><i class="fa fa-fw fa-filter">&nbsp;</i> Filtrar</button>
-                                </div>
-                            </div>
-                        }
+        <div class="row mt-5 d-flex justify-content-end">
+            <div class="col-lg-4 col-12">
+                <div class="form-group row">
+                    <label for="inputAnio" class="col-7 col-form-label text-right">Año: </label>
+                    <div class="col-5">
+                        @Html.DropDownList("inputAnio", ViewBag.Anios as SelectList, new { Class = "form-control text-center" })
                     </div>
                 </div>
             </div>
-            <div class="col-md-9 col-sm-8 col-12">
-                <div id="categorias-proceso">
-                    @Html.Partial("_CategoriasEstado", Model)
-                </div>
-            </div>
         </div>
+
+        <h3 class="mb-3"><small>CUOTAS DE PAGO @ViewBag.AnioSelect</small></h3>
+        <a class="btn btn-primary modal-link mb-3 float-right" href="@Url.Action("Create", "Procesos", new { anio = ViewBag.AnioSelect })">
+            <i class="fa fa-tags">&nbsp;</i> Agregar Cuota de Pago
+        </a>
+
+        <div class="table-responsive" style="min-height:300px">
+            @Html.Grid(Model).Columns(columns =>
+                {
+                    columns.Add(c => c.T_CatPagoDesc).Titled("Descripción").Filterable(true);
+                    columns.Add(c => c.I_Anio).Css("text-center").Titled("Año").Filterable(true);
+                    columns.Add(c => c.T_Periodo).Titled("Periodo").Filterable(true);
+                    columns.Add(c => c.D_FecVencto).Css("text-center").Format("{0:dd/MM/yyyy}").Titled("Fch. Vencimiento").Filterable(true);
+                    columns.Add(c => c.I_Prioridad).Css("text-center").Titled("Prioridad").Filterable(true);
+                    columns.Add().SetWidth(250).Css("text-right").Encoded(false).Sanitized(false).
+                        RenderValueAs(model => @<a href="@Url.Action("EditarConceptosPago", "Procesos", new { procesoId = model.I_ProcesoID })" class="modal-link-xl"><i class="fa bi-ui-checks-grid" aria-hidden="true">&nbsp;</i><span class="d-none d-md-inline-block">Conceptos de pago</span></a>);
+                    columns.Add().SetWidth(100).Css("text-right").Encoded(false).Sanitized(false).
+                        RenderValueAs(model => @<a href="@Url.Action("Edit", "Procesos", new { id = model.I_ProcesoID })" class="modal-link"><i class="fa fa-pencil-square-o" aria-hidden="true">&nbsp;</i><span class="d-none d-md-inline-block">Editar</span></a>);
+                     }).WithPaging(10).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
+        </div>
+
     </div>
 </div>
 
+
 @section Scripts {
     <script>
+        $(document).ready(function () {
+            $('#inputAnio').on('change', function () {
+                location.href = '@Url.Action("Obligaciones","Procesos")' + '?anio=' + $(this).val();
+            })
 
+        })
     </script>
 }

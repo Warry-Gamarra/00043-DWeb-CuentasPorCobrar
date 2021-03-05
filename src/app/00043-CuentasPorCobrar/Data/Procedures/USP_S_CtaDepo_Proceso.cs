@@ -18,8 +18,9 @@ namespace Data.Procedures
         public bool B_Habilitado { get; set; }
         public string C_NumeroCuenta { get; set; }
         public string T_EntidadDesc { get; set; }
+        public string T_DescCuenta { get; set; }
 
-        public static List<USP_S_CtaDepo_Proceso> Execute(int I_PeriodoID)
+        public static List<USP_S_CtaDepo_Proceso> Execute(int I_ProcesoID)
         {
             List<USP_S_CtaDepo_Proceso> result;
             DynamicParameters parameters = new DynamicParameters();
@@ -29,7 +30,7 @@ namespace Data.Procedures
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    parameters.Add(name: "I_PeriodoID", dbType: DbType.Int32, value: I_PeriodoID);
+                    parameters.Add(name: "I_ProcesoID", dbType: DbType.Int32, value: I_ProcesoID);
 
                     result = _dbConnection.Query<USP_S_CtaDepo_Proceso>(s_command, parameters, commandType: CommandType.StoredProcedure).ToList();
                 }

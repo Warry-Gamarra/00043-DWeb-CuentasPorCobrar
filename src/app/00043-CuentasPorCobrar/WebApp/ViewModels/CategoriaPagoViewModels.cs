@@ -65,7 +65,9 @@ namespace WebApp.ViewModels
             this.Nombre = categoriaPago.Descripcion;
             this.NivelId = categoriaPago.Nivel;
             this.TipoAlumnoId = categoriaPago.TipoAlumno;
+            this.Prioridad = categoriaPago.Prioridad;
             this.EsObligacion = categoriaPago.EsObligacion;
+            this.CuentasDeposito = categoriaPago.CuentasDeposito.ToArray();
         }
     }
 

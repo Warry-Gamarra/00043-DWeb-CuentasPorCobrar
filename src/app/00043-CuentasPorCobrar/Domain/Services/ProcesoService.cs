@@ -59,6 +59,7 @@ namespace Domain.Services
                 var result = lista.Select(x => new CuentaDeposito()
                 {
                     I_CtaDepID = x.I_CtaDepositoID,
+                    T_DescCuenta = x.T_DescCuenta,
                     C_NumeroCuenta = x.C_NumeroCuenta,
                     T_EntidadDesc = x.T_EntidadDesc
                 }).ToList();
@@ -81,6 +82,9 @@ namespace Domain.Services
                 {
                     I_ProcesoID = x.I_ProcesoID,
                     T_CatPagoDesc = x.T_CatPagoDesc,
+                    C_PeriodoCod = x.C_PeriodoCod,
+                    T_PeriodoDesc = x.T_PeriodoDesc,
+                    I_Periodo = x.I_Periodo,
                     I_Anio = x.I_Anio,
                     D_FecVencto = x.D_FecVencto,
                     I_Prioridad = x.I_Prioridad
@@ -106,7 +110,8 @@ namespace Domain.Services
                         I_CatPagoID = procesoEntity.I_CatPagoID,
                         I_Anio = procesoEntity.I_Anio,
                         D_FecVencto = procesoEntity.D_FecVencto,
-                        I_Prioridad = procesoEntity.I_Prioridad,
+                        I_Prioridad = procesoEntity.I_Prioridad ?? Obtener_Prioridad_CategoriaPago(procesoEntity.I_CatPagoID),
+                        I_Periodo = procesoEntity.I_Periodo,
                         I_UsuarioCre = procesoEntity.I_UsuarioCre.GetValueOrDefault()
                     };
 
@@ -182,9 +187,9 @@ namespace Domain.Services
             return new Response(result);
         }
 
-        public ProcesoEntity Obtener_Proceso(int I_ProcesoID)
+        public Proceso Obtener_Proceso(int I_ProcesoID)
         {
-            ProcesoEntity result = null;
+            Proceso result = null;
 
             try
             {
@@ -192,14 +197,14 @@ namespace Domain.Services
 
                 if (proceso != null)
                 {
-                    result = new ProcesoEntity()
+                    result = new Proceso()
                     {
                         I_ProcesoID = proceso.I_ProcesoID,
                         I_CatPagoID = proceso.I_CatPagoID,
                         I_Anio = proceso.I_Anio,
                         D_FecVencto = proceso.D_FecVencto,
+                        I_Periodo = proceso.I_Periodo.Value,
                         I_Prioridad = proceso.I_Prioridad,
-                        B_Habilitado = proceso.B_Habilitado
                     };
                 }
             }
@@ -247,6 +252,7 @@ namespace Domain.Services
                     I_ProcesoID = x.I_ProcesoID,
                     B_Habilitado = x.B_Habilitado,
                     C_NumeroCuenta = x.C_NumeroCuenta,
+                    T_DescCuenta = x.T_DescCuenta,
                     T_EntidadDesc = x.T_EntidadDesc
                 }).ToList();
 

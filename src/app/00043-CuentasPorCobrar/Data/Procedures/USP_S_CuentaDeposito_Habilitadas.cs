@@ -14,6 +14,7 @@ namespace Data.Procedures
     {
         public int I_CtaDepositoID { get; set; }
         public string C_NumeroCuenta { get; set; }
+        public string T_DescCuenta { get; set; }
         public string T_EntidadDesc { get; set; }
 
         public static List<USP_S_CuentaDeposito_Habilitadas> Execute(int I_CatPagoID)

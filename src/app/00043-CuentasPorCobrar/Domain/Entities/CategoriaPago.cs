@@ -1,4 +1,5 @@
-﻿using Data.Tables;
+﻿using Data.Procedures;
+using Data.Tables;
 using Domain.DTO;
 using Domain.Services;
 using System;
@@ -71,7 +72,12 @@ namespace Domain.Entities
 
         public CategoriaPago Find(int categoriaPagoId)
         {
-            return new CategoriaPago(TC_CategoriaPago.FindByID(categoriaPagoId));
+            var cuentas = USP_S_CuentaDeposito_Habilitadas.Execute(categoriaPagoId);
+
+            return new CategoriaPago(TC_CategoriaPago.FindByID(categoriaPagoId))
+            {
+                CuentasDeposito = cuentas != null ? cuentas.Select(x => x.I_CtaDepositoID).ToList() : new List<int>()
+            };
         }
 
         public Response Save(CategoriaPago categoriaPago, int currentUserId, SaveOption saveOption)

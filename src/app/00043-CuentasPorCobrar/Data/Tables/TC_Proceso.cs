@@ -17,6 +17,7 @@ namespace Data.Tables
         public short? I_Anio { get; set; }
         public DateTime? D_FecVencto { get; set; }
         public byte? I_Prioridad { get; set; }
+        public int? I_Periodo { get; set; }
         public bool B_Habilitado { get; set; }
         public bool B_Eliminado { get; set; }
         public int? I_UsuarioCre { get; set; }
