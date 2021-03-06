@@ -63,11 +63,19 @@ namespace WebApp.Controllers
         }
 
         [HttpGet]
-        public JsonResult BuscarObligacionesAlumno(int anio, int periodo, string codigoAlu, string codRc)
+        [HandleJsonExceptionAttribute]
+        public JsonResult BuscarObligacionesAlumno(int anio, int periodo, string codAlu, string codRc)
         {
-            var detalle_pago = obligacionFacade.Obtener_DetallePago(anio, periodo, codigoAlu, codRc);
+            var alumno = obligacionFacade.Obtener_Especialidades_X_Alumno(codAlu);
 
-            var cuotas_pago = obligacionFacade.Obtener_CuotaPago(anio, periodo, codigoAlu, codRc);
+            if (alumno == null || alumno.Count == 0)
+            {
+                throw new Exception("El alumno no existe.");
+            }
+
+            var detalle_pago = obligacionFacade.Obtener_DetallePago(anio, periodo, codAlu, codRc);
+
+            var cuotas_pago = obligacionFacade.Obtener_CuotaPago(anio, periodo, codAlu, codRc);
 
             return Json(new { detalle_pago = detalle_pago, cuotas_pago = cuotas_pago }, JsonRequestBehavior.AllowGet);
         }
@@ -134,6 +142,27 @@ namespace WebApp.Controllers
             tw.Close();
 
             return File(memoryStream.GetBuffer(), "text/plain", "Obligaciones.txt");
+        }
+    }
+
+    public class HandleJsonExceptionAttribute : ActionFilterAttribute
+    {
+        public override void OnActionExecuted(ActionExecutedContext filterContext)
+        {
+            if (filterContext.HttpContext.Request.IsAjaxRequest() && filterContext.Exception != null)
+            {
+                filterContext.HttpContext.Response.StatusCode = (int)System.Net.HttpStatusCode.InternalServerError;
+                filterContext.Result = new JsonResult()
+                {
+                    JsonRequestBehavior = JsonRequestBehavior.AllowGet,
+                    Data = new
+                    {
+                        filterContext.Exception.Message,
+                        filterContext.Exception.StackTrace
+                    }
+                };
+                filterContext.ExceptionHandled = true;
+            }
         }
     }
 }
