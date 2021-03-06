@@ -36,7 +36,7 @@ namespace WebApp.Controllers
         }
 
         // GET: api/Service/5
-        public List<SelectViewModel> GetCuentasDeposito(int id)
+        public List<SelectGroupViewModel> GetCuentasDeposito(int id)
         {
             if (id == 0)
             {

@@ -72,7 +72,7 @@
 
             <div class="form-group">
                 @Html.LabelFor(model => model.CuentasDeposito, new { @class = "control-label" })
-                @Html.DropDownListFor(model => model.CuentasDeposito, ViewBag.CtasDeposito as SelectList, new { @class = "select-multiple form-control text-uppercase", multiple = "true" })
+                @Html.ListBoxFor(model => model.CuentasDeposito, ViewBag.CtasDeposito as SelectList, new { @class = "select-multiple form-control text-uppercase", multiple = "true" })
                 <p class="text-danger small">@Html.ValidationMessageFor(model => model.CuentasDeposito)</p>
             </div>
         </div>

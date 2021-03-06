@@ -187,12 +187,13 @@ CREATE PROCEDURE dbo.USP_S_Procesos
 AS
 BEGIN
 	SET NOCOUNT ON;
-	SELECT p.I_ProcesoID, cp.T_CatPagoDesc, p.I_Anio, p.D_FecVencto, p.I_Prioridad FROM dbo.TC_Proceso p
-	INNER JOIN dbo.TC_CategoriaPago cp ON p.I_CatPagoID = cp.I_CatPagoID
+	SELECT p.I_ProcesoID, cp.T_CatPagoDesc, T_OpcionDesc AS T_PeriodoDesc, I_Periodo, T_OpcionCod AS C_PeriodoCod, p.I_Anio, p.D_FecVencto, p.I_Prioridad 
+	FROM dbo.TC_Proceso p
+		INNER JOIN dbo.TC_CategoriaPago cp ON p.I_CatPagoID = cp.I_CatPagoID
+		INNER JOIN dbo.TC_CatalogoOpcion co ON co.I_OpcionID = p.I_Periodo
 	WHERE p.B_Eliminado = 0
 END
 GO
-
 
 
 IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_GrabarProceso')
@@ -205,6 +206,7 @@ CREATE PROCEDURE dbo.USP_I_GrabarProceso
 @I_Anio smallint = null,
 @D_FecVencto datetime = null,
 @I_Prioridad tinyint = null,
+@I_Periodo int = null,
 @I_UsuarioCre int,
 @I_ProcesoID int OUTPUT,
 @B_Result bit OUTPUT,
@@ -213,8 +215,8 @@ AS
 BEGIN
 	SET NOCOUNT ON
   	BEGIN TRY
-		INSERT dbo.TC_Proceso(I_CatPagoID, I_Anio, D_FecVencto, I_Prioridad, B_Migrado, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
-		VALUES(@I_CatPagoID, @I_Anio, @D_FecVencto, @I_Prioridad, 0, 1, 0, @I_UsuarioCre, getdate())
+		INSERT dbo.TC_Proceso(I_CatPagoID, I_Anio, D_FecVencto, I_Prioridad, I_Periodo, B_Migrado, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
+		VALUES(@I_CatPagoID, @I_Anio, @D_FecVencto, @I_Prioridad, @I_Periodo, 0, 1, 0, @I_UsuarioCre, getdate())
 		
 		SET @I_ProcesoID = SCOPE_IDENTITY()
 		SET @B_Result = 1
@@ -342,14 +344,15 @@ IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCE
 GO
 
 
-CREATE PROCEDURE dbo.USP_S_CtaDepo_Proceso
-@I_ProcesoID int
+CREATE PROCEDURE dbo.USP_S_CtaDepo_Proceso 4
+	@I_ProcesoID int
 AS
 BEGIN
 	SET NOCOUNT ON
-  	SELECT cp.I_CtaDepoProID, cp.I_CtaDepositoID, cp.I_ProcesoID, cp.B_Habilitado, c.C_NumeroCuenta, e.T_EntidadDesc FROM dbo.TI_CtaDepo_Proceso cp
-	INNER JOIN dbo.TC_CuentaDeposito c ON c.I_CtaDepositoID = cp.I_CtaDepositoID
-	INNER JOIN dbo.TC_EntidadFinanciera e ON e.I_EntidadFinanID = c.I_EntidadFinanID
+  	SELECT cp.I_CtaDepoProID, cp.I_CtaDepositoID, c.T_DescCuenta, cp.I_ProcesoID, cp.B_Habilitado, c.C_NumeroCuenta, e.T_EntidadDesc 
+	FROM dbo.TI_CtaDepo_Proceso cp
+		INNER JOIN dbo.TC_CuentaDeposito c ON c.I_CtaDepositoID = cp.I_CtaDepositoID
+		INNER JOIN dbo.TC_EntidadFinanciera e ON e.I_EntidadFinanID = c.I_EntidadFinanID
 	WHERE cp.B_Eliminado = 0 AND cp.I_ProcesoID = @I_ProcesoID
 END
 GO

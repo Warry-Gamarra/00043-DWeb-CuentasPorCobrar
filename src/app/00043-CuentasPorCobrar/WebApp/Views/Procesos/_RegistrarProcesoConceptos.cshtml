@@ -1,0 +1,209 @@
+﻿
+@model WebApp.ViewModels.RegistroConceptosProcesoViewModel
+
+<div class="modal-header bg-dark-gray" style="border-radius: .2rem .2rem 0px 0px">
+    <h5 class="modal-title text-center"><i class="fa fa-tag">&nbsp;</i> @ViewBag.Title</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+
+@using (Ajax.BeginForm("Save", "Procesos", new { area = "" }, new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "div_msg", OnBegin = "Load", OnComplete = "Stop" }))
+{
+    @Html.Hidden("Submited", 0)
+    @Html.AntiForgeryToken()
+    <div class="modal-body">
+        <div class="container-fluid">
+            <div class="form-group form-row">
+                <label for="inputConcepto" class="control-label col-sm-3 text-right">Buscar concepto:</label>
+                <div class="col-sm-7">
+                    @Html.DropDownList("inputConcepto", ViewBag.Conceptos as SelectList, "", new { Class = "select-filter form-control" })
+                </div>
+                <div class="col-sm-2">
+                    <button type="button" id="btn-agregar" class="btn btn-sm btn-outline-secondary"><i class="fa fa-plus">&nbsp;</i> Agregar</button>
+                </div>
+            </div>
+            <div id="table-conceptos">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Concepto</th>
+                            <th>Mod. Ing.</th>
+                            <th>Calculado</th>
+                            <th style="width:100px;">Monto Mínimo</th>
+                            <th style="width:100px;">Monto</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr></tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+            @Html.HiddenFor(model => model.ProcesoId)
+
+            <div class="form-group">
+                @*@Html.LabelFor(model => model.CategoriaId, new { @class = "control-label" })
+                @Html.DropDownListFor(model => model.CategoriaId, ViewBag.Categorias as SelectList, "", new { @class = "select-filter form-control text-uppercase", placeholder = "[SELECCIONAR DESC. CUOTA]" })
+                <p class="text-danger small">@Html.ValidationMessageFor(model => model.CategoriaId)</p>*@
+            </div>
+            <div class="form-row">
+                @*<div class="form-group col-4">
+                    @Html.LabelFor(model => model.Anio, new { @class = "control-label" })
+                    @Html.TextBoxFor(model => model.Anio, new { @class = "form-control", @readonly = "true" })
+                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.Anio)</p>
+                </div>
+                <div class="form-group col-8">
+                    @Html.LabelFor(model => model.PerAcadId, new { @class = "control-label" })
+                    @Html.DropDownListFor(model => model.PerAcadId, ViewBag.Periodos as SelectList, "", new { @class = "select-filter form-control text-uppercase" })
+                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.PerAcadId)</p>
+                </div>*@
+            </div>
+            <hr />
+            <div class="form-group row">
+                @Html.LabelFor(model => model.FecVencto, new { @class = "control-label col-form-label col-4" })
+                <div class="col-8">
+                    <div class="input-group date" id="datepicker_fecvento">
+                        @Html.TextBoxFor(model => model.FecVencto, "{0:dd/MM/yyyy}", new { @class = "form-control" })
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="fa fa-calendar-o"></i></span>
+                        </div>
+                    </div>
+                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.FecVencto)</p>
+                </div>
+            </div>
+            @*<div class="form-group row">
+                @Html.LabelFor(model => model.CtaDepositoID, new { @class = "control-label col-form-label col-4" })
+                <div class="col-8">
+                    @Html.ListBoxFor(model => model.CtaDepositoID, ViewBag.CtasDeposito as SelectList, new { @class = "select-multiple form-control text-uppercase", multiple = "true" })
+                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.CtaDepositoID)</p>
+                </div>
+            </div>*@
+        </div>
+    </div>
+    <div class="modal-footer" id="div_msg">
+        <div class="col-md-12" style="display:none" id="loading">
+            <h6>Actualizando los datos...</h6>
+
+            <div class="progress">
+                <div class="indeterminate"></div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="btnsubmit"><i class="fa fa-save"></i>&nbsp;Guardar</button>
+        <button type="button" class="btn btn-secondary" id="btnCancel" data-dismiss="modal"><i class="fa fa-times-circle-o">&nbsp;</i>Cancelar</button>
+    </div>
+}
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        //$('#wizard_verticle').smartWizard({
+        //    transitionEffect: 'slide',
+        //    labelNext: 'Siguiente', // label for Next button
+        //    labelPrevious: 'Atrás', // label for Previous button
+        //    labelFinish: 'Finalizar',  // label for Finish button
+        //});
+
+        $('.select-filter').select2({
+            theme: 'bootstrap4',
+            dropdownParent: $('#modal-container'),
+            placeholder: "[ SELECCIONAR ]"
+        }).on('hide', function (e) {
+            e.stopPropagation();
+        });
+
+
+        $('.input-group.date').datepicker({
+            todayBtn: 'linked',
+            language: 'es',
+            format: 'dd/mm/yyyy',
+            autoclose: true,
+            startDate: '-0d',
+            weekStart: 0,
+            orientation: 'bottom auto',
+            calendarWeeks: true,
+        }).on('hide', function (e) {
+            e.stopPropagation();
+        });
+
+        $('#CategoriaId').on('change', function () {
+            $.ajax({
+                url: ('@Url.Action("GetCuentasDeposito", "Service", new { httproute = "ActionApi" })' + '/' + this.value),
+                type: 'GET',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                cache: false,
+                beforeSend: function () { },
+                success: function (data) {
+                    $('#CtaDepositoID').empty()
+                    if (data && data.length > 0) {
+                        for (let i = 0; i < data.length; i++) {
+                            let options = ''
+                            for (let j = 0; j < data[i].ItemsGroup.length; j++) {
+                                options += '<option value="' + data[i].ItemsGroup[j].Value + '">' + data[i].ItemsGroup[j].TextDisplay + '</option>'
+                            }
+                            optGroup = `<optgroup label="` + data[i].NameGroup + '">' + options + '</optgroup>'
+                            $('#CtaDepositoID').append(optGroup);
+                        }
+                    }
+                },
+                error: function () { },
+                complete: function () { }
+            });
+
+        })
+
+
+
+        let conceptos = [];
+
+        $('#btn-agregar').on('click', function (event) {
+            event.preventDefault();
+
+            let selectedText = $('#inputConcepto option:selected').text();
+            let selectedValue = $('#inputConcepto').val();
+
+            if (selectedValue === "" || selectedValue == null) {
+                return false;
+            }
+
+            conceptos.push({ "id": selectedValue, "descripcion": selectedText });
+
+            $('#inputConcepto option[value="' + selectedValue + '"]').remove();
+            drawTable(conceptos);
+        })
+
+        $('#table-conceptos>table>tbody').on('click', 'button.remove-item', function (event) {
+            event.preventDefault();
+
+            let indexRow = $(this).data('index');
+            let conceptoDesc = conceptos[indexRow]['descripcion'];
+            let opt = new Option(conceptos[indexRow]['id'], conceptoDesc);
+
+            conceptos.splice(indexRow, 1);
+            drawTable(conceptos);
+
+            $(opt).html(conceptoDesc);
+            $('#inputConcepto').append(opt);
+        });
+
+        function drawTable(conceptos) {
+            let rowsTemplate = ''
+            $.each(conceptos, function (index, itemValue) {
+                rowsTemplate += `<tr>
+                                        <td> ${itemValue.descripcion} </td>
+                                        <td>  </td>
+                                        <td><input type="checkbox" class="" id="${itemValue.id}" name="calculado" /></td>
+                                        <td><input type="number" class="form-control input-sm" id="monto_min_${index}" name="monto_min" /></td>
+                                        <td><input type="number" class="form-control input-sm" id="monto_${index}" name="monto" /></td>
+                                        <td><button class="btn btn-sm btn-outline-danger remove-item" data-index="${index}"><i class="fa fa-trash-o"></i></button></td>
+                                    </tr>`;
+            })
+
+            $('#table-conceptos>table>tbody').html(rowsTemplate);
+        }
+
+    })
+
+</script>

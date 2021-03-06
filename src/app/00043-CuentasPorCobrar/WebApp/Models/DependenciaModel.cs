@@ -68,7 +68,6 @@ namespace WebApp.Models
                 result.Error(true);
             }
             return result;
-            return result;
         }
     }
 }

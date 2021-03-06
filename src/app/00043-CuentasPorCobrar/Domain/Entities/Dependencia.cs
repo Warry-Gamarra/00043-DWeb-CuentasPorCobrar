@@ -41,7 +41,7 @@ namespace Domain.Entities
             _dependenciaRepository.I_DependenciaID = dependenciaId;
             _dependenciaRepository.D_FecMod = DateTime.Now;
             _dependenciaRepository.B_Habilitado = !currentState;
-
+            
             return new Response(_dependenciaRepository.ChangeState(currentUserId));
         }
 

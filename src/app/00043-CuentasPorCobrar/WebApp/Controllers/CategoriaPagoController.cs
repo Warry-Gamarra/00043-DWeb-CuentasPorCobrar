@@ -52,11 +52,12 @@ namespace WebApp.Controllers
         {
             ViewBag.Title = "Editar categoría de pago";
 
+            var model = _categoriaPago.Find(id);
             ViewBag.Niveles = new SelectList(_conceptoPago.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.Grado), "Value", "TextDisplay");
             ViewBag.TiposAlumno = new SelectList(_conceptoPago.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.TipoAlumno), "Value", "TextDisplay");
-            ViewBag.CtasDeposito = new SelectList(_cuentasDeposito.Find(), "Id", "NumeroCuenta");
+            ViewBag.CtasDeposito = new SelectList(_cuentasDeposito.Find(), "Id", "DescripcionFull", "EntidadFinanciera", model.CuentasDeposito, null);
 
-            return PartialView("_RegistrarCategoria", _categoriaPago.Find(id));
+            return PartialView("_RegistrarCategoria", model);
         }
 
         public JsonResult ChangeState(int RowID, bool B_habilitado)

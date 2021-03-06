@@ -11,91 +11,78 @@ namespace WebApp.Models
 {
     public class ProcesoModel
     {
-        ProcesoService procesoService;
+        private readonly ProcesoService procesoService;
+        private readonly ConceptoPagoService conceptoPagoService;
 
         public ProcesoModel()
         {
             procesoService = new ProcesoService();
+            conceptoPagoService = new ConceptoPagoService();
         }
 
-        public List<CategoriaProcesoViewModel> ObtenerCategoriasPorAnioGradoAcad(int anio, int gradoAcadId)
-        {
-            List<CategoriaProcesoViewModel> result = new List<CategoriaProcesoViewModel>();
-
-            foreach (var item in procesoService.Listar_CategoriaPago_Habilitados().Where(x => x.Nivel == gradoAcadId))
-            {
-                result.Add(new CategoriaProcesoViewModel()
-                {
-                    Id = item.CategoriaId,
-                    Nombre = $"{anio.ToString()} - {item.Descripcion}",
-                    CantidadProcesos = 0,
-                    CantidadConceptos = 0,
-                    TieneProcesos = false,
-                    TieneConceptos = false,
-                    Anio = anio,
-                    PeriodoId = 0
-                });
-            }
-
-            return result;
-        }
-
-        public RegistroProcesoConceptosViewModel InitProcesoCategoria(int categoriaId, int anio)
+        public RegistroConceptosProcesoViewModel ObtenerConceptosProceso(int procesoID)
         {
             CategoriaPagoModel categoriaModel = new CategoriaPagoModel();
-            var categoria = categoriaModel.Find(categoriaId);
-            RegistroProcesoConceptosViewModel result = new RegistroProcesoConceptosViewModel()
+            var proceso = procesoService.Obtener_Proceso(procesoID);
+            var conceptosPago = new List<ConceptoPagoViewModel>();
+
+            RegistroConceptosProcesoViewModel result = new RegistroConceptosProcesoViewModel()
             {
-                CategoriaId = categoriaId,
-                DescProceso = $"{anio.ToString()} - {categoria.Nombre}",
-                AnioProceso = anio,
-                PrioridadId = categoria.Prioridad,
-                CtasDepoId = categoria.CuentasDeposito
+                CategoriaId = proceso.I_CatPagoID,
+                DescProceso = $"{proceso.I_Anio}-{proceso.I_Periodo}-{proceso.T_CatPagoDesc}",
+                AnioProceso = proceso.I_Anio,
+                FecVencto = proceso.D_FecVencto,
+                ProcesoId = proceso.I_ProcesoID,
+                Conceptos = conceptosPago
             };
 
             return result;
         }
-
-
-
-
-
 
         public int Obtener_Prioridad_Tipo_Proceso(int I_CatPagoID)
         {
             return procesoService.Obtener_Prioridad_CategoriaPago(I_CatPagoID);
         }
 
-        public List<SelectViewModel> Listar_Combo_CtaDepositoHabilitadas(int I_CatPagoID)
+        public List<SelectGroupViewModel> Listar_Combo_CtaDepositoHabilitadas(int I_CatPagoID)
         {
-            List<SelectViewModel> result = new List<SelectViewModel>();
+            List<SelectGroupViewModel> result = new List<SelectGroupViewModel>();
 
             var lista = procesoService.Listar_Cuenta_Deposito_Habilitadas(I_CatPagoID);
 
             if (lista != null)
             {
-                result = lista.Select(x => new SelectViewModel()
+                foreach (var entidad in lista.Select(x => x.T_EntidadDesc).Distinct())
                 {
-                    Value = x.I_CtaDepID.ToString(),
-                    TextDisplay = String.Format("{0}: {1}", x.T_EntidadDesc, x.C_NumeroCuenta),
-                }).ToList();
+                    result.Add(new SelectGroupViewModel()
+                    {
+                        NameGroup = entidad,
+                        ItemsGroup = lista.Where(x => x.T_EntidadDesc == entidad).Select(x => new SelectViewModel()
+                        {
+                            Value = x.I_CtaDepID.ToString(),
+                            TextDisplay = String.Format("{0} - {1}", x.T_DescCuenta, x.C_NumeroCuenta),
+                            NameGroup = entidad
+                        }).ToList()
+                    });
+                }
             }
 
             return result;
         }
 
-        public List<ProcesoViewModel> Listar_Procesos()
+        public List<ProcesoViewModel> Listar_Procesos(int anio)
         {
             List<ProcesoViewModel> result = new List<ProcesoViewModel>();
 
-            var lista = procesoService.Listar_Procesos();
+            var lista = procesoService.Listar_Procesos().Where(x => x.I_Anio == anio);
 
             if (lista != null)
             {
                 result = lista.Select(x => new ProcesoViewModel()
                 {
                     I_ProcesoID = x.I_ProcesoID,
-                    T_CatPagoDesc = x.T_CatPagoDesc,
+                    T_CatPagoDesc = $"{x.I_Anio.ToString()}-{x.C_PeriodoCod}-{x.T_CatPagoDesc}",
+                    T_Periodo = x.T_PeriodoDesc,
                     I_Anio = x.I_Anio,
                     D_FecVencto = x.D_FecVencto,
                     I_Prioridad = x.I_Prioridad
@@ -127,21 +114,22 @@ namespace WebApp.Models
             return result;
         }
 
-        public Response Grabar_Proceso(MantenimientoProcesoViewModel model, int currentUserId)
+        public Response Grabar_Proceso(RegistroProcesoViewModel model, int currentUserId)
         {
             ProcesoEntity procesoEntity;
             CtaDepoProcesoEntity ctaDepoProcesoEntity;
 
-            var procesoSaveOption = (!model.I_ProcesoID.HasValue) ? SaveOption.Insert : SaveOption.Update;
+            var procesoSaveOption = (!model.ProcesoId.HasValue) ? SaveOption.Insert : SaveOption.Update;
 
             procesoEntity = new ProcesoEntity()
             {
-                I_ProcesoID = model.I_ProcesoID.GetValueOrDefault(),
-                I_CatPagoID = model.I_CatPagoID,
-                I_Anio = model.I_Anio,
-                D_FecVencto = model.D_FecVencto,
-                I_Prioridad = model.I_Prioridad,
-                B_Habilitado = model.B_Habilitado.HasValue ? model.B_Habilitado.GetValueOrDefault() : true,
+                I_ProcesoID = model.ProcesoId.GetValueOrDefault(),
+                I_CatPagoID = model.CategoriaId.Value,
+                I_Anio = model.Anio,
+                I_Periodo = model.PerAcadId,
+                D_FecVencto = model.FecVencto,
+                I_Prioridad = model.PrioridadId,
+                B_Habilitado = true,
                 I_UsuarioCre = currentUserId,
                 I_UsuarioMod = currentUserId
             };
@@ -156,11 +144,11 @@ namespace WebApp.Models
 
                 if (ctasDeposito != null && ctasDeposito.Count > 0)
                 {
-                    if (model.Arr_CtaDepositoID != null)
+                    if (model.CtaDepositoID != null)
                     {
-                        for (int i = 0; i < model.Arr_CtaDepositoID.Length; i++)
+                        for (int i = 0; i < model.CtaDepositoID.Length; i++)
                         {
-                            int ctaDepositoID = model.Arr_CtaDepositoID[i];
+                            int ctaDepositoID = model.CtaDepositoID[i];
 
                             if (ctasDeposito.Exists(x => x.I_CtaDepositoID == ctaDepositoID))
                             {
@@ -187,7 +175,7 @@ namespace WebApp.Models
                             }
                         }
 
-                        var listaDeshabilitar = ctasDeposito.FindAll(x => !model.Arr_CtaDepositoID.Contains(x.I_CtaDepositoID));
+                        var listaDeshabilitar = ctasDeposito.FindAll(x => !model.CtaDepositoID.Contains(x.I_CtaDepositoID));
 
                         foreach (var item in listaDeshabilitar)
                         {
@@ -215,9 +203,9 @@ namespace WebApp.Models
                 }
                 else
                 {
-                    if (model.Arr_CtaDepositoID != null)
+                    if (model.CtaDepositoID != null)
                     {
-                        foreach (var item in model.Arr_CtaDepositoID)
+                        foreach (var item in model.CtaDepositoID)
                         {
                             ctaDepoProcesoEntity = new CtaDepoProcesoEntity()
                             {
@@ -233,42 +221,35 @@ namespace WebApp.Models
                 }
             }
 
+            if (resultProceso.Value)
+            {
+                resultProceso.Success(false);
+            }
+            else
+            {
+                resultProceso.Error(true);
+            }
+
             return resultProceso;
         }
 
-        public MantenimientoProcesoViewModel Obtener_Proceso(int I_ProcesoID)
+
+        public RegistroProcesoViewModel Obtener_Proceso(int I_ProcesoID)
         {
             var proceso = procesoService.Obtener_Proceso(I_ProcesoID);
 
-            var model = new MantenimientoProcesoViewModel()
+            var model = new RegistroProcesoViewModel()
             {
-                I_ProcesoID = proceso.I_ProcesoID,
-                I_CatPagoID = proceso.I_CatPagoID,
-                I_Anio = proceso.I_Anio,
-                D_FecVencto = proceso.D_FecVencto,
-                I_Prioridad = proceso.I_Prioridad,
-                B_Habilitado = proceso.B_Habilitado
+                ProcesoId = proceso.I_ProcesoID,
+                CategoriaId = proceso.I_CatPagoID,
+                Anio = proceso.I_Anio.Value,
+                PerAcadId = proceso.I_Periodo,
+                FecVencto = proceso.D_FecVencto,
+                PrioridadId = proceso.I_Prioridad,
+                CtaDepositoID = procesoService.Obtener_CtasDepo_X_Proceso(I_ProcesoID).Select(x => x.I_CtaDepositoID).ToArray()
             };
 
             return model;
-        }
-
-        public List<SelectViewModel> Listar_Combo_CtasDepoProceso(int I_ProcesoID)
-        {
-            List<SelectViewModel> result = new List<SelectViewModel>();
-
-            var lista = procesoService.Obtener_CtasDepo_X_Proceso(I_ProcesoID);
-
-            if (lista != null)
-            {
-                result = lista.Where(x => x.B_Habilitado).Select(x => new SelectViewModel()
-                {
-                    Value = x.I_CtaDepositoID.ToString(),
-                    TextDisplay = String.Format("{0}: {1}", x.T_EntidadDesc, x.C_NumeroCuenta),
-                }).ToList();
-            }
-
-            return result;
         }
 
         public List<SelectViewModel> Listar_Anios()
