@@ -13,6 +13,7 @@ namespace Data.Procedures
     public class USP_S_Procesos
     {
         public int I_ProcesoID { get; set; }
+        public int I_CatPagoID { get; set; }
         public string T_CatPagoDesc { get; set; }
         public string T_PeriodoDesc { get; set; }
         public int I_Periodo { get; set; }

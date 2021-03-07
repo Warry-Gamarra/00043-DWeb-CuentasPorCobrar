@@ -513,6 +513,7 @@
     <Content Include="Views\EntidadFinanciera\_CuentasBanco.cshtml" />
     <Content Include="Views\Obligaciones\Generar.cshtml" />
     <Content Include="Views\Procesos\_RegistrarProcesoConceptos.cshtml" />
+    <Content Include="Views\Procesos\_ConceptosProcceso.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
