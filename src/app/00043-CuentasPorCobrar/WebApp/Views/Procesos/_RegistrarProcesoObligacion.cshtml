@@ -1,5 +1,6 @@
 ﻿
 @model WebApp.ViewModels.RegistroProcesoViewModel
+@Scripts.Render("~/bundles/jqueryval")
 
 <div class="modal-header bg-dark-gray" style="border-radius: .2rem .2rem 0px 0px">
     <h5 class="modal-title text-center"><i class="fa fa-tag">&nbsp;</i> @ViewBag.Title</h5>
@@ -127,7 +128,7 @@
                 complete: function () { }
             });
 
-        })
+        });
     })
 
 </script>

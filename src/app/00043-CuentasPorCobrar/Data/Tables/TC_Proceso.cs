@@ -25,25 +25,5 @@ namespace Data.Tables
         public int? I_UsuarioMod { get; set; }
         public DateTime? D_FecMod { get; set; }
 
-        public static TC_Proceso FindByID(int I_ProcesoID)
-        {
-            TC_Proceso result;
-
-            try
-            {
-                string s_command = @"select p.* from dbo.TC_Proceso p where p.I_ProcesoID = @I_ProcesoID";
-
-                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
-                {
-                    result = _dbConnection.Query<TC_Proceso>(s_command, new { I_ProcesoID = I_ProcesoID }, commandType: CommandType.Text).FirstOrDefault();
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return result;
-        }
     }
 }

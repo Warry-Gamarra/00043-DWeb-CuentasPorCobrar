@@ -96,6 +96,18 @@ namespace WebApp.Controllers
 
 
         [Route("configuracion/obligaciones-y-conceptos/{procesoId}/conceptos-de-pago")]
+        public ActionResult VerConceptosProcceso(int procesoId)
+        {
+
+            ViewBag.Title = "Conceptos de Pago";
+
+            var model = procesoModel.ObtenerConceptosProceso(procesoId);
+            ViewBag.Conceptos = new SelectList(_conceptoModel.Listar_CatalogoConceptos(), "Id", "NombreConcepto");
+
+            return PartialView("_RegistrarProcesoConceptos", model);
+        }
+
+        [Route("configuracion/obligaciones-y-conceptos/{procesoId}/editar-concepto/{id}")]
         public ActionResult EditarConceptosPago(int procesoId)
         {
 

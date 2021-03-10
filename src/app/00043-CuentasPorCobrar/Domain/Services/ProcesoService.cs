@@ -144,7 +144,7 @@ namespace Domain.Services
 
                     break;
             }
-            
+
             return new Response(result);
         }
 
@@ -193,7 +193,7 @@ namespace Domain.Services
 
             try
             {
-                var proceso = TC_Proceso.FindByID(I_ProcesoID);
+                var proceso = USP_S_Procesos.Execute().Find(x => x.I_ProcesoID == I_ProcesoID);
 
                 if (proceso != null)
                 {
@@ -201,9 +201,10 @@ namespace Domain.Services
                     {
                         I_ProcesoID = proceso.I_ProcesoID,
                         I_CatPagoID = proceso.I_CatPagoID,
+                        T_CatPagoDesc = proceso.T_CatPagoDesc,
                         I_Anio = proceso.I_Anio,
                         D_FecVencto = proceso.D_FecVencto,
-                        I_Periodo = proceso.I_Periodo.Value,
+                        I_Periodo = proceso.I_Periodo,
                         I_Prioridad = proceso.I_Prioridad,
                     };
                 }
@@ -222,7 +223,8 @@ namespace Domain.Services
             {
                 var lista = TI_CtaDepo_Proceso.FindByProceso(I_ProcesoID);
 
-                var result = lista.Select(x => new CtaDepoProcesoEntity() {
+                var result = lista.Select(x => new CtaDepoProcesoEntity()
+                {
                     I_CtaDepoProID = x.I_CtaDepoProID,
                     I_CtaDepositoID = x.I_CtaDepositoID,
                     I_ProcesoID = x.I_ProcesoID,
