@@ -42,6 +42,20 @@
                                             <label for="cmbPeriodoGrupal">Periodo</label>
                                             @Html.DropDownList("cmbPeriodoGrupal", new SelectList(ViewBag.Periodos, "Value", "TextDisplay", "15"), null, new { @class = "form-control form-control-sm" })
                                         </div>
+
+                                        @*<div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
+                                            <label for="cmbNivelGrupal">Facultad</label>
+                                            <select id="cmbNivelGrupal" name="cmbNivelGrupal" class="form-control form-control-sm">
+                                                <option>Facultad 1</option>
+                                                <option>Facultad 2</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group col-lg-3 col-md-5 col-sm-12 col-12">
+                                            <label for="cmbEspecialidad">Especialidad</label>
+                                            <select id="cmbEspecialidad" name="cmbEspecialidad" class="form-control form-control-sm"></select>
+                                        </div>*@
+
                                         <div class="form-group col-lg-2 col-sm-3 col-12">
                                             <button type="submit" class="btn btn-block btn-outline-primary mt-4">
                                                 <i class="fa fa-fw fa-engine">&nbsp;</i> Generar obligaciones
@@ -90,11 +104,7 @@
                                         </div>
                                         <div class="form-group col-lg-3 col-md-5 col-12">
                                             <label for="cmbEspecialidad">Especialidad</label>
-                                            <select id="cmbEspecialidad" name="cmbEspecialidad" class="form-control form-control-sm">
-                                                @*<option selected>[ Seleccionar una opción ]</option>
-                                                <option value="011">INGENIERÍA DE SISTEMAS</option>
-                                                <option value="044">PSICOLOGÍA</option>*@
-                                            </select>
+                                            <select id="cmbEspecialidad" name="cmbEspecialidad" class="form-control form-control-sm"></select>
                                         </div>
                                         <div class="form-group col-lg-2 col-md-3 col-12">
                                             <button type="button" id="btnConsultarObligacionAlumno" class="btn btn-block btn-outline-primary mt-4"><i class="fa fa-fw fa-search-plus">&nbsp;</i> Iniciar consulta</button>
@@ -246,12 +256,20 @@
                 success: function (data) {
                     if (data) {
                         if (data.detalle_pago.length == 0) {
-                            var r = confirm("El alumno no cuenta con obligaciones generadas para este periodo. " +
-                                "¿Desea generar las obligaciones en este momento ?.");
-
-                            if (r === true) {
-                                GenerarPorAlumno(anio, periodo, codRc, codigoAlu);
-                            }
+                            Swal.fire({
+                                title: '',
+                                text: "El alumno no cuenta con obligaciones generadas para este periodo. ¿Desea generar las obligaciones en este momento?.",
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Si, continuar.',
+                                cancelButtonText: 'No, cancelar.'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    GenerarPorAlumno(anio, periodo, codRc, codigoAlu);
+                                }
+                            });
                         } else {
                             GenerarTablaDetalle(data.detalle_pago);
                             GenerarTablaCuotas(data.cuotas_pago);
