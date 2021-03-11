@@ -36,6 +36,12 @@ namespace WebApi.Models
 
         public string T_ModIngDesc { get; set; }
 
+        public string N_Grado { get; set; }
+
+        public string T_GradoDesc { get; set; }
+
+        public string N_Grupo { get; set; }
+
         public int? C_AnioIngreso { get; set; }
 
         public int? I_IdPlan { get; set; }

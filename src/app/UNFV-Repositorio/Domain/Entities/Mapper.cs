@@ -104,6 +104,9 @@ namespace Domain.Entities
                 T_DenomProg = alumno.T_DenomProg,
                 C_CodModIng = alumno.C_CodModIng,
                 T_ModIngDesc = alumno.T_ModIngDesc,
+                N_Grado = alumno.N_Grado,
+                T_GradoDesc = alumno.T_GradoDesc,
+                N_Grupo = alumno.N_Grupo,
                 C_AnioIngreso = alumno.C_AnioIngreso,
                 I_IdPlan = alumno.I_IdPlan,
                 B_Habilitado = alumno.B_Habilitado
