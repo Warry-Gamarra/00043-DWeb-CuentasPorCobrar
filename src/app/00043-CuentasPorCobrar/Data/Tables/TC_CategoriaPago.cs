@@ -20,6 +20,7 @@ namespace Data.Tables
         public int I_TipoAlumno { get; set; }
         public string T_TipoAluDesc { get; set; }
         public bool B_Obligacion { get; set; }
+        public string N_CodBanco { get; set; }
         public bool B_Habilitado { get; set; }
         public bool B_Eliminado { get; set; }
         public int? I_UsuarioCre { get; set; }
@@ -86,6 +87,7 @@ namespace Data.Tables
                     parameters.Add(name: "I_TipoAlumno", dbType: DbType.Int32, value: this.I_TipoAlumno);
                     parameters.Add(name: "I_Prioridad", dbType: DbType.Int32, value: this.I_Prioridad);
                     parameters.Add(name: "B_Obligacion", dbType: DbType.Boolean, value: this.B_Obligacion);
+                    parameters.Add(name: "N_CodBanco", dbType: DbType.String, size: 10, value: this.N_CodBanco);
                     parameters.Add(name: "Tbl_Cuentas", value: dataTable.AsTableValuedParameter("type_SelectItems"));
                     parameters.Add(name: "D_FecCre", dbType: DbType.DateTime, value: this.D_FecCre);
                     parameters.Add(name: "CurrentUserId", dbType: DbType.Int32, value: currentUserId);
@@ -122,6 +124,7 @@ namespace Data.Tables
                     parameters.Add(name: "I_Nivel", dbType: DbType.Int32, value: this.I_Nivel);
                     parameters.Add(name: "I_TipoAlumno", dbType: DbType.Int32, value: this.I_TipoAlumno);
                     parameters.Add(name: "I_Prioridad", dbType: DbType.Int32, value: this.I_Prioridad);
+                    parameters.Add(name: "N_CodBanco", dbType: DbType.String, size: 10, value: this.N_CodBanco);
                     parameters.Add(name: "Tbl_Cuentas", value: dataTable.AsTableValuedParameter("type_SelectItems"));
                     parameters.Add(name: "B_Obligacion", dbType: DbType.Boolean, value: this.B_Obligacion);
                     parameters.Add(name: "D_FecMod", dbType: DbType.DateTime, value: this.D_FecMod);

@@ -21,7 +21,9 @@ namespace Domain.Entities
         public int TipoAlumno { get; set; }
         public string TipoAlumnoDesc { get; set; }
         public bool EsObligacion { get; set; }
+        public string CodBcoComercio { get; set; }
         public List<int> CuentasDeposito { get; set; }
+        public List<CuentaDepoEntidad> CuentasDepositoEntidad { get; set; }
         public bool Habilitado { get; set; }
 
 
@@ -40,6 +42,7 @@ namespace Domain.Entities
             this.Prioridad = table.I_Prioridad;
             this.TipoAlumno = table.I_TipoAlumno;
             this.EsObligacion = table.B_Obligacion;
+            this.CodBcoComercio = table.N_CodBanco;
             this.Habilitado = table.B_Habilitado;
         }
 
@@ -76,7 +79,12 @@ namespace Domain.Entities
 
             return new CategoriaPago(TC_CategoriaPago.FindByID(categoriaPagoId))
             {
-                CuentasDeposito = cuentas != null ? cuentas.Select(x => x.I_CtaDepositoID).ToList() : new List<int>()
+                CuentasDeposito = cuentas != null ? cuentas.Select(x => x.I_CtaDepositoID).ToList(): new List<int>(),
+                CuentasDepositoEntidad = cuentas != null ? cuentas.Select(x => new CuentaDepoEntidad()
+                {
+                    CuentaDepoId = x.I_CtaDepositoID,
+                    EntidadFinanId = x.I_EntidadFinanID
+                }).ToList() : new List<CuentaDepoEntidad>()
             };
         }
 
@@ -88,6 +96,7 @@ namespace Domain.Entities
             _categoriaPago.I_TipoAlumno = categoriaPago.TipoAlumno;
             _categoriaPago.I_Nivel = categoriaPago.Nivel;
             _categoriaPago.B_Obligacion = categoriaPago.EsObligacion;
+            _categoriaPago.N_CodBanco = categoriaPago.CodBcoComercio;
 
             DataTable dataTable = new DataTable();
             dataTable.Columns.Add("C_ID");

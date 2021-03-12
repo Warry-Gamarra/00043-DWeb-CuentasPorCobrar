@@ -344,7 +344,7 @@ IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCE
 GO
 
 
-CREATE PROCEDURE dbo.USP_S_CtaDepo_Proceso 4
+CREATE PROCEDURE dbo.USP_S_CtaDepo_Proceso
 	@I_ProcesoID int
 AS
 BEGIN
@@ -364,14 +364,17 @@ IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCE
 GO
 
 CREATE PROCEDURE dbo.USP_S_ConceptoPago
+	@I_ProcesoID int
 AS
 BEGIN
 	SET NOCOUNT ON;
-	SELECT c.I_ConcPagID, catg.T_CatPagoDesc, cp.T_ConceptoDesc, c.I_Anio, c.I_Periodo, c.M_Monto FROM dbo.TI_ConceptoPago c
+	SELECT c.I_ConcPagID, catg.T_CatPagoDesc, cp.T_ConceptoDesc, c.I_Anio, c.I_Periodo, c.M_Monto 
+	FROM dbo.TI_ConceptoPago c
 	INNER JOIN dbo.TC_Concepto cp ON cp.I_ConceptoID = c.I_ConceptoID
 	INNER JOIN dbo.TC_Proceso p ON p.I_ProcesoID = c.I_ProcesoID
 	INNER JOIN dbo.TC_CategoriaPago catg ON catg.I_CatPagoID = p.I_CatPagoID
-	WHERE c.B_Habilitado = 1 AND c.B_Eliminado = 0
+	WHERE c.B_Habilitado = 1 AND c.B_Eliminado = 0 
+	AND c.I_ProcesoID = @I_ProcesoID
 END
 GO
 
@@ -943,6 +946,7 @@ CREATE PROCEDURE [dbo].[USP_I_GrabarCategoriaPago]
 	,@I_TipoAlumno	int
 	,@I_Prioridad	int
 	,@B_Obligacion	bit
+	,@N_CodBanco	varchar(10)
 	,@Tbl_Cuentas		[dbo].[type_SelectItems] READONLY
 	,@D_FecCre		datetime
 	,@CurrentUserId	int
@@ -953,8 +957,8 @@ AS
 BEGIN
   SET NOCOUNT ON
   	BEGIN TRY		
-		INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Nivel, I_Prioridad, I_TipoAlumno, B_Obligacion, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
-						  	  VALUES (@T_CatPagoDesc, @I_Nivel, @I_Prioridad, @I_TipoAlumno, @B_Obligacion, 1, 0, @CurrentUserId, @D_FecCre)
+		INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Nivel, I_Prioridad, I_TipoAlumno, B_Obligacion, N_CodBanco, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
+						  	  VALUES (@T_CatPagoDesc, @I_Nivel, @I_Prioridad, @I_TipoAlumno, @B_Obligacion, @N_CodBanco, 1, 0, @CurrentUserId, @D_FecCre)
 		
 		SET @I_CatPagoID = SCOPE_IDENTITY()
 
@@ -998,6 +1002,7 @@ CREATE PROCEDURE [dbo].[USP_U_ActualizarCategoriaPago]
 	,@I_TipoAlumno	int
 	,@I_Prioridad	int
 	,@B_Obligacion	bit
+	,@N_CodBanco	varchar(10)
 	,@Tbl_Cuentas	[dbo].[type_SelectItems] READONLY
 	,@D_FecMod		datetime
 	,@CurrentUserId	int
@@ -1014,6 +1019,7 @@ BEGIN
 			, I_Prioridad = @I_Prioridad
 			, I_TipoAlumno = @I_TipoAlumno
 			, B_Obligacion = @B_Obligacion
+			, N_CodBanco = @N_CodBanco
 			, D_FecMod = @D_FecMod
 			, I_UsuarioMod = @CurrentUserId
 
