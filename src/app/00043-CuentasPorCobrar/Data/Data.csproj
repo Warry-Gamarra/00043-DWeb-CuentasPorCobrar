@@ -92,7 +92,6 @@
     <Compile Include="Tables\TC_CategoriaPago.cs" />
     <Compile Include="Tables\TC_CuentaDeposito.cs" />
     <Compile Include="Tables\TC_EntidadFinanciera.cs" />
-    <Compile Include="Tables\TC_Proceso.cs" />
     <Compile Include="Tables\TC_Usuario.cs" />
     <Compile Include="Tables\TI_ConceptoPago.cs" />
     <Compile Include="Tables\TI_CtaDepo_Proceso.cs" />

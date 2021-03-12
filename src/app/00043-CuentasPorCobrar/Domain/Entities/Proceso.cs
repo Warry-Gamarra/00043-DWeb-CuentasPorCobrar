@@ -15,6 +15,7 @@ namespace Domain.Entities
         public string T_CatPagoDesc { get; set; }
         public string T_PeriodoDesc { get; set; }
         public string C_PeriodoCod { get; set; }
+        public string N_CodBanco { get; set; }
         public DateTime? D_FecVencto { get; set; }
         public short? I_Prioridad { get; set; }
     }

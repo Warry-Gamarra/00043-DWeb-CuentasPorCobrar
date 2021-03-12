@@ -62,7 +62,7 @@ namespace WebApp.ViewModels
         [Display(Name = "Cuentas Habilitadas")]
         public int[] CuentasDeposito { get; set; }
         public bool  MostrarCodBanco { get; set; } 
-        public string BcoComercioNombre { get; set; } 
+        public int[] CtasBcoComercio { get; set; } 
 
         public CategoriaPagoRegistroViewModel() { }
 
@@ -78,5 +78,4 @@ namespace WebApp.ViewModels
             this.CuentasDeposito = categoriaPago.CuentasDeposito.ToArray();
         }
     }
-
 }

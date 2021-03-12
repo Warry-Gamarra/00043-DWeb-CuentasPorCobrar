@@ -25,8 +25,6 @@ namespace Domain.DTO
         MultaNoVotar
     }
 
-
-
     public enum TablaMigracion
     {
         Dependencias,

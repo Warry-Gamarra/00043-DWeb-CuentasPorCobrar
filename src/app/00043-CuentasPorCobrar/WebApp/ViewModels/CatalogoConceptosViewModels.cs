@@ -40,7 +40,7 @@ namespace WebApp.ViewModels
         public bool EsMatricula { get; set; }
 
         [Display(Name = "¿Aplica a pagos extemporáneos?")]
-        public bool EsExtemporaneo { get; set; }
+        public bool Extemporaneo { get; set; }
 
         [Display(Name = "¿Agrupa otros conceptos?")]
         public bool AgupaConceptos { get; set; }
@@ -52,7 +52,7 @@ namespace WebApp.ViewModels
         {
             this.Id = concepto.I_ConceptoID;
             this.NombreConcepto = concepto.T_ConceptoDesc.ToUpper();
-            this.EsExtemporaneo = concepto.B_EsPagoExtmp;
+            this.Extemporaneo = concepto.B_EsPagoExtmp;
             this.EsMatricula = concepto.B_EsPagoMatricula;
             this.AgupaConceptos = concepto.B_ConceptoAgrupa;
         }

@@ -1,5 +1,4 @@
-﻿using Domain.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -12,11 +11,15 @@ namespace WebApp.Controllers
 {
     public class ServiceController : ApiController
     {
-        ProcesoModel procesoModel;
+        private readonly ProcesoModel procesoModel;
+        private readonly ConceptoPagoModel conceptoPagoModel;
+        private readonly CategoriaPagoModel categoriaPagoModel;
 
         public ServiceController()
         {
             procesoModel = new ProcesoModel();
+            conceptoPagoModel = new ConceptoPagoModel();
+            categoriaPagoModel = new CategoriaPagoModel();
         }
 
         // GET: api/Service/5
@@ -36,7 +39,24 @@ namespace WebApp.Controllers
         }
 
         // GET: api/Service/5
-        public List<SelectGroupViewModel> GetCuentasDeposito(int id)
+        public object GetDefaultValuesCategoria(int id)
+        {
+            if (id == 0)
+            {
+                var error = new HttpResponseMessage(HttpStatusCode.NotAcceptable)
+                {
+                    Content = new StringContent("El ID proporcionado no puede ser 0.")
+                };
+
+                throw new HttpResponseException(error);
+            }
+            string codBanco = categoriaPagoModel.Find(id).CodBcoComercio;
+            List<SelectGroupViewModel> lista = procesoModel.Listar_Combo_CtaDepositoHabilitadas(id);
+            
+            return new { CodBanco = codBanco, CuentasDeposito = lista };
+        }
+
+        public CatalogoConceptosRegistroViewModel GetDefaultValuesConcepto(int id)
         {
             if (id == 0)
             {
@@ -48,9 +68,10 @@ namespace WebApp.Controllers
                 throw new HttpResponseException(error);
             }
 
-            var lista = procesoModel.Listar_Combo_CtaDepositoHabilitadas(id);
-            
-            return lista;
+            var model = conceptoPagoModel.ObtenerConcepto(id);
+
+            return model;
         }
+
     }
 }

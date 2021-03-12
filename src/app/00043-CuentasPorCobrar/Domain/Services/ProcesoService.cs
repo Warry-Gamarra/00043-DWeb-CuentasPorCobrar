@@ -87,7 +87,8 @@ namespace Domain.Services
                     I_Periodo = x.I_Periodo,
                     I_Anio = x.I_Anio,
                     D_FecVencto = x.D_FecVencto,
-                    I_Prioridad = x.I_Prioridad
+                    I_Prioridad = x.I_Prioridad,
+                    N_CodBanco = x.N_CodBanco
                 }).ToList();
 
                 return result;
@@ -112,6 +113,8 @@ namespace Domain.Services
                         D_FecVencto = procesoEntity.D_FecVencto,
                         I_Prioridad = procesoEntity.I_Prioridad ?? Obtener_Prioridad_CategoriaPago(procesoEntity.I_CatPagoID),
                         I_Periodo = procesoEntity.I_Periodo,
+                        N_CodBanco = procesoEntity.N_CodBanco,
+                        //T_ProcesoDesc = procesoEntity.T_ProcesoDesc,
                         I_UsuarioCre = procesoEntity.I_UsuarioCre.GetValueOrDefault()
                     };
 
@@ -128,6 +131,7 @@ namespace Domain.Services
                         D_FecVencto = procesoEntity.D_FecVencto,
                         I_Prioridad = procesoEntity.I_Prioridad,
                         B_Habilitado = procesoEntity.B_Habilitado,
+                        N_CodBanco = procesoEntity.N_CodBanco,
                         I_UsuarioMod = procesoEntity.I_UsuarioMod.GetValueOrDefault()
                     };
 
@@ -202,10 +206,13 @@ namespace Domain.Services
                         I_ProcesoID = proceso.I_ProcesoID,
                         I_CatPagoID = proceso.I_CatPagoID,
                         T_CatPagoDesc = proceso.T_CatPagoDesc,
+                        C_PeriodoCod = proceso.C_PeriodoCod,
                         I_Anio = proceso.I_Anio,
                         D_FecVencto = proceso.D_FecVencto,
                         I_Periodo = proceso.I_Periodo,
                         I_Prioridad = proceso.I_Prioridad,
+                        N_CodBanco = proceso.N_CodBanco,
+                        T_PeriodoDesc = proceso.T_PeriodoDesc,
                     };
                 }
             }
@@ -247,7 +254,7 @@ namespace Domain.Services
             {
                 var lista = USP_S_CtaDepo_Proceso.Execute(I_ProcesoID);
 
-                var result = lista.Select(x => new CtaDepoProceso()
+                var result = lista.Where(x => x.B_Habilitado).Select(x => new CtaDepoProceso()
                 {
                     I_CtaDepoProID = x.I_CtaDepoProID,
                     I_CtaDepositoID = x.I_CtaDepositoID,
@@ -255,7 +262,8 @@ namespace Domain.Services
                     B_Habilitado = x.B_Habilitado,
                     C_NumeroCuenta = x.C_NumeroCuenta,
                     T_DescCuenta = x.T_DescCuenta,
-                    T_EntidadDesc = x.T_EntidadDesc
+                    T_EntidadDesc = x.T_EntidadDesc,
+                    I_EntidadFinanID = x.I_EntidadFinanID
                 }).ToList();
 
                 return result;

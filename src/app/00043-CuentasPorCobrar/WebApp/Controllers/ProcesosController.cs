@@ -70,7 +70,10 @@ namespace WebApp.Controllers
             ViewBag.Periodos = new SelectList(_selectModel.GetPeriodosAcademicosCatalogo(), "Value", "TextDisplay", null);
             ViewBag.CtasDeposito = new SelectList(new List<SelectViewModel>());
 
-            return PartialView("_RegistrarProcesoObligacion");
+            return PartialView("_RegistrarProcesoObligacion", new RegistroProcesoViewModel()
+            {
+                CtasBcoComercio = _cuentasDeposito.Find().Where(x => x.EntidadFinancieraId == Constantes.BANCO_COMERCIO_ID).Select(x => x.Id.Value).ToArray()
+            });
         }
 
 
@@ -94,49 +97,17 @@ namespace WebApp.Controllers
             return PartialView("_RegistrarProcesoObligacion", model);
         }
 
-
         [Route("configuracion/obligaciones-y-conceptos/{procesoId}/conceptos-de-pago")]
-        public ActionResult VerConceptosProcceso(int procesoId)
+        public ActionResult VerConceptos(int procesoId)
         {
+            ViewBag.Title = procesoModel.Obtener_Proceso(procesoId).DescProceso;
+            ViewBag.ProcesoId = procesoId;
 
-            ViewBag.Title = "Conceptos de Pago";
+            var model = procesoModel.ObtenerConceptosProcesoHabilitados(procesoId);
 
-            var model = procesoModel.ObtenerConceptosProceso(procesoId);
-            ViewBag.Conceptos = new SelectList(_conceptoModel.Listar_CatalogoConceptos(), "Id", "NombreConcepto");
-
-            return PartialView("_RegistrarProcesoConceptos", model);
+            return PartialView("_ListadoConceptosProceso", model);
         }
 
-        [Route("configuracion/obligaciones-y-conceptos/{procesoId}/editar-concepto/{id}")]
-        public ActionResult EditarConceptosPago(int procesoId)
-        {
-
-            ViewBag.Title = "Registrar Conceptos";
-
-            var model = procesoModel.ObtenerConceptosProceso(procesoId);
-            ViewBag.Conceptos = new SelectList(_conceptoModel.Listar_CatalogoConceptos(), "Id", "NombreConcepto");
-
-            return PartialView("_RegistrarProcesoConceptos", model);
-        }
-
-
-
-        //public ActionResult AgregarProcesosObligaciones(int catId, int anio)
-        //{
-        //    ViewBag.Title = "Agregar obligación";
-
-        //    var model = procesoModel.ObtenerConceptosProceso(catId, anio);
-
-        //    ViewBag.Lista_CtaDepoHabilitadas = new List<SelectViewModel>();
-        //    ViewBag.Lista_CtaDepoProceso = new List<SelectViewModel>();
-        //    ViewBag.Periodos = new SelectList(_selectModel.GetPeriodosAcademicosCatalogo(), "Value", "TextDisplay");
-        //    ViewBag.CtasDeposito = new SelectList(_cuentasDeposito.Find(), "Id", "DescripcionFull", "EntidadFinanciera", model.CtasDepoId, null);
-        //    ViewBag.Conceptos = new SelectList(_conceptoModel.Listar_CatalogoConceptos(), "Id", "NombreConcepto");
-        //    ViewBag.Dependencias = new SelectList(_selectModel.GetDependencias(), "Value", "TextDisplay", _dependenciaUsuarioId);
-
-
-        //    return PartialView("_RegistrarProcesoObligacionCocepto", model);
-        //}
 
 
         [Route("configuracion/tasas-y-servicios")]

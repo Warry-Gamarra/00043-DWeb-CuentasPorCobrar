@@ -14,11 +14,14 @@ namespace Data.Procedures
     {
         public int I_CatPagoID { get; set; }
         public int? I_Anio { get; set; }
+        public int MyProperty { get; set; }
         public DateTime? D_FecVencto { get; set; }
         public int? I_Prioridad { get; set; }
         public int? I_Periodo { get; set; }
+        public string N_CodBanco { get; set; }
+        public string T_ProcesoDesc { get; set; }
         public int I_UsuarioCre { get; set; }
-        
+
         public ResponseData Execute()
         {
             ResponseData result = new ResponseData();
@@ -35,6 +38,8 @@ namespace Data.Procedures
                     parameters.Add(name: "I_Periodo", dbType: DbType.Int16, value: this.I_Periodo);
                     parameters.Add(name: "D_FecVencto", dbType: DbType.DateTime, value: this.D_FecVencto);
                     parameters.Add(name: "I_Prioridad", dbType: DbType.Byte, value: this.I_Prioridad);
+                    parameters.Add(name: "N_CodBanco", dbType: DbType.String, size: 10, value: this.N_CodBanco);
+                    parameters.Add(name: "T_ProcesoDesc", dbType: DbType.String, size: 250, value: this.T_ProcesoDesc);
                     parameters.Add(name: "I_UsuarioCre", dbType: DbType.Int32, value: this.I_UsuarioCre);
 
                     parameters.Add(name: "I_ProcesoID", dbType: DbType.Int32, direction: ParameterDirection.Output);

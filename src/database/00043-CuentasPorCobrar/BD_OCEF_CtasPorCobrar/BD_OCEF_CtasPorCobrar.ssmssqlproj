@@ -158,9 +158,9 @@
           <FullPath>1. BD_OCEF_CtasPorCobrar - Creación de base de datos.sql</FullPath>
         </FileNode>
         <FileNode Name="2. BD_OCEF_CtasPorCobrar - Esquema de base de datos.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:DESKTOP-BIFTP5M\SQL_2016E:False:sa</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>DESKTOP-BIFTP5M\SQL_2016E</AssociatedConnSrvName>
-          <AssociatedConnUserName>sa</AssociatedConnUserName>
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:DESKTOP-B34HJML\SQL_2016E:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>DESKTOP-B34HJML\SQL_2016E</AssociatedConnSrvName>
+          <AssociatedConnUserName />
           <FullPath>2. BD_OCEF_CtasPorCobrar - Esquema de base de datos.sql</FullPath>
         </FileNode>
         <FileNode Name="3. BD_OCEF_CtasPorCobrar - Carga de datos iniciales.sql">

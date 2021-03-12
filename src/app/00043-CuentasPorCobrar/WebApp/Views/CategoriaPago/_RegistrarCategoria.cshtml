@@ -117,20 +117,45 @@
             $('#CodBco').show();
         }
         else {
+            $('#CodBcoComercio').val(null);
             $('#CodBco').hide();
-            $('#CodBco').val(null);
         }
 
         $('#CuentasDeposito').on('change', function () {
-           let nomBanco = '@Model.BcoComercioNombre';
-            debugger;
+
+            let selected = $('#CuentasDeposito').val();
+            let cuentas = [];
+
+            @foreach (var cuenta in Model.CtasBcoComercio)
+            {
+                @:cuentas.push('@cuenta');
+            }
+
+            let index = -1
+            $.each(selected, function (i, value) {
+                index = $.inArray(value, cuentas);
+
+                if (index > -1) {
+                    return false;
+                }
+            });
+
+            if (index > -1) {
+                $('#CodBco').show();
+            }
+            else {
+                $('#CodBcoComercio').val(null);
+                $('#CodBco').hide();
+            }
+
+            @*let nomBanco = '@Model.BcoComercioNombre';
             if ($('#CuentasDeposito :selected').parent().attr('label') === nomBanco) {
                 $('#CodBco').show();
             }
             else {
+                $('#CodBcoComercio').val(null);
                 $('#CodBco').hide();
-                $('#CodBco').val(null);
-            }
+            }*@
         })
     });
 

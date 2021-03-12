@@ -13,12 +13,13 @@ namespace WebApp.Models
     {
         private readonly ICategoriaPago _categoriaPago;
         private readonly IEntidadFinanciera _entidadFinanciera;
-        private const int BANCO_COMERCIO_ID = 1;
+        private readonly ICuentaDeposito _cuentaDeposito;
 
         public CategoriaPagoModel()
         {
             _categoriaPago = new CategoriaPago();
             _entidadFinanciera = new EntidadFinanciera();
+            _cuentaDeposito = new CuentaDeposito();
         }
 
         public List<CategoriaPagoViewModel> Find()
@@ -36,14 +37,15 @@ namespace WebApp.Models
         public CategoriaPagoRegistroViewModel Find(int categoriaPagoID)
         {
             CategoriaPago categoriaPago = _categoriaPago.Find(categoriaPagoID);
-            EntidadFinanciera bancoComercio = _entidadFinanciera.Find(BANCO_COMERCIO_ID);
+            var ctasBcoComercio = _cuentaDeposito.Find().Where(x => x.I_EntidadFinanId == Constantes.BANCO_COMERCIO_ID);
 
-            string nombreBanco = bancoComercio != null ? bancoComercio.Nombre : null;
+            var result = new CategoriaPagoRegistroViewModel(categoriaPago)
+            {
+                CtasBcoComercio = ctasBcoComercio.Select(x => x.I_CtaDepID).ToArray()
+            };
 
-            var result = new CategoriaPagoRegistroViewModel(categoriaPago) { BcoComercioNombre = nombreBanco };
-
-            if (categoriaPago.CuentasDepositoEntidad.Where(x => x.EntidadFinanId == BANCO_COMERCIO_ID).Count() > 0)
-                 result.MostrarCodBanco = true;
+            if (categoriaPago.CuentasDepositoEntidad.Where(x => x.EntidadFinanId == Constantes.BANCO_COMERCIO_ID).Count() > 0)
+                result.MostrarCodBanco = true;
 
             return result;
         }

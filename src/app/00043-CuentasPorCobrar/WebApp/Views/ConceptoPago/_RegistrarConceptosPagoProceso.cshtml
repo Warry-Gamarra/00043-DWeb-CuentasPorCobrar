@@ -1,0 +1,235 @@
+﻿
+@model WebApp.ViewModels.RegistroConceptosProcesoViewModel
+
+@Scripts.Render("~/bundles/jqueryval")
+
+<div class="row">
+    <div class="container-fluid">
+        <a id="btn-return" class="mb-3 float-right" href="@Url.Action("VerConceptos", "Procesos", new { procesoId = ViewBag.ProcesoId })">
+            <i class="fa fa-arrow-left">&nbsp;</i> Volver a la lista
+        </a>
+
+        @if (Model.ConceptoPago.I_ConcPagID.HasValue)
+        {
+            <p class="h4 mt-2 border-bottom">Editar concepto de pago</p>
+        }
+        else
+        {
+            <p class="h4 mt-2 border-bottom">Agregar concepto de pago</p>
+            <div class="form-group form-row mt-4" id="search-container">
+                <label for="inputConcepto" class="control-label col-sm-3 d-sm-inline-block d-none text-right col-form-label">Buscar concepto:</label>
+                <div class="col-sm-5 col-9">
+                    @Html.DropDownList("inputConcepto", ViewBag.Conceptos as SelectList, "", new { Class = "select-filter form-control form-control-sm" })
+                </div>
+                <div class="col-sm-4 col-3">
+                    <button type="button" id="btn-agregar" class="btn btn-sm btn-outline-info"><i class="fa fa-check">&nbsp;</i> Seleccionar</button>
+                </div>
+                <hr />
+            </div>
+
+            <div id="search-loader" class="container-fluid" style="display:none;">
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border text-info" role="status" style="width: 5rem; height: 5rem;">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="row" style="min-height:100px;">
+    <div id="alert-message" class="container-fluid" style="display:@(Model.MostrarFormulario ? "none" : "block");">
+        <p class="alert alert-info text-center">
+            <span class="d-block"><i class="fa fa-2x fa-exclamation-circle"></i></span>
+            Escoja un concepto de la lista y presione el boton <strong> seleccionar </strong>
+        </p>
+    </div>
+
+    <div id="concepto-form" class="container-fluid" style="display:@(Model.MostrarFormulario ? "block" : "none");">
+
+        @using (Ajax.BeginForm("Save", "ConceptoPago", new { area = "" }, new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "div_msg", OnBegin = "Load", OnComplete = "Stop" }))
+        {
+            @Html.Hidden("Submited", 0)
+            @Html.AntiForgeryToken()
+
+            <div class="form-group form-row">
+                @Html.HiddenFor(model => model.ConceptoPago.I_ConceptoID)
+                @Html.HiddenFor(model => model.ConceptoPago.B_AgrupaConcepto)
+                @Html.HiddenFor(model => model.ConceptoPago.B_ConceptoGeneral)
+                @Html.HiddenFor(model => model.ConceptoPago.B_Fraccionable)
+                @Html.LabelFor(model => model.ConceptoPago.I_ConceptoID, new { @class = "control-label col-12" })
+                <div class="col-10">
+                    @Html.TextBox("ConceptoPago_Descripcion", "", new { @class = "form-control disabled" })
+                    <p class="text-danger">@Html.ValidationMessageFor(model => model.ConceptoPago.I_ConceptoID)</p>
+                </div>
+                <div class="col-2">
+                    <button type="button" id="btn-remove" class="btn btn-block btn-outline-danger"><i class="fa fa-trash-o"></i><span class="d-md-inline-block d-none">&nbsp;Borrar</span></button>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6 col-12">
+                    <div class="form-row">
+                        <div class="col-7">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ConceptoPago.T_Clasificador, new { @class = "control-label" })
+                                @Html.TextBoxFor(model => model.ConceptoPago.T_Clasificador, new { @class = "form-control" })
+                                <p class="text-danger">@Html.ValidationMessageFor(model => model.ConceptoPago.T_Clasificador)</p>
+                            </div>
+                        </div>
+                        <div class="col-5">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ConceptoPago.C_CodTasa, new { @class = "control-label" })
+                                @Html.TextBoxFor(model => model.ConceptoPago.C_CodTasa, new { @class = "form-control" })
+                                <p class="text-danger">@Html.ValidationMessageFor(model => model.ConceptoPago.C_CodTasa)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <label class="control-label col-sm-4" for="Monto">Monto</label>
+                        <div class="col-sm-8">
+                            @Html.TextBoxFor(model => model.ConceptoPago.M_Monto, "{0:f4}", new { @class = "form-control" })
+                            <p class="text-danger">@Html.ValidationMessageFor(model => model.ConceptoPago.M_Monto)</p>
+                        </div>
+                        <label class="control-label col-md-4" for="Monto_Minimo">Monto Mínimo</label>
+                        <div class="col-sm-8">
+                            @Html.TextBoxFor(model => model.ConceptoPago.M_MontoMinimo, "{0:f4}", new { @class = "form-control" })
+                            <p class="text-danger">@Html.ValidationMessageFor(model => model.ConceptoPago.M_MontoMinimo)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-12 border-left">
+                    <div class="form-group">
+                        <label class="control-label" for="T_DescripcionLarga">Descripción Larga</label>
+                        @Html.TextAreaFor(model => model.ConceptoPago.T_DescripcionLarga, new { @class = "form-control" })
+                        <p class="text-danger">@Html.ValidationMessageFor(model => model.ConceptoPago.T_DescripcionLarga)</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="T_Documento">Sustento / Observación</label>
+                        @Html.TextAreaFor(model => model.ConceptoPago.T_Documento, new { @class = "form-control" })
+                        <p class="text-danger">@Html.ValidationMessageFor(model => model.ConceptoPago.T_Documento)</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row d-flex justify-content-center">
+                <button type="submit" class="btn btn-primary center" id="btnsubmit"><i class="fa fa-save"></i>&nbsp;Guardar</button>
+            </div>
+        }
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $('#btn-return').on('click', function (event) {
+            event.preventDefault();
+
+            let url = $(event.target).attr("href");
+            loadForm(url, "obteniendo listado de conceptos")
+        })
+
+        function loadForm(url, message) {
+            $('#load-message').html(message);
+
+            $('#content-body').hide();
+            $('#spin-loader').show();
+
+            let modal = $('#modal-container-lg');
+            setTimeout(function () {
+                modal.find('.modal-content').load(url)
+            }, 600);
+        }
+
+        $('.select-filter').select2({
+            dropdownParent: $('#modal-container-lg'),
+            placeholder: "[ SELECCIONAR ]"
+        }).on('hide', function (e) {
+            e.stopPropagation();
+        });
+
+
+        $('.input-group.date').datepicker({
+            todayBtn: 'linked',
+            language: 'es',
+            format: 'dd/mm/yyyy',
+            autoclose: true,
+            startDate: '-0d',
+            weekStart: 0,
+            orientation: 'bottom auto',
+            calendarWeeks: true,
+        }).on('hide', function (e) {
+            e.stopPropagation();
+        });
+
+        let conceptoSelected = { value: '', text: '' };
+
+        $('#btn-agregar').on('click', function (event) {
+            event.preventDefault();
+            let selectedValue = $('#inputConcepto').val();
+
+            if (selectedValue === "" || selectedValue == null) {
+                return false;
+            }
+
+            GetDefaultValuesConcepto(selectedValue);
+        })
+
+        function GetDefaultValuesConcepto(value, text) {
+
+            $.ajax({
+                url: ('@Url.Action("GetDefaultValuesConcepto", "Service", new { httproute = "ActionApi" })/' + value),
+                type: 'GET',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                cache: false,
+                beforeSend: function () {
+                    $('#alert-message').hide();
+                    $('#search-loader').show();
+                },
+                success: function (data) {
+                    DisableSearh(true)
+
+                    $('#ConceptoPago_I_ConceptoID').val(data['Id']);
+                    $('#ConceptoPago_Descripcion').val(data['NombreConcepto']);
+
+                    $('#search-container').hide();
+                    $('#concepto-form').show();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $('#alert-message p.alert').removeClass('alert-info').addClass('alert-danger').html(jqXHR.responseText)
+                    $('#alert-message').show();
+                },
+                complete: function () {
+                    $('#search-loader').hide();
+                }
+            })
+        }
+
+        $('#btn-remove').on('click', function (event) {
+            event.preventDefault();
+
+            $('#concepto-form').hide();
+            $('#search-loader').show();
+
+            setTimeout(function () {
+                $('#search-loader').hide();
+                $('#search-container').show();
+                $('#alert-message').show();
+            }, 500);
+
+            DisableSearh(false);
+        })
+
+        function DisableSearh(flag) {
+            $('#inputConcepto').val(null).trigger('change');
+            $('#inputConcepto').prop('disabled', flag);
+            $('#btn-agregar').prop('disabled', flag);
+        }
+
+    })
+
+
+</script>

@@ -41,9 +41,12 @@ namespace WebApp.Controllers
 
             ViewBag.Niveles = new SelectList(_conceptoPago.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.Grado), "Value", "TextDisplay");
             ViewBag.TiposAlumno = new SelectList(_conceptoPago.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.TipoAlumno), "Value", "TextDisplay");
-            ViewBag.CtasDeposito = new SelectList(_cuentasDeposito.Find(), "Id", "NumeroCuenta");
+            ViewBag.CtasDeposito = new SelectList(_cuentasDeposito.Find(), "Id", "DescripcionFull", "EntidadFinanciera", null, null);
 
-            return PartialView("_RegistrarCategoria", new CategoriaPagoRegistroViewModel());
+            return PartialView("_RegistrarCategoria", new CategoriaPagoRegistroViewModel()
+            {
+                CtasBcoComercio = _cuentasDeposito.Find().Where(x => x.EntidadFinancieraId == Constantes.BANCO_COMERCIO_ID).Select(x => x.Id.Value).ToArray()
+            });
         }
 
         [Route("mantenimiento/categorias-de-pago/editar/{id}")]

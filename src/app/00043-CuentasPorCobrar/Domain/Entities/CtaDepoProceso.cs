@@ -15,5 +15,7 @@ namespace Domain.Entities
         public string T_DescCuenta { get; set; }
         public string C_NumeroCuenta { get; set; }
         public string T_EntidadDesc { get; set; }
+        public int I_EntidadFinanID { get; set; }
+
     }
 }

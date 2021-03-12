@@ -24,6 +24,8 @@ namespace WebApp.ViewModels
         [Required]
         public int? CategoriaId { get; set; }
 
+        public string DescProceso { get; set; }
+
         [Display(Name = "Año")]
         public int Anio { get; set; }
 
@@ -38,18 +40,29 @@ namespace WebApp.ViewModels
 
         [Display(Name = "Nro de Cta.Cte")]
         public int[] CtaDepositoID { get; set; }
+
+        [Display(Name = "Código Banco de Comercio")]
+        public string CodBcoComercio { get; set; }
+
+        public bool MostrarCodBanco { get; set; }
+        public int[] CtasBcoComercio { get; set; }
+
     }
 
 
     public class RegistroConceptosProcesoViewModel 
     {
         public int ProcesoId { get; set; }
-        public int CategoriaId { get; set; }
         public string DescProceso { get; set; }
-        public int? AnioProceso { get; set; }
-        public DateTime? FecVencto { get; set; }
+        public bool MostrarFormulario { get; set; }
 
-        public List<ConceptoPagoViewModel> Conceptos { get; set; }
+        public RegistroConceptoPagoViewModel ConceptoPago { get; set; }
+
+        public RegistroConceptosProcesoViewModel()
+        {
+            this.ConceptoPago = new RegistroConceptoPagoViewModel();
+            this.MostrarFormulario = true;
+        }
 
     }
 }

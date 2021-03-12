@@ -13,28 +13,30 @@ namespace WebApp.Models
     {
         private readonly ProcesoService procesoService;
         private readonly ConceptoPagoService conceptoPagoService;
+        private readonly IEntidadFinanciera _entidadFinanciera;
+        private readonly ICuentaDeposito _cuentaDeposito;
 
         public ProcesoModel()
         {
             procesoService = new ProcesoService();
             conceptoPagoService = new ConceptoPagoService();
+            _entidadFinanciera = new EntidadFinanciera();
+            _cuentaDeposito = new CuentaDeposito();
         }
 
-        public RegistroConceptosProcesoViewModel ObtenerConceptosProceso(int procesoID)
+        public List<ConceptoPagoViewModel> ObtenerConceptosProcesoHabilitados(int procesoID)
         {
-            CategoriaPagoModel categoriaModel = new CategoriaPagoModel();
-            var proceso = procesoService.Obtener_Proceso(procesoID);
-            var conceptosPago = new List<ConceptoPagoViewModel>();
+            var lista = conceptoPagoService.Listar_ConceptoPago_Habilitados(procesoID);
 
-            RegistroConceptosProcesoViewModel result = new RegistroConceptosProcesoViewModel()
+            var result = lista.Select(x => new ConceptoPagoViewModel()
             {
-                CategoriaId = proceso.I_CatPagoID,
-                DescProceso = $"{proceso.I_Anio}-{proceso.I_Periodo}-{proceso.T_CatPagoDesc}",
-                AnioProceso = proceso.I_Anio,
-                FecVencto = proceso.D_FecVencto,
-                ProcesoId = proceso.I_ProcesoID,
-                Conceptos = conceptosPago
-            };
+                ProcesoId = procesoID,
+                DescProceso = string.IsNullOrEmpty(x.T_ProcesoDesc) ? $"{x.I_Anio}-{x.I_Periodo}-{x.T_CatPagoDesc}" : x.T_ProcesoDesc,
+                ConceptoPagoID = x.I_ConcPagID,
+                ConceptoDesc = x.T_ConceptoDesc,
+                Monto = x.M_Monto,
+                Habilitado = true
+            }).ToList();
 
             return result;
         }
@@ -81,7 +83,7 @@ namespace WebApp.Models
                 result = lista.Select(x => new ProcesoViewModel()
                 {
                     I_ProcesoID = x.I_ProcesoID,
-                    T_CatPagoDesc = $"{x.I_Anio.ToString()}-{x.C_PeriodoCod}-{x.T_CatPagoDesc}",
+                    T_CatPagoDesc = string.IsNullOrEmpty(x.T_CatPagoDesc) ? $"{x.I_Anio.ToString()}-{x.C_PeriodoCod}-{x.T_CatPagoDesc}" : x.T_CatPagoDesc,
                     T_Periodo = x.T_PeriodoDesc,
                     I_Anio = x.I_Anio,
                     D_FecVencto = x.D_FecVencto,
@@ -129,6 +131,7 @@ namespace WebApp.Models
                 I_Periodo = model.PerAcadId,
                 D_FecVencto = model.FecVencto,
                 I_Prioridad = model.PrioridadId,
+                N_CodBanco = model.CodBcoComercio,
                 B_Habilitado = true,
                 I_UsuarioCre = currentUserId,
                 I_UsuarioMod = currentUserId
@@ -237,6 +240,9 @@ namespace WebApp.Models
         public RegistroProcesoViewModel Obtener_Proceso(int I_ProcesoID)
         {
             var proceso = procesoService.Obtener_Proceso(I_ProcesoID);
+            var ctasBcoComercio = _cuentaDeposito.Find().Where(x => x.I_EntidadFinanId == Constantes.BANCO_COMERCIO_ID);
+
+            var cuentasProceso = procesoService.Obtener_CtasDepo_X_Proceso(I_ProcesoID);
 
             var model = new RegistroProcesoViewModel()
             {
@@ -244,10 +250,16 @@ namespace WebApp.Models
                 CategoriaId = proceso.I_CatPagoID,
                 Anio = proceso.I_Anio.Value,
                 PerAcadId = proceso.I_Periodo,
+                DescProceso = string.IsNullOrEmpty(proceso.T_PeriodoDesc) ? $"{proceso.I_Anio.ToString()}-{proceso.C_PeriodoCod}-{proceso.T_CatPagoDesc}" : proceso.T_PeriodoDesc,
                 FecVencto = proceso.D_FecVencto,
                 PrioridadId = proceso.I_Prioridad,
-                CtaDepositoID = procesoService.Obtener_CtasDepo_X_Proceso(I_ProcesoID).Select(x => x.I_CtaDepositoID).ToArray()
+                CtasBcoComercio = ctasBcoComercio.Select(x => x.I_CtaDepID).ToArray(),
+                CodBcoComercio = proceso.N_CodBanco,
+                CtaDepositoID = cuentasProceso.Select(x => x.I_CtaDepositoID).ToArray()                
             };
+
+            if (cuentasProceso.Where(x => x.I_EntidadFinanID == Constantes.BANCO_COMERCIO_ID).Count() > 0)
+                model.MostrarCodBanco = true;
 
             return model;
         }

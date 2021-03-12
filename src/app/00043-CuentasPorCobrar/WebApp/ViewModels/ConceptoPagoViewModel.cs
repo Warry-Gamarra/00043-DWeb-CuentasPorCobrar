@@ -8,16 +8,18 @@ namespace WebApp.ViewModels
 {
     public class ConceptoPagoViewModel
     {
-        public int I_ConcPagID { get; set; }
-        public string T_CatPagoDesc { get; set; }
-        public string T_ConceptoDesc { get; set; }
+        public int ProcesoId { get; set; }
+        public int ConceptoPagoID { get; set; }
+        public string DescProceso { get; set; }
+        public string ConceptoDesc { get; set; }
+        public decimal Monto { get; set; }
         public bool Habilitado { get; set; }
     }
 
-    public class MantenimientoConceptoPagoViewModel
+    public class RegistroConceptoPagoViewModel
     {
         public int? I_ConcPagID { get; set; }
-        [Display(Name = "Descripción")]
+        [Display(Name = "Descripción del concepto")]
         [Required]
         public int I_ConceptoID { get; set; }
         public bool B_Fraccionable { get; set; }
