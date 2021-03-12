@@ -75,6 +75,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DTO\Tipos.cs" />
     <Compile Include="DTO\DataMatriculaResponse.cs" />
     <Compile Include="Entities\EspecialidadesPorAlumnoDTO.cs" />
     <Compile Include="Entities\CuotaPagoDTO.cs" />
