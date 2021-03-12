@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using WebApp.Models;
+using WebApp.Models.Facades;
 
 namespace WebApp.Controllers
 {
@@ -15,12 +16,16 @@ namespace WebApp.Controllers
         ProcesoModel procesoModel;
         ConceptoPagoModel conceptoPagoModel;
         ObligacionFacade obligacionFacade;
-
+        IAlumnosClienteFacade alumnosCliente;
+        IProgramasClientFacade programasClient;
+        
         public ObligacionesController()
         {
             procesoModel = new ProcesoModel();
             conceptoPagoModel = new ConceptoPagoModel();
             obligacionFacade = new ObligacionFacade();
+            alumnosCliente = new AlumnosClienteFacade();
+            programasClient = new ProgramasClientFacade();
         }
 
         public ActionResult Generar()
@@ -38,6 +43,8 @@ namespace WebApp.Controllers
             ViewBag.Anios = procesoModel.Listar_Anios();
 
             ViewBag.Periodos = conceptoPagoModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.Periodo);
+
+            ViewBag.Facultades = programasClient.GetFacultades();
 
             return View();
         }

@@ -14,7 +14,6 @@ namespace WebApi.Models
         public AlumnoServiceFacade(IAlumnoService alumnoService)
         {
             _alumnoService = alumnoService;
-
         }
         public ServiceResponse GrabarAlumno(MantenimientoAlumnoModel alumnoModel, int currentUserID)
         {

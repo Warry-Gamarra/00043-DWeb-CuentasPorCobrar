@@ -108,6 +108,9 @@ namespace WebApi.Models
                 T_DenomProg = alumnoDTO.T_DenomProg,
                 C_CodModIng = alumnoDTO.C_CodModIng,
                 T_ModIngDesc = alumnoDTO.T_ModIngDesc,
+                N_Grado = alumnoDTO.N_Grado,
+                T_GradoDesc = alumnoDTO.T_GradoDesc,
+                N_Grupo = alumnoDTO.N_Grupo,
                 C_AnioIngreso = alumnoDTO.C_AnioIngreso,
                 I_IdPlan = alumnoDTO.I_IdPlan,
                 B_Habilitado = alumnoDTO.B_Habilitado

@@ -422,6 +422,10 @@
     <Compile Include="Models\EntidadFinancieraModel.cs" />
     <Compile Include="Models\EspecialidadesPorAlumnoModel.cs" />
     <Compile Include="Models\EstudianteModels.cs" />
+    <Compile Include="Models\Facades\IAlumnosClienteFacade.cs" />
+    <Compile Include="Models\Facades\AlumnosClienteFacade.cs" />
+    <Compile Include="Models\Facades\IProgramasClientFacade.cs" />
+    <Compile Include="Models\Facades\ProgramasClientFacade.cs" />
     <Compile Include="Models\ManualUsuarioModel.cs" />
     <Compile Include="Models\Mapper.cs" />
     <Compile Include="Models\ObligacionDetalleModel.cs" />

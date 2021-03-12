@@ -2195,4 +2195,14 @@ INNER JOIN BD_UNFV_Repositorio.dbo.VW_CarreraProfesional c on a.C_RcCod = c.C_Rc
 GO
 
 
-SELECT * FROM dbo.VW_EspecialidadesPorAlumno WHERE C_CodAlu = '2010012091'
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_Facultades')
+	DROP VIEW [dbo].[VW_Facultades]
+GO
+
+CREATE VIEW [dbo].[VW_Facultades]
+AS
+SELECT DISTINCT f.C_CodFac, f.T_FacDesc FROM BD_UNFV_Repositorio.dbo.VW_CarreraProfesional f
+WHERE f.B_Habilitado = 1
+GO
+
+select * from BD_UNFV_Repositorio.dbo.VW_CarreraProfesional WHERE N_Grado = '4'
