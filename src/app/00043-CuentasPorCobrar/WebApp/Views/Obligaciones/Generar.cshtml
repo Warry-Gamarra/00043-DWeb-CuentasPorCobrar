@@ -43,18 +43,18 @@
                                             @Html.DropDownList("cmbPeriodoGrupal", new SelectList(ViewBag.Periodos, "Value", "TextDisplay", "15"), null, new { @class = "form-control form-control-sm" })
                                         </div>
 
-                                        @*<div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
-                                            <label for="cmbNivelGrupal">Facultad</label>
+                                        <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
+                                            <label for="cmbNivelGrupal">Nivel/Grado</label>
                                             <select id="cmbNivelGrupal" name="cmbNivelGrupal" class="form-control form-control-sm">
-                                                <option>Facultad 1</option>
-                                                <option>Facultad 2</option>
+                                                <option>Pregrado</option>
+                                                <option>Posgrado</option>
                                             </select>
                                         </div>
 
                                         <div class="form-group col-lg-3 col-md-5 col-sm-12 col-12">
-                                            <label for="cmbEspecialidad">Especialidad</label>
-                                            <select id="cmbEspecialidad" name="cmbEspecialidad" class="form-control form-control-sm"></select>
-                                        </div>*@
+                                            <label for="cmbFacultad">Facultades</label>
+                                            @Html.DropDownList("cmbFacultad", new SelectList(ViewBag.Facultades, "Value", "TextDisplay", "15"), null, new { @class = "form-control form-control-sm" })
+                                        </div>
 
                                         <div class="form-group col-lg-2 col-sm-3 col-12">
                                             <button type="submit" class="btn btn-block btn-outline-primary mt-4">
