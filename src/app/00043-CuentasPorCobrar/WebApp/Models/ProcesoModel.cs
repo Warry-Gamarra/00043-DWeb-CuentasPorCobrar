@@ -83,7 +83,8 @@ namespace WebApp.Models
                 result = lista.Select(x => new ProcesoViewModel()
                 {
                     I_ProcesoID = x.I_ProcesoID,
-                    T_CatPagoDesc = string.IsNullOrEmpty(x.T_CatPagoDesc) ? $"{x.I_Anio.ToString()}-{x.C_PeriodoCod}-{x.T_CatPagoDesc}" : x.T_CatPagoDesc,
+                    T_CatPagoDesc = x.T_CatPagoDesc,
+                    T_ProcesoDesc = string.IsNullOrEmpty(x.T_ProcesoDesc) ? $"{x.I_Anio.ToString()}-{x.C_PeriodoCod}-{x.T_CatPagoDesc}" : x.T_CatPagoDesc,
                     T_Periodo = x.T_PeriodoDesc,
                     I_Anio = x.I_Anio,
                     D_FecVencto = x.D_FecVencto,
@@ -250,7 +251,7 @@ namespace WebApp.Models
                 CategoriaId = proceso.I_CatPagoID,
                 Anio = proceso.I_Anio.Value,
                 PerAcadId = proceso.I_Periodo,
-                DescProceso = string.IsNullOrEmpty(proceso.T_PeriodoDesc) ? $"{proceso.I_Anio.ToString()}-{proceso.C_PeriodoCod}-{proceso.T_CatPagoDesc}" : proceso.T_PeriodoDesc,
+                DescProceso = string.IsNullOrEmpty(proceso.T_ProcesoDesc) ? $"{proceso.I_Anio.ToString()}-{proceso.C_PeriodoCod}-{proceso.T_CatPagoDesc}" : proceso.T_ProcesoDesc,
                 FecVencto = proceso.D_FecVencto,
                 PrioridadId = proceso.I_Prioridad,
                 CtasBcoComercio = ctasBcoComercio.Select(x => x.I_CtaDepID).ToArray(),

@@ -11,6 +11,7 @@ namespace WebApp.ViewModels
         public int I_ProcesoID { get; set; }
         public string T_CatPagoDesc { get; set; }
         public short? I_Anio { get; set; }
+        public string T_ProcesoDesc { get; set; }
         public string T_Periodo { get; set; }
         public DateTime? D_FecVencto { get; set; }
         public short? I_Prioridad { get; set; }

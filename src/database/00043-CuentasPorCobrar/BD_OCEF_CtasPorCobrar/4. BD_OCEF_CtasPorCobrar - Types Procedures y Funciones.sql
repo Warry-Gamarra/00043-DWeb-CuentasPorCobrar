@@ -188,7 +188,8 @@ CREATE PROCEDURE dbo.USP_S_Procesos
 AS
 BEGIN
 	SET NOCOUNT ON;
-	SELECT p.I_ProcesoID, cp.I_CatPagoID, cp.T_CatPagoDesc, T_OpcionDesc AS T_PeriodoDesc, I_Periodo, T_OpcionCod AS C_PeriodoCod, p.I_Anio, p.D_FecVencto, p.I_Prioridad 
+	SELECT p.I_ProcesoID, cp.I_CatPagoID, cp.T_CatPagoDesc, T_OpcionDesc AS T_PeriodoDesc, I_Periodo, T_OpcionCod AS C_PeriodoCod, 
+		   p.I_Anio, p.D_FecVencto, p.I_Prioridad, p.N_CodBanco, p.T_ProcesoDesc
 	FROM dbo.TC_Proceso p
 		INNER JOIN dbo.TC_CategoriaPago cp ON p.I_CatPagoID = cp.I_CatPagoID
 		INNER JOIN dbo.TC_CatalogoOpcion co ON co.I_OpcionID = p.I_Periodo

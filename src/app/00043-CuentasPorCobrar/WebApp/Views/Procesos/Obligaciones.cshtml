@@ -36,7 +36,7 @@
         <div class="table-responsive" style="min-height:300px">
             @Html.Grid(Model).Columns(columns =>
             {
-                columns.Add(c => c.T_CatPagoDesc).Titled("Descripción").Filterable(true);
+                columns.Add(c => c.T_ProcesoDesc).Titled("Descripción").Filterable(true);
                 columns.Add(c => c.I_Anio).Css("text-center").Titled("Año").Filterable(true);
                 columns.Add(c => c.T_Periodo).Titled("Periodo").Filterable(true);
                 columns.Add(c => c.D_FecVencto).Css("text-center").Format("{0:dd/MM/yyyy}").Titled("Fch. Vencimiento").Filterable(true);

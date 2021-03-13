@@ -84,6 +84,7 @@ namespace Domain.Services
                     T_CatPagoDesc = x.T_CatPagoDesc,
                     C_PeriodoCod = x.C_PeriodoCod,
                     T_PeriodoDesc = x.T_PeriodoDesc,
+                    T_ProcesoDesc = x.T_ProcesoDesc,                    
                     I_Periodo = x.I_Periodo,
                     I_Anio = x.I_Anio,
                     D_FecVencto = x.D_FecVencto,
