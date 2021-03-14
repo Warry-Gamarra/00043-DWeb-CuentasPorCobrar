@@ -107,6 +107,14 @@ namespace Domain.Services
             switch (saveOption)
             {
                 case SaveOption.Insert:
+
+                    if (USP_S_Procesos.Execute().FirstOrDefault(x => x.I_CatPagoID == procesoEntity.I_CatPagoID 
+                                                                   && x.I_Anio == procesoEntity.I_Anio 
+                                                                   && x.I_Periodo == procesoEntity.I_Periodo) != null)
+                    {
+                        return new Response() { Value =false, Message = "La cuota de pago ya se encuentra registrada" };
+                    }
+
                     var grabarProceso = new USP_I_GrabarProceso()
                     {
                         I_CatPagoID = procesoEntity.I_CatPagoID,
@@ -115,7 +123,7 @@ namespace Domain.Services
                         I_Prioridad = procesoEntity.I_Prioridad ?? Obtener_Prioridad_CategoriaPago(procesoEntity.I_CatPagoID),
                         I_Periodo = procesoEntity.I_Periodo,
                         N_CodBanco = procesoEntity.N_CodBanco,
-                        //T_ProcesoDesc = procesoEntity.T_ProcesoDesc,
+                        T_ProcesoDesc = procesoEntity.T_ProcesoDesc,
                         I_UsuarioCre = procesoEntity.I_UsuarioCre.GetValueOrDefault()
                     };
 
@@ -132,6 +140,7 @@ namespace Domain.Services
                         D_FecVencto = procesoEntity.D_FecVencto,
                         I_Prioridad = procesoEntity.I_Prioridad,
                         B_Habilitado = procesoEntity.B_Habilitado,
+                        T_ProcesoDesc = procesoEntity.T_ProcesoDesc,
                         N_CodBanco = procesoEntity.N_CodBanco,
                         I_UsuarioMod = procesoEntity.I_UsuarioMod.GetValueOrDefault()
                     };

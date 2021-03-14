@@ -156,6 +156,7 @@ namespace Domain.Services
                 var result = lista.Where(x => x.B_Habilitado).Select(x => new CatalogoOpcionEntity()
                 {
                     I_OpcionID = x.I_OpcionID,
+                    T_OpcionCod = x.T_OpcionCod,
                     T_OpcionDesc = x.T_OpcionDesc,
                     B_Habilitado = x.B_Habilitado
                 }).ToList();

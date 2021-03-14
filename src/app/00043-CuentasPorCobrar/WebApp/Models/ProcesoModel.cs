@@ -11,22 +11,24 @@ namespace WebApp.Models
 {
     public class ProcesoModel
     {
-        private readonly ProcesoService procesoService;
-        private readonly ConceptoPagoService conceptoPagoService;
+        private readonly ProcesoService _procesoService;
+        private readonly ConceptoPagoService _conceptoPagoService;
         private readonly IEntidadFinanciera _entidadFinanciera;
         private readonly ICuentaDeposito _cuentaDeposito;
+        private readonly CategoriaPagoModel _categoriaPagoModel;
 
         public ProcesoModel()
         {
-            procesoService = new ProcesoService();
-            conceptoPagoService = new ConceptoPagoService();
+            _procesoService = new ProcesoService();
+            _conceptoPagoService = new ConceptoPagoService();
             _entidadFinanciera = new EntidadFinanciera();
             _cuentaDeposito = new CuentaDeposito();
+            _categoriaPagoModel = new CategoriaPagoModel();
         }
 
         public List<ConceptoPagoViewModel> ObtenerConceptosProcesoHabilitados(int procesoID)
         {
-            var lista = conceptoPagoService.Listar_ConceptoPago_Habilitados(procesoID);
+            var lista = _conceptoPagoService.Listar_ConceptoPago_Habilitados(procesoID);
 
             var result = lista.Select(x => new ConceptoPagoViewModel()
             {
@@ -43,14 +45,14 @@ namespace WebApp.Models
 
         public int Obtener_Prioridad_Tipo_Proceso(int I_CatPagoID)
         {
-            return procesoService.Obtener_Prioridad_CategoriaPago(I_CatPagoID);
+            return _procesoService.Obtener_Prioridad_CategoriaPago(I_CatPagoID);
         }
 
         public List<SelectGroupViewModel> Listar_Combo_CtaDepositoHabilitadas(int I_CatPagoID)
         {
             List<SelectGroupViewModel> result = new List<SelectGroupViewModel>();
 
-            var lista = procesoService.Listar_Cuenta_Deposito_Habilitadas(I_CatPagoID);
+            var lista = _procesoService.Listar_Cuenta_Deposito_Habilitadas(I_CatPagoID);
 
             if (lista != null)
             {
@@ -76,7 +78,7 @@ namespace WebApp.Models
         {
             List<ProcesoViewModel> result = new List<ProcesoViewModel>();
 
-            var lista = procesoService.Listar_Procesos().Where(x => x.I_Anio == anio);
+            var lista = _procesoService.Listar_Procesos().Where(x => x.I_Anio == anio);
 
             if (lista != null)
             {
@@ -100,7 +102,7 @@ namespace WebApp.Models
         {
             List<ProcesoViewModel> result = new List<ProcesoViewModel>();
 
-            var lista = procesoService.Listar_Procesos();
+            var lista = _procesoService.Listar_Procesos();
 
             if (lista != null)
             {
@@ -124,6 +126,13 @@ namespace WebApp.Models
 
             var procesoSaveOption = (!model.ProcesoId.HasValue) ? SaveOption.Insert : SaveOption.Update;
 
+            //if (!model.ProcesoId.HasValue)
+            //{
+                string categoriaDesc = _categoriaPagoModel.Find(model.CategoriaId.Value).Nombre;
+                string periodoCod = _conceptoPagoService.Listar_CatalogoOpcion_Habilitadas_X_Parametro(Parametro.Periodo).Find(x => x.I_OpcionID == model.PerAcadId).T_OpcionCod;
+                model.DescProceso = $"{model.Anio.ToString()}-{periodoCod}-{categoriaDesc} ";
+            //}
+
             procesoEntity = new ProcesoEntity()
             {
                 I_ProcesoID = model.ProcesoId.GetValueOrDefault(),
@@ -133,18 +142,19 @@ namespace WebApp.Models
                 D_FecVencto = model.FecVencto,
                 I_Prioridad = model.PrioridadId,
                 N_CodBanco = model.CodBcoComercio,
+                T_ProcesoDesc = model.DescProceso,
                 B_Habilitado = true,
                 I_UsuarioCre = currentUserId,
                 I_UsuarioMod = currentUserId
             };
 
-            var resultProceso = procesoService.Grabar_Proceso(procesoEntity, procesoSaveOption);
+            var resultProceso = _procesoService.Grabar_Proceso(procesoEntity, procesoSaveOption);
 
             if (resultProceso.Value)
             {
                 procesoEntity.I_ProcesoID = int.Parse(resultProceso.CurrentID);
 
-                var ctasDeposito = procesoService.Obtener_CtasDepoProceso(procesoEntity.I_ProcesoID);
+                var ctasDeposito = _procesoService.Obtener_CtasDepoProceso(procesoEntity.I_ProcesoID);
 
                 if (ctasDeposito != null && ctasDeposito.Count > 0)
                 {
@@ -162,7 +172,7 @@ namespace WebApp.Models
                                 {
                                     ctaDepoProcesoEntity.B_Habilitado = true;
                                     ctaDepoProcesoEntity.I_UsuarioMod = currentUserId;
-                                    procesoService.Grabar_CtaDepoProceso(ctaDepoProcesoEntity, SaveOption.Update);
+                                    _procesoService.Grabar_CtaDepoProceso(ctaDepoProcesoEntity, SaveOption.Update);
                                 }
                             }
                             else
@@ -175,7 +185,7 @@ namespace WebApp.Models
                                     B_Habilitado = true
                                 };
 
-                                procesoService.Grabar_CtaDepoProceso(ctaDepoProcesoEntity, SaveOption.Insert);
+                                _procesoService.Grabar_CtaDepoProceso(ctaDepoProcesoEntity, SaveOption.Insert);
                             }
                         }
 
@@ -188,7 +198,7 @@ namespace WebApp.Models
                                 item.I_UsuarioMod = currentUserId;
                                 item.B_Habilitado = false;
 
-                                procesoService.Grabar_CtaDepoProceso(item, SaveOption.Update);
+                                _procesoService.Grabar_CtaDepoProceso(item, SaveOption.Update);
                             }
                         }
                     }
@@ -200,7 +210,7 @@ namespace WebApp.Models
                             {
                                 item.I_UsuarioMod = currentUserId;
                                 item.B_Habilitado = false;
-                                procesoService.Grabar_CtaDepoProceso(item, SaveOption.Update);
+                                _procesoService.Grabar_CtaDepoProceso(item, SaveOption.Update);
                             }
                         }
                     }
@@ -219,7 +229,7 @@ namespace WebApp.Models
                                 B_Habilitado = true
                             };
 
-                            procesoService.Grabar_CtaDepoProceso(ctaDepoProcesoEntity, SaveOption.Insert);
+                            _procesoService.Grabar_CtaDepoProceso(ctaDepoProcesoEntity, SaveOption.Insert);
                         }
                     }
                 }
@@ -240,10 +250,10 @@ namespace WebApp.Models
 
         public RegistroProcesoViewModel Obtener_Proceso(int I_ProcesoID)
         {
-            var proceso = procesoService.Obtener_Proceso(I_ProcesoID);
+            var proceso = _procesoService.Obtener_Proceso(I_ProcesoID);
             var ctasBcoComercio = _cuentaDeposito.Find().Where(x => x.I_EntidadFinanId == Constantes.BANCO_COMERCIO_ID);
 
-            var cuentasProceso = procesoService.Obtener_CtasDepo_X_Proceso(I_ProcesoID);
+            var cuentasProceso = _procesoService.Obtener_CtasDepo_X_Proceso(I_ProcesoID);
 
             var model = new RegistroProcesoViewModel()
             {
