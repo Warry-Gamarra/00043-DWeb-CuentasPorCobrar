@@ -368,7 +368,7 @@ CREATE VIEW [dbo].[VW_Alumnos]
 AS
 SELECT
 	p.I_PersonaID, p.C_CodTipDoc, tdoc.T_TipDocDesc, p.C_NumDNI, p.T_ApePaterno, p.T_ApeMaterno, p.T_Nombre, 
-	p.D_FecNac, p.C_Sexo, a.C_CodAlu, a.C_RcCod, prog.T_DenomProg, a.C_CodModIng, modIng.T_ModIngDesc, 
+	p.D_FecNac, p.C_Sexo, a.C_CodAlu, a.C_RcCod, car.C_CodEsp, car.C_CodEsc, car.C_CodFac, prog.T_DenomProg, a.C_CodModIng, modIng.T_ModIngDesc, 
 	car.N_Grado, grad.T_GradoDesc, car.N_Grupo, a.C_AnioIngreso, 
 	a.I_IdPlan, a.B_Habilitado, a.B_Eliminado FROM dbo.TC_Persona p
 INNER JOIN dbo.TC_Alumno a ON a.I_PersonaID = p.I_PersonaID AND p.B_Eliminado = 0

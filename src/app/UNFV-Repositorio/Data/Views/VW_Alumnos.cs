@@ -34,6 +34,12 @@ namespace Data.Views
 
         public string C_RcCod { get; set; }
 
+        public string C_CodEsp { get; set; }
+
+        public string C_CodEsc { get; set; }
+
+        public string C_CodFac { get; set; }
+
         public string T_DenomProg { get; set; }
 
         public string C_CodModIng { get; set; }
