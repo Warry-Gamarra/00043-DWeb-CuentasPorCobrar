@@ -139,5 +139,20 @@ namespace Data.Repositories.Implementations
 
             return result;
         }
+
+        public IEnumerable<VW_Alumnos> GetByCodAlu(string codAlu)
+        {
+            IEnumerable<VW_Alumnos> result;
+            try
+            {
+                result = VW_Alumnos.GetByCodAlu(codAlu);
+            }
+            catch (Exception)
+            {
+                result = null;
+            }
+
+            return result;
+        }
     }
 }

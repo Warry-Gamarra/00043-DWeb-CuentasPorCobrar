@@ -21,5 +21,7 @@ namespace Data.Repositories
         VW_Alumnos GetByID(string codRc, string codAlu);
 
         IEnumerable<VW_Alumnos> GetByDocIdent(string codTipDoc, string numDNI);
+
+        IEnumerable<VW_Alumnos> GetByCodAlu(string codAlu);
     }
 }

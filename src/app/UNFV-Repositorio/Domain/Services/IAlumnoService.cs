@@ -19,5 +19,7 @@ namespace Domain.Services
         IEnumerable<AlumnoDTO> GetByDocIdent(string codTipDoc, string numDNI);
 
         AlumnoDTO GetByID(string codRc, string codAlu);
+
+        IEnumerable<AlumnoDTO> GetByCodAlu(string codAlu);
     }
 }

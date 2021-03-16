@@ -119,5 +119,27 @@ namespace Data.Views
 
             return result;
         }
+
+        public static IEnumerable<VW_Alumnos> GetByCodAlu(string codAlu)
+        {
+            IEnumerable<VW_Alumnos> result;
+            string command;
+
+            try
+            {
+                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
+                {
+                    command = "SELECT * FROM dbo.VW_Alumnos WHERE B_Eliminado = 0 AND C_CodAlu = @C_CodAlu";
+
+                    result = _dbConnection.Query<VW_Alumnos>(command, new { C_CodAlu = codAlu }, commandType: CommandType.Text);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
     }
 }
