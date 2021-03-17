@@ -1,4 +1,5 @@
 ﻿using Data.Procedures;
+using Data.Tables;
 using Data.Types;
 using Data.Views;
 using ExcelDataReader;
@@ -208,16 +209,17 @@ namespace Domain.Entities
             return cuotaPagoDTO;
         }
 
-        public static EspecialidadesPorAlumnoDTO VW_EspecialidadesPorAlumno_To_EspecialidadesPorAlumnoDTO(VW_EspecialidadesPorAlumno especialidadesPorAlumno)
+        public static CatalogoOpcionEntity TC_CatalogoOpcion_To_CatalogoOpcionEntity(TC_CatalogoOpcion catalogoOpcion)
         {
-            var especialidadesPorAlumnoDTO = new EspecialidadesPorAlumnoDTO()
+            var catalogoOpcionEntity = new CatalogoOpcionEntity()
             {
-                C_CodAlu = especialidadesPorAlumno.C_CodAlu,
-                C_RcCod = especialidadesPorAlumno.C_RcCod,
-                T_EspDesc = especialidadesPorAlumno.T_EspDesc
+                I_OpcionID = catalogoOpcion.I_OpcionID,
+                T_OpcionCod = catalogoOpcion.T_OpcionCod,
+                T_OpcionDesc = catalogoOpcion.T_OpcionDesc,
+                B_Habilitado = catalogoOpcion.B_Habilitado
             };
 
-            return especialidadesPorAlumnoDTO;
+            return catalogoOpcionEntity;
         }
     }
 }

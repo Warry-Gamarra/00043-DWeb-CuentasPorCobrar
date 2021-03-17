@@ -1,24 +1,30 @@
 ﻿using Domain.DTO;
 using Domain.Services;
+using Domain.Services.Implementations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace WebApp.Models
+namespace WebApp.Models.Facades
 {
-    public class ObligacionFacade
+    public class ObligacionServiceFacade : IObligacionServiceFacade
     {
-        private ObligacionService obligacionService;
+        private IObligacionService obligacionService;
 
-        public ObligacionFacade()
+        public ObligacionServiceFacade()
         {
             obligacionService = new ObligacionService();
         }
 
-        public Response Generar_Obligaciones_Pregrado(int anio, int periodo, int currentUserID)
+        public Response Generar_Obligaciones_Pregrado(int anio, int periodo, string codFacultad, int currentUserID)
         {
-            return obligacionService.Generar_Obligaciones_Pregrado(anio, periodo, currentUserID);
+            return obligacionService.Generar_Obligaciones_Pregrado(anio, periodo, codFacultad, currentUserID);
+        }
+
+        public Response Generar_Obligaciones_Posgrado(int anio, int periodo, int currentUserID)
+        {
+            return obligacionService.Generar_Obligaciones_Posgrado(anio, periodo, currentUserID);
         }
 
         public Response Generar_Obligaciones_PorAlumno(int anio, int periodo, string codAlu, string codRc, int currentUserID)
@@ -49,15 +55,6 @@ namespace WebApp.Models
             var cuotasPago = obligacionService.Obtener_CuotasPago_X_Proceso(anio, periodo, tipoAlumno, nivel);
 
             var result = cuotasPago.Select(c => Mapper.CuotaPagoDTO_To_CuotaPagoModel(c)).ToList();
-
-            return result;
-        }
-
-        public List<EspecialidadesPorAlumnoModel> Obtener_Especialidades_X_Alumno(string codAlu)
-        {
-            var especialidades = obligacionService.Obtener_Especialidades_X_Alumno(codAlu);
-
-            var result = especialidades.Select(e => Mapper.EspecialidadesPorAlumnoDTO_To_EspecialidadesPorAlumnoModel(e)).ToList();
 
             return result;
         }

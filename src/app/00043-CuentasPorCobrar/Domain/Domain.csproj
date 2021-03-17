@@ -82,7 +82,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DTO\DataMatriculaResponse.cs" />
-    <Compile Include="Entities\EspecialidadesPorAlumnoDTO.cs" />
     <Compile Include="Entities\CuotaPagoDTO.cs" />
     <Compile Include="Entities\DataMatriculaObs.cs" />
     <Compile Include="DTO\Options.cs" />
@@ -116,7 +115,9 @@
     <Compile Include="Helpers\MatriculaExcelSource.cs" />
     <Compile Include="Helpers\MatriculaSourceFactory.cs" />
     <Compile Include="Helpers\RandomPassword.cs" />
+    <Compile Include="Helpers\TipoEstudio.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\IGeneralService.cs" />
     <Compile Include="Services\ICategoriaPago.cs" />
     <Compile Include="Services\IClasificadores.cs" />
     <Compile Include="Services\ICorreoAplicacion.cs" />
@@ -125,9 +126,13 @@
     <Compile Include="Services\IEstudiante.cs" />
     <Compile Include="Services\IHelpResources.cs" />
     <Compile Include="Services\IDependencia.cs" />
+    <Compile Include="Services\Implementations\CatalogoService.cs" />
+    <Compile Include="Services\ICatalogoService.cs" />
+    <Compile Include="Services\Implementations\GeneralService.cs" />
+    <Compile Include="Services\IObligacionService.cs" />
     <Compile Include="Services\IRoles.cs" />
     <Compile Include="Services\IUser.cs" />
-    <Compile Include="Services\ObligacionService.cs" />
+    <Compile Include="Services\Implementations\ObligacionService.cs" />
     <Compile Include="Services\ProcesoService.cs" />
     <Compile Include="Services\ConceptoPagoService.cs" />
     <Compile Include="UnfvRepositorioClient\AlumnoModel.cs" />
@@ -138,9 +143,7 @@
     <Compile Include="UnfvRepositorioClient\IAlumnosClient.cs" />
     <Compile Include="UnfvRepositorioClient\AlumnosClient.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Services\Implementations\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Data\Data.csproj">
       <Project>{02be7951-a281-420a-9d8d-856c384f7389}</Project>

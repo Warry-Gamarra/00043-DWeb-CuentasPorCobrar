@@ -36,24 +36,21 @@
                                     <div class="form-row">
                                         <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
                                             <label for="cmbAnioGrupal">Año</label>
-                                            @Html.DropDownList("cmbAnioGrupal", new SelectList(ViewBag.Anios, "Value", "TextDisplay", DateTime.Now.Year), new { @class = "form-control form-control-sm" })
+                                            @Html.DropDownList("cmbAnioGrupal", new SelectList(ViewBag.Anios, "Value", "TextDisplay", ViewBag.CurrentYear), new { @class = "form-control form-control-sm" })
                                         </div>
                                         <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
                                             <label for="cmbPeriodoGrupal">Periodo</label>
-                                            @Html.DropDownList("cmbPeriodoGrupal", new SelectList(ViewBag.Periodos, "Value", "TextDisplay", "15"), null, new { @class = "form-control form-control-sm" })
+                                            @Html.DropDownList("cmbPeriodoGrupal", new SelectList(ViewBag.Periodos, "Value", "TextDisplay", ViewBag.DefaultPeriodo), null, new { @class = "form-control form-control-sm" })
                                         </div>
 
                                         <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
-                                            <label for="cmbNivelGrupal">Nivel/Grado</label>
-                                            <select id="cmbNivelGrupal" name="cmbNivelGrupal" class="form-control form-control-sm">
-                                                <option>Pregrado</option>
-                                                <option>Posgrado</option>
-                                            </select>
+                                            <label for="cmbTipoEstudio">Tipo de estudio</label>
+                                            @Html.DropDownList("cmbTipoEstudio", new SelectList(ViewBag.TipoEstudios, "Value", "TextDisplay", ViewBag.DefaultTipoEstudio), null, new { @class = "form-control form-control-sm" })
                                         </div>
 
                                         <div class="form-group col-lg-3 col-md-5 col-sm-12 col-12">
-                                            <label for="cmbFacultad">Facultades</label>
-                                            @Html.DropDownList("cmbFacultad", new SelectList(ViewBag.Facultades, "Value", "TextDisplay", "15"), null, new { @class = "form-control form-control-sm" })
+                                            <label for="cmbFacultad">Facultades/Especialidades</label>
+                                            @Html.DropDownList("cmbFacultad", new SelectList(ViewBag.Facultades, "Value", "TextDisplay", ViewBag.DefaultFacultad), "TODOS", new { @class = "form-control form-control-sm" })
                                         </div>
 
                                         <div class="form-group col-lg-2 col-sm-3 col-12">
@@ -162,36 +159,79 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="lblModalEspera">Mensaje del sistema</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
             </div>
-            <div class="modal-body"></div>
+            <div class="modal-body">
+                <div class="d-flex align-items-center">
+                    <strong> Generando obligaciones...</strong>
+                    <div class="spinner-border ml-auto text-primary" role="status" aria-hidden="true"></div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 @section Scripts {
     <script>
+        const MESSAGE_TYPE = {
+            INFO: 'info',
+            SUCCESS: 'success',
+            WARNING: 'warning',
+            ERROR: 'error'
+        };
+
+        $("#frmGenerarOblig").on("change", "#cmbTipoEstudio", function (e) {
+            let tipoEstudio = $(this).val();
+
+            CargarFacultades(tipoEstudio);
+        });
+
+        function CargarFacultades(tipoEstudio) {
+            let cmbFacultad = $('#cmbFacultad');
+
+            let parametros = {
+                tipoEstudio: tipoEstudio
+            };
+
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("ObtenerFacultades", "Obligaciones")',
+                data: parametros,
+                dataType: 'json',
+                beforeSend: function () {
+                    cmbFacultad.html('');
+                },
+                success: function (data) {
+                    if (data && data.length > 0) {
+                        let html = '';
+
+                        $.each(data, function (i, item) {
+                            html += '<option value="' + item.Value + '">' + item.TextDisplay + '</option>'
+                        });
+
+                        cmbFacultad.html(html);
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                }
+            });
+        }
+
+        $(document).on("click", "#individial-tab", function (e) {
+            LimpiarMensajeGenerarOblig();
+        });
+
         $("#frmGenerarOblig").on("click", "button[type='submit']", function (e) {
             $(this).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Generando obligaciones . . .');
             AbrirModalEsperaGeneracionOblig();
             LimpiarMensajeGenerarOblig();
         });
 
-        $(document).on("click", "#individial-tab", function (e) {
-            LimpiarMensajeGenerarOblig();
-        });
-
         function AbrirModalEsperaGeneracionOblig() {
-            let modal = $('#modalEspera');
+            $('#modalEspera').modal('show');
+        }
 
-            modal.find(".modal-body").html('<div class="d-flex align-items-center">' +
-                '<strong> Generando obligaciones...</strong >' +
-                '<div class="spinner-border ml-auto text-primary" role="status" aria-hidden="true"></div>' +
-                '</div>');
-
-            modal.modal('show');
+        function CerrarModalEsperaGeneracionOblig() {
+            $('#modalEspera').modal('hide');
         }
 
         function LimpiarMensajeGenerarOblig() {
@@ -199,49 +239,93 @@
         }
 
         $(document).on('click', '#btnConsultarObligacionAlumno', function () {
-            let cmbAnioIndividual = $('#cmbAnioIndividual').val();
-            let cmbPeriodoIndividual = $('#cmbPeriodoIndividual').val();
-            let cmbEspecialidad = $('#cmbEspecialidad').val();
-            let txtCodAlumno = $('#txtCodAlumno').val();
-
-            if (txtCodAlumno === null || txtCodAlumno.length !== 10) {
-                MostrarMensajeGeneracionObligPorAlumno('El campo Código de Alumno es requerido.');
-            } else if (cmbEspecialidad === null || cmbEspecialidad.length !== 3) {
-                BuscarAlumno(txtCodAlumno);
-            } else {
-                BuscarObligacion(cmbAnioIndividual, cmbPeriodoIndividual, cmbEspecialidad, txtCodAlumno);
-            }
+            BuscarAlumno();
         });
 
         $(document).on('keypress', '#txtCodAlumno', function (e) {
             if (e.which === 13) {
                 e.preventDefault();
-
-                GenerarTablaDetalle([]);
-                GenerarTablaCuotas([]);
-
-                let codigoAlu = $('#txtCodAlumno').val();
-
-                if (codigoAlu.length === 10) {
-                    BuscarAlumno(codigoAlu);
-                } else {
-                    llenarComboEspecialidades([]);
-                }
+                BuscarAlumno();
             }
         });
 
-        function MostrarMensajeGeneracionObligPorAlumno(msg) {
-            let modal = $('#modalEspera');
-            modal.find(".modal-body").html('<p class="text-danger">' + msg + '</p>');
-            modal.modal('show');
+        function BuscarAlumno() {
+            let anio = $('#cmbAnioIndividual').val();
+            let periodo = $('#cmbPeriodoIndividual').val();
+            let especialidad = $('#cmbEspecialidad').val();
+            let codAlu = $('#txtCodAlumno').val();
+
+            if (codAlu === null || codAlu.length !== 10) {
+                MostrarMensajeObligacionesPorAlumno('El campo Código de Alumno es requerido.', MESSAGE_TYPE.WARNING);
+            } else if (especialidad === null || especialidad.length === '') {
+                ObtenerEspecialidadesAlumno(codAlu);
+            } else {
+                BuscarObligaciones(anio, periodo, especialidad, codAlu);
+            }
         }
 
-        function BuscarObligacion(anio, periodo, codRc, codigoAlu) {
+        function MostrarMensajeObligacionesPorAlumno(errorMessage, messageType) {
+            Swal.fire({
+                title: '',
+                text: errorMessage,
+                icon: messageType,
+                timer: 6000
+            });
+        }
+
+        function ObtenerEspecialidadesAlumno(codAlu) {
+            let parametros = {
+                codAlu: codAlu
+            };
+
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("ObtenerEspecialidadesAlumno", "Obligaciones")',
+                data: parametros,
+                dataType: 'json',
+                beforeSend: function () {
+                    llenarComboEspecialidades(null);
+                },
+                success: function (data) {
+                    llenarComboEspecialidades(data);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    let jsonException = JSON.parse(xhr.responseText);
+                    MostrarMensajeObligacionesPorAlumno(jsonException.Message, MESSAGE_TYPE.ERROR);
+                }
+            });
+        }
+
+        function llenarComboEspecialidades(especialidades) {
+            let cmbEspecialidad = $('#cmbEspecialidad');
+
+            cmbEspecialidad.empty();
+
+            if (especialidades !== null) {
+                let html = '';
+
+                $.each(especialidades, function (i, item) {
+                    html += '<option value="' + item.C_RcCod + '">' + item.T_EspDesc + '</option>'
+
+                    if (i === 0) {
+                        let anio = $('#cmbAnioIndividual').val();
+                        let periodo = $('#cmbPeriodoIndividual').val();
+                        let codAlu = $('#txtCodAlumno').val();
+
+                        BuscarObligaciones(anio, periodo, item.C_RcCod, codAlu);
+                    }
+                });
+
+                cmbEspecialidad.html(html);
+            }
+        }
+
+        function BuscarObligaciones(anio, periodo, codRc, codAlu) {
             let parametros = {
                 anio: anio,
                 periodo: periodo,
                 codRc: codRc,
-                codAlu: codigoAlu
+                codAlu: codAlu
             };
 
             $.ajax({
@@ -250,8 +334,8 @@
                 data: parametros,
                 dataType: 'json',
                 beforeSend: function () {
-                    GenerarTablaDetalle([]);
-                    GenerarTablaCuotas([]);
+                    GenerarTablaDetalle(null);
+                    GenerarTablaCuotas(null);
                 },
                 success: function (data) {
                     if (data) {
@@ -259,7 +343,7 @@
                             Swal.fire({
                                 title: '',
                                 text: "El alumno no cuenta con obligaciones generadas para este periodo. ¿Desea generar las obligaciones en este momento?.",
-                                icon: 'warning',
+                                icon: MESSAGE_TYPE.WARNING,
                                 showCancelButton: true,
                                 confirmButtonColor: '#3085d6',
                                 cancelButtonColor: '#d33',
@@ -267,7 +351,7 @@
                                 cancelButtonText: 'No, cancelar.'
                             }).then((result) => {
                                 if (result.isConfirmed) {
-                                    GenerarPorAlumno(anio, periodo, codRc, codigoAlu);
+                                    GenerarObligacionesAlumno(anio, periodo, codRc, codAlu);
                                 }
                             });
                         } else {
@@ -277,60 +361,71 @@
                     }
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
-                    var msg = JSON.parse(xhr.responseText);
-                    MostrarMensajeGeneracionObligPorAlumno(msg.Message);
+                    var jsonException = JSON.parse(xhr.responseText);
+                    MostrarMensajeObligacionesPorAlumno(jsonException.Message, MESSAGE_TYPE.ERROR);
                 }
             });
         }
 
-        function GenerarPorAlumno(anio, periodo, codRc, codigoAlu) {
+        function GenerarObligacionesAlumno(anio, periodo, codRc, codAlu) {
             let parametros = {
                 anio: anio,
                 periodo: periodo,
                 codRc: codRc,
-                codAlu: codigoAlu
+                codAlu: codAlu
             };
 
             $.ajax({
                 type: 'POST',
-                url: '@Url.Action("GenerarPorAlumno", "Obligaciones")',
+                url: '@Url.Action("GenerarObligacionesAlumno", "Obligaciones")',
                 data: parametros,
                 dataType: 'json',
+                beforeSend: function () {
+                    AbrirModalEsperaGeneracionOblig();
+                },
                 success: function (data) {
                     if (data) {
                         if (data.Value) {
-                            BuscarObligacion(anio, periodo, codRc, codigoAlu);
+                            BuscarObligaciones(anio, periodo, codRc, codAlu);
                         } else {
-                            MostrarMensajeGeneracionObligPorAlumno("Ha ocurrido un error al generar las obligaciones.");
+                            MostrarMensajeObligacionesPorAlumno(data.Message, MESSAGE_TYPE.ERROR);
                         }
-                    } else {
-                        MostrarMensajeGeneracionObligPorAlumno("Ha ocurrido un error al generar las obligaciones.");
                     }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    var jsonException = JSON.parse(xhr.responseText);
+                    MostrarMensajeObligacionesPorAlumno(jsonException.Message, MESSAGE_TYPE.ERROR);
+                },
+                complete: function () {
+                    CerrarModalEsperaGeneracionOblig();
                 }
             });
         }
 
         function GenerarTablaDetalle(detalle_pago) {
             let tblDetalleObligaciones = $('#tblDetalleObligaciones').find('tbody');
-            let rows = '';
-
+            
             tblDetalleObligaciones.html('');
 
-            $.each(detalle_pago, function (i, item) {
-                rows += '<tr>' +
-                    '<td>' + item.T_ConceptoDesc + '</td>' +
-                    '<td>' + item.I_Anio + '-' + item.C_Periodo + ' ' + item.T_CatPagoDesc + '</td>' +
-                    '<td>' + item.T_Monto + '</td>' +
-                    '<td>' + item.T_FecVencto + '</td>' + 
-                    '<td>' + item.T_TipoObligacion + '</td>' + 
-                    '<td>' + item.T_Pagado + '</td>' +
-                    '<td>' + item.C_CodOperacion + '</td>' +
-                    '<td>' + item.T_FecPago + '</td>' +
-                    '<td>' + item.T_LugarPago + '</td>' +
-                    '</tr>';
-            });
+            if (detalle_pago !== null) {
+                let rows = '';
 
-            tblDetalleObligaciones.html(rows);
+                $.each(detalle_pago, function (i, item) {
+                    rows += '<tr>' +
+                        '<td>' + item.T_ConceptoDesc + '</td>' +
+                        '<td>' + item.I_Anio + '-' + item.C_Periodo + ' ' + item.T_CatPagoDesc + '</td>' +
+                        '<td>' + item.T_Monto + '</td>' +
+                        '<td>' + item.T_FecVencto + '</td>' +
+                        '<td>' + item.T_TipoObligacion + '</td>' +
+                        '<td>' + item.T_Pagado + '</td>' +
+                        '<td>' + item.C_CodOperacion + '</td>' +
+                        '<td>' + item.T_FecPago + '</td>' +
+                        '<td>' + item.T_LugarPago + '</td>' +
+                        '</tr>';
+                });
+
+                tblDetalleObligaciones.html(rows);
+            }
         }
 
         function GenerarTablaCuotas(cuotas_pago) {
@@ -352,53 +447,6 @@
             tblCuotasPago.html(rows);
         }
 
-        function BuscarAlumno(codigoAlu) {
-            let parametros = {
-                codAlu: codigoAlu
-            };
-
-            $.ajax({
-                type: 'GET',
-                url: '@Url.Action("Obtener_Especialidades_X_Alumno", "Obligaciones")',
-                data: parametros,
-                dataType: 'json',
-                success: function (data) {
-                    if (data) {
-                        llenarComboEspecialidades(data);
-                    }
-                }
-            });
-        }
-
-        function llenarComboEspecialidades(lista) {
-            let cmbEspecialidad = $('#cmbEspecialidad');
-            cmbEspecialidad.empty();
-
-            if (lista !== null) {
-                
-                let html = '';
-                let codRc = null;
-
-
-                $.each(lista, function (i, item) {
-                    html += '<option value="' + item.C_RcCod + '">' + item.T_EspDesc + '</option>'
-
-                    if (i === 0) {
-                        codRc = item.C_RcCod;
-                    }
-                });
-
-                cmbEspecialidad.html(html);
-
-                if (codRc !== null) {
-                    let cmbAnioIndividual = $('#cmbAnioIndividual').val();
-                    let cmbPeriodoIndividual = $('#cmbPeriodoIndividual').val();
-                    let cmbEspecialidad = $('#cmbEspecialidad').val();
-                    let txtCodAlumno = $('#txtCodAlumno').val();
-
-                    BuscarObligacion(cmbAnioIndividual, cmbPeriodoIndividual, cmbEspecialidad, txtCodAlumno);
-                }
-            }
-        }
+        
     </script>
 }

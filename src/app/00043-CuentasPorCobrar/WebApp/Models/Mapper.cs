@@ -1,9 +1,11 @@
 ﻿using Domain.DTO;
 using Domain.Entities;
+using Domain.UnfvRepositorioClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using WebApp.ViewModels;
 
 namespace WebApp.Models
 {
@@ -77,16 +79,27 @@ namespace WebApp.Models
             return cuotaPagoModel;
         }
 
-        public static EspecialidadesPorAlumnoModel EspecialidadesPorAlumnoDTO_To_EspecialidadesPorAlumnoModel(EspecialidadesPorAlumnoDTO especialidadesPorAlumno)
+        public static EspecialidadAlumnoModel AlumnoModel_To_EspecialidadAlumnoModel(AlumnoModel alumno)
         {
-            var result = new EspecialidadesPorAlumnoModel()
+            var result = new EspecialidadAlumnoModel()
             {
-                C_CodAlu = especialidadesPorAlumno.C_CodAlu,
-                C_RcCod = especialidadesPorAlumno.C_RcCod,
-                T_EspDesc = especialidadesPorAlumno.T_EspDesc
+                C_CodAlu = alumno.C_CodAlu,
+                C_RcCod = alumno.C_RcCod,
+                T_EspDesc = alumno.T_DenomProg
             };
 
             return result;
+        }
+
+        public static SelectViewModel CatalogoOpcionEntity_To_SelectViewModel(CatalogoOpcionEntity catalogoOpcionEntity)
+        {
+            SelectViewModel selectViewModel = new SelectViewModel()
+            {
+                Value = catalogoOpcionEntity.I_OpcionID.ToString(),
+                TextDisplay = catalogoOpcionEntity.T_OpcionDesc.ToUpper()
+            };
+
+            return selectViewModel;
         }
     }
 }

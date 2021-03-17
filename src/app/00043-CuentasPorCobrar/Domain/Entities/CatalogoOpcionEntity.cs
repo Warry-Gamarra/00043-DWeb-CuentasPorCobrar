@@ -9,6 +9,7 @@ namespace Domain.Entities
     public class CatalogoOpcionEntity
     {
         public int I_OpcionID { get; set; }
+        public string T_OpcionCod { get; set; }
         public string T_OpcionDesc { get; set; }
         public bool B_Habilitado { get; set; }
     }

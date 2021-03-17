@@ -6,10 +6,12 @@ using System.Web;
 
 namespace WebApp.Models.Facades
 {
-    public interface IAlumnosClienteFacade
+    public interface IAlumnosClientFacade
     {
         IEnumerable<AlumnoModel> GetByDocIdent(string codTipDoc, string numDNI);
 
         AlumnoModel GetByID(string codRc, string codAlu);
+
+        IEnumerable<EspecialidadAlumnoModel> GetEspecialidadesAlumno(string codAlu);
     }
 }

@@ -1633,6 +1633,7 @@ GO
 CREATE PROCEDURE [dbo].[USP_IU_GenerarObligacionesPregrado_X_Ciclo]
 @I_Anio int,
 @I_Periodo int,
+@C_CodFac varchar(2) = null,
 @C_CodAlu varchar(20) = null,
 @C_CodRc varchar(3) = null,
 @I_UsuarioCre int,
@@ -1672,11 +1673,21 @@ BEGIN
 		where m.B_Habilitado = 1 and m.B_Eliminado = 0 and a.N_Grado = @I_Bachiller and
 			m.I_Anio = @I_Anio and m.I_Periodo = @I_Periodo and m.C_CodAlu = @C_CodAlu and m.C_CodRc = @C_CodRc
 	end else begin
-		insert @Tmp_MatriculaAlumno(I_MatAluID, C_CodRc, C_CodAlu, C_EstMat, B_Ingresante, C_CodModIng, N_Grupo, I_CredDesaprob)
-		select m.I_MatAluID, m.C_CodRc, m.C_CodAlu, m.C_EstMat, m.B_Ingresante, a.C_CodModIng, a.N_Grupo, ISNULL(m.I_CredDesaprob, 0) from dbo.TC_MatriculaAlumno m 
-		inner join BD_UNFV_Repositorio.dbo.VW_Alumnos a ON a.C_CodAlu = m.C_CodAlu and a.C_RcCod = m.C_CodRc
-		where m.B_Habilitado = 1 and m.B_Eliminado = 0 and a.N_Grado = @I_Bachiller and
-			m.I_Anio = @I_Anio and m.I_Periodo = @I_Periodo
+		if (@C_CodFac is null) or (@C_CodFac = '') begin
+			insert @Tmp_MatriculaAlumno(I_MatAluID, C_CodRc, C_CodAlu, C_EstMat, B_Ingresante, C_CodModIng, N_Grupo, I_CredDesaprob)
+			select m.I_MatAluID, m.C_CodRc, m.C_CodAlu, m.C_EstMat, m.B_Ingresante, a.C_CodModIng, a.N_Grupo, ISNULL(m.I_CredDesaprob, 0) from dbo.TC_MatriculaAlumno m 
+			inner join BD_UNFV_Repositorio.dbo.VW_Alumnos a ON a.C_CodAlu = m.C_CodAlu and a.C_RcCod = m.C_CodRc
+			where m.B_Habilitado = 1 and m.B_Eliminado = 0 and a.N_Grado = @I_Bachiller and
+				m.I_Anio = @I_Anio and m.I_Periodo = @I_Periodo
+		end else begin
+			insert @Tmp_MatriculaAlumno(I_MatAluID, C_CodRc, C_CodAlu, C_EstMat, B_Ingresante, C_CodModIng, N_Grupo, I_CredDesaprob)
+			select m.I_MatAluID, m.C_CodRc, m.C_CodAlu, m.C_EstMat, m.B_Ingresante, a.C_CodModIng, a.N_Grupo, ISNULL(m.I_CredDesaprob, 0) from dbo.TC_MatriculaAlumno m 
+			inner join BD_UNFV_Repositorio.dbo.VW_Alumnos a ON a.C_CodAlu = m.C_CodAlu and a.C_RcCod = m.C_CodRc
+			where m.B_Habilitado = 1 and m.B_Eliminado = 0 and a.N_Grado = @I_Bachiller and
+				m.I_Anio = @I_Anio and m.I_Periodo = @I_Periodo and a.C_CodFac = @C_CodFac
+		end
+		
+		
 	end
 
 	declare @C_Moneda varchar(3) = 'PEN',
@@ -2170,26 +2181,26 @@ GO
 
 
 
-IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_EspecialidadesPorAlumno')
-	DROP VIEW [dbo].[VW_EspecialidadesPorAlumno]
-GO
+--IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_EspecialidadesPorAlumno')
+--	DROP VIEW [dbo].[VW_EspecialidadesPorAlumno]
+--GO
 
 
-CREATE VIEW [dbo].[VW_EspecialidadesPorAlumno]
-AS
-SELECT a.C_CodAlu, a.C_RcCod, c.T_EspDesc FROM BD_UNFV_Repositorio.dbo.VW_Alumnos a
-INNER JOIN BD_UNFV_Repositorio.dbo.VW_CarreraProfesional c on a.C_RcCod = c.C_RcCod
-GO
+--CREATE VIEW [dbo].[VW_EspecialidadesPorAlumno]
+--AS
+--SELECT a.C_CodAlu, a.C_RcCod, c.T_EspDesc FROM BD_UNFV_Repositorio.dbo.VW_Alumnos a
+--INNER JOIN BD_UNFV_Repositorio.dbo.VW_CarreraProfesional c on a.C_RcCod = c.C_RcCod
+--GO
 
 
-IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_Facultades')
-	DROP VIEW [dbo].[VW_Facultades]
-GO
+--IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_Facultades')
+--	DROP VIEW [dbo].[VW_Facultades]
+--GO
 
-CREATE VIEW [dbo].[VW_Facultades]
-AS
-SELECT DISTINCT f.C_CodFac, f.T_FacDesc FROM BD_UNFV_Repositorio.dbo.VW_CarreraProfesional f
-WHERE f.B_Habilitado = 1
-GO
+--CREATE VIEW [dbo].[VW_Facultades]
+--AS
+--SELECT DISTINCT f.C_CodFac, f.T_FacDesc FROM BD_UNFV_Repositorio.dbo.VW_CarreraProfesional f
+--WHERE f.B_Habilitado = 1
+--GO
 
 select * from BD_UNFV_Repositorio.dbo.VW_CarreraProfesional WHERE N_Grado = '4'
