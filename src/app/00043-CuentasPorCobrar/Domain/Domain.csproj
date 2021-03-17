@@ -81,6 +81,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DTO\Constantes.cs" />
+    <Compile Include="DTO\Tipos.cs" />
     <Compile Include="DTO\DataMatriculaResponse.cs" />
     <Compile Include="Entities\CuotaPagoDTO.cs" />
     <Compile Include="Entities\DataMatriculaObs.cs" />

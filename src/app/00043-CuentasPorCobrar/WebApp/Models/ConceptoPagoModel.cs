@@ -36,7 +36,7 @@ namespace WebApp.Models
                 I_ConceptoID = model.Id ?? 0,
                 T_ConceptoDesc = model.NombreConcepto,
                 B_EsPagoMatricula = model.EsMatricula,
-                B_EsPagoExtmp = model.EsExtemporaneo,
+                B_EsPagoExtmp = model.Extemporaneo,
                 B_ConceptoAgrupa = model.AgupaConceptos
             };
 
@@ -70,25 +70,6 @@ namespace WebApp.Models
         public CatalogoConceptosRegistroViewModel ObtenerConcepto(int conceptoId)
         {
             var result = new CatalogoConceptosRegistroViewModel(conceptoPagoService.GetConcepto(conceptoId));
-
-            return result;
-        }
-
-        public List<ConceptoPagoViewModel> Listar_ConceptoPago_Habilitados()
-        {
-            List<ConceptoPagoViewModel> result = new List<ConceptoPagoViewModel>();
-
-            var lista = conceptoPagoService.Listar_ConceptoPago_Habilitados();
-
-            if (lista != null)
-            {
-                result = lista.Select(x => new ConceptoPagoViewModel()
-                {
-                    I_ConcPagID = x.I_ConcPagID,
-                    T_CatPagoDesc = x.T_CatPagoDesc,
-                    T_ConceptoDesc = x.T_ConceptoDesc,
-                }).ToList();
-            }
 
             return result;
         }
@@ -147,7 +128,7 @@ namespace WebApp.Models
             return result;
         }
 
-        public Response Grabar_ConceptoPago(MantenimientoConceptoPagoViewModel model, int currentUserId)
+        public Response Grabar_ConceptoPago(RegistroConceptoPagoViewModel model, int currentUserId)
         {
             ConceptoPagoEntity conceptoPagoEntity;
             
@@ -199,11 +180,11 @@ namespace WebApp.Models
             return result;
         }
 
-        public MantenimientoConceptoPagoViewModel Obtener_ConceptoPago(int I_ConcPagID)
+        public RegistroConceptoPagoViewModel Obtener_ConceptoPago(int I_ConcPagID)
         {
             var conceptoPago = conceptoPagoService.Obtener_ConceptoPago(I_ConcPagID);
 
-            var model = new MantenimientoConceptoPagoViewModel()
+            var model = new RegistroConceptoPagoViewModel()
             {
                 I_ConcPagID = conceptoPago.I_ConcPagID,
                 I_ProcesoID = conceptoPago.I_ProcesoID,

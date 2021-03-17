@@ -15,6 +15,7 @@ namespace Data.Procedures
         public int I_CtaDepoProID { get; set; }
         public int I_CtaDepositoID { get; set; }
         public int I_ProcesoID { get; set; }
+        public int I_EntidadFinanID { get; set; }
         public bool B_Habilitado { get; set; }
         public string C_NumeroCuenta { get; set; }
         public string T_EntidadDesc { get; set; }

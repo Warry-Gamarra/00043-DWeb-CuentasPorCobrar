@@ -71,16 +71,17 @@ namespace Domain.Services
             return result;
         }
 
-        public List<ConceptoPago> Listar_ConceptoPago_Habilitados()
+        public List<ConceptoPago> Listar_ConceptoPago_Habilitados(int procesoID)
         {
             try
             {
-                var lista = USP_S_ConceptoPago.Execute();
+                var lista = USP_S_ConceptoPago.Execute(procesoID);
 
                 var result = lista.Select(x => new ConceptoPago()
                 {
-                    I_ConcPagID = x.I_ConcPagID,
+                    I_ConcPagID = x.I_ConcPagID.Value,
                     T_CatPagoDesc = x.T_CatPagoDesc,
+                    T_ProcesoDesc = x.T_ProcesoDesc,
                     T_ConceptoDesc = x.T_ConceptoDesc,
                     I_Anio = x.I_Anio,
                     I_Periodo = x.I_Periodo,
@@ -155,6 +156,7 @@ namespace Domain.Services
                 var result = lista.Where(x => x.B_Habilitado).Select(x => new CatalogoOpcionEntity()
                 {
                     I_OpcionID = x.I_OpcionID,
+                    T_OpcionCod = x.T_OpcionCod,
                     T_OpcionDesc = x.T_OpcionDesc,
                     B_Habilitado = x.B_Habilitado
                 }).ToList();

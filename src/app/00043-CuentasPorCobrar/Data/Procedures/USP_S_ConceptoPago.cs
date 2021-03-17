@@ -12,16 +12,18 @@ namespace Data.Procedures
 {
     public class USP_S_ConceptoPago
     {
-        public int I_ConcPagID { get; set; }
+        public int? I_ConcPagID { get; set; }
         public string T_CatPagoDesc { get; set; }
         public string T_ConceptoDesc { get; set; }
+        public string T_ProcesoDesc { get; set; }
         public int I_Anio { get; set; }
         public int I_Periodo { get; set; }
         public decimal M_Monto { get; set; }
         
-        public static List<USP_S_ConceptoPago> Execute()
+        public static List<USP_S_ConceptoPago> Execute(int I_ProcesoID)
         {
             List<USP_S_ConceptoPago> result;
+            DynamicParameters parameters = new DynamicParameters();
 
             try
             {
@@ -29,7 +31,8 @@ namespace Data.Procedures
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    result = _dbConnection.Query<USP_S_ConceptoPago>(s_command, commandType: CommandType.StoredProcedure).ToList();
+                    parameters.Add(name: "I_ProcesoID", dbType: DbType.Int32, value: I_ProcesoID);
+                    result = _dbConnection.Query<USP_S_ConceptoPago>(s_command, parameters, commandType: CommandType.StoredProcedure).ToList();
                 }
             }
             catch (Exception ex)

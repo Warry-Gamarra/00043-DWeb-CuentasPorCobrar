@@ -392,6 +392,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CategoriaPagoController.cs" />
     <Compile Include="Controllers\ClasificadoresController.cs" />
+    <Compile Include="Controllers\ConceptoPagoController.cs" />
     <Compile Include="Controllers\CuentaDepositoController.cs" />
     <Compile Include="Controllers\DependenciaController.cs" />
     <Compile Include="Controllers\DeudasController.cs" />
@@ -404,7 +405,7 @@
     <Compile Include="Controllers\CorreoController.cs" />
     <Compile Include="Controllers\ObligacionesController.cs" />
     <Compile Include="Controllers\PagosController.cs" />
-    <Compile Include="Controllers\ConceptoPagoController.cs" />
+    <Compile Include="Controllers\ConceptoController.cs" />
     <Compile Include="Controllers\ProcesosController.cs" />
     <Compile Include="Controllers\ServiceController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
@@ -491,7 +492,7 @@
     <Content Include="Views\Users\_DetailUser.cshtml" />
     <Content Include="Views\Shared\_GridPager.cshtml" />
     <Content Include="Views\Shared\_Grid.cshtml" />
-    <Content Include="Views\ConceptoPago\Index.cshtml" />
+    <Content Include="Views\Concepto\Index.cshtml" />
     <Content Include="Views\ConceptoPago\Grabar.cshtml" />
     <Content Include="Views\Estudiantes\Index.cshtml" />
     <Content Include="Views\Clasificadores\Index.cshtml" />
@@ -517,13 +518,13 @@
     <Content Include="Views\Procesos\_RegistrarProcesoObligacion.cshtml" />
     <Content Include="Views\Procesos\Tasas.cshtml" />
     <Content Include="Views\CategoriaPago\_RegistrarCategoria.cshtml" />
-    <Content Include="Views\ConceptoPago\_RegistrarConcepto.cshtml" />
+    <Content Include="Views\Concepto\_RegistrarConcepto.cshtml" />
     <Content Include="Views\Pagos\ImportarArchivosPago.cshtml" />
     <Content Include="Views\Pagos\ExportarDatosPago.cshtml" />
     <Content Include="Views\EntidadFinanciera\_CuentasBanco.cshtml" />
     <Content Include="Views\Obligaciones\Generar.cshtml" />
-    <Content Include="Views\Procesos\_RegistrarProcesoConceptos.cshtml" />
-    <Content Include="Views\Procesos\_ConceptosProcceso.cshtml" />
+    <Content Include="Views\ConceptoPago\_RegistrarConceptosPagoProceso.cshtml" />
+    <Content Include="Views\Procesos\_ListadoConceptosProceso.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

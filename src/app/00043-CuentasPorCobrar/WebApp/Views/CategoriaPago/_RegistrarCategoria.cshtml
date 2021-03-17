@@ -33,7 +33,7 @@
             </div>
             <div class="row form-group">
                 @Html.LabelFor(model => model.EsObligacion, new { @class = "control-label col-12" })
-                <div class="col-md-5 offset-1">
+                <div class="col-4 offset-2">
                     <div class="form-check">
                         @Html.RadioButtonFor(model => model.EsObligacion, true, new { @Class = "form-check-input", @id = "rbtn_oblig" })
                         <label class="form-check-label" for="rbtn_oblig">
@@ -41,7 +41,7 @@
                         </label>
                     </div>
                 </div>
-                <div class="col-md-5 offset-1">
+                <div class="col-4 offset-2">
                     <div class="form-check">
                         @Html.RadioButtonFor(model => model.EsObligacion, false, new { @Class = "form-check-input", @id = "rbtn_tasa" })
                         <label class="form-check-label" for="rbtn_tasa">
@@ -52,7 +52,7 @@
             </div>
             <div class="row form-group">
                 @Html.LabelFor(model => model.Prioridad, new { @class = "control-label col-12" })
-                <div class="col-md-5 offset-1">
+                <div class="col-4 offset-2">
                     <div class="form-check">
                         @Html.RadioButtonFor(model => model.Prioridad, 1, new { @Class = "form-check-input", @id = "rbtn_mat" })
                         <label class="form-check-label" for="rbtn_mat">
@@ -60,7 +60,7 @@
                         </label>
                     </div>
                 </div>
-                <div class="col-md-5 offset-1">
+                <div class="col-4 offset-2">
                     <div class="form-check">
                         @Html.RadioButtonFor(model => model.Prioridad, 2, new { @Class = "form-check-input", @id = "rbtn_otr" })
                         <label class="form-check-label" for="rbtn_otr">
@@ -75,6 +75,15 @@
                 @Html.ListBoxFor(model => model.CuentasDeposito, ViewBag.CtasDeposito as SelectList, new { @class = "select-multiple form-control text-uppercase", multiple = "true" })
                 <p class="text-danger small">@Html.ValidationMessageFor(model => model.CuentasDeposito)</p>
             </div>
+
+            <div class="form-group form-row mt-4" id="CodBco">
+                @Html.LabelFor(model => model.CodBcoComercio, new { @class = "control-label col-form-label col-sm-6 col-12" })
+                <div class="col-sm-6 col-12">
+                    @Html.TextBoxFor(model => model.CodBcoComercio, new { @class = "form-control text-right" })
+                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.CodBcoComercio)</p>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -93,16 +102,61 @@
 }
 
 <script>
-    $(document).on('ready', function () {
+    $(document).ready(function () {
         $('#btnsubmit').removeClass('disabled');
-        
-    });
 
-    $("form").submit(function () {
-        if (parseInt($("#submited").val()) > 0) {
-            return false;
+        $("form").submit(function () {
+            if (parseInt($("#submited").val()) > 0) {
+                return false;
+            }
+        });
+
+        $('.select-multiple').select2();
+
+        if ('@Model.MostrarCodBanco' === 'True') {
+            $('#CodBco').show();
         }
+        else {
+            $('#CodBcoComercio').val(null);
+            $('#CodBco').hide();
+        }
+
+        $('#CuentasDeposito').on('change', function () {
+
+            let selected = $('#CuentasDeposito').val();
+            let cuentas = [];
+
+            @foreach (var cuenta in Model.CtasBcoComercio)
+            {
+                @:cuentas.push('@cuenta');
+            }
+
+            let index = -1
+            $.each(selected, function (i, value) {
+                index = $.inArray(value, cuentas);
+
+                if (index > -1) {
+                    return false;
+                }
+            });
+
+            if (index > -1) {
+                $('#CodBco').show();
+            }
+            else {
+                $('#CodBcoComercio').val(null);
+                $('#CodBco').hide();
+            }
+
+            @*let nomBanco = '@Model.BcoComercioNombre';
+            if ($('#CuentasDeposito :selected').parent().attr('label') === nomBanco) {
+                $('#CodBco').show();
+            }
+            else {
+                $('#CodBcoComercio').val(null);
+                $('#CodBco').hide();
+            }*@
+        })
     });
 
-    $('.select-multiple').select2();
 </script>

@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Domain.DTO;
+using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -54,8 +55,14 @@ namespace WebApp.ViewModels
         [Display(Name = "Prioridad")]
         public int Prioridad { get; set; }
 
+        [Display(Name = "Código Bco. Comercio")]
+        [MaxLength(10)]
+        public string CodBcoComercio { get; set; }
+
         [Display(Name = "Cuentas Habilitadas")]
         public int[] CuentasDeposito { get; set; }
+        public bool  MostrarCodBanco { get; set; } 
+        public int[] CtasBcoComercio { get; set; } 
 
         public CategoriaPagoRegistroViewModel() { }
 
@@ -67,8 +74,8 @@ namespace WebApp.ViewModels
             this.TipoAlumnoId = categoriaPago.TipoAlumno;
             this.Prioridad = categoriaPago.Prioridad;
             this.EsObligacion = categoriaPago.EsObligacion;
+            this.CodBcoComercio = categoriaPago.CodBcoComercio;
             this.CuentasDeposito = categoriaPago.CuentasDeposito.ToArray();
         }
     }
-
 }

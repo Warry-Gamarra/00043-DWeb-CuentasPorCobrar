@@ -9,7 +9,7 @@
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 </div>
 
-@using (Ajax.BeginForm("Save", "ConceptoPago", new { area = "" }, new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "div_msg", OnBegin = "Load", OnSuccess = "Submited", OnComplete = "Stop" }))
+@using (Ajax.BeginForm("Save", "Concepto", new { area = "" }, new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "div_msg", OnBegin = "Load", OnSuccess = "Submited", OnComplete = "Stop" }))
 {
     @Html.Hidden("submited", 0)
     @Html.AntiForgeryToken()
@@ -44,10 +44,10 @@
                 </div>
             </div>
             <div class="row form-group">
-                @Html.LabelFor(model => model.EsExtemporaneo, new { @class = "control-label col-12" })
+                @Html.LabelFor(model => model.Extemporaneo, new { @class = "control-label col-12" })
                 <div class="col-md-5 offset-1">
                     <div class="form-check">
-                        @Html.RadioButtonFor(model => model.EsExtemporaneo, true, new { @Class = "form-check-input", @id = "rbtn_extmp" })
+                        @Html.RadioButtonFor(model => model.Extemporaneo, true, new { @Class = "form-check-input", @id = "rbtn_extmp" })
                         <label class="form-check-label" for="rbtn_extmp">
                             Sí
                         </label>
@@ -55,14 +55,13 @@
                 </div>
                 <div class="col-md-5 offset-1">
                     <div class="form-check">
-                        @Html.RadioButtonFor(model => model.EsExtemporaneo, false, new { @Class = "form-check-input", @id = "rbtn_normal" })
+                        @Html.RadioButtonFor(model => model.Extemporaneo, false, new { @Class = "form-check-input", @id = "rbtn_normal" })
                         <label class="form-check-label" for="rbtn_normal">
                             No
                         </label>
                     </div>
                 </div>
             </div>
-
             <div class="row form-group">
                 @Html.LabelFor(model => model.AgupaConceptos, new { @class = "control-label col-12" })
                 <div class="col-md-5 offset-1">

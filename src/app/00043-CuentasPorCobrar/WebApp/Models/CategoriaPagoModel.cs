@@ -12,10 +12,14 @@ namespace WebApp.Models
     public class CategoriaPagoModel
     {
         private readonly ICategoriaPago _categoriaPago;
+        private readonly IEntidadFinanciera _entidadFinanciera;
+        private readonly ICuentaDeposito _cuentaDeposito;
 
         public CategoriaPagoModel()
         {
             _categoriaPago = new CategoriaPago();
+            _entidadFinanciera = new EntidadFinanciera();
+            _cuentaDeposito = new CuentaDeposito();
         }
 
         public List<CategoriaPagoViewModel> Find()
@@ -32,18 +36,31 @@ namespace WebApp.Models
 
         public CategoriaPagoRegistroViewModel Find(int categoriaPagoID)
         {
-            return new CategoriaPagoRegistroViewModel(_categoriaPago.Find(categoriaPagoID));
+            CategoriaPago categoriaPago = _categoriaPago.Find(categoriaPagoID);
+            var ctasBcoComercio = _cuentaDeposito.Find().Where(x => x.I_EntidadFinanId == Constantes.BANCO_COMERCIO_ID);
+
+            var result = new CategoriaPagoRegistroViewModel(categoriaPago)
+            {
+                CtasBcoComercio = ctasBcoComercio.Select(x => x.I_CtaDepID).ToArray()
+            };
+
+            if (categoriaPago.CuentasDepositoEntidad.Where(x => x.EntidadFinanId == Constantes.BANCO_COMERCIO_ID).Count() > 0)
+                result.MostrarCodBanco = true;
+
+            return result;
         }
 
         public Response Save(CategoriaPagoRegistroViewModel model, int currentUserId)
         {
-            CategoriaPago categoriaPago = new CategoriaPago() {
+            CategoriaPago categoriaPago = new CategoriaPago()
+            {
                 CategoriaId = model.Id,
                 Descripcion = model.Nombre,
                 Nivel = model.NivelId,
                 TipoAlumno = model.TipoAlumnoId,
                 Prioridad = model.Prioridad,
                 EsObligacion = model.EsObligacion,
+                CodBcoComercio = model.CodBcoComercio,
                 CuentasDeposito = model.CuentasDeposito.ToList()
             };
 

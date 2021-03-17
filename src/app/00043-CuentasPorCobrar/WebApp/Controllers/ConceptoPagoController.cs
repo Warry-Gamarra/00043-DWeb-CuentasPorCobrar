@@ -1,90 +1,51 @@
-﻿using System;
+﻿using Domain.DTO;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using WebApp.Models;
 using WebApp.ViewModels;
 using WebMatrix.WebData;
-using Domain.DTO;
-using System.IO;
 
 namespace WebApp.Controllers
 {
     [Authorize]
-    [Route("mantenimiento/conceptos-de-pago/{action}")]
     public class ConceptoPagoController : Controller
     {
-        ConceptoPagoModel conceptoPagoModel;
         ProcesoModel procesoModel;
+        private readonly ConceptoPagoModel _conceptoModel;
 
         public ConceptoPagoController()
         {
-            conceptoPagoModel = new ConceptoPagoModel();
             procesoModel = new ProcesoModel();
+            _conceptoModel = new ConceptoPagoModel();
+
         }
 
-        [Route("mantenimiento/conceptos-de-pago")]
-        public ActionResult Index()
+        [Route("configuracion/obligaciones-y-conceptos/{procesoId}/agregar-concepto/")]
+        public ActionResult Create(int procesoId)
         {
-            ViewBag.Title = "Conceptos de Pago";
 
-            var lista = conceptoPagoModel.Listar_CatalogoConceptos();
+            ViewBag.Title = "Registrar Conceptos";
+            ViewBag.Conceptos = new SelectList(_conceptoModel.Listar_CatalogoConceptos(), "Id", "NombreConcepto");
+            ViewBag.ProcesoId = procesoId;
 
-            return View(lista);
+            return PartialView("_RegistrarConceptosPagoProceso", new RegistroConceptosProcesoViewModel() { MostrarFormulario = false });
         }
 
-        [Route("mantenimiento/conceptos-de-pago/nuevo")]
-        [HttpGet]
-        public ActionResult Create()
+
+        [Route("configuracion/obligaciones-y-conceptos/{procesoId}/editar-concepto/{id}")]
+        public ActionResult EditarConceptosPago(int id)
         {
-            ViewBag.Title = "Nuevo concepto de pago";
 
+            ViewBag.Title = "Registrar Conceptos";
+            ViewBag.Conceptos = new SelectList(_conceptoModel.Listar_CatalogoConceptos(), "Id", "NombreConcepto");
 
-            return PartialView("_RegistrarConcepto", new CatalogoConceptosRegistroViewModel());
+            return PartialView("_RegistrarConceptosPagoProceso", new RegistroConceptosProcesoViewModel());
         }
 
-        [Route("mantenimiento/conceptos-de-pago/editar/{id}")]
-        [HttpGet]
-        public ActionResult Edit(int id)
-        {
-            ViewBag.Title = "editar concepto de pago";
-
-
-            return PartialView("_RegistrarConcepto", conceptoPagoModel.ObtenerConcepto(id));
-        }
-
-        public JsonResult ChangeState(int RowID, bool B_habilitado)
-        {
-            var result = conceptoPagoModel.ChangeState(RowID, B_habilitado, WebSecurity.CurrentUserId, Url.Action("ChangeState", "EntidadFinanciera"));
-
-            return Json(result, JsonRequestBehavior.AllowGet);
-        }
-
-        [HttpPost]
-        public ActionResult Save(CatalogoConceptosRegistroViewModel model)
-        {
-            Response result = new Response();
-
-            if (ModelState.IsValid)
-            {
-                result = conceptoPagoModel.Save(model, WebSecurity.CurrentUserId);
-            }
-            else
-            {
-                string details = "";
-                foreach (ModelState modelState in ViewData.ModelState.Values)
-                {
-                    foreach (ModelError error in modelState.Errors)
-                    {
-                        details += error.ErrorMessage + " / ";
-                    }
-                }
-
-                ResponseModel.Error(result, "Ha ocurrido un error con el envio de datos. " + details);
-            }
-            return PartialView("_MsgPartialWR", result);
-        }
 
         //public ActionResult Grabar(int? id)
         //{
@@ -117,80 +78,79 @@ namespace WebApp.Controllers
         //    return PartialView("_MantenimientoConceptoPago", model);
         //}
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public JsonResult Save(MantenimientoConceptoPagoViewModel model)
-        //{
-        //    Response result = new Response();
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public JsonResult Save(RegistroConceptoPagoViewModel model)
+        {
+            Response result = new Response();
 
-        //    if (ModelState.IsValid)
-        //    {
-        //        result = conceptoPagoModel.Grabar_ConceptoPago(model, WebSecurity.CurrentUserId);
+            if (ModelState.IsValid)
+            {
+                result = _conceptoModel.Grabar_ConceptoPago(model, WebSecurity.CurrentUserId);
 
-        //        if (!result.Value)
-        //        {
-        //            ModelState.AddModelError("", result.Message);
-        //        }
-        //    }
+                if (!result.Value)
+                {
+                    ModelState.AddModelError("", result.Message);
+                }
+            }
 
-        //    ViewBag.Title = model.I_ConcPagID.HasValue ? "Editar registro" : "Nuevo registro";
+            ViewBag.Title = model.I_ConcPagID.HasValue ? "Editar registro" : "Nuevo registro";
 
-        //    Cargar_Listas();
+            Cargar_Listas();
 
-        //    return JsonView(result, "_MantenimientoConceptoPago", model);
-        //}
+            return JsonView(result, "_MantenimientoConceptoPago", model);
+        }
 
-        //private JsonResult JsonView(Response result, string viewName, object model)
-        //{
-        //    return Json(new { Result = result, View = RenderPartialView(viewName, model) });
-        //}
+        private JsonResult JsonView(Response result, string viewName, object model)
+        {
+            return Json(new { Result = result, View = RenderPartialView(viewName, model) });
+        }
 
-        //private string RenderPartialView(string partialViewName, object model)
-        //{
-        //    if (ControllerContext == null)
-        //        return string.Empty;
+        private string RenderPartialView(string partialViewName, object model)
+        {
+            if (ControllerContext == null)
+                return string.Empty;
 
-        //    if (model == null)
-        //        throw new ArgumentNullException("model");
+            if (model == null)
+                throw new ArgumentNullException("model");
 
-        //    if (string.IsNullOrEmpty(partialViewName))
-        //        throw new ArgumentNullException("partialViewName");
+            if (string.IsNullOrEmpty(partialViewName))
+                throw new ArgumentNullException("partialViewName");
 
-        //    ViewData.Model = model;
+            ViewData.Model = model;
 
-        //    using (var sw = new StringWriter())
-        //    {
-        //        var viewResult = ViewEngines.Engines.FindPartialView(ControllerContext, partialViewName);
-        //        var viewContext = new ViewContext(ControllerContext, viewResult.View, ViewData, TempData, sw);
-        //        viewResult.View.Render(viewContext, sw);
-        //        return sw.GetStringBuilder().ToString();
-        //    }
-        //}
+            using (var sw = new StringWriter())
+            {
+                var viewResult = ViewEngines.Engines.FindPartialView(ControllerContext, partialViewName);
+                var viewContext = new ViewContext(ControllerContext, viewResult.View, ViewData, TempData, sw);
+                viewResult.View.Render(viewContext, sw);
+                return sw.GetStringBuilder().ToString();
+            }
+        }
 
-        //private void Cargar_Listas()
-        //{
-        //    ViewBag.Lista_Combo_ConceptoPago = conceptoPagoModel.Listar_Combo_Concepto();
+        private void Cargar_Listas()
+        {
+            ViewBag.Lista_Combo_ConceptoPago = _conceptoModel.Listar_Combo_Concepto();
 
-        //    ViewBag.Lista_Opciones_TipoAlumno = conceptoPagoModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.TipoAlumno);
+            ViewBag.Lista_Opciones_TipoAlumno = _conceptoModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.TipoAlumno);
 
-        //    ViewBag.Lista_Opciones_Grado = conceptoPagoModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.Grado);
+            ViewBag.Lista_Opciones_Grado = _conceptoModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.Grado);
 
-        //    ViewBag.Lista_Opciones_TipoObligacion = conceptoPagoModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.TipoObligacion);
+            ViewBag.Lista_Opciones_TipoObligacion = _conceptoModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.TipoObligacion);
 
-        //    ViewBag.Lista_Combo_Procesos = conceptoPagoModel.Listar_Combo_Procesos();
+            ViewBag.Lista_Combo_Procesos = _conceptoModel.Listar_Combo_Procesos();
 
-        //    ViewBag.Lista_Opciones_CampoCalculado = conceptoPagoModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.CampoCalculado);
+            ViewBag.Lista_Opciones_CampoCalculado = _conceptoModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.CampoCalculado);
 
-        //    ViewBag.Lista_Anios = procesoModel.Listar_Anios();
+            ViewBag.Lista_Anios = procesoModel.Listar_Anios();
 
-        //    ViewBag.Lista_Combo_Periodo = conceptoPagoModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.Periodo);
+            ViewBag.Lista_Combo_Periodo = _conceptoModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.Periodo);
 
-        //    ViewBag.Lista_Combo_GrupoCodRc = conceptoPagoModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.GrupoCodRc);
+            ViewBag.Lista_Combo_GrupoCodRc = _conceptoModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.GrupoCodRc);
 
-        //    ViewBag.Lista_Combo_CodIngreso = conceptoPagoModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.CodIngreso);
+            ViewBag.Lista_Combo_CodIngreso = _conceptoModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.CodIngreso);
 
-        //    ViewBag.Lista_Vacia = Lista_Vacia();
-        //}
+        }
 
         //private static SelectList Lista_Vacia()
         //{
@@ -198,5 +158,6 @@ namespace WebApp.Controllers
 
         //    return new SelectList(lista, "Value", "Text");
         //}
+
     }
 }
