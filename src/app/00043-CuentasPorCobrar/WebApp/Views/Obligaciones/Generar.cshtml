@@ -1,5 +1,4 @@
-﻿
-<div class="container-fluid">
+﻿<div class="container-fluid">
     <div class="col-12">
         <section class="content-header">
             <nav aria-label="breadcrumb">
@@ -104,13 +103,50 @@
                                             <select id="cmbEspecialidad" name="cmbEspecialidad" class="form-control form-control-sm"></select>
                                         </div>
                                         <div class="form-group col-lg-2 col-md-3 col-12">
-                                            <button type="button" id="btnConsultarObligacionAlumno" class="btn btn-block btn-outline-primary mt-4"><i class="fa fa-fw fa-search-plus">&nbsp;</i> Iniciar consulta</button>
+                                            <button type="button" id="btnConsultarObligacionAlumno" class="btn btn-block btn-outline-primary mt-4"><i class="fa fa-fw fa-search-plus"></i> Iniciar consulta</button>
                                         </div>
+
+                                        <div class="form-group col-lg-2 col-sm-3 col-12">
+                                            <button type="button" id="btnLimpiarConsultaObligaAlumno" class="btn btn-block btn-outline-danger mt-4"><i class="fa fa-fw fa-eraser"></i> Limpiar</button>
+                                        </div>
+
                                     </div>
                                 </form>
                             </div>
                         </div>
-                        <div class="table-responsive mt-4" style="min-height:300px">
+
+                        <div class="card" style="margin-top: 5px;">
+                            <div class="my-3 p-3 bg-body rounded shadow-sm" style="margin-bottom: 0px !important;">
+                                <h6 class="border-bottom pb-2 mb-0">Alumno</h6>
+
+                                <div class="d-flex text-muted pt-3">
+                                    <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
+                                        <div class="d-flex justify-content-between">
+                                            <strong class="text-gray-dark">Nombres y apellidos</strong>
+                                        </div>
+                                        <span class="d-block" id="nombresCompletosAlumno"></span>
+                                    </div>
+                                </div>
+                                <div class="d-flex text-muted pt-3">
+                                    <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
+                                        <div class="d-flex justify-content-between">
+                                            <strong class="text-gray-dark">Documento</strong>
+                                        </div>
+                                        <span class="d-block" id="documentoIdentidadAlumno"></span>
+                                    </div>
+                                </div>
+                                <div class="d-flex text-muted pt-3">
+                                    <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
+                                        <div class="d-flex justify-content-between">
+                                            <strong class="text-gray-dark">Modalidad de Ingreso</strong>
+                                        </div>
+                                        <span class="d-block" id="modalidadIngresoAlumno"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive mt-4" style="max-height:150px">
                             <p class="h5">Obligaciones (Conceptos de Pago)</p>
 
                             <table class="table table-sm table-hover" id="tblDetalleObligaciones">
@@ -130,7 +166,8 @@
                                 <tbody></tbody>
                             </table>
                         </div>
-                        <div class="table-responsive mt-4" style="min-height:300px">
+
+                        <div class="table-responsive mt-4" style="max-height:150px">
                             <p class="h5">Cuotas a pagar en Banco</p>
 
                             <table class="table table-sm table-hover" id="tblCuotasPago">
@@ -239,30 +276,34 @@
         }
 
         $(document).on('click', '#btnConsultarObligacionAlumno', function () {
-            BuscarAlumno();
-        });
-
-        $(document).on('keypress', '#txtCodAlumno', function (e) {
-            if (e.which === 13) {
-                e.preventDefault();
-                BuscarAlumno();
-            }
-        });
-
-        function BuscarAlumno() {
             let anio = $('#cmbAnioIndividual').val();
             let periodo = $('#cmbPeriodoIndividual').val();
-            let especialidad = $('#cmbEspecialidad').val();
             let codAlu = $('#txtCodAlumno').val();
+            let especialidad = $('#cmbEspecialidad').val();
 
             if (codAlu === null || codAlu.length !== 10) {
                 MostrarMensajeObligacionesPorAlumno('El campo Código de Alumno es requerido.', MESSAGE_TYPE.WARNING);
             } else if (especialidad === null || especialidad.length === '') {
                 ObtenerEspecialidadesAlumno(codAlu);
             } else {
-                BuscarObligaciones(anio, periodo, especialidad, codAlu);
+                BuscarObligacionesAlumno(anio, periodo, especialidad, codAlu);
             }
-        }
+        });
+
+        $(document).on('keypress', '#txtCodAlumno', function (e) {
+            if (e.which === 13) {
+                e.preventDefault();
+
+                let codAlu = $('#txtCodAlumno').val();
+
+                if (codAlu === null || codAlu.length !== 10) {
+                    MostrarMensajeObligacionesPorAlumno('El campo Código de Alumno es requerido.', MESSAGE_TYPE.WARNING);
+                } else {
+                    ObtenerEspecialidadesAlumno(codAlu);
+                }
+
+            }
+        });
 
         function MostrarMensajeObligacionesPorAlumno(errorMessage, messageType) {
             Swal.fire({
@@ -312,7 +353,7 @@
                         let periodo = $('#cmbPeriodoIndividual').val();
                         let codAlu = $('#txtCodAlumno').val();
 
-                        BuscarObligaciones(anio, periodo, item.C_RcCod, codAlu);
+                        BuscarObligacionesAlumno(anio, periodo, item.C_RcCod, codAlu);
                     }
                 });
 
@@ -320,7 +361,7 @@
             }
         }
 
-        function BuscarObligaciones(anio, periodo, codRc, codAlu) {
+        function BuscarObligacionesAlumno(anio, periodo, codRc, codAlu) {
             let parametros = {
                 anio: anio,
                 periodo: periodo,
@@ -334,6 +375,7 @@
                 data: parametros,
                 dataType: 'json',
                 beforeSend: function () {
+                    QuitarDatosAlumno();
                     GenerarTablaDetalle(null);
                     GenerarTablaCuotas(null);
                 },
@@ -355,6 +397,7 @@
                                 }
                             });
                         } else {
+                            MostrarDatosAlumno(data.alumno);
                             GenerarTablaDetalle(data.detalle_pago);
                             GenerarTablaCuotas(data.cuotas_pago);
                         }
@@ -386,7 +429,7 @@
                 success: function (data) {
                     if (data) {
                         if (data.Value) {
-                            BuscarObligaciones(anio, periodo, codRc, codAlu);
+                            BuscarObligacionesAlumno(anio, periodo, codRc, codAlu);
                         } else {
                             MostrarMensajeObligacionesPorAlumno(data.Message, MESSAGE_TYPE.ERROR);
                         }
@@ -400,6 +443,18 @@
                     CerrarModalEsperaGeneracionOblig();
                 }
             });
+        }
+
+        function MostrarDatosAlumno(alumno) {
+            $('#nombresCompletosAlumno').html(alumno.T_Nombre + ' ' + alumno.T_ApePaterno + ' ' + alumno.T_ApeMaterno);
+            $('#documentoIdentidadAlumno').html(alumno.C_NumDNI);
+            $('#modalidadIngresoAlumno').html(alumno.T_ModIngDesc);
+        }
+
+        function QuitarDatosAlumno() {
+            $('#nombresCompletosAlumno').html('');
+            $('#documentoIdentidadAlumno').html('');
+            $('#modalidadIngresoAlumno').html('');
         }
 
         function GenerarTablaDetalle(detalle_pago) {
@@ -447,6 +502,12 @@
             tblCuotasPago.html(rows);
         }
 
-        
+        $(document).on('click', '#btnLimpiarConsultaObligaAlumno', function (e) {
+            $('#txtCodAlumno').val('');
+            llenarComboEspecialidades(null);
+            QuitarDatosAlumno();
+            GenerarTablaDetalle(null);
+            GenerarTablaCuotas(null)
+        });
     </script>
 }
