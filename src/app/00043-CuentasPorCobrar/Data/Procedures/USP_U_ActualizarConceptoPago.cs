@@ -15,6 +15,7 @@ namespace Data.Procedures
         public int I_ConcPagID { get; set; }
         public int I_ProcesoID { get; set; }
         public int I_ConceptoID { get; set; }
+        public string T_ConceptoPagoDesc { get; set; }
         public bool? B_Fraccionable { get; set; }
         public bool? B_ConceptoGeneral { get; set; }
         public bool? B_AgrupaConcepto { get; set; }
@@ -63,6 +64,7 @@ namespace Data.Procedures
                     parameters.Add(name: "I_ConcPagID", dbType: DbType.Int32, value: this.I_ConcPagID);
                     parameters.Add(name: "I_ProcesoID", dbType: DbType.Int32, value: this.I_ProcesoID);
                     parameters.Add(name: "I_ConceptoID", dbType: DbType.Int32, value: this.I_ConceptoID);
+                    parameters.Add(name: "T_ConceptoPagoDesc", dbType: DbType.String, size: 250, value: this.T_ConceptoPagoDesc);
                     parameters.Add(name: "B_Fraccionable", dbType: DbType.Boolean, value: this.B_Fraccionable);
                     parameters.Add(name: "B_ConceptoGeneral", dbType: DbType.Boolean, value: this.B_ConceptoGeneral);
                     parameters.Add(name: "B_AgrupaConcepto", dbType: DbType.Boolean, value: this.B_AgrupaConcepto);

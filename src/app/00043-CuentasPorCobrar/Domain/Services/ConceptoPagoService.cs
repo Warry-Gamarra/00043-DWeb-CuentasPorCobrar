@@ -37,6 +37,10 @@ namespace Domain.Services
             _concepto.B_EsPagoExtmp = concepto.B_EsPagoExtmp;
             _concepto.B_ConceptoAgrupa = concepto.B_ConceptoAgrupa;
             _concepto.B_Habilitado = concepto.B_Habilitado;
+            _concepto.B_Calculado = concepto.B_Calculado;
+            _concepto.I_Calculado = concepto.I_Calculado;
+            _concepto.I_Monto = concepto.I_Monto;
+            _concepto.I_MontoMinimo = concepto.I_MontoMinimo;
 
             switch (saveOption)
             {
@@ -67,11 +71,15 @@ namespace Domain.Services
             result.B_EsPagoMatricula = concepto.B_EsPagoMatricula;
             result.B_EsPagoExtmp = concepto.B_EsPagoExtmp;
             result.B_ConceptoAgrupa = concepto.B_ConceptoAgrupa;
+            result.B_Calculado = concepto.B_Calculado;
+            result.I_Calculado = concepto.I_Calculado;
+            result.I_Monto = concepto.I_Monto;
+            result.I_MontoMinimo = concepto.I_MontoMinimo;
 
             return result;
         }
 
-        public List<ConceptoPago> Listar_ConceptoPago_Habilitados(int procesoID)
+        public List<ConceptoPago> Listar_ConceptoPago_Proceso_Habilitados(int procesoID)
         {
             try
             {
@@ -96,6 +104,33 @@ namespace Domain.Services
             }
         }
 
+
+        public List<ConceptoPago> Listar_ConceptoPago_TipoObligacion_Habilitados(int? procesoID, TipoObligacion tipoObligacion)
+        {
+            try
+            {
+                var lista = USP_S_ConceptoPago.Execute(procesoID, tipoObligacion == TipoObligacion.Matricula ? true : false);
+
+                var result = lista.Select(x => new ConceptoPago()
+                {
+                    I_ConcPagID = x.I_ConcPagID.Value,
+                    T_CatPagoDesc = x.T_CatPagoDesc,
+                    T_ProcesoDesc = x.T_ProcesoDesc,
+                    T_ConceptoDesc = x.T_ConceptoDesc,
+                    I_Anio = x.I_Anio,
+                    I_Periodo = x.I_Periodo,
+                    M_Monto = x.M_Monto,
+                    M_MontoMinimo = x.M_MontoMinimo
+                }).ToList();
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         public List<ConceptoEntity> Listar_Concepto_Habilitados()
         {
             try
@@ -106,6 +141,10 @@ namespace Domain.Services
                 {
                     I_ConceptoID = x.I_ConceptoID,
                     T_ConceptoDesc = x.T_ConceptoDesc,
+                    B_Calculado = x.B_Calculado,
+                    I_Calculado = x.I_Calculado,
+                    I_Monto = x.I_Monto,
+                    I_MontoMinimo = x.I_MontoMinimo,
                     B_Habilitado = x.B_Habilitado,
                     I_UsuarioCre = x.I_UsuarioCre,
                     D_FecCre = x.D_FecCre,
@@ -131,6 +170,10 @@ namespace Domain.Services
                 {
                     I_ConceptoID = x.I_ConceptoID,
                     T_ConceptoDesc = x.T_ConceptoDesc,
+                    B_Calculado = x.B_Calculado,
+                    I_Calculado = x.I_Calculado,
+                    I_Monto = x.I_Monto,
+                    I_MontoMinimo = x.I_MontoMinimo,
                     B_Habilitado = x.B_Habilitado,
                     I_UsuarioCre = x.I_UsuarioCre,
                     D_FecCre = x.D_FecCre,
@@ -146,6 +189,30 @@ namespace Domain.Services
             }
         }
 
+        public List<ConceptoEntity> Listar_Concepto(TipoObligacion tipoObligacion)
+        {
+            try
+            {
+                var lista = TC_Concepto.Find(tipoObligacion == TipoObligacion.Matricula ? true : false);
+
+                var result = lista.Select(x => new ConceptoEntity()
+                {
+                    I_ConceptoID = x.I_ConceptoID,
+                    T_ConceptoDesc = x.T_ConceptoDesc,
+                    B_Habilitado = x.B_Habilitado,
+                    I_UsuarioCre = x.I_UsuarioCre,
+                    D_FecCre = x.D_FecCre,
+                    I_UsuarioMod = x.I_UsuarioMod,
+                    D_FecMod = x.D_FecMod
+                }).ToList();
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
 
         public List<CatalogoOpcionEntity> Listar_CatalogoOpcion_Habilitadas_X_Parametro(DTO.Parametro parametroID)
         {
@@ -180,6 +247,7 @@ namespace Domain.Services
                     {
                         I_ProcesoID = conceptoPago.I_ProcesoID,
                         I_ConceptoID = conceptoPago.I_ConceptoID,
+                        T_ConceptoPagoDesc = conceptoPago.T_ConceptoPagoDesc,
                         B_Fraccionable = conceptoPago.B_Fraccionable,
                         B_ConceptoGeneral = conceptoPago.B_ConceptoGeneral,
                         B_AgrupaConcepto = conceptoPago.B_AgrupaConcepto,
@@ -224,6 +292,7 @@ namespace Domain.Services
                         I_ConcPagID = conceptoPago.I_ConcPagID,
                         I_ProcesoID = conceptoPago.I_ProcesoID,
                         I_ConceptoID = conceptoPago.I_ConceptoID,
+                        T_ConceptoPagoDesc = conceptoPago.T_ConceptoPagoDesc,
                         B_Fraccionable = conceptoPago.B_Fraccionable,
                         B_ConceptoGeneral = conceptoPago.B_ConceptoGeneral,
                         B_AgrupaConcepto = conceptoPago.B_AgrupaConcepto,
@@ -291,6 +360,7 @@ namespace Domain.Services
                         I_ConcPagID = conceptoPago.I_ConcPagID,
                         I_ProcesoID = conceptoPago.I_ProcesoID,
                         I_ConceptoID = conceptoPago.I_ConceptoID,
+                        T_ConceptoPagoDesc = string.IsNullOrEmpty(conceptoPago.T_ConceptoPagoDesc) ? TC_Concepto.Find(conceptoPago.I_ConceptoID).T_ConceptoDesc : conceptoPago.T_ConceptoPagoDesc,
                         B_Fraccionable = conceptoPago.B_Fraccionable,
                         B_ConceptoGeneral = conceptoPago.B_ConceptoGeneral,
                         B_AgrupaConcepto = conceptoPago.B_AgrupaConcepto,

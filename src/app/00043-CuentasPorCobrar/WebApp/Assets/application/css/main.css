@@ -294,3 +294,10 @@ strong.select2-results__group {
     color: #afafaf;
     font-size: 0.8rem;
 }
+
+
+/* --------------------- Select2 Extends -----------------------------*/
+
+.select2-container {
+    width: 100% !important;
+}

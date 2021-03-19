@@ -23,6 +23,7 @@ namespace Data.Procedures
         public short? I_Anio { get; set; }
         public DateTime? D_FecVencto { get; set; }
         public short? I_Prioridad { get; set; }
+        public bool B_Obligacion { get; set; }
 
         public static List<USP_S_Procesos> Execute()
         {

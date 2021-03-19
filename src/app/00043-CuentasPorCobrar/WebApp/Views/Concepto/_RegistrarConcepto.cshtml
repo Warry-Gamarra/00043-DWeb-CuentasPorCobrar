@@ -15,69 +15,70 @@
     @Html.AntiForgeryToken()
     <div class="modal-body">
         <div class="container-fluid">
+            <p class="h5 border-bottom mb-3">Datos generales</p>
             @Html.HiddenFor(model => model.Id)
 
             <div class="form-group">
                 @Html.LabelFor(model => model.NombreConcepto, new { @class = "control-label" })
-
                 @Html.TextBoxFor(model => model.NombreConcepto, new { @class = "form-control" })
                 <p class="text-danger small">@Html.ValidationMessageFor(model => model.NombreConcepto)</p>
             </div>
+            <div class="form-row">
+                <div class="form-group col-sm-6">
+                    <div class="form-row">
+                        @Html.LabelFor(model => model.MontoMinimo, new { @class = "control-label col-form-label col-6" })
+                        <div class="col-6">
+                            @Html.TextBoxFor(model => model.MontoMinimo, new { @class = "form-control text-right" })
+                        </div>
+                        <p class="text-danger small">@Html.ValidationMessageFor(model => model.MontoMinimo)</p>
+                    </div>
+                </div>
+                <div class="form-group col-sm-6">
+                    <div class="form-row">
+                        @Html.LabelFor(model => model.Monto, new { @class = "control-label text-sm-right col-form-label col-6" })
+                        <div class="col-6">
+                            @Html.TextBoxFor(model => model.Monto, new { @class = "form-control text-right" })
+                        </div>
+                        <p class="text-danger small">@Html.ValidationMessageFor(model => model.Monto)</p>
+                    </div>
+                </div>
+            </div>
+            <p class="h5 border-bottom my-3">Otras características</p>
+            <div class="form-group">
+                <div class="form-check">
+                    @Html.CheckBoxFor(model => model.EsMatricula, new { @class = "form-check-input" })
+                    @Html.LabelFor(model => model.EsMatricula, new { @class = "form-check-label" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-check">
+                    @Html.CheckBoxFor(model => model.Extemporaneo, new { @class = "form-check-input" })
+                    @Html.LabelFor(model => model.Extemporaneo, new { @class = "form-check-label" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-check">
+                    @Html.CheckBoxFor(model => model.AgupaConceptos, new { @class = "form-check-input" })
+                    @Html.LabelFor(model => model.AgupaConceptos, new { @class = "form-check-label" })
+                </div>
+            </div>
 
-            <div class="row form-group">
-                @Html.LabelFor(model => model.EsMatricula, new { @class = "control-label col-12" })
-                <div class="col-md-5 offset-1">
-                    <div class="form-check">
-                        @Html.RadioButtonFor(model => model.EsMatricula, true, new { @Class = "form-check-input", @id = "rbtn_esMat" })
-                        <label class="form-check-label" for="rbtn_esMat">
-                            Sí
-                        </label>
-                    </div>
+            <div class="form-group">
+                <div class="form-check">
+                    @Html.CheckBoxFor(model => model.Calculado, new { @class = "form-check-input" })
+                    @Html.LabelFor(model => model.Calculado, new { @class = "form-check-label" })
                 </div>
-                <div class="col-md-5 offset-1">
-                    <div class="form-check">
-                        @Html.RadioButtonFor(model => model.EsMatricula, false, new { @Class = "form-check-input", @id = "rbtn_esOtr" })
-                        <label class="form-check-label" for="rbtn_esOtr">
-                            No
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="row form-group">
-                @Html.LabelFor(model => model.Extemporaneo, new { @class = "control-label col-12" })
-                <div class="col-md-5 offset-1">
-                    <div class="form-check">
-                        @Html.RadioButtonFor(model => model.Extemporaneo, true, new { @Class = "form-check-input", @id = "rbtn_extmp" })
-                        <label class="form-check-label" for="rbtn_extmp">
-                            Sí
-                        </label>
-                    </div>
-                </div>
-                <div class="col-md-5 offset-1">
-                    <div class="form-check">
-                        @Html.RadioButtonFor(model => model.Extemporaneo, false, new { @Class = "form-check-input", @id = "rbtn_normal" })
-                        <label class="form-check-label" for="rbtn_normal">
-                            No
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="row form-group">
-                @Html.LabelFor(model => model.AgupaConceptos, new { @class = "control-label col-12" })
-                <div class="col-md-5 offset-1">
-                    <div class="form-check">
-                        @Html.RadioButtonFor(model => model.AgupaConceptos, true, new { @Class="form-check-input", @id = "rbtn_agrupa" })
-                        <label class="form-check-label" for="rbtn_agrupa">
-                            Sí
-                        </label>
-                    </div>
-                </div>
-                <div class="col-md-5 offset-1">
-                    <div class="form-check">
-                        @Html.RadioButtonFor(model => model.AgupaConceptos, false, new { @Class = "form-check-input", @id = "rbtn_noAgrupa" })
-                        <label class="form-check-label" for="rbtn_noAgrupa">
-                            No
-                        </label>
+
+                <div id="radios_group" class="offset-1 mt-2" style="display: @ViewBag.CalculadoVisible">
+                    <div class="row">
+                        @foreach (var item in (List<WebApp.ViewModels.SelectViewModel>)ViewBag.Lista_Opciones_CampoCalculado)
+                        {
+                            var id = "TipoCalculo_" + item.Value;
+                            <div class="form-check form-check-inline col-5">
+                                @Html.RadioButtonFor(model => model.TipoCalculo, item.Value, new { @id = id, @disabled = "disabled" })
+                                <label class="form-check-label" for="@id">&nbsp;@item.TextDisplay</label>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
@@ -101,6 +102,19 @@
 <script>
     $(document).on('ready', function () {
         $('#btnsubmit').removeClass('disabled');
+    });
+
+    $(document).on("click", '#Calculado', function (event) {
+        let opciones = $('input[name=TipoCalculo]');
+
+        if (this.checked) {
+            $('#radios_group').show();
+            opciones.prop('disabled', false);
+        } else {
+            $('#radios_group').hide();
+            opciones.prop('disabled', true);
+            opciones.prop('checked', false);
+        }
     });
 
     $("form").submit(function () {

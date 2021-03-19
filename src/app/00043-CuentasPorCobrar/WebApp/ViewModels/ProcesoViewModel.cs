@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using WebApp.Models;
 using System.Linq;
 using System.Web;
 
@@ -28,7 +29,7 @@ namespace WebApp.ViewModels
         public string DescProceso { get; set; }
 
         [Display(Name = "Año")]
-        public int Anio { get; set; }
+        public int? Anio { get; set; }
 
         [Display(Name = "Fecha Vencimiento")]
         public DateTime? FecVencto { get; set; }
@@ -37,7 +38,7 @@ namespace WebApp.ViewModels
         public int? PrioridadId { get; set; }
 
         [Display(Name = "Periodo Académico")]
-        public int PerAcadId { get; set; }
+        public int? PerAcadId { get; set; }
 
         [Display(Name = "Nro de Cta.Cte")]
         public int[] CtaDepositoID { get; set; }
@@ -51,7 +52,7 @@ namespace WebApp.ViewModels
     }
 
 
-    public class RegistroConceptosProcesoViewModel 
+    public class RegistroConceptosProcesoViewModel
     {
         public int ProcesoId { get; set; }
         public string DescProceso { get; set; }
@@ -59,9 +60,12 @@ namespace WebApp.ViewModels
 
         public RegistroConceptoPagoViewModel ConceptoPago { get; set; }
 
-        public RegistroConceptosProcesoViewModel()
+        public RegistroConceptosProcesoViewModel() { }
+
+        public RegistroConceptosProcesoViewModel(int procesoID, ConceptoPagoModel concepto)
         {
-            this.ConceptoPago = new RegistroConceptoPagoViewModel();
+            this.ProcesoId = procesoID;
+            this.ConceptoPago = concepto.InicializarConceptoPagoTasa(procesoID);
             this.MostrarFormulario = true;
         }
 

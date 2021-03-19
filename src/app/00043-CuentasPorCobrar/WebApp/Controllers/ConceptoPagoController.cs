@@ -24,81 +24,99 @@ namespace WebApp.Controllers
 
         }
 
-        [Route("configuracion/obligaciones-y-conceptos/{procesoId}/agregar-concepto/")]
-        public ActionResult Create(int procesoId)
+        [Route("configuracion/cuotas-de-pago-y-conceptos/{procesoId}/agregar-concepto-obligacion/")]
+        public ActionResult CreateObligacion(int procesoId)
         {
 
-            ViewBag.Title = "Registrar Conceptos";
-            ViewBag.Conceptos = new SelectList(_conceptoModel.Listar_CatalogoConceptos(), "Id", "NombreConcepto");
-            ViewBag.ProcesoId = procesoId;
+            ViewBag.Title = "Registrar Concepto";
+            ViewBag.Conceptos = new SelectList(_conceptoModel.Listar_CatalogoConceptos(TipoObligacion.Matricula), "Id", "NombreConcepto");
 
-            return PartialView("_RegistrarConceptosPagoProceso", new RegistroConceptosProcesoViewModel() { MostrarFormulario = false });
+            var model = new RegistroConceptosProcesoViewModel(procesoId, _conceptoModel)
+            {
+                MostrarFormulario = false
+            };
+
+            return PartialView("_RegistrarConceptosPagoProceso", model);
         }
 
 
-        [Route("configuracion/obligaciones-y-conceptos/{procesoId}/editar-concepto/{id}")]
-        public ActionResult EditarConceptosPago(int id)
+        [Route("configuracion/cuotas-de-pago-y-conceptos/{procesoId}/editar-concepto-obligacion/{id}")]
+        public ActionResult EditObligacion(int procesoId, int id)
         {
 
-            ViewBag.Title = "Registrar Conceptos";
-            ViewBag.Conceptos = new SelectList(_conceptoModel.Listar_CatalogoConceptos(), "Id", "NombreConcepto");
+            ViewBag.Title = "Editar Concepto";
+            var model = _conceptoModel.ObtenerConceptoPagoProceso(procesoId, id);
 
-            return PartialView("_RegistrarConceptosPagoProceso", new RegistroConceptosProcesoViewModel());
+            return PartialView("_RegistrarConceptosPagoProceso", model);
         }
 
 
-        //public ActionResult Grabar(int? id)
-        //{
-        //    ViewBag.Title = id.HasValue ? "Editar registro": "Nuevo registro";
+        [Route("configuracion/tasas-y-servicios/{procesoId}/agregar-tasa-concepto/")]
+        public ActionResult CreateTasa(int procesoId)
+        {
 
-        //    ViewBag.id = id ?? 0;
+            ViewBag.Title = "Registrar Concepto";
+            ViewBag.Conceptos = new SelectList(_conceptoModel.Listar_CatalogoConceptos(TipoObligacion.OtrosPagos), "Id", "NombreConcepto");
 
-        //    return View();
-        //}
 
-        //[ChildActionOnly]
-        //public ActionResult Create()
-        //{
-        //    ViewBag.Title = "Nuevo registro";
+            var model = new RegistroConceptosProcesoViewModel(procesoId, _conceptoModel)
+            {
+                MostrarFormulario = true
+            };
 
-        //    Cargar_Listas();
+            return PartialView("_RegistrarConceptosPagoTasa", model);
+        }
 
-        //    return PartialView("_MantenimientoConceptoPago");
-        //}
 
-        //[ChildActionOnly]
-        //public ActionResult Edit(int id)
-        //{
-        //    ViewBag.Title = "Editar registro";
+        [Route("configuracion/tasas-y-servicios/{procesoId}/editar-tasa-concepto/{id}")]
+        public ActionResult EditTasa(int procesoId, int id)
+        {
 
-        //    Cargar_Listas();
+            ViewBag.Title = "Editar Concepto";
+            ViewBag.Conceptos = new SelectList(_conceptoModel.Listar_CatalogoConceptos(), "Id", "NombreConcepto");
 
-        //    var model = conceptoPagoModel.Obtener_ConceptoPago(id);
+            var model = _conceptoModel.ObtenerConceptoPagoProceso(procesoId, id);
 
-        //    return PartialView("_MantenimientoConceptoPago", model);
-        //}
+            return PartialView("_RegistrarConceptosPagoTasa", model);
+        }
+
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult Save(RegistroConceptoPagoViewModel model)
+        public ActionResult Save(RegistroConceptosProcesoViewModel model)
         {
             Response result = new Response();
 
             if (ModelState.IsValid)
             {
-                result = _conceptoModel.Grabar_ConceptoPago(model, WebSecurity.CurrentUserId);
+                result = _conceptoModel.Grabar_ConceptoPago(model.ConceptoPago, WebSecurity.CurrentUserId);
 
                 if (!result.Value)
                 {
                     ModelState.AddModelError("", result.Message);
                 }
             }
+            else
+            {
+                string details = "";
+                foreach (ModelState modelState in ViewData.ModelState.Values)
+                {
+                    foreach (ModelError error in modelState.Errors)
+                    {
+                        details += "\n " + error.ErrorMessage;
+                    }
+                }
 
-            ViewBag.Title = model.I_ConcPagID.HasValue ? "Editar registro" : "Nuevo registro";
+                ResponseModel.Error(result, "Ha ocurrido un error con el envio de datos.\n" + details);
+            }
 
-            Cargar_Listas();
+            //ViewBag.Title = model.I_ConcPagID.HasValue ? "Editar registro" : "Nuevo registro";
 
-            return JsonView(result, "_MantenimientoConceptoPago", model);
+            //Cargar_Listas();
+
+            //return JsonView(result, "_MantenimientoConceptoPago", model);
+            return PartialView("_MsgPartial", result);
         }
 
         private JsonResult JsonView(Response result, string viewName, object model)

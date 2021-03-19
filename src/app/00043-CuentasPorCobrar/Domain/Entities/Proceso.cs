@@ -19,5 +19,6 @@ namespace Domain.Entities
         public string T_ProcesoDesc { get; set; }
         public DateTime? D_FecVencto { get; set; }
         public short? I_Prioridad { get; set; }
+        public bool B_Obligacion { get; set; }
     }
 }

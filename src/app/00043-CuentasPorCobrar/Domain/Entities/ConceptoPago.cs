@@ -14,6 +14,7 @@ namespace Domain.Entities
         public string T_ProcesoDesc { get; set; }
         public int I_Anio { get; set; }
         public int I_Periodo { get; set; }
+        public decimal M_MontoMinimo { get; set; }
         public decimal M_Monto { get; set; }
     }
 }

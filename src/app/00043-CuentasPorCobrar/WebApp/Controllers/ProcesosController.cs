@@ -45,10 +45,10 @@ namespace WebApp.Controllers
             return View(lista);
         }
 
-        [Route("configuracion/obligaciones-y-conceptos")]
+        [Route("configuracion/cuotas-de-pago-y-conceptos")]
         public ActionResult Obligaciones(int? anio, int? grado)
         {
-            ViewBag.Title = "Obligaciones y conceptos";
+            ViewBag.Title = "Cuotas de pago y conceptos";
 
             anio = anio ?? DateTime.Now.Year;
             grado = grado ?? 4;
@@ -61,23 +61,25 @@ namespace WebApp.Controllers
             return View("Obligaciones", procesoModel.Listar_Procesos(anio.Value));
         }
 
-        [Route("configuracion/obligaciones-y-conceptos/{anio}/nueva-cuota-pago")]
-        public ActionResult Create(int anio)
+        [Route("configuracion/cuotas-de-pago-y-conceptos/{anio}/nueva-cuota-pago")]
+        public ActionResult CreateCuotaPago(int anio)
         {
             ViewBag.Title = "Nueva Cuota de Pago";
 
-            ViewBag.Categorias = new SelectList(_categoriaPagoModel.Find(), "Id", "Nombre");
+            ViewBag.Categorias = new SelectList(_categoriaPagoModel.Find(TipoObligacion.Matricula), "Id", "Nombre");
             ViewBag.Periodos = new SelectList(_selectModel.GetPeriodosAcademicosCatalogo(), "Value", "TextDisplay", null);
             ViewBag.CtasDeposito = new SelectList(new List<SelectViewModel>());
 
             return PartialView("_RegistrarProcesoObligacion", new RegistroProcesoViewModel()
             {
+                Anio = anio,
                 CtasBcoComercio = _cuentasDeposito.Find().Where(x => x.EntidadFinancieraId == Constantes.BANCO_COMERCIO_ID).Select(x => x.Id.Value).ToArray()
             });
         }
 
 
-        public ActionResult Edit(int id)
+        [Route("configuracion/cuotas-de-pago-y-conceptos/{id}/editar")]
+        public ActionResult EditCuotaPago(int id)
         {
             ViewBag.Title = "Editar Cuota de Pago";
 
@@ -97,18 +99,6 @@ namespace WebApp.Controllers
             return PartialView("_RegistrarProcesoObligacion", model);
         }
 
-        [Route("configuracion/obligaciones-y-conceptos/{procesoId}/conceptos-de-pago")]
-        public ActionResult VerConceptos(int procesoId)
-        {
-            ViewBag.Title = procesoModel.Obtener_Proceso(procesoId).DescProceso;
-            ViewBag.ProcesoId = procesoId;
-
-            var model = procesoModel.ObtenerConceptosProcesoHabilitados(procesoId);
-
-            return PartialView("_ListadoConceptosProceso", model);
-        }
-
-
 
         [Route("configuracion/tasas-y-servicios")]
         public ActionResult Tasas()
@@ -116,12 +106,47 @@ namespace WebApp.Controllers
             ViewBag.Title = "Tasas y Servicios";
 
             var lista = procesoModel.Listar_Tasas();
-            ViewBag.Conceptos = new SelectList(_conceptoModel.Listar_CatalogoConceptos(), "Id", "NombreConcepto");
+
+            ViewBag.Conceptos = new SelectList(_conceptoModel.Listar_CatalogoConceptos(TipoObligacion.OtrosPagos), "Id", "NombreConcepto");
             ViewBag.Dependencias = new SelectList(_selectModel.GetDependencias(), "Value", "TextDisplay", _dependenciaUsuarioId);
 
             return View("Tasas", lista);
         }
 
+        [Route("configuracion/tasas-y-servicios/habilitar-grupo")]
+        public ActionResult CreateGrupoTasa()
+        {
+            ViewBag.Title = "Nueva Cuota de Pago";
+
+            ViewBag.Categorias = new SelectList(_categoriaPagoModel.Find(TipoObligacion.OtrosPagos), "Id", "Nombre");
+            ViewBag.CtasDeposito = new SelectList(new List<SelectViewModel>());
+
+            return PartialView("_RegistrarProcesoTasa", new RegistroProcesoViewModel()
+            {
+                CtasBcoComercio = _cuentasDeposito.Find().Where(x => x.EntidadFinancieraId == Constantes.BANCO_COMERCIO_ID).Select(x => x.Id.Value).ToArray()
+            });
+        }
+
+
+        [Route("configuracion/tasas-y-servicios/{id}/editar")]
+        public ActionResult EditGrupoTasa(int id)
+        {
+            ViewBag.Title = "Editar Cuota de Pago";
+
+            RegistroProcesoViewModel model = procesoModel.Obtener_Proceso(id);
+
+            var ctasCategoria = new List<SelectViewModel>();
+
+            foreach (var item in procesoModel.Listar_Combo_CtaDepositoHabilitadas(model.CategoriaId.Value).Select(x => x.ItemsGroup))
+            {
+                ctasCategoria.AddRange(item);
+            }
+
+            ViewBag.Categorias = new SelectList(_categoriaPagoModel.Find().Where(x => x.Id == model.CategoriaId.Value), "Id", "Nombre");
+            ViewBag.CtasDeposito = new SelectList(ctasCategoria, "Value", "TextDisplay", "NameGroup", model.CtaDepositoID, null);
+
+            return PartialView("_RegistrarProcesoTasa", model);
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -149,6 +174,37 @@ namespace WebApp.Controllers
             }
 
             return PartialView("_MsgPartialWR", result);
+        }
+
+
+        [Route("configuracion/cuotas-de-pago-y-conceptos/{procesoId}/conceptos-de-pago")]
+        public ActionResult VerConceptos(int procesoId)
+        {
+            ViewBag.Title = procesoModel.Obtener_Proceso(procesoId).DescProceso;
+            ViewBag.ProcesoId = procesoId;
+
+            var model = procesoModel.ObtenerConceptosProcesoHabilitados(procesoId);
+
+            return PartialView("_ListadoConceptosProceso", model);
+        }
+
+
+        [Route("configuracion/tasas-y-servicios/{procesoId}/tasas")]
+        public ActionResult VerTasas(int procesoId)
+        {
+            ViewBag.ProcesoId = procesoId;
+
+            var model = procesoModel.ObtenerConceptosProcesoHabilitados(procesoId);
+
+            return PartialView("_ListadoTasasProcesoGrupos", model);
+        }
+
+
+        public ActionResult BuscarTasas(int? concepto, int? dependencia)
+        {
+            var model = procesoModel.ObtenerConceptosTipoObligacionHabilitados(null, TipoObligacion.OtrosPagos);
+
+            return PartialView("_ListadoTasasProcesoBusqueda", model);
         }
     }
 }

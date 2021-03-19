@@ -11,6 +11,8 @@ namespace WebApp.ViewModels
     {
         public int? Id { get; set; }
         public string NombreConcepto { get; set; }
+        public decimal Monto { get; set; }
+        public decimal MontoMinimo { get; set; }
         public bool Habilitado { get; set; }
         public DateTime? FecModificacion { get; set; }
 
@@ -23,6 +25,8 @@ namespace WebApp.ViewModels
             this.NombreConcepto = concepto.T_ConceptoDesc.ToUpper();
             this.Habilitado = concepto.B_Habilitado;
             this.FecModificacion = concepto.D_FecMod ?? concepto.D_FecCre;
+            this.Monto = concepto.I_Monto;
+            this.MontoMinimo = concepto.I_MontoMinimo;
         }
     }
 
@@ -36,15 +40,29 @@ namespace WebApp.ViewModels
         [MaxLength(250)]
         public string NombreConcepto { get; set; }
 
-        [Display(Name = "¿Es un concepto de matrícula?")]
+        [Display(Name = "Monto")]
+        [Required]
+        [Range(0, int.MaxValue)]
+        public decimal Monto { get; set; }
+
+        [Display(Name = "Monto mínimo")]
+        [Range(0, int.MaxValue)]
+        public decimal MontoMinimo { get; set; }
+
+        [Display(Name = "Concepto de matrícula")]
         public bool EsMatricula { get; set; }
 
-        [Display(Name = "¿Aplica a pagos extemporáneos?")]
+        [Display(Name = "Concepto de pago extemporáneo")]
         public bool Extemporaneo { get; set; }
 
-        [Display(Name = "¿Agrupa otros conceptos?")]
+        [Display(Name = "Agrupa conceptos")]
         public bool AgupaConceptos { get; set; }
 
+        [Display(Name = "Concepto calculado")]
+        public bool Calculado { get; set; }
+
+        [Display(Name = "Agrupa conceptos")]
+        public int TipoCalculo { get; set; }
 
         public CatalogoConceptosRegistroViewModel() { }
 
@@ -55,6 +73,10 @@ namespace WebApp.ViewModels
             this.Extemporaneo = concepto.B_EsPagoExtmp;
             this.EsMatricula = concepto.B_EsPagoMatricula;
             this.AgupaConceptos = concepto.B_ConceptoAgrupa;
+            this.Monto = concepto.I_Monto;
+            this.MontoMinimo = concepto.I_MontoMinimo;
+            this.Calculado = concepto.B_Calculado;
+            this.TipoCalculo = concepto.I_Calculado;
         }
     }
 

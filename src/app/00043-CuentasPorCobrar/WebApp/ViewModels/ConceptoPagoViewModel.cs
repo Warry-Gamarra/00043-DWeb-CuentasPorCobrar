@@ -8,10 +8,11 @@ namespace WebApp.ViewModels
 {
     public class ConceptoPagoViewModel
     {
-        public int ProcesoId { get; set; }
+        public int? ProcesoId { get; set; }
         public int ConceptoPagoID { get; set; }
         public string DescProceso { get; set; }
         public string ConceptoDesc { get; set; }
+        public decimal MontoMinimo { get; set; }
         public decimal Monto { get; set; }
         public bool Habilitado { get; set; }
     }
@@ -22,6 +23,11 @@ namespace WebApp.ViewModels
         [Display(Name = "Descripción del concepto")]
         [Required]
         public int I_ConceptoID { get; set; }
+
+        [Display(Name = "Descripción del concepto")]
+        [Required]
+        public string T_ConceptoPagoDesc { get; set; }
+
         public bool B_Fraccionable { get; set; }
         public bool B_ConceptoGeneral { get; set; }
         public bool B_AgrupaConcepto { get; set; }
@@ -73,10 +79,10 @@ namespace WebApp.ViewModels
         public bool B_Porcentaje { get; set; }
         [Required]
         [Display(Name = "Monto")]
-        [AmountGreaterThanZero]
+        [Range(0, Int32.MaxValue)]
         public decimal? M_Monto { get; set; }
         [Display(Name = "Monto Mínimo")]
-        [AmountGreaterThanZero]
+        [Range(0, Int32.MaxValue)]
         public decimal? M_MontoMinimo { get; set; }
         public string T_DescripcionLarga { get; set; }
         public string T_Documento { get; set; }

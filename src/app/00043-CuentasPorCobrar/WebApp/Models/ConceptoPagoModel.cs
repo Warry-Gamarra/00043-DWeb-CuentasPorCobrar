@@ -13,11 +13,13 @@ namespace WebApp.Models
     {
         ConceptoPagoService conceptoPagoService;
         ProcesoService procesoService;
+        readonly CategoriaPago categoriaPago;
 
         public ConceptoPagoModel()
         {
             conceptoPagoService = new ConceptoPagoService();
             procesoService = new ProcesoService();
+            categoriaPago = new CategoriaPago();
         }
 
 
@@ -37,7 +39,11 @@ namespace WebApp.Models
                 T_ConceptoDesc = model.NombreConcepto,
                 B_EsPagoMatricula = model.EsMatricula,
                 B_EsPagoExtmp = model.Extemporaneo,
-                B_ConceptoAgrupa = model.AgupaConceptos
+                B_ConceptoAgrupa = model.AgupaConceptos,
+                I_Monto = model.Monto,
+                I_MontoMinimo = model.MontoMinimo,
+                B_Calculado = model.Calculado,
+                I_Calculado = model.TipoCalculo,
             };
 
             Response result = conceptoPagoService.Save(concepto, currentUserId, (model.Id.HasValue ? SaveOption.Update : SaveOption.Insert));
@@ -66,6 +72,17 @@ namespace WebApp.Models
             return result;
         }
 
+        public List<CatalogoConceptosViewModel> Listar_CatalogoConceptos(TipoObligacion tipoObligacion)
+        {
+            List<CatalogoConceptosViewModel> result = new List<CatalogoConceptosViewModel>();
+
+            foreach (var item in conceptoPagoService.Listar_Concepto(tipoObligacion))
+            {
+                result.Add(new CatalogoConceptosViewModel(item));
+            }
+
+            return result;
+        }
 
         public CatalogoConceptosRegistroViewModel ObtenerConcepto(int conceptoId)
         {
@@ -92,7 +109,7 @@ namespace WebApp.Models
             return result;
         }
 
-        public List<SelectViewModel> Listar_Combo_CatalogoOpcion_X_Parametro(Domain.DTO.Parametro tipoParametroID)
+        public List<SelectViewModel> Listar_Combo_CatalogoOpcion_X_Parametro(Parametro tipoParametroID)
         {
             List<SelectViewModel> result = new List<SelectViewModel>();
 
@@ -128,6 +145,25 @@ namespace WebApp.Models
             return result;
         }
 
+
+        public RegistroConceptoPagoViewModel InicializarConceptoPagoTasa(int procesoId)
+        {
+            var proceso = procesoService.Obtener_Proceso(procesoId);
+            var categoria = categoriaPago.Find(proceso.I_CatPagoID);
+
+            RegistroConceptoPagoViewModel result = new RegistroConceptoPagoViewModel()
+            {
+                I_ProcesoID = procesoId,
+                I_AlumnosDestino = categoria.TipoAlumno,
+                I_GradoDestino = categoria.Nivel,
+                //I_TipoObligacion = conceptoPagoService.Listar_CatalogoOpcion_Habilitadas_X_Parametro(Parametro.)
+                I_Anio = proceso.I_Anio,
+                I_Periodo = proceso.I_Periodo,
+            };
+
+            return result;
+        }
+
         public Response Grabar_ConceptoPago(RegistroConceptoPagoViewModel model, int currentUserId)
         {
             ConceptoPagoEntity conceptoPagoEntity;
@@ -139,6 +175,7 @@ namespace WebApp.Models
                 I_ConcPagID = model.I_ConcPagID.GetValueOrDefault(),
                 I_ProcesoID = model.I_ProcesoID,
                 I_ConceptoID = model.I_ConceptoID,
+                T_ConceptoPagoDesc = model.T_ConceptoPagoDesc.ToUpper(),
                 B_Fraccionable = model.B_Fraccionable,
                 B_ConceptoGeneral = model.B_ConceptoGeneral,
                 B_AgrupaConcepto = model.B_AgrupaConcepto,
@@ -177,6 +214,28 @@ namespace WebApp.Models
 
             var result = conceptoPagoService.Grabar_ConceptoPago(conceptoPagoEntity, saveOption);
 
+            if (result.Value)
+            {
+                result.Success(false);
+            }
+            else
+            {
+                result.Error(true);
+            }
+
+            return result;
+        }
+
+
+        public RegistroConceptosProcesoViewModel ObtenerConceptoPagoProceso(int procesoId, int conceptoPagoId)
+        {
+            var result = new RegistroConceptosProcesoViewModel()
+            {
+                ProcesoId = procesoId,
+                ConceptoPago = Obtener_ConceptoPago(conceptoPagoId),
+                MostrarFormulario = true,
+            };
+
             return result;
         }
 
@@ -189,6 +248,7 @@ namespace WebApp.Models
                 I_ConcPagID = conceptoPago.I_ConcPagID,
                 I_ProcesoID = conceptoPago.I_ProcesoID,
                 I_ConceptoID = conceptoPago.I_ConceptoID,
+                T_ConceptoPagoDesc = conceptoPago.T_ConceptoPagoDesc,
                 B_Fraccionable = conceptoPago.B_Fraccionable.HasValue ? conceptoPago.B_Fraccionable.Value : false,
                 B_ConceptoGeneral = conceptoPago.B_ConceptoGeneral.HasValue ? conceptoPago.B_ConceptoGeneral.Value : false,
                 B_AgrupaConcepto = conceptoPago.B_AgrupaConcepto.HasValue ? conceptoPago.B_AgrupaConcepto.Value : false,

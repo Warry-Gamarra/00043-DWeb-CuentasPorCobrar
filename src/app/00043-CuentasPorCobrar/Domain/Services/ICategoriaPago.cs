@@ -11,7 +11,7 @@ namespace Domain.Services
     public interface ICategoriaPago
     {
         List<CategoriaPago> Find();
-        CategoriaPago Find(int clasificadorId);
+        CategoriaPago Find(int categoriaId);
         Response Save(CategoriaPago categoriaPago, int currentUserId, SaveOption saveOption);
         Response ChangeState(int categoriaId, bool currentState, int currentUserId);
     }

@@ -15,6 +15,7 @@ namespace Data.Tables
         public int I_ConcPagID { get; set; }
         public int I_ProcesoID { get; set; }
         public int I_ConceptoID { get; set; }
+        public string T_ConceptoPagoDesc { get; set; }
         public bool? B_Fraccionable { get; set; }
         public bool? B_ConceptoGeneral { get; set; }
         public bool? B_AgrupaConcepto { get; set; }

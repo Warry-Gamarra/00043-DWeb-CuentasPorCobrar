@@ -25,10 +25,9 @@ namespace Domain.DTO
         MultaNoVotar
     }
 
-    public enum TablaMigracion
+    public enum TipoObligacion
     {
-        Dependencias,
-        Tasas,
-        Obligaciones
+        Matricula,
+        OtrosPagos
     }
 }

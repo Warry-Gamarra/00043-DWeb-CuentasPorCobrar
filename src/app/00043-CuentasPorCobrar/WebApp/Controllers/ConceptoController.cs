@@ -39,7 +39,8 @@ namespace WebApp.Controllers
         public ActionResult Create()
         {
             ViewBag.Title = "Nuevo concepto de pago";
-
+            ViewBag.Lista_Opciones_CampoCalculado = conceptoPagoModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.CampoCalculado);
+            ViewBag.CalculadoVisible = "none";
 
             return PartialView("_RegistrarConcepto", new CatalogoConceptosRegistroViewModel());
         }
@@ -48,10 +49,14 @@ namespace WebApp.Controllers
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            ViewBag.Title = "editar concepto de pago";
+            ViewBag.Title = "Editar concepto de pago";
+            ViewBag.Lista_Opciones_CampoCalculado = conceptoPagoModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.CampoCalculado);
 
+            CatalogoConceptosRegistroViewModel model = conceptoPagoModel.ObtenerConcepto(id);
 
-            return PartialView("_RegistrarConcepto", conceptoPagoModel.ObtenerConcepto(id));
+            ViewBag.CalculadoVisible = model.Calculado ? "block" : "none";
+
+            return PartialView("_RegistrarConcepto", model);
         }
 
         public JsonResult ChangeState(int RowID, bool B_habilitado)
