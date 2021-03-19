@@ -102,5 +102,48 @@ namespace Domain.UnfvRepositorioClient
 
             return result;
         }
+
+        public IEnumerable<AlumnoModel> GetByCodAlu(string codAlu)
+        {
+            string url, jsonResponse;
+            HttpWebRequest request;
+            IEnumerable<AlumnoModel> result;
+
+            try
+            {
+                var uri = UnfvRepositorioClientConfiguration.BaseUrl("alumnos");
+
+                var query = HttpUtility.ParseQueryString(uri.Query);
+
+                query["codAlu"] = codAlu;
+
+                uri.Query = query.ToString();
+
+                url = uri.ToString();
+
+                request = (HttpWebRequest)WebRequest.Create(url);
+
+                request.Method = HttpVerb.GET.ToString();
+
+                using (var response = (HttpWebResponse)request.GetResponse())
+                using (var responseStream = response.GetResponseStream())
+                using (var reader = new StreamReader(responseStream))
+                {
+                    jsonResponse = reader.ReadToEnd();
+
+                    result = JsonConvert.DeserializeObject<List<AlumnoModel>>(jsonResponse);
+                }
+            }
+            catch (WebException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
     }
 }

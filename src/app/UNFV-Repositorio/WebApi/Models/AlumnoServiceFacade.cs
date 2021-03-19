@@ -45,5 +45,10 @@ namespace WebApi.Models
 
             return Mapper.AlumnoDTO_To_AlumnoModel(alumnoDTO);
         }
+
+        public IEnumerable<AlumnoModel> GetByCodAlu(string codAlu)
+        {
+            return _alumnoService.GetByCodAlu(codAlu).Select(a => Mapper.AlumnoDTO_To_AlumnoModel(a));
+        }
     }
 }

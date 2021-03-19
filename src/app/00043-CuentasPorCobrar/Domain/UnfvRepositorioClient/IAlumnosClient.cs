@@ -11,5 +11,7 @@ namespace Domain.UnfvRepositorioClient
         IEnumerable<AlumnoModel> GetByDocIdent(string codTipDoc, string numDNI);
 
         AlumnoModel GetByID(string codRc, string codAlu);
+
+        IEnumerable<AlumnoModel> GetByCodAlu(string codAlu);
     }
 }

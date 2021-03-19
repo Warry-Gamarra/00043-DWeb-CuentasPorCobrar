@@ -1,4 +1,5 @@
-﻿using Domain.UnfvRepositorioClient;
+﻿using Domain.Helpers;
+using Domain.UnfvRepositorioClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,19 +17,41 @@ namespace WebApp.Models.Facades
             programasClient = new ProgramasClient();
         }
 
-        public List<SelectViewModel> GetFacultades()
+        public IEnumerable<SelectViewModel> GetFacultades(TipoEstudio tipoEstudio)
         {
-            List<SelectViewModel> result = new List<SelectViewModel>();
-
-            var facultades = programasClient.GetFacultades();
-
-            if (facultades != null)
+            IEnumerable<FacultadModel> facultades;
+            IEnumerable<SelectViewModel> result;
+            
+            switch (tipoEstudio)
             {
-                result = facultades.Select(x => new SelectViewModel()
-                {
-                    Value = x.CodFac,
-                    TextDisplay = x.FacDesc
-                }).ToList();
+                case TipoEstudio.Pregrado:
+                    string[] excluidos = { "CA", "CI", "CP", "CV", "EP", "ET" };
+
+                    facultades = programasClient.GetFacultades();
+
+                    result = facultades.Where(f => !excluidos.Contains(f.CodFac)).Select(x => new SelectViewModel()
+                    {
+                        Value = x.CodFac,
+                        TextDisplay = x.FacDesc
+                    }).OrderBy(f => f.TextDisplay);
+
+                    break;
+
+                case TipoEstudio.Posgrado:
+                    facultades = programasClient.GetFacultades();
+
+                    result = facultades.Where(f => f.CodFac == "EP").Select(x => new SelectViewModel()
+                    {
+                        Value = x.CodFac,
+                        TextDisplay = x.FacDesc
+                    });
+
+                    break;
+
+                default:
+                    result = new List<SelectViewModel>();
+
+                    break;
             }
 
             return result;

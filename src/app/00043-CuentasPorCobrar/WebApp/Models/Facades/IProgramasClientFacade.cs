@@ -1,4 +1,5 @@
-﻿using Domain.UnfvRepositorioClient;
+﻿using Domain.Helpers;
+using Domain.UnfvRepositorioClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace WebApp.Models.Facades
 {
     public interface IProgramasClientFacade
     {
-        List<SelectViewModel> GetFacultades();
+        IEnumerable<SelectViewModel> GetFacultades(TipoEstudio tipoEstudio);
     }
 }

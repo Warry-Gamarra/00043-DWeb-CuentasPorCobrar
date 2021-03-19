@@ -29,9 +29,16 @@ namespace WebApi.Controllers
 
         [HttpGet]
         [Route("alumnos")]
-        public IHttpActionResult GetAlumnosPorDocIdent(string codTipDoc, string numDNI)
+        public IHttpActionResult GetAlumnosByDocIdent(string codTipDoc, string numDNI)
         {
             return Ok(_service.GetByDocIdent(codTipDoc, numDNI));
+        }
+
+        [HttpGet]
+        [Route("alumnos")]
+        public IHttpActionResult GetAlumnosByCodAlu(string codAlu)
+        {
+            return Ok(_service.GetByCodAlu(codAlu));
         }
 
         [HttpGet]

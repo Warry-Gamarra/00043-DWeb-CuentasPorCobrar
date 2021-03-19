@@ -34,6 +34,12 @@ namespace Data.Views
 
         public string C_RcCod { get; set; }
 
+        public string C_CodEsp { get; set; }
+
+        public string C_CodEsc { get; set; }
+
+        public string C_CodFac { get; set; }
+
         public string T_DenomProg { get; set; }
 
         public string C_CodModIng { get; set; }
@@ -110,6 +116,28 @@ namespace Data.Views
                     command = "SELECT * FROM dbo.VW_Alumnos WHERE B_Eliminado = 0 AND C_CodTipDoc = @C_CodTipDoc AND C_NumDNI = @C_NumDNI";
 
                     result = _dbConnection.Query<VW_Alumnos>(command, new { C_CodTipDoc = codTipDoc, C_NumDNI = numDNI }, commandType: CommandType.Text);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
+
+        public static IEnumerable<VW_Alumnos> GetByCodAlu(string codAlu)
+        {
+            IEnumerable<VW_Alumnos> result;
+            string command;
+
+            try
+            {
+                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
+                {
+                    command = "SELECT * FROM dbo.VW_Alumnos WHERE B_Eliminado = 0 AND C_CodAlu = @C_CodAlu";
+
+                    result = _dbConnection.Query<VW_Alumnos>(command, new { C_CodAlu = codAlu }, commandType: CommandType.Text);
                 }
             }
             catch (Exception ex)

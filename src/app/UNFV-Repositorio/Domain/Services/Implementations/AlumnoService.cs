@@ -150,6 +150,22 @@ namespace Domain.Services.Implementations
             var result = (alumno == null) ? null : Mapper.VW_Alumnos_To_AlumnoDTO(alumno);
 
             return result;
-        }   
+        }
+
+        public IEnumerable<AlumnoDTO> GetByCodAlu(string codAlu)
+        {
+            IEnumerable<AlumnoDTO> result;
+
+            var alumnos = _alumnoRepository.GetByCodAlu(codAlu);
+
+            if (alumnos == null)
+                result = new List<AlumnoDTO>();
+            else
+            {
+                result = alumnos.Select(a => Mapper.VW_Alumnos_To_AlumnoDTO(a));
+            }
+
+            return result;
+        }
     }
 }

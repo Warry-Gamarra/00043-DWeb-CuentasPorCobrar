@@ -9,11 +9,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Services
+namespace Domain.Services.Implementations
 {
-    public class ObligacionService
+    public class ObligacionService : IObligacionService
     {
-        public Response Generar_Obligaciones_Pregrado(int anio, int periodo, int currentUserID)
+        public Response Generar_Obligaciones_Pregrado(int anio, int periodo, string codFacultad, int currentUserID)
         {
             ResponseData result;
 
@@ -21,12 +21,18 @@ namespace Domain.Services
             {
                 I_Anio = anio,
                 I_Periodo = periodo,
+                C_CodFac = codFacultad,
                 I_UsuarioCre = currentUserID
             };
 
             result = generarObligaciones.Execute();
 
             return new Response(result);
+        }
+
+        public Response Generar_Obligaciones_Posgrado(int anio, int periodo, int currentUserID)
+        {
+            throw new NotImplementedException();
         }
 
         public Response Generar_Obligaciones_PorAlumno(int anio, int periodo, string codAlu, string codRc, int currentUserID)
@@ -70,15 +76,6 @@ namespace Domain.Services
             var cuotaPagos = VW_CuotasPago.GetByProceso(anio, periodo, tipoAlumno, nivel);
 
             var result = cuotaPagos.Select(c => Mapper.VW_CuotaPago_To_CuotaPagoDTO(c));
-
-            return result;
-        }
-
-        public IEnumerable<EspecialidadesPorAlumnoDTO> Obtener_Especialidades_X_Alumno(string codAlu)
-        {
-            var especialidades = VW_EspecialidadesPorAlumno.FindByAlumno(codAlu);
-
-            var result = especialidades.Select(e => Mapper.VW_EspecialidadesPorAlumno_To_EspecialidadesPorAlumnoDTO(e));
 
             return result;
         }
