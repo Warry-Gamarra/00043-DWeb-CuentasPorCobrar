@@ -81,6 +81,7 @@ namespace Domain.Services
                 var result = lista.Select(x => new Proceso()
                 {
                     I_ProcesoID = x.I_ProcesoID,
+                    I_CatPagoID = x.I_CatPagoID,
                     T_CatPagoDesc = x.T_CatPagoDesc,
                     C_PeriodoCod = x.C_PeriodoCod,
                     T_PeriodoDesc = x.T_PeriodoDesc,
@@ -89,7 +90,8 @@ namespace Domain.Services
                     I_Anio = x.I_Anio,
                     D_FecVencto = x.D_FecVencto,
                     I_Prioridad = x.I_Prioridad,
-                    N_CodBanco = x.N_CodBanco
+                    N_CodBanco = x.N_CodBanco,
+                    B_Obligacion = x.B_Obligacion
                 }).ToList();
 
                 return result;
@@ -223,6 +225,8 @@ namespace Domain.Services
                         I_Prioridad = proceso.I_Prioridad,
                         N_CodBanco = proceso.N_CodBanco,
                         T_PeriodoDesc = proceso.T_PeriodoDesc,
+                        B_Obligacion = proceso.B_Obligacion,
+                        T_ProcesoDesc = proceso.T_ProcesoDesc,
                     };
                 }
             }

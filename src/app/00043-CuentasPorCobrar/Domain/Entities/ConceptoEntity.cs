@@ -13,6 +13,10 @@ namespace Domain.Entities
         public bool B_EsPagoMatricula { get; set; }
         public bool B_EsPagoExtmp { get; set; }
         public bool B_ConceptoAgrupa { get; set; }
+        public bool B_Calculado { get; set; }
+        public int I_Calculado { get; set; }
+        public decimal I_Monto { get; set; }
+        public decimal I_MontoMinimo { get; set; }
         public bool B_Habilitado { get; set; }
         public int? I_UsuarioCre { get; set; }
         public DateTime? D_FecCre { get; set; }

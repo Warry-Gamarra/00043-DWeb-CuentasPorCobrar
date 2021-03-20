@@ -17,6 +17,10 @@ namespace Data.Tables
         public bool B_EsPagoMatricula { get; set; }
         public bool B_EsPagoExtmp { get; set; }
         public bool B_ConceptoAgrupa { get; set; }
+        public bool B_Calculado { get; set; }
+        public int I_Calculado { get; set; }
+        public decimal I_Monto { get; set; }
+        public decimal I_MontoMinimo { get; set; }
         public bool B_Habilitado { get; set; }
         public bool B_Eliminado { get; set; }
         public int? I_UsuarioCre { get; set; }
@@ -46,6 +50,27 @@ namespace Data.Tables
             return result;
         }
 
+        public static List<TC_Concepto> Find(bool esObligacion)
+        {
+            List<TC_Concepto> result;
+
+            try
+            {
+                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
+                {
+                    var s_command = @"SELECT c.* FROM TC_Concepto c WHERE c.B_Eliminado = 0 AND B_EsPagoMatricula = @B_EsPagoMatricula";
+
+                    result = _dbConnection.Query<TC_Concepto>(s_command, new { B_EsPagoMatricula = esObligacion ? 1 : 0 }, commandType: CommandType.Text).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
+
         public static TC_Concepto Find(int conceptoID)
         {
             TC_Concepto result;
@@ -56,7 +81,7 @@ namespace Data.Tables
                 {
                     var s_command = @"SELECT c.* FROM TC_Concepto c WHERE I_ConceptoID = @I_ConceptoID AND c.B_Eliminado = 0";
 
-                    result = _dbConnection.QuerySingleOrDefault<TC_Concepto>(s_command, new { I_ConceptoID  = conceptoID }, commandType: CommandType.Text);
+                    result = _dbConnection.QuerySingleOrDefault<TC_Concepto>(s_command, new { I_ConceptoID = conceptoID }, commandType: CommandType.Text);
                 }
             }
             catch (Exception ex)
@@ -79,9 +104,13 @@ namespace Data.Tables
                 {
                     parameters.Add(name: "I_ConceptoID", dbType: DbType.Int32, value: this.I_ConceptoID);
                     parameters.Add(name: "T_ConceptoDesc", dbType: DbType.String, size: 500, value: this.T_ConceptoDesc);
+                    parameters.Add(name: "I_Monto", dbType: DbType.Decimal, value: this.I_Monto);
+                    parameters.Add(name: "I_MontoMinimo", dbType: DbType.Decimal, value: this.I_MontoMinimo);
                     parameters.Add(name: "B_EsPagoMatricula", dbType: DbType.Boolean, value: this.B_EsPagoMatricula);
                     parameters.Add(name: "B_EsPagoExtmp", dbType: DbType.Boolean, value: this.B_EsPagoExtmp);
                     parameters.Add(name: "B_ConceptoAgrupa", dbType: DbType.Boolean, value: this.B_ConceptoAgrupa);
+                    parameters.Add(name: "B_Calculado", dbType: DbType.Boolean, value: this.B_Calculado);
+                    parameters.Add(name: "I_Calculado", dbType: DbType.Int32, value: this.I_Calculado);
                     parameters.Add(name: "D_FecCre", dbType: DbType.DateTime, value: this.D_FecCre);
                     parameters.Add(name: "CurrentUserId", dbType: DbType.Int32, value: currentUserId);
 
@@ -114,9 +143,13 @@ namespace Data.Tables
                 {
                     parameters.Add(name: "I_ConceptoID", dbType: DbType.Int32, value: this.I_ConceptoID);
                     parameters.Add(name: "T_ConceptoDesc", dbType: DbType.String, size: 250, value: this.T_ConceptoDesc);
+                    parameters.Add(name: "I_Monto", dbType: DbType.Decimal, value: this.I_Monto);
+                    parameters.Add(name: "I_MontoMinimo", dbType: DbType.Decimal, value: this.I_MontoMinimo);
                     parameters.Add(name: "B_EsPagoMatricula", dbType: DbType.Boolean, value: this.B_EsPagoMatricula);
                     parameters.Add(name: "B_EsPagoExtmp", dbType: DbType.Boolean, value: this.B_EsPagoExtmp);
                     parameters.Add(name: "B_ConceptoAgrupa", dbType: DbType.Boolean, value: this.B_ConceptoAgrupa);
+                    parameters.Add(name: "B_Calculado", dbType: DbType.Boolean, value: this.B_Calculado);
+                    parameters.Add(name: "I_Calculado", dbType: DbType.Int32, value: this.I_Calculado);
                     parameters.Add(name: "D_FecMod", dbType: DbType.DateTime, value: this.D_FecMod);
                     parameters.Add(name: "CurrentUserId", dbType: DbType.Int32, value: currentUserId);
 

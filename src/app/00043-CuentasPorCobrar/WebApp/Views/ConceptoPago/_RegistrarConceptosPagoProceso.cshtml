@@ -5,9 +5,6 @@
 
 <div class="row">
     <div class="container-fluid">
-        <a id="btn-return" class="mb-3 float-right" href="@Url.Action("VerConceptos", "Procesos", new { procesoId = ViewBag.ProcesoId })">
-            <i class="fa fa-arrow-left">&nbsp;</i> Volver a la lista
-        </a>
 
         @if (Model.ConceptoPago.I_ConcPagID.HasValue)
         {
@@ -25,12 +22,17 @@
                     <button type="button" id="btn-agregar" class="btn btn-sm btn-outline-info"><i class="fa fa-check">&nbsp;</i> Seleccionar</button>
                 </div>
                 <hr />
+
+
             </div>
 
             <div id="search-loader" class="container-fluid" style="display:none;">
                 <div class="d-flex justify-content-center">
                     <div class="spinner-border text-info" role="status" style="width: 5rem; height: 5rem;">
                         <span class="sr-only">Loading...</span>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <span id="load-message" class="h5 mt-4"></span>
                     </div>
                 </div>
             </div>
@@ -40,7 +42,7 @@
 
 <div class="row" style="min-height:100px;">
     <div id="alert-message" class="container-fluid" style="display:@(Model.MostrarFormulario ? "none" : "block");">
-        <p class="alert alert-info text-center">
+        <p class="alert alert-info text-center mt-3 mb-5">
             <span class="d-block"><i class="fa fa-2x fa-exclamation-circle"></i></span>
             Escoja un concepto de la lista y presione el boton <strong> seleccionar </strong>
         </p>
@@ -54,14 +56,21 @@
             @Html.AntiForgeryToken()
 
             <div class="form-group form-row">
+                @Html.HiddenFor(model => model.ConceptoPago.I_ConcPagID)
+                @Html.HiddenFor(model => model.ConceptoPago.I_ProcesoID)
                 @Html.HiddenFor(model => model.ConceptoPago.I_ConceptoID)
                 @Html.HiddenFor(model => model.ConceptoPago.B_AgrupaConcepto)
                 @Html.HiddenFor(model => model.ConceptoPago.B_ConceptoGeneral)
                 @Html.HiddenFor(model => model.ConceptoPago.B_Fraccionable)
+                @Html.HiddenFor(model => model.ConceptoPago.I_AlumnosDestino)
+                @Html.HiddenFor(model => model.ConceptoPago.I_GradoDestino)
+                @Html.HiddenFor(model => model.ConceptoPago.I_TipoObligacion)
+
                 @Html.LabelFor(model => model.ConceptoPago.I_ConceptoID, new { @class = "control-label col-12" })
                 <div class="col-10">
-                    @Html.TextBox("ConceptoPago_Descripcion", "", new { @class = "form-control disabled" })
-                    <p class="text-danger">@Html.ValidationMessageFor(model => model.ConceptoPago.I_ConceptoID)</p>
+                    @Html.TextBoxFor(model => model.ConceptoPago.T_ConceptoPagoDesc, new { @class = "form-control disabled" })
+                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.ConceptoPago.I_ConceptoID)</p>
+                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.ConceptoPago.T_ConceptoPagoDesc)</p>
                 </div>
                 <div class="col-2">
                     <button type="button" id="btn-remove" class="btn btn-block btn-outline-danger"><i class="fa fa-trash-o"></i><span class="d-md-inline-block d-none">&nbsp;Borrar</span></button>
@@ -75,14 +84,14 @@
                             <div class="form-group">
                                 @Html.LabelFor(model => model.ConceptoPago.T_Clasificador, new { @class = "control-label" })
                                 @Html.TextBoxFor(model => model.ConceptoPago.T_Clasificador, new { @class = "form-control" })
-                                <p class="text-danger">@Html.ValidationMessageFor(model => model.ConceptoPago.T_Clasificador)</p>
+                                <p class="text-danger small">@Html.ValidationMessageFor(model => model.ConceptoPago.T_Clasificador)</p>
                             </div>
                         </div>
                         <div class="col-5">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.ConceptoPago.C_CodTasa, new { @class = "control-label" })
                                 @Html.TextBoxFor(model => model.ConceptoPago.C_CodTasa, new { @class = "form-control" })
-                                <p class="text-danger">@Html.ValidationMessageFor(model => model.ConceptoPago.C_CodTasa)</p>
+                                <p class="text-danger small">@Html.ValidationMessageFor(model => model.ConceptoPago.C_CodTasa)</p>
                             </div>
                         </div>
                     </div>
@@ -90,12 +99,24 @@
                         <label class="control-label col-sm-4" for="Monto">Monto</label>
                         <div class="col-sm-8">
                             @Html.TextBoxFor(model => model.ConceptoPago.M_Monto, "{0:f4}", new { @class = "form-control" })
-                            <p class="text-danger">@Html.ValidationMessageFor(model => model.ConceptoPago.M_Monto)</p>
+                            <p class="text-danger small">@Html.ValidationMessageFor(model => model.ConceptoPago.M_Monto)</p>
                         </div>
                         <label class="control-label col-md-4" for="Monto_Minimo">Monto Mínimo</label>
                         <div class="col-sm-8">
                             @Html.TextBoxFor(model => model.ConceptoPago.M_MontoMinimo, "{0:f4}", new { @class = "form-control" })
-                            <p class="text-danger">@Html.ValidationMessageFor(model => model.ConceptoPago.M_MontoMinimo)</p>
+                            <p class="text-danger small">@Html.ValidationMessageFor(model => model.ConceptoPago.M_MontoMinimo)</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        @Html.LabelFor(model => model.ConceptoPago.N_NroPagos, new { @class = "control-label col-md-2" })
+                        <div class="col-md-3">
+                            @Html.TextBoxFor(model => model.ConceptoPago.N_NroPagos, new { @class = "form-control" })
+                            <p class="text-danger">@Html.ValidationMessageFor(model => model.ConceptoPago.N_NroPagos)</p>
+                        </div>
+                        <div class="col-md-3">
+                            @Html.CheckBoxFor(model => model.ConceptoPago.B_Porcentaje)
+                            @Html.LabelFor(model => model.ConceptoPago.B_Porcentaje, new { @class = "form-check-label control-label" })
                         </div>
                     </div>
                 </div>
@@ -104,12 +125,12 @@
                     <div class="form-group">
                         <label class="control-label" for="T_DescripcionLarga">Descripción Larga</label>
                         @Html.TextAreaFor(model => model.ConceptoPago.T_DescripcionLarga, new { @class = "form-control" })
-                        <p class="text-danger">@Html.ValidationMessageFor(model => model.ConceptoPago.T_DescripcionLarga)</p>
+                        <p class="text-danger small">@Html.ValidationMessageFor(model => model.ConceptoPago.T_DescripcionLarga)</p>
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="T_Documento">Sustento / Observación</label>
                         @Html.TextAreaFor(model => model.ConceptoPago.T_Documento, new { @class = "form-control" })
-                        <p class="text-danger">@Html.ValidationMessageFor(model => model.ConceptoPago.T_Documento)</p>
+                        <p class="text-danger small">@Html.ValidationMessageFor(model => model.ConceptoPago.T_Documento)</p>
                     </div>
                 </div>
             </div>
@@ -117,7 +138,14 @@
                 <button type="submit" class="btn btn-primary center" id="btnsubmit"><i class="fa fa-save"></i>&nbsp;Guardar</button>
             </div>
         }
+
     </div>
+</div>
+<div class="modal-footer" id="div_msg" style="margin: 0.75rem -1.5rem -0.75rem;">
+    <a id="btn-return" class="btn btn-outline-primary" href="@Url.Action("VerConceptos", "Procesos", new { procesoId = Model.ProcesoId })">
+        <i class="fa fa-arrow-left">&nbsp;</i> Volver a la lista
+    </a>
+    <button type="button" class="btn btn-secondary" id="btnCancel" data-dismiss="modal"><i class="fa fa-times-circle-o">&nbsp;</i>Cancelar</button>
 </div>
 
 <script type="text/javascript">
@@ -127,8 +155,8 @@
         $('#btn-return').on('click', function (event) {
             event.preventDefault();
 
-            let url = $(event.target).attr("href");
-            loadForm(url, "obteniendo listado de conceptos")
+            let url = $(event.currentTarget).attr("href");
+            loadForm(url, "cargando formulario...")
         })
 
         function loadForm(url, message) {
@@ -193,7 +221,7 @@
                     DisableSearh(true)
 
                     $('#ConceptoPago_I_ConceptoID').val(data['Id']);
-                    $('#ConceptoPago_Descripcion').val(data['NombreConcepto']);
+                    $('#ConceptoPago_T_ConceptoPagoDesc').val(data['NombreConcepto']);
 
                     $('#search-container').hide();
                     $('#concepto-form').show();

@@ -6,7 +6,7 @@
 </div>
 
 <div class="modal-body">
-    <div id="spin-loader" class="container-fluid" style="display:none;">
+    <div id="spin-loader" class="container-fluid my-5" style="display:none;">
         <div class="d-flex justify-content-center">
             <div class="spinner-border text-info" role="status" style="width: 5rem; height: 5rem;">
                 <span class="sr-only">Loading...</span>
@@ -29,34 +29,30 @@
                                                               @Html.Raw("<span id=\"td" + @model.ConceptoPagoID + "\"><button type=\"submit\" class=\"btn btn-xs btn-success\" onclick=\"ChangeStateReloadPage(" + @model.ConceptoPagoID + ", " + @model.Habilitado.ToString().ToLower() + ", '" + @Url.Action("ChangeState", "ConceptoPago") + "');\"><i class=\"fa fa-check-circle-o\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Habilitado</span></button></span>")
                                                          : @Html.Raw("<span id=\"td" + @model.ConceptoPagoID + "\"><button type=\"submit\" class=\"btn btn-xs btn-secondary\" onclick=\"ChangeStateReloadPage(" + @model.ConceptoPagoID + ", " + @model.Habilitado.ToString().ToLower() + ", '" + @Url.Action("ChangeState", "ConceptoPago") + "');\"><i class=\"fa fa-minus-circle\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Deshabilitado</span></button></span>"))
                          .Filterable(false).SetWidth(160).Titled("Estado");
-                   columns.Add().SetWidth(200).Css("text-right").Encoded(false).Sanitized(false).
-                   RenderValueAs(model => @<a href="@Url.Action("Edit", "ConceptoPago", new { id = model.ConceptoPagoID })" class="modal-link btn-editar"><i class="fa fa-pencil-square-o" aria-hidden="true">&nbsp;</i><span class="d-none d-md-inline-block">Editar</span></a>);
-             }).WithPaging(10).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
+                   columns.Add().SetWidth(100).Css("text-right").Encoded(false).Sanitized(false).
+                   RenderValueAs(model => @<a href="@Url.Action("EditObligacion", "ConceptoPago", new { procesoId = model.ProcesoId, id = model.ConceptoPagoID })" class="btn-editar"><i class="fa fa-pencil-square-o" aria-hidden="true">&nbsp;</i><span class="d-none d-md-inline-block">Editar</span></a>);
+          }).Sortable(false).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
         </div>
-        <div class="d-flex justify-content-center">
-            <a href="@Url.Action("Create","ConceptoPago", new { procesoId = ViewBag.ProcesoId })" class="btn btn-primary" id="btn-agregar"><i class="fa bi-ui-checks-grid">&nbsp;</i>Agregar concepto</a>
+        <div class="modal-footer" id="div_msg" style="margin: -0.75rem -1.5rem;">
+            <a href="@Url.Action("CreateObligacion","ConceptoPago", new { procesoId = ViewBag.ProcesoId })" class="btn btn-primary" id="btn-agregar"><i class="fa bi-ui-checks-grid">&nbsp;</i>Agregar concepto</a>
+            <button type="button" class="btn btn-secondary" id="btnCancel" data-dismiss="modal"><i class="fa fa-times-circle-o">&nbsp;</i>Cancelar</button>
         </div>
     </div>
 </div>
 
-<div class="modal-footer" id="div_msg">
-    <button type="button" class="btn btn-secondary" id="btnCancel" data-dismiss="modal"><i class="fa fa-times-circle-o">&nbsp;</i>Cancelar</button>
-</div>
 
 <script>
     $(document).ready(function () {
         $('#btn-agregar').on('click', function (event) {
             event.preventDefault();
-            var url = $(event.target).attr("href");
-
-            loadForm(url, "obteniendo formulario")
+            var url = $(event.currentTarget).attr("href");
+            loadForm(url, "obteniendo formulario...")
         })
 
         $('.btn-editar').on('click', function (event) {
             event.preventDefault();
-            var url = $(event.target).attr("href");
-
-            loadForm(url, "obteniendo datos del concepto")
+            var url = $(event.currentTarget).attr("href");
+            loadForm(url, "obteniendo datos del concepto...");
         })
 
         function loadForm(url, message) {

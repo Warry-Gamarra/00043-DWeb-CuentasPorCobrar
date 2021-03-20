@@ -28,7 +28,7 @@ namespace WebApp.Models
 
         public List<ConceptoPagoViewModel> ObtenerConceptosProcesoHabilitados(int procesoID)
         {
-            var lista = _conceptoPagoService.Listar_ConceptoPago_Habilitados(procesoID);
+            var lista = _conceptoPagoService.Listar_ConceptoPago_Proceso_Habilitados(procesoID);
 
             var result = lista.Select(x => new ConceptoPagoViewModel()
             {
@@ -36,6 +36,24 @@ namespace WebApp.Models
                 DescProceso = string.IsNullOrEmpty(x.T_ProcesoDesc) ? $"{x.I_Anio}-{x.I_Periodo}-{x.T_CatPagoDesc}" : x.T_ProcesoDesc,
                 ConceptoPagoID = x.I_ConcPagID,
                 ConceptoDesc = x.T_ConceptoDesc,
+                Monto = x.M_Monto,
+                Habilitado = true
+            }).ToList();
+
+            return result;
+        }
+
+        public List<ConceptoPagoViewModel> ObtenerConceptosTipoObligacionHabilitados(int? procesoID, TipoObligacion tipoObligacion)
+        {
+            var lista = _conceptoPagoService.Listar_ConceptoPago_TipoObligacion_Habilitados(procesoID, tipoObligacion);
+
+            var result = lista.Select(x => new ConceptoPagoViewModel()
+            {
+                ProcesoId = procesoID,
+                DescProceso = string.IsNullOrEmpty(x.T_ProcesoDesc) ? $"{x.I_Anio}-{x.I_Periodo}-{x.T_CatPagoDesc}" : x.T_ProcesoDesc,
+                ConceptoPagoID = x.I_ConcPagID,
+                ConceptoDesc = x.T_ConceptoDesc,
+                MontoMinimo = x.M_MontoMinimo,
                 Monto = x.M_Monto,
                 Habilitado = true
             }).ToList();
@@ -100,9 +118,11 @@ namespace WebApp.Models
 
         public List<ProcesoViewModel> Listar_Tasas()
         {
+            //return ObtenerConceptosTipoObligacionHabilitados(null, TipoObligacion.OtrosPagos);
+
             List<ProcesoViewModel> result = new List<ProcesoViewModel>();
 
-            var lista = _procesoService.Listar_Procesos();
+            var lista = _procesoService.Listar_Procesos().Where(x => !x.B_Obligacion);
 
             if (lista != null)
             {
@@ -110,6 +130,8 @@ namespace WebApp.Models
                 {
                     I_ProcesoID = x.I_ProcesoID,
                     T_CatPagoDesc = x.T_CatPagoDesc,
+                    T_ProcesoDesc = string.IsNullOrEmpty(x.T_ProcesoDesc) ? $"{x.I_Anio.ToString()}-{x.C_PeriodoCod}-{x.T_CatPagoDesc}" : x.T_CatPagoDesc,
+                    T_Periodo = x.T_PeriodoDesc,
                     I_Anio = x.I_Anio,
                     D_FecVencto = x.D_FecVencto,
                     I_Prioridad = x.I_Prioridad
@@ -125,13 +147,21 @@ namespace WebApp.Models
             CtaDepoProcesoEntity ctaDepoProcesoEntity;
 
             var procesoSaveOption = (!model.ProcesoId.HasValue) ? SaveOption.Insert : SaveOption.Update;
+            var categoria = _categoriaPagoModel.Find(model.CategoriaId.Value);
 
-            //if (!model.ProcesoId.HasValue)
-            //{
-                string categoriaDesc = _categoriaPagoModel.Find(model.CategoriaId.Value).Nombre;
-                string periodoCod = _conceptoPagoService.Listar_CatalogoOpcion_Habilitadas_X_Parametro(Parametro.Periodo).Find(x => x.I_OpcionID == model.PerAcadId).T_OpcionCod;
-                model.DescProceso = $"{model.Anio.ToString()}-{periodoCod}-{categoriaDesc} ";
-            //}
+
+            if (!model.ProcesoId.HasValue)
+            {
+                if (categoria.EsObligacion)
+                {
+                    string periodoCod = _conceptoPagoService.Listar_CatalogoOpcion_Habilitadas_X_Parametro(Parametro.Periodo).Find(x => x.I_OpcionID == model.PerAcadId).T_OpcionCod;
+                    model.DescProceso = $"{model.Anio.ToString()}-{periodoCod}-{categoria.Nombre}";
+                }
+                else
+                {
+                    model.DescProceso = categoria.Nombre;
+                }
+            }
 
             procesoEntity = new ProcesoEntity()
             {
@@ -259,14 +289,14 @@ namespace WebApp.Models
             {
                 ProcesoId = proceso.I_ProcesoID,
                 CategoriaId = proceso.I_CatPagoID,
-                Anio = proceso.I_Anio.Value,
+                Anio = proceso.I_Anio,
                 PerAcadId = proceso.I_Periodo,
                 DescProceso = string.IsNullOrEmpty(proceso.T_ProcesoDesc) ? $"{proceso.I_Anio.ToString()}-{proceso.C_PeriodoCod}-{proceso.T_CatPagoDesc}" : proceso.T_ProcesoDesc,
                 FecVencto = proceso.D_FecVencto,
                 PrioridadId = proceso.I_Prioridad,
                 CtasBcoComercio = ctasBcoComercio.Select(x => x.I_CtaDepID).ToArray(),
                 CodBcoComercio = proceso.N_CodBanco,
-                CtaDepositoID = cuentasProceso.Select(x => x.I_CtaDepositoID).ToArray()                
+                CtaDepositoID = cuentasProceso.Select(x => x.I_CtaDepositoID).ToArray()
             };
 
             if (cuentasProceso.Where(x => x.I_EntidadFinanID == Constantes.BANCO_COMERCIO_ID).Count() > 0)

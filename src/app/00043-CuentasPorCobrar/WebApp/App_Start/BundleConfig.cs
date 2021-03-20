@@ -44,7 +44,7 @@ namespace WebApp.App_Start
             bundles.Add(new ScriptBundle("~/bundles/select").Include(
                 "~/Assets/select2/js/select2.min.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/datetime") .Include(
+            bundles.Add(new ScriptBundle("~/bundles/datetime").Include(
                 "~/Assets/bootstrap-datepicker/js/bootstrap-datepicker.js",
                 "~/Assets/bootstrap-datepicker/js/bootstrap-datepicker.es.js",
                 "~/Assets/bootstrap-datepicker/js/bootstrap-timepicker.js",

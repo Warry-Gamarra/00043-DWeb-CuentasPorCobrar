@@ -30,6 +30,8 @@
             @Html.Grid(Model).Columns(columns =>
             {
                 columns.Add(c => c.NombreConcepto).Titled("Descripción").Filterable(true);
+                columns.Add(c => c.MontoMinimo).RenderValueAs(model => model.MontoMinimo.ToString("f2")).Css("text-right").Titled("Monto mínimo").Filterable(true);
+                columns.Add(c => c.Monto).RenderValueAs(model => model.Monto.ToString("f2")).Css("text-right").Titled("Monto").Filterable(true);
                 columns.Add(c => c.Habilitado).SetWidth(100).Css("text-center").Encoded(false).Sanitized(false)
                       .RenderValueAs(model => model.Habilitado ?
                                                            @Html.Raw("<span id=\"td" + @model.Id + "\"><button type=\"submit\" class=\"btn btn-xs btn-success\" onclick=\"ChangeStateReloadPage(" + @model.Id + ", " + @model.Habilitado.ToString().ToLower() + ", '" + @Url.Action("ChangeState", "Concepto") + "');\"><i class=\"fa fa-check-circle-o\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Habilitado</span></button></span>")
@@ -37,7 +39,7 @@
                       .Filterable(true).SetWidth(160).Titled("Estado");
                 columns.Add().SetWidth(200).Css("text-right").Encoded(false).Sanitized(false).
                 RenderValueAs(model => @<a href="@Url.Action("Edit", "Concepto", new { id = model.Id })" class="modal-link"><i class="fa fa-pencil-square-o" aria-hidden="true">&nbsp;</i><span class="d-none d-md-inline-block">Editar</span></a>);
-             }).WithPaging(10).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
+             }).WithPaging(12).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
         </div>
 
     </div>

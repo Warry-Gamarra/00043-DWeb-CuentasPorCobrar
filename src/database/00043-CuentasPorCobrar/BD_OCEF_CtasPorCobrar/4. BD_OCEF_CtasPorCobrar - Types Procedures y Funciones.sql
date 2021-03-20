@@ -189,10 +189,10 @@ AS
 BEGIN
 	SET NOCOUNT ON;
 	SELECT p.I_ProcesoID, cp.I_CatPagoID, cp.T_CatPagoDesc, T_OpcionDesc AS T_PeriodoDesc, I_Periodo, T_OpcionCod AS C_PeriodoCod, 
-		   p.I_Anio, p.D_FecVencto, p.I_Prioridad, p.N_CodBanco, p.T_ProcesoDesc
+		   p.I_Anio, p.D_FecVencto, p.I_Prioridad, p.N_CodBanco, p.T_ProcesoDesc, cp.B_Obligacion
 	FROM dbo.TC_Proceso p
 		INNER JOIN dbo.TC_CategoriaPago cp ON p.I_CatPagoID = cp.I_CatPagoID
-		INNER JOIN dbo.TC_CatalogoOpcion co ON co.I_OpcionID = p.I_Periodo
+		LEFT JOIN dbo.TC_CatalogoOpcion co ON co.I_OpcionID = p.I_Periodo
 	WHERE p.B_Eliminado = 0
 END
 GO
@@ -372,17 +372,20 @@ IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCE
 GO
 
 CREATE PROCEDURE dbo.USP_S_ConceptoPago
-	@I_ProcesoID int
+	@I_ProcesoID int = null,
+	@B_Obligacion int = null
 AS
 BEGIN
 	SET NOCOUNT ON;
-	SELECT c.I_ConcPagID, catg.T_CatPagoDesc, p.T_ProcesoDesc, cp.T_ConceptoDesc, c.I_Anio, c.I_Periodo, c.M_Monto 
+	SELECT c.I_ConcPagID, catg.T_CatPagoDesc, p.T_ProcesoDesc, ISNULL(c.T_ConceptoPagoDesc, cp.T_ConceptoDesc) as T_ConceptoDesc, c.I_Anio, 
+			c.I_Periodo, c.M_Monto, c.M_MontoMinimo 
 	FROM dbo.TI_ConceptoPago c
 		INNER JOIN dbo.TC_Concepto cp ON cp.I_ConceptoID = c.I_ConceptoID
 		INNER JOIN dbo.TC_Proceso p ON p.I_ProcesoID = c.I_ProcesoID
 		INNER JOIN dbo.TC_CategoriaPago catg ON catg.I_CatPagoID = p.I_CatPagoID
 	WHERE c.B_Habilitado = 1 AND c.B_Eliminado = 0 
-			AND c.I_ProcesoID = @I_ProcesoID
+			AND (@I_ProcesoID IS NULL OR c.I_ProcesoID = @I_ProcesoID)
+			AND (@B_Obligacion IS NULL OR catg.B_Obligacion = @B_Obligacion)
 END
 GO
 
@@ -395,6 +398,7 @@ GO
 CREATE PROCEDURE dbo.USP_I_GrabarConceptoPago
 @I_ProcesoID int,
 @I_ConceptoID int,
+@T_ConceptoPagoDesc varchar(250),
 @B_Fraccionable bit = null,
 @B_ConceptoGeneral bit = null,
 @B_AgrupaConcepto bit = null,
@@ -434,13 +438,13 @@ AS
 BEGIN
 	SET NOCOUNT ON
   	BEGIN TRY
-		INSERT dbo.TI_ConceptoPago(I_ProcesoID, I_ConceptoID, B_Fraccionable, B_ConceptoGeneral, B_AgrupaConcepto, 
+		INSERT dbo.TI_ConceptoPago(I_ProcesoID, I_ConceptoID, T_ConceptoPagoDesc, B_Fraccionable, B_ConceptoGeneral, B_AgrupaConcepto, 
 			I_AlumnosDestino, I_GradoDestino, I_TipoObligacion, T_Clasificador, C_CodTasa, B_Calculado, I_Calculado, 
 			B_AnioPeriodo, I_Anio, I_Periodo, B_Especialidad, C_CodRc, B_Dependencia, C_DepCod, B_GrupoCodRc, I_GrupoCodRc, 
 			B_ModalidadIngreso, I_ModalidadIngresoID, B_ConceptoAgrupa, I_ConceptoAgrupaID, B_ConceptoAfecta, I_ConceptoAfectaID, 
 			N_NroPagos, B_Porcentaje, M_Monto, M_MontoMinimo, T_DescripcionLarga, T_Documento, B_Migrado, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
 		
-		VALUES(@I_ProcesoID, @I_ConceptoID, @B_Fraccionable, @B_ConceptoGeneral, @B_AgrupaConcepto, 
+		VALUES(@I_ProcesoID, @I_ConceptoID, @T_ConceptoPagoDesc, @B_Fraccionable, @B_ConceptoGeneral, @B_AgrupaConcepto, 
 			@I_AlumnosDestino, @I_GradoDestino, @I_TipoObligacion, @T_Clasificador, @C_CodTasa, @B_Calculado, @I_Calculado, 
 			@B_AnioPeriodo, @I_Anio, @I_Periodo, @B_Especialidad, @C_CodRc, @B_Dependencia, @C_DepCod, @B_GrupoCodRc, @I_GrupoCodRc,
 			@B_ModalidadIngreso, @I_ModalidadIngresoID, @B_ConceptoAgrupa, @I_ConceptoAgrupaID, @B_ConceptoAfecta, @I_ConceptoAfectaID, 
@@ -468,6 +472,7 @@ CREATE PROCEDURE dbo.USP_U_ActualizarConceptoPago
 @I_ConcPagID int,
 @I_ProcesoID int,
 @I_ConceptoID int,
+@T_ConceptoPagoDesc varchar(250),
 @B_Fraccionable bit = null,
 @B_ConceptoGeneral bit = null,
 @B_AgrupaConcepto bit = null,
@@ -510,6 +515,7 @@ BEGIN
 		UPDATE dbo.TI_ConceptoPago SET
 			I_ProcesoID = @I_ProcesoID,
 			I_ConceptoID = @I_ConceptoID,
+			T_ConceptoPagoDesc = @T_ConceptoPagoDesc,
 			B_Fraccionable = @B_Fraccionable,
 			B_ConceptoGeneral = @B_ConceptoGeneral,
 			B_AgrupaConcepto = @B_AgrupaConcepto,
@@ -555,6 +561,7 @@ BEGIN
 	END CATCH
 END
 GO
+
 
 IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'USP_I_GrabarDatosUsuario' AND ROUTINE_TYPE = 'PROCEDURE')
 	DROP PROCEDURE [dbo].[USP_I_GrabarDatosUsuario]
@@ -1104,11 +1111,15 @@ GO
 CREATE PROCEDURE [dbo].[USP_I_GrabarConcepto]
 	 @I_ConceptoID		int
 	,@T_ConceptoDesc	varchar(250)
+	,@I_Monto			decimal(15,2)
+	,@I_MontoMinimo		decimal(15,2)
 	,@B_EsPagoMatricula	bit
 	,@B_EsPagoExtmp		bit
 	,@B_ConceptoAgrupa	bit
-	,@D_FecCre		datetime
-	,@CurrentUserId	int
+	,@B_Calculado		bit
+	,@I_Calculado		int
+	,@D_FecCre			datetime
+	,@CurrentUserId		int
 
 	,@B_Result bit OUTPUT
 	,@T_Message nvarchar(4000) OUTPUT	
@@ -1116,8 +1127,10 @@ AS
 BEGIN
   SET NOCOUNT ON
   	BEGIN TRY
-		INSERT INTO TC_Concepto(T_ConceptoDesc, B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
-						VALUES (@T_ConceptoDesc, @B_EsPagoMatricula, @B_EsPagoExtmp, @B_ConceptoAgrupa, 1, 0, @CurrentUserId, @D_FecCre)
+		INSERT INTO TC_Concepto(T_ConceptoDesc, I_Monto, I_MontoMinimo, B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, 
+								B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
+						VALUES (@T_ConceptoDesc, @I_Monto, @I_MontoMinimo, @B_EsPagoMatricula, @B_EsPagoExtmp, @B_ConceptoAgrupa,
+								@B_Calculado, @I_Calculado, 1, 0, @CurrentUserId, @D_FecCre)
 
 		SET @B_Result = 1
 		SET @T_Message = 'Nuevo registro agregado.'
@@ -1138,9 +1151,13 @@ GO
 CREATE PROCEDURE [dbo].[USP_U_ActualizarConcepto]
 	 @I_ConceptoID	int
 	,@T_ConceptoDesc	varchar(250)
+	,@I_Monto			decimal(15,2)
+	,@I_MontoMinimo		decimal(15,2)
 	,@B_EsPagoMatricula	bit
 	,@B_EsPagoExtmp		bit
 	,@B_ConceptoAgrupa	bit
+	,@B_Calculado		bit
+	,@I_Calculado		int
 	,@D_FecMod		datetime
 	,@CurrentUserId	int
 
@@ -1152,6 +1169,10 @@ BEGIN
   	BEGIN TRY
 	UPDATE	TC_Concepto 
 		SET	T_ConceptoDesc = @T_ConceptoDesc
+			, I_Monto = @I_Monto
+			, I_MontoMinimo = @I_MontoMinimo
+			, I_Calculado = @I_Calculado
+			, B_Calculado = @B_Calculado
 			, B_EsPagoMatricula = @B_EsPagoMatricula
 			, B_EsPagoExtmp	 = @B_EsPagoExtmp		
 			, B_ConceptoAgrupa = @B_ConceptoAgrupa
