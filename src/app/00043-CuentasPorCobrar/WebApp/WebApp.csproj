@@ -431,6 +431,7 @@
     <Compile Include="Models\Facades\IObligacionServiceFacade.cs" />
     <Compile Include="Models\Facades\IProgramasClientFacade.cs" />
     <Compile Include="Models\Facades\ProgramasClientFacade.cs" />
+    <Compile Include="Models\TransferenciaInformacionBCP.cs" />
     <Compile Include="Models\HandleJsonExceptionAttribute.cs" />
     <Compile Include="Models\ITransferenciaInformacion.cs" />
     <Compile Include="Models\ManualUsuarioModel.cs" />

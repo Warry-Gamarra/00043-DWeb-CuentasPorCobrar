@@ -63,21 +63,29 @@ namespace WebApp.Controllers
             return View();
         }
 
+        [HttpGet]
+        public ActionResult GenerarArchivosBancos(FiltroEnvioObligacionesModel model)
+        {
+            try
+            {
+                var transferenciaInformacion = TransferenciaInformacionFactory.Get(model.I_EntidadFinanciera);
+
+                var memoryStream = transferenciaInformacion.GenerarInformacionObligaciones(model.I_Anio, model.I_Periodo, model.E_TipoEstudio, model.T_Facultad, model.D_FechaDesde, model.D_FechaHasta);
+
+                return File(memoryStream, "text/plain", "Obligaciones.txt");
+            }
+            catch (Exception ex)
+            {
+                //return View("generar-archivos-pago", model);
+                return RedirectToAction("generar-archivos-pago", "operaciones");
+            }
+        }
+
         [Route("operaciones/cargar-pagos")]
         public ActionResult ImportarArchivosPago()
         {
             ViewBag.Title = "Cargar Pagos";
             return View();
-        }
-
-        [HttpGet]
-        public ActionResult GenerarArchivosBancos(FiltroEnvioObligacionesModel model)
-        {
-            var transferenciaInformacion = TransferenciaInformacionFactory.Get(model.I_EntidadFinanciera);
-
-            var memoryStream = transferenciaInformacion.GenerarInformacionObligaciones(model.I_Anio, model.I_Periodo, model.E_TipoEstudio, model.T_Facultad, model.D_FechaDesde, model.D_FechaHasta);
-
-            return File(memoryStream, "text/plain", "Obligaciones.txt");
         }
 
         private IEnumerable<SelectViewModel> ListaEntidadesFinancieras()

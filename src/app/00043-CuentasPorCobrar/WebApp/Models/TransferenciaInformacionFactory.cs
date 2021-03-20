@@ -16,6 +16,9 @@ namespace WebApp.Models
                 case 1:
                     transferenciaInformacion = new TransferenciaInformacionBcoComercio();
                     break;
+                case 2:
+                    transferenciaInformacion = new TransferenciaInformacionBCP();
+                    break;
                 default:
                     throw new InvalidOperationException();
             }
