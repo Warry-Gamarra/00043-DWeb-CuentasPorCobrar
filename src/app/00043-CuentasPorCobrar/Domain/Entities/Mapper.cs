@@ -160,6 +160,7 @@ namespace Domain.Entities
                 N_CodBanco = detalleObligaciones.N_CodBanco ?? "",
                 C_CodAlu = detalleObligaciones.C_CodAlu,
                 C_CodRc = detalleObligaciones.C_CodRc,
+                C_CodFac = detalleObligaciones.C_CodFac,
                 T_Nombre = detalleObligaciones.T_Nombre,
                 T_ApePaterno = detalleObligaciones.T_ApePaterno,
                 T_ApeMaterno = detalleObligaciones.T_ApeMaterno ?? "",
@@ -177,7 +178,13 @@ namespace Domain.Entities
                 D_FecPago = detalleObligaciones.D_FecPago,
                 T_LugarPago = detalleObligaciones.T_LugarPago ?? "",
                 C_Moneda = detalleObligaciones.C_Moneda,
-                I_TipoObligacion = detalleObligaciones.I_TipoObligacion
+                I_TipoObligacion = detalleObligaciones.I_TipoObligacion,
+                I_Nivel = detalleObligaciones.I_Nivel,
+                C_Nivel = detalleObligaciones.C_Nivel,
+                T_Nivel = detalleObligaciones.T_Nivel,
+                I_TipoAlumno = detalleObligaciones.I_TipoAlumno,
+                C_TipoAlumno = detalleObligaciones.C_TipoAlumno,
+                T_TipoAlumno = detalleObligaciones.T_TipoAlumno
             };
 
             return obligacionDetalleDTO;
@@ -192,6 +199,7 @@ namespace Domain.Entities
                 N_CodBanco = cuotaPago.N_CodBanco ?? "",
                 C_CodAlu = cuotaPago.C_CodAlu,
                 C_CodRc = cuotaPago.C_CodRc,
+                C_CodFac = cuotaPago.C_CodFac,
                 T_Nombre = cuotaPago.T_Nombre,
                 T_ApePaterno = cuotaPago.T_ApePaterno,
                 T_ApeMaterno = cuotaPago.T_ApeMaterno ?? "",
@@ -203,6 +211,8 @@ namespace Domain.Entities
                 D_FecVencto = cuotaPago.D_FecVencto,
                 C_Moneda = cuotaPago.C_Moneda,
                 I_TipoObligacion = cuotaPago.I_TipoObligacion,
+                C_Nivel = cuotaPago.C_Nivel,
+                C_TipoAlumno = cuotaPago.C_TipoAlumno,
                 I_MontoTotal = cuotaPago.I_MontoTotal
             };
 

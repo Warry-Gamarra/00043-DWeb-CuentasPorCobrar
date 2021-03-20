@@ -22,6 +22,8 @@ namespace Data.Views
 
         public string C_CodRc { get; set; }
 
+        public string C_CodFac { get; set; }
+
         public string T_Nombre { get; set; }
 
         public string T_ApePaterno { get; set; }
@@ -42,7 +44,11 @@ namespace Data.Views
 
         public string C_Moneda { get; set; }
 
-        public int I_TipoObligacion { get; set; }
+        public int? I_TipoObligacion { get; set; }
+
+        public string C_Nivel { get; set; }
+
+        public string C_TipoAlumno { get; set; }
 
         public decimal? I_MontoTotal { get; set; }
 
@@ -70,15 +76,61 @@ namespace Data.Views
             return result;
         }
 
-        public static IEnumerable<VW_CuotasPago> GetByProceso(int anio, int periodo, int tipoAlumno, int nivel)
+        public static IEnumerable<VW_CuotasPago> GetPregrado(int anio, int periodo, string codFac, DateTime? fechaDesde, DateTime? fechaHasta)
         {
             IEnumerable<VW_CuotasPago> result;
 
             try
             {
-                string s_command = @"SELECT * FROM dbo.VW_CuotasPago c WHERE c.I_Anio = @I_Anio AND c.I_Periodo = @I_Periodo";
+                string s_command = @"SELECT * FROM dbo.VW_CuotasPago c 
+                    WHERE c.I_Anio = @I_Anio AND c.I_Periodo = @I_Periodo AND
+                        c.C_Nivel = '1' AND c.C_CodFac = ISNULL(@C_CodFac, C_CodFac)";
 
-                var parameters = new { I_Anio = anio, I_Periodo = periodo };
+                if (fechaDesde.HasValue)
+                {
+                    s_command += " AND DATEDIFF(DAY, c.D_FecVencto, @D_FechaDesde) <= 0";
+                }
+
+                if (fechaHasta.HasValue)
+                {
+                    s_command += " AND DATEDIFF(DAY, c.D_FecVencto, @D_FechaHasta) >= 0";
+                }
+
+                var parameters = new { I_Anio = anio, I_Periodo = periodo, C_CodFac = codFac, D_FechaDesde = fechaDesde, D_FechaHasta = fechaHasta };
+
+                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
+                {
+                    result = _dbConnection.Query<VW_CuotasPago>(s_command, parameters, commandType: CommandType.Text);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
+
+        public static IEnumerable<VW_CuotasPago> GetPosgrado(int anio, int periodo, DateTime? fechaDesde, DateTime? fechaHasta)
+        {
+            IEnumerable<VW_CuotasPago> result;
+
+            try
+            {
+                string s_command = @"SELECT * FROM dbo.VW_CuotasPago c WHERE c.I_Anio = @I_Anio AND c.I_Periodo = @I_Periodo
+                    AND c.C_Nivel IN ('2', '3')";
+
+                if (fechaDesde.HasValue)
+                {
+                    s_command += " AND DATEDIFF(DAY, c.D_FecVencto, @D_FechaDesde) <= 0";
+                }
+
+                if (fechaHasta.HasValue)
+                {
+                    s_command += " AND DATEDIFF(DAY, c.D_FecVencto, @D_FechaHasta) >= 0";
+                }
+
+                var parameters = new { I_Anio = anio, I_Periodo = periodo, D_FechaDesde = fechaDesde, D_FechaHasta = fechaHasta };
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {

@@ -3,6 +3,7 @@ using Data.Procedures;
 using Data.Views;
 using Domain.DTO;
 using Domain.Entities;
+using Domain.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -71,9 +72,21 @@ namespace Domain.Services.Implementations
             return result;
         }
         
-        public IEnumerable<CuotaPagoDTO> Obtener_CuotasPago_X_Proceso(int anio, int periodo, int tipoAlumno, int nivel)
+        public IEnumerable<CuotaPagoDTO> Obtener_CuotasPago_X_Proceso(int anio, int periodo, TipoEstudio tipoEstudio, string codFac, DateTime? fechaDesde, DateTime? fechaHasta)
         {
-            var cuotaPagos = VW_CuotasPago.GetByProceso(anio, periodo, tipoAlumno, nivel);
+            IEnumerable<VW_CuotasPago> cuotaPagos;
+
+            switch (tipoEstudio)
+            {
+                case TipoEstudio.Pregrado:
+                    cuotaPagos = VW_CuotasPago.GetPregrado(anio, periodo, codFac, fechaDesde, fechaHasta);
+                    break;
+                case TipoEstudio.Posgrado:
+                    cuotaPagos = VW_CuotasPago.GetPosgrado(anio, periodo, fechaDesde, fechaHasta);
+                    break;
+                default:
+                    throw new InvalidOperationException();
+            }
 
             var result = cuotaPagos.Select(c => Mapper.VW_CuotaPago_To_CuotaPagoDTO(c));
 
