@@ -277,7 +277,7 @@ CREATE TABLE TC_CategoriaPago
 	B_Obligacion         bit  NULL ,
 	I_Nivel              int  NULL ,
 	I_TipoAlumno         int  NULL ,
-	N_CodBanco			 int  NULL ,
+	N_CodBanco			 varchar(10)  NULL ,
 	B_Habilitado         bit  NOT NULL ,
 	B_Eliminado          bit  NOT NULL ,
 	I_UsuarioCre         int  NULL ,

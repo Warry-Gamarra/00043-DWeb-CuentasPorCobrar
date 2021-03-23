@@ -63,6 +63,13 @@
                             </td>
                         </tr>
                     }
+
+                    @if (Model.Count() == 0)
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center">No se encontraron resultados</td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>

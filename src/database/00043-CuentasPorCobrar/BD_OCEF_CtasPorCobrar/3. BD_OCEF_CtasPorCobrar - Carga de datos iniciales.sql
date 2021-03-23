@@ -36,40 +36,89 @@ INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado,
 INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(4, 'No Voto', '4', 1, 0)
 
 
+/* -------------------------------- TC_EntidadFinanciera - TC_CuentaDeposito ------------------------------------ */
 
-/* -------------------------------- TC_CategoriaPago ------------------------------------ */
+SET IDENTITY_INSERT TC_EntidadFinanciera ON
+GO
 
-INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (N'MIGRADO (CATEGORIA TEMPORAL)', 10, 1, 8, 3, 0, 0)
+INSERT TC_EntidadFinanciera(I_EntidadFinanID, T_EntidadDesc, B_Habilitado, B_Eliminado)values(1, 'BANCO DE COMERCIO', 1, 0)
+INSERT TC_EntidadFinanciera(I_EntidadFinanID, T_EntidadDesc, B_Habilitado, B_Eliminado)values(2, 'BANCO DE CRÉDITO DEL PERÚ', 1, 0)
 
-INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (N'MATRÍCULA PREGRADO INGRESANTE', 1, 1, 4, 2, 1, 0)
-INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (N'MATRÍCULA PREGRADO REGULAR', 1, 1, 4, 1, 1, 0)
-INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (N'MATRÍCULA EUPG MAESTRÍA INGRESANTE', 1, 1, 5, 2, 1, 0)
-INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (N'MATRÍCULA EUPG MAESTRÍA REGULAR', 1, 1, 5, 1, 1, 0)
-INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (N'MATRÍCULA EUPG DOCTORADO INGRESANTE', 1, 1, 6, 2, 1, 0)
-INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (N'MATRÍCULA EUPG DOCTORADO REGULAR', 1, 1, 6, 1, 1, 0)
-INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (N'PENSIÓN EUPG MAESTRÍA INGRESANTE', 2, 1, 5, 2, 1, 0)
-INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (N'PENSIÓN EUPG MAESTRÍA REGULAR', 2, 1, 5, 1, 1, 0)
-INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (N'PENSIÓN EUPG DOCTORADO INGRESANTE', 2, 1, 6, 2, 1, 0)
-INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (N'PENSIÓN EUPG DOCTORADO REGULAR', 2, 1, 6, 1, 1, 0)
-
-INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (N'OTROS PAGOS PREGRADO INGRESANTE', 2, 1, 4, 2, 1, 0)
-INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (N'OTROS PAGOS PREGRADO REGULAR', 2, 1, 4, 1, 1, 0)
-INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (N'OTROS PAGOS EUPG INGRESANTE', 2, 1, 7, 2, 1, 0)
-INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (N'OTROS PAGOS EUPG REGULAR', 2, 1, 7, 1, 1, 0)
-
-INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (N'SERVICIO DE SALUD', 2, 1, 6, 1, 1, 0)
-
+SET IDENTITY_INSERT TC_EntidadFinanciera OFF
 GO
 
 
-INSERT TC_EntidadFinanciera(T_EntidadDesc, B_Habilitado, B_Eliminado)values('BANCO DE COMERCIO', 1, 0)
-INSERT TC_EntidadFinanciera(T_EntidadDesc, B_Habilitado, B_Eliminado)values('BANCO DE CRÉDITO', 1, 0)
-
 INSERT TC_CuentaDeposito(I_EntidadFinanID, C_NumeroCuenta, B_Habilitado, B_Eliminado) VALUES(1, '110-01-0414438', 1, 0)
-INSERT TC_CuentaDeposito(I_EntidadFinanID, C_NumeroCuenta, B_Habilitado, B_Eliminado) VALUES(2, '119-104146435-1-01', 1, 0)
+INSERT TC_CuentaDeposito(I_EntidadFinanID, C_NumeroCuenta, B_Habilitado, B_Eliminado) VALUES(1, '110-01-0416304', 1, 0)
+INSERT TC_CuentaDeposito(I_EntidadFinanID, C_NumeroCuenta, B_Habilitado, B_Eliminado) VALUES(1, '110-01-0418432', 1, 0)
+INSERT TC_CuentaDeposito(I_EntidadFinanID, C_NumeroCuenta, B_Habilitado, B_Eliminado) VALUES(1, '110-01-0444317', 1, 0)
+INSERT TC_CuentaDeposito(I_EntidadFinanID, C_NumeroCuenta, B_Habilitado, B_Eliminado) VALUES(1, '110-01-0450881', 1, 0)
+INSERT TC_CuentaDeposito(I_EntidadFinanID, C_NumeroCuenta, B_Habilitado, B_Eliminado) VALUES(1, '110-01-045127-2', 1, 0)
+INSERT TC_CuentaDeposito(I_EntidadFinanID, C_NumeroCuenta, B_Habilitado, B_Eliminado) VALUES(1, '110-01-0451398', 1, 0)
 
-INSERT TC_CuentaDeposito_CategoriaPago(I_CtaDepositoID, I_CatPagoID, B_Habilitado, B_Eliminado) VALUES(1,1,1,0)
-INSERT TC_CuentaDeposito_CategoriaPago(I_CtaDepositoID, I_CatPagoID, B_Habilitado, B_Eliminado) VALUES(2,1,1,0)
+
+INSERT TC_CuentaDeposito(I_EntidadFinanID, C_NumeroCuenta, B_Habilitado, B_Eliminado) VALUES(2, '119-104146435-1-01', 1, 0)
+GO
+
+
+
+/* -------------------------------- TC_CategoriaPago ------------------------------------ */
+
+--INSERT INTO TC_CategoriaPago (T_CatPagoDesc, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (N'MIGRADO (CATEGORIA TEMPORAL)', 10, 1, 8, 3, 0, 0)
+SET IDENTITY_INSERT TC_CategoriaPago ON
+GO
+
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (1, N'MATRÍCULA PREGRADO INGRESANTE', '0639', 1, 1, 4, 2, 1, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (2, N'MATRÍCULA PREGRADO REGULAR', '0635', 1, 1, 4, 1, 1, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (3, N'MATRÍCULA EUPG MAESTRÍA INGRESANTE', '0671', 1, 1, 5, 2, 1, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (4, N'MATRÍCULA EUPG MAESTRÍA REGULAR', '0670', 1, 1, 5, 1, 1, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (5, N'MATRÍCULA EUPG DOCTORADO INGRESANTE', '0675', 1, 1, 6, 2, 1, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (6, N'MATRÍCULA EUPG DOCTORADO REGULAR', '0674', 1, 1, 6, 1, 1, 0)
+
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (7, N'PENSIÓN EUPG MAESTRÍA INGRESANTE', '0679', 2, 1, 5, 2, 1, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (8, N'PENSIÓN EUPG MAESTRÍA REGULAR', '0678', 2, 1, 5, 1, 1, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (9, N'PENSIÓN EUPG DOCTORADO INGRESANTE', '0681', 2, 1, 6, 2, 1, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (10, N'PENSIÓN EUPG DOCTORADO REGULAR', '0680', 2, 1, 6, 1, 1, 0)
+																																							 
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (11, N'DEUDA ANTERIOR EUPG MAESTRÍA', '0682', 1, 1, 5, 2, 1, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (12, N'DEUDA ANTERIOR EUPG DOCTORADO', '0683', 1, 1, 6, 3, 1, 0)
+																																							 
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (13, N'OTROS PAGOS PREGRADO INGRESANTE', '0638', 2, 1, 4, 2, 1, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (14, N'OTROS PAGOS PREGRADO REGULAR', '0637', 2, 1, 4, 1, 1, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (15, N'OTROS PAGOS EUPG INGRESANTE', '0698', 2, 1, 7, 2, 1, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (16, N'OTROS PAGOS EUPG REGULAR', '0695', 2, 1, 7, 1, 1, 0)
+
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (17, N'MATRÍCULA EUDED INGRESANTE', '0685', 1, 1, 4, 2, 1, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (18, N'MATRÍCULA EUDED REGULAR', '0685', 1, 1, 4, 1, 1, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (19, N'PENSIÓN EUDED INGRESANTE', '0688', 2, 1, 4, 2, 1, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (20, N'PENSIÓN EUDED REGULAR', '0687', 2, 1, 4, 1, 1, 0)
+
+
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (21, N'MATRÍCULA EUPG MAESTRÍA SEMIPRESENCIAL INGRESANTE', '0672', 1, 1, 5, 2, 1, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (22, N'MATRÍCULA EUPG MAESTRÍA SEMIPRESENCIAL REGULAR', '0672', 1, 1, 5, 1, 1, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (23, N'MATRÍCULA EUPG DOCTORADO SEMIPRESENCIAL INGRESANTE', '0673', 1, 1, 6, 2, 1, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (24, N'MATRÍCULA EUPG DOCTORADO SEMIPRESENCIAL REGULAR', '0673', 1, 1, 6, 1, 1, 0)
+
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (25, N'PENSION EUPG MAESTRÍA SEMIPRESENCIAL INGRESANTE', '0677', 1, 1, 5, 2, 1, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (26, N'PENSION EUPG MAESTRÍA SEMIPRESENCIAL REGULAR', '0677', 1, 1, 5, 1, 1, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (27, N'PENSION EUPG DOCTORADO SEMIPRESENCIAL INGRESANTE', '0676', 1, 1, 6, 2, 1, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (28, N'PENSION EUPG DOCTORADO SEMIPRESENCIAL REGULAR', '0676', 1, 1, 6, 1, 1, 0)
+
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (29, N'PENSION EUPG MAESTRÍA PERIODO ANTERIOR', '0696', 1, 1, 5, 1, 1, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (30, N'PENSION EUPG DOCTORADO PERIODO ANTERIOR', '0697', 1, 1, 6, 1, 1, 0)
+
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (31, N'PENSION PROLICED REGULAR', '0689', 1, 1, 6, 1, 1, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (32, N'MATRÍCULA PROLICED REGULAR', '0690', 1, 1, 6, 1, 1, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (33, N'MATRÍCULA PROCUNED REGULAR', '0691', 1, 1, 6, 1, 1, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (34, N'PENSION PROCUNED REGULAR', '0692', 1, 1, 6, 1, 1, 0)
+
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (35, N'SERVICIO DE SALUD', '0636', 2, 1, 4, 3, 1, 0)
+
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (36, N'OTRAS TASAS SIN OBLIGACIÓN', NULL, 2, 0, 8, 3, 1, 0)
+
+SET IDENTITY_INSERT TC_CategoriaPago off
+GO
+
 
 
 
@@ -128,7 +177,7 @@ INSERT INTO TC_DependenciaUNFV (C_DepCod, C_DepCodPl, T_DepDesc, B_Habilitado, B
 INSERT INTO TC_DependenciaUNFV (C_DepCod, C_DepCodPl, T_DepDesc, B_Habilitado, B_Eliminado) VALUES ('270000','06110OLFAC','INGENIERIA ELECTRONICA E INFORMATICA',1,0)
 INSERT INTO TC_DependenciaUNFV (C_DepCod, C_DepCodPl, T_DepDesc, B_Habilitado, B_Eliminado) VALUES ('040000','06000OGVRI','VICERRECTORADO DE INVESTIGACION',1,0)
 
-INSERT INTO TC_DependenciaUNFV (C_DepCod, C_DepCodPl, T_DepDesc, B_Habilitado, B_Eliminado) VALUES ('','03110OLFAC','',0,0)
+--INSERT INTO TC_DependenciaUNFV (C_DepCod, C_DepCodPl, T_DepDesc, B_Habilitado, B_Eliminado) VALUES ('','03110OLFAC','',0,0)
 GO
 
 
@@ -274,132 +323,108 @@ INSERT INTO TC_TipoArchivo (I_TipoArchivoID, T_TipoArchivDesc, B_ArchivoEntrada,
 SET IDENTITY_INSERT TC_TipoArchivo OFF;
 
 
-/*---------------------------------------------------------------------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------------------------------------------------------------------*/
-/*														MIGRACION DE DATOS DEL TEMPORAL DE PAGOS										 */
-/*---------------------------------------------------------------------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------------------------------------------------------------------*/
-
-SET IDENTITY_INSERT TC_Proceso ON
-
-INSERT INTO TC_Proceso (I_ProcesoID, I_CatPagoID, T_ProcesoDesc, I_Anio, I_Periodo, N_CodBanco, D_FecVencto, I_Prioridad, B_Mora, B_Migrado, B_Habilitado, B_Eliminado)
-		SELECT CAST(CUOTA_PAGO AS INT), 1, DESCRIPCIO, CASE ISNUMERIC(LTRIM(SUBSTRING(LTRIM(DESCRIPCIO),1,4))) WHEN 1 THEN SUBSTRING(LTRIM(DESCRIPCIO),1,4) ELSE 0 END, NULL, 
-				CODIGO_BNC, FCH_VENC, PRIORIDAD, C_MORA, 1, 1, ELIMINADO
-		FROM temporal_pagos.dbo.cp_des
-		WHERE CUOTA_PAGO NOT IN (143, 330, 331, 438, 439)
-		UNION 
-		SELECT CAST(CUOTA_PAGO AS INT), 1, DESCRIPCIO, CASE ISNUMERIC(LTRIM(SUBSTRING(LTRIM(DESCRIPCIO),1,4))) WHEN 1 THEN SUBSTRING(LTRIM(DESCRIPCIO),1,4) ELSE 0 END, NULL, 
-				CODIGO_BNC, FCH_VENC, PRIORIDAD, C_MORA, 1, 1, ELIMINADO
-		FROM temporal_pagos.dbo.cp_des
-		WHERE CUOTA_PAGO IN (143, 330, 331, 438, 439) AND ELIMINADO = 0
-
-SET IDENTITY_INSERT TC_Proceso OFF
-GO
+--/*---------------------------------------------------------------------------------------------------------------------------------------*/
+--/*---------------------------------------------------------------------------------------------------------------------------------------*/
+--/*														MIGRACION DE DATOS DEL TEMPORAL DE PAGOS										 */
+--/*---------------------------------------------------------------------------------------------------------------------------------------*/
+--/*---------------------------------------------------------------------------------------------------------------------------------------*/
 
 
-SET IDENTITY_INSERT TC_Concepto ON
+--SET IDENTITY_INSERT TI_ConceptoPago ON
 
-INSERT INTO TC_Concepto (I_ConceptoID, T_ConceptoDesc, B_EsPagoMatricula, B_EsPagoExtmp, B_Habilitado, B_Eliminado) VALUES (0, 'MIGRADO', 0, 0, 0, 0)
+--INSERT INTO TI_ConceptoPago (I_ConcPagID, I_ProcesoID, I_ConceptoID, T_ConceptoPagoDesc, B_Fraccionable, B_ConceptoGeneral, B_AgrupaConcepto, I_AlumnosDestino, I_GradoDestino, I_TipoObligacion, 
+--							 T_Clasificador, C_CodTasa, B_Calculado, I_Calculado, B_AnioPeriodo, I_Anio, I_Periodo, B_Especialidad, C_CodRc, B_Dependencia, C_DepCod, B_GrupoCodRc, I_GrupoCodRc, 
+--							 B_ModalidadIngreso, I_ModalidadIngresoID, B_ConceptoAgrupa, I_ConceptoAgrupaID, B_ConceptoAfecta, I_ConceptoAfectaID, N_NroPagos, B_Porcentaje, C_Moneda, M_Monto, 
+--							 M_MontoMinimo, T_DescripcionLarga, T_Documento, B_Migrado, B_Habilitado, B_Eliminado, I_TipoDescuentoID) 
+--					 SELECT cp.id_cp, cp.cuota_pago, 0, cp.descripcio, cp.fraccionab, cp.concepto_g, cp.agrupa, co_tipoAlumno.I_OpcionID, co_grado.I_OpcionID, co_tipOblg.I_OpcionID,
+--							cp.clasificad, cp.clasific_5, CASE WHEN co_calc.I_OpcionID IS NULL THEN 0 ELSE 1 END, co_calc.I_OpcionID, CASE CAST(cp.ano AS int) WHEN 0 THEN 0 ELSE 1 END, 
+--							CASE CAST(cp.ano AS int) WHEN 0 THEN NULL ELSE CAST(cp.ano AS int) END, co_periodo.I_OpcionID, CASE LEN(LTRIM(RTRIM(cp.cod_rc))) WHEN 0 THEN 0 ELSE 1 END, 
+--							CASE LEN(LTRIM(RTRIM(cp.cod_rc))) WHEN 0 THEN NULL ELSE cp.cod_rc END, CASE LEN(LTRIM(RTRIM(cp.cod_dep_pl))) WHEN 0 THEN 0 ELSE 1 END, unfv_dep.I_DependenciaID, 
+--							CASE WHEN co_grpRc.I_OpcionID IS NULL THEN 0 ELSE 1 END, co_grpRc.I_OpcionID, CASE WHEN co_codIng.I_OpcionID IS NULL THEN 0 ELSE 1 END, co_codIng.I_OpcionID, 
+--							CASE cp.id_cp_agrp WHEN 0 THEN NULL ELSE 1 END, CASE cp.id_cp_agrp WHEN 0 THEN NULL ELSE cp.id_cp_agrp END, CASE cp.id_cp_afec WHEN 0 THEN NULL ELSE 1 END, 
+--							CASE cp.id_cp_afec WHEN 0 THEN NULL ELSE cp.id_cp_afec END, cp.nro_pagos, cp.porcentaje, 'PEN', cp.monto, cp.monto_min, cp.descrip_l, cp.documento, 1, 0, 0, NULL 							
 
-SET IDENTITY_INSERT TC_Concepto OFF
-GO
+--					 FROM	temporal_pagos.dbo.cp_pri cp
+--							LEFT JOIN temporal_pagos.dbo.cp_des cd ON cp.cuota_pago = cd.CUOTA_PAGO AND Cd.eliminado = 0 
+--							LEFT JOIN TC_CatalogoOpcion co_tipoAlumno ON CAST(co_tipoAlumno.T_OpcionCod AS float) = cp.tip_alumno AND co_tipoAlumno.I_ParametroID = 1
+--							LEFT JOIN TC_CatalogoOpcion co_grado ON CAST(co_grado.T_OpcionCod AS float) = cp.grado AND co_grado.I_ParametroID = 2
+--							LEFT JOIN TC_CatalogoOpcion co_tipOblg ON CAST(co_tipOblg.T_OpcionCod AS bit) = cp.tipo_oblig AND co_tipOblg.I_ParametroID = 3
+--							LEFT JOIN TC_CatalogoOpcion co_calc ON co_calc.T_OpcionCod COLLATE DATABASE_DEFAULT = cp.calcular COLLATE DATABASE_DEFAULT AND co_calc.I_ParametroID = 4
+--							LEFT JOIN TC_CatalogoOpcion co_periodo ON co_periodo.T_OpcionCod COLLATE DATABASE_DEFAULT = cp.p COLLATE DATABASE_DEFAULT AND co_periodo.I_ParametroID = 5
+--							LEFT JOIN TC_CatalogoOpcion co_grpRc ON co_grpRc.T_OpcionCod COLLATE DATABASE_DEFAULT = cp.grupo_rc COLLATE DATABASE_DEFAULT AND co_grpRc.I_ParametroID = 6
+--							LEFT JOIN TC_CatalogoOpcion co_codIng ON co_codIng.T_OpcionCod COLLATE DATABASE_DEFAULT = cp.cod_ing COLLATE DATABASE_DEFAULT AND co_codIng.I_ParametroID = 7
+--							LEFT JOIN TC_DependenciaUNFV unfv_dep on unfv_dep.C_DepCodPl COLLATE DATABASE_DEFAULT = cp.cod_dep_pl COLLATE DATABASE_DEFAULT AND LEN(unfv_dep.C_DepCodPl) > 0 
+--					 WHERE cd.cuota_pago IS not NULL
+--							AND NOT EXISTS (SELECT id_cp, descripcio, 0, ISNULL(eliminado, 0) FROM temporal_pagos.dbo.cp_pri B WHERE cp.ID_CP IN (3899,3898,3897,3896) AND cp.eliminado = 1)
+--					 ORDER BY id_cp
 
-
-SET IDENTITY_INSERT TI_ConceptoPago ON
-
-INSERT INTO TI_ConceptoPago (I_ConcPagID, I_ProcesoID, I_ConceptoID, T_ConceptoPagoDesc, B_Fraccionable, B_ConceptoGeneral, B_AgrupaConcepto, I_AlumnosDestino, I_GradoDestino, I_TipoObligacion, 
-							 T_Clasificador, C_CodTasa, B_Calculado, I_Calculado, B_AnioPeriodo, I_Anio, I_Periodo, B_Especialidad, C_CodRc, B_Dependencia, C_DepCod, B_GrupoCodRc, I_GrupoCodRc, 
-							 B_ModalidadIngreso, I_ModalidadIngresoID, B_ConceptoAgrupa, I_ConceptoAgrupaID, B_ConceptoAfecta, I_ConceptoAfectaID, N_NroPagos, B_Porcentaje, C_Moneda, M_Monto, 
-							 M_MontoMinimo, T_DescripcionLarga, T_Documento, B_Migrado, B_Habilitado, B_Eliminado, I_TipoDescuentoID) 
-					 SELECT cp.id_cp, cp.cuota_pago, 0, cp.descripcio, cp.fraccionab, cp.concepto_g, cp.agrupa, co_tipoAlumno.I_OpcionID, co_grado.I_OpcionID, co_tipOblg.I_OpcionID,
-							cp.clasificad, cp.clasific_5, CASE WHEN co_calc.I_OpcionID IS NULL THEN 0 ELSE 1 END, co_calc.I_OpcionID, CASE CAST(cp.ano AS int) WHEN 0 THEN 0 ELSE 1 END, 
-							CASE CAST(cp.ano AS int) WHEN 0 THEN NULL ELSE CAST(cp.ano AS int) END, co_periodo.I_OpcionID, CASE LEN(LTRIM(RTRIM(cp.cod_rc))) WHEN 0 THEN 0 ELSE 1 END, 
-							CASE LEN(LTRIM(RTRIM(cp.cod_rc))) WHEN 0 THEN NULL ELSE cp.cod_rc END, CASE LEN(LTRIM(RTRIM(cp.cod_dep_pl))) WHEN 0 THEN 0 ELSE 1 END, unfv_dep.I_DependenciaID, 
-							CASE WHEN co_grpRc.I_OpcionID IS NULL THEN 0 ELSE 1 END, co_grpRc.I_OpcionID, CASE WHEN co_codIng.I_OpcionID IS NULL THEN 0 ELSE 1 END, co_codIng.I_OpcionID, 
-							CASE cp.id_cp_agrp WHEN 0 THEN NULL ELSE 1 END, CASE cp.id_cp_agrp WHEN 0 THEN NULL ELSE cp.id_cp_agrp END, CASE cp.id_cp_afec WHEN 0 THEN NULL ELSE 1 END, 
-							CASE cp.id_cp_afec WHEN 0 THEN NULL ELSE cp.id_cp_afec END, cp.nro_pagos, cp.porcentaje, 'PEN', cp.monto, cp.monto_min, cp.descrip_l, cp.documento, 1, 0, 0, NULL 							
-
-					 FROM	temporal_pagos.dbo.cp_pri cp
-							LEFT JOIN temporal_pagos.dbo.cp_des cd ON cp.cuota_pago = cd.CUOTA_PAGO AND Cd.eliminado = 0 
-							LEFT JOIN TC_CatalogoOpcion co_tipoAlumno ON CAST(co_tipoAlumno.T_OpcionCod AS float) = cp.tip_alumno AND co_tipoAlumno.I_ParametroID = 1
-							LEFT JOIN TC_CatalogoOpcion co_grado ON CAST(co_grado.T_OpcionCod AS float) = cp.grado AND co_grado.I_ParametroID = 2
-							LEFT JOIN TC_CatalogoOpcion co_tipOblg ON CAST(co_tipOblg.T_OpcionCod AS bit) = cp.tipo_oblig AND co_tipOblg.I_ParametroID = 3
-							LEFT JOIN TC_CatalogoOpcion co_calc ON co_calc.T_OpcionCod COLLATE DATABASE_DEFAULT = cp.calcular COLLATE DATABASE_DEFAULT AND co_calc.I_ParametroID = 4
-							LEFT JOIN TC_CatalogoOpcion co_periodo ON co_periodo.T_OpcionCod COLLATE DATABASE_DEFAULT = cp.p COLLATE DATABASE_DEFAULT AND co_periodo.I_ParametroID = 5
-							LEFT JOIN TC_CatalogoOpcion co_grpRc ON co_grpRc.T_OpcionCod COLLATE DATABASE_DEFAULT = cp.grupo_rc COLLATE DATABASE_DEFAULT AND co_grpRc.I_ParametroID = 6
-							LEFT JOIN TC_CatalogoOpcion co_codIng ON co_codIng.T_OpcionCod COLLATE DATABASE_DEFAULT = cp.cod_ing COLLATE DATABASE_DEFAULT AND co_codIng.I_ParametroID = 7
-							LEFT JOIN TC_DependenciaUNFV unfv_dep on unfv_dep.C_DepCodPl COLLATE DATABASE_DEFAULT = cp.cod_dep_pl COLLATE DATABASE_DEFAULT AND LEN(unfv_dep.C_DepCodPl) > 0 
-					 WHERE cd.cuota_pago IS not NULL
-							AND NOT EXISTS (SELECT id_cp, descripcio, 0, ISNULL(eliminado, 0) FROM temporal_pagos.dbo.cp_pri B WHERE cp.ID_CP IN (3899,3898,3897,3896) AND cp.eliminado = 1)
-					 ORDER BY id_cp
-
-SET IDENTITY_INSERT TI_ConceptoPago OFF
-GO
+--SET IDENTITY_INSERT TI_ConceptoPago OFF
+--GO
 
 
-INSERT INTO TC_MatriculaAlumno (C_CodRc, C_CodAlu, I_Anio, I_Periodo, C_EstMat, C_Ciclo, B_Ingresante, B_Habilitado, B_Eliminado)
-      SELECT DISTINCT ep.COD_RC, ep.COD_ALU, CAST(ISNULL(ep.ANO, '0') as int), co_periodo.I_OpcionID, 'S', NULL, NULL, 1,0
-	    FROM temporal_pagos.dbo.ec_pri ep  
-			 INNER JOIN TC_CatalogoOpcion co_periodo ON co_periodo.T_OpcionCod COLLATE DATABASE_DEFAULT = ep.P COLLATE DATABASE_DEFAULT AND co_periodo.I_ParametroID = 5
-		WHERE EP.COD_RC IS NOT NULL AND ep.COD_ALU IS NOT NULL
+--INSERT INTO TC_MatriculaAlumno (C_CodRc, C_CodAlu, I_Anio, I_Periodo, C_EstMat, C_Ciclo, B_Ingresante, B_Habilitado, B_Eliminado)
+--      SELECT DISTINCT ep.COD_RC, ep.COD_ALU, CAST(ISNULL(ep.ANO, '0') as int), co_periodo.I_OpcionID, 'S', NULL, NULL, 1,0
+--	    FROM temporal_pagos.dbo.ec_pri ep  
+--			 INNER JOIN TC_CatalogoOpcion co_periodo ON co_periodo.T_OpcionCod COLLATE DATABASE_DEFAULT = ep.P COLLATE DATABASE_DEFAULT AND co_periodo.I_ParametroID = 5
+--		WHERE EP.COD_RC IS NOT NULL AND ep.COD_ALU IS NOT NULL
 
-GO
-
-
-INSERT INTO TR_ObligacionAluCab (I_ProcesoID, I_MatAluID, C_Moneda, I_MontoOblig, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, I_UsuarioMod, D_FecMod)
-	  SELECT P.I_ProcesoID, I_MatAluID, 'PEN', eo.MONTO, 1, 0, NULL, NULL, NULL, NULL
-		FROM (SELECT * FROM temporal_pagos.dbo.ec_obl WHERE ANO <> 'A') eo 
-			 INNER JOIN TC_Proceso P ON eo.CUOTA_PAGO = P.I_ProcesoID
-			 LEFT JOIN (SELECT M.*, C.T_OpcionCod FROM TC_MatriculaAlumno M 
-						INNER JOIN TC_CatalogoOpcion C ON M.I_Periodo = c.I_OpcionID) AS ma ON eo.COD_ALU COLLATE DATABASE_DEFAULT = ma.C_CodAlu COLLATE DATABASE_DEFAULT 
-																							AND eo.COD_RC COLLATE DATABASE_DEFAULT = ma.C_CodRc COLLATE DATABASE_DEFAULT 
-																							AND CAST(eo.ANO AS INT)  = ma.I_Anio
-																							AND eo.p COLLATE DATABASE_DEFAULT = ma.T_OpcionCod COLLATE DATABASE_DEFAULT 
-
-GO
+--GO
 
 
-INSERT INTO TR_ObligacionAluDet (I_ObligacionAluID, I_ConcPagID, I_Monto, B_Pagado, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, I_UsuarioMod, D_FecMod)
-					SELECT OA.I_ObligacionAluID, CP.I_ConcPagID, CAST(ED.monto AS decimal(15,2)), CASE ED.pagado WHEN 'T' THEN 1 ELSE 0 END, CASE ED.eliminado WHEN 'T' THEN 1 ELSE 0 END, 
-							CASE ED.eliminado WHEN 'T' THEN 1 ELSE 0 END, NULL, NULL, NULL, NULL
-					  FROM temporal_pagos..ec_det ED
-							INNER JOIN (SELECT OAC.I_ObligacionAluID, OAC.I_ProcesoID, M.C_CodAlu, M.C_CodRc, P.I_Anio, C.T_OpcionCod as P, OAC.D_FecVencto
-										FROM TC_Proceso P 
-										INNER JOIN TR_ObligacionAluCab OAC ON OAC.I_ProcesoID = P.I_ProcesoID
-										INNER JOIN TC_MatriculaAlumno M ON OAC.I_MatAluID = M.I_MatAluID
-										INNER JOIN TC_CatalogoOpcion C ON M.I_Periodo = c.I_OpcionID ) OA ON ED.cod_alu COLLATE DATABASE_DEFAULT = OA.C_CodAlu COLLATE DATABASE_DEFAULT
-													AND ED.cod_rc COLLATE DATABASE_DEFAULT = OA.C_CodRc COLLATE DATABASE_DEFAULT
-													AND CAST(ED.cuota_pago AS int) = OA.I_ProcesoID
-													AND CAST(ED.ano AS int) = OA.I_Anio
-													AND ED.p COLLATE DATABASE_DEFAULT = OA.P COLLATE DATABASE_DEFAULT
-													AND ED.fch_venc COLLATE DATABASE_DEFAULT = CONVERT(VARCHAR, OA.D_FecVencto, 101) COLLATE DATABASE_DEFAULT
-							INNER JOIN TI_ConceptoPago CP ON CP.I_ConcPagID = CAST(ED.concepto AS INT)
+--INSERT INTO TR_ObligacionAluCab (I_ProcesoID, I_MatAluID, C_Moneda, I_MontoOblig, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, I_UsuarioMod, D_FecMod)
+--	  SELECT P.I_ProcesoID, I_MatAluID, 'PEN', eo.MONTO, 1, 0, NULL, NULL, NULL, NULL
+--		FROM (SELECT * FROM temporal_pagos.dbo.ec_obl WHERE ANO <> 'A') eo 
+--			 INNER JOIN TC_Proceso P ON eo.CUOTA_PAGO = P.I_ProcesoID
+--			 LEFT JOIN (SELECT M.*, C.T_OpcionCod FROM TC_MatriculaAlumno M 
+--						INNER JOIN TC_CatalogoOpcion C ON M.I_Periodo = c.I_OpcionID) AS ma ON eo.COD_ALU COLLATE DATABASE_DEFAULT = ma.C_CodAlu COLLATE DATABASE_DEFAULT 
+--																							AND eo.COD_RC COLLATE DATABASE_DEFAULT = ma.C_CodRc COLLATE DATABASE_DEFAULT 
+--																							AND CAST(eo.ANO AS INT)  = ma.I_Anio
+--																							AND eo.p COLLATE DATABASE_DEFAULT = ma.T_OpcionCod COLLATE DATABASE_DEFAULT 
 
-GO
+--GO
 
 
-INSERT INTO TR_TasaUnfv (C_CodTasa, I_MontoTasa, I_NroPagos, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, I_ConcPagID)
-				SELECT  C_CodTasa, M_Monto, N_NroPagos, 1, 0, NULL, NULL, I_ConcPagID
-				  FROM  TI_ConceptoPago
-				 WHERE  LEN(C_CodTasa) <> 0
+--INSERT INTO TR_ObligacionAluDet (I_ObligacionAluID, I_ConcPagID, I_Monto, B_Pagado, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, I_UsuarioMod, D_FecMod)
+--					SELECT OA.I_ObligacionAluID, CP.I_ConcPagID, CAST(ED.monto AS decimal(15,2)), CASE ED.pagado WHEN 'T' THEN 1 ELSE 0 END, CASE ED.eliminado WHEN 'T' THEN 1 ELSE 0 END, 
+--							CASE ED.eliminado WHEN 'T' THEN 1 ELSE 0 END, NULL, NULL, NULL, NULL
+--					  FROM temporal_pagos..ec_det ED
+--							INNER JOIN (SELECT OAC.I_ObligacionAluID, OAC.I_ProcesoID, M.C_CodAlu, M.C_CodRc, P.I_Anio, C.T_OpcionCod as P, OAC.D_FecVencto
+--										FROM TC_Proceso P 
+--										INNER JOIN TR_ObligacionAluCab OAC ON OAC.I_ProcesoID = P.I_ProcesoID
+--										INNER JOIN TC_MatriculaAlumno M ON OAC.I_MatAluID = M.I_MatAluID
+--										INNER JOIN TC_CatalogoOpcion C ON M.I_Periodo = c.I_OpcionID ) OA ON ED.cod_alu COLLATE DATABASE_DEFAULT = OA.C_CodAlu COLLATE DATABASE_DEFAULT
+--													AND ED.cod_rc COLLATE DATABASE_DEFAULT = OA.C_CodRc COLLATE DATABASE_DEFAULT
+--													AND CAST(ED.cuota_pago AS int) = OA.I_ProcesoID
+--													AND CAST(ED.ano AS int) = OA.I_Anio
+--													AND ED.p COLLATE DATABASE_DEFAULT = OA.P COLLATE DATABASE_DEFAULT
+--													AND ED.fch_venc COLLATE DATABASE_DEFAULT = CONVERT(VARCHAR, OA.D_FecVencto, 101) COLLATE DATABASE_DEFAULT
+--							INNER JOIN TI_ConceptoPago CP ON CP.I_ConcPagID = CAST(ED.concepto AS INT)
 
-GO
+--GO
 
 
-INSERT INTO TRI_PagoProcesadoUnfv (I_TasaUnfvID, I_PagoBancoID, I_ObligacionAluID, I_MontoPagado, I_SaldoAPagar, I_PagoDemas, B_PagoDemas, D_FecCre, I_UsuarioCre, B_Anulado)
-			SELECT  NULL, NULL, I_ObligacionAluID,  CASE pagado WHEN 1 THEN CAST(EO.monto AS decimal(15,2)) ELSE 0 END, CASE pagado WHEN 1 THEN 0 ELSE CAST(EO.monto AS decimal(15,2)) END, NULL, 0, NULL, NULL, 0
-			  FROM  temporal_pagos.dbo.ec_obl EO 
-					INNER JOIN (SELECT OAC.I_ObligacionAluID, OAC.I_ProcesoID, M.C_CodAlu, M.C_CodRc, P.I_Anio, C.T_OpcionCod as P, OAC.D_FecVencto
-								FROM TC_Proceso P 
-								INNER JOIN TR_ObligacionAluCab OAC ON OAC.I_ProcesoID = P.I_ProcesoID
-								INNER JOIN TC_MatriculaAlumno M ON OAC.I_MatAluID = M.I_MatAluID
-								INNER JOIN TC_CatalogoOpcion C ON M.I_Periodo = c.I_OpcionID ) OA ON EO.cod_alu COLLATE DATABASE_DEFAULT = OA.C_CodAlu COLLATE DATABASE_DEFAULT
-											AND EO.cod_rc COLLATE DATABASE_DEFAULT = OA.C_CodRc COLLATE DATABASE_DEFAULT
-											AND CAST(EO.cuota_pago AS int) = OA.I_ProcesoID
-											AND EO.ano = CAST(OA.I_Anio AS varchar)
-											AND EO.p COLLATE DATABASE_DEFAULT = OA.P COLLATE DATABASE_DEFAULT
-											AND CONVERT(VARCHAR, EO.fch_venc, 101) = CONVERT(VARCHAR, OA.D_FecVencto, 101)
-					INNER JOIN TC_Proceso P ON P.I_ProcesoID = CAST(EO.CUOTA_PAGO AS INT)
-				WHERE tipo_oblig = 1
+--INSERT INTO TR_TasaUnfv (C_CodTasa, I_MontoTasa, I_NroPagos, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, I_ConcPagID)
+--				SELECT  C_CodTasa, M_Monto, N_NroPagos, 1, 0, NULL, NULL, I_ConcPagID
+--				  FROM  TI_ConceptoPago
+--				 WHERE  LEN(C_CodTasa) <> 0
 
-GO
+--GO
+
+
+--INSERT INTO TRI_PagoProcesadoUnfv (I_TasaUnfvID, I_PagoBancoID, I_ObligacionAluID, I_MontoPagado, I_SaldoAPagar, I_PagoDemas, B_PagoDemas, D_FecCre, I_UsuarioCre, B_Anulado)
+--			SELECT  NULL, NULL, I_ObligacionAluID,  CASE pagado WHEN 1 THEN CAST(EO.monto AS decimal(15,2)) ELSE 0 END, CASE pagado WHEN 1 THEN 0 ELSE CAST(EO.monto AS decimal(15,2)) END, NULL, 0, NULL, NULL, 0
+--			  FROM  temporal_pagos.dbo.ec_obl EO 
+--					INNER JOIN (SELECT OAC.I_ObligacionAluID, OAC.I_ProcesoID, M.C_CodAlu, M.C_CodRc, P.I_Anio, C.T_OpcionCod as P, OAC.D_FecVencto
+--								FROM TC_Proceso P 
+--								INNER JOIN TR_ObligacionAluCab OAC ON OAC.I_ProcesoID = P.I_ProcesoID
+--								INNER JOIN TC_MatriculaAlumno M ON OAC.I_MatAluID = M.I_MatAluID
+--								INNER JOIN TC_CatalogoOpcion C ON M.I_Periodo = c.I_OpcionID ) OA ON EO.cod_alu COLLATE DATABASE_DEFAULT = OA.C_CodAlu COLLATE DATABASE_DEFAULT
+--											AND EO.cod_rc COLLATE DATABASE_DEFAULT = OA.C_CodRc COLLATE DATABASE_DEFAULT
+--											AND CAST(EO.cuota_pago AS int) = OA.I_ProcesoID
+--											AND EO.ano = CAST(OA.I_Anio AS varchar)
+--											AND EO.p COLLATE DATABASE_DEFAULT = OA.P COLLATE DATABASE_DEFAULT
+--											AND CONVERT(VARCHAR, EO.fch_venc, 101) = CONVERT(VARCHAR, OA.D_FecVencto, 101)
+--					INNER JOIN TC_Proceso P ON P.I_ProcesoID = CAST(EO.CUOTA_PAGO AS INT)
+--				WHERE tipo_oblig = 1
+
+--GO
