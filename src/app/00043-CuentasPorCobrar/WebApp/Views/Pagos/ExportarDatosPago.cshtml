@@ -1,4 +1,17 @@
-﻿<div class="container-fluid">
+﻿@model WebApp.ViewModels.FiltroEnvioObligacionesModel
+<style>
+    .input-daterange {
+        display: flex !important;
+    }
+
+    @@media (max-width: 768px) {
+        .input-daterange {
+            display: block !important;
+        }
+    }
+</style>
+
+<div class="container-fluid">
     <div class="col-12">
         <section class="content-header">
             <nav aria-label="breadcrumb">
@@ -18,50 +31,59 @@
                 <div class="card">
                     <div class="card-body bg-light-gray">
                         <form action="@Url.Action("GenerarArchivosBancos", "Pagos")" method="GET" target="_blank">
-
                             <div class="form-row">
-                                <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
-                                    <label for="cmbAnio">Año</label>
-                                    @Html.DropDownList("cmbAnio", new SelectList(ViewBag.Anios, "Value", "TextDisplay", ViewBag.CurrentYear), new { @class = "form-control form-control-sm" })
+                                <div class="form-group col-xl-1 col-lg-4 col-md-4 col-sm-4 col-6">
+                                    <label for="anio">Año</label>
+                                    @Html.DropDownListFor(model => model.I_Anio, new SelectList(ViewBag.Anios, "Value", "TextDisplay", ViewBag.CurrentYear), new { @class = "form-control form-control-sm" })
                                 </div>
-                                <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
-                                    <label for="cmbPeriodoGrupal">Periodo</label>
-                                    @Html.DropDownList("cmbPeriodo", new SelectList(ViewBag.Periodos, "Value", "TextDisplay", ViewBag.DefaultPeriodo), null, new { @class = "form-control form-control-sm" })
+                                <div class="form-group col-xl-1 col-lg-4 col-md-4 col-sm-4 col-6">
+                                    <label for="periodo">Periodo</label>
+                                    @Html.DropDownListFor(model => model.I_Periodo, new SelectList(ViewBag.Periodos, "Value", "TextDisplay", ViewBag.DefaultPeriodo), null, new { @class = "form-control form-control-sm" })
                                 </div>
-
-                                <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
-                                    <label for="cmbTipoEstudio">Tipo de estudio</label>
-                                    @Html.DropDownList("cmbTipoEstudio", new SelectList(ViewBag.TipoEstudios, "Value", "TextDisplay", ViewBag.DefaultTipoEstudio), null, new { @class = "form-control form-control-sm" })
+                                <div class="form-group col-xl-1 col-lg-4 col-md-4 col-sm-4 col-12">
+                                    <label for="tipoEstudio">Tipo de estudio</label>
+                                    @Html.DropDownListFor(model => model.E_TipoEstudio, new SelectList(ViewBag.TipoEstudios, "Value", "TextDisplay", ViewBag.DefaultTipoEstudio), null, new { @class = "form-control form-control-sm" })
                                 </div>
-
-                                <div class="form-group col-lg-3 col-md-5 col-sm-12 col-12">
-                                    <label for="cmbFacultad">Facultades/Especialidades</label>
-                                    @Html.DropDownList("cmbFacultad", new SelectList(ViewBag.Facultades, "Value", "TextDisplay", ViewBag.DefaultFacultad), "TODOS", new { @class = "form-control form-control-sm" })
+                                <div class="form-group col-xl-3 col-lg-8 col-md-8 col-sm-12 col-12">
+                                    <label for="facultad">Facultades/Especialidades</label>
+                                    @Html.DropDownListFor(model => model.T_Facultad, new SelectList(ViewBag.Facultades, "Value", "TextDisplay", ViewBag.DefaultFacultad), "TODOS", new { @class = "form-control form-control-sm" })
                                 </div>
-
-                                <div class="form-group col-lg-2 col-sm-3 col-12">
-                                    <button type="submit" class="btn btn-block btn-outline-primary mt-4">
-                                        <i class="fa fa-fw fa-engine">&nbsp;</i> Generar obligaciones
+                                <div class="form-group col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12">
+                                    <label for="entidadFinanciera">Banco</label>
+                                    @Html.DropDownListFor(model => model.I_EntidadFinanciera, new SelectList(ViewBag.EntidadesFinancieras, "Value", "TextDisplay"), null, new { @class = "form-control form-control-sm" })
+                                </div>
+                                <div class="form-group col-xl-4 col-lg-12 col-md-12 col-sm-12 col-12">
+                                    <div id="datepicker">
+                                        <div class="input-daterange">
+                                            <div class="form-group col-lg-6 col-md-6 col-sm-12 col-12" style="padding-left: 0px;">
+                                                <label for="fechaDesde">F.Vcto. Desde</label>
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(model => model.T_FechaDesde, "{0:dd/MM/yyyy}", new { @class = "form-control form-control-sm", @placeholder = "Fecha inicio" })
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text"><i class="fa fa-calendar-o"></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-lg-6 col-md-6 col-sm-12 col-12" style="padding-left: 0px;">
+                                                <label for="fechaHasta">F.Vcto. Hasta</label>
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(model => model.T_FechaHasta, "{0:dd/MM/yyyy}", new { @class = "form-control form-control-sm", @placeholder = "Fecha final" })
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text"><i class="fa fa-calendar-o"></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-xl-2 col-lg-4 col-md-6">
+                                    <button type="submit" class="btn btn-block btn-outline-primary mt-4" onclick="clickk()">
+                                        <i class="fa fa-fw fa-engine">&nbsp;</i> Generar archivo
                                     </button>
                                 </div>
                             </div>
-
-                            @*<div class="form-row">
-            <div class="form-group col-md-3 col-lg-2 col-sm-4 col-12">
-                <label for="inputCodAlu">Desde</label>
-                <input type="text" class="form-control form-control-sm" id="inputCodAlu">
-            </div>
-            <div class="form-group col-md-3 col-lg-2 col-sm-4 col-12">
-                <label for="inputCodAlu">Hasta</label>
-                <input type="text" class="form-control form-control-sm" id="inputCodAlu">
-            </div>
-            <div class="form-group col-lg-2 col-sm-3 col-12">
-                <button type="submit" class="btn btn-block btn-outline-success mt-4"><i class="fa fa-fw fa-filter">&nbsp;</i> Filtros</button>
-            </div>
-            <div class="form-group col-lg-2 col-sm-3 col-12">
-                <button type="submit" class="btn btn-block btn-outline-primary mt-4"><i class="fa fa-fw fa-search-plus">&nbsp;</i> Iniciar consulta</button>
-            </div>
-        </div>*@
                         </form>
                     </div>
                 </div>
@@ -71,7 +93,19 @@
     </div>
 </div>
 
+@section Scripts {
+    <script>
+        $('#datepicker .input-daterange').datepicker({
+            todayBtn: 'linked',
+            language: 'es',
+            format: 'dd/mm/yyyy',
+            autoclose: true,
+            weekStart: 0
+        }).on('hide', function (e) {
+            e.stopPropagation();
+        });
 
+        $('#datepicker .input-daterange #T_FechaDesde').datepicker('setDate', new Date());
+    </script>
+}
 
-
-<a href="http://localhost:52118/Obligaciones/GenerarArchivosBancos?anio=2021&periodo=15&tipoAlumno=1&nivel=1">content</a>

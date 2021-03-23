@@ -432,6 +432,7 @@
     <Compile Include="Models\Facades\IProgramasClientFacade.cs" />
     <Compile Include="Models\Facades\ProgramasClientFacade.cs" />
     <Compile Include="Models\HandleJsonExceptionAttribute.cs" />
+    <Compile Include="Models\ITransferenciaInformacion.cs" />
     <Compile Include="Models\ManualUsuarioModel.cs" />
     <Compile Include="Models\Mapper.cs" />
     <Compile Include="Models\ObligacionDetalleModel.cs" />
@@ -439,6 +440,8 @@
     <Compile Include="Models\SelectModels.cs" />
     <Compile Include="Models\ProcesoModel.cs" />
     <Compile Include="Models\ConceptoPagoModel.cs" />
+    <Compile Include="Models\TransferenciaInformacionBcoComercio.cs" />
+    <Compile Include="Models\TransferenciaInformacionFactory.cs" />
     <Compile Include="Models\UsersModel.cs" />
     <Compile Include="Models\CorreoAplicacionModel.cs" />
     <Compile Include="Models\ResponseModel.cs" />
@@ -453,6 +456,7 @@
     <Compile Include="ViewModels\CorreoAplicacionViewModel.cs" />
     <Compile Include="ViewModels\ConceptoPagoViewModel.cs" />
     <Compile Include="ViewModels\EstudiantesViewModels.cs" />
+    <Compile Include="ViewModels\FiltroEnvioObligacionesModel.cs" />
     <Compile Include="ViewModels\ProcesoViewModel.cs" />
     <Compile Include="ViewModels\RolesViewModel.cs" />
     <Compile Include="ViewModels\SelectViewModel.cs" />

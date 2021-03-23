@@ -2178,10 +2178,11 @@ GO
 
 CREATE VIEW [dbo].[VW_DetalleObligaciones]
 AS
-SELECT pro.I_ProcesoID, pro.N_CodBanco, mat.C_CodAlu, mat.C_CodRc, a.T_Nombre, a.T_ApePaterno, a.T_ApeMaterno, mat.I_Anio, mat.I_Periodo, 
+SELECT pro.I_ProcesoID, pro.N_CodBanco, mat.C_CodAlu, mat.C_CodRc, a.C_CodFac, a.T_Nombre, a.T_ApePaterno, a.T_ApeMaterno, mat.I_Anio, mat.I_Periodo, 
 	per.T_OpcionCod AS C_Periodo, per.T_OpcionDesc AS T_Periodo, 
 	con.T_ConceptoDesc, cat.T_CatPagoDesc, det.I_Monto, det.B_Pagado, det.D_FecVencto, pro.I_Prioridad,
-	pagban.C_CodOperacion, pagban.D_FecPago, pagban.T_LugarPago, cab.C_Moneda, cp.I_TipoObligacion
+	pagban.C_CodOperacion, pagban.D_FecPago, pagban.T_LugarPago, cab.C_Moneda, cp.I_TipoObligacion, 
+	cat.I_Nivel, niv.T_OpcionCod AS C_Nivel, niv.T_OpcionDesc AS T_Nivel, cat.I_TipoAlumno, tipal.T_OpcionCod AS C_TipoAlumno, tipal.T_OpcionDesc AS T_TipoAlumno
 FROM dbo.TC_MatriculaAlumno mat
 INNER JOIN dbo.TR_ObligacionAluCab cab ON cab.I_MatAluID = mat.I_MatAluID AND cab.B_Eliminado = 0 
 INNER JOIN dbo.TR_ObligacionAluDet det ON det.I_ObligacionAluID = cab.I_ObligacionAluID AND det.B_Eliminado = 0
@@ -2189,7 +2190,9 @@ INNER JOIN dbo.TI_ConceptoPago cp ON cp.I_ConcPagID = det.I_ConcPagID AND det.B_
 INNER JOIN dbo.TC_Concepto con ON con.I_ConceptoID = cp.I_ConceptoID AND con.B_Eliminado = 0
 INNER JOIN dbo.TC_Proceso pro ON pro.I_ProcesoID = cp.I_ProcesoID AND pro.B_Eliminado = 0
 INNER JOIN dbo.TC_CategoriaPago cat ON cat.I_CatPagoID = pro.I_CatPagoID AND cat.B_Eliminado = 0
-INNER JOIN dbo.TC_CatalogoOpcion per ON per.I_OpcionID = mat.I_Periodo
+INNER JOIN dbo.TC_CatalogoOpcion per ON per.I_ParametroID = 5 AND per.I_OpcionID = mat.I_Periodo
+INNER JOIN dbo.TC_CatalogoOpcion niv ON niv.I_ParametroID = 2 AND niv.I_OpcionID = cat.I_Nivel
+INNER JOIN dbo.TC_CatalogoOpcion tipal ON tipal.I_ParametroID = 1 AND tipal.I_OpcionID = cat.I_TipoAlumno
 INNER JOIN BD_UNFV_Repositorio.dbo.VW_Alumnos a ON a.C_CodAlu = mat.C_CodAlu AND a.C_RcCod = mat.C_CodRc
 LEFT JOIN dbo.TRI_PagoProcesadoUnfv pagpro ON pagpro.I_ObligacionAluID = cab.I_ObligacionAluID AND pagpro.B_Anulado = 0
 LEFT JOIN dbo.TR_PagoBanco pagban ON pagban.I_PagoBancoID = pagpro.I_PagoBancoID AND pagban.B_Anulado = 0
@@ -2203,43 +2206,22 @@ GO
 
 CREATE VIEW [dbo].[VW_CuotasPago]
 AS
-WITH CuotasPago(I_ProcesoID, N_CodBanco, C_CodAlu, C_CodRc, T_Nombre, T_ApePaterno, T_ApeMaterno, I_Anio, I_Periodo, C_Periodo, T_Periodo, 
-	T_CatPagoDesc, D_FecVencto, I_Prioridad, C_Moneda, I_TipoObligacion, I_MontoTotal)
+WITH CuotasPago(I_ProcesoID, N_CodBanco, C_CodAlu, C_CodRc, C_CodFac, T_Nombre, T_ApePaterno, T_ApeMaterno, I_Anio, I_Periodo, C_Periodo, T_Periodo, 
+	T_CatPagoDesc, D_FecVencto, I_Prioridad, C_Moneda, I_TipoObligacion, C_Nivel, C_TipoAlumno, I_MontoTotal)
 AS
 (
-	SELECT d.I_ProcesoID, d.N_CodBanco, d.C_CodAlu, d.C_CodRc, d.T_Nombre, d.T_ApePaterno, d.T_ApeMaterno, d.I_Anio, d.I_Periodo, d.C_Periodo, d.T_Periodo, 
-		d.T_CatPagoDesc, d.D_FecVencto, d.I_Prioridad, d.C_Moneda, d.I_TipoObligacion, SUM(d.I_Monto) AS I_MontoTotal FROM VW_DetalleObligaciones d
-	GROUP BY d.I_ProcesoID, d.N_CodBanco, d.C_CodAlu, d.C_CodRc, d.T_Nombre, d.T_ApePaterno, d.T_ApeMaterno, d.I_Anio, d.I_Periodo, d.C_Periodo, d.T_Periodo, 
-		d.T_CatPagoDesc, d.D_FecVencto, d.I_Prioridad, d.C_Moneda, d.I_TipoObligacion
+	SELECT d.I_ProcesoID, d.N_CodBanco, d.C_CodAlu, d.C_CodRc, d.C_CodFac, d.T_Nombre, d.T_ApePaterno, d.T_ApeMaterno, d.I_Anio, d.I_Periodo, d.C_Periodo, d.T_Periodo, 
+		d.T_CatPagoDesc, d.D_FecVencto, d.I_Prioridad, d.C_Moneda, d.I_TipoObligacion, d.C_Nivel, d.C_TipoAlumno,
+		SUM(d.I_Monto) AS I_MontoTotal 
+	FROM VW_DetalleObligaciones d
+	GROUP BY d.I_ProcesoID, d.N_CodBanco, d.C_CodAlu, d.C_CodRc, d.C_CodFac, d.T_Nombre, d.T_ApePaterno, d.T_ApeMaterno, d.I_Anio, d.I_Periodo, d.C_Periodo, d.T_Periodo, 
+		d.T_CatPagoDesc, d.D_FecVencto, d.I_Prioridad, d.C_Moneda, d.I_TipoObligacion, C_Nivel, C_TipoAlumno
 )
 SELECT ROW_NUMBER() OVER(PARTITION BY C_CodAlu, C_CodRc ORDER BY I_Prioridad, D_FecVencto) AS I_NroOrden,
-	I_ProcesoID, N_CodBanco, C_CodAlu, C_CodRc, T_Nombre, T_ApePaterno, T_ApeMaterno, 
-	I_Anio, I_Periodo, C_Periodo, T_Periodo, T_CatPagoDesc, D_FecVencto, C_Moneda, I_TipoObligacion, I_MontoTotal 
+	I_ProcesoID, N_CodBanco, C_CodAlu, C_CodRc, C_CodFac, T_Nombre, T_ApePaterno, T_ApeMaterno, 
+	I_Anio, I_Periodo, C_Periodo, T_Periodo, T_CatPagoDesc, D_FecVencto, C_Moneda, I_TipoObligacion, C_Nivel, C_TipoAlumno, I_MontoTotal
 FROM CuotasPago
 GO
 
 
-
---IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_EspecialidadesPorAlumno')
---	DROP VIEW [dbo].[VW_EspecialidadesPorAlumno]
---GO
-
-
---CREATE VIEW [dbo].[VW_EspecialidadesPorAlumno]
---AS
---SELECT a.C_CodAlu, a.C_RcCod, c.T_EspDesc FROM BD_UNFV_Repositorio.dbo.VW_Alumnos a
---INNER JOIN BD_UNFV_Repositorio.dbo.VW_CarreraProfesional c on a.C_RcCod = c.C_RcCod
---GO
-
-
---IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_Facultades')
---	DROP VIEW [dbo].[VW_Facultades]
---GO
-
---CREATE VIEW [dbo].[VW_Facultades]
---AS
---SELECT DISTINCT f.C_CodFac, f.T_FacDesc FROM BD_UNFV_Repositorio.dbo.VW_CarreraProfesional f
---WHERE f.B_Habilitado = 1
---GO
-
---select * from BD_UNFV_Repositorio.dbo.VW_CarreraProfesional WHERE N_Grado = '4'
+select * from BD_UNFV_Repositorio.dbo.VW_CarreraProfesional WHERE N_Grado = '4'

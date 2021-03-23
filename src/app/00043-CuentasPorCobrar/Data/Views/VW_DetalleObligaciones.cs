@@ -20,6 +20,8 @@ namespace Data.Views
 
         public string C_CodRc { get; set; }
 
+        public string C_CodFac { get; set; }
+
         public string T_Nombre { get; set; }
 
         public string T_ApePaterno { get; set; }
@@ -54,7 +56,19 @@ namespace Data.Views
 
         public string C_Moneda { get; set; }
 
-        public int I_TipoObligacion { get; set; }
+        public int? I_TipoObligacion { get; set; }
+
+        public int? I_Nivel { get; set; }
+
+        public string C_Nivel { get; set; }
+
+        public string T_Nivel { get; set; }
+
+        public int? I_TipoAlumno { get; set; }
+
+        public string C_TipoAlumno { get; set; }
+
+        public string T_TipoAlumno { get; set; }
 
         public static IEnumerable<VW_DetalleObligaciones> FindByAlumno(int anio, int periodo, string codAlu, string codRc)
         {

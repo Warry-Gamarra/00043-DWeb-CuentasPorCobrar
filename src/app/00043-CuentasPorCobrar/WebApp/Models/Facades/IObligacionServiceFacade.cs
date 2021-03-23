@@ -1,4 +1,5 @@
 ﻿using Domain.DTO;
+using Domain.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,6 @@ namespace WebApp.Models.Facades
 
         List<CuotaPagoModel> Obtener_CuotaPago(int anio, int periodo, string codAlu, string codRc);
 
-        List<CuotaPagoModel> Obtener_CuotasPago_X_Proceso(int anio, int periodo, int tipoAlumno, int nivel);
+        List<CuotaPagoModel> Obtener_CuotasPago_X_Proceso(int anio, int periodo, TipoEstudio tipoEstudio, string codFac, DateTime? fechaDesde, DateTime? fechaHasta);
     }
 }

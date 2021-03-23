@@ -30,6 +30,7 @@ namespace WebApp.Models
                 N_CodBanco = obligacionDetalleDTO.N_CodBanco,
                 C_CodAlu = obligacionDetalleDTO.C_CodAlu,
                 C_CodRc = obligacionDetalleDTO.C_CodRc,
+                C_CodFac = obligacionDetalleDTO.C_CodFac,
                 T_Nombre = obligacionDetalleDTO.T_Nombre,
                 T_ApePaterno = obligacionDetalleDTO.T_ApePaterno,
                 T_ApeMaterno = obligacionDetalleDTO.T_ApeMaterno,
@@ -47,7 +48,13 @@ namespace WebApp.Models
                 D_FecPago = obligacionDetalleDTO.D_FecPago,
                 T_LugarPago = obligacionDetalleDTO.T_LugarPago,
                 C_Moneda = obligacionDetalleDTO.C_Moneda,
-                I_TipoObligacion = obligacionDetalleDTO.I_TipoObligacion
+                I_TipoObligacion = obligacionDetalleDTO.I_TipoObligacion,
+                I_Nivel = obligacionDetalleDTO.I_Nivel,
+                C_Nivel = obligacionDetalleDTO.C_Nivel,
+                T_Nivel = obligacionDetalleDTO.T_Nivel,
+                I_TipoAlumno = obligacionDetalleDTO.I_TipoAlumno,
+                C_TipoAlumno = obligacionDetalleDTO.C_TipoAlumno,
+                T_TipoAlumno = obligacionDetalleDTO.T_TipoAlumno
             };
 
             return obligacionDetalleModel;
@@ -62,6 +69,7 @@ namespace WebApp.Models
                 N_CodBanco = cuotaPagoDTO.N_CodBanco,
                 C_CodAlu = cuotaPagoDTO.C_CodAlu,
                 C_CodRc = cuotaPagoDTO.C_CodRc,
+                C_CodFac = cuotaPagoDTO.C_CodFac,
                 T_Nombre = cuotaPagoDTO.T_Nombre,
                 T_ApePaterno = cuotaPagoDTO.T_ApePaterno,
                 T_ApeMaterno = cuotaPagoDTO.T_ApeMaterno,
@@ -73,6 +81,8 @@ namespace WebApp.Models
                 D_FecVencto = cuotaPagoDTO.D_FecVencto,
                 C_Moneda = cuotaPagoDTO.C_Moneda,
                 I_TipoObligacion = cuotaPagoDTO.I_TipoObligacion,
+                C_Nivel = cuotaPagoDTO.C_Nivel,
+                C_TipoAlumno = cuotaPagoDTO.C_TipoAlumno,
                 I_MontoTotal = cuotaPagoDTO.I_MontoTotal
             };
 

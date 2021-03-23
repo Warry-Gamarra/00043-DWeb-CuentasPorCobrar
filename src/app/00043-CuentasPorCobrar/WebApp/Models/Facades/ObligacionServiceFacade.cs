@@ -1,4 +1,5 @@
 ﻿using Domain.DTO;
+using Domain.Helpers;
 using Domain.Services;
 using Domain.Services.Implementations;
 using System;
@@ -50,9 +51,9 @@ namespace WebApp.Models.Facades
             return result;
         }
 
-        public List<CuotaPagoModel> Obtener_CuotasPago_X_Proceso(int anio, int periodo, int tipoAlumno, int nivel)
+        public List<CuotaPagoModel> Obtener_CuotasPago_X_Proceso(int anio, int periodo, TipoEstudio tipoEstudio, string codFac, DateTime? fechaDesde, DateTime? fechaHasta)
         {
-            var cuotasPago = obligacionService.Obtener_CuotasPago_X_Proceso(anio, periodo, tipoAlumno, nivel);
+            var cuotasPago = obligacionService.Obtener_CuotasPago_X_Proceso(anio, periodo, tipoEstudio, codFac, fechaDesde, fechaHasta);
 
             var result = cuotasPago.Select(c => Mapper.CuotaPagoDTO_To_CuotaPagoModel(c)).ToList();
 
