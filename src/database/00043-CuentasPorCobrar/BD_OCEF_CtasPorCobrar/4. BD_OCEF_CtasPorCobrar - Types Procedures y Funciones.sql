@@ -939,8 +939,12 @@ GO
 /*-------------------------- */
 
 IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.DOMAINS WHERE DOMAIN_NAME = 'type_SelectItems')
-	DROP PROCEDURE [dbo].[USP_I_GrabarCategoriaPago]
-	DROP PROCEDURE [dbo].[USP_U_ActualizarCategoriaPago]
+	IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_GrabarCategoriaPago')
+		DROP PROCEDURE [dbo].[USP_I_GrabarCategoriaPago]
+
+	IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarCategoriaPago')
+		DROP PROCEDURE [dbo].[USP_U_ActualizarCategoriaPago]
+
 	DROP TYPE [dbo].[type_SelectItems]
 GO
 
@@ -2238,4 +2242,4 @@ GO
 --WHERE f.B_Habilitado = 1
 --GO
 
-select * from BD_UNFV_Repositorio.dbo.VW_CarreraProfesional WHERE N_Grado = '4'
+--select * from BD_UNFV_Repositorio.dbo.VW_CarreraProfesional WHERE N_Grado = '4'

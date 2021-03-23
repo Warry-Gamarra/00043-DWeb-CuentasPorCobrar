@@ -139,8 +139,10 @@
                     },
                     success: function (data) {
                         $(domTarget + '> .card-body').html(data);
-                        $('#AccordionGrupoTasas .card > .card-header').removeClass('alert-dark');
-                        $(domTarget).parent().children('.card-header').addClass('alert-dark');
+                        $('#AccordionGrupoTasas .card > .card-header').removeClass('bg-white text-primary');
+                        $(domTarget).parent().children('.card-header').addClass('bg-white text-primary');
+                        //$('#AccordionGrupoTasas .card > .card-header').removeClass('alert-dark');
+                        //$(domTarget).parent().children('.card-header').addClass('alert-dark');
                     }
                 });
             }

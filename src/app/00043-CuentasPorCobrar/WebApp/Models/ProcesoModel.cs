@@ -104,7 +104,7 @@ namespace WebApp.Models
                 {
                     I_ProcesoID = x.I_ProcesoID,
                     T_CatPagoDesc = x.T_CatPagoDesc,
-                    T_ProcesoDesc = string.IsNullOrEmpty(x.T_ProcesoDesc) ? $"{x.I_Anio.ToString()}-{x.C_PeriodoCod}-{x.T_CatPagoDesc}" : x.T_CatPagoDesc,
+                    T_ProcesoDesc = string.IsNullOrEmpty(x.T_ProcesoDesc) ? $"{x.I_Anio.ToString()}-{x.C_PeriodoCod}-{x.T_CatPagoDesc}" : x.T_ProcesoDesc,
                     T_Periodo = x.T_PeriodoDesc,
                     I_Anio = x.I_Anio,
                     D_FecVencto = x.D_FecVencto,
@@ -130,7 +130,7 @@ namespace WebApp.Models
                 {
                     I_ProcesoID = x.I_ProcesoID,
                     T_CatPagoDesc = x.T_CatPagoDesc,
-                    T_ProcesoDesc = string.IsNullOrEmpty(x.T_ProcesoDesc) ? $"{x.I_Anio.ToString()}-{x.C_PeriodoCod}-{x.T_CatPagoDesc}" : x.T_CatPagoDesc,
+                    T_ProcesoDesc = string.IsNullOrEmpty(x.T_ProcesoDesc) ? $"{x.I_Anio.ToString()}-{x.C_PeriodoCod}-{x.T_CatPagoDesc}" : x.T_ProcesoDesc,
                     T_Periodo = x.T_PeriodoDesc,
                     I_Anio = x.I_Anio,
                     D_FecVencto = x.D_FecVencto,
