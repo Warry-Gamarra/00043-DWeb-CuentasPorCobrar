@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.DTO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -10,13 +11,16 @@ namespace WebApp.Models
         public static ITransferenciaInformacion Get(int entidadFinanciera)
         {
             ITransferenciaInformacion transferenciaInformacion;
+            if (Constantes.BCP_ID == 1)
+            {
 
+            }
             switch (entidadFinanciera)
             {
-                case 1:
+                case Constantes.BANCO_COMERCIO_ID:
                     transferenciaInformacion = new TransferenciaInformacionBcoComercio();
                     break;
-                case 2:
+                case Constantes.BCP_ID:
                     transferenciaInformacion = new TransferenciaInformacionBCP();
                     break;
                 default:

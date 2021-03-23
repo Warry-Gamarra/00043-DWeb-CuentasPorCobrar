@@ -9,5 +9,7 @@ namespace Domain.DTO
     public static class Constantes
     {
         public const int BANCO_COMERCIO_ID = 1;
+
+        public const int BCP_ID = 2;
     }
 }
