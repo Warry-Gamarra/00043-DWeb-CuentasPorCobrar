@@ -524,7 +524,7 @@
     <Content Include="Views\Procesos\Tasas.cshtml" />
     <Content Include="Views\CategoriaPago\_RegistrarCategoria.cshtml" />
     <Content Include="Views\Concepto\_RegistrarConcepto.cshtml" />
-    <Content Include="Views\Pagos\ImportarArchivosPago.cshtml" />
+    <Content Include="Views\Pagos\ImportarPagoTasas.cshtml" />
     <Content Include="Views\Pagos\ExportarDatosPago.cshtml" />
     <Content Include="Views\EntidadFinanciera\_CuentasBanco.cshtml" />
     <Content Include="Views\Obligaciones\Generar.cshtml" />
@@ -534,6 +534,8 @@
     <Content Include="Views\ConceptoPago\_RegistrarConceptosPagoProceso.cshtml" />
     <Content Include="Views\Procesos\_ListadoConceptosProceso.cshtml" />
     <Content Include="Views\Procesos\_ListadoTasasProcesoBusqueda.cshtml" />
+    <Content Include="Views\Pagos\ImportarPagoObligaciones.cshtml" />
+    <Content Include="Views\Pagos\_SeleccionarArchivo.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

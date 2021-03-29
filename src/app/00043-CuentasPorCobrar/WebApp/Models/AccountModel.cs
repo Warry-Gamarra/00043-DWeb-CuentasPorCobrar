@@ -1,5 +1,5 @@
 ﻿using CL_CustomMail;
-using DTO = Domain.DTO;
+using Helpers = Domain.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,9 +22,9 @@ namespace WebApp.Models
         }
 
 
-        public DTO.Response SendPasswordTokenMail(ResetPasswordViewModel model, string link)
+        public Helpers.Response SendPasswordTokenMail(ResetPasswordViewModel model, string link)
         {
-            var result = new DTO.Response();
+            var result = new Helpers.Response();
 
             var usuario = _user.Find().Find(x => x.UserName == model.UserName);
             var correo = _correoAplicacion.Find().SingleOrDefault(x => x.Enabled);
@@ -73,7 +73,7 @@ namespace WebApp.Models
 
                 var responseMail = target.SendMail(_settings, _from, _to, target.MailBody, target.IsHtml);
 
-                result = new DTO.Response()
+                result = new Helpers.Response()
                 {
                     Value = responseMail.IsDone,
                     Message = responseMail.Message
@@ -104,9 +104,9 @@ namespace WebApp.Models
         }
 
 
-        public DTO.Response ResetPassword(int UserID, string token, string newpass, bool send, string link)
+        public Helpers.Response ResetPassword(int UserID, string token, string newpass, bool send, string link)
         {
-            var result = new DTO.Response();
+            var result = new Helpers.Response();
 
             if (WebSecurity.ResetPassword(token, newpass))
             {
@@ -158,7 +158,7 @@ namespace WebApp.Models
 
                         var responseMail = target.SendMail(_settings, _from, _to, target.MailBody, target.IsHtml);
 
-                        result = new DTO.Response()
+                        result = new Helpers.Response()
                         {
                             Value = responseMail.IsDone,
                             Message = responseMail.Message

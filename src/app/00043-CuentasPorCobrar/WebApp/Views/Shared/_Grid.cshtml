@@ -35,7 +35,11 @@ else
     }
     else
     {
-        int row = Model.Pager.PageSize * (Model.Pager.CurrentPage - 1) + 1;
+        int row = 1;
+        if (Model.Pager.CurrentPage > 0)
+        {
+            row = Model.Pager.PageSize * (Model.Pager.CurrentPage - 1) + 1;
+        }
 
         foreach (object item in Model.ItemsToDisplay)
         {

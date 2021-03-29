@@ -1,6 +1,6 @@
 ﻿using Data.Tables;
 using Data.Views;
-using Domain.DTO;
+using Domain.Helpers;
 using Domain.Helpers;
 using Domain.Services;
 using System;

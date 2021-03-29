@@ -1,4 +1,4 @@
-﻿using Domain.DTO;
+﻿using Domain.Helpers;
 using Domain.Services;
 using System;
 using System.Collections.Generic;
@@ -150,9 +150,11 @@ namespace WebApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Save(RegistroProcesoViewModel model)
+        public ActionResult Save(RegistroProcesoViewModel model, DateTime txtFecVencto)
         {
             Response result = new Response();
+
+            model.FecVencto = txtFecVencto;
 
             if (ModelState.IsValid)
             {

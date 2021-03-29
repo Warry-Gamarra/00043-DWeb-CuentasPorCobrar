@@ -1,4 +1,4 @@
-﻿using Domain.DTO;
+﻿using Domain.Helpers;
 using Domain.Services;
 using Domain.Entities;
 using System;

@@ -1,7 +1,7 @@
 ﻿using Data;
 using Data.Procedures;
 using Data.Views;
-using Domain.DTO;
+using Domain.Helpers;
 using Domain.Entities;
 using Domain.Helpers;
 using System;

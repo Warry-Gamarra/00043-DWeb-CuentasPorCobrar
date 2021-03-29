@@ -1,7 +1,7 @@
 ﻿using Data;
 using Data.Procedures;
 using Data.Tables;
-using Domain.DTO;
+using Domain.Helpers;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -33,6 +33,7 @@ namespace Domain.Services
         {
             _concepto.I_ConceptoID = concepto.I_ConceptoID;
             _concepto.T_ConceptoDesc = concepto.T_ConceptoDesc;
+            _concepto.T_Clasificador = concepto.T_Clasificador;
             _concepto.B_EsPagoMatricula = concepto.B_EsPagoMatricula;
             _concepto.B_EsPagoExtmp = concepto.B_EsPagoExtmp;
             _concepto.B_ConceptoAgrupa = concepto.B_ConceptoAgrupa;
@@ -68,6 +69,7 @@ namespace Domain.Services
 
             result.I_ConceptoID = concepto.I_ConceptoID;
             result.T_ConceptoDesc = concepto.T_ConceptoDesc.ToUpper();
+            result.T_Clasificador = concepto.T_Clasificador;
             result.B_EsPagoMatricula = concepto.B_EsPagoMatricula;
             result.B_EsPagoExtmp = concepto.B_EsPagoExtmp;
             result.B_ConceptoAgrupa = concepto.B_ConceptoAgrupa;
@@ -141,6 +143,7 @@ namespace Domain.Services
                 {
                     I_ConceptoID = x.I_ConceptoID,
                     T_ConceptoDesc = x.T_ConceptoDesc,
+                    T_Clasificador = x.T_Clasificador,
                     B_Calculado = x.B_Calculado,
                     I_Calculado = x.I_Calculado,
                     I_Monto = x.I_Monto,
@@ -170,6 +173,7 @@ namespace Domain.Services
                 {
                     I_ConceptoID = x.I_ConceptoID,
                     T_ConceptoDesc = x.T_ConceptoDesc,
+                    T_Clasificador = x.T_Clasificador,
                     B_Calculado = x.B_Calculado,
                     I_Calculado = x.I_Calculado,
                     I_Monto = x.I_Monto,
@@ -199,6 +203,8 @@ namespace Domain.Services
                 {
                     I_ConceptoID = x.I_ConceptoID,
                     T_ConceptoDesc = x.T_ConceptoDesc,
+                    T_Clasificador = x.T_Clasificador,
+                    B_ConceptoAgrupa = x.B_ConceptoAgrupa,
                     B_Habilitado = x.B_Habilitado,
                     I_UsuarioCre = x.I_UsuarioCre,
                     D_FecCre = x.D_FecCre,
@@ -214,7 +220,7 @@ namespace Domain.Services
             }
         }
 
-        public List<CatalogoOpcionEntity> Listar_CatalogoOpcion_Habilitadas_X_Parametro(DTO.Parametro parametroID)
+        public List<CatalogoOpcionEntity> Listar_CatalogoOpcion_Habilitadas_X_Parametro(Helpers.Parametro parametroID)
         {
             try
             {

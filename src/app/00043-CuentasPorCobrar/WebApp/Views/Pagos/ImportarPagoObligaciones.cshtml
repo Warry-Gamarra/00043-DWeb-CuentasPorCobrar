@@ -1,0 +1,59 @@
+﻿<link href="~/Assets/fileInput/css/fileinput.min.css" rel="stylesheet" />
+<script src="~/Assets/fileInput/js/fileinput.min.js"></script>
+<script src="~/Assets/fileInput/js/locales/es.js"></script>
+<script src="~/Assets/jquery/jquery.form.js"></script>
+
+<div class="container-fluid">
+    <div class="col-12">
+        <section class="content-header">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb float-right small d-none d-sm-inline-flex">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")"><i class="fa fa-home">&nbsp;</i>Inicio</a></li>
+                    <li class="breadcrumb-item"><span><i class="fa fa-refresh">&nbsp;</i>Operaciones </span></li>
+                    <li class="breadcrumb-item active"><span><i class="fa bi-journal-arrow-up">&nbsp;</i>@ViewBag.Title </span></li>
+                </ol>
+            </nav>
+            <h1 class="">@ViewBag.Title <small></small></h1>
+        </section>
+    </div>
+    <div class="col-12 my-4">
+        <p class="h5 text-secondary">Recepción de información enviada por el BANCO</p>
+        <a href="@Url.Action("SeleccionarArchivo","Pagos", new { area = "", tipo = "obligaciones" })" class="btn btn-primary px-5 modal-link-lg"><i class="fa fa-paperclip">&nbsp;</i> Adjuntar archivo</a>
+    </div>
+    <div class="col-12 my-4">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover table-sm">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Obs</th>
+                        <th>Nro</th>
+                        <th>Codigo</th>
+                        <th>Apellidos y nombres</th>
+                        <th>Cuota</th>
+                        <th>Concepto</th>
+                        <th>Importe</th>
+                        <th>Total</th>
+                        <th>Fec. Venc.</th>
+                        <th>Agencia</th>
+                        <th>Fec. Pago</th>
+                        <th>Cod RC</th>
+                        <th>Periodo</th>
+                        <th>Operación</th>
+                        <th>Cod. Cajero</th>
+                        <th>Impreso</th>
+                        <th>Registrado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="17"> No se ha cargado informacion de pagos</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+
+
+    </script>

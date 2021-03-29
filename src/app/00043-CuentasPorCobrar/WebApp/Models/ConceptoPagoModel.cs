@@ -1,4 +1,4 @@
-﻿using Domain.DTO;
+﻿using Domain.Helpers;
 using Domain.Entities;
 using Domain.Services;
 using Domain.Services.Implementations;
@@ -38,6 +38,7 @@ namespace WebApp.Models
             {
                 I_ConceptoID = model.Id ?? 0,
                 T_ConceptoDesc = model.NombreConcepto,
+                T_Clasificador = model.Clasificador,
                 B_EsPagoMatricula = model.EsMatricula,
                 B_EsPagoExtmp = model.Extemporaneo,
                 B_ConceptoAgrupa = model.AgupaConceptos,
@@ -73,11 +74,11 @@ namespace WebApp.Models
             return result;
         }
 
-        public List<CatalogoConceptosViewModel> Listar_CatalogoConceptos(TipoObligacion tipoObligacion)
+        public List<CatalogoConceptosViewModel> Listar_CatalogoConceptos(TipoObligacion tipoObligacion, bool conceptoAgrupa = false)
         {
             List<CatalogoConceptosViewModel> result = new List<CatalogoConceptosViewModel>();
 
-            foreach (var item in conceptoPagoService.Listar_Concepto(tipoObligacion))
+            foreach (var item in conceptoPagoService.Listar_Concepto(tipoObligacion).Where(x => x.B_ConceptoAgrupa == conceptoAgrupa))
             {
                 result.Add(new CatalogoConceptosViewModel(item));
             }
@@ -87,7 +88,10 @@ namespace WebApp.Models
 
         public CatalogoConceptosRegistroViewModel ObtenerConcepto(int conceptoId)
         {
+            var tipoObligacion = conceptoPagoService.Listar_CatalogoOpcion_Habilitadas_X_Parametro(Parametro.TipoObligacion);
             var result = new CatalogoConceptosRegistroViewModel(conceptoPagoService.GetConcepto(conceptoId));
+
+            result.TipoObligacion = tipoObligacion.Find(x => x.T_OpcionCod == Convert.ToInt32(result.EsMatricula).ToString()).I_OpcionID;
 
             return result;
         }
@@ -147,7 +151,7 @@ namespace WebApp.Models
         }
 
 
-        public RegistroConceptoPagoViewModel InicializarConceptoPagoTasa(int procesoId)
+        public RegistroConceptoPagoViewModel InicializarConceptoPago(int procesoId)
         {
             var proceso = procesoService.Obtener_Proceso(procesoId);
             var categoria = categoriaPago.Find(proceso.I_CatPagoID);
@@ -157,7 +161,6 @@ namespace WebApp.Models
                 I_ProcesoID = procesoId,
                 I_AlumnosDestino = categoria.TipoAlumno,
                 I_GradoDestino = categoria.Nivel,
-                //I_TipoObligacion = conceptoPagoService.Listar_CatalogoOpcion_Habilitadas_X_Parametro(Parametro.)
                 I_Anio = proceso.I_Anio,
                 I_Periodo = proceso.I_Periodo,
             };

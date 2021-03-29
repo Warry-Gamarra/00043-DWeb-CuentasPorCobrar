@@ -58,7 +58,7 @@ namespace WebApp.Models
         {
             List<SelectViewModel> result = new List<SelectViewModel>();
 
-            foreach (var item in _conceptoPagoService.Listar_CatalogoOpcion_Habilitadas_X_Parametro(Domain.DTO.Parametro.Periodo))
+            foreach (var item in _conceptoPagoService.Listar_CatalogoOpcion_Habilitadas_X_Parametro(Domain.Helpers.Parametro.Periodo))
             {
                 result.Add(new SelectViewModel() { Value = item.I_OpcionID.ToString(), TextDisplay = item.T_OpcionDesc });
             }
@@ -82,7 +82,7 @@ namespace WebApp.Models
         {
             List<SelectViewModel> result = new List<SelectViewModel>();
 
-            foreach (var item in _conceptoPagoService.Listar_CatalogoOpcion_Habilitadas_X_Parametro(Domain.DTO.Parametro.Grado))
+            foreach (var item in _conceptoPagoService.Listar_CatalogoOpcion_Habilitadas_X_Parametro(Domain.Helpers.Parametro.Grado))
             {
                 result.Add(new SelectViewModel() { Value = item.I_OpcionID.ToString(), TextDisplay = item.T_OpcionDesc.ToUpper() });
             }

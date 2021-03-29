@@ -81,13 +81,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DTO\Constantes.cs" />
-    <Compile Include="DTO\Tipos.cs" />
-    <Compile Include="DTO\DataMatriculaResponse.cs" />
+    <Compile Include="Helpers\Constantes.cs" />
+    <Compile Include="Helpers\Tipos.cs" />
+    <Compile Include="Helpers\DataMatriculaResponse.cs" />
     <Compile Include="Entities\CuotaPagoDTO.cs" />
     <Compile Include="Entities\DataMatriculaObs.cs" />
-    <Compile Include="DTO\Options.cs" />
-    <Compile Include="DTO\Parametro.cs" />
+    <Compile Include="Helpers\Options.cs" />
+    <Compile Include="Helpers\Parametro.cs" />
     <Compile Include="Entities\ClasificadorDeIngreso.cs" />
     <Compile Include="Entities\ConceptoEntity.cs" />
     <Compile Include="Entities\ConceptoPago.cs" />
@@ -109,7 +109,7 @@
     <Compile Include="Entities\Dependencia.cs" />
     <Compile Include="Entities\RolAplicacion.cs" />
     <Compile Include="Entities\User.cs" />
-    <Compile Include="DTO\Response.cs" />
+    <Compile Include="Helpers\Response.cs" />
     <Compile Include="Helpers\Crypto.cs" />
     <Compile Include="Helpers\HttpVerb.cs" />
     <Compile Include="Helpers\IMatriculaSource.cs" />
@@ -146,7 +146,9 @@
     <Compile Include="UnfvRepositorioClient\IAlumnosClient.cs" />
     <Compile Include="UnfvRepositorioClient\AlumnosClient.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="DTO\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Data\Data.csproj">
       <Project>{02be7951-a281-420a-9d8d-856c384f7389}</Project>

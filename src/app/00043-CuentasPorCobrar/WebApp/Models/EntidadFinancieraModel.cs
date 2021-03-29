@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Domain.DTO;
+using Domain.Helpers;
 using Domain.Entities;
 using Domain.Services;
 using WebApp.ViewModels;

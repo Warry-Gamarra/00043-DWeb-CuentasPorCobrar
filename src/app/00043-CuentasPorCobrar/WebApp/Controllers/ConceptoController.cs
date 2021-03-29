@@ -6,7 +6,7 @@ using System.Web.Mvc;
 using WebApp.Models;
 using WebApp.ViewModels;
 using WebMatrix.WebData;
-using Domain.DTO;
+using Domain.Helpers;
 using System.IO;
 
 namespace WebApp.Controllers

@@ -40,7 +40,7 @@ namespace WebApp.Controllers
         [Route("operaciones/generar-archivos-pago")]
         public ActionResult ExportarDatosPago()
         {
-            ViewBag.Title = "Generar archivos de Pago";
+            ViewBag.Title = "Generar archivos de pago";
 
             ViewBag.Anios = generalServiceFacade.Listar_Anios();
 
@@ -62,6 +62,22 @@ namespace WebApp.Controllers
 
             return View();
         }
+
+        [Route("operaciones/cargar-pagos/obligaciones")]
+        public ActionResult ImportarPagoObligaciones()
+        {
+            ViewBag.Title = "Cargar pagos de obligaciones";
+            return View();
+        }
+
+        [Route("operaciones/cargar-pagos/tasas")]
+        public ActionResult ImportarPagoTasas()
+        {
+            ViewBag.Title = "Cargar pagos de tasas";
+            return View();
+        }
+
+
 
         [HttpGet]
         public ActionResult GenerarArchivosBancos(FiltroEnvioObligacionesModel model)
@@ -98,5 +114,15 @@ namespace WebApp.Controllers
 
             return listaEntidades;
         }
+
+        [Route("operaciones/cargar-pagos/seleccionar-archivo/{tipo}")]
+        public ActionResult SeleccionarArchivo(string tipo)
+        {
+            ViewBag.Tipo = $"({tipo.ToUpper()})";
+            //var model = _seleccionarArchivoModel.Init(TipoAlumno.Posgrado, TipoArchivoAlumno.Matricula);
+            return PartialView("_SeleccionarArchivo");
+        }
+
+
     }
 }
