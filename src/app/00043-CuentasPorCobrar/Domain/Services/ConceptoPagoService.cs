@@ -1,7 +1,7 @@
 ﻿using Data;
 using Data.Procedures;
 using Data.Tables;
-using Domain.DTO;
+using Domain.Helpers;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -220,7 +220,7 @@ namespace Domain.Services
             }
         }
 
-        public List<CatalogoOpcionEntity> Listar_CatalogoOpcion_Habilitadas_X_Parametro(DTO.Parametro parametroID)
+        public List<CatalogoOpcionEntity> Listar_CatalogoOpcion_Habilitadas_X_Parametro(Helpers.Parametro parametroID)
         {
             try
             {

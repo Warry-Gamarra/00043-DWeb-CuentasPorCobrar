@@ -1,5 +1,5 @@
 ﻿using ClosedXML.Excel;
-using Domain.DTO;
+using Domain.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;

@@ -1,5 +1,5 @@
 ﻿using Data.Tables;
-using Domain.DTO;
+using Domain.Helpers;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;

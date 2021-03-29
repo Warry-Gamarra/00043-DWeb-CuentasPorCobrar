@@ -1,5 +1,5 @@
 ﻿using Data.Procedures;
-using Domain.DTO;
+using Domain.Helpers;
 using Domain.Services;
 using System;
 using System.Collections.Generic;

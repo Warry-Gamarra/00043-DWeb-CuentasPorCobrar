@@ -1,7 +1,7 @@
 ﻿using Data.Procedures;
 using Data.Tables;
 using Data.Types;
-using Domain.DTO;
+using Domain.Helpers;
 using Domain.Helpers;
 using Domain.Services;
 using NDbfReader;
