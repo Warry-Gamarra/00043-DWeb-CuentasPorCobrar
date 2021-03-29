@@ -23,24 +23,32 @@
                 @Html.TextBoxFor(model => model.NombreConcepto, new { @class = "form-control" })
                 <p class="text-danger small">@Html.ValidationMessageFor(model => model.NombreConcepto)</p>
             </div>
-            <div class="form-row">
-                <div class="form-group col-sm-6">
-                    <div class="form-row">
-                        @Html.LabelFor(model => model.MontoMinimo, new { @class = "control-label col-form-label col-6" })
-                        <div class="col-6">
-                            @Html.TextBoxFor(model => model.MontoMinimo, new { @class = "form-control text-right" })
-                        </div>
-                        <p class="text-danger small">@Html.ValidationMessageFor(model => model.MontoMinimo)</p>
+            <div class="form-group">
+                <div class="form-row">
+                    @Html.LabelFor(model => model.Clasificador, new { @class = "control-label col-form-label col-6" })
+                    <div class="col-6">
+                        @Html.TextBoxFor(model => model.Clasificador, new { @class = "form-control" })
                     </div>
+                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.Clasificador)</p>
                 </div>
-                <div class="form-group col-sm-6">
-                    <div class="form-row">
-                        @Html.LabelFor(model => model.Monto, new { @class = "control-label text-sm-right col-form-label col-6" })
-                        <div class="col-6">
-                            @Html.TextBoxFor(model => model.Monto, new { @class = "form-control text-right" })
-                        </div>
-                        <p class="text-danger small">@Html.ValidationMessageFor(model => model.Monto)</p>
+            </div>
+
+            <div class="form-group">
+                <div class="form-row">
+                    @Html.LabelFor(model => model.MontoMinimo, new { @class = "control-label text-sm-right col-form-label col-6" })
+                    <div class="col-6">
+                        @Html.TextBoxFor(model => model.MontoMinimo, new { @class = "form-control text-right" })
                     </div>
+                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.MontoMinimo)</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-row">
+                    @Html.LabelFor(model => model.Monto, new { @class = "control-label text-sm-right col-form-label col-6" })
+                    <div class="col-6">
+                        @Html.TextBoxFor(model => model.Monto, new { @class = "form-control text-right" })
+                    </div>
+                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.Monto)</p>
                 </div>
             </div>
             <p class="h5 border-bottom my-3">Otras características</p>

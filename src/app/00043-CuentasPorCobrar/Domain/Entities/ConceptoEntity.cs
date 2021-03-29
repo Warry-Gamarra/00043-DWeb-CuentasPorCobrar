@@ -10,6 +10,7 @@ namespace Domain.Entities
     {
         public int I_ConceptoID { get; set; }
         public string T_ConceptoDesc { get; set; }
+        public string T_Clasificador { get; set; }
         public bool B_EsPagoMatricula { get; set; }
         public bool B_EsPagoExtmp { get; set; }
         public bool B_ConceptoAgrupa { get; set; }

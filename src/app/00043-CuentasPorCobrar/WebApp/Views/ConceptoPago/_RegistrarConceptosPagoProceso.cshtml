@@ -58,13 +58,17 @@
             <div class="form-group form-row">
                 @Html.HiddenFor(model => model.ConceptoPago.I_ConcPagID)
                 @Html.HiddenFor(model => model.ConceptoPago.I_ProcesoID)
+                @Html.HiddenFor(model => model.ConceptoPago.I_Anio)
+                @Html.HiddenFor(model => model.ConceptoPago.I_Periodo)
+                @Html.HiddenFor(model => model.ConceptoPago.I_GradoDestino)
+                @Html.HiddenFor(model => model.ConceptoPago.I_TipoObligacion)
                 @Html.HiddenFor(model => model.ConceptoPago.I_ConceptoID)
                 @Html.HiddenFor(model => model.ConceptoPago.B_AgrupaConcepto)
                 @Html.HiddenFor(model => model.ConceptoPago.B_ConceptoGeneral)
                 @Html.HiddenFor(model => model.ConceptoPago.B_Fraccionable)
                 @Html.HiddenFor(model => model.ConceptoPago.I_AlumnosDestino)
-                @Html.HiddenFor(model => model.ConceptoPago.I_GradoDestino)
-                @Html.HiddenFor(model => model.ConceptoPago.I_TipoObligacion)
+                @Html.HiddenFor(model => model.ConceptoPago.B_Calculado)
+                @Html.HiddenFor(model => model.ConceptoPago.I_Calculado)
 
                 @Html.LabelFor(model => model.ConceptoPago.I_ConceptoID, new { @class = "control-label col-12" })
                 <div class="col-10">
@@ -73,7 +77,10 @@
                     <p class="text-danger small">@Html.ValidationMessageFor(model => model.ConceptoPago.T_ConceptoPagoDesc)</p>
                 </div>
                 <div class="col-2">
-                    <button type="button" id="btn-remove" class="btn btn-block btn-outline-danger"><i class="fa fa-trash-o"></i><span class="d-md-inline-block d-none">&nbsp;Borrar</span></button>
+                    @if (!Model.ConceptoPago.I_ConcPagID.HasValue)
+                    {
+                        <button type="button" id="btn-remove" class="btn btn-block btn-outline-danger"><i class="fa fa-trash-o"></i><span class="d-md-inline-block d-none">&nbsp;Borrar</span></button>
+                    }
                 </div>
             </div>
 
@@ -222,6 +229,13 @@
 
                     $('#ConceptoPago_I_ConceptoID').val(data['Id']);
                     $('#ConceptoPago_T_ConceptoPagoDesc').val(data['NombreConcepto']);
+                    $('#ConceptoPago_T_Clasificador').val(data['Clasificador']);
+                    $('#ConceptoPago_M_Monto').val(data['Monto']);
+                    $('#ConceptoPago_M_MontoMinimo').val(data['MontoMinimo']);
+                    $('#ConceptoPago_B_AgrupaConcepto').val(data['AgupaConceptos']);
+                    $('#ConceptoPago_I_TipoObligacion').val(data['TipoObligacion']);
+                    $('#ConceptoPago_B_Calculado').val(data['Calculado']);
+                    $('#ConceptoPago_I_Calculado').val(data['TipoCalculo']);
 
                     $('#search-container').hide();
                     $('#concepto-form').show();

@@ -111,4 +111,105 @@ FROM TC_Proceso P
 GO
 
 
-/* -------------------------------- TC_Concepto - TI_ConceptoPago ------------------------------------ */
+/* -------------------------------- TC_Concepto - TI_ConceptoPago (OBLIGACIONES) ------------------------------------ */
+
+SET IDENTITY_INSERT TC_Concepto ON
+GO
+
+-- INSERTAR CONCEPTOS agrupa = 1
+INSERT INTO TC_Concepto (I_ConceptoID, T_ConceptoDesc, T_Clasificador, I_Monto, I_MontoMinimo, B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado)
+				SELECT id_cp, descripcio, clasificad, monto, monto_min, 1, 0, 1, 0, NULL, 1,eliminado
+				FROM temporal_pagos..cp_pri 
+				WHERE agrupa = 1 and tipo_oblig = 1
+
+SET IDENTITY_INSERT TC_Concepto OFF
+GO
+
+-- INSERTAR CONCEPTOS agrupa = 0
+
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1230010100',	0, NULL, 1, 0, 40, 40,'BIBLIOTECA')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1230010300',	0, NULL, 1, 0, 16, 11,'CARNET UNIVERSITARIO EUPG')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1230010301',	0, NULL, 1, 0, 16, 16,'CARNET UNIVERSITARIO')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1230020315',	0, NULL, 0, 0, 40, 0,'LABORATORIO EUPG')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '123003200',	0, NULL, 0, 0, 6, 6,'RECORD ACADÉMICO')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1230032000',	0, NULL, 1, 0, 6, 6,'RECORD ACADÉMICO')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1230033701',	0, NULL, 1, 0, 150, 150,'CONSTANCIA DE INGRESO MAESTRÍA')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1230033702',	0, NULL, 1, 0, 150, 150,'CONSTANCIA DE INGRESO DOCTORADO')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1230040311',	0, NULL, 1, 0, 49, 49,'LABORATORIO GABINETE - GRUPO 1')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1230040312',	0, NULL, 1, 0, 42, 42,'LABORATORIO GABINETE - GRUPO 2')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1230040313',	0, NULL, 1, 0, 35, 35,'LABORATORIO GABINETE - GRUPO 3')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1230040314',	0, NULL, 1, 0, 28, 28,'LABORATORIO GABINETE - GRUPO 4')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1230070200',	0, NULL, 1, 0, 25, 25,'SERVICIOS UNIVERSITARIOS')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1230080100',	0, NULL, 1, 0, 1920, 480,'PENSIÓN MAESTRIA INGRESANTE EUPG')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1230080110',	0, NULL, 1, 0, 1920, 480,'PENSIÓN MAESTRIA REGULAR EUPG')
+ --INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1230080200',	0, NULL, 1, 0, 2400, 600,'PENSIÓN DOCTORADO INGRESANTE EUPG')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1230080200',	0, NULL, 1, 0, 2400, 600,'PENSIÓN DOCTORADO REGULAR EUPG')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1230080610',	1, 3, 1, 0,	2232, 248,'PENSIÓN ENSEÑANZA SEGUNDA PROFESIÓN')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1230080605',	1, 3, 1, 0,	186, 186,'PENSIÓN CONVENIO - 2DA PROF. PNP')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1230080606',	1, 3, 1, 0,	186, 186,'PENSIÓN CONVENIO - 2DA PROF. EP')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1230080611',	1, 3, 1, 0,	200, 200,'PENSIÓN ENSEÑANZA - TRASLADO EXT.PARTICUL')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1230080612',	1, 3, 1, 0,	50,	50,'PENSIÓN ENSEÑANZA - TRASLADO EXT.NACIONAL')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1230080618',	0, NULL, 1, 0, 100,	100,'DERECHO ACADÉMICO MENSUAL')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1230081600',	0, NULL, 1, 0, 390,	130,'PENSIÓN - PROCUNED')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1230081601',	0, NULL, 1, 0, 225,	225,'PENSIÓN - PROLICED')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1230090200',	0, NULL, 1, 0, 35, 0,'MATRÍCULA')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1230090300',	0, NULL, 1, 0, 100,	100,'MATRÍCULA CONVENIO POLI')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1230090301',	0, NULL, 1, 0, 170,	170,'MATRÍCULA (X CONVENIO) 2DA.PROF.FAP')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1230090302',	0, NULL, 1, 0, 170,	170,'MATRÍCULA (X CONVENIO) 2DA.PROF.PNP')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1230090303',	0, NULL, 1, 0, 170,	170,'MATRÍCULA (X CONVENIO) 2DA.PROF.EJE')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1230090304',	0, NULL, 1, 0, 178,	178,'MATRÍCULA (ALUMNO.CONV)')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1230090308',	0, NULL, 1, 0, 196,	196,'MATRÍCULA BACHILL.CONV.FAP')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 1, 0, '1230090400',	0, NULL, 1, 0, 50, 50,'MATRÍCULA EXTEMPORÁNEA (RECARGO)')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1230090502',	0, NULL, 1, 0, 80, 80,'MATRÍCULA / LIMA - PROCUNED')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1230090503',	0, NULL, 1, 0, 80, 80,'MATRÍCULA / PROV. - PROCUNED')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1230090504',	0, NULL, 1, 0, 100,	100,'MATRÍCULA / LIMA - PROLICED')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1230090505',	0, NULL, 1, 0, 130,	130,'MATRÍCULA / PROV. - PROLICED')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1230091500',	0, NULL, 1, 0, 500,	500,'MATRÍCULA MAESTRÍA - EUPG')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1230091600',	0, NULL, 1, 0, 500,	500,'MATRÍCULA DOCTORADO - EUPG')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1230092500',	0, NULL, 1, 0, 100,	100,'MATRÍCULA SUSPENSIÓN')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1230092501',	0, NULL, 1, 0, 100,	100,'MATRÍCULA CANCELADA')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1230990210',	1, 4, 1 , 0, 21,21,'MULTA POR NO VOTAR')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '123099100',	0, NULL, 1 , 0,	0, 0,'FRACCIONAMIENTO DEUDA ANTERIOR EUPG')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1230991000',	0, NULL, 1 , 0,	0, 0,'MORA X PENSIONES - PERIODO ACTUAL')
+ --INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '123991000', 0, NULL, 1 , 0, 0, 0,'MORA X PENSIONES')
+ --INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1323199121', 0, NULL, 1 , 0, 0, 0,'DEUDAS ANTERIORES EUPG')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1440012800',	0, NULL, 1, 0, 3, 3,'CARPETA DE MATRÍCULA')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1540020315',	0, NULL, 1, 0, 0, 0,'LABORATORIO INFORMÁTICA - EUPG')
+ INSERT INTO TC_Concepto (B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, T_Clasificador, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_Monto, I_MontoMinimo, T_ConceptoDesc ) VALUES (1, 0, 0, '1540100100',	0, NULL, 1, 0, 5, 5,'DEPORTES')
+
+ GO
+
+
+SET IDENTITY_INSERT TI_ConceptoPago ON
+GO
+
+INSERT INTO TI_ConceptoPago (I_ConcPagID, I_ProcesoID, I_ConceptoID, T_ConceptoPagoDesc, B_Fraccionable, B_ConceptoGeneral, B_AgrupaConcepto, I_AlumnosDestino, I_GradoDestino, I_TipoObligacion, T_Clasificador, C_CodTasa, B_Calculado, I_Calculado, 
+							B_AnioPeriodo, I_Anio, I_Periodo, B_Especialidad, C_CodRc, B_Dependencia, C_DepCod, B_GrupoCodRc, I_GrupoCodRc, B_ModalidadIngreso, I_ModalidadIngresoID, B_ConceptoAgrupa, I_ConceptoAgrupaID, B_ConceptoAfecta, 
+							I_ConceptoAfectaID, N_NroPagos, B_Porcentaje, C_Moneda, M_Monto, M_MontoMinimo, T_DescripcionLarga, T_Documento, B_Migrado, B_Habilitado, B_Eliminado, I_TipoDescuentoID)
+
+			SELECT  cp.id_cp, cp.cuota_pago, c.I_ConceptoID, cp.descripcio, cp.fraccionab, cp.concepto_g, cp.agrupa, co_tipoAlumno.I_OpcionID as tip_alumno, co_grado.I_OpcionID as grado, co_tipOblg.I_OpcionID as tip_oblig, cp.clasificad, cp.clasific_5, 
+					CASE WHEN co_calc.I_OpcionID IS NULL THEN 0 ELSE 1 END as calculado, co_calc.I_OpcionID as tip_calculo, CASE CAST(cp.ano AS int) WHEN 0 THEN 0 ELSE 1 END as b_anio, CASE CAST(cp.ano AS int) WHEN 0 THEN NULL ELSE CAST(cp.ano AS int) END as anio, 
+					co_periodo.I_OpcionID as periodo, CASE LEN(LTRIM(RTRIM(cp.cod_rc))) WHEN 0 THEN 0 ELSE 1 END as b_cod_rc, CASE LEN(LTRIM(RTRIM(cp.cod_rc))) WHEN 0 THEN NULL ELSE cp.cod_rc END as cod_rc, 
+					CASE LEN(LTRIM(RTRIM(cp.cod_dep_pl))) WHEN 0 THEN 0 ELSE 1 END as b_cod_dep_pl, unfv_dep.I_DependenciaID, CASE WHEN co_grpRc.I_OpcionID IS NULL THEN 0 ELSE 1 END as b_co_grpRc, co_grpRc.I_OpcionID as grupo_rc,
+					CASE WHEN co_codIng.I_OpcionID IS NULL THEN 0 ELSE 1 END as b_codIng, co_codIng.I_OpcionID as codIng, CASE cp.id_cp_agrp WHEN 0 THEN 0 ELSE 1 END as b_id_cp_agrp, CASE cp.id_cp_agrp WHEN 0 THEN NULL ELSE cp.id_cp_agrp END as id_cp_agrp, 
+					CASE cp.id_cp_afec WHEN 0 THEN 0 ELSE 1 END as b_id_cp_afec, CASE cp.id_cp_afec WHEN 0 THEN NULL ELSE cp.id_cp_afec END as id_cp_afec, cp.nro_pagos, cp.porcentaje, 'PEN' as moneda, cp.monto, cp.monto_min, cp.descrip_l,
+					cp.documento, 1 as migrado, 1 as habilitado, cp.eliminado as eliminado, NULL as tipo_descuento
+
+			FROM	temporal_pagos.dbo.cp_pri cp
+					INNER JOIN TC_Concepto c ON c.T_Clasificador COLLATE DATABASE_DEFAULT = cp.clasificad COLLATE DATABASE_DEFAULT AND c.B_ConceptoAgrupa = 0
+					INNER JOIN TC_Proceso p ON cp.cuota_pago = p.I_ProcesoID
+					LEFT JOIN TC_CatalogoOpcion co_tipoAlumno ON CAST(co_tipoAlumno.T_OpcionCod AS float) = cp.tip_alumno AND co_tipoAlumno.I_ParametroID = 1
+					LEFT JOIN TC_CatalogoOpcion co_grado ON CAST(co_grado.T_OpcionCod AS float) = cp.grado AND co_grado.I_ParametroID = 2
+					LEFT JOIN TC_CatalogoOpcion co_tipOblg ON CAST(co_tipOblg.T_OpcionCod AS bit) = cp.tipo_oblig AND co_tipOblg.I_ParametroID = 3
+					LEFT JOIN TC_CatalogoOpcion co_calc ON co_calc.T_OpcionCod COLLATE DATABASE_DEFAULT = cp.calcular COLLATE DATABASE_DEFAULT AND co_calc.I_ParametroID = 4
+					LEFT JOIN TC_CatalogoOpcion co_periodo ON co_periodo.T_OpcionCod COLLATE DATABASE_DEFAULT = cp.p COLLATE DATABASE_DEFAULT AND co_periodo.I_ParametroID = 5
+					LEFT JOIN TC_CatalogoOpcion co_grpRc ON co_grpRc.T_OpcionCod COLLATE DATABASE_DEFAULT = cp.grupo_rc COLLATE DATABASE_DEFAULT AND co_grpRc.I_ParametroID = 6
+					LEFT JOIN TC_CatalogoOpcion co_codIng ON co_codIng.T_OpcionCod COLLATE DATABASE_DEFAULT = cp.cod_ing COLLATE DATABASE_DEFAULT AND co_codIng.I_ParametroID = 7
+					LEFT JOIN TC_DependenciaUNFV unfv_dep on unfv_dep.C_DepCodPl COLLATE DATABASE_DEFAULT = cp.cod_dep_pl COLLATE DATABASE_DEFAULT AND LEN(unfv_dep.C_DepCodPl) > 0 
+			WHERE	
+			 		p.I_CatPagoID <> 36 
+					AND cp.agrupa = 0
+			ORDER BY cuota_pago, id_cp
+
+SET IDENTITY_INSERT TI_ConceptoPago OFF
+GO

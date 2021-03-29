@@ -65,7 +65,7 @@ namespace WebApp.ViewModels
         public RegistroConceptosProcesoViewModel(int procesoID, ConceptoPagoModel concepto)
         {
             this.ProcesoId = procesoID;
-            this.ConceptoPago = concepto.InicializarConceptoPagoTasa(procesoID);
+            this.ConceptoPago = concepto.InicializarConceptoPago(procesoID);
             this.MostrarFormulario = true;
         }
 

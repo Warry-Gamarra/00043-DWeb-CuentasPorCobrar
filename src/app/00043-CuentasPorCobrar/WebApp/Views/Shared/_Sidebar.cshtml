@@ -7,8 +7,8 @@
                 <i class="fa fa-fw fa-search"></i> Consultas<span class="pull-right"><i class="fa fa-fw fa-caret-down"></i></span>
             </a>
             <ul id="inquiries" class="collapse">
-                <li><a href="@Url.Action("Index", "EstadosCuenta")"><i class="fa fa-fw fa-tasks"></i>&nbsp; Estados de Cuenta</a></li>
-                <li><a href="@Url.Action("Index", "Pagos")"><i class="fa fa-fw fa-database"></i>&nbsp; Pagos Registrados</a></li>
+                <li><a href="@Url.Action("Index", "EstadosCuenta")"><i class="fa fa-fw fa-tasks"></i>&nbsp; Estados de cuenta</a></li>
+                <li><a href="@Url.Action("Index", "Pagos")"><i class="fa fa-fw fa-database"></i>&nbsp; Pagos registrados</a></li>
                 <li><a href="@Url.Action("Index", "Deudas")"><i class="fa fa-fw fa-sign-in"></i>&nbsp; Deudas registradas</a></li>
                 <li><a href="@Url.Action("Generar", "Obligaciones")"><i class="fa fa-fw fa-th-large"></i>&nbsp; Consolidado por clasificador</a></li>
             </ul>
@@ -18,11 +18,11 @@
                 <i class="fa fa-fw fa-refresh"></i> Operaciones<span class="pull-right"><i class="fa fa-fw fa-caret-down"></i></span>
             </a>
             <ul id="operations" class="collapse">
-                <li><a href="@Url.Action("Index", "Estudiantes")"><i class="fa fa-fw fa-upload"></i>&nbsp; Carga de alumnos</a></li>
-                <li><a href="@Url.Action("Generar", "Obligaciones")"><i class="fa fa-fw fa-file-text-o"></i>&nbsp; Generar obligaciones</a></li>
-                <li><a href="@Url.Action("Generar", "Tasas")"><i class="fa fa-fw fa-percent"></i>&nbsp; Generar Tasas</a></li>
-                <li><a href="@Url.Action("ExportarDatosPago", "Pagos")"><i class="fa fa-fw bi-file-arrow-down"></i>&nbsp; Generar Archivos de Pago</a></li>
-                <li><a href="@Url.Action("ImportarArchivosPago", "Pagos")"><i class="fa fa-fw bi-file-arrow-up"></i>&nbsp; Cargar Pago</a></li>
+                <li><a href="@Url.Action("Index", "Estudiantes")"><i class="fa fa-fw fa-user-plus"></i>&nbsp; Carga de alumnos</a></li>
+                <li><a href="@Url.Action("Generar", "Obligaciones")"><i class="fa fa-fw bi-person-lines-fill"></i>&nbsp; Generar obligaciones</a></li>
+                <li><a href="@Url.Action("ExportarDatosPago", "Pagos")"><i class="fa fa-fw bi-journal-arrow-down" style="font-weight:600"></i>&nbsp; Generar archivos de pago</a></li>
+                <li><a href="@Url.Action("ImportarPagoObligaciones", "Pagos")"><i class="fa fa-fw bi-journal-arrow-up"></i>&nbsp; Cargar pago obligaciones</a></li>
+                <li><a href="@Url.Action("ImportarPagoTasas", "Pagos")"><i class="fa fa-fw bi-sort-up-alt"></i>&nbsp; Cargar pago tasas</a></li>
             </ul>
         </li>
         <li class="nav-item">
@@ -30,8 +30,8 @@
                 <i class="fa fa-fw fa-cogs"></i> Configuración<span class="pull-right"><i class="fa fa-fw fa-caret-down"></i></span>
             </a>
             <ul id="settings" class="collapse">
-                <li><a href="@Url.Action("Obligaciones", "Procesos" )"><i class="fa fa-fw fa-tags"></i>&nbsp; Cuota de Pago y Conceptos</a></li>
-                <li><a href="@Url.Action("Tasas", "Procesos" )"><i class="fa fa-fw fa-sitemap"></i>&nbsp; Tasas y Servicios</a></li>
+                <li><a href="@Url.Action("Obligaciones", "Procesos" )"><i class="fa fa-fw bi-stack"></i>&nbsp; Cuota de pago y conceptos</a></li>
+                <li><a href="@Url.Action("Tasas", "Procesos" )"><i class="fa fa-fw fa-percent"></i>&nbsp; Tasas y servicios</a></li>
                 <li><a href="@Url.Action("Index", "EstructuraArchivo")"><i class="fa fa-fw fa-copy"></i>&nbsp; Archivos de intercambio</a></li>
                 <li><a href="@Url.Action("Index", "Clasificadores")"><i class="fa fa-fw fa-list-ol"></i>&nbsp; Clasificadores de ingreso</a></li>
             </ul>
@@ -42,10 +42,10 @@
             </a>
             <ul id="maintenance" class="collapse">
                 <li class="dropdown-header">Pagos</li>
-                <li><a href="@Url.Action("Index", "CategoriaPago")"><i class="fa fa-fw bi-grid-1x2-fill"></i>&nbsp; Categorías de Pago</a></li>
+                <li><a href="@Url.Action("Index", "CategoriaPago")"><i class="fa fa-fw bi-grid-1x2-fill"></i>&nbsp; Categorías de pago</a></li>
                 <li><a href="@Url.Action("Index", "Concepto")"><i class="fa fa-fw bi-ui-checks-grid"></i>&nbsp; Conceptos de pago</a></li>
-                <li><a href="@Url.Action("Index", "EntidadFinanciera")"><i class="fa fa-fw fa-bank"></i>&nbsp; Entidades Financieras</a></li>
-                <li><a href="@Url.Action("Index", "CuentaDeposito")"><i class="fa fa-fw fa-credit-card"></i>&nbsp; Números de Cuenta</a></li>
+                <li><a href="@Url.Action("Index", "EntidadFinanciera")"><i class="fa fa-fw fa-bank"></i>&nbsp; Entidades financieras</a></li>
+                <li><a href="@Url.Action("Index", "CuentaDeposito")"><i class="fa fa-fw fa-credit-card"></i>&nbsp; Números de cuenta</a></li>
 
                 <li class="dropdown-header">Aplicación</li>
                 <li><a href="@Url.Action("Index", "Correo")"><i class="fa fa-fw fa-envelope"></i>&nbsp; Correo de aplicación </a></li>
@@ -59,7 +59,7 @@
                 <i class="fa fa-fw fa-life-ring"></i> Ayuda<span class="pull-right"><i class="fa fa-fw fa-caret-down"></i></span>
             </a>
             <ul id="help" class="collapse">
-                <li><a href="@Url.Action("Manual", "HelpCenter")"><i class="fa fa-fw fa-book"></i>&nbsp; Manual de Usuario</a></li>
+                <li><a href="@Url.Action("Manual", "HelpCenter")"><i class="fa fa-fw fa-book"></i>&nbsp; Manual de usuario</a></li>
             </ul>
         </li>
     </ul>

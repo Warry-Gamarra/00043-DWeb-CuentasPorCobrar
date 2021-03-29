@@ -371,6 +371,7 @@ CREATE TABLE TC_Concepto
 ( 
 	I_ConceptoID         int IDENTITY ( 1,1 ) ,
 	T_ConceptoDesc       varchar(250)  NULL ,
+	T_Clasificador       varchar(50)  NULL ,
 	I_Monto				 decimal(15,2) NOT NULL ,
 	I_MontoMinimo		 decimal(15,2) NOT NULL ,
 	B_EsPagoMatricula    bit  NOT NULL ,
@@ -418,7 +419,7 @@ CREATE TABLE TI_ConceptoPago
 	I_AlumnosDestino     int  NULL ,
 	I_GradoDestino       int  NULL ,
 	I_TipoObligacion     int  NULL ,
-	T_Clasificador       varchar(250)  NULL ,
+	T_Clasificador       varchar(50)  NULL ,
 	C_CodTasa            varchar(20)  NULL ,
 	B_Calculado          bit  NULL ,
 	I_Calculado          int  NULL ,

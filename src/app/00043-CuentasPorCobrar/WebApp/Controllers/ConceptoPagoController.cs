@@ -27,7 +27,6 @@ namespace WebApp.Controllers
         [Route("configuracion/cuotas-de-pago-y-conceptos/{procesoId}/agregar-concepto-obligacion/")]
         public ActionResult CreateObligacion(int procesoId)
         {
-
             ViewBag.Title = "Registrar Concepto";
             ViewBag.Conceptos = new SelectList(_conceptoModel.Listar_CatalogoConceptos(TipoObligacion.Matricula), "Id", "NombreConcepto");
 
@@ -43,7 +42,6 @@ namespace WebApp.Controllers
         [Route("configuracion/cuotas-de-pago-y-conceptos/{procesoId}/editar-concepto-obligacion/{id}")]
         public ActionResult EditObligacion(int procesoId, int id)
         {
-
             ViewBag.Title = "Editar Concepto";
             var model = _conceptoModel.ObtenerConceptoPagoProceso(procesoId, id);
 
@@ -54,7 +52,6 @@ namespace WebApp.Controllers
         [Route("configuracion/tasas-y-servicios/{procesoId}/agregar-tasa-concepto/")]
         public ActionResult CreateTasa(int procesoId)
         {
-
             ViewBag.Title = "Registrar Concepto";
             ViewBag.Conceptos = new SelectList(_conceptoModel.Listar_CatalogoConceptos(TipoObligacion.OtrosPagos), "Id", "NombreConcepto");
 
@@ -71,7 +68,6 @@ namespace WebApp.Controllers
         [Route("configuracion/tasas-y-servicios/{procesoId}/editar-tasa-concepto/{id}")]
         public ActionResult EditTasa(int procesoId, int id)
         {
-
             ViewBag.Title = "Editar Concepto";
             ViewBag.Conceptos = new SelectList(_conceptoModel.Listar_CatalogoConceptos(), "Id", "NombreConcepto");
 
@@ -169,13 +165,5 @@ namespace WebApp.Controllers
             ViewBag.Lista_Combo_CodIngreso = _conceptoModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.CodIngreso);
 
         }
-
-        //private static SelectList Lista_Vacia()
-        //{
-        //    var lista = new List<SelectListItem>();
-
-        //    return new SelectList(lista, "Value", "Text");
-        //}
-
     }
 }

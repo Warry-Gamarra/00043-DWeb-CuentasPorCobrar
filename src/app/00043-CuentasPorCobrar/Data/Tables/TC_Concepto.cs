@@ -14,6 +14,7 @@ namespace Data.Tables
     {
         public int I_ConceptoID { get; set; }
         public string T_ConceptoDesc { get; set; }
+        public string T_Clasificador { get; set; }
         public bool B_EsPagoMatricula { get; set; }
         public bool B_EsPagoExtmp { get; set; }
         public bool B_ConceptoAgrupa { get; set; }
@@ -103,7 +104,8 @@ namespace Data.Tables
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
                     parameters.Add(name: "I_ConceptoID", dbType: DbType.Int32, value: this.I_ConceptoID);
-                    parameters.Add(name: "T_ConceptoDesc", dbType: DbType.String, size: 500, value: this.T_ConceptoDesc);
+                    parameters.Add(name: "T_ConceptoDesc", dbType: DbType.String, size: 250, value: this.T_ConceptoDesc);
+                    parameters.Add(name: "T_Clasificador", dbType: DbType.String, size: 50, value: this.T_Clasificador);
                     parameters.Add(name: "I_Monto", dbType: DbType.Decimal, value: this.I_Monto);
                     parameters.Add(name: "I_MontoMinimo", dbType: DbType.Decimal, value: this.I_MontoMinimo);
                     parameters.Add(name: "B_EsPagoMatricula", dbType: DbType.Boolean, value: this.B_EsPagoMatricula);
@@ -143,6 +145,7 @@ namespace Data.Tables
                 {
                     parameters.Add(name: "I_ConceptoID", dbType: DbType.Int32, value: this.I_ConceptoID);
                     parameters.Add(name: "T_ConceptoDesc", dbType: DbType.String, size: 250, value: this.T_ConceptoDesc);
+                    parameters.Add(name: "T_Clasificador", dbType: DbType.String, size: 50, value: this.T_Clasificador);
                     parameters.Add(name: "I_Monto", dbType: DbType.Decimal, value: this.I_Monto);
                     parameters.Add(name: "I_MontoMinimo", dbType: DbType.Decimal, value: this.I_MontoMinimo);
                     parameters.Add(name: "B_EsPagoMatricula", dbType: DbType.Boolean, value: this.B_EsPagoMatricula);

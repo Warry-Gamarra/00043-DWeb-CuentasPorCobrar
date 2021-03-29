@@ -3,7 +3,7 @@
 @Scripts.Render("~/bundles/jqueryval")
 
 <div class="modal-header bg-dark-gray" style="border-radius: .2rem .2rem 0px 0px">
-    <h5 class="modal-title text-center"><i class="fa fa-tag">&nbsp;</i> @ViewBag.Title</h5>
+    <h5 class="modal-title text-center"><i class="fa bi-layers-half">&nbsp;</i> @ViewBag.Title</h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 </div>
 
@@ -38,7 +38,7 @@
                 @Html.LabelFor(model => model.FecVencto, new { @class = "control-label col-form-label col-4" })
                 <div class="col-8">
                     <div class="input-group date" id="datepicker_fecvento">
-                        @Html.TextBoxFor(model => model.FecVencto, "{0:dd/MM/yyyy}", new { @class = "form-control required" })
+                        @Html.TextBox("txtFecVencto", Model.FecVencto, "{0:dd/MM/yyyy}", new { @class = "form-control required" })
                         <div class="input-group-append">
                             <span class="input-group-text"><i class="fa fa-calendar-o"></i></span>
                         </div>

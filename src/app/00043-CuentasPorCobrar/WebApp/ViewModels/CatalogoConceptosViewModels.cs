@@ -11,6 +11,7 @@ namespace WebApp.ViewModels
     {
         public int? Id { get; set; }
         public string NombreConcepto { get; set; }
+        public string Clasificador { get; set; }
         public decimal Monto { get; set; }
         public decimal MontoMinimo { get; set; }
         public bool Habilitado { get; set; }
@@ -23,6 +24,7 @@ namespace WebApp.ViewModels
         {
             this.Id = concepto.I_ConceptoID;
             this.NombreConcepto = concepto.T_ConceptoDesc.ToUpper();
+            this.Clasificador = string.IsNullOrEmpty(concepto.T_Clasificador) ? "-" : concepto.T_Clasificador;
             this.Habilitado = concepto.B_Habilitado;
             this.FecModificacion = concepto.D_FecMod ?? concepto.D_FecCre;
             this.Monto = concepto.I_Monto;
@@ -39,6 +41,10 @@ namespace WebApp.ViewModels
         [Required]
         [MaxLength(250)]
         public string NombreConcepto { get; set; }
+
+        [Display(Name = "Codigo de clasificador (opcional)")]
+        [MaxLength(50)]
+        public string Clasificador { get; set; }
 
         [Display(Name = "Monto")]
         [Required]
@@ -63,6 +69,7 @@ namespace WebApp.ViewModels
 
         [Display(Name = "Agrupa conceptos")]
         public int TipoCalculo { get; set; }
+        public int TipoObligacion { get; set; }
 
         public CatalogoConceptosRegistroViewModel() { }
 
@@ -70,6 +77,7 @@ namespace WebApp.ViewModels
         {
             this.Id = concepto.I_ConceptoID;
             this.NombreConcepto = concepto.T_ConceptoDesc.ToUpper();
+            this.Clasificador = concepto.T_Clasificador;
             this.Extemporaneo = concepto.B_EsPagoExtmp;
             this.EsMatricula = concepto.B_EsPagoMatricula;
             this.AgupaConceptos = concepto.B_ConceptoAgrupa;

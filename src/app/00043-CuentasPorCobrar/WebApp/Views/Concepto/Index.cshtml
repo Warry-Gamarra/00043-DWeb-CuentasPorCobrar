@@ -30,6 +30,7 @@
             @Html.Grid(Model).Columns(columns =>
             {
                 columns.Add(c => c.NombreConcepto).Titled("Descripción").Filterable(true);
+                columns.Add(c => c.Clasificador).Titled("Clasificador").Css("text-center").Filterable(true);
                 columns.Add(c => c.MontoMinimo).RenderValueAs(model => model.MontoMinimo.ToString("f2")).Css("text-right").Titled("Monto mínimo").Filterable(true);
                 columns.Add(c => c.Monto).RenderValueAs(model => model.Monto.ToString("f2")).Css("text-right").Titled("Monto").Filterable(true);
                 columns.Add(c => c.Habilitado).SetWidth(100).Css("text-center").Encoded(false).Sanitized(false)

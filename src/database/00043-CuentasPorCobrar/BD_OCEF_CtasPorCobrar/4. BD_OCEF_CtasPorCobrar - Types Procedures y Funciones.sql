@@ -1115,6 +1115,7 @@ GO
 CREATE PROCEDURE [dbo].[USP_I_GrabarConcepto]
 	 @I_ConceptoID		int
 	,@T_ConceptoDesc	varchar(250)
+	,@T_Clasificador	varchar(50)
 	,@I_Monto			decimal(15,2)
 	,@I_MontoMinimo		decimal(15,2)
 	,@B_EsPagoMatricula	bit
@@ -1131,9 +1132,9 @@ AS
 BEGIN
   SET NOCOUNT ON
   	BEGIN TRY
-		INSERT INTO TC_Concepto(T_ConceptoDesc, I_Monto, I_MontoMinimo, B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, 
+		INSERT INTO TC_Concepto(T_ConceptoDesc, T_Clasificador, I_Monto, I_MontoMinimo, B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, 
 								B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
-						VALUES (@T_ConceptoDesc, @I_Monto, @I_MontoMinimo, @B_EsPagoMatricula, @B_EsPagoExtmp, @B_ConceptoAgrupa,
+						VALUES (@T_ConceptoDesc, @T_Clasificador, @I_Monto, @I_MontoMinimo, @B_EsPagoMatricula, @B_EsPagoExtmp, @B_ConceptoAgrupa,
 								@B_Calculado, @I_Calculado, 1, 0, @CurrentUserId, @D_FecCre)
 
 		SET @B_Result = 1
@@ -1155,6 +1156,7 @@ GO
 CREATE PROCEDURE [dbo].[USP_U_ActualizarConcepto]
 	 @I_ConceptoID	int
 	,@T_ConceptoDesc	varchar(250)
+	,@T_Clasificador	varchar(50)
 	,@I_Monto			decimal(15,2)
 	,@I_MontoMinimo		decimal(15,2)
 	,@B_EsPagoMatricula	bit
@@ -1173,6 +1175,7 @@ BEGIN
   	BEGIN TRY
 	UPDATE	TC_Concepto 
 		SET	T_ConceptoDesc = @T_ConceptoDesc
+			, T_Clasificador = @T_Clasificador
 			, I_Monto = @I_Monto
 			, I_MontoMinimo = @I_MontoMinimo
 			, I_Calculado = @I_Calculado
