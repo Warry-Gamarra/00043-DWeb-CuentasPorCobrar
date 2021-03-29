@@ -1,6 +1,7 @@
 ﻿using Domain.DTO;
 using Domain.Entities;
 using Domain.Services;
+using Domain.Services.Implementations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace WebApp.Models
 {
     public class ProcesoModel
     {
-        private readonly ProcesoService _procesoService;
+        private readonly IProcesoService _procesoService;
         private readonly ConceptoPagoService _conceptoPagoService;
         private readonly IEntidadFinanciera _entidadFinanciera;
         private readonly ICuentaDeposito _cuentaDeposito;

@@ -9,9 +9,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Services
+namespace Domain.Services.Implementations
 {
-    public class ProcesoService
+    public class ProcesoService : IProcesoService
     {
         public List<CategoriaPago> Listar_CategoriaPago_Habilitados()
         {

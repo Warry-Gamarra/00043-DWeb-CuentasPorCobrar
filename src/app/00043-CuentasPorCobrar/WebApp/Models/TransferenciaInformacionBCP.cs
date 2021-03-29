@@ -73,9 +73,9 @@ namespace WebApp.Models
                 string montoMora = BCPDecimalFormat(0).PadLeft(15, '0');
                 string montoMinimo = BCPDecimalFormat(0).PadLeft(9, '0');
                 string tipoRegistroActualizacion = "A";//M, E
-                string nroDocumentoPago = "-";
-                string nroDocumentoIdentidad = "-";
-                string fillerDetalle = "-";
+                string nroDocumentoPago = "";
+                string nroDocumentoIdentidad = "";
+                string fillerDetalle = "";
 
                 string det = String.Format("{0}{1, -3}{2}{3, -7}{4, -14}{5, -40}{6, -30}{7:yyyyMMdd}{8:yyyyMMdd}{9}{10}{11}{12}{13, 20}{14, 16}{15, 61}",
                     tipoRegistro,               //0
