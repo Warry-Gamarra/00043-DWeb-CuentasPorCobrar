@@ -938,7 +938,7 @@ GO
 
 /*-------------------------- */
 
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.DOMAINS WHERE DOMAIN_NAME = 'type_SelectItems')
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.DOMAINS WHERE DOMAIN_NAME = 'type_SelectItems') BEGIN
 	IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_GrabarCategoriaPago')
 		DROP PROCEDURE [dbo].[USP_I_GrabarCategoriaPago]
 
@@ -946,6 +946,7 @@ IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.DOMAINS WHERE DOMAIN_NAME = 'type_Se
 		DROP PROCEDURE [dbo].[USP_U_ActualizarCategoriaPago]
 
 	DROP TYPE [dbo].[type_SelectItems]
+END
 GO
 
 CREATE TYPE [dbo].[type_SelectItems] AS TABLE(
@@ -1342,10 +1343,12 @@ GO
 
 
 /*-----------------------------------------------------------*/
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.DOMAINS WHERE DOMAIN_NAME = 'type_dataMatricula') BEGIN
+	IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_IU_GrabarMatricula')
+		DROP PROCEDURE [dbo].[USP_IU_GrabarMatricula]
 
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.DOMAINS WHERE DOMAIN_NAME = 'type_dataMatricula')
-	DROP PROCEDURE [dbo].[USP_IU_GrabarMatricula]
 	DROP TYPE [dbo].[type_dataMatricula]
+END
 GO
 
 CREATE TYPE [dbo].[type_dataMatricula] AS TABLE(
@@ -1447,9 +1450,7 @@ GO
 
 
 /*-----------------------------------------------------------*/
-
-IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.DOMAINS WHERE DOMAIN_NAME = 'type_roles' AND DATA_TYPE = 'table type')
-BEGIN
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.DOMAINS WHERE DOMAIN_NAME = 'type_roles' AND DATA_TYPE = 'table type') BEGIN
 	IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'USP_I_GrabarDocumentacionUsuario' AND ROUTINE_TYPE = 'PROCEDURE')
 		DROP PROCEDURE [dbo].[USP_I_GrabarDocumentacionUsuario]
 
@@ -2227,4 +2228,98 @@ FROM CuotasPago
 GO
 
 
-select * from BD_UNFV_Repositorio.dbo.VW_CarreraProfesional WHERE N_Grado = '4'
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.DOMAINS WHERE DOMAIN_NAME = 'type_dataPago') BEGIN
+	IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_GrabarPagoObligaciones')
+		DROP PROCEDURE [dbo].[USP_I_GrabarPagoObligaciones]
+
+	DROP TYPE [dbo].[type_dataPago]
+END
+GO
+
+CREATE TYPE [dbo].[type_dataPago] AS TABLE(
+	--Datos de pago
+	C_CodOperacion		varchar(50),
+	T_NomDepositante	varchar(20),
+	C_Referencia		varchar(50),
+	D_FecPago			datetime,
+	I_Cantidad			int,
+	C_Moneda			varchar(3),
+	I_MontoPago			decimal(15,2),
+	T_LugarPago			varchar(250),
+	--Identificar obligaciones
+	C_CodAlu			varchar(20),
+	C_CodRc				varchar(3),
+	I_ProcesoID			int,
+	D_FecVencto			datetime
+)
+GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_GrabarPagoObligaciones')
+	DROP PROCEDURE [dbo].[USP_I_GrabarPagoObligaciones]
+GO
+
+CREATE PROCEDURE [dbo].[USP_I_GrabarPagoObligaciones]
+(
+	 @Tbl_Pagos	[dbo].[type_dataPago]	READONLY
+	,@D_FecRegistro datetime
+	,@UserID		int
+	,@B_Result		bit				OUTPUT
+	,@T_Message		nvarchar(4000)	OUTPUT
+)
+AS
+BEGIN
+	SELECT * FROM dbo.TR_PagoBanco
+	SELECT * FROM dbo.TRI_PagoProcesadoUnfv	
+	SELECT * FROM dbo.TR_ObligacionAluCab
+	SELECT * FROM dbo.TR_ObligacionAluDet
+
+	DECLARE @Tmp_PagoObligacion TABLE (
+		id INT IDENTITY(1,1),
+		I_ObligacionAluID	int,
+		C_CodOperacion		varchar(50),
+		T_NomDepositante	varchar(20),
+		C_Referencia		varchar(50),
+		D_FecPago			datetime,
+		I_Cantidad			int,
+		C_Moneda			varchar(3),
+		I_MontoPago			decimal(15,2),
+		T_LugarPago			varchar(250)
+	);
+
+	WITH Matriculados(I_ObligacionAluID, C_CodAlu, C_CodRc, I_ProcesoID, D_FecVencto)
+	AS 
+	(
+		SELECT cab.I_ObligacionAluID, m.C_CodAlu, m.C_CodRc, cab.I_ProcesoID, cab.D_FecVencto FROM dbo.TC_MatriculaAlumno m
+		INNER JOIN dbo.TR_ObligacionAluCab cab ON cab.I_MatAluID = m.I_MatAluID
+		WHERE m.B_Eliminado = 0 AND cab.B_Eliminado = 0
+	)
+	INSERT @Tmp_PagoObligacion(I_ObligacionAluID, C_CodOperacion, T_NomDepositante, 
+		C_Referencia, D_FecPago, I_Cantidad, C_Moneda, I_MontoPago, T_LugarPago)
+	SELECT m.I_ObligacionAluID, p.C_CodOperacion, p.T_NomDepositante, p.C_Referencia, p.D_FecPago, 
+		p.I_Cantidad, p.C_Moneda, p.I_MontoPago, p.T_LugarPago FROM @Tbl_Pagos p
+	INNER JOIN Matriculados m ON m.C_CodAlu = p.C_CodAlu AND m.C_CodRc = p.C_CodRc AND 
+		m.I_ProcesoID = p.I_ProcesoID AND DATEDIFF(DAY, m.D_FecVencto, p.D_FecVencto) = 0
+	
+	DECLARE @I_PagoBanco INT
+
+	BEGIN TRANSACTION
+	BEGIN TRY
+		
+		
+
+
+
+		--INSERT dbo.TR_PagoBanco(C_CodOperacion, C_CodDepositante, T_NomDepositante, C_Referencia, D_FecPago, I_Cantidad,
+		--	C_Moneda, I_MontoPago, T_LugarPago, B_Anulado, I_UsuarioCre, D_FecCre)
+		
+
+
+		COMMIT TRANSACTION
+	END TRY
+	BEGIN CATCH
+		ROLLBACK TRANSACTION
+	END CATCH
+END
+GO

@@ -1,6 +1,7 @@
 ﻿using Domain.Helpers;
 using Domain.Entities;
 using Domain.Services;
+using Domain.Services.Implementations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace WebApp.Models
     public class ConceptoPagoModel
     {
         ConceptoPagoService conceptoPagoService;
-        ProcesoService procesoService;
+        IProcesoService procesoService;
         readonly CategoriaPago categoriaPago;
 
         public ConceptoPagoModel()
