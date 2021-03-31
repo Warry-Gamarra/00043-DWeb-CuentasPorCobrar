@@ -32,14 +32,23 @@ namespace WebApp.Models
 
             var tw = new StreamWriter(memoryStream);
 
+            string identificadorRegistro = "T";
+            int cantRegistrosSoles = cuotas_pago.Count();
+            int totalSoles = (int)(cuotas_pago.Sum(c => c.I_MontoTotal) * 100);
+            int cantRegistrosDolares = 0;
+            int totalDolares = 0;
+            int fechaVencimiento = 0;
+
             #region Cabecera
-            string cab = String.Format("T{0:D6}{1:D14}{2:D6}{3:D14}{4:yyyyMMdd}{5:D8}",
-                cuotas_pago.Count(),
-                (int)(cuotas_pago.Sum(c => c.I_MontoTotal) * 100),
-                0,
-                0,
-                fecha_actual,
-                0);
+            string cab = String.Format("{0}{1:D6}{2:D14}{3:D6}{4:D14}{5:yyyyMMdd}{6:D8}",
+                identificadorRegistro,  //0
+                cantRegistrosSoles,     //1
+                totalSoles,             //2
+                cantRegistrosDolares,   //3
+                totalDolares,           //4
+                fecha_actual,           //5
+                fechaVencimiento        //6
+                );
 
             tw.WriteLine(cab);
             #endregion
@@ -47,23 +56,39 @@ namespace WebApp.Models
             #region Detalle
             foreach (var item in cuotas_pago)
             {
-                string det = String.Format("D0001000{0,-20}{1,-40}{2}{3}00000000{4:yyyyMMdd}{5}{6:D14}{0}{7}{8}{9}{4:yyyyMMdd}{10}{11}{12}{13:D14}{14}{6:D14}{15}",
-                    item.C_CodAlu.PadLeft(10, '0'),
-                    item.T_NombresCompletos,
-                    item.I_NroOrden.ToString("D5").PadRight(20, ' '),
-                    new String(' ', 20), //Referencia del recibo
-                    item.D_FecVencto,
-                    "01", //Moneda (01=soles y 02=dolares),
-                    (int)(item.I_MontoTotal * 100),
-                    item.C_CodRc, //Información adicional
-                    item.I_Anio,
-                    item.C_Periodo,
-                    item.I_ProcesoID.ToString().PadLeft(10, ' '),
-                    item.I_MontoTotal.Value.ToString("#.00").PadLeft(10, ' '),
-                    new String(' ', 4),
-                    0, //Interes moratorio
-                    item.N_CodBanco.PadRight(4, '0'),
-                    new String('0', 162)
+                string identificadorRegistroDetalle = "D";
+                string codigoServicio = "0001";
+                string codigoSucursal = "000";
+                string codigoContrato = item.C_CodAlu.PadLeft(10, '0');
+                string nombres = item.T_NombresCompletos;
+                string numeroRecibo = item.I_NroOrden.ToString("D5").PadRight(20, ' ');
+                string referenciaRecibo = new String(' ', 20);
+                string fechaEmision = "00000000";
+                string fechaVncto = item.D_FecVencto.ToString("yyyyMMdd");
+                string moneda = "01";//Moneda (01=soles y 02=dolares)
+                int importeTotal = (int)(item.I_MontoTotal * 100);
+                string informacionAdicional = codigoContrato + item.C_CodRc + item.I_Anio.ToString() + item.C_Periodo + fechaVncto +
+                    item.I_ProcesoID.ToString().PadLeft(10, ' ') + item.I_MontoTotal.Value.ToString("#.00").PadLeft(10, ' ') + new String(' ', 4);
+                int interesMoratorio = 0;
+                string codigoConcepto01 = item.N_CodBanco.PadRight(4, '0');
+                string otros = new String('0', 162);
+
+                string det = String.Format("{0}{1}{2}{3,-20}{4,-40}{5}{6}{7}{8:yyyyMMdd}{9}{10:D14}{11}{12:D14}{13}{10:D14}{14}",
+                    identificadorRegistroDetalle,   //0
+                    codigoServicio,                 //1
+                    codigoSucursal,                 //2
+                    codigoContrato,                 //3
+                    nombres,                        //4
+                    numeroRecibo,                   //5
+                    referenciaRecibo,               //6
+                    fechaEmision,                   //7
+                    fechaVncto,                     //8
+                    moneda,                         //9
+                    importeTotal,                   //10
+                    informacionAdicional,           //11
+                    interesMoratorio,               //12
+                    codigoConcepto01,               //13
+                    otros                           //14
                     );
                 tw.WriteLine(det);
             }
