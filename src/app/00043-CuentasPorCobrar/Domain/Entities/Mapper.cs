@@ -2,8 +2,6 @@
 using Data.Tables;
 using Data.Types;
 using Data.Views;
-using ExcelDataReader;
-using NDbfReader;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -15,92 +13,18 @@ namespace Domain.Entities
 {
     public static class Mapper
     {
-        public static DataMatriculaType MatriculaReader_To_DataMatriculaType(Reader reader)
+        public static MatriculaObsEntity MatriculaEntity_To_MatriculaObsEntity(MatriculaEntity matricula, bool B_Success, string T_Message)
         {
-            DataMatriculaType dataMatriculaType = new DataMatriculaType()
+            var dataMatriculaObs = new MatriculaObsEntity()
             {
-                C_CodRC = reader.GetString("COD_RC"),
-                C_CodAlu = reader.GetString("COD_ALU"),
-                I_Anio = reader.GetInt32("ANO"),
-                C_Periodo = reader.GetString("P"),
-                C_EstMat = reader.GetString("EST_MAT"),
-                C_Ciclo = reader.GetString("NIVEL"),
-                B_Ingresante = reader.GetBoolean("ES_INGRESA"),
-                I_CredDesaprob = reader.GetInt32("CRED_DESAP")
-            };
-
-            return dataMatriculaType;
-        }
-
-        public static DataMatriculaType MatriculaReader_To_DataMatriculaType(IExcelDataReader reader)
-        {
-            string stringValue; int intValue;
-
-            DataMatriculaType dataMatriculaType = new DataMatriculaType()
-            {
-                C_CodRC = reader.GetValue(0)?.ToString(),
-                C_CodAlu = reader.GetValue(1)?.ToString(),
-                C_Periodo = reader.GetValue(3)?.ToString(),
-                C_EstMat = reader.GetValue(4)?.ToString(),
-                C_Ciclo = reader.GetValue(5)?.ToString()
-            };
-            
-            if (reader.GetValue(2) != null)
-            {
-                stringValue = reader.GetValue(2).ToString();
-
-                if (int.TryParse(stringValue, out intValue))
-                    dataMatriculaType.I_Anio = intValue;
-            }
-
-            if (reader.GetValue(6) != null)
-            {
-                stringValue = reader.GetValue(6).ToString();
-
-                if (stringValue.Equals("T", StringComparison.OrdinalIgnoreCase))
-                    dataMatriculaType.B_Ingresante = true;
-
-                if (stringValue.Equals("F", StringComparison.OrdinalIgnoreCase))
-                    dataMatriculaType.B_Ingresante = false;
-            }
-
-            if (reader.GetValue(7) != null)
-            {
-                stringValue = reader.GetValue(7).ToString();
-
-                if (stringValue.Trim() == "")
-                    dataMatriculaType.I_CredDesaprob = 0;
-                else if (int.TryParse(stringValue, out intValue))
-                    dataMatriculaType.I_CredDesaprob = intValue;
-            }
-            else
-            {
-                dataMatriculaType.I_CredDesaprob = 0;
-            }
-
-            if (reader.FieldCount > 8)
-            {
-                if (reader.GetValue(9) != null)
-                {
-                    dataMatriculaType.B_ActObl = reader.GetValue(9).ToString().Equals("T", StringComparison.OrdinalIgnoreCase);
-                }
-            }
-
-            return dataMatriculaType;
-        }
-
-        public static DataMatriculaObs DataMatriculaType_To_DataMatriculaObs(DataMatriculaType dataMatricula, bool B_Success, string T_Message)
-        {
-            var dataMatriculaObs = new DataMatriculaObs()
-            {
-                C_CodRC = dataMatricula.C_CodRC,
-                C_CodAlu = dataMatricula.C_CodAlu,
-                I_Anio = dataMatricula.I_Anio,
-                C_Periodo = dataMatricula.C_Periodo,
-                C_EstMat = dataMatricula.C_EstMat,
-                C_Ciclo = dataMatricula.C_Ciclo,
-                B_Ingresante = dataMatricula.B_Ingresante,
-                I_CredDesaprob = dataMatricula.I_CredDesaprob,
+                C_CodRC = matricula.C_CodRC,
+                C_CodAlu = matricula.C_CodAlu,
+                I_Anio = matricula.I_Anio,
+                C_Periodo = matricula.C_Periodo,
+                C_EstMat = matricula.C_EstMat,
+                C_Ciclo = matricula.C_Ciclo,
+                B_Ingresante = matricula.B_Ingresante,
+                I_CredDesaprob = matricula.I_CredDesaprob,
                 B_Success = B_Success,
                 T_Message = T_Message
             };
@@ -108,7 +32,7 @@ namespace Domain.Entities
             return dataMatriculaObs;
         }
 
-        public static DataTable DataMatriculaTypeList_To_DataTable(List<DataMatriculaType> dataMatriculas)
+        public static DataTable MatriculaEntity_To_DataTable(List<MatriculaEntity> dataMatriculas)
         {
             DataTable dataTable = new DataTable();
             dataTable.Columns.Add("C_CodRC");
@@ -136,20 +60,46 @@ namespace Domain.Entities
             return dataTable;
         }
 
-        public static List<DataMatriculaObs> DataMatriculaResult_To_DataMatriculaObs(List<DataMatriculaResult> dataMatriculaResult)
+        public static MatriculaObsEntity DataMatriculaResult_To_MatriculaObsEntity(DataMatriculaResult result)
         {
-            return dataMatriculaResult.Select(d  => new DataMatriculaObs() {
-                C_CodRC = d.C_CodRC,
-                C_CodAlu = d.C_CodAlu,
-                I_Anio = d.I_Anio,
-                C_Periodo = d.C_Periodo,
-                C_EstMat = d.C_EstMat,
-                C_Ciclo = d.C_Ciclo,
-                B_Ingresante = d.B_Ingresante,
-                I_CredDesaprob = d.I_CredDesaprob,
-                B_Success = d.B_Success,
-                T_Message = d.T_Message
-            }).ToList();
+            var matriculaObs = new MatriculaObsEntity()
+            {
+                C_CodRC = result.C_CodRC,
+                C_CodAlu = result.C_CodAlu,
+                I_Anio = result.I_Anio,
+                C_Periodo = result.C_Periodo,
+                C_EstMat = result.C_EstMat,
+                C_Ciclo = result.C_Ciclo,
+                B_Ingresante = result.B_Ingresante,
+                I_CredDesaprob = result.I_CredDesaprob,
+                B_Success = result.B_Success,
+                T_Message = result.T_Message
+            };
+
+            return matriculaObs;
+        }
+
+        public static MatriculaDTO MatriculaDTO_To_VW_MatriculaAlumno(VW_MatriculaAlumno matriculaAlumno)
+        {
+            var matriculaDTO = new MatriculaDTO()
+            {
+                T_Nombre = matriculaAlumno.T_Nombre,
+                T_ApePaterno = matriculaAlumno.T_ApePaterno,
+                T_ApeMaterno = matriculaAlumno.T_ApeMaterno,
+                N_Grado = matriculaAlumno.N_Grado,
+                I_MatAluID = matriculaAlumno.I_MatAluID,
+                C_CodRc = matriculaAlumno.C_CodRc,
+                C_CodAlu = matriculaAlumno.C_CodAlu,
+                I_Anio = matriculaAlumno.I_Anio,
+                I_Periodo = matriculaAlumno.I_Periodo,
+                C_EstMat = matriculaAlumno.C_EstMat,
+                C_Ciclo = matriculaAlumno.C_Ciclo,
+                B_Ingresante = matriculaAlumno.B_Ingresante,
+                I_CredDesaprob = matriculaAlumno.I_CredDesaprob,
+                B_Habilitado = matriculaAlumno.B_Habilitado
+            };
+
+            return matriculaDTO;
         }
 
         public static ObligacionDetalleDTO VW_DetalleObligaciones_To_ObligacionDetalleDTO(VW_DetalleObligaciones detalleObligaciones)
@@ -230,6 +180,29 @@ namespace Domain.Entities
             };
 
             return catalogoOpcionEntity;
+        }
+
+        public static Proceso USP_S_Procesos_To_Proceso(USP_S_Procesos uspProceso)
+        {
+            var proceso = new Proceso()
+            {
+                I_ProcesoID = uspProceso.I_ProcesoID,
+                I_CatPagoID = uspProceso.I_CatPagoID,
+                T_CatPagoDesc = uspProceso.T_CatPagoDesc,
+                C_PeriodoCod = uspProceso.C_PeriodoCod,
+                T_PeriodoDesc = uspProceso.T_PeriodoDesc,
+                T_ProcesoDesc = uspProceso.T_ProcesoDesc,
+                I_Periodo = uspProceso.I_Periodo,
+                I_Anio = uspProceso.I_Anio,
+                D_FecVencto = uspProceso.D_FecVencto,
+                I_Prioridad = uspProceso.I_Prioridad,
+                N_CodBanco = uspProceso.N_CodBanco,
+                B_Obligacion = uspProceso.B_Obligacion,
+                I_Nivel = uspProceso.I_Nivel,
+                C_Nivel = uspProceso.C_Nivel
+            };
+
+            return proceso;
         }
     }
 }

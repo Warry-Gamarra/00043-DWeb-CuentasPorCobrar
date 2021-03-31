@@ -28,11 +28,16 @@
             </div>
         </div>
     </div>
-    <div class="modal-footer">
+    <div class="modal-footer" id="button-section">
         <button type="submit" class="btn btn-@Model.Color"><i id="icon-submit" class="fa fa-cloud-upload">&nbsp;</i>Subir archivo de </button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
     </div>
-
+    <div class="modal-footer" id="wating-section" style="display: none;">
+        <div class="d-flex align-items-center">
+            <strong>Cargando alumnos...</strong>
+            <div class="spinner-border ml-auto text-primary" role="status" aria-hidden="true"></div>
+        </div>
+    </div>
 }
 
 
@@ -68,6 +73,8 @@
             dataType: "json",
             beforeSend: function () {
                 $('#icon-submit').removeClass('fa-cloud-upload').addClass('fa-spin fa-cog');
+                $('#button-section').css('display', 'none');
+                $('#wating-section').css('display', 'flex');
             },
             success: function (result) {
                if (result.Value) {
@@ -76,13 +83,14 @@
                 } else {
                     $('.modal-footer').html('<p class="alert alert-danger">' + result['Message'] + '</p><button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>')
                 }
-
-                $('#icon-submit').addClass('fa-cloud-upload').removeClass('fa-spin fa-cog');
-
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 toastr.error(errorThrown);
+            },
+            complete: function () {
                 $('#icon-submit').addClass('fa-cloud-upload').removeClass('fa-spin fa-cog');
+                $('#button-section').css('display', 'flex');
+                $('#wating-section').css('display', 'none');
             }
         });
     })

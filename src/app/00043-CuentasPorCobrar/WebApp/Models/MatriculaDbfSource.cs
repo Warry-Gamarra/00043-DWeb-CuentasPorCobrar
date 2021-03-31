@@ -3,17 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Data.Types;
 using Domain.Entities;
 using NDbfReader;
 
-namespace Domain.Helpers
+namespace WebApp.Models
 {
     public class MatriculaDbfSource : IMatriculaSource
     {
-        public List<DataMatriculaType> GetList(string filePath)
+        public List<MatriculaEntity> GetList(string filePath)
         {
-            var dataMatriculas = new List<DataMatriculaType>();
+            var dataMatriculas = new List<MatriculaEntity>();
 
             using (var table = Table.Open(filePath))
             {
@@ -21,7 +20,7 @@ namespace Domain.Helpers
                 
                 while (reader.Read())
                 {
-                    dataMatriculas.Add(Mapper.MatriculaReader_To_DataMatriculaType(reader));
+                    dataMatriculas.Add(Mapper.MatriculaReader_To_MatriculaEntity(reader));
                 }
             }
 

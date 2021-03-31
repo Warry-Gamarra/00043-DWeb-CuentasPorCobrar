@@ -11,15 +11,14 @@ using WebMatrix.WebData;
 
 namespace WebApp.Controllers
 {
-
     [Authorize]
     public class EstudiantesController : Controller
     {
-        private readonly SeleccionarArchivoModel _seleccionarArchivoModel;
+        private readonly EstudianteModel _seleccionarArchivoModel;
 
         public EstudiantesController()
         {
-            _seleccionarArchivoModel = new SeleccionarArchivoModel();
+            _seleccionarArchivoModel = new EstudianteModel();
         }
 
         [Route("operaciones/cargar-estudiantes")]
@@ -60,54 +59,46 @@ namespace WebApp.Controllers
         }
                
         [HttpPost]
-        [Route("operaciones/cargar-aptos-pregrado")]
-        public ActionResult CargarArchivoMatriculaPregrado(HttpPostedFileBase file, TipoAlumno tipoAlumno)
+        public ActionResult CargarArchivoMatricula(HttpPostedFileBase file, TipoAlumno tipoAlumno)
         {
-            var result = _seleccionarArchivoModel.CargarAlumnosAptos(Server.MapPath("~/Upload/Alumnos/"), file, tipoAlumno, WebSecurity.CurrentUserId);
+            var result = _seleccionarArchivoModel.CargarMatricula(Server.MapPath("~/Upload/Alumnos/"), file, tipoAlumno, WebSecurity.CurrentUserId);
 
             var response = Mapper.DataMatriculaResponse_To_Response(result);
 
-            Session["MATRICULA_PREGRADO_RESPONSE"] = result.DataMatriculasObs;
+            Session["MATRICULA_RESPONSE"] = result.DataMatriculasObs;
 
             return Json(response, JsonRequestBehavior.AllowGet);
         }
         
         [HttpPost]
-        [Route("operaciones/cargar-aptos-posgrado")]
-        public ActionResult CargarArchivoMatriculaPosgrado(HttpPostedFileBase file, TipoAlumno tipoAlumno)
-        {
-            var result = _seleccionarArchivoModel.CargarAlumnosAptos(Server.MapPath("~/Upload/Alumnos/"), file, tipoAlumno, WebSecurity.CurrentUserId);
-
-            var response = Mapper.DataMatriculaResponse_To_Response(result);
-
-            return Json(response, JsonRequestBehavior.AllowGet);
-        }
-
-        [HttpPost]
         [Route("operaciones/cargar-multas-pregrado")]
         public ActionResult CargarArchivoMultaPregrado(HttpPostedFileBase file, TipoAlumno tipoAlumno)
         {
-            var result = _seleccionarArchivoModel.CargarAlumnosAptos(Server.MapPath("~/Upload/MultaNoVotar/"), file, tipoAlumno, WebSecurity.CurrentUserId);
+            var result = _seleccionarArchivoModel.CargarMultasPorNoVotar(Server.MapPath("~/Upload/MultaNoVotar/"), file, tipoAlumno, WebSecurity.CurrentUserId);
 
-            var response = Mapper.DataMatriculaResponse_To_Response(result);
+            return Json(result, JsonRequestBehavior.AllowGet);
 
-            return Json(response, JsonRequestBehavior.AllowGet);
+            //var response = Mapper.DataMatriculaResponse_To_Response(result);
+
+            //return Json(response, JsonRequestBehavior.AllowGet);
         }
         
         [HttpPost]
         [Route("operaciones/cargar-multas-posgrado")]
         public ActionResult CargarArchivoMultaPosgrado(HttpPostedFileBase file, TipoAlumno tipoAlumno)
         {
-            var result = _seleccionarArchivoModel.CargarAlumnosAptos(Server.MapPath("~/Upload/MultaNoVotar/"), file, tipoAlumno, WebSecurity.CurrentUserId);
+            var result = _seleccionarArchivoModel.CargarMultasPorNoVotar(Server.MapPath("~/Upload/MultaNoVotar/"), file, tipoAlumno, WebSecurity.CurrentUserId);
 
-            var response = Mapper.DataMatriculaResponse_To_Response(result);
+            return Json(result, JsonRequestBehavior.AllowGet);
 
-            return Json(response, JsonRequestBehavior.AllowGet);
+            //var response = Mapper.DataMatriculaResponse_To_Response(result);
+
+            //return Json(response, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult DescargarObservadorPregrado()
         {
-            if (Session["MATRICULA_PREGRADO_RESPONSE"] == null)
+            if (Session["MATRICULA_RESPONSE"] == null)
                 return  RedirectToAction("cargar-estudiantes", "operaciones");
 
             using (var workbook = new XLWorkbook())
@@ -130,7 +121,7 @@ namespace WebApp.Controllers
                 #endregion
 
                 #region Body
-                foreach (var item in (List<Domain.Entities.DataMatriculaObs>)Session["MATRICULA_PREGRADO_RESPONSE"])
+                foreach (var item in (List<Domain.Entities.MatriculaObsEntity>)Session["MATRICULA_RESPONSE"])
                 {
                     currentRow++;
                     worksheet.Cell(currentRow, 1).SetValue<string>(item.C_CodRC);

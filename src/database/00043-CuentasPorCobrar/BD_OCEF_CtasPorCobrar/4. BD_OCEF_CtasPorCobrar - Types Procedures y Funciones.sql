@@ -188,11 +188,12 @@ CREATE PROCEDURE dbo.USP_S_Procesos
 AS
 BEGIN
 	SET NOCOUNT ON;
-	SELECT p.I_ProcesoID, cp.I_CatPagoID, cp.T_CatPagoDesc, T_OpcionDesc AS T_PeriodoDesc, I_Periodo, T_OpcionCod AS C_PeriodoCod, 
-		   p.I_Anio, p.D_FecVencto, p.I_Prioridad, p.N_CodBanco, p.T_ProcesoDesc, cp.B_Obligacion
+	SELECT p.I_ProcesoID, cp.I_CatPagoID, cp.T_CatPagoDesc, per.T_OpcionDesc AS T_PeriodoDesc, I_Periodo, per.T_OpcionCod AS C_PeriodoCod, 
+		   p.I_Anio, p.D_FecVencto, p.I_Prioridad, p.N_CodBanco, p.T_ProcesoDesc, cp.B_Obligacion, cp.I_Nivel, niv.T_OpcionCod AS C_Nivel
 	FROM dbo.TC_Proceso p
 		INNER JOIN dbo.TC_CategoriaPago cp ON p.I_CatPagoID = cp.I_CatPagoID
-		LEFT JOIN dbo.TC_CatalogoOpcion co ON co.I_OpcionID = p.I_Periodo
+		LEFT JOIN dbo.TC_CatalogoOpcion per ON per.I_OpcionID = p.I_Periodo
+		LEFT JOIN dbo.TC_CatalogoOpcion niv ON cp.I_Nivel = niv.I_OpcionID
 	WHERE p.B_Eliminado = 0
 END
 GO
@@ -1372,6 +1373,7 @@ GO
 CREATE PROCEDURE [dbo].[USP_IU_GrabarMatricula]
 (
 	 @Tbl_Matricula	[dbo].[type_dataMatricula]	READONLY
+	,@B_AlumnosPregrado bit
 	,@D_FecRegistro datetime
 	,@UserID		int
 	,@B_Result		bit				OUTPUT
@@ -1384,12 +1386,37 @@ BEGIN
 			BEGIN TRANSACTION
 			
 			DECLARE @Tbl_Actions AS TABLE( T_Action varchar(10), T_Codigo varchar(10));
+			
+			CREATE TABLE #Tmp_Matricula
+			(
+				C_CodRC			VARCHAR(3),
+				C_CodAlu		VARCHAR(20),
+				I_Anio			INT,
+				C_Periodo		VARCHAR(50),
+				I_Periodo		INT,
+				C_EstMat		VARCHAR(2),
+				C_Ciclo			VARCHAR(2),
+				B_Ingresante	BIT,
+				I_CredDesaprob	TINYINT,
+				B_ActObl		BIT
+			)
 
-			SELECT m.C_CodRC, m.C_CodAlu, m.I_Anio, m.C_Periodo, c.I_OpcionID AS I_Periodo, m.C_EstMat, m.C_Ciclo, m.B_Ingresante, m.I_CredDesaprob, m.B_ActObl
-			INTO #Tmp_Matricula FROM @Tbl_Matricula AS m
-			INNER JOIN dbo.TC_CatalogoOpcion c ON c.I_ParametroID = 5 AND c.T_OpcionCod = m.C_Periodo
-			INNER JOIN BD_UNFV_Repositorio.dbo.VW_Alumnos a ON a.C_CodAlu = m.C_CodAlu and a.C_RcCod = a.C_RcCod
-			WHERE c.B_Eliminado = 0;
+			IF (@B_AlumnosPregrado = 1) BEGIN
+				INSERT #Tmp_Matricula(C_CodRC, C_CodAlu, I_Anio, C_Periodo, I_Periodo, C_EstMat, C_Ciclo, B_Ingresante, I_CredDesaprob, B_ActObl)
+				SELECT m.C_CodRC, m.C_CodAlu, m.I_Anio, m.C_Periodo, c.I_OpcionID AS I_Periodo, m.C_EstMat, m.C_Ciclo, m.B_Ingresante, m.I_CredDesaprob, m.B_ActObl
+				FROM @Tbl_Matricula AS m
+				INNER JOIN dbo.TC_CatalogoOpcion c ON c.I_ParametroID = 5 AND c.T_OpcionCod = m.C_Periodo
+				INNER JOIN BD_UNFV_Repositorio.dbo.VW_Alumnos a ON a.C_CodAlu = m.C_CodAlu and a.C_RcCod = a.C_RcCod
+				WHERE c.B_Eliminado = 0 AND a.N_Grado = '1';
+			END 
+			ELSE BEGIN
+				INSERT #Tmp_Matricula(C_CodRC, C_CodAlu, I_Anio, C_Periodo, I_Periodo, C_EstMat, C_Ciclo, B_Ingresante, I_CredDesaprob, B_ActObl)
+				SELECT m.C_CodRC, m.C_CodAlu, m.I_Anio, m.C_Periodo, c.I_OpcionID AS I_Periodo, m.C_EstMat, m.C_Ciclo, m.B_Ingresante, m.I_CredDesaprob, m.B_ActObl
+				FROM @Tbl_Matricula AS m
+				INNER JOIN dbo.TC_CatalogoOpcion c ON c.I_ParametroID = 5 AND c.T_OpcionCod = m.C_Periodo
+				INNER JOIN BD_UNFV_Repositorio.dbo.VW_Alumnos a ON a.C_CodAlu = m.C_CodAlu and a.C_RcCod = a.C_RcCod
+				WHERE c.B_Eliminado = 0 AND a.N_Grado IN ('2', '3');
+			END;
 
 			--Update para alumnos sin obligaciones
 			WITH Tmp_SinObligaciones(I_MatAluID, C_EstMat, C_Ciclo, B_Ingresante, I_CredDesaprob)
@@ -2323,3 +2350,17 @@ BEGIN
 	END CATCH
 END
 GO
+
+
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_MatriculaAlumno')
+	DROP VIEW [dbo].[VW_MatriculaAlumno]
+GO
+
+CREATE VIEW [dbo].[VW_MatriculaAlumno]
+AS
+SELECT a.T_Nombre, a.T_ApePaterno, a.T_ApeMaterno, a.N_Grado, m.* FROM TC_MatriculaAlumno m 
+INNER JOIN BD_UNFV_Repositorio.dbo.VW_Alumnos a ON a.C_CodAlu = m.C_CodAlu AND a.C_RcCod = m.C_CodRc
+WHERE m.B_Eliminado = 0
+GO
+

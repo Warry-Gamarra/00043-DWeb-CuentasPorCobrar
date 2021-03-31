@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using WebApp.ViewModels;
+using NDbfReader;
+using ExcelDataReader;
 
 namespace WebApp.Models
 {
@@ -110,6 +112,80 @@ namespace WebApp.Models
             };
 
             return selectViewModel;
+        }
+
+        public static MatriculaEntity MatriculaReader_To_MatriculaEntity(Reader reader)
+        {
+            var dataMatriculaType = new MatriculaEntity()
+            {
+                C_CodRC = reader.GetString("COD_RC"),
+                C_CodAlu = reader.GetString("COD_ALU"),
+                I_Anio = reader.GetInt32("ANO"),
+                C_Periodo = reader.GetString("P"),
+                C_EstMat = reader.GetString("EST_MAT"),
+                C_Ciclo = reader.GetString("NIVEL"),
+                B_Ingresante = reader.GetBoolean("ES_INGRESA"),
+                I_CredDesaprob = reader.GetInt32("CRED_DESAP")
+            };
+
+            return dataMatriculaType;
+        }
+
+        public static MatriculaEntity MatriculaReader_To_MatriculaEntity(IExcelDataReader reader)
+        {
+            string stringValue; int intValue;
+
+            var dataMatriculaType = new MatriculaEntity()
+            {
+                C_CodRC = reader.GetValue(0)?.ToString(),
+                C_CodAlu = reader.GetValue(1)?.ToString(),
+                C_Periodo = reader.GetValue(3)?.ToString(),
+                C_EstMat = reader.GetValue(4)?.ToString(),
+                C_Ciclo = reader.GetValue(5)?.ToString()
+            };
+
+            if (reader.GetValue(2) != null)
+            {
+                stringValue = reader.GetValue(2).ToString();
+
+                if (int.TryParse(stringValue, out intValue))
+                    dataMatriculaType.I_Anio = intValue;
+            }
+
+            if (reader.GetValue(6) != null)
+            {
+                stringValue = reader.GetValue(6).ToString();
+
+                if (stringValue.Equals("T", StringComparison.OrdinalIgnoreCase))
+                    dataMatriculaType.B_Ingresante = true;
+
+                if (stringValue.Equals("F", StringComparison.OrdinalIgnoreCase))
+                    dataMatriculaType.B_Ingresante = false;
+            }
+
+            if (reader.GetValue(7) != null)
+            {
+                stringValue = reader.GetValue(7).ToString();
+
+                if (stringValue.Trim() == "")
+                    dataMatriculaType.I_CredDesaprob = 0;
+                else if (int.TryParse(stringValue, out intValue))
+                    dataMatriculaType.I_CredDesaprob = intValue;
+            }
+            else
+            {
+                dataMatriculaType.I_CredDesaprob = 0;
+            }
+
+            if (reader.FieldCount > 8)
+            {
+                if (reader.GetValue(9) != null)
+                {
+                    dataMatriculaType.B_ActObl = reader.GetValue(9).ToString().Equals("T", StringComparison.OrdinalIgnoreCase);
+                }
+            }
+
+            return dataMatriculaType;
         }
     }
 }

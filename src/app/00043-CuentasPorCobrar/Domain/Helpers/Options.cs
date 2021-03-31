@@ -15,8 +15,7 @@ namespace Domain.Helpers
     public enum TipoAlumno
     {
         Pregrado,
-        Posgrado,
-        Euded
+        Posgrado
     }
 
     public enum TipoArchivoAlumno
