@@ -145,9 +145,7 @@
     <Compile Include="UnfvRepositorioClient\IAlumnosClient.cs" />
     <Compile Include="UnfvRepositorioClient\AlumnosClient.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="DTO\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Data\Data.csproj">
       <Project>{02be7951-a281-420a-9d8d-856c384f7389}</Project>

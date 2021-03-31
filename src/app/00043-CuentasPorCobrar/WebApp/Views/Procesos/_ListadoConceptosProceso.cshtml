@@ -45,27 +45,39 @@
     $(document).ready(function () {
         $('#btn-agregar').on('click', function (event) {
             event.preventDefault();
-            var url = $(event.currentTarget).attr("href");
-            loadForm(url, "obteniendo formulario...")
+            var url = $(event.currentTarget).attr('href');
+            loadForm(url, 'obteniendo formulario...')
         })
 
         $('.btn-editar').on('click', function (event) {
             event.preventDefault();
-            var url = $(event.currentTarget).attr("href");
-            loadForm(url, "obteniendo datos del concepto...");
+            var url = $(event.currentTarget).attr('href');
+            loadForm(url, 'obteniendo datos del concepto...');
         })
 
         function loadForm(url, message) {
             $('#load-message').html(message);
-            $('#content-body').hide();
-            $('#spin-loader').show();
 
-            $('#content-body').load(url);
-            setTimeout(function () {
-                $('#spin-loader').hide();
-                $('#content-body').show();
-            }, 600);
-
+            $.ajax({
+                url: url,
+                type: "GET",
+                beforeSend: function () {
+                    $('#content-body').hide();
+                    $('#spin-loader').show();
+                },
+                success: function (data) {
+                    $('#content-body').html(data);
+                    setTimeout(function () {
+                        $('#spin-loader').hide();
+                        $('#content-body').show();
+                    }, 300);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $('#content-body').html('<p class="alert alert-danger">' + jqXHR.responseText + '</p>');
+                    $('#spin-loader').hide();
+                    $('#content-body').show();
+                }
+            })
         }
     })
 </script>
