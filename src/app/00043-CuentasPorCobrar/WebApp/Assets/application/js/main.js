@@ -33,6 +33,27 @@ function onComplete() {
     $('#div-resultado').show();
 }
 
+function FormatearNumero(number, decimals = 2, round = true) {
+    if (isNaN(number) || number.lenght == 0) number = 0; 
+        
+    if (round) {
+        return parseFloat(number).toFixed(decimals);
+    }
+    else {
+        let arrStr = number.split('.');
+        if (decimals > 0 && arrStr.lenght > 1) {
+            number = arrStr[0] + '.' + arrStr[1].substring(0, decimals);
+            return parseFloat(number);
+        }
+        else {
+            return parseFloat(arrStr[0]);
+        }
+    }
+}
+
+
+
+
 function ChangeStateReloadPage(RowID, B_habilitado, ActionName) {
     var parametros = {
         RowID: RowID,

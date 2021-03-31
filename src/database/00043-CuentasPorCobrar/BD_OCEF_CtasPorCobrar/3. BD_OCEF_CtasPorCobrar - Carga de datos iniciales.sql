@@ -431,6 +431,17 @@ WHERE TP_CD.ELIMINADO = 0
 SET IDENTITY_INSERT TC_Proceso OFF
 GO
 
+-- Cambiando el Identity de TC_Periodo a la maxima cuota de pago de la base de datos del temporal de pagos.
+
+DECLARE @I_ProcesoID	int
+SET @I_ProcesoID = (SELECT MAX(CAST(CUOTA_PAGO as int)) FROM  temporal_pagos..cp_des) + 1 
+
+DBCC CHECKIDENT(TC_Proceso, RESEED, @I_ProcesoID)
+
+GO
+
+-- Estableciendo la relacion entre cuentas de deposito y procesos importados.
+
 INSERT INTO TI_CtaDepo_Proceso (I_CtaDepositoID, I_ProcesoID, B_Habilitado, B_Eliminado)
 SELECT CD.I_CtaDepositoID, P.I_ProcesoID, 1 AS B_Habilitado, 0 AS B_Eliminado
 FROM TC_Proceso P
@@ -542,6 +553,14 @@ INSERT INTO TI_ConceptoPago (I_ConcPagID, I_ProcesoID, I_ConceptoID, T_ConceptoP
 SET IDENTITY_INSERT TI_ConceptoPago OFF
 GO
 
+-- Cambiando el Identity de TC_Periodo a la maxima cuota de pago de la base de datos del temporal de pagos.
+
+DECLARE @I_ConcPagID	int
+SET @I_ConcPagID = (SELECT MAX(CAST(id_cp as int)) FROM  temporal_pagos..cp_pri) + 1 
+
+DBCC CHECKIDENT(TI_ConceptoPago, RESEED, @I_ConcPagID)
+
+GO
 
 
 --SET IDENTITY_INSERT TI_ConceptoPago ON

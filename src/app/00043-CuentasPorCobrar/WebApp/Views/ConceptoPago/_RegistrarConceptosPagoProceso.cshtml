@@ -105,12 +105,12 @@
                     <div class="form-row">
                         <label class="control-label col-sm-4" for="Monto">Monto</label>
                         <div class="col-sm-8">
-                            @Html.TextBoxFor(model => model.ConceptoPago.M_Monto, "{0:f4}", new { @class = "form-control" })
+                            @Html.TextBoxFor(model => model.ConceptoPago.M_Monto, "{0:f2}", new { @class = "number form-control text-right" })
                             <p class="text-danger small">@Html.ValidationMessageFor(model => model.ConceptoPago.M_Monto)</p>
                         </div>
                         <label class="control-label col-md-4" for="Monto_Minimo">Monto Mínimo</label>
                         <div class="col-sm-8">
-                            @Html.TextBoxFor(model => model.ConceptoPago.M_MontoMinimo, "{0:f4}", new { @class = "form-control" })
+                            @Html.TextBoxFor(model => model.ConceptoPago.M_MontoMinimo, "{0:f2}", new { @class = "number form-control text-right" })
                             <p class="text-danger small">@Html.ValidationMessageFor(model => model.ConceptoPago.M_MontoMinimo)</p>
                         </div>
                     </div>
@@ -118,7 +118,7 @@
                     <div class="form-group row">
                         @Html.LabelFor(model => model.ConceptoPago.N_NroPagos, new { @class = "control-label col-md-2" })
                         <div class="col-md-3">
-                            @Html.TextBoxFor(model => model.ConceptoPago.N_NroPagos, new { @class = "form-control" })
+                            @Html.TextBoxFor(model => model.ConceptoPago.N_NroPagos, new { @class = "number-0 form-control" })
                             <p class="text-danger">@Html.ValidationMessageFor(model => model.ConceptoPago.N_NroPagos)</p>
                         </div>
                         <div class="col-md-3">
@@ -159,6 +159,18 @@
 
     $(document).ready(function () {
 
+        $('.number').on('focus', function () {
+            $(this).select();
+        })
+
+        $('.number').on('blur', function () {
+            $(this).val(FormatearNumero($(this).val()));
+        })
+
+        $('.number-0').on('blur', function () {
+            $(this).val(FormatearNumero($(this).val(), 0));
+        })
+
         $('#btn-return').on('click', function (event) {
             event.preventDefault();
 
@@ -198,8 +210,6 @@
         }).on('hide', function (e) {
             e.stopPropagation();
         });
-
-        let conceptoSelected = { value: '', text: '' };
 
         $('#btn-agregar').on('click', function (event) {
             event.preventDefault();
