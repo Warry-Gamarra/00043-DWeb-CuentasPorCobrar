@@ -31,12 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ExcelDataReader, Version=3.6.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
-      <HintPath>..\packages\ExcelDataReader.3.6.0\lib\net45\ExcelDataReader.dll</HintPath>
-    </Reference>
-    <Reference Include="NDbfReader, Version=2.3.0.0, Culture=neutral, PublicKeyToken=421d1ecd09787b1d, processorArchitecture=MSIL">
-      <HintPath>..\packages\NDbfReader.2.3.0\lib\net45\NDbfReader.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -81,11 +75,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\MatriculaDTO.cs" />
+    <Compile Include="Entities\MatriculaEntity.cs" />
     <Compile Include="Helpers\Constantes.cs" />
     <Compile Include="Helpers\Tipos.cs" />
     <Compile Include="Helpers\DataMatriculaResponse.cs" />
     <Compile Include="Entities\CuotaPagoDTO.cs" />
-    <Compile Include="Entities\DataMatriculaObs.cs" />
+    <Compile Include="Entities\MatriculaObsEntity.cs" />
     <Compile Include="Helpers\Options.cs" />
     <Compile Include="Helpers\Parametro.cs" />
     <Compile Include="Entities\ClasificadorDeIngreso.cs" />
@@ -97,7 +93,7 @@
     <Compile Include="Entities\HelperResources.cs" />
     <Compile Include="Entities\CatalogoOpcionEntity.cs" />
     <Compile Include="Entities\CategoriaPago.cs" />
-    <Compile Include="Entities\Estudiante.cs" />
+    <Compile Include="Services\Implementations\EstudianteService.cs" />
     <Compile Include="Entities\EntidadFinanciera.cs" />
     <Compile Include="Entities\CorreoAplicacion.cs" />
     <Compile Include="Entities\Mapper.cs" />
@@ -112,10 +108,6 @@
     <Compile Include="Helpers\Response.cs" />
     <Compile Include="Helpers\Crypto.cs" />
     <Compile Include="Helpers\HttpVerb.cs" />
-    <Compile Include="Helpers\IMatriculaSource.cs" />
-    <Compile Include="Helpers\MatriculaDbfSource.cs" />
-    <Compile Include="Helpers\MatriculaExcelSource.cs" />
-    <Compile Include="Helpers\MatriculaSourceFactory.cs" />
     <Compile Include="Helpers\RandomPassword.cs" />
     <Compile Include="Helpers\TipoEstudio.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -125,7 +117,7 @@
     <Compile Include="Services\ICorreoAplicacion.cs" />
     <Compile Include="Services\ICuentaDeposito.cs" />
     <Compile Include="Services\IEntidadFinanciera.cs" />
-    <Compile Include="Services\IEstudiante.cs" />
+    <Compile Include="Services\IEstudianteService.cs" />
     <Compile Include="Services\IHelpResources.cs" />
     <Compile Include="Services\IDependencia.cs" />
     <Compile Include="Services\Implementations\CatalogoService.cs" />

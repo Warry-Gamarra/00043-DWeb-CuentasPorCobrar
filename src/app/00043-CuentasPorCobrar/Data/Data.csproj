@@ -82,8 +82,8 @@
     <Compile Include="Procedures\USP_U_ActualizarProceso.cs" />
     <Compile Include="Procedures\USP_U_ActualizarCtaDeposito_Proceso.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Views\VW_MatriculaAlumno.cs" />
     <Compile Include="Types\DataMatriculaResult.cs" />
-    <Compile Include="Types\DataMatriculaType.cs" />
     <Compile Include="Tables\TC_ClasificadorIngreso.cs" />
     <Compile Include="Tables\TC_Concepto.cs" />
     <Compile Include="Tables\TC_DependenciaUNFV.cs" />

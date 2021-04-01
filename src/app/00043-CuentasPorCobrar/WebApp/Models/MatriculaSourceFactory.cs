@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Helpers
+namespace WebApp.Models
 {
-    class MatriculaSourceFactory
+    public class MatriculaSourceFactory
     {
         public static IMatriculaSource GetMatriculaSource(string extension)
         {

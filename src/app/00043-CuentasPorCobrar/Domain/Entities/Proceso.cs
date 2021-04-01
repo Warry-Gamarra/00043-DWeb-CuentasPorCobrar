@@ -20,5 +20,7 @@ namespace Domain.Entities
         public DateTime? D_FecVencto { get; set; }
         public short? I_Prioridad { get; set; }
         public bool B_Obligacion { get; set; }
+        public int I_Nivel { get; set; }
+        public string C_Nivel { get; set; }
     }
 }

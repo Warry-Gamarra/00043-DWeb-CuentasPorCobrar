@@ -78,21 +78,7 @@ namespace Domain.Services.Implementations
             {
                 var lista = USP_S_Procesos.Execute();
 
-                var result = lista.Select(x => new Proceso()
-                {
-                    I_ProcesoID = x.I_ProcesoID,
-                    I_CatPagoID = x.I_CatPagoID,
-                    T_CatPagoDesc = x.T_CatPagoDesc,
-                    C_PeriodoCod = x.C_PeriodoCod,
-                    T_PeriodoDesc = x.T_PeriodoDesc,
-                    T_ProcesoDesc = x.T_ProcesoDesc,                    
-                    I_Periodo = x.I_Periodo,
-                    I_Anio = x.I_Anio,
-                    D_FecVencto = x.D_FecVencto,
-                    I_Prioridad = x.I_Prioridad,
-                    N_CodBanco = x.N_CodBanco,
-                    B_Obligacion = x.B_Obligacion
-                }).ToList();
+                var result = lista.Select(x => Mapper.USP_S_Procesos_To_Proceso(x)).ToList();
 
                 return result;
             }
@@ -213,21 +199,7 @@ namespace Domain.Services.Implementations
 
                 if (proceso != null)
                 {
-                    result = new Proceso()
-                    {
-                        I_ProcesoID = proceso.I_ProcesoID,
-                        I_CatPagoID = proceso.I_CatPagoID,
-                        T_CatPagoDesc = proceso.T_CatPagoDesc,
-                        C_PeriodoCod = proceso.C_PeriodoCod,
-                        I_Anio = proceso.I_Anio,
-                        D_FecVencto = proceso.D_FecVencto,
-                        I_Periodo = proceso.I_Periodo,
-                        I_Prioridad = proceso.I_Prioridad,
-                        N_CodBanco = proceso.N_CodBanco,
-                        T_PeriodoDesc = proceso.T_PeriodoDesc,
-                        B_Obligacion = proceso.B_Obligacion,
-                        T_ProcesoDesc = proceso.T_ProcesoDesc,
-                    };
+                    result = Mapper.USP_S_Procesos_To_Proceso(proceso);
                 }
             }
             catch (Exception ex)

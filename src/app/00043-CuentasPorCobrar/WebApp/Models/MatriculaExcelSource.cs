@@ -4,19 +4,18 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Data.Types;
 using Domain.Entities;
 using ExcelDataReader;
 
-namespace Domain.Helpers
+namespace WebApp.Models
 {
     public class MatriculaExcelSource : IMatriculaSource
     {
         readonly string[] expectedColNames = { "Cod_rc", "Cod_alu", "Año", "P", "Est_mat", "Nivel", "Es_ingresa", "Cred_desap" };
 
-        public List<DataMatriculaType> GetList(string filePath)
+        public List<MatriculaEntity> GetList(string filePath)
         {
-            var dataMatriculas = new List<DataMatriculaType>();
+            var dataMatriculas = new List<MatriculaEntity>();
 
             using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
             {
@@ -48,7 +47,7 @@ namespace Domain.Helpers
                             }
                             else
                             {
-                                dataMatriculas.Add(Mapper.MatriculaReader_To_DataMatriculaType(reader));
+                                dataMatriculas.Add(Mapper.MatriculaReader_To_MatriculaEntity(reader));
                             }
                         }
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class DataMatriculaObs
+    public class MatriculaEntity
     {
         public string C_CodRC { get; set; }
         public string C_CodAlu { get; set; }
@@ -16,7 +16,6 @@ namespace Domain.Entities
         public string C_Ciclo { get; set; }
         public bool? B_Ingresante { get; set; }
         public int? I_CredDesaprob { get; set; }
-        public bool B_Success { get; set; }
-        public string T_Message { get; set; }
+        public bool B_ActObl { get; set; }
     }
 }

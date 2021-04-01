@@ -1,5 +1,4 @@
 ﻿using Domain.Helpers;
-using Domain.Helpers;
 using Domain.Services;
 using System;
 using System.Collections.Generic;
@@ -10,6 +9,7 @@ using System.Web.Mvc;
 using WebApp.Models;
 using WebApp.Models.Facades;
 using WebApp.ViewModels;
+using WebMatrix.WebData;
 
 namespace WebApp.Controllers
 {
@@ -81,21 +81,9 @@ namespace WebApp.Controllers
 
             try
             {
-                switch (cmbTipoEstudio)
-                {
-                    case TipoEstudio.Pregrado:
-                        currentUserID = 0;
-                        result = obligacionServiceFacade.Generar_Obligaciones_Pregrado(cmbAnioGrupal, cmbPeriodoGrupal, cmbFacultad, currentUserID);
-                        break;
+                currentUserID = WebSecurity.CurrentUserId;
 
-                    case TipoEstudio.Posgrado:
-                        currentUserID = 0;
-                        result = obligacionServiceFacade.Generar_Obligaciones_Posgrado(cmbAnioGrupal, cmbPeriodoGrupal, currentUserID);
-                        break;
-
-                    default:
-                        throw new Exception("Ha ocurrido un error al seleccionar el Tipo de Estudio.");
-                }
+                result = obligacionServiceFacade.Generar_Obligaciones(cmbAnioGrupal, cmbPeriodoGrupal, cmbTipoEstudio, cmbFacultad, currentUserID);
             }
             catch (Exception ex)
             {

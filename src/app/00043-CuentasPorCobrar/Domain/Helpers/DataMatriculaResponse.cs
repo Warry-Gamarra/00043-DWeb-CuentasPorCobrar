@@ -11,10 +11,10 @@ namespace Domain.Helpers
     {
         public DataMatriculaResponse()
         {
-            DataMatriculasObs = new List<DataMatriculaObs>();
+            DataMatriculasObs = new List<MatriculaObsEntity>();
         }
 
-        public DataMatriculaResponse(List<DataMatriculaObs> dataMatriculasObs)
+        public DataMatriculaResponse(List<MatriculaObsEntity> dataMatriculasObs)
         {
             this.DataMatriculasObs = dataMatriculasObs;
 
@@ -31,6 +31,6 @@ namespace Domain.Helpers
 
         public string Message { get; set; }
 
-        public List<DataMatriculaObs> DataMatriculasObs { get; set; }
+        public List<MatriculaObsEntity> DataMatriculasObs { get; set; }
     }
 }
