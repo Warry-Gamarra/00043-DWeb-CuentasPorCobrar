@@ -173,6 +173,7 @@ namespace Domain.Entities
 
             if (result.Value)
             {
+                result.CurrentID = password;
                 result.Message += ". Contraseña: " + password + ".";
                 return result;
             }

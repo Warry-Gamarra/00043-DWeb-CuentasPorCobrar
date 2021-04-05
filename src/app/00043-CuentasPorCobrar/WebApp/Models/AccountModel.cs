@@ -7,6 +7,7 @@ using System.Web;
 using Domain.Entities;
 using WebApp.ViewModels;
 using WebMatrix.WebData;
+using System.Configuration;
 
 namespace WebApp.Models
 {
@@ -14,11 +15,13 @@ namespace WebApp.Models
     {
         private readonly User _user;
         private readonly CorreoAplicacion _correoAplicacion;
+        private readonly string appName;
 
         public AccountModel()
         {
             _user = new User();
             _correoAplicacion = new CorreoAplicacion();
+            appName = ConfigurationManager.AppSettings["AppName"];
         }
 
 
@@ -39,14 +42,14 @@ namespace WebApp.Models
 
                 _to.addressesTo.Add(usuario.Person.correo);
                 _to.fileAttachedPath = "";
-                _to.MailSubject = "OCEF - Restablecimiento de contraseña - Token de verificación";
+                _to.MailSubject = "OCEF - " + appName + " - Restablecimiento de contraseña - Token de verificación";
 
 
                 BodyComponents _component = new BodyComponents();
 
                 _component.urlLogo = "https://unfvpe-my.sharepoint.com/personal/desarrollo_ceuci_unfv_edu_pe/_layouts/15/guestaccess.aspx?docid=1b894f118cca14633a3f5f25894c3383a&authkey=AfDpUW9qeUtxeWLEWtFChQ4";
                 _component.urlHeaderImgBg = "https://unfvpe-my.sharepoint.com/personal/desarrollo_ceuci_unfv_edu_pe/_layouts/15/guestaccess.aspx?docid=064ec5cc25b0c4fd79a91633510de3fdb&authkey=AdaPspODafSuu6h58WLzDTY";
-                _component.subjectText = "Restablecimiento de contraseña - Token de verificación";
+                _component.subjectText = appName + " - Restablecimiento de contraseña - Token de verificación";
                 _component.h1HeaderTitle = "Oficina Central de Economico Financiero";
                 _component.h2HeaderTitle = "Oficina de Tesorería";
                 _component.mainContent.Title = "Estimado(a): " + usuario.Person.Nombre;
@@ -125,7 +128,7 @@ namespace WebApp.Models
 
                         _to.addressesTo.Add(usuario.Person.correo);
                         _to.fileAttachedPath = "";
-                        _to.MailSubject = "OCEF - Restablecimiento de contraseña de usuario";
+                        _to.MailSubject = "OCEF - " + appName + " - Restablecimiento de contraseña de usuario";
 
 
                         BodyComponents _component = new BodyComponents();
@@ -134,7 +137,7 @@ namespace WebApp.Models
                         _component.urlHeaderImgBg = "https://unfvpe-my.sharepoint.com/personal/desarrollo_ceuci_unfv_edu_pe/_layouts/15/guestaccess.aspx?docid=064ec5cc25b0c4fd79a91633510de3fdb&authkey=AdaPspODafSuu6h58WLzDTY";
                         _component.h1HeaderTitle = "Oficina Central de Economico Financiero";
                         _component.h2HeaderTitle = "Oficina de Tesorería";
-                        _component.subjectText = "Restablecimiento de contraseña - Nueva Contraseña";
+                        _component.subjectText = appName + " - Restablecimiento de contraseña - Nueva Contraseña";
                         _component.mainContent.Title = "Nueva contraseña para el usuario: " + usuario.UserName;
                         _component.mainContent.Text = "<p>Se ha reestablecido la contraseña de manera exitosa.</p><p>La nueva contraseña es: " + newpass + " </p>";
                         _component.Column1.Title = "";
