@@ -1714,8 +1714,8 @@ BEGIN
 	SET NOCOUNT ON;
 
 	--1ro Obtener los conceptos según año y periodo
-	declare @I_Pregrado int = (select I_OpcionID from dbo.TC_CatalogoOpcion where I_ParametroID = 2 and T_OpcionCod = '1')
-	declare @I_Bachiller int = 1
+	declare @N_GradoBachiller char(1) = '1'
+	declare @I_Pregrado int = (select I_OpcionID from dbo.TC_CatalogoOpcion where I_ParametroID = 2 and T_OpcionCod = @N_GradoBachiller)
 
 	select p.I_ProcesoID, p.D_FecVencto, cp.T_CatPagoDesc, conpag.I_ConcPagID, con.T_ConceptoDesc, cp.I_TipoAlumno, conpag.M_Monto, conpag.M_MontoMinimo, conpag.I_TipoObligacion,
 	conpag.B_Calculado, conpag.I_Calculado, conpag.B_GrupoCodRc, gr.T_OpcionCod AS I_GrupoCodRc, conpag.B_ModalidadIngreso, moding.T_OpcionCod AS C_CodModIng, 
@@ -1734,64 +1734,70 @@ BEGIN
 
 	--2do Obtengo la relación de alumnos
 	declare @Tmp_MatriculaAlumno table (id int identity(1,1), I_MatAluID int, C_CodRc varchar(3), C_CodAlu varchar(20), C_EstMat varchar(2), B_Ingresante bit, C_CodModIng varchar(2), N_Grupo char(1), I_CredDesaprob tinyint)
-	declare @Tmp_Procesos table (I_ProcesoID int, I_ConcPagID int, M_Monto decimal(15,2))
-
+	
 	if (@C_CodAlu is not null) and (@C_CodRc is not null) begin
 		insert @Tmp_MatriculaAlumno(I_MatAluID, C_CodRc, C_CodAlu, C_EstMat, B_Ingresante, C_CodModIng, N_Grupo, I_CredDesaprob)
 		select m.I_MatAluID, m.C_CodRc, m.C_CodAlu, m.C_EstMat, m.B_Ingresante, a.C_CodModIng, a.N_Grupo, ISNULL(m.I_CredDesaprob, 0) from dbo.TC_MatriculaAlumno m 
 		inner join BD_UNFV_Repositorio.dbo.VW_Alumnos a ON a.C_CodAlu = m.C_CodAlu and a.C_RcCod = m.C_CodRc
-		where m.B_Habilitado = 1 and m.B_Eliminado = 0 and a.N_Grado = @I_Bachiller and
+		where m.B_Habilitado = 1 and m.B_Eliminado = 0 and a.N_Grado = @N_GradoBachiller and
 			m.I_Anio = @I_Anio and m.I_Periodo = @I_Periodo and m.C_CodAlu = @C_CodAlu and m.C_CodRc = @C_CodRc
 	end else begin
 		if (@C_CodFac is null) or (@C_CodFac = '') begin
 			insert @Tmp_MatriculaAlumno(I_MatAluID, C_CodRc, C_CodAlu, C_EstMat, B_Ingresante, C_CodModIng, N_Grupo, I_CredDesaprob)
 			select m.I_MatAluID, m.C_CodRc, m.C_CodAlu, m.C_EstMat, m.B_Ingresante, a.C_CodModIng, a.N_Grupo, ISNULL(m.I_CredDesaprob, 0) from dbo.TC_MatriculaAlumno m 
 			inner join BD_UNFV_Repositorio.dbo.VW_Alumnos a ON a.C_CodAlu = m.C_CodAlu and a.C_RcCod = m.C_CodRc
-			where m.B_Habilitado = 1 and m.B_Eliminado = 0 and a.N_Grado = @I_Bachiller and
+			where m.B_Habilitado = 1 and m.B_Eliminado = 0 and a.N_Grado = @N_GradoBachiller and
 				m.I_Anio = @I_Anio and m.I_Periodo = @I_Periodo
 		end else begin
 			insert @Tmp_MatriculaAlumno(I_MatAluID, C_CodRc, C_CodAlu, C_EstMat, B_Ingresante, C_CodModIng, N_Grupo, I_CredDesaprob)
 			select m.I_MatAluID, m.C_CodRc, m.C_CodAlu, m.C_EstMat, m.B_Ingresante, a.C_CodModIng, a.N_Grupo, ISNULL(m.I_CredDesaprob, 0) from dbo.TC_MatriculaAlumno m 
 			inner join BD_UNFV_Repositorio.dbo.VW_Alumnos a ON a.C_CodAlu = m.C_CodAlu and a.C_RcCod = m.C_CodRc
-			where m.B_Habilitado = 1 and m.B_Eliminado = 0 and a.N_Grado = @I_Bachiller and
+			where m.B_Habilitado = 1 and m.B_Eliminado = 0 and a.N_Grado = @N_GradoBachiller and
 				m.I_Anio = @I_Anio and m.I_Periodo = @I_Periodo and a.C_CodFac = @C_CodFac
 		end
-		
-		
 	end
+
+	--3ro Comienzo con el calculo las obligaciones por alumno almacenandolas en @Tmp_Procesos.
+	declare @Tmp_Procesos table (I_ProcesoID int, I_ConcPagID int, M_Monto decimal(15,2), D_FecVencto datetime, I_TipoObligacion int)
 
 	declare @C_Moneda varchar(3) = 'PEN',
 			@D_CurrentDate datetime = getdate(),
-			@I_Posicion int = 1,
+			@I_FilaActual int = 1,
 			@I_CantRegistros int = (select max(id) from @Tmp_MatriculaAlumno),
-			@I_AlumnoRegular int = 1,
-			@I_AlumnoIngresante int = 2,
-			@I_Matricula int = 9,
-			@I_OtrosPagos int = 10,
-			@I_CrdtDesaprobados int = 11,
-			@I_DeudasAnteriores int = 12,
-			@I_Pensiones int = 13,
-			----------------------------
+			
+			--Tipo de alumno
+			@I_AlumnoRegular int = (select I_OpcionID from dbo.TC_CatalogoOpcion where I_ParametroID = 1 and T_OpcionCod = '1'),
+			@I_AlumnoIngresante int = (select I_OpcionID from dbo.TC_CatalogoOpcion where I_ParametroID = 1 and T_OpcionCod = '2'),
+			
+			--Tipo obligación
+			@I_Matricula int = (select I_OpcionID from dbo.TC_CatalogoOpcion where I_ParametroID = 3 and T_OpcionCod = '1'),
+			@I_OtrosPagos int = (select I_OpcionID from dbo.TC_CatalogoOpcion where I_ParametroID = 3 and T_OpcionCod = '0'),
+
+			--Campo calculado
+			@I_CrdtDesaprobados int = (select I_OpcionID from dbo.TC_CatalogoOpcion where I_ParametroID = 4 and T_OpcionCod = '1'),
+			@I_DeudasAnteriores int = (select I_OpcionID from dbo.TC_CatalogoOpcion where I_ParametroID = 4 and T_OpcionCod = '2'),
+			@I_Pensiones int = (select I_OpcionID from dbo.TC_CatalogoOpcion where I_ParametroID = 4 and T_OpcionCod = '3'),
+			
+			--Otras variables
 			@I_MatAluID int,
-			--@C_CodRc varchar(3),
-			--@C_CodAlu varchar(20),
 			@C_EstMat varchar(2),
 			@C_CodModIng varchar(2),
 			@N_Grupo char(1),
 			@I_TipoAlumno int,
-			@D_FecVencto datetime,
 			@I_MontoDeuda decimal(15,2),
 			@I_CredDesaprob tinyint,
 			@N_NroPagos tinyint
 
-	while (@I_Posicion <= @I_CantRegistros) begin
+	while (@I_FilaActual <= @I_CantRegistros) begin
 		begin tran
 		begin try
 			
-			--3ro obtengo la información alumno por alumno e inicializo variables
-			select @I_MatAluID= I_MatAluID, @C_CodRc = C_CodRc, @C_CodAlu = C_CodAlu, @C_EstMat = C_EstMat, @C_CodModIng = C_CodModIng, @N_Grupo = N_Grupo, @I_CredDesaprob = ISNULL(I_CredDesaprob, 0),
-			@I_TipoAlumno = (case when B_Ingresante = 0 then @I_AlumnoRegular else @I_AlumnoIngresante end) from @Tmp_MatriculaAlumno 
-			where id = @I_Posicion
+			--4to obtengo la información alumno por alumno e inicializo variables
+			select @I_MatAluID= I_MatAluID, @C_CodRc = C_CodRc, @C_CodAlu = C_CodAlu, @C_EstMat = C_EstMat, @C_CodModIng = C_CodModIng, 
+				@N_Grupo = N_Grupo, @I_CredDesaprob = ISNULL(I_CredDesaprob, 0), 
+				@I_TipoAlumno = (case when B_Ingresante = 0 then @I_AlumnoRegular else @I_AlumnoIngresante end) 
+			from @Tmp_MatriculaAlumno 
+			where id = @I_FilaActual
 
 			delete @Tmp_Procesos
 
@@ -1800,102 +1806,106 @@ BEGIN
 				where I_TipoAlumno = @I_TipoAlumno and I_TipoObligacion = @I_Matricula and 
 				B_EsPagoMatricula = 1 and C_CodModIng = @C_CodModIng)
 			begin
-				insert @Tmp_Procesos(I_ProcesoID, I_ConcPagID, M_Monto)
-				select I_ProcesoID, I_ConcPagID, M_Monto from #tmp_conceptos_pregrado
+				insert @Tmp_Procesos(I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion)
+				select I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion from #tmp_conceptos_pregrado
 				where I_TipoAlumno = @I_TipoAlumno and I_TipoObligacion = @I_Matricula and 
 					B_EsPagoMatricula = 1 and C_CodModIng = @C_CodModIng
-
-				set @D_FecVencto = (select top 1 D_FecVencto from #tmp_conceptos_pregrado
-					where I_TipoAlumno = @I_TipoAlumno and I_TipoObligacion = @I_Matricula and 
-					B_EsPagoMatricula = 1 and C_CodModIng = @C_CodModIng)
 			end
 			else
 			begin
-				insert @Tmp_Procesos(I_ProcesoID, I_ConcPagID, M_Monto)
-				select I_ProcesoID, I_ConcPagID, M_Monto from #tmp_conceptos_pregrado
+				insert @Tmp_Procesos(I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion)
+				select I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion from #tmp_conceptos_pregrado
 				where I_TipoAlumno = @I_TipoAlumno and I_TipoObligacion = @I_Matricula and 
 					B_EsPagoMatricula = 1
-
-				set @D_FecVencto = (select top 1 D_FecVencto from #tmp_conceptos_pregrado
-					where I_TipoAlumno = @I_TipoAlumno and I_TipoObligacion = @I_Matricula and 
-					B_EsPagoMatricula = 1)
 			end
 
 			--Pagos generales de matrícula
-			insert @Tmp_Procesos(I_ProcesoID, I_ConcPagID, M_Monto)
-			select I_ProcesoID, I_ConcPagID, M_Monto from #tmp_conceptos_pregrado
-			where I_TipoAlumno = @I_TipoAlumno and I_TipoObligacion = @I_Matricula and 
+			insert @Tmp_Procesos(I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion)
+			select I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion from #tmp_conceptos_pregrado
+			where I_TipoAlumno = @I_TipoAlumno and I_TipoObligacion = @I_Matricula and
 				B_EsPagoMatricula = 0 and B_Calculado = 0 and B_GrupoCodRc = 0 and B_EsPagoExtmp = 0
 
 			--Pagos de laboratorio
-			insert @Tmp_Procesos(I_ProcesoID, I_ConcPagID, M_Monto)
-			select I_ProcesoID, I_ConcPagID, M_Monto from #tmp_conceptos_pregrado
-			where I_TipoAlumno = @I_TipoAlumno and I_TipoObligacion = @I_Matricula and 
-				B_EsPagoMatricula = 0 and B_GrupoCodRc = 1 and I_GrupoCodRc = @N_Grupo
+			if (select count(I_ProcesoID) from #tmp_conceptos_pregrado
+				where I_TipoAlumno = @I_TipoAlumno and I_TipoObligacion = @I_Matricula and 
+				B_EsPagoMatricula = 0 and B_GrupoCodRc = 1 and I_GrupoCodRc = @N_Grupo) = 1
+			begin
+				insert @Tmp_Procesos(I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion)
+				select I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion from #tmp_conceptos_pregrado
+				where I_TipoAlumno = @I_TipoAlumno and I_TipoObligacion = @I_Matricula and 
+					B_EsPagoMatricula = 0 and B_GrupoCodRc = 1 and I_GrupoCodRc = @N_Grupo
+			end
 
 			--Pagos extemoráneos
-			if (datediff(day, @D_CurrentDate, @D_FecVencto) < 0)
-			begin
-				insert @Tmp_Procesos(I_ProcesoID, I_ConcPagID, M_Monto)
-				select I_ProcesoID, I_ConcPagID, M_Monto from #tmp_conceptos_pregrado
+			if (select count(I_ProcesoID) from #tmp_conceptos_pregrado
 				where I_TipoAlumno = @I_TipoAlumno and I_TipoObligacion = @I_Matricula and 
-					B_EsPagoMatricula = 0 and B_EsPagoExtmp = 1
+					B_EsPagoMatricula = 0 and B_EsPagoExtmp = 1 and
+					datediff(day, @D_CurrentDate, D_FecVencto) < 0) = 1
+			begin
+				insert @Tmp_Procesos(I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion)
+				select I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion from #tmp_conceptos_pregrado
+				where I_TipoAlumno = @I_TipoAlumno and I_TipoObligacion = @I_Matricula and 
+					B_EsPagoMatricula = 0 and B_EsPagoExtmp = 1 and
+					datediff(day, @D_CurrentDate, D_FecVencto) < 0
 			end
 
 			--Monto de deuda anterior
-			set @I_MontoDeuda = isnull((select SUM(det.I_Monto) from dbo.TR_ObligacionAluCab cab
-				inner join dbo.TR_ObligacionAluDet det on det.I_ObligacionAluID = cab.I_ObligacionAluID
-				inner join (select top 1 m.I_MatAluID from dbo.TC_MatriculaAlumno m 
-					where m.B_Eliminado = 0 and not m.I_MatAluID = @I_MatAluID and m.C_CodAlu = @C_CodAlu and m.C_CodRc = @C_CodRc
-					order by m.I_Anio desc, m.C_Ciclo desc) mat on mat.I_MatAluID = cab.I_MatAluID
-				where cab.B_Eliminado = 0 and det.B_Eliminado = 0 and det.B_Pagado = 0), 0)
-			
-			if (@I_MontoDeuda > 0)
+			if (select count(I_ProcesoID) from #tmp_conceptos_pregrado 
+				where I_TipoAlumno = @I_TipoAlumno and B_Calculado = 1 and I_Calculado = @I_DeudasAnteriores) = 1
 			begin
-				set @N_NroPagos = isnull((select top 1 N_NroPagos from #tmp_conceptos_pregrado 
-					where I_TipoAlumno = @I_TipoAlumno and I_TipoObligacion = @I_OtrosPagos and 
-						B_Calculado = 1 and I_Calculado = @I_DeudasAnteriores), 1);
-				
-				with CTE_Recursivo as
-				(
-					select 1 as num, I_ProcesoID, I_ConcPagID from #tmp_conceptos_pregrado
-					where I_TipoAlumno = @I_TipoAlumno and I_TipoObligacion = @I_OtrosPagos and 
-						B_Calculado = 1 and I_Calculado = @I_DeudasAnteriores
-					union all
-					select num + 1, I_ProcesoID, I_ConcPagID
-					from CTE_Recursivo
-					where num < @N_NroPagos
-				)
-				insert @Tmp_Procesos(I_ProcesoID, I_ConcPagID, M_Monto)
-				select I_ProcesoID, I_ConcPagID, dbo.FN_CalcularCuotasDeuda(@I_MontoDeuda, @N_NroPagos, num) AS M_Monto
-				from CTE_Recursivo;
-			end
+				set @I_MontoDeuda = isnull((select SUM(cab.I_MontoOblig) from dbo.TR_ObligacionAluCab cab
+					inner join (select top 1 m.I_MatAluID from dbo.TC_MatriculaAlumno m 
+						where m.B_Eliminado = 0 and not m.I_MatAluID = @I_MatAluID and m.C_CodAlu = @C_CodAlu and m.C_CodRc = @C_CodRc
+						order by m.I_Anio desc, m.C_Ciclo desc) mat on mat.I_MatAluID = cab.I_MatAluID
+					where cab.B_Eliminado = 0 and cab.B_Pagado = 0), 0)
 
+				if (@I_MontoDeuda > 0)
+				begin
+					set @N_NroPagos = isnull((select top 1 N_NroPagos from #tmp_conceptos_pregrado 
+						where I_TipoAlumno = @I_TipoAlumno and B_Calculado = 1 and I_Calculado = @I_DeudasAnteriores), 1);
+
+					with CTE_Recursivo as
+					(
+						select 1 as num, I_ProcesoID, I_ConcPagID, D_FecVencto, I_TipoObligacion from #tmp_conceptos_pregrado
+						where I_TipoAlumno = @I_TipoAlumno and B_Calculado = 1 and I_Calculado = @I_DeudasAnteriores
+						union all
+						select num + 1, I_ProcesoID, I_ConcPagID, D_FecVencto, I_TipoObligacion
+						from CTE_Recursivo
+						where num < @N_NroPagos
+					)
+					insert @Tmp_Procesos(I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion)
+					select I_ProcesoID, I_ConcPagID, dbo.FN_CalcularCuotasDeuda(@I_MontoDeuda, @N_NroPagos, num) AS M_Monto, D_FecVencto, I_TipoObligacion
+					from CTE_Recursivo;
+				end
+			end
+			
 			--Monto de cursos desaprobados
-			if (@I_CredDesaprob > 0)
+			if (select count(I_ProcesoID) from #tmp_conceptos_pregrado
+					where I_TipoAlumno = @I_TipoAlumno and B_Calculado = 1 and I_Calculado = @I_CrdtDesaprobados) = 1
 			begin
-				set @N_NroPagos = isnull((select top 1 N_NroPagos from #tmp_conceptos_pregrado 
-					where I_TipoAlumno = @I_TipoAlumno and I_TipoObligacion = @I_OtrosPagos and 
-						B_Calculado = 1 and I_Calculado = @I_CrdtDesaprobados), 1);
+				if (@I_CredDesaprob > 0)
+				begin
+					set @N_NroPagos = isnull((select top 1 N_NroPagos from #tmp_conceptos_pregrado 
+						where I_TipoAlumno = @I_TipoAlumno and B_Calculado = 1 and I_Calculado = @I_CrdtDesaprobados), 1);
 
-				with CTE_Recursivo as
-				(
-					select 1 as num, I_ProcesoID, I_ConcPagID, M_Monto from #tmp_conceptos_pregrado
-					where I_TipoAlumno = @I_TipoAlumno and I_TipoObligacion = @I_OtrosPagos and 
-						B_Calculado = 1 and I_Calculado = @I_CrdtDesaprobados
-					union all
-					select num + 1, I_ProcesoID, I_ConcPagID, M_Monto
+					with CTE_Recursivo as
+					(
+						select 1 as num, I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion from #tmp_conceptos_pregrado
+						where I_TipoAlumno = @I_TipoAlumno and B_Calculado = 1 and I_Calculado = @I_CrdtDesaprobados
+						union all
+						select num + 1, I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion
+						from CTE_Recursivo
+						where num < @N_NroPagos
+					)
+					insert @Tmp_Procesos(I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion)
+					select I_ProcesoID, I_ConcPagID, cast((M_Monto * @I_CredDesaprob) / @N_NroPagos as decimal(15,2)), D_FecVencto, I_TipoObligacion
 					from CTE_Recursivo
-					where num < @N_NroPagos
-				)
-				insert @Tmp_Procesos(I_ProcesoID, I_ConcPagID, M_Monto)
-				select I_ProcesoID, I_ConcPagID, cast((M_Monto * @I_CredDesaprob) / @N_NroPagos as decimal(15,2)) from CTE_Recursivo
+				end
 			end
-			
+
 			--Monto de Pensión de enseñanza
-			if exists(select I_ProcesoID from #tmp_conceptos_pregrado
-				where I_TipoAlumno = @I_TipoAlumno and I_TipoObligacion = @I_OtrosPagos and 
-					B_Calculado = 1 and I_Calculado = @I_Pensiones and C_CodModIng = @C_CodModIng)
+			if (select count(I_ProcesoID) from #tmp_conceptos_pregrado
+				where I_TipoAlumno = @I_TipoAlumno and B_Calculado = 1 and I_Calculado = @I_Pensiones and C_CodModIng = @C_CodModIng) = 1
 			begin
 				set @N_NroPagos = isnull((select top 1 N_NroPagos from #tmp_conceptos_pregrado 
 					where I_TipoAlumno = @I_TipoAlumno and I_TipoObligacion = @I_OtrosPagos and 
@@ -1903,27 +1913,30 @@ BEGIN
 				
 				with CTE_Recursivo as
 				(
-					select 1 as num, I_ProcesoID, I_ConcPagID, M_Monto from #tmp_conceptos_pregrado
-					where I_TipoAlumno = @I_TipoAlumno and I_TipoObligacion = @I_OtrosPagos and 
-						B_Calculado = 1 and I_Calculado = @I_Pensiones and C_CodModIng = @C_CodModIng
+					select 1 as num, I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion from #tmp_conceptos_pregrado
+					where I_TipoAlumno = @I_TipoAlumno and B_Calculado = 1 and I_Calculado = @I_Pensiones and C_CodModIng = @C_CodModIng
 					union all
-					select num + 1, I_ProcesoID, I_ConcPagID, M_Monto
+					select num + 1, I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion
 					from CTE_Recursivo
 					where num < @N_NroPagos
 				)
-				insert @Tmp_Procesos(I_ProcesoID, I_ConcPagID, M_Monto)
-				select I_ProcesoID, I_ConcPagID, cast(M_Monto / @N_NroPagos as decimal(15,2)) as M_Monto from CTE_Recursivo
+				insert @Tmp_Procesos(I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion)
+				select I_ProcesoID, I_ConcPagID, cast(M_Monto / @N_NroPagos as decimal(15,2)) as M_Monto, D_FecVencto, I_TipoObligacion
+				from CTE_Recursivo
 			end
+
+			select @I_MatAluID,* from #tmp_conceptos_pregrado
+			select @I_MatAluID,I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion from @Tmp_Procesos
 
 			--Inserción de Cabecera
 			insert dbo.TR_ObligacionAluCab(I_ProcesoID, I_MatAluID, C_Moneda, I_MontoOblig, B_Pagado, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, D_FecVencto)
-			select distinct p.I_ProcesoID, @I_MatAluID, @C_Moneda, 0, 0, 1, 0, @I_UsuarioCre, @D_CurrentDate, @D_FecVencto from @Tmp_Procesos p
+			select distinct p.I_ProcesoID, @I_MatAluID, @C_Moneda, 0, 0, 1, 0, @I_UsuarioCre, @D_CurrentDate, P.D_FecVencto from @Tmp_Procesos p
 			left join dbo.TR_ObligacionAluCab cab on cab.I_ProcesoID = p.I_ProcesoID and cab.I_MatAluID = @I_MatAluID and cab.B_Eliminado = 0
 			where cab.I_ProcesoID is null
 
 			--Inserción de los Detalles
 			insert dbo.TR_ObligacionAluDet(I_ObligacionAluID, I_ConcPagID, I_Monto, B_Pagado, D_FecVencto, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
-			select cab.I_ObligacionAluID, tmp.I_ConcPagID, tmp.M_Monto, 0, @D_FecVencto, 1, 0, @I_UsuarioCre, @D_CurrentDate from dbo.TR_ObligacionAluCab cab
+			select cab.I_ObligacionAluID, tmp.I_ConcPagID, tmp.M_Monto, 0, tmp.D_FecVencto, 1, 0, @I_UsuarioCre, @D_CurrentDate from dbo.TR_ObligacionAluCab cab
 			inner join @Tmp_Procesos tmp on tmp.I_ProcesoID = cab.I_ProcesoID
 			where cab.B_Eliminado = 0 and cab.I_MatAluID = @I_MatAluID and 
 				not exists(select det.I_ObligacionAluDetID from dbo.TR_ObligacionAluDet det 
@@ -1944,7 +1957,7 @@ BEGIN
 			print ERROR_LINE()
 		end catch
 
-		set @I_Posicion = (@I_Posicion +1)
+		set @I_FilaActual = (@I_FilaActual +1)
 	end
 
 	set @B_Result = 1
@@ -1954,9 +1967,9 @@ BEGIN
 declare @B_Result bit,
 		@T_Message nvarchar(4000)
 
-exec USP_IU_GenerarObligacionesPregrado_X_Ciclo 2021, 15, null, null, 1,
-@B_Result OUTPUT,
-@T_Message OUTPUT
+exec USP_IU_GenerarObligacionesPregrado_X_Ciclo @I_Anio = 2021, @I_Periodo = 15, @C_CodFac = null, @C_CodAlu = null, @C_CodRc = null, @I_UsuarioCre = 1,
+@B_Result = @B_Result OUTPUT,
+@T_Message = @T_Message OUTPUT
 go
 
 */
