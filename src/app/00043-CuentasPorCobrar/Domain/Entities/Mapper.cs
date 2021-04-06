@@ -106,6 +106,7 @@ namespace Domain.Entities
         {
             var obligacionDetalleDTO = new ObligacionDetalleDTO()
             {
+                I_ObligacionAluID = detalleObligaciones.I_ObligacionAluID,
                 I_ProcesoID = detalleObligaciones.I_ProcesoID,
                 N_CodBanco = detalleObligaciones.N_CodBanco ?? "",
                 C_CodAlu = detalleObligaciones.C_CodAlu,
@@ -118,6 +119,7 @@ namespace Domain.Entities
                 I_Periodo = detalleObligaciones.I_Periodo,
                 C_Periodo = detalleObligaciones.C_Periodo,
                 T_Periodo = detalleObligaciones.T_Periodo,
+                T_ProcesoDesc = detalleObligaciones.T_ProcesoDesc,
                 T_ConceptoDesc = detalleObligaciones.T_ConceptoDesc,
                 T_CatPagoDesc = detalleObligaciones.T_CatPagoDesc,
                 I_Monto = detalleObligaciones.I_Monto,
@@ -145,6 +147,7 @@ namespace Domain.Entities
             var cuotaPagoDTO = new CuotaPagoDTO()
             {
                 I_NroOrden = cuotaPago.I_NroOrden,
+                I_ObligacionAluID = cuotaPago.I_ObligacionAluID,
                 I_ProcesoID = cuotaPago.I_ProcesoID,
                 N_CodBanco = cuotaPago.N_CodBanco ?? "",
                 C_CodAlu = cuotaPago.C_CodAlu,
@@ -157,13 +160,16 @@ namespace Domain.Entities
                 I_Periodo = cuotaPago.I_Periodo,
                 C_Periodo = cuotaPago.C_Periodo,
                 T_Periodo = cuotaPago.T_Periodo,
-                T_CatPagoDesc = cuotaPago.T_CatPagoDesc,
+                T_ProcesoDesc = cuotaPago.T_ProcesoDesc,
                 D_FecVencto = cuotaPago.D_FecVencto,
+                I_Prioridad = cuotaPago.I_Prioridad,
                 C_Moneda = cuotaPago.C_Moneda,
-                I_TipoObligacion = cuotaPago.I_TipoObligacion,
                 C_Nivel = cuotaPago.C_Nivel,
                 C_TipoAlumno = cuotaPago.C_TipoAlumno,
-                I_MontoTotal = cuotaPago.I_MontoTotal
+                I_MontoOblig = cuotaPago.I_MontoOblig,
+                C_CodOperacion = cuotaPago.C_CodOperacion,
+                D_FecPago = cuotaPago.D_FecPago,
+                T_LugarPago = cuotaPago.T_LugarPago
             };
 
             return cuotaPagoDTO;

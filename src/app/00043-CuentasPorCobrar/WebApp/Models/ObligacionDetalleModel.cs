@@ -7,6 +7,18 @@ namespace WebApp.Models
 {
     public class ObligacionDetalleModel
     {
+        public int? I_NroOrden { get; set; }
+
+        public string T_NroOrden
+        {
+            get
+            {
+                return I_NroOrden.HasValue ? "P" + I_NroOrden.Value.ToString("D2") : "";
+            }
+        }
+
+        public int I_ObligacionAluID { get; set; }
+
         public int I_ProcesoID { get; set; }
 
         public string N_CodBanco { get; set; }
@@ -30,6 +42,8 @@ namespace WebApp.Models
         public string C_Periodo { get; set; }
 
         public string T_Periodo { get; set; }
+
+        public string T_ProcesoDesc { get; set; }
 
         public string T_ConceptoDesc { get; set; }
 

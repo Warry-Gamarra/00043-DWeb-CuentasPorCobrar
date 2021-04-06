@@ -17,6 +17,8 @@ namespace WebApp.Models
             }
         }
 
+        public int I_ObligacionAluID { get; set; }
+
         public int I_ProcesoID { get; set; }
 
         public string N_CodBanco { get; set; }
@@ -49,7 +51,7 @@ namespace WebApp.Models
 
         public string T_Periodo { get; set; }
 
-        public string T_CatPagoDesc { get; set; }
+        public string T_ProcesoDesc { get; set; }
 
         public DateTime D_FecVencto { get; set; }
 
@@ -61,33 +63,36 @@ namespace WebApp.Models
             }
         }
 
+        public byte I_Prioridad { get; set; }
+
         public string C_Moneda { get; set; }
-
-        public int? I_TipoObligacion { get; set; }
-
-        public string T_TipoObligacion
-        {
-            get
-            {
-                if (I_TipoObligacion.HasValue)
-                    return I_TipoObligacion == 9 ? "Mat" : "Otr";
-                else
-                    return "";
-            }
-        }
 
         public string C_Nivel { get; set; }
 
         public string C_TipoAlumno { get; set; }
 
-        public decimal? I_MontoTotal { get; set; }
+        public decimal? I_MontoOblig { get; set; }
 
-        public string T_MontoTotal
+        public string T_MontoOblig
         {
             get
             {
-                return I_MontoTotal.HasValue ? I_MontoTotal.Value.ToString("N2") : "";
+                return I_MontoOblig.HasValue ? I_MontoOblig.Value.ToString("N2") : "";
             }
         }
+
+        public string C_CodOperacion { get; set; }
+
+        public DateTime? D_FecPago { get; set; }
+
+        public string T_FecPago
+        {
+            get
+            {
+                return D_FecPago.HasValue ? D_FecPago.Value.ToString("dd/MM/yyyy") : "";
+            }
+        }
+
+        public string T_LugarPago { get; set; }
     }
 }

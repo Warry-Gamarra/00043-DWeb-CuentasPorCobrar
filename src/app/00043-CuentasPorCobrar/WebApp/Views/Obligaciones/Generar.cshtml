@@ -117,8 +117,6 @@
 
                         <div class="card" style="margin-top: 5px;">
                             <div class="my-3 p-3 bg-body rounded shadow-sm" style="margin-bottom: 0px !important;">
-                                <h6 class="border-bottom pb-2 mb-0">Alumno</h6>
-
                                 <div class="d-flex text-muted pt-3">
                                     <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
                                         <div class="d-flex justify-content-between">
@@ -146,7 +144,7 @@
                             </div>
                         </div>
 
-                        <div class="table-responsive mt-4" style="max-height:150px">
+                        <div class="table-responsive mt-4" style="max-height: 250px">
                             <p class="h5">Obligaciones (Conceptos de Pago)</p>
 
                             <table class="table table-sm table-hover" id="tblDetalleObligaciones">
@@ -154,6 +152,7 @@
                                     <tr>
                                         <th>Concepto</th>
                                         <th>Cuota pago</th>
+                                        <th></th>
                                         <th>Monto</th>
                                         <th>Fec. Vencimiento</th>
                                         <th>Tipo</th>
@@ -167,7 +166,7 @@
                             </table>
                         </div>
 
-                        <div class="table-responsive mt-4" style="max-height:150px">
+                        <div class="table-responsive mt-4" style="max-height: 170px">
                             <p class="h5">Cuotas a pagar en Banco</p>
 
                             <table class="table table-sm table-hover" id="tblCuotasPago">
@@ -177,7 +176,7 @@
                                         <th></th>
                                         <th>Monto</th>
                                         <th>Fec. Vencimiento</th>
-                                        <th>Tipo</th>
+                                        <th>Cta.Cte.</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -381,6 +380,10 @@
                 },
                 success: function (data) {
                     if (data) {
+                        if (data.alumno !== null) {
+                            MostrarDatosAlumno(data.alumno);
+                        }
+                        
                         if (data.detalle_pago.length == 0) {
                             Swal.fire({
                                 title: '',
@@ -397,7 +400,6 @@
                                 }
                             });
                         } else {
-                            MostrarDatosAlumno(data.alumno);
                             GenerarTablaDetalle(data.detalle_pago);
                             GenerarTablaCuotas(data.cuotas_pago);
                         }
@@ -467,8 +469,9 @@
 
                 $.each(detalle_pago, function (i, item) {
                     rows += '<tr>' +
-                        '<td>' + item.T_ConceptoDesc + '</td>' +
-                        '<td>' + item.I_Anio + '-' + item.C_Periodo + ' ' + item.T_CatPagoDesc + '</td>' +
+                        '<td>' + item.T_ConceptoDesc + '</td>' + 
+                        '<td>' + item.T_ProcesoDesc + '</td>' +
+                        '<td>' + item.T_NroOrden + '</td>' +
                         '<td>' + item.T_Monto + '</td>' +
                         '<td>' + item.T_FecVencto + '</td>' +
                         '<td>' + item.T_TipoObligacion + '</td>' +
@@ -491,11 +494,11 @@
 
             $.each(cuotas_pago, function (i, item) {
                 rows += '<tr>' +
-                    '<td>' + item.I_Anio + '-' + item.C_Periodo + ' ' + item.T_CatPagoDesc + '</td>' +
+                    '<td>' + item.T_ProcesoDesc + '</td>' +
                     '<td>' + item.T_NroOrden + '</td>' +
-                    '<td>' + item.T_MontoTotal + '</td>' +
+                    '<td>' + item.T_MontoOblig + '</td>' +
                     '<td>' + item.T_FecVencto + '</td>' +
-                    '<td>' + item.T_TipoObligacion + '</td>' + 
+                    '<td></td>' +
                     '</tr>';
             });
 

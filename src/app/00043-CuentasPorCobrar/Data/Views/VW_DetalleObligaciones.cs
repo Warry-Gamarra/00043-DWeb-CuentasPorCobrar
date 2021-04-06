@@ -12,6 +12,8 @@ namespace Data.Views
 {
     public class VW_DetalleObligaciones
     {
+        public int I_ObligacionAluID { get; set; }
+
         public int I_ProcesoID { get; set; }
 
         public string N_CodBanco { get; set; }
@@ -35,6 +37,8 @@ namespace Data.Views
         public string C_Periodo { get; set; }
 
         public string T_Periodo { get; set; }
+
+        public string T_ProcesoDesc { get; set; }
 
         public string T_ConceptoDesc { get; set; }
 

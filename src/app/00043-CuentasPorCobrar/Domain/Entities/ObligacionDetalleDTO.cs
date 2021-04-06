@@ -8,6 +8,8 @@ namespace Domain.Entities
 {
     public class ObligacionDetalleDTO
     {
+        public int I_ObligacionAluID { get; set; }
+
         public int I_ProcesoID { get; set; }
 
         public string N_CodBanco { get; set; }
@@ -31,6 +33,8 @@ namespace Domain.Entities
         public string C_Periodo { get; set; }
 
         public string T_Periodo { get; set; }
+
+        public string T_ProcesoDesc { get; set; }
 
         public string T_ConceptoDesc { get; set; }
 

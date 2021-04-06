@@ -39,7 +39,7 @@ namespace WebApp.Models
             string nombreEmpresa = "UNFV";
             DateTime fechaTransmision = DateTime.Now;
             int cantidadRegistros = cuotas_pago.Count;
-            string montoTotal = BCPDecimalFormat(cuotas_pago.Sum(c => c.I_MontoTotal));
+            string montoTotal = BCPDecimalFormat(cuotas_pago.Sum(c => c.I_MontoOblig));
             string tipoArchivo = "R";//A
             string codigoServicio = "";
             string filler = "";
@@ -69,7 +69,7 @@ namespace WebApp.Models
                 string nombreDepositante = (item.T_Nombre.Trim() + " " + (item.T_ApePaterno.Trim() + " " + item.T_ApeMaterno).Trim());
                 nombreDepositante = nombreDepositante.Substring(0, (nombreDepositante.Length < 40 ? nombreDepositante.Length : 40));
                 string informacionRetorno = "INFORMACION DE RETORNO";
-                string montoCupon = BCPDecimalFormat(item.I_MontoTotal).PadLeft(15, '0');
+                string montoCupon = BCPDecimalFormat(item.I_MontoOblig).PadLeft(15, '0');
                 string montoMora = BCPDecimalFormat(0).PadLeft(15, '0');
                 string montoMinimo = BCPDecimalFormat(0).PadLeft(9, '0');
                 string tipoRegistroActualizacion = "A";//M, E

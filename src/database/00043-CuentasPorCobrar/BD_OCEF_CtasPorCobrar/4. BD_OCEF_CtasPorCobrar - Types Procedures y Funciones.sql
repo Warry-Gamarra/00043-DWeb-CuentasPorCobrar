@@ -1943,6 +1943,8 @@ BEGIN
 			end
 
 			--Grabando pago de matrícula
+			set @I_ProcesoID = 0
+
 			if exists(select p.I_ProcesoID from @Tmp_Procesos p where p.I_Prioridad = 1)
 			begin
 				set @I_ProcesoID = (select distinct p.I_ProcesoID from @Tmp_Procesos p where p.I_Prioridad = 1)
@@ -1953,7 +1955,7 @@ BEGIN
 					select @I_MontoInicial = cab.I_MontoOblig, @D_FecVenctoInicial = cab.D_FecVencto, @B_Pagado = cab.B_Pagado from dbo.TR_ObligacionAluCab cab 
 					where cab.B_Eliminado = 0 and I_MatAluID = @I_MatAluID and I_ProcesoID = @I_ProcesoID
 
-					select @D_FecVenctoActual = p.D_FecVencto, @I_MontoActual = sum(p.M_Monto) from @Tmp_Procesos p 
+					select @D_FecVenctoActual = p.D_FecVencto, @I_MontoActual = Sum(p.M_Monto) from @Tmp_Procesos p 
 					where p.I_Prioridad = 1 group by p.D_FecVencto
 
 					if (@B_Pagado = 0)
@@ -1969,7 +1971,7 @@ BEGIN
 							where B_Eliminado = 0 and I_MatAluID = @I_MatAluID and I_ProcesoID = @I_ProcesoID
 
 							insert dbo.TR_ObligacionAluCab(I_ProcesoID, I_MatAluID, C_Moneda, I_MontoOblig, B_Pagado, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, D_FecVencto)
-							select p.I_ProcesoID, @I_MatAluID, @C_Moneda, SUM(p.M_Monto), 0, 1, 0, @I_UsuarioCre, @D_CurrentDate, p.D_FecVencto from @Tmp_Procesos p
+							select p.I_ProcesoID, @I_MatAluID, @C_Moneda, Sum(p.M_Monto), 0, 1, 0, @I_UsuarioCre, @D_CurrentDate, p.D_FecVencto from @Tmp_Procesos p
 							where p.I_Prioridad = 1 
 							group by p.I_ProcesoID, p.D_FecVencto
 
@@ -1985,7 +1987,7 @@ BEGIN
 				begin
 					--insert
 					insert dbo.TR_ObligacionAluCab(I_ProcesoID, I_MatAluID, C_Moneda, I_MontoOblig, B_Pagado, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, D_FecVencto)
-					select p.I_ProcesoID, @I_MatAluID, @C_Moneda, SUM(p.M_Monto), 0, 1, 0, @I_UsuarioCre, @D_CurrentDate, p.D_FecVencto from @Tmp_Procesos p
+					select p.I_ProcesoID, @I_MatAluID, @C_Moneda, Sum(p.M_Monto), 0, 1, 0, @I_UsuarioCre, @D_CurrentDate, p.D_FecVencto from @Tmp_Procesos p
 					where p.I_Prioridad = 1 
 					group by p.I_ProcesoID, p.D_FecVencto
 
@@ -1996,19 +1998,39 @@ BEGIN
 					where p.I_Prioridad = 1
 				end
 			end
-			
-			--Grabando otros pagos
-			if exists(select p.I_ProcesoID from @Tmp_Procesos p where not p.I_Prioridad = 1)
-			begin
-				--select * from @Tmp_Procesos
-				select cab.I_MatAluID, cab.I_ProcesoID, cab.D_FecVencto, det.I_ConcPagID, det.I_Monto from dbo.TR_ObligacionAluCab cab
-				inner join dbo.TR_ObligacionAluDet det on det.I_ObligacionAluID = cab.I_ObligacionAluID
-				where cab.B_Eliminado = 0 and det.B_Eliminado = 0 and cab.I_MatAluID = @I_MatAluID and
-					cab.I_ProcesoID
 
-				select p.I_ProcesoID, p.D_FecVencto from @Tmp_Procesos p 
-				where not p.I_Prioridad = 1
-				group by p.D_FecVencto
+			--Grabando otros pagos
+			if exists(select p.I_ProcesoID from @Tmp_Procesos p where p.I_Prioridad = 2)
+			begin
+
+				if not exists(select cab.I_ObligacionAluID from dbo.TR_ObligacionAluCab cab
+					where cab.B_Eliminado = 0 and cab.I_MatAluID = @I_MatAluID and
+					cab.I_ProcesoID in (select p.I_ProcesoID from @Tmp_Procesos p where p.I_Prioridad = 2))
+				begin
+					insert dbo.TR_ObligacionAluCab(I_ProcesoID, I_MatAluID, C_Moneda, I_MontoOblig, B_Pagado, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, D_FecVencto)
+					select p.I_ProcesoID, @I_MatAluID, @C_Moneda, Sum(p.M_Monto), 0, 1, 0, @I_UsuarioCre, @D_CurrentDate, p.D_FecVencto from @Tmp_Procesos p
+					where p.I_Prioridad = 2
+					group by p.I_ProcesoID, p.D_FecVencto
+
+					insert dbo.TR_ObligacionAluDet(I_ObligacionAluID, I_ConcPagID, I_Monto, B_Pagado, D_FecVencto, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
+					select cab.I_ObligacionAluID, p.I_ConcPagID, p.M_Monto, 0, p.D_FecVencto, 1, 0, @I_UsuarioCre, @D_CurrentDate from @Tmp_Procesos p
+					inner join dbo.TR_ObligacionAluCab cab on cab.B_Habilitado = 1 and cab.B_Eliminado = 0 and p.I_ProcesoID = cab.I_ProcesoID and DATEDIFF(Day, p.D_FecVencto, cab.D_FecVencto) = 0
+					where p.I_Prioridad = 2
+				end
+				else
+				begin
+					print 'Modificacion de Otros pagos'
+					--Se puede modificar el nro.de pagos
+					--Se puede modificar el monto
+					--Se puede modificar la fecha de vencimiento
+					--select * from @Tmp_Procesos p where p.I_Prioridad = 2
+
+					--select *
+					--from dbo.TR_ObligacionAluCab cab
+					--inner join dbo.TR_ObligacionAluDet det on det.I_ObligacionAluID = cab.I_ObligacionAluID
+					--where cab.B_Eliminado = 0 and det.B_Eliminado = 0 and cab.I_MatAluID = @I_MatAluID and
+					--	cab.I_ProcesoID in (select p.I_ProcesoID from @Tmp_Procesos p where p.I_Prioridad = 2)
+				end
 			end
 
 			----Inserción de Cabecera
@@ -2050,7 +2072,8 @@ BEGIN
 declare @B_Result bit,
 		@T_Message nvarchar(4000)
 
-exec USP_IU_GenerarObligacionesPregrado_X_Ciclo @I_Anio = 2021, @I_Periodo = 15, @C_CodFac = null, @C_CodAlu = null, @C_CodRc = null, @I_UsuarioCre = 1,
+exec USP_IU_GenerarObligacionesPregrado_X_Ciclo @I_Anio = 2021, @I_Periodo = 15, 
+@C_CodFac = null, @C_CodAlu = null, @C_CodRc = null, @I_UsuarioCre = 1,
 @B_Result = @B_Result OUTPUT,
 @T_Message = @T_Message OUTPUT
 go
@@ -2058,8 +2081,6 @@ go
 */
 END
 GO
-
-
 
 
 
@@ -2305,9 +2326,10 @@ GO
 
 CREATE VIEW [dbo].[VW_DetalleObligaciones]
 AS
-SELECT pro.I_ProcesoID, pro.N_CodBanco, mat.C_CodAlu, mat.C_CodRc, a.C_CodFac, a.T_Nombre, a.T_ApePaterno, a.T_ApeMaterno, mat.I_Anio, mat.I_Periodo, 
+SELECT 
+	cab.I_ObligacionAluID, pro.I_ProcesoID, pro.N_CodBanco, mat.C_CodAlu, mat.C_CodRc, a.C_CodFac, a.T_Nombre, a.T_ApePaterno, a.T_ApeMaterno, mat.I_Anio, mat.I_Periodo, 
 	per.T_OpcionCod AS C_Periodo, per.T_OpcionDesc AS T_Periodo, 
-	con.T_ConceptoDesc, cat.T_CatPagoDesc, det.I_Monto, det.B_Pagado, det.D_FecVencto, pro.I_Prioridad,
+	pro.T_ProcesoDesc, ISNULL(cp.T_ConceptoPagoDesc, con.T_ConceptoDesc) AS T_ConceptoDesc, cat.T_CatPagoDesc, det.I_Monto, det.B_Pagado, cab.D_FecVencto, pro.I_Prioridad,
 	pagban.C_CodOperacion, pagban.D_FecPago, pagban.T_LugarPago, cab.C_Moneda, cp.I_TipoObligacion, 
 	cat.I_Nivel, niv.T_OpcionCod AS C_Nivel, niv.T_OpcionDesc AS T_Nivel, cat.I_TipoAlumno, tipal.T_OpcionCod AS C_TipoAlumno, tipal.T_OpcionDesc AS T_TipoAlumno
 FROM dbo.TC_MatriculaAlumno mat
@@ -2327,27 +2349,29 @@ WHERE mat.B_Eliminado = 0
 GO
 
 
+
 IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_CuotasPago')
 	DROP VIEW [dbo].[VW_CuotasPago]
 GO
 
 CREATE VIEW [dbo].[VW_CuotasPago]
 AS
-WITH CuotasPago(I_ProcesoID, N_CodBanco, C_CodAlu, C_CodRc, C_CodFac, T_Nombre, T_ApePaterno, T_ApeMaterno, I_Anio, I_Periodo, C_Periodo, T_Periodo, 
-	T_CatPagoDesc, D_FecVencto, I_Prioridad, C_Moneda, I_TipoObligacion, C_Nivel, C_TipoAlumno, I_MontoTotal)
-AS
-(
-	SELECT d.I_ProcesoID, d.N_CodBanco, d.C_CodAlu, d.C_CodRc, d.C_CodFac, d.T_Nombre, d.T_ApePaterno, d.T_ApeMaterno, d.I_Anio, d.I_Periodo, d.C_Periodo, d.T_Periodo, 
-		d.T_CatPagoDesc, d.D_FecVencto, d.I_Prioridad, d.C_Moneda, d.I_TipoObligacion, d.C_Nivel, d.C_TipoAlumno,
-		SUM(d.I_Monto) AS I_MontoTotal 
-	FROM VW_DetalleObligaciones d
-	GROUP BY d.I_ProcesoID, d.N_CodBanco, d.C_CodAlu, d.C_CodRc, d.C_CodFac, d.T_Nombre, d.T_ApePaterno, d.T_ApeMaterno, d.I_Anio, d.I_Periodo, d.C_Periodo, d.T_Periodo, 
-		d.T_CatPagoDesc, d.D_FecVencto, d.I_Prioridad, d.C_Moneda, d.I_TipoObligacion, C_Nivel, C_TipoAlumno
-)
-SELECT ROW_NUMBER() OVER(PARTITION BY C_CodAlu, C_CodRc ORDER BY I_Prioridad, D_FecVencto) AS I_NroOrden,
-	I_ProcesoID, N_CodBanco, C_CodAlu, C_CodRc, C_CodFac, T_Nombre, T_ApePaterno, T_ApeMaterno, 
-	I_Anio, I_Periodo, C_Periodo, T_Periodo, T_CatPagoDesc, D_FecVencto, C_Moneda, I_TipoObligacion, C_Nivel, C_TipoAlumno, I_MontoTotal
-FROM CuotasPago
+SELECT 
+	ROW_NUMBER() OVER(PARTITION BY mat.I_Anio, mat.I_Periodo, mat.C_CodRc, mat.C_CodAlu ORDER BY pro.I_Prioridad, cab.D_FecVencto) AS I_NroOrden,
+	cab.I_ObligacionAluID, pro.I_ProcesoID, pro.N_CodBanco, mat.C_CodAlu, mat.C_CodRc, a.C_CodFac, a.T_Nombre, a.T_ApePaterno, a.T_ApeMaterno, mat.I_Anio, mat.I_Periodo, 
+	per.T_OpcionCod AS C_Periodo, per.T_OpcionDesc AS T_Periodo, pro.T_ProcesoDesc, cab.D_FecVencto, pro.I_Prioridad, cab.C_Moneda,
+	niv.T_OpcionCod AS C_Nivel, tipal.T_OpcionCod AS C_TipoAlumno, cab.I_MontoOblig,
+	pagban.C_CodOperacion, pagban.D_FecPago, pagban.T_LugarPago
+FROM dbo.TC_MatriculaAlumno mat
+INNER JOIN dbo.TR_ObligacionAluCab cab ON cab.I_MatAluID = mat.I_MatAluID AND cab.B_Eliminado = 0
+INNER JOIN dbo.TC_Proceso pro ON pro.I_ProcesoID = cab.I_ProcesoID AND pro.B_Eliminado = 0
+INNER JOIN dbo.TC_CategoriaPago cat ON cat.I_CatPagoID = pro.I_CatPagoID AND cat.B_Eliminado = 0
+INNER JOIN dbo.TC_CatalogoOpcion per ON per.I_ParametroID = 5 AND per.I_OpcionID = mat.I_Periodo
+INNER JOIN dbo.TC_CatalogoOpcion niv ON niv.I_ParametroID = 2 AND niv.I_OpcionID = cat.I_Nivel
+INNER JOIN dbo.TC_CatalogoOpcion tipal ON tipal.I_ParametroID = 1 AND tipal.I_OpcionID = cat.I_TipoAlumno
+INNER JOIN BD_UNFV_Repositorio.dbo.VW_Alumnos a ON a.C_CodAlu = mat.C_CodAlu AND a.C_RcCod = mat.C_CodRc
+LEFT JOIN dbo.TRI_PagoProcesadoUnfv pagpro ON pagpro.I_ObligacionAluID = cab.I_ObligacionAluID AND pagpro.B_Anulado = 0
+LEFT JOIN dbo.TR_PagoBanco pagban ON pagban.I_PagoBancoID = pagpro.I_PagoBancoID AND pagban.B_Anulado = 0
 GO
 
 
