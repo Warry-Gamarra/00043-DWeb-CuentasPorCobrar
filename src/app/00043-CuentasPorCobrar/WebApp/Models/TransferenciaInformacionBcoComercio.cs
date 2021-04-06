@@ -11,10 +11,12 @@ namespace WebApp.Models
     public class TransferenciaInformacionBcoComercio : ITransferenciaInformacion
     {
         IObligacionServiceFacade obligacionServiceFacade;
+        private DateTime fecha_actual;
 
         public TransferenciaInformacionBcoComercio()
         {
             obligacionServiceFacade = new ObligacionServiceFacade();
+            fecha_actual = DateTime.Now;
         }
 
         public byte[] GenerarInformacionObligaciones(int anio, int periodo, TipoEstudio tipoEstudio, string facultad, DateTime? fechaDesde, DateTime? fechaHasta)
@@ -25,8 +27,6 @@ namespace WebApp.Models
             {
                 throw new Exception("No hay registros.");
             }
-
-            var fecha_actual = DateTime.Now;
 
             var memoryStream = new MemoryStream();
 
@@ -99,6 +99,11 @@ namespace WebApp.Models
             tw.Close();
             
             return memoryStream.GetBuffer();
+        }
+
+        public string NombreArchivoGenerado()
+        {
+            return String.Format("BcoComercio_Obligaciones_{0:yyyy-MM-dd}.txt", fecha_actual);
         }
 
         public void RecepcionarInformacionPagos()
