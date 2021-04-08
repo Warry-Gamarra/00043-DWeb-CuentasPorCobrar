@@ -24,7 +24,7 @@ namespace WebApp.Models
         {
             var cuotas_pago = obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(anio, periodo, tipoEstudio, facultad, fechaDesde, fechaHasta);
 
-            var cuenta_bcp = "119-104146435-0-01";
+            var cuenta_bcp = "123-1234567-0-12";
 
             var cuenta_split = cuenta_bcp.Split('-');
 
