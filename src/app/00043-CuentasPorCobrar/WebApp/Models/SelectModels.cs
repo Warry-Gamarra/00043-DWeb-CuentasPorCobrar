@@ -13,12 +13,14 @@ namespace WebApp.Models
         private readonly IRoles _roles;
         private readonly IDependencia _dependencia;
         private readonly ConceptoPagoService _conceptoPagoService;
+        private readonly EntidadFinanciera _entidadFinanciera;
 
         public SelectModels()
         {
             _roles = new RolAplicacion();
             _dependencia = new Dependencia();
             _conceptoPagoService = new ConceptoPagoService();
+            _entidadFinanciera = new EntidadFinanciera();
         }
 
         public List<SelectViewModel> GetRoles()
@@ -85,6 +87,18 @@ namespace WebApp.Models
             foreach (var item in _conceptoPagoService.Listar_CatalogoOpcion_Habilitadas_X_Parametro(Domain.Helpers.Parametro.Grado))
             {
                 result.Add(new SelectViewModel() { Value = item.I_OpcionID.ToString(), TextDisplay = item.T_OpcionDesc.ToUpper() });
+            }
+
+            return result;
+        }
+
+        public List<SelectViewModel> GetEntidadesFinancieras()
+        {
+            List<SelectViewModel> result = new List<SelectViewModel>();
+
+            foreach (var item in _entidadFinanciera.Find().Where(x => x.Habilitado))
+            {
+                result.Add(new SelectViewModel() { Value = item.Id.ToString(), TextDisplay = item.Nombre.ToUpper() });
             }
 
             return result;

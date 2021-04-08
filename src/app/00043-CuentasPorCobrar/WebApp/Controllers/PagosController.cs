@@ -14,11 +14,12 @@ namespace WebApp.Controllers
     [Authorize]
     public class PagosController : Controller
     {
-        IGeneralServiceFacade generalServiceFacade;
-        ICatalogoServiceFacade catalogoServiceFacade;
-        IObligacionServiceFacade obligacionServiceFacade;
-        IAlumnosClientFacade alumnosClientFacade;
-        IProgramasClientFacade programasClientFacade;
+        private readonly IGeneralServiceFacade generalServiceFacade;
+        private readonly ICatalogoServiceFacade catalogoServiceFacade;
+        private readonly IObligacionServiceFacade obligacionServiceFacade;
+        private readonly IAlumnosClientFacade alumnosClientFacade;
+        private readonly IProgramasClientFacade programasClientFacade;
+        private readonly SelectModels selectModels;
 
         public PagosController()
         {
@@ -27,6 +28,7 @@ namespace WebApp.Controllers
             obligacionServiceFacade = new ObligacionServiceFacade();
             alumnosClientFacade = new AlumnosClientFacade();
             programasClientFacade = new ProgramasClientFacade();
+            selectModels = new SelectModels();
         }
 
         // GET: Pagos
@@ -106,23 +108,28 @@ namespace WebApp.Controllers
 
         private IEnumerable<SelectViewModel> ListaEntidadesFinancieras()
         {
-            var listaEntidades = new List<SelectViewModel>();
+            //var listaEntidades =  new List<SelectViewModel>();
 
-            listaEntidades.Add(new SelectViewModel() { Value = "1", TextDisplay = "BANCO DE COMERCIO" });
+            //listaEntidades.Add(new SelectViewModel() { Value = "1", TextDisplay = "BANCO DE COMERCIO" });
 
-            listaEntidades.Add(new SelectViewModel() { Value = "2", TextDisplay = "BANCO DE CRÉDITO" });
+            //listaEntidades.Add(new SelectViewModel() { Value = "2", TextDisplay = "BANCO DE CRÉDITO" });
 
-            return listaEntidades;
+            return selectModels.GetEntidadesFinancieras();
         }
 
         [Route("operaciones/cargar-pagos/seleccionar-archivo/{tipo}")]
         public ActionResult SeleccionarArchivo(string tipo)
         {
             ViewBag.Tipo = $"({tipo.ToUpper()})";
+            ViewBag.EntidadesFinancieras = new SelectList(ListaEntidadesFinancieras(), "Value", "TextDisplay");
             //var model = _seleccionarArchivoModel.Init(TipoAlumno.Posgrado, TipoArchivoAlumno.Matricula);
             return PartialView("_SeleccionarArchivo");
         }
 
-
+        [HttpPost]
+        public ActionResult CargarArchivoPago(HttpPostedFileBase file, CargarArchivoViewModel model)
+        {
+            return View();
+        }
     }
 }

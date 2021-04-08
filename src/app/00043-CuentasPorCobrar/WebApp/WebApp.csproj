@@ -470,6 +470,7 @@
     <Compile Include="ViewModels\ConceptoPagoViewModel.cs" />
     <Compile Include="ViewModels\EstudiantesViewModels.cs" />
     <Compile Include="ViewModels\FiltroEnvioObligacionesModel.cs" />
+    <Compile Include="ViewModels\PagosViewModels.cs" />
     <Compile Include="ViewModels\ProcesoViewModel.cs" />
     <Compile Include="ViewModels\RolesViewModel.cs" />
     <Compile Include="ViewModels\SelectViewModel.cs" />

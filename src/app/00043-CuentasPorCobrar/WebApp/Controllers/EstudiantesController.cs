@@ -77,10 +77,6 @@ namespace WebApp.Controllers
             var result = _seleccionarArchivoModel.CargarMultasPorNoVotar(Server.MapPath("~/Upload/MultaNoVotar/"), file, tipoAlumno, WebSecurity.CurrentUserId);
 
             return Json(result, JsonRequestBehavior.AllowGet);
-
-            //var response = Mapper.DataMatriculaResponse_To_Response(result);
-
-            //return Json(response, JsonRequestBehavior.AllowGet);
         }
         
         [HttpPost]
@@ -90,10 +86,6 @@ namespace WebApp.Controllers
             var result = _seleccionarArchivoModel.CargarMultasPorNoVotar(Server.MapPath("~/Upload/MultaNoVotar/"), file, tipoAlumno, WebSecurity.CurrentUserId);
 
             return Json(result, JsonRequestBehavior.AllowGet);
-
-            //var response = Mapper.DataMatriculaResponse_To_Response(result);
-
-            //return Json(response, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult DescargarObservadorPregrado()
