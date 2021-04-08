@@ -81,6 +81,8 @@ namespace WebApp.Models
             }
         }
 
+        public bool B_Pagado { get; set; }
+
         public string C_CodOperacion { get; set; }
 
         public DateTime? D_FecPago { get; set; }
@@ -89,7 +91,7 @@ namespace WebApp.Models
         {
             get
             {
-                return D_FecPago.HasValue ? D_FecPago.Value.ToString("dd/MM/yyyy") : "";
+                return D_FecPago.HasValue ? D_FecPago.Value.ToString("dd/MM/yyyy HH:mm") : "";
             }
         }
 

@@ -50,6 +50,8 @@ namespace Domain.Entities
 
         public decimal? I_MontoOblig { get; set; }
 
+        public bool B_Pagado { get; set; }
+
         public string C_CodOperacion { get; set; }
 
         public DateTime? D_FecPago { get; set; }

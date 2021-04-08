@@ -54,6 +54,8 @@ namespace Data.Views
 
         public decimal? I_MontoOblig { get; set; }
 
+        public bool B_Pagado { get; set; }
+
         public string C_CodOperacion { get; set; }
 
         public  DateTime? D_FecPago { get; set; }
@@ -91,7 +93,7 @@ namespace Data.Views
             try
             {
                 string s_command = @"SELECT * FROM dbo.VW_CuotasPago c 
-                    WHERE c.I_Anio = @I_Anio AND c.I_Periodo = @I_Periodo AND
+                    WHERE c.I_Anio = @I_Anio AND c.I_Periodo = @I_Periodo AND c.B_Pagado = 0 AND
                         c.C_Nivel = '1' AND c.C_CodFac = ISNULL(@C_CodFac, C_CodFac)";
 
                 if (fechaDesde.HasValue)
@@ -125,7 +127,7 @@ namespace Data.Views
 
             try
             {
-                string s_command = @"SELECT * FROM dbo.VW_CuotasPago c WHERE c.I_Anio = @I_Anio AND c.I_Periodo = @I_Periodo
+                string s_command = @"SELECT * FROM dbo.VW_CuotasPago c WHERE c.I_Anio = @I_Anio AND c.I_Periodo = @I_Periodo AND c.B_Pagado = 0
                     AND c.C_Nivel IN ('2', '3')";
 
                 if (fechaDesde.HasValue)

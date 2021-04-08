@@ -89,6 +89,7 @@ namespace WebApp.Models
                 C_Nivel = cuotaPagoDTO.C_Nivel,
                 C_TipoAlumno = cuotaPagoDTO.C_TipoAlumno,
                 I_MontoOblig = cuotaPagoDTO.I_MontoOblig,
+                B_Pagado = cuotaPagoDTO.B_Pagado,
                 C_CodOperacion = cuotaPagoDTO.C_CodOperacion,
                 D_FecPago = cuotaPagoDTO.D_FecPago,
                 T_LugarPago = cuotaPagoDTO.T_LugarPago

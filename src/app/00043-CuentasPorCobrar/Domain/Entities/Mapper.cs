@@ -167,6 +167,7 @@ namespace Domain.Entities
                 C_Nivel = cuotaPago.C_Nivel,
                 C_TipoAlumno = cuotaPago.C_TipoAlumno,
                 I_MontoOblig = cuotaPago.I_MontoOblig,
+                B_Pagado = cuotaPago.B_Pagado,
                 C_CodOperacion = cuotaPago.C_CodOperacion,
                 D_FecPago = cuotaPago.D_FecPago,
                 T_LugarPago = cuotaPago.T_LugarPago

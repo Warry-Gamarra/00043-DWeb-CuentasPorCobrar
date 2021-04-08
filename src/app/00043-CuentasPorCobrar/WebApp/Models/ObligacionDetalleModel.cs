@@ -89,7 +89,7 @@ namespace WebApp.Models
         {
             get
             {
-                return D_FecPago.HasValue ? D_FecPago.Value.ToString("dd/MM/yyyy") : "";
+                return D_FecPago.HasValue ? D_FecPago.Value.ToString("dd/MM/yyyy HH:mm") : "";
             }
         }
 
