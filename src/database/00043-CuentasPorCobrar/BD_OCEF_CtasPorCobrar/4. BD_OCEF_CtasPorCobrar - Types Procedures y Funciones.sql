@@ -2475,7 +2475,7 @@ BEGIN
 	INNER JOIN Matriculados m ON m.C_CodAlu = p.C_CodAlu AND m.C_CodRc = p.C_CodRc AND 
 		m.I_ProcesoID = p.I_ProcesoID AND DATEDIFF(DAY, m.D_FecVencto, p.D_FecVencto) = 0 --AND m.I_MontoOblig = p.I_MontoPago
 
-	select * FROM @Tmp_PagoObligacion
+	--select * FROM @Tmp_PagoObligacion
 
 	DECLARE @I_FilaActual		int = 1,
 			@I_CantRegistros	int = (select count(id) from @Tmp_PagoObligacion),

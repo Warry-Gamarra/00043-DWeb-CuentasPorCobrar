@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Services.Implementations
 {
@@ -90,6 +89,23 @@ namespace Domain.Services.Implementations
             var result = cuotaPagos.Select(c => Mapper.VW_CuotaPago_To_CuotaPagoDTO(c));
 
             return result;
+        }
+
+        public Response Grabar_Pago_Obligaciones(List<PagoObligacionEntity> dataPagoObligaciones, int currentUserID)
+        {
+            ResponseData result;
+
+            var grabarPago = new USP_I_GrabarPagoObligaciones()
+            {
+                D_FecRegistro = DateTime.Now,
+                UserID = currentUserID
+            };
+
+            var dataTable = Mapper.PagoObligacionEntity_To_DataTable(dataPagoObligaciones);
+
+            result = grabarPago.Execute(dataTable);
+
+            return new Response(result);
         }
     }
 }

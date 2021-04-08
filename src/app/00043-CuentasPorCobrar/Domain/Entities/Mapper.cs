@@ -211,5 +211,39 @@ namespace Domain.Entities
 
             return proceso;
         }
+
+        public static DataTable PagoObligacionEntity_To_DataTable(List<PagoObligacionEntity> dataPagoObligaciones)
+        {
+            DataTable dataTable = new DataTable();
+            dataTable.Columns.Add("C_CodOperacion");
+            dataTable.Columns.Add("T_NomDepositante");
+            dataTable.Columns.Add("C_Referencia");
+            dataTable.Columns.Add("D_FecPago");
+            dataTable.Columns.Add("I_Cantidad");
+            dataTable.Columns.Add("C_Moneda");
+            dataTable.Columns.Add("I_MontoPago");
+            dataTable.Columns.Add("T_LugarPago");
+            dataTable.Columns.Add("C_CodAlu");
+            dataTable.Columns.Add("C_CodRc");
+            dataTable.Columns.Add("I_ProcesoID");
+            dataTable.Columns.Add("D_FecVencto");
+
+            dataPagoObligaciones.ForEach(x => dataTable.Rows.Add(
+                x.C_CodOperacion,
+                x.T_NomDepositante,
+                x.C_Referencia,
+                x.D_FecPago,
+                x.I_Cantidad,
+                x.C_Moneda,
+                x.I_MontoPago,
+                x.T_LugarPago,
+                x.C_CodAlu,
+                x.C_CodRc,
+                x.I_ProcesoID,
+                x.D_FecVencto
+            ));
+
+            return dataTable;
+        }
     }
 }
