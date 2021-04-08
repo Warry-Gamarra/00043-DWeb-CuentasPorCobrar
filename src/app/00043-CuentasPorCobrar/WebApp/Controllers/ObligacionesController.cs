@@ -139,6 +139,10 @@ namespace WebApp.Controllers
 
             var cuotas_pago = obligacionServiceFacade.Obtener_CuotaPago(anio, periodo, codAlu, codRc);
 
+            detalle_pago.ForEach(d => {
+                d.I_NroOrden = cuotas_pago.Find(c => c.I_ObligacionAluID == d.I_ObligacionAluID).I_NroOrden;
+            });
+
             return Json(new { alumno = alumno, detalle_pago = detalle_pago, cuotas_pago = cuotas_pago }, JsonRequestBehavior.AllowGet);
         }
 

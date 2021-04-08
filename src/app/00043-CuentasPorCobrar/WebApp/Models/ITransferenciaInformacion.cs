@@ -10,6 +10,8 @@ namespace WebApp.Models
     {
         byte[] GenerarInformacionObligaciones(int anio, int periodo, TipoEstudio tipoEstudio, string facultad, DateTime? fechaDesde, DateTime? fechaHasta);
 
+        string NombreArchivoGenerado();
+
         void RecepcionarInformacionPagos();
     }
 }

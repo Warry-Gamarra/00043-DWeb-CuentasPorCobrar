@@ -30,23 +30,24 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body bg-light-gray">
-                        <form action="@Url.Action("GenerarArchivosBancos", "Pagos")" method="GET">
+                        <form action="@Url.Action("GenerarArchivosBancos", "Pagos")" method="POST">
+                            @Html.AntiForgeryToken()
                             <div class="form-row">
                                 <div class="form-group col-xl-1 col-lg-4 col-md-4 col-sm-4 col-6">
                                     <label for="anio">Año</label>
-                                    @Html.DropDownListFor(model => model.I_Anio, new SelectList(ViewBag.Anios, "Value", "TextDisplay", ViewBag.CurrentYear), new { @class = "form-control form-control-sm" })
+                                    @Html.DropDownListFor(model => model.I_Anio, new SelectList(ViewBag.Anios, "Value", "TextDisplay"), new { @class = "form-control form-control-sm" })
                                 </div>
                                 <div class="form-group col-xl-1 col-lg-4 col-md-4 col-sm-4 col-6">
                                     <label for="periodo">Periodo</label>
-                                    @Html.DropDownListFor(model => model.I_Periodo, new SelectList(ViewBag.Periodos, "Value", "TextDisplay", ViewBag.DefaultPeriodo), null, new { @class = "form-control form-control-sm" })
+                                    @Html.DropDownListFor(model => model.I_Periodo, new SelectList(ViewBag.Periodos, "Value", "TextDisplay"), null, new { @class = "form-control form-control-sm" })
                                 </div>
                                 <div class="form-group col-xl-1 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <label for="tipoEstudio">Tipo de estudio</label>
-                                    @Html.DropDownListFor(model => model.E_TipoEstudio, new SelectList(ViewBag.TipoEstudios, "Value", "TextDisplay", ViewBag.DefaultTipoEstudio), null, new { @class = "form-control form-control-sm" })
+                                    @Html.DropDownListFor(model => model.E_TipoEstudio, new SelectList(ViewBag.TipoEstudios, "Value", "TextDisplay"), null, new { @class = "form-control form-control-sm" })
                                 </div>
                                 <div class="form-group col-xl-3 col-lg-8 col-md-8 col-sm-12 col-12">
                                     <label for="facultad">Facultades/Especialidades</label>
-                                    @Html.DropDownListFor(model => model.T_Facultad, new SelectList(ViewBag.Facultades, "Value", "TextDisplay", ViewBag.DefaultFacultad), "TODOS", new { @class = "form-control form-control-sm" })
+                                    @Html.DropDownListFor(model => model.T_Facultad, new SelectList(ViewBag.Facultades, "Value", "TextDisplay"), "TODOS", new { @class = "form-control form-control-sm" })
                                 </div>
                                 <div class="form-group col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12">
                                     <label for="entidadFinanciera">Banco</label>
@@ -88,6 +89,11 @@
                     </div>
                 </div>
 
+                <div class="card" id="generarObligMsj" style="margin-top: 5px;">
+                    <div class="card-body">
+                        @Html.ValidationSummary(true, null, new { @class = "text-danger" })
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -105,7 +111,8 @@
             e.stopPropagation();
         });
 
-        $('#datepicker .input-daterange #T_FechaDesde').datepicker('setDate', new Date());
+        $('#datepicker .input-daterange #T_FechaDesde').datepicker('update', "@Model.T_FechaDesde");
+        $('#datepicker .input-daterange #T_FechaHasta').datepicker('update', "@Model.T_FechaHasta");
     </script>
 }
 

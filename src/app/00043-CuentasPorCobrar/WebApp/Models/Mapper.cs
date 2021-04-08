@@ -28,6 +28,7 @@ namespace WebApp.Models
         {
             var obligacionDetalleModel = new ObligacionDetalleModel()
             {
+                I_ObligacionAluID = obligacionDetalleDTO.I_ObligacionAluID,
                 I_ProcesoID = obligacionDetalleDTO.I_ProcesoID,
                 N_CodBanco = obligacionDetalleDTO.N_CodBanco,
                 C_CodAlu = obligacionDetalleDTO.C_CodAlu,
@@ -40,6 +41,7 @@ namespace WebApp.Models
                 I_Periodo = obligacionDetalleDTO.I_Periodo,
                 C_Periodo = obligacionDetalleDTO.C_Periodo,
                 T_Periodo = obligacionDetalleDTO.T_Periodo,
+                T_ProcesoDesc = obligacionDetalleDTO.T_ProcesoDesc,
                 T_ConceptoDesc = obligacionDetalleDTO.T_ConceptoDesc,
                 T_CatPagoDesc = obligacionDetalleDTO.T_CatPagoDesc,
                 I_Monto = obligacionDetalleDTO.I_Monto,
@@ -67,6 +69,7 @@ namespace WebApp.Models
             var cuotaPagoModel = new CuotaPagoModel()
             {
                 I_NroOrden = cuotaPagoDTO.I_NroOrden,
+                I_ObligacionAluID = cuotaPagoDTO.I_ObligacionAluID,
                 I_ProcesoID = cuotaPagoDTO.I_ProcesoID,
                 N_CodBanco = cuotaPagoDTO.N_CodBanco,
                 C_CodAlu = cuotaPagoDTO.C_CodAlu,
@@ -79,13 +82,17 @@ namespace WebApp.Models
                 I_Periodo = cuotaPagoDTO.I_Periodo,
                 C_Periodo = cuotaPagoDTO.C_Periodo,
                 T_Periodo = cuotaPagoDTO.T_Periodo,
-                T_CatPagoDesc = cuotaPagoDTO.T_CatPagoDesc,
+                T_ProcesoDesc = cuotaPagoDTO.T_ProcesoDesc,
                 D_FecVencto = cuotaPagoDTO.D_FecVencto,
+                I_Prioridad = cuotaPagoDTO.I_Prioridad,
                 C_Moneda = cuotaPagoDTO.C_Moneda,
-                I_TipoObligacion = cuotaPagoDTO.I_TipoObligacion,
                 C_Nivel = cuotaPagoDTO.C_Nivel,
                 C_TipoAlumno = cuotaPagoDTO.C_TipoAlumno,
-                I_MontoTotal = cuotaPagoDTO.I_MontoTotal
+                I_MontoOblig = cuotaPagoDTO.I_MontoOblig,
+                B_Pagado = cuotaPagoDTO.B_Pagado,
+                C_CodOperacion = cuotaPagoDTO.C_CodOperacion,
+                D_FecPago = cuotaPagoDTO.D_FecPago,
+                T_LugarPago = cuotaPagoDTO.T_LugarPago
             };
 
             return cuotaPagoModel;

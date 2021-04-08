@@ -11,10 +11,12 @@ namespace WebApp.Models
     public class TransferenciaInformacionBcoComercio : ITransferenciaInformacion
     {
         IObligacionServiceFacade obligacionServiceFacade;
+        private DateTime fecha_actual;
 
         public TransferenciaInformacionBcoComercio()
         {
             obligacionServiceFacade = new ObligacionServiceFacade();
+            fecha_actual = DateTime.Now;
         }
 
         public byte[] GenerarInformacionObligaciones(int anio, int periodo, TipoEstudio tipoEstudio, string facultad, DateTime? fechaDesde, DateTime? fechaHasta)
@@ -26,15 +28,13 @@ namespace WebApp.Models
                 throw new Exception("No hay registros.");
             }
 
-            var fecha_actual = DateTime.Now;
-
             var memoryStream = new MemoryStream();
 
             var tw = new StreamWriter(memoryStream);
 
             string identificadorRegistro = "T";
             int cantRegistrosSoles = cuotas_pago.Count();
-            int totalSoles = (int)(cuotas_pago.Sum(c => c.I_MontoTotal) * 100);
+            int totalSoles = (int)(cuotas_pago.Sum(c => c.I_MontoOblig) * 100);
             int cantRegistrosDolares = 0;
             int totalDolares = 0;
             int fechaVencimiento = 0;
@@ -66,9 +66,9 @@ namespace WebApp.Models
                 string fechaEmision = "00000000";
                 string fechaVncto = item.D_FecVencto.ToString("yyyyMMdd");
                 string moneda = "01";//Moneda (01=soles y 02=dolares)
-                int importeTotal = (int)(item.I_MontoTotal * 100);
+                int importeTotal = (int)(item.I_MontoOblig * 100);
                 string informacionAdicional = codigoContrato + item.C_CodRc + item.I_Anio.ToString() + item.C_Periodo + fechaVncto +
-                    item.I_ProcesoID.ToString().PadLeft(10, ' ') + item.I_MontoTotal.Value.ToString("#.00").PadLeft(10, ' ') + new String(' ', 4);
+                    item.I_ProcesoID.ToString().PadLeft(10, ' ') + item.I_MontoOblig.Value.ToString("#.00").PadLeft(10, ' ') + new String(' ', 4);
                 int interesMoratorio = 0;
                 string codigoConcepto01 = item.N_CodBanco.PadRight(4, '0');
                 string otros = new String('0', 162);
@@ -99,6 +99,11 @@ namespace WebApp.Models
             tw.Close();
             
             return memoryStream.GetBuffer();
+        }
+
+        public string NombreArchivoGenerado()
+        {
+            return String.Format("BcoComercio_Obligaciones_{0:yyyy-MM-dd}.txt", fecha_actual);
         }
 
         public void RecepcionarInformacionPagos()

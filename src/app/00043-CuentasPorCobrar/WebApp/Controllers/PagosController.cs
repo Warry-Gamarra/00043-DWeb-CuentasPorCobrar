@@ -54,15 +54,16 @@ namespace WebApp.Controllers
 
             ViewBag.EntidadesFinancieras = ListaEntidadesFinancieras();
 
-            ViewBag.CurrentYear = DateTime.Now.Year;
+            var model = new FiltroEnvioObligacionesModel()
+            {
+                I_Anio = DateTime.Now.Year,
+                I_Periodo = 15,
+                E_TipoEstudio = TipoEstudio.Pregrado,
+                T_Facultad = "",
+                T_FechaDesde = DateTime.Now.ToString("dd/MM/yyyy")
+            };
 
-            ViewBag.DefaultPeriodo = "15";
-
-            ViewBag.DefaultTipoEstudio = TipoEstudio.Pregrado;
-
-            ViewBag.DefaultFacultad = "";
-
-            return View();
+            return View(model);
         }
 
         [Route("operaciones/cargar-pagos/obligaciones")]
@@ -79,9 +80,9 @@ namespace WebApp.Controllers
             return View();
         }
 
-
-
-        [HttpGet]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("operaciones/generar-archivos-pago")]
         public ActionResult GenerarArchivosBancos(FiltroEnvioObligacionesModel model)
         {
             try
@@ -90,12 +91,25 @@ namespace WebApp.Controllers
 
                 var memoryStream = transferenciaInformacion.GenerarInformacionObligaciones(model.I_Anio, model.I_Periodo, model.E_TipoEstudio, model.T_Facultad, model.D_FechaDesde, model.D_FechaHasta);
 
-                return File(memoryStream, "text/plain", "Obligaciones.txt");
+                return File(memoryStream, "text/plain", transferenciaInformacion.NombreArchivoGenerado());
             }
             catch (Exception ex)
             {
-                //return View("generar-archivos-pago", model);
-                return RedirectToAction("generar-archivos-pago", "operaciones");
+                ViewBag.Title = "Generar archivos de pago";
+
+                ViewBag.Anios = generalServiceFacade.Listar_Anios();
+
+                ViewBag.Periodos = catalogoServiceFacade.Listar_Periodos();
+
+                ViewBag.TipoEstudios = generalServiceFacade.Listar_TipoEstudios();
+
+                ViewBag.Facultades = programasClientFacade.GetFacultades(TipoEstudio.Pregrado);
+
+                ViewBag.EntidadesFinancieras = ListaEntidadesFinancieras();
+
+                ModelState.AddModelError("", ex.Message);
+
+                return View("ExportarDatosPago", model);
             }
         }
 

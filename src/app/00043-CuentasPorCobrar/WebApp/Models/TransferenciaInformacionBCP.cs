@@ -12,10 +12,12 @@ namespace WebApp.Models
     public class TransferenciaInformacionBCP : ITransferenciaInformacion
     {
         IObligacionServiceFacade obligacionServiceFacade;
+        private DateTime fechaTransmision;
 
         public TransferenciaInformacionBCP()
         {
             obligacionServiceFacade = new ObligacionServiceFacade();
+            fechaTransmision = DateTime.Now;
         }
 
         public byte[] GenerarInformacionObligaciones(int anio, int periodo, TipoEstudio tipoEstudio, string facultad, DateTime? fechaDesde, DateTime? fechaHasta)
@@ -36,15 +38,14 @@ namespace WebApp.Models
             string codigoMoneda = "0";
             string numeroCuentaEmpresa = "1234567";
             string tipoValidacion = "C";
-            string nombreEmpresa = "UNFV";
-            DateTime fechaTransmision = DateTime.Now;
+            string nombreEmpresa = "UNIVERSIDAD NACIONAL FEDERICO VILLARREAL";
             int cantidadRegistros = cuotas_pago.Count;
-            string montoTotal = BCPDecimalFormat(cuotas_pago.Sum(c => c.I_MontoTotal));
-            string tipoArchivo = "R";//A
-            string codigoServicio = "";
-            string filler = "";
+            int montoTotal = (int)(cuotas_pago.Sum(c => c.I_MontoOblig) * 100);
+            string tipoArchivoActualizacion = "R";
+            string codigoServicio = "000000";
+            string fillerCabecera = "";
 
-            string cab = String.Format("{0}{1, -3}{2}{3, -7}{4}{5, -40}{6:yyyyMMdd}{7:D9}{8, 15}{9, 1}{10, 6}{11, 157}",
+            string cab = String.Format("{0}{1, -3}{2}{3, -7}{4}{5, -40}{6:yyyyMMdd}{7:D9}{8:D15}{9}{10}{11,157}",
                 tipoRegistro,           //0
                 codigoSucursal,         //1
                 codigoMoneda,           //2
@@ -54,9 +55,9 @@ namespace WebApp.Models
                 fechaTransmision,       //6
                 cantidadRegistros,      //7
                 montoTotal,             //8
-                tipoArchivo,            //9
+                tipoArchivoActualizacion, //9
                 codigoServicio,         //10
-                filler                  //11
+                fillerCabecera          //11
                 );
 
             tw.WriteLine(cab);
@@ -69,15 +70,15 @@ namespace WebApp.Models
                 string nombreDepositante = (item.T_Nombre.Trim() + " " + (item.T_ApePaterno.Trim() + " " + item.T_ApeMaterno).Trim());
                 nombreDepositante = nombreDepositante.Substring(0, (nombreDepositante.Length < 40 ? nombreDepositante.Length : 40));
                 string informacionRetorno = "INFORMACION DE RETORNO";
-                string montoCupon = BCPDecimalFormat(item.I_MontoTotal).PadLeft(15, '0');
-                string montoMora = BCPDecimalFormat(0).PadLeft(15, '0');
-                string montoMinimo = BCPDecimalFormat(0).PadLeft(9, '0');
+                int montoCupon = (int)(item.I_MontoOblig * 100);
+                int montoMora = 0;
+                int montoMinimo = 0;
                 string tipoRegistroActualizacion = "A";//M, E
                 string nroDocumentoPago = "";
                 string nroDocumentoIdentidad = "";
                 string fillerDetalle = "";
 
-                string det = String.Format("{0}{1, -3}{2}{3, -7}{4, -14}{5, -40}{6, -30}{7:yyyyMMdd}{8:yyyyMMdd}{9}{10}{11}{12}{13, 20}{14, 16}{15, 61}",
+                string det = String.Format("{0}{1, -3}{2}{3, -7}{4, -14}{5, -40}{6, -30}{7:yyyyMMdd}{8:yyyyMMdd}{9:D15}{10:D15}{11:D9}{12}{13, 20}{14, 16}{15,61}",
                     tipoRegistro,               //0
                     codigoSucursal,             //1
                     codigoMoneda,               //2
@@ -106,15 +107,14 @@ namespace WebApp.Models
             return memoryStream.GetBuffer();
         }
 
+        public string NombreArchivoGenerado()
+        {
+            return String.Format("BCP_CREP_VC_{0:yyyyMMdd}.txt", fechaTransmision);
+        }
+
         public void RecepcionarInformacionPagos()
         {
             throw new NotImplementedException();
-        }
-
-        private string BCPDecimalFormat(decimal? value)
-        {
-            value = value ?? 0;
-            return value.Value.ToString("F3", CultureInfo.CreateSpecificCulture("es-ES"));
         }
     }
 }

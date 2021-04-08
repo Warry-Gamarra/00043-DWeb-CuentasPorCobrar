@@ -14,6 +14,8 @@ namespace Data.Views
     {
         public int I_NroOrden { get; set; }
 
+        public int I_ObligacionAluID { get; set; }
+
         public int I_ProcesoID { get; set; }
 
         public string N_CodBanco { get; set; }
@@ -38,19 +40,27 @@ namespace Data.Views
 
         public string T_Periodo { get; set; }
 
-        public string T_CatPagoDesc { get; set; }
+        public string T_ProcesoDesc { get; set; }
 
         public DateTime D_FecVencto { get; set; }
 
-        public string C_Moneda { get; set; }
+        public byte I_Prioridad { get; set; }
 
-        public int? I_TipoObligacion { get; set; }
+        public string C_Moneda { get; set; }
 
         public string C_Nivel { get; set; }
 
         public string C_TipoAlumno { get; set; }
 
-        public decimal? I_MontoTotal { get; set; }
+        public decimal? I_MontoOblig { get; set; }
+
+        public bool B_Pagado { get; set; }
+
+        public string C_CodOperacion { get; set; }
+
+        public  DateTime? D_FecPago { get; set; }
+
+        public string T_LugarPago { get; set; }
 
         public static IEnumerable<VW_CuotasPago> FindByAlumno(int anio, int periodo, string codAlu, string codRc)
         {
@@ -83,7 +93,7 @@ namespace Data.Views
             try
             {
                 string s_command = @"SELECT * FROM dbo.VW_CuotasPago c 
-                    WHERE c.I_Anio = @I_Anio AND c.I_Periodo = @I_Periodo AND
+                    WHERE c.I_Anio = @I_Anio AND c.I_Periodo = @I_Periodo AND c.B_Pagado = 0 AND
                         c.C_Nivel = '1' AND c.C_CodFac = ISNULL(@C_CodFac, C_CodFac)";
 
                 if (fechaDesde.HasValue)
@@ -117,7 +127,7 @@ namespace Data.Views
 
             try
             {
-                string s_command = @"SELECT * FROM dbo.VW_CuotasPago c WHERE c.I_Anio = @I_Anio AND c.I_Periodo = @I_Periodo
+                string s_command = @"SELECT * FROM dbo.VW_CuotasPago c WHERE c.I_Anio = @I_Anio AND c.I_Periodo = @I_Periodo AND c.B_Pagado = 0
                     AND c.C_Nivel IN ('2', '3')";
 
                 if (fechaDesde.HasValue)
