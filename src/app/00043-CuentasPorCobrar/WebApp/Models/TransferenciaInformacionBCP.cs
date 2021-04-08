@@ -24,6 +24,10 @@ namespace WebApp.Models
         {
             var cuotas_pago = obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(anio, periodo, tipoEstudio, facultad, fechaDesde, fechaHasta);
 
+            var cuenta_bcp = "119-104146435-0-01";
+
+            var cuenta_split = cuenta_bcp.Split('-');
+
             if (cuotas_pago.Count == 0)
             {
                 throw new Exception("No hay registros.");
@@ -34,9 +38,9 @@ namespace WebApp.Models
             var tw = new StreamWriter(memoryStream);
 
             string tipoRegistro = "CC";
-            string codigoSucursal = "123";
-            string codigoMoneda = "0";
-            string numeroCuentaEmpresa = "1234567";
+            string codigoSucursal = cuenta_split[0].Substring(0, 3);
+            string codigoMoneda = cuenta_split[2].Substring(0, 1);
+            string numeroCuentaEmpresa = cuenta_split[1].Substring(0, 7);
             string tipoValidacion = "C";
             string nombreEmpresa = "UNIVERSIDAD NACIONAL FEDERICO VILLARREAL";
             int cantidadRegistros = cuotas_pago.Count;
@@ -69,8 +73,8 @@ namespace WebApp.Models
                 string codigoDepositante = item.C_CodAlu.PadLeft(14, '0');
                 string nombreDepositante = (item.T_Nombre.Trim() + " " + (item.T_ApePaterno.Trim() + " " + item.T_ApeMaterno).Trim());
                 nombreDepositante = nombreDepositante.Substring(0, (nombreDepositante.Length < 40 ? nombreDepositante.Length : 40));
-                string informacionRetorno = "INFORMACION DE RETORNO";
                 int montoCupon = (int)(item.I_MontoOblig * 100);
+                string informacionRetorno = item.C_CodRc + item.I_ProcesoID.ToString("D6") + montoCupon.ToString("D15");
                 int montoMora = 0;
                 int montoMinimo = 0;
                 string tipoRegistroActualizacion = "A";//M, E
@@ -109,7 +113,7 @@ namespace WebApp.Models
 
         public string NombreArchivoGenerado()
         {
-            return String.Format("BCP_CREP_VC_{0:yyyyMMdd}.txt", fechaTransmision);
+            return String.Format("BCP_CREP_VC_{0:yyyyMMdd_HHmm}.txt", fechaTransmision);
         }
 
         public void RecepcionarInformacionPagos()
