@@ -247,10 +247,26 @@ go
 /*	-----------------------  Obligaciones y pagos	-----------------------  */
 
 
+CREATE TABLE TC_EntidadFinanciera
+( 
+	I_EntidadFinanID     int IDENTITY ( 1,1 ) ,
+	T_EntidadDesc        varchar(150)  NOT NULL ,
+	B_Habilitado         bit  NOT NULL ,
+	B_Eliminado          bit  NOT NULL ,
+	I_UsuarioCre         int  NULL ,
+	D_FecCre             datetime  NULL ,
+	I_UsuarioMod         int  NULL ,
+	D_FecMod             datetime  NULL ,
+	CONSTRAINT PK_EntidadFinanciera PRIMARY KEY  NONCLUSTERED (I_EntidadFinanID ASC)
+)
+go
+
+
 
 CREATE TABLE TR_PagoBanco
 ( 
 	I_PagoBancoID        int IDENTITY ( 1,1 ) ,
+	I_EntidadFinanID	 int NOT NULL ,
 	C_CodOperacion       varchar(50)  NULL ,
 	C_CodDepositante     varchar(20)  NULL ,
 	T_NomDepositante     varchar(200)  NULL ,
@@ -263,7 +279,10 @@ CREATE TABLE TR_PagoBanco
 	B_Anulado            bit  NOT NULL ,
 	I_UsuarioCre         int  NULL ,
 	D_FecCre             datetime  NULL ,
-	CONSTRAINT PK_PagoBanco PRIMARY KEY  CLUSTERED (I_PagoBancoID ASC)
+	CONSTRAINT PK_PagoBanco PRIMARY KEY  CLUSTERED (I_PagoBancoID ASC),
+	CONSTRAINT FK_EntidadFinanciera_PagoBanco FOREIGN KEY (I_EntidadFinanID) REFERENCES TC_EntidadFinanciera(I_EntidadFinanID)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
 )
 go
 
@@ -559,22 +578,6 @@ go
 
 
 
-CREATE TABLE TC_EntidadFinanciera
-( 
-	I_EntidadFinanID     int IDENTITY ( 1,1 ) ,
-	T_EntidadDesc        varchar(150)  NOT NULL ,
-	B_Habilitado         bit  NOT NULL ,
-	B_Eliminado          bit  NOT NULL ,
-	I_UsuarioCre         int  NULL ,
-	D_FecCre             datetime  NULL ,
-	I_UsuarioMod         int  NULL ,
-	D_FecMod             datetime  NULL ,
-	CONSTRAINT PK_EntidadFinanciera PRIMARY KEY  NONCLUSTERED (I_EntidadFinanID ASC)
-)
-go
-
-
-
 CREATE TABLE TC_CuentaDeposito
 ( 
 	I_CtaDepositoID      int IDENTITY ( 1,1 ) ,
@@ -654,9 +657,31 @@ CREATE TABLE TI_TipoArchivo_EntidadFinanciera
 	CONSTRAINT FK_EntidadFinanciera_TipoArchivoEntidadFinanciera FOREIGN KEY (I_EntidadFinanID) REFERENCES TC_EntidadFinanciera(I_EntidadFinanID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION,
-CONSTRAINT FK_TipoArchivo_TipoArchivoEntidadFinanciera FOREIGN KEY (I_TipoArchivoID) REFERENCES TC_TipoArchivo(I_TipoArchivoID)
+	CONSTRAINT FK_TipoArchivo_TipoArchivoEntidadFinanciera FOREIGN KEY (I_TipoArchivoID) REFERENCES TC_TipoArchivo(I_TipoArchivoID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
+)
+go
+
+
+
+CREATE TABLE TS_CampoTablaPago
+( 
+	I_CampoPagoID        int IDENTITY ( 1,1 ) ,
+	T_TablaPagoNom       varchar(50)  NULL ,
+	T_CampoPagoNom       varchar(50)  NULL ,
+	T_CampoInfoDesc      varchar(50)  NULL,
+	I_TipoArchivoID      int  NULL ,
+	B_Habilitado         bit  NOT NULL ,
+	B_Eliminado          bit  NOT NULL ,
+	I_UsuarioCre         int  NULL ,
+	I_UsuarioMod         int  NULL ,
+	D_FecCre             datetime  NULL ,
+	D_FecMod             datetime  NULL ,
+	CONSTRAINT PK_CampoTablaPagoBD PRIMARY KEY  CLUSTERED (I_CampoPagoID ASC),
+	CONSTRAINT FK_TipoArchivo_CampoTablaPago FOREIGN KEY (I_TipoArchivoID) REFERENCES TC_TipoArchivo(I_TipoArchivoID)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION,
 )
 go
 
@@ -697,8 +722,12 @@ CREATE TABLE TC_ColumnaSeccion
 	I_UsuarioMod         int  NULL ,
 	D_FecMod             datetime  NULL ,
 	I_SecArchivoID       int  NULL ,
+	I_CampoPagoID        int  NULL ,
 	CONSTRAINT PK_ColumnaSeccion PRIMARY KEY  CLUSTERED (I_ColSecID ASC),
 	CONSTRAINT FK_SeccionArchivo_ColumnasSeccion FOREIGN KEY (I_SecArchivoID) REFERENCES TC_SeccionArchivo(I_SecArchivoID)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION,
+	CONSTRAINT FK_CampoTablaPago_ColumnasSeccion FOREIGN KEY (I_CampoPagoID) REFERENCES TS_CampoTablaPago(I_CampoPagoID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 )
@@ -721,7 +750,7 @@ CREATE TABLE TC_CuentaDeposito_CategoriaPago
 	CONSTRAINT FK_CuentaDeposito_CuentaDepositoCategoriaPago FOREIGN KEY (I_CtaDepositoID) REFERENCES TC_CuentaDeposito(I_CtaDepositoID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION,
-CONSTRAINT FK_CategoriaPago_CuentaDepositoCategoriaPago FOREIGN KEY (I_CatPagoID) REFERENCES TC_CategoriaPago(I_CatPagoID)
+	CONSTRAINT FK_CategoriaPago_CuentaDepositoCategoriaPago FOREIGN KEY (I_CatPagoID) REFERENCES TC_CategoriaPago(I_CatPagoID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 )

@@ -2565,3 +2565,332 @@ BEGIN
 END
 GO
 
+
+/*---------------------------- -------------*/
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_GrabarSeccionArchivo')
+	DROP PROCEDURE [dbo].[USP_I_GrabarSeccionArchivo]
+GO
+
+CREATE PROCEDURE [dbo].[USP_I_GrabarSeccionArchivo]
+	 @I_SecArchivoID	int
+	,@T_SecArchivoDesc	varchar(50)
+	,@I_FilaInicio		smallint
+	,@I_FilaFin			smallint
+	,@I_TipArchivoEntFinanID	int
+	,@D_FecCre			datetime
+	,@CurrentUserId		int
+
+	,@B_Result bit OUTPUT
+	,@T_Message nvarchar(4000) OUTPUT	
+AS
+BEGIN
+  SET NOCOUNT ON
+  	BEGIN TRY
+		INSERT INTO TC_SeccionArchivo(T_SecArchivoDesc, I_FilaInicio, I_FilaFin, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, I_TipArchivoEntFinanID)
+							  VALUES (@T_SecArchivoDesc, @I_FilaInicio, @I_FilaFin, 1, 0, @CurrentUserId, @D_FecCre, @I_TipArchivoEntFinanID)
+
+		SET @B_Result = 1
+		SET @T_Message = 'Nuevo registro agregado.'
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+
+END
+GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarSeccionArchivo')
+	DROP PROCEDURE [dbo].[USP_U_ActualizarSeccionArchivo]
+GO
+
+CREATE PROCEDURE [dbo].[USP_U_ActualizarSeccionArchivo]
+	 @I_SecArchivoID	int
+	,@T_SecArchivoDesc	varchar(50)
+	,@I_FilaInicio		smallint
+	,@I_FilaFin			smallint
+	,@I_TipArchivoEntFinanID	int
+	,@D_FecMod			datetime
+	,@CurrentUserId		int
+
+	,@B_Result bit OUTPUT
+	,@T_Message nvarchar(4000) OUTPUT	
+AS
+BEGIN
+  SET NOCOUNT ON
+  	BEGIN TRY
+	UPDATE	TC_SeccionArchivo 
+		SET	T_SecArchivoDesc = @T_SecArchivoDesc
+			, I_FilaInicio = @I_FilaInicio
+			, I_FilaFin = @I_FilaFin
+			, I_TipArchivoEntFinanID = @I_TipArchivoEntFinanID
+			, D_FecMod = @D_FecMod
+			, I_UsuarioMod = @CurrentUserId
+		WHERE I_SecArchivoID = @I_SecArchivoID
+			
+		SET @B_Result = 1
+		SET @T_Message = 'Actualización de datos correcta'
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+
+END
+GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarEstadoSeccionArchivo')
+	DROP PROCEDURE [dbo].[USP_U_ActualizarEstadoSeccionArchivo]
+GO
+
+CREATE PROCEDURE [dbo].[USP_U_ActualizarEstadoSeccionArchivo]
+	 @I_SecArchivoID	int
+	,@B_Habilitado		bit
+	,@D_FecMod			datetime
+	,@CurrentUserId		int
+
+	,@B_Result bit OUTPUT
+	,@T_Message nvarchar(4000) OUTPUT	
+AS
+BEGIN
+  SET NOCOUNT ON
+  	BEGIN TRY
+		UPDATE	TC_SeccionArchivo 
+		SET		B_Habilitado = @B_Habilitado,
+				D_FecMod = @D_FecMod,
+				I_UsuarioMod = @CurrentUserId
+		WHERE I_SecArchivoID = @I_SecArchivoID
+			
+		SET @B_Result = 1
+		SET @T_Message = 'Actualización de datos correcta'
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+END
+GO
+
+
+/*---------------------------- -------------*/
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_GrabarColumnaSeccion')
+	DROP PROCEDURE [dbo].[USP_I_GrabarColumnaSeccion]
+GO
+
+CREATE PROCEDURE [dbo].[USP_I_GrabarColumnaSeccion]
+	 @I_SecArchivoID	int
+	,@I_CampoPagoID		int
+	,@T_ColSecDesc		varchar(50)
+	,@I_ColumnaInicio	smallint
+	,@I_ColumnaFin		smallint
+	,@D_FecCre			datetime
+	,@CurrentUserId		int
+
+	,@B_Result bit OUTPUT
+	,@T_Message nvarchar(4000) OUTPUT	
+AS
+BEGIN
+  SET NOCOUNT ON
+  	BEGIN TRY
+		INSERT INTO TC_ColumnaSeccion (T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, I_CampoPagoID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, I_SecArchivoID)
+							   VALUES (@T_ColSecDesc, @I_ColumnaInicio, @I_ColumnaFin, @I_CampoPagoID, 1, 0, @CurrentUserId, @D_FecCre, @I_SecArchivoID)
+
+		SET @B_Result = 1
+		SET @T_Message = 'Nuevo registro agregado.'
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+
+END
+GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarColumnaSeccion')
+	DROP PROCEDURE [dbo].[USP_U_ActualizarColumnaSeccion]
+GO
+
+CREATE PROCEDURE [dbo].[USP_U_ActualizarColumnaSeccion]
+	 @I_ColSecID		int
+	,@T_ColSecDesc		varchar(50)
+	,@I_ColumnaInicio	smallint
+	,@I_ColumnaFin		smallint
+	,@I_SecArchivoID	int
+	,@D_FecMod			datetime
+	,@CurrentUserId		int
+
+	,@B_Result bit OUTPUT
+	,@T_Message nvarchar(4000) OUTPUT	
+AS
+BEGIN
+  SET NOCOUNT ON
+  	BEGIN TRY
+	UPDATE	TC_ColumnaSeccion 
+		SET	T_ColSecDesc = @T_ColSecDesc
+			, I_ColumnaInicio = @I_ColumnaInicio
+			, I_ColumnaFin = @I_ColumnaFin
+			, I_SecArchivoID = @I_SecArchivoID
+			, D_FecMod = @D_FecMod
+			, I_UsuarioMod = @CurrentUserId
+		WHERE I_ColSecID = @I_ColSecID
+			
+		SET @B_Result = 1
+		SET @T_Message = 'Actualización de datos correcta'
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+
+END
+GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarEstadoColumnaSeccion')
+	DROP PROCEDURE [dbo].[USP_U_ActualizarEstadoColumnaSeccion]
+GO
+
+CREATE PROCEDURE [dbo].[USP_U_ActualizarEstadoColumnaSeccion]
+	 @I_ColSecID		int
+	,@B_Habilitado		bit
+	,@D_FecMod			datetime
+	,@CurrentUserId		int
+
+	,@B_Result bit OUTPUT
+	,@T_Message nvarchar(4000) OUTPUT	
+AS
+BEGIN
+  SET NOCOUNT ON
+  	BEGIN TRY
+		UPDATE	TC_ColumnaSeccion 
+		SET		B_Habilitado = @B_Habilitado,
+				D_FecMod = @D_FecMod,
+				I_UsuarioMod = @CurrentUserId
+		WHERE   I_ColSecID = @I_ColSecID
+			
+		SET @B_Result = 1
+		SET @T_Message = 'Actualización de datos correcta'
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+END
+GO
+
+
+/*---------------------------- -------------*/
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_GrabarCampoTablaPago')
+	DROP PROCEDURE [dbo].[USP_I_GrabarCampoTablaPago]
+GO
+
+CREATE PROCEDURE [dbo].[USP_I_GrabarCampoTablaPago]
+	 @I_CampoPagoID		int
+	,@T_TablaPagoNom	varchar(50)
+	,@T_CampoPagoNom	varchar(50)
+	,@T_CampoInfoDesc	varchar(50)
+	,@D_FecCre			datetime
+	,@CurrentUserId		int
+
+	,@B_Result bit OUTPUT
+	,@T_Message nvarchar(4000) OUTPUT	
+AS
+BEGIN
+  SET NOCOUNT ON
+  	BEGIN TRY
+		INSERT INTO TS_CampoTablaPago (T_TablaPagoNom, T_CampoPagoNom, T_CampoInfoDesc, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
+							   VALUES (@T_TablaPagoNom, @T_CampoPagoNom, @T_CampoInfoDesc, 1, 0, @CurrentUserId, @D_FecCre)
+
+		SET @B_Result = 1
+		SET @T_Message = 'Nuevo registro agregado.'
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+
+END
+GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarCampoTablaPago')
+	DROP PROCEDURE [dbo].[USP_U_ActualizarCampoTablaPago]
+GO
+
+CREATE PROCEDURE [dbo].[USP_U_ActualizarCampoTablaPago]
+	 @I_CampoPagoID		int
+	,@T_TablaPagoNom	varchar(50)
+	,@T_CampoPagoNom	varchar(50)
+	,@T_CampoInfoDesc	varchar(50)
+	,@D_FecMod			datetime
+	,@CurrentUserId		int
+
+	,@B_Result bit OUTPUT
+	,@T_Message nvarchar(4000) OUTPUT	
+AS
+BEGIN
+  SET NOCOUNT ON
+  	BEGIN TRY
+	UPDATE	TS_CampoTablaPago 
+		SET	T_TablaPagoNom = @T_TablaPagoNom
+			, T_CampoPagoNom = @T_CampoPagoNom
+			, T_CampoInfoDesc = @T_CampoInfoDesc
+			, D_FecMod = @D_FecMod
+			, I_UsuarioMod = @CurrentUserId
+		WHERE I_CampoPagoID = @I_CampoPagoID
+			
+		SET @B_Result = 1
+		SET @T_Message = 'Actualización de datos correcta'
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+
+END
+GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarEstadoCampoTablaPago')
+	DROP PROCEDURE [dbo].[USP_U_ActualizarEstadoCampoTablaPago]
+GO
+
+CREATE PROCEDURE [dbo].[USP_U_ActualizarEstadoCampoTablaPago]
+	 @I_CampoPagoID		int
+	,@B_Habilitado		bit
+	,@D_FecMod			datetime
+	,@CurrentUserId		int
+
+	,@B_Result bit OUTPUT
+	,@T_Message nvarchar(4000) OUTPUT	
+AS
+BEGIN
+  SET NOCOUNT ON
+  	BEGIN TRY
+		UPDATE	TS_CampoTablaPago 
+		SET		B_Habilitado = @B_Habilitado,
+				D_FecMod = @D_FecMod,
+				I_UsuarioMod = @CurrentUserId
+		WHERE   I_CampoPagoID = @I_CampoPagoID
+			
+		SET @B_Result = 1
+		SET @T_Message = 'Actualización de datos correcta'
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+END
+GO
+
+
+

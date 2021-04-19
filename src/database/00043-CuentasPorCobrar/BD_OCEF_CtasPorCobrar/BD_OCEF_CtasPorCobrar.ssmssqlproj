@@ -3,94 +3,10 @@
   <Items>
     <LogicalFolder Name="Connections" Type="2" Sorted="true">
       <Items>
-        <ConnectionNode Name="14-CEUC-DESA-05\SQL_2016E:">
-          <Created>2020-12-21T11:53:21.2703004-05:00</Created>
-          <Type>SQL</Type>
-          <Server>14-CEUC-DESA-05\SQL_2016E</Server>
-          <UserName />
-          <Authentication>SQL</Authentication>
-          <InitialDB />
-          <LoginTimeout>0</LoginTimeout>
-          <ExecutionTimeout>0</ExecutionTimeout>
-          <ConnectionProtocol>NotSpecified</ConnectionProtocol>
-          <ApplicationName>Microsoft SQL Server Management Studio - Query</ApplicationName>
-        </ConnectionNode>
-        <ConnectionNode Name="14-CEUC-DESA-05\SQL_2016E:HUMBERTO-PC\Humberto">
-          <Created>2021-01-11T11:26:48.6725913-05:00</Created>
-          <Type>SQL</Type>
-          <Server>14-CEUC-DESA-05\SQL_2016E</Server>
-          <UserName />
-          <Authentication>Windows Authentication</Authentication>
-          <InitialDB />
-          <LoginTimeout>30</LoginTimeout>
-          <ExecutionTimeout>0</ExecutionTimeout>
-          <ConnectionProtocol>NotSpecified</ConnectionProtocol>
-          <ApplicationName>Microsoft SQL Server Management Studio - Query</ApplicationName>
-        </ConnectionNode>
-        <ConnectionNode Name="16-CEUC-DESA-01:">
-          <Created>2020-12-29T17:24:04.1455172-05:00</Created>
-          <Type>SQL</Type>
-          <Server>16-CEUC-DESA-01</Server>
-          <UserName />
-          <Authentication>SQL</Authentication>
-          <InitialDB />
-          <LoginTimeout>30</LoginTimeout>
-          <ExecutionTimeout>0</ExecutionTimeout>
-          <ConnectionProtocol>NotSpecified</ConnectionProtocol>
-          <ApplicationName>Microsoft SQL Server Management Studio - Consulta</ApplicationName>
-        </ConnectionNode>
-        <ConnectionNode Name="172.17.14.137\SQL_2016E:UserOCEF">
-          <Created>2020-12-29T17:28:19.9701117-05:00</Created>
-          <Type>SQL</Type>
-          <Server>172.17.14.137\SQL_2016E</Server>
-          <UserName>UserOCEF</UserName>
-          <Authentication>SQL</Authentication>
-          <InitialDB>BD_OCEF_CtasPorCobrar</InitialDB>
-          <LoginTimeout>30</LoginTimeout>
-          <ExecutionTimeout>0</ExecutionTimeout>
-          <ConnectionProtocol>NotSpecified</ConnectionProtocol>
-          <ApplicationName>Microsoft SQL Server Management Studio - Consulta</ApplicationName>
-        </ConnectionNode>
-        <ConnectionNode Name="DESKTOP-B34HJML\SQL_2016E:">
-          <Created>2020-10-13T15:12:28.6651684-05:00</Created>
+        <ConnectionNode Name="DESKTOP-B34HJML\SQL_2016E:DESKTOP-B34HJML\gamar">
+          <Created>2021-04-13T17:34:17.271599-05:00</Created>
           <Type>SQL</Type>
           <Server>DESKTOP-B34HJML\SQL_2016E</Server>
-          <UserName />
-          <Authentication>SQL</Authentication>
-          <InitialDB />
-          <LoginTimeout>30</LoginTimeout>
-          <ExecutionTimeout>0</ExecutionTimeout>
-          <ConnectionProtocol>NotSpecified</ConnectionProtocol>
-          <ApplicationName>Microsoft SQL Server Management Studio - Query</ApplicationName>
-        </ConnectionNode>
-        <ConnectionNode Name="DESKTOP-B34HJML\SQL_2016E:">
-          <Created>2020-12-07T22:08:44.2875749-05:00</Created>
-          <Type>SQL</Type>
-          <Server>DESKTOP-B34HJML\SQL_2016E</Server>
-          <UserName />
-          <Authentication>SQL</Authentication>
-          <InitialDB />
-          <LoginTimeout>30</LoginTimeout>
-          <ExecutionTimeout>0</ExecutionTimeout>
-          <ConnectionProtocol>NotSpecified</ConnectionProtocol>
-          <ApplicationName>Microsoft SQL Server Management Studio - Query</ApplicationName>
-        </ConnectionNode>
-        <ConnectionNode Name="DESKTOP-B34HJML\SQL_2016E:HUMBERTO-PC\Humberto">
-          <Created>2021-02-04T18:39:22.2198317-05:00</Created>
-          <Type>SQL</Type>
-          <Server>DESKTOP-B34HJML\SQL_2016E</Server>
-          <UserName />
-          <Authentication>Windows Authentication</Authentication>
-          <InitialDB />
-          <LoginTimeout>30</LoginTimeout>
-          <ExecutionTimeout>0</ExecutionTimeout>
-          <ConnectionProtocol>NotSpecified</ConnectionProtocol>
-          <ApplicationName>Microsoft SQL Server Management Studio - Query</ApplicationName>
-        </ConnectionNode>
-        <ConnectionNode Name="DESKTOP-B34HJML\SQL_2017E:HUMBERTO-PC\Humberto">
-          <Created>2021-03-29T11:28:18.5968298-05:00</Created>
-          <Type>SQL</Type>
-          <Server>DESKTOP-B34HJML\SQL_2017E</Server>
           <UserName />
           <Authentication>Windows Authentication</Authentication>
           <InitialDB />
@@ -134,9 +50,9 @@
           <FullPath>1. BD_OCEF_CtasPorCobrar - Creación de base de datos.sql</FullPath>
         </FileNode>
         <FileNode Name="2. BD_OCEF_CtasPorCobrar - Esquema de base de datos.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:HUMBERTO-PC\SQLEXPRESS:False:sa</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>HUMBERTO-PC\SQLEXPRESS</AssociatedConnSrvName>
-          <AssociatedConnUserName>sa</AssociatedConnUserName>
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:DESKTOP-B34HJML\SQL_2016E:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>DESKTOP-B34HJML\SQL_2016E</AssociatedConnSrvName>
+          <AssociatedConnUserName />
           <FullPath>2. BD_OCEF_CtasPorCobrar - Esquema de base de datos.sql</FullPath>
         </FileNode>
         <FileNode Name="3. BD_OCEF_CtasPorCobrar - Carga de datos iniciales.sql">
@@ -146,14 +62,14 @@
           <FullPath>3. BD_OCEF_CtasPorCobrar - Carga de datos iniciales.sql</FullPath>
         </FileNode>
         <FileNode Name="4. BD_OCEF_CtasPorCobrar - Types Procedures y Funciones.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:HUMBERTO-PC\SQLEXPRESS:False:sa</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>HUMBERTO-PC\SQLEXPRESS</AssociatedConnSrvName>
-          <AssociatedConnUserName>sa</AssociatedConnUserName>
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:DESKTOP-B34HJML\SQL_2016E:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>DESKTOP-B34HJML\SQL_2016E</AssociatedConnSrvName>
+          <AssociatedConnUserName />
           <FullPath>4. BD_OCEF_CtasPorCobrar - Types Procedures y Funciones.sql</FullPath>
         </FileNode>
         <FileNode Name="SQLQuery1.sql">
-          <AssociatedConnectionMoniker />
-          <AssociatedConnSrvName />
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:DESKTOP-B34HJML\SQL_2016E:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>DESKTOP-B34HJML\SQL_2016E</AssociatedConnSrvName>
           <AssociatedConnUserName />
           <FullPath>SQLQuery1.sql</FullPath>
         </FileNode>
