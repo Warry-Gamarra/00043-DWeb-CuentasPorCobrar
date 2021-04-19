@@ -8,6 +8,7 @@ using Domain.Helpers;
 using WebApp.Models;
 using System.Globalization;
 using WebApp.ViewModels;
+using WebMatrix.WebData;
 
 namespace WebApp.Controllers
 {
@@ -20,6 +21,7 @@ namespace WebApp.Controllers
         private readonly IAlumnosClientFacade alumnosClientFacade;
         private readonly IProgramasClientFacade programasClientFacade;
         private readonly SelectModels selectModels;
+        private readonly PagosModel pagosModel;
 
         public PagosController()
         {
@@ -29,6 +31,7 @@ namespace WebApp.Controllers
             alumnosClientFacade = new AlumnosClientFacade();
             programasClientFacade = new ProgramasClientFacade();
             selectModels = new SelectModels();
+            pagosModel = new PagosModel();
         }
 
         // GET: Pagos
@@ -65,21 +68,6 @@ namespace WebApp.Controllers
 
             return View(model);
         }
-
-        [Route("operaciones/cargar-pagos/obligaciones")]
-        public ActionResult ImportarPagoObligaciones()
-        {
-            ViewBag.Title = "Cargar pagos de obligaciones";
-            return View();
-        }
-
-        [Route("operaciones/cargar-pagos/tasas")]
-        public ActionResult ImportarPagoTasas()
-        {
-            ViewBag.Title = "Cargar pagos de tasas";
-            return View();
-        }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("operaciones/generar-archivos-pago")]
@@ -122,28 +110,60 @@ namespace WebApp.Controllers
 
         private IEnumerable<SelectViewModel> ListaEntidadesFinancieras()
         {
-            //var listaEntidades =  new List<SelectViewModel>();
-
-            //listaEntidades.Add(new SelectViewModel() { Value = "1", TextDisplay = "BANCO DE COMERCIO" });
-
-            //listaEntidades.Add(new SelectViewModel() { Value = "2", TextDisplay = "BANCO DE CRÉDITO" });
-
             return selectModels.GetEntidadesFinancieras();
         }
 
-        [Route("operaciones/cargar-pagos/seleccionar-archivo/{tipo}")]
-        public ActionResult SeleccionarArchivo(string tipo)
+
+        [Route("operaciones/cargar-pagos/obligaciones")]
+        public ActionResult ImportarPagoObligaciones()
         {
-            ViewBag.Tipo = $"({tipo.ToUpper()})";
-            ViewBag.EntidadesFinancieras = new SelectList(ListaEntidadesFinancieras(), "Value", "TextDisplay");
-            //var model = _seleccionarArchivoModel.Init(TipoAlumno.Posgrado, TipoArchivoAlumno.Matricula);
-            return PartialView("_SeleccionarArchivo");
+            ViewBag.Title = "Cargar pagos de obligaciones";
+            var model = new List<ArchivoImportadoViewModel>();
+            return View(model);
         }
+
+        [Route("operaciones/cargar-pagos/seleccionar-archivo/obligaciones")]
+        public ActionResult SeleccionarArchivoObligaciones()
+        {
+            ViewBag.Tipo = "(OBLIGACIONES)";
+            ViewBag.EntidadesFinancieras = new SelectList(ListaEntidadesFinancieras(), "Value", "TextDisplay");
+            ViewBag.Anios = new SelectList(generalServiceFacade.Listar_Anios(), "Value", "TextDisplay");
+            ViewBag.Periodos = new SelectList(catalogoServiceFacade.Listar_Periodos(), "Value", "TextDisplay");
+
+            var model = new CargarArchivoViewModel() { TipoArchivo = TipoPago.Obligacion};
+
+            return PartialView("_SeleccionarArchivo", model);
+        }
+
+
+        [Route("operaciones/cargar-pagos/tasas")]
+        public ActionResult ImportarPagoTasas()
+        {
+            ViewBag.Title = "Cargar pagos de tasas";
+            var model = new List<ArchivoImportadoViewModel>();
+            return View(model);
+        }
+
+
+        [Route("operaciones/cargar-pagos/seleccionar-archivo/tasas")]
+        public ActionResult SeleccionarArchivoTasas()
+        {
+            ViewBag.Tipo = "(TASAS)";
+            ViewBag.EntidadesFinancieras = new SelectList(ListaEntidadesFinancieras(), "Value", "TextDisplay");
+            ViewBag.Anios = new SelectList(generalServiceFacade.Listar_Anios(), "Value", "TextDisplay");
+            ViewBag.Periodos = new SelectList(catalogoServiceFacade.Listar_Periodos(), "Value", "TextDisplay");
+
+            var model = new CargarArchivoViewModel() { TipoArchivo = TipoPago.Tasa }; ;
+            return PartialView("_SeleccionarArchivo", model);
+        }
+
 
         [HttpPost]
         public ActionResult CargarArchivoPago(HttpPostedFileBase file, CargarArchivoViewModel model)
         {
-            return View();
+            var result = pagosModel.CargarArchivoPagos(Server.MapPath("~/Upload/Pagos/"), file, model, WebSecurity.CurrentUserId);
+
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
     }
 }

@@ -429,6 +429,7 @@
     <Compile Include="Models\CustomAttribute.cs" />
     <Compile Include="Models\EntidadFinancieraModel.cs" />
     <Compile Include="Models\EspecialidadAlumnoModel.cs" />
+    <Compile Include="Models\EstructuraArchivoModel.cs" />
     <Compile Include="Models\EstudianteModel.cs" />
     <Compile Include="Models\Facades\CatalogoServiceFacade.cs" />
     <Compile Include="Models\Facades\GeneralServiceFacade.cs" />
@@ -443,6 +444,7 @@
     <Compile Include="Models\MatriculaDbfSource.cs" />
     <Compile Include="Models\MatriculaExcelSource.cs" />
     <Compile Include="Models\MatriculaSourceFactory.cs" />
+    <Compile Include="Models\PagosModel.cs" />
     <Compile Include="Models\TransferenciaInformacionBCP.cs" />
     <Compile Include="Models\HandleJsonExceptionAttribute.cs" />
     <Compile Include="Models\ITransferenciaInformacion.cs" />
@@ -549,6 +551,11 @@
     <Content Include="Views\Procesos\_ListadoTasasProcesoBusqueda.cshtml" />
     <Content Include="Views\Pagos\ImportarPagoObligaciones.cshtml" />
     <Content Include="Views\Pagos\_SeleccionarArchivo.cshtml" />
+    <Content Include="Views\Pagos\_ResultadoCargaPago.cshtml" />
+    <Compile Include="ViewModels\EstructuraArchivoViewModels.cs" />
+    <Content Include="Views\EstructuraArchivo\CamposTabla.cshtml" />
+    <Content Include="Views\EstructuraArchivo\_RegistroEstructuraArchivo.cshtml" />
+    <Content Include="Views\EstructuraArchivo\_RegistroCampoTabla.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -560,6 +567,8 @@
     <Folder Include="App_Data\" />
     <Folder Include="Upload\Alumnos\" />
     <Folder Include="Upload\MultaNoVotar\" />
+    <Folder Include="Upload\Pagos\Obligaciones\" />
+    <Folder Include="Upload\Pagos\Tasas\" />
     <Folder Include="Upload\Tablas\" />
   </ItemGroup>
   <ItemGroup>

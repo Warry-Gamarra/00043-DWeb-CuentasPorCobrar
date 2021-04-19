@@ -22,6 +22,10 @@ namespace Data.Tables
         public int I_UsuarioMod { get; set; }
         public DateTime D_FecMod { get; set; }
 
+        public string T_TipoArchivDesc { get; set; }
+        public bool B_ArchivoEntrada { get; set; }
+        public string T_EntidadDesc { get; set; }
+
 
         public List<TI_TipoArchivo_EntidadFinanciera> Find()
         {
@@ -31,8 +35,11 @@ namespace Data.Tables
             {
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    string s_command = @"SELECT I_TipArchivoEntFinanID, I_EntidadFinanID, I_TipoArchivoID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, I_UsuarioMod, D_FecMod 
-                                         FROM TI_TipoArchivo_EntidadFinanciera WHERE B_Eliminado = 0;";
+                    string s_command = @"SELECT TA.T_TipoArchivDesc, TA.B_ArchivoEntrada, EF.T_EntidadDesc, TAEF.*
+                                         FROM TI_TipoArchivo_EntidadFinanciera TAEF
+	                                         INNER JOIN TC_TipoArchivo TA ON TA.I_TipoArchivoID = TAEF.I_TipoArchivoID
+	                                         INNER JOIN TC_EntidadFinanciera EF ON EF.I_EntidadFinanID = TAEF.I_EntidadFinanID
+                                         WHERE TAEF.B_Eliminado = 0;";
 
                     result = _dbConnection.Query<TI_TipoArchivo_EntidadFinanciera>(s_command, commandType: CommandType.Text).ToList();
                 }
@@ -53,8 +60,11 @@ namespace Data.Tables
             {
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    string s_command = @"SELECT I_TipArchivoEntFinanID, I_EntidadFinanID, I_TipoArchivoID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, I_UsuarioMod, D_FecMod 
-                                         FROM TI_TipoArchivo_EntidadFinanciera WHERE I_EntidadFinanID = @I_EntidadFinanID;";
+                    string s_command = @"SELECT TA.T_TipoArchivDesc, TA.B_ArchivoEntrada, EF.T_EntidadDesc, TAEF.*
+                                         FROM TI_TipoArchivo_EntidadFinanciera TAEF
+	                                         INNER JOIN TC_TipoArchivo TA ON TA.I_TipoArchivoID = TAEF.I_TipoArchivoID
+	                                         INNER JOIN TC_EntidadFinanciera EF ON EF.I_EntidadFinanID = TAEF.I_EntidadFinanID
+                                         WHERE TAEF.I_EntidadFinanID = @I_EntidadFinanID;";
 
                     result = _dbConnection.Query<TI_TipoArchivo_EntidadFinanciera>(s_command, new { I_EntidadFinanID = entityId }, commandType: CommandType.Text).ToList();
                 }
