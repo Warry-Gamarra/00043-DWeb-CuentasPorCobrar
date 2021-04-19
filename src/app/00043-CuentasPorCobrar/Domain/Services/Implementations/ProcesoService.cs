@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Data.Views;
 
 namespace Domain.Services.Implementations
 {
@@ -238,19 +239,10 @@ namespace Domain.Services.Implementations
         {
             try
             {
-                var lista = USP_S_CtaDepo_Proceso.Execute(I_ProcesoID);
+                var lista = VW_CtaDepositoProceso.GetCtaDepositoByProceso(I_ProcesoID);
 
-                var result = lista.Where(x => x.B_Habilitado).Select(x => new CtaDepoProceso()
-                {
-                    I_CtaDepoProID = x.I_CtaDepoProID,
-                    I_CtaDepositoID = x.I_CtaDepositoID,
-                    I_ProcesoID = x.I_ProcesoID,
-                    B_Habilitado = x.B_Habilitado,
-                    C_NumeroCuenta = x.C_NumeroCuenta,
-                    T_DescCuenta = x.T_DescCuenta,
-                    T_EntidadDesc = x.T_EntidadDesc,
-                    I_EntidadFinanID = x.I_EntidadFinanID
-                }).ToList();
+                var result = lista.Where(x => x.B_Habilitado)
+                    .Select(x => Mapper.VW_CtaDepositoProceso_To_CtaDepoProceso(x)).ToList();
 
                 return result;
             }

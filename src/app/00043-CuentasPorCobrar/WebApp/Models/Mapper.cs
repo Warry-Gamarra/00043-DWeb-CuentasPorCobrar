@@ -194,5 +194,29 @@ namespace WebApp.Models
 
             return dataMatriculaType;
         }
+
+        public static CtaDepoProcesoModel CtaDepoProceso_To_CtaDepoProcesoModel(CtaDepoProceso ctaDepoProceso)
+        {
+            var model = new CtaDepoProcesoModel()
+            {
+                I_CtaDepoProID = ctaDepoProceso.I_CtaDepoProID,
+                I_EntidadFinanID = ctaDepoProceso.I_EntidadFinanID,
+                T_EntidadDesc = ctaDepoProceso.T_EntidadDesc,
+                I_CtaDepositoID = ctaDepoProceso.I_CtaDepositoID,
+                C_NumeroCuenta = ctaDepoProceso.C_NumeroCuenta,
+                T_DescCuenta = ctaDepoProceso.T_DescCuenta,
+                I_ProcesoID = ctaDepoProceso.I_ProcesoID,
+                T_ProcesoDesc = ctaDepoProceso.T_ProcesoDesc,
+                I_Prioridad = ctaDepoProceso.I_Prioridad,
+                I_Anio = ctaDepoProceso.I_Anio,
+                I_Periodo = ctaDepoProceso.I_Periodo,
+                C_Periodo = ctaDepoProceso.C_Periodo,
+                T_PeriodoDesc = ctaDepoProceso.T_PeriodoDesc,
+                I_Nivel = ctaDepoProceso.I_Nivel,
+                C_Nivel = ctaDepoProceso.C_Nivel,
+                B_Habilitado = ctaDepoProceso.B_Habilitado
+            };
+            return model;
+        }
     }
 }

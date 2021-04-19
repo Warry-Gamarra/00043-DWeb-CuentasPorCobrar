@@ -11,22 +11,22 @@ namespace WebApp.Models
 {
     public class TransferenciaInformacionBCP : ITransferenciaInformacion
     {
-        IObligacionServiceFacade obligacionServiceFacade;
+        IObligacionServiceFacade _obligacionServiceFacade;
         private DateTime fechaTransmision;
 
         public TransferenciaInformacionBCP()
         {
-            obligacionServiceFacade = new ObligacionServiceFacade();
+            _obligacionServiceFacade = new ObligacionServiceFacade();
             fechaTransmision = DateTime.Now;
         }
 
         public byte[] GenerarInformacionObligaciones(int anio, int periodo, TipoEstudio tipoEstudio, string facultad, DateTime? fechaDesde, DateTime? fechaHasta)
         {
-            var cuotas_pago = obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(anio, periodo, tipoEstudio, facultad, fechaDesde, fechaHasta);
+            var cuotas_pago = _obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(anio, periodo, tipoEstudio, facultad, fechaDesde, fechaHasta);
 
-            var cuenta_bcp = "123-1234567-0-12";
+            var cuentas_bcp = _obligacionServiceFacade.Obtener_CtaDeposito_X_Periodo(anio, periodo, tipoEstudio).Where(x => x.I_EntidadFinanID == Constantes.BCP_ID);
 
-            var cuenta_split = cuenta_bcp.Split('-');
+            var cuenta_cabecera_split = cuentas_bcp.First().C_NumeroCuenta.Split('-');
 
             if (cuotas_pago.Count == 0)
             {
@@ -38,9 +38,9 @@ namespace WebApp.Models
             var tw = new StreamWriter(memoryStream);
 
             string tipoRegistro = "CC";
-            string codigoSucursal = cuenta_split[0].Substring(0, 3);
-            string codigoMoneda = cuenta_split[2].Substring(0, 1);
-            string numeroCuentaEmpresa = cuenta_split[1].Substring(0, 7);
+            string codigoSucursal = cuenta_cabecera_split[0].Substring(0, 3);
+            string codigoMoneda = cuenta_cabecera_split[2].Substring(0, 1);
+            string numeroCuentaEmpresa = cuenta_cabecera_split[1].Substring(0, 7);
             string tipoValidacion = "C";
             string nombreEmpresa = "UNIVERSIDAD NACIONAL FEDERICO VILLARREAL";
             int cantidadRegistros = cuotas_pago.Count;
@@ -70,6 +70,11 @@ namespace WebApp.Models
 
             foreach (var item in cuotas_pago)
             {
+                var cuenta_detalle_split = cuentas_bcp.First(x => x.I_ProcesoID == item.I_ProcesoID).C_NumeroCuenta.Split('-');
+                codigoSucursal = cuenta_detalle_split[0].Substring(0, 3);
+                codigoMoneda = cuenta_detalle_split[2].Substring(0, 1);
+                numeroCuentaEmpresa = cuenta_detalle_split[1].Substring(0, 7);
+
                 string codigoDepositante = item.C_CodAlu.PadLeft(14, '0');
                 string nombreDepositante = (item.T_Nombre.Trim() + " " + (item.T_ApePaterno.Trim() + " " + item.T_ApeMaterno).Trim());
                 nombreDepositante = nombreDepositante.Substring(0, (nombreDepositante.Length < 40 ? nombreDepositante.Length : 40));

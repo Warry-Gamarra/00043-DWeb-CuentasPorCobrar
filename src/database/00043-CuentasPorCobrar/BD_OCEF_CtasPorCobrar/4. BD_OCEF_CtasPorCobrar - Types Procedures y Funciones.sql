@@ -348,24 +348,6 @@ BEGIN
 END
 GO
 
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_CtaDepo_Proceso')
-	DROP PROCEDURE dbo.USP_S_CtaDepo_Proceso
-GO
-
-
-CREATE PROCEDURE dbo.USP_S_CtaDepo_Proceso
-	@I_ProcesoID int
-AS
-BEGIN
-	SET NOCOUNT ON
-  	SELECT cp.I_CtaDepoProID, cp.I_CtaDepositoID, c.T_DescCuenta, cp.I_ProcesoID, cp.B_Habilitado, c.C_NumeroCuenta, c.I_EntidadFinanID, e.T_EntidadDesc 
-	FROM dbo.TI_CtaDepo_Proceso cp
-		INNER JOIN dbo.TC_CuentaDeposito c ON c.I_CtaDepositoID = cp.I_CtaDepositoID
-		INNER JOIN dbo.TC_EntidadFinanciera e ON e.I_EntidadFinanID = c.I_EntidadFinanID
-	WHERE cp.B_Eliminado = 0 AND cp.I_ProcesoID = @I_ProcesoID
-END
-GO
-
 
 
 IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_ConceptoPago')
@@ -2393,7 +2375,10 @@ GO
 
 CREATE VIEW [dbo].[VW_MatriculaAlumno]
 AS
-SELECT a.T_Nombre, a.T_ApePaterno, a.T_ApeMaterno, a.N_Grado FROM TC_MatriculaAlumno m 
+SELECT 
+	m.I_MatAluID, a.C_CodAlu, a.C_RcCod, a.T_Nombre, a.T_ApePaterno, a.T_ApeMaterno, a.N_Grado, m.I_Anio, m.I_Periodo, 
+	a.C_CodFac, m.C_EstMat, m.C_Ciclo, m.B_Ingresante, m.I_CredDesaprob, m.B_Habilitado
+FROM TC_MatriculaAlumno m 
 INNER JOIN BD_UNFV_Repositorio.dbo.VW_Alumnos a ON a.C_CodAlu = m.C_CodAlu AND a.C_RcCod = m.C_CodRc
 WHERE m.B_Eliminado = 0
 GO
@@ -2565,3 +2550,25 @@ BEGIN
 END
 GO
 
+
+
+
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_CtaDepositoProceso')
+	DROP VIEW [dbo].[VW_CtaDepositoProceso]
+GO
+
+CREATE VIEW [dbo].[VW_CtaDepositoProceso]
+AS
+SELECT 
+	ctapro.I_CtaDepoProID, e.I_EntidadFinanID, e.T_EntidadDesc, ctadepo.I_CtaDepositoID, ctadepo.C_NumeroCuenta, ctadepo.T_DescCuenta, 
+	p.I_ProcesoID, p.T_ProcesoDesc, p.I_Prioridad, p.I_Anio, p.I_Periodo, per.T_OpcionCod as C_Periodo, per.T_OpcionDesc as T_PeriodoDesc, cat.I_Nivel, niv.T_OpcionCod AS C_Nivel, ctapro.B_Habilitado 
+FROM dbo.TC_Proceso p
+INNER JOIN dbo.TC_CategoriaPago cat ON cat.I_CatPagoID = p.I_CatPagoID and cat.B_Eliminado = 0
+INNER JOIN dbo.TC_CatalogoOpcion niv ON niv.I_ParametroID = 2 AND niv.I_OpcionID = cat.I_Nivel
+INNER JOIN dbo.TI_CtaDepo_Proceso ctapro ON ctapro.I_ProcesoID = p.I_ProcesoID AND ctapro.B_Eliminado = 0
+INNER JOIN dbo.TC_CuentaDeposito ctadepo ON ctadepo.I_CtaDepositoID = ctapro.I_CtaDepositoID AND ctadepo.B_Eliminado = 0
+INNER JOIN dbo.TC_EntidadFinanciera e ON e.I_EntidadFinanID = ctadepo.I_EntidadFinanID AND e.B_Eliminado = 0
+LEFT JOIN dbo.TC_CatalogoOpcion per on per.I_ParametroID = 5 and per.I_OpcionID = p.I_Periodo
+WHERE p.B_Eliminado = 0
+GO

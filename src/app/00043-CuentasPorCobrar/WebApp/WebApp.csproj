@@ -422,6 +422,7 @@
     </Compile>
     <Compile Include="Models\AccountModel.cs" />
     <Compile Include="Models\CategoriaPagoModel.cs" />
+    <Compile Include="Models\CtaDepoProcesoModel.cs" />
     <Compile Include="Models\CuotaPagoModel.cs" />
     <Compile Include="Models\DependenciaModel.cs" />
     <Compile Include="Models\ClasificadorModel.cs" />

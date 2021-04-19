@@ -107,5 +107,14 @@ namespace Domain.Services.Implementations
 
             return new Response(result);
         }
+
+        public IEnumerable<CtaDepoProceso> Obtener_CtaDeposito_X_Periodo(int anio, int periodo)
+        {
+            var ctasDeposito = VW_CtaDepositoProceso.GetCtaDepositoByAnioPeriodo(anio, periodo);
+
+            var result = ctasDeposito.Select(x => Mapper.VW_CtaDepositoProceso_To_CtaDepoProceso(x));
+
+            return result;
+        }
     }
 }

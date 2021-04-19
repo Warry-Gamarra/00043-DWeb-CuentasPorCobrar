@@ -8,6 +8,12 @@ namespace Domain.Entities
 {
     public class MatriculaDTO
     {
+        public int I_MatAluID { get; set; }
+
+        public string C_CodAlu { get; set; }
+
+        public string C_RcCod { get; set; }
+
         public string T_Nombre { get; set; }
 
         public string T_ApePaterno { get; set; }
@@ -16,15 +22,11 @@ namespace Domain.Entities
 
         public string N_Grado { get; set; }
 
-        public int I_MatAluID { get; set; }
-
-        public string C_CodRc { get; set; }
-
-        public string C_CodAlu { get; set; }
-
         public int I_Anio { get; set; }
 
         public int I_Periodo { get; set; }
+
+        public string C_CodFac { get; set; }
 
         public string C_EstMat { get; set; }
 

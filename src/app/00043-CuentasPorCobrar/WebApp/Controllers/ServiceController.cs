@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Domain.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using WebApp.Models;
+using WebApp.Models.Facades;
 using WebApp.ViewModels;
 
 namespace WebApp.Controllers
@@ -14,15 +16,17 @@ namespace WebApp.Controllers
         private readonly ProcesoModel procesoModel;
         private readonly ConceptoPagoModel conceptoPagoModel;
         private readonly CategoriaPagoModel categoriaPagoModel;
+        IObligacionServiceFacade _obligacionServiceFacade;
 
         public ServiceController()
         {
             procesoModel = new ProcesoModel();
             conceptoPagoModel = new ConceptoPagoModel();
             categoriaPagoModel = new CategoriaPagoModel();
+            _obligacionServiceFacade = new ObligacionServiceFacade();
         }
 
-        // GET: api/Service/5
+        // GET: api/service/GetPrioridad/5
         public int GetPrioridad(int id)
         {
             if (id == 0)
@@ -38,7 +42,7 @@ namespace WebApp.Controllers
             return procesoModel.Obtener_Prioridad_Tipo_Proceso(id);
         }
 
-        // GET: api/Service/5
+        // GET: api/service/GetDefaultValuesCategoria/5
         public object GetDefaultValuesCategoria(int id)
         {
             if (id == 0)
@@ -56,6 +60,7 @@ namespace WebApp.Controllers
             return new { CodBanco = codBanco, CuentasDeposito = lista };
         }
 
+        // GET: api/service/GetDefaultValuesConcepto/5
         public CatalogoConceptosRegistroViewModel GetDefaultValuesConcepto(int id)
         {
             if (id == 0)
@@ -73,5 +78,20 @@ namespace WebApp.Controllers
             return model;
         }
 
+        // GET: api/service/GetCtasDepositoPorPeriodo?anio=2021&periodo=15
+        public IEnumerable<SelectViewModel> GetCtasDepositoPorPeriodo(int anio, int periodo, TipoEstudio tipoEstudio)
+        {
+            var ctasDeposito = _obligacionServiceFacade.Obtener_CtaDeposito_X_Periodo(anio, periodo, tipoEstudio);
+
+            var entidades = ctasDeposito.GroupBy(x => x.I_EntidadFinanID);
+
+            var result = entidades.Select(
+                x => new SelectViewModel() {
+                    Value = x.Key.ToString(),
+                    TextDisplay = x.First().T_EntidadDesc
+                });
+
+            return result;
+        }
     }
 }

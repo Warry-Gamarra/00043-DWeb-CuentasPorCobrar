@@ -83,15 +83,16 @@ namespace Domain.Entities
         {
             var matriculaDTO = new MatriculaDTO()
             {
+                I_MatAluID = matriculaAlumno.I_MatAluID,
+                C_CodAlu = matriculaAlumno.C_CodAlu,
+                C_RcCod = matriculaAlumno.C_RcCod,
                 T_Nombre = matriculaAlumno.T_Nombre,
                 T_ApePaterno = matriculaAlumno.T_ApePaterno,
                 T_ApeMaterno = matriculaAlumno.T_ApeMaterno,
                 N_Grado = matriculaAlumno.N_Grado,
-                I_MatAluID = matriculaAlumno.I_MatAluID,
-                C_CodRc = matriculaAlumno.C_CodRc,
-                C_CodAlu = matriculaAlumno.C_CodAlu,
                 I_Anio = matriculaAlumno.I_Anio,
                 I_Periodo = matriculaAlumno.I_Periodo,
+                C_CodFac = matriculaAlumno.C_CodFac,
                 C_EstMat = matriculaAlumno.C_EstMat,
                 C_Ciclo = matriculaAlumno.C_Ciclo,
                 B_Ingresante = matriculaAlumno.B_Ingresante,
@@ -244,6 +245,31 @@ namespace Domain.Entities
             ));
 
             return dataTable;
+        }
+
+        public static CtaDepoProceso VW_CtaDepositoProceso_To_CtaDepoProceso(VW_CtaDepositoProceso vwCtaDepositoProceso)
+        {
+            var ctaDepoProceso = new CtaDepoProceso()
+            {
+                I_CtaDepoProID = vwCtaDepositoProceso.I_CtaDepoProID,
+                I_EntidadFinanID = vwCtaDepositoProceso.I_EntidadFinanID,
+                T_EntidadDesc = vwCtaDepositoProceso.T_EntidadDesc,
+                I_CtaDepositoID = vwCtaDepositoProceso.I_CtaDepositoID,
+                C_NumeroCuenta = vwCtaDepositoProceso.C_NumeroCuenta,
+                T_DescCuenta = vwCtaDepositoProceso.T_DescCuenta,
+                I_ProcesoID = vwCtaDepositoProceso.I_ProcesoID,
+                T_ProcesoDesc = vwCtaDepositoProceso.T_ProcesoDesc,
+                I_Prioridad = vwCtaDepositoProceso.I_Prioridad,
+                I_Anio = vwCtaDepositoProceso.I_Anio,
+                I_Periodo = vwCtaDepositoProceso.I_Periodo,
+                C_Periodo = vwCtaDepositoProceso.C_Periodo,
+                T_PeriodoDesc = vwCtaDepositoProceso.T_PeriodoDesc,
+                I_Nivel = vwCtaDepositoProceso.I_Nivel,
+                C_Nivel = vwCtaDepositoProceso.C_Nivel,
+                B_Habilitado = vwCtaDepositoProceso.B_Habilitado
+            };
+
+            return ctaDepoProceso;
         }
     }
 }
