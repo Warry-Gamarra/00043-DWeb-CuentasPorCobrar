@@ -295,6 +295,10 @@ strong.select2-results__group {
     font-size: 0.8rem;
 }
 
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    color: #fff;
+    background-color: #4c6784;
+}
 
 /* --------------------- Select2 Extends -----------------------------*/
 

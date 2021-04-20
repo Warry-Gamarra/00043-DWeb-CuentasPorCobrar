@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@{ 
+    string AppName = System.Configuration.ConfigurationManager.AppSettings["AppName"].ToString();
+}
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -6,7 +10,7 @@
 
     <link rel="shortcut icon" href="~/favicon.ico" type="image/x-icon">
     <link rel="icon" href="~/favicon.ico">
-    <title>.:: @ViewBag.Title - Sistema de Cuentas por Cobrar ::.</title>
+    <title>.:: @ViewBag.Title - @AppName ::.</title>
     @Styles.Render("~/content/css")
     @Styles.Render("~/content/datetime")
     @Styles.Render("~/content/select")
@@ -28,7 +32,7 @@
                 <img class="img-fluid" style="max-width: 130px;" src="~/Assets/images/logo.png" alt="UNFV">
             </a>
             <a class="navbar-brand navbar-title d-none d-sm-inline-block" href="" rel="home" title="Universidad Nacional Federico Villarreal">
-                Sistema de Cuentas por Cobrar
+                @AppName
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

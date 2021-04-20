@@ -1,6 +1,7 @@
 ﻿@model WebApp.ViewModels.LoginViewModel
 @{
     Layout = null;
+    string AppName = System.Configuration.ConfigurationManager.AppSettings["AppName"].ToString();
 }
 
 
@@ -14,7 +15,7 @@
 
     <link rel="shortcut icon" href="~/favicon.ico" type="image/x-icon">
     <link rel="icon" href="~/favicon.ico">
-    <title>.:: UNFV - Sistema de Cuentas Por Cobrar ::.</title>
+    <title>.:: UNFV - @AppName ::.</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet" />
     <link href="@Url.Content("~/Assets/bootstrap/css/bootstrap.min.css")" rel="stylesheet" />
@@ -30,7 +31,7 @@
                 @Html.AntiForgeryToken()
 
                 <img class="avatar" src="~/Assets/images/logo.png" alt="avatar" loading="lazy" />
-                <h1>Sistema de cuentas por Cobrar</h1>
+                <h1>@AppName</h1>
                 <p class="col-12 text-center">
                     <div class="text-danger"> @Html.ValidationSummary(true) </div>
                 </p>
