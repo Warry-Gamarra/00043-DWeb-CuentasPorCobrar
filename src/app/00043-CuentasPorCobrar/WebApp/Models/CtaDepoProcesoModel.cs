@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Web;
 
-namespace Domain.Entities
+namespace WebApp.Models
 {
-    public class CtaDepoProceso
+    public class CtaDepoProcesoModel
     {
         public int I_CtaDepoProID { get; set; }
 
@@ -21,7 +20,7 @@ namespace Domain.Entities
         public string T_DescCuenta { get; set; }
 
         public int I_ProcesoID { get; set; }
-        
+
         public string T_ProcesoDesc { get; set; }
 
         public byte? I_Prioridad { get; set; }

@@ -24,7 +24,7 @@ namespace WebApp.Models
                     transferenciaInformacion = new TransferenciaInformacionBCP();
                     break;
                 default:
-                    throw new InvalidOperationException();
+                    throw new NotImplementedException("Ha ocurrido un error al identificar el Banco.");
             }
 
             return transferenciaInformacion;

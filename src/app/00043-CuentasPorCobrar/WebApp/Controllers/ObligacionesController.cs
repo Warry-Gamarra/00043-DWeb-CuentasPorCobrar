@@ -165,8 +165,6 @@ namespace WebApp.Controllers
             var result = obligacionServiceFacade.Generar_Obligaciones_PorAlumno(anio, periodo, codAlu, codRc, 0);
 
             return Json(result, JsonRequestBehavior.AllowGet);
-        }
-
-        
+        }        
     }   
 }

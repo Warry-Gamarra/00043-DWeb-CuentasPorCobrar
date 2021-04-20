@@ -238,7 +238,7 @@
                 },
                 success: function (data) {
                     if (data && data.length > 0) {
-                        let html = '';
+                        let html = (tipoEstudio === 'Pregrado') ? '<option value="">TODOS</option>' : '';
 
                         $.each(data, function (i, item) {
                             html += '<option value="' + item.Value + '">' + item.TextDisplay + '</option>'

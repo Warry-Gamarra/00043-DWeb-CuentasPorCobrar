@@ -70,7 +70,6 @@
     <Compile Include="Connection\ResponseData.cs" />
     <Compile Include="Procedures\USP_IU_GenerarObligacionesPregrado_X_Ciclo.cs" />
     <Compile Include="Procedures\USP_I_GrabarPagoObligaciones.cs" />
-    <Compile Include="Procedures\USP_S_CtaDepo_Proceso.cs" />
     <Compile Include="Procedures\USP_U_ActualizarConceptoPago.cs" />
     <Compile Include="Procedures\USP_I_GrabarConceptoPago.cs" />
     <Compile Include="Procedures\USP_IU_GrabarMatricula.cs" />
@@ -86,6 +85,7 @@
     <Compile Include="Tables\TS_CampoTablaPago.cs" />
     <Compile Include="Tables\TC_ColumnaSeccion.cs" />
     <Compile Include="Tables\TC_SeccionArchivo.cs" />
+    <Compile Include="Views\VW_CtaDepositoProceso.cs" />
     <Compile Include="Views\VW_MatriculaAlumno.cs" />
     <Compile Include="Types\DataMatriculaResult.cs" />
     <Compile Include="Tables\TC_ClasificadorIngreso.cs" />

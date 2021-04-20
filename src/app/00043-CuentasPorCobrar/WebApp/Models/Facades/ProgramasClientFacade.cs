@@ -21,39 +21,46 @@ namespace WebApp.Models.Facades
         {
             IEnumerable<FacultadModel> facultades;
             IEnumerable<SelectViewModel> result;
-            
-            switch (tipoEstudio)
+
+            try
             {
-                case TipoEstudio.Pregrado:
-                    string[] excluidos = { "CA", "CI", "CP", "CV", "EP", "ET" };
+                switch (tipoEstudio)
+                {
+                    case TipoEstudio.Pregrado:
+                        string[] excluidos = { "CA", "CI", "CP", "CV", "EP", "ET" };
 
-                    facultades = programasClient.GetFacultades();
+                        facultades = programasClient.GetFacultades();
 
-                    result = facultades.Where(f => !excluidos.Contains(f.CodFac)).Select(x => new SelectViewModel()
-                    {
-                        Value = x.CodFac,
-                        TextDisplay = x.FacDesc
-                    }).OrderBy(f => f.TextDisplay);
+                        result = facultades.Where(f => !excluidos.Contains(f.CodFac)).Select(x => new SelectViewModel()
+                        {
+                            Value = x.CodFac,
+                            TextDisplay = x.FacDesc
+                        }).OrderBy(f => f.TextDisplay);
 
-                    break;
+                        break;
 
-                case TipoEstudio.Posgrado:
-                    facultades = programasClient.GetFacultades();
+                    case TipoEstudio.Posgrado:
+                        facultades = programasClient.GetFacultades();
 
-                    result = facultades.Where(f => f.CodFac == "EP").Select(x => new SelectViewModel()
-                    {
-                        Value = x.CodFac,
-                        TextDisplay = x.FacDesc
-                    });
+                        result = facultades.Where(f => f.CodFac == "EP").Select(x => new SelectViewModel()
+                        {
+                            Value = x.CodFac,
+                            TextDisplay = x.FacDesc
+                        });
 
-                    break;
+                        break;
 
-                default:
-                    result = new List<SelectViewModel>();
+                    default:
+                        result = new List<SelectViewModel>();
 
-                    break;
+                        break;
+                }
             }
-
+            catch (Exception)
+            {
+                result = new List<SelectViewModel>();
+            }
+            
             return result;
         }
     }

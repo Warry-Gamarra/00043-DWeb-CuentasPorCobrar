@@ -84,6 +84,11 @@ namespace WebApp.Models.Facades
             {
                 case TipoEstudio.Pregrado:
                     matriculas = _estudianteService.GetMatriculaPregrado(anio, periodo);
+
+                    if (!String.IsNullOrEmpty(codFacultad))
+                    {
+                        matriculas = matriculas.Where(x => x.C_CodFac == codFacultad);
+                    }
                     break;
 
                 case TipoEstudio.Posgrado:
@@ -136,6 +141,31 @@ namespace WebApp.Models.Facades
             var cuotasPago = _obligacionService.Obtener_CuotasPago_X_Proceso(anio, periodo, tipoEstudio, codFac, fechaDesde, fechaHasta);
 
             var result = cuotasPago.Select(c => Mapper.CuotaPagoDTO_To_CuotaPagoModel(c)).ToList();
+
+            return result;
+        }
+
+        public IEnumerable<CtaDepoProcesoModel> Obtener_CtaDeposito_X_Periodo(int anio, int periodo, TipoEstudio tipoEstudio)
+        {
+            IEnumerable<CtaDepoProcesoModel> result;
+
+            var ctasDeposito = _obligacionService.Obtener_CtaDeposito_X_Periodo(anio, periodo);
+
+            switch (tipoEstudio)
+            {
+                case TipoEstudio.Pregrado:
+                    result = ctasDeposito.Where(x => x.C_Nivel == C_NivelPregrado)
+                        .Select(x => Mapper.CtaDepoProceso_To_CtaDepoProcesoModel(x));
+                    break;
+
+                case TipoEstudio.Posgrado:
+                    result = ctasDeposito.Where(x => x.C_Nivel == C_NivelMaestria || x.C_Nivel == C_NivelDoctorado)
+                        .Select(x => Mapper.CtaDepoProceso_To_CtaDepoProcesoModel(x));
+                    break;
+
+                default:
+                    throw new NotImplementedException("Ha ocurrido un error al identificar si el alumno es de Pregrado o Posgrado.");
+            }
 
             return result;
         }

@@ -55,7 +55,7 @@ namespace WebApp.Controllers
 
             ViewBag.Facultades = programasClientFacade.GetFacultades(TipoEstudio.Pregrado);
 
-            ViewBag.EntidadesFinancieras = ListaEntidadesFinancieras();
+            ViewBag.EntidadesFinancieras = new List<SelectViewModel>();
 
             var model = new FiltroEnvioObligacionesModel()
             {
@@ -93,7 +93,7 @@ namespace WebApp.Controllers
 
                 ViewBag.Facultades = programasClientFacade.GetFacultades(TipoEstudio.Pregrado);
 
-                ViewBag.EntidadesFinancieras = ListaEntidadesFinancieras();
+                ViewBag.EntidadesFinancieras = new List<SelectViewModel>();
 
                 ModelState.AddModelError("", ex.Message);
 
