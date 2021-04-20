@@ -1,0 +1,119 @@
+﻿@model WebApp.ViewModels.CamposTablaViewModel
+
+
+@Scripts.Render("~/bundles/jqueryval")
+
+<div class="modal-header bg-dark-gray" style="border-radius: .2rem .2rem 0px 0px">
+    <h5 class="modal-title text-center"><i class="fa fa-columns">&nbsp;</i> @ViewBag.Title</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+@using (Ajax.BeginForm("CampoSave", "EstructuraArchivo", new { area = "" }, new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "div_msg", OnBegin = "Load", OnSuccess = "Submited", OnComplete = "Stop" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="modal-body">
+        <div class="container-fluid mt-3">
+            @Html.Hidden("submited", 0)
+            @Html.HiddenFor(model => model.CampoId)
+
+            <div class="form-group row">
+                @Html.LabelFor(model => model.DescCampo, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.DescCampo, new { @class = "form-control" })
+                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.DescCampo)</p>
+                </div>
+            </div>
+            <div class="form-group row">
+                @Html.LabelFor(model => model.NombreTabla, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.DropDownListFor(model => model.NombreTabla, ViewBag.Tablas as SelectList, "[ SELECCIONAR ]", new { @class = "form-control" })
+                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.NombreTabla)</p>
+                </div>
+            </div>
+            <div class="form-group row">
+                @Html.LabelFor(model => model.NombreCampoTabla, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.DropDownListFor(model => model.NombreCampoTabla, ViewBag.ColumnasTabla as SelectList, "[ SELECCIONAR ]", new { @class = "form-control" })
+                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.NombreCampoTabla)</p>
+                </div>
+            </div>
+            <div class="form-group row">
+                @Html.LabelFor(model => model.TipoArchivo, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    <div id="radios_group">
+                        @foreach (var item in (List<WebApp.ViewModels.SelectViewModel>)ViewBag.TipoArchivo)
+                        {
+                            var id = "TipoArchivo_" + item.Value;
+                            <div class="form-check">
+                                @Html.RadioButtonFor(model => model.TipoArchivo, item.Value, new { @id = id })
+                                <label class="form-check-label" for="@id">&nbsp;@item.TextDisplay</label>
+                            </div>
+                        }
+                        <p class="text-danger small">@Html.ValidationMessageFor(model => model.TipoArchivo)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer" id="div_msg">
+        <div class="col-md-12" style="display:none" id="loading">
+            <h6>Actualizando los datos...</h6>
+
+            <div class="progress">
+                <div class="indeterminate"></div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary" id="btnsubmit"><i class="fa fa-save"></i>&nbsp;Guardar</button>
+        <button type="button" class="btn btn-secondary" id="btnCancel" data-dismiss="modal"><i class="fa fa-times-circle-o">&nbsp;</i>Cancelar</button>
+    </div>
+}
+
+<script>
+            $(document).on('ready', function () {
+                $('#btnsubmit').removeClass('disabled');
+                GetColumns($('#NombreTabla').val());
+            });
+
+            $("form").submit(function () {
+                if (parseInt($("#submited").val()) > 0) {
+                    return false;
+                }
+            });
+
+
+            $('#NombreTabla').on('change', function () {
+                GetColumns($('#NombreTabla').val());
+            })
+
+            function GetColumns(value, text) {
+                if (value === "" || value == null) {
+                    return false;
+                }
+
+                $.ajax({
+                    url: ('@Url.Action("GetColumnasPorTabla", "Service", new { httproute = "ActionApi" })?nombreTabla=' + value),
+                    type: 'GET',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    cache: false,
+                    beforeSend: function () {
+                        $('#NombreCampoTabla').html('<option>[ cargando ... ]</option>');
+                    },
+                    success: function (data) {
+                        let options = '<option>[ SELECCIONAR ]</option>';
+                        $.each(data, function (index, item) {
+                            options += '<option value="' + item['Value'] +'">'+ item['TextDisplay'] +'</option>'
+                        })
+
+                        $('#NombreCampoTabla').html(options);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        $('#NombreCampoTabla').html('<option>[ SELECCIONAR ]</option>');
+
+                        alert(jqXHR.responseText)
+                    }
+                })
+            }
+
+</script>
+

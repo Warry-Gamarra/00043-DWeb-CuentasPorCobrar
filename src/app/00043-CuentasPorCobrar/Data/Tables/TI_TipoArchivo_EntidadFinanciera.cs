@@ -52,6 +52,32 @@ namespace Data.Tables
             return result;
         }
 
+        public TI_TipoArchivo_EntidadFinanciera Find(int tipArchivoEntFinanID)
+        {
+            TI_TipoArchivo_EntidadFinanciera result = new TI_TipoArchivo_EntidadFinanciera();
+
+            try
+            {
+                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
+                {
+                    string s_command = @"SELECT TA.T_TipoArchivDesc, TA.B_ArchivoEntrada, EF.T_EntidadDesc, TAEF.*
+                                         FROM TI_TipoArchivo_EntidadFinanciera TAEF
+	                                         INNER JOIN TC_TipoArchivo TA ON TA.I_TipoArchivoID = TAEF.I_TipoArchivoID
+	                                         INNER JOIN TC_EntidadFinanciera EF ON EF.I_EntidadFinanID = TAEF.I_EntidadFinanID
+                                         WHERE TAEF.I_TipArchivoEntFinanID = @I_TipArchivoEntFinanID;";
+
+                    result = _dbConnection.QuerySingleOrDefault<TI_TipoArchivo_EntidadFinanciera>(s_command,
+                        new { I_TipArchivoEntFinanID = tipArchivoEntFinanID }, commandType: CommandType.Text);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
+
         public List<TI_TipoArchivo_EntidadFinanciera> FindByEntityID(int entityId)
         {
             List<TI_TipoArchivo_EntidadFinanciera> result = new List<TI_TipoArchivo_EntidadFinanciera>();
@@ -87,14 +113,14 @@ namespace Data.Tables
             {
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    parameters.Add(name: "I_EntidadFinanID", dbType: DbType.Byte, value: this.I_EntidadFinanID);
+                    parameters.Add(name: "I_EntidadFinanID", dbType: DbType.Int32, value: this.I_EntidadFinanID);
                     parameters.Add(name: "D_FecCre", dbType: DbType.DateTime, value: this.D_FecCre);
                     parameters.Add(name: "CurrentUserId", dbType: DbType.Int32, value: this.I_UsuarioCre);
 
                     parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);
                     parameters.Add(name: "T_Message", dbType: DbType.String, size: 4000, direction: ParameterDirection.Output);
 
-                    _dbConnection.Execute("USP_I_GrabarTipoArchivosEntidadFinanciera", parameters, commandType: CommandType.StoredProcedure);
+                    _dbConnection.Execute("USP_I_GrabarTiposArchivoEntidadFinanciera", parameters, commandType: CommandType.StoredProcedure);
 
                     result.Value = parameters.Get<bool>("B_Result");
                     result.Message = parameters.Get<string>("T_Message");
@@ -106,6 +132,102 @@ namespace Data.Tables
                 result.Message = ex.Message;
             }
 
+            return result;
+        }
+
+        public ResponseData Insert()
+        {
+            ResponseData result = new ResponseData();
+            DynamicParameters parameters = new DynamicParameters();
+
+            try
+            {
+                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
+                {
+                    parameters.Add(name: "I_TipoArchivoID", dbType: DbType.Int32, value: this.I_TipoArchivoID);
+                    parameters.Add(name: "I_EntidadFinanID", dbType: DbType.Int32, value: this.I_EntidadFinanID);
+                    parameters.Add(name: "D_FecCre", dbType: DbType.DateTime, value: this.D_FecCre);
+                    parameters.Add(name: "CurrentUserId", dbType: DbType.Int32, value: this.I_UsuarioCre);
+
+                    parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);
+                    parameters.Add(name: "T_Message", dbType: DbType.String, size: 4000, direction: ParameterDirection.Output);
+
+                    _dbConnection.Execute("USP_I_GrabarTipoArchivoEntidadFinanciera", parameters, commandType: CommandType.StoredProcedure);
+
+                    result.Value = parameters.Get<bool>("B_Result");
+                    result.Message = parameters.Get<string>("T_Message");
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Value = false;
+                result.Message = ex.Message;
+            }
+
+            return result;
+        }
+
+        public ResponseData Update()
+        {
+            ResponseData result = new ResponseData();
+            DynamicParameters parameters = new DynamicParameters();
+
+            try
+            {
+                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
+                {
+                    parameters.Add(name: "I_TipArchivoEntFinanID", dbType: DbType.Int32, value: this.I_TipArchivoEntFinanID);
+                    parameters.Add(name: "I_TipoArchivoID", dbType: DbType.Int32, value: this.I_TipoArchivoID);
+                    parameters.Add(name: "I_EntidadFinanID", dbType: DbType.Int32, value: this.I_EntidadFinanID);
+                    parameters.Add(name: "D_FecMod", dbType: DbType.DateTime, value: this.D_FecMod);
+                    parameters.Add(name: "CurrentUserId", dbType: DbType.Int32, value: this.I_UsuarioMod);
+
+                    parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);
+                    parameters.Add(name: "T_Message", dbType: DbType.String, size: 4000, direction: ParameterDirection.Output);
+
+                    _dbConnection.Execute("USP_U_ActualizarTipoArchivoEntidadFinanciera", parameters, commandType: CommandType.StoredProcedure);
+
+                    result.Value = parameters.Get<bool>("B_Result");
+                    result.Message = parameters.Get<string>("T_Message");
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Value = false;
+                result.Message = ex.Message;
+            }
+
+            return result;
+        }
+
+        public ResponseData ChangeState(int currentUserId)
+        {
+            ResponseData result = new ResponseData();
+            DynamicParameters parameters = new DynamicParameters();
+
+            try
+            {
+                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
+                {
+                    parameters.Add(name: "I_TipArchivoEntFinanID", dbType: DbType.Int32, value: this.I_TipArchivoEntFinanID);
+                    parameters.Add(name: "B_Habilitado", dbType: DbType.Boolean, value: this.B_Habilitado);
+                    parameters.Add(name: "D_FecMod", dbType: DbType.DateTime, value: this.D_FecMod);
+                    parameters.Add(name: "CurrentUserId", dbType: DbType.Int32, value: currentUserId);
+
+                    parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);
+                    parameters.Add(name: "T_Message", dbType: DbType.String, size: 4000, direction: ParameterDirection.Output);
+
+                    _dbConnection.Execute("USP_U_ActualizarEstadoEstrucArchivoEntFinan", parameters, commandType: CommandType.StoredProcedure);
+
+                    result.Value = parameters.Get<bool>("B_Result");
+                    result.Message = parameters.Get<string>("T_Message");
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Value = false;
+                result.Message = ex.Message;
+            }
             return result;
         }
     }

@@ -16,6 +16,7 @@ namespace WebApp.Controllers
         private readonly ProcesoModel procesoModel;
         private readonly ConceptoPagoModel conceptoPagoModel;
         private readonly CategoriaPagoModel categoriaPagoModel;
+        private readonly EstructuraArchivoModel estructuraArchivoModel;
         IObligacionServiceFacade _obligacionServiceFacade;
 
         public ServiceController()
@@ -23,6 +24,7 @@ namespace WebApp.Controllers
             procesoModel = new ProcesoModel();
             conceptoPagoModel = new ConceptoPagoModel();
             categoriaPagoModel = new CategoriaPagoModel();
+            estructuraArchivoModel = new EstructuraArchivoModel();
             _obligacionServiceFacade = new ObligacionServiceFacade();
         }
 
@@ -90,6 +92,24 @@ namespace WebApp.Controllers
                     Value = x.Key.ToString(),
                     TextDisplay = x.First().T_EntidadDesc
                 });
+
+            return result;
+        }
+
+        // GET: api/service/GetCtasDepositoPorPeriodo?nombreTabla=TR_PagoBanco
+        public IEnumerable<SelectViewModel> GetColumnasPorTabla(string nombreTabla)
+        {
+            if (string.IsNullOrEmpty(nombreTabla))
+            {
+                var error = new HttpResponseMessage(HttpStatusCode.NotAcceptable)
+                {
+                    Content = new StringContent("El nombre de la tabla no puede estar vacío.")
+                };
+
+                throw new HttpResponseException(error);
+            }
+
+            var result = estructuraArchivoModel.ObtenerColumnasTabla(nombreTabla);
 
             return result;
         }

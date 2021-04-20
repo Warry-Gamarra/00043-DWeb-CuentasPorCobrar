@@ -31,7 +31,8 @@ namespace Data.Tables
         public int I_TipoArchivoID { get; set; }
 
 
-        public List<TC_SeccionArchivo> FindByEntFinanID(int entidadFinanId)
+
+        public List<TC_SeccionArchivo> Find()
         {
             List<TC_SeccionArchivo> result = new List<TC_SeccionArchivo>();
 
@@ -44,9 +45,35 @@ namespace Data.Tables
  	                                          INNER JOIN TI_TipoArchivo_EntidadFinanciera TAEF ON SA.I_TipArchivoEntFinanID = TAEF.I_TipArchivoEntFinanID
  	                                          INNER JOIN TC_TipoArchivo TA ON TA.I_TipoArchivoID = TAEF.I_TipoArchivoID
  	                                          INNER JOIN TC_EntidadFinanciera EF ON EF.I_EntidadFinanID = TAEF.I_EntidadFinanID
-                                         WHERE TAEF.I_EntidadFinanID = @entidadFinanId;";
+                                         WHERE SA.B_Eliminado = 0;";
+
+                    result = _dbConnection.Query<TC_SeccionArchivo>(s_command, commandType: CommandType.Text).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
+
+        public List<TC_SeccionArchivo> Find(int tipArchivoEntFinanID)
+        {
+            List<TC_SeccionArchivo> result = new List<TC_SeccionArchivo>();
+
+            try
+            {
+                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
+                {
+                    string s_command = @"SELECT TA.T_TipoArchivDesc, TA.B_ArchivoEntrada, EF.T_EntidadDesc, TAEF.I_EntidadFinanID, TAEF.I_TipoArchivoID, SA.*
+                                         FROM TC_SeccionArchivo SA
+ 	                                          INNER JOIN TI_TipoArchivo_EntidadFinanciera TAEF ON SA.I_TipArchivoEntFinanID = TAEF.I_TipArchivoEntFinanID
+ 	                                          INNER JOIN TC_TipoArchivo TA ON TA.I_TipoArchivoID = TAEF.I_TipoArchivoID
+ 	                                          INNER JOIN TC_EntidadFinanciera EF ON EF.I_EntidadFinanID = TAEF.I_EntidadFinanID
+                                         WHERE TAEF.I_TipArchivoEntFinanID = @I_TipArchivoEntFinanID;";
  
-                    result = _dbConnection.Query<TC_SeccionArchivo>(s_command, new { I_EntidadFinanID = entidadFinanId }, commandType: CommandType.Text).ToList();
+                    result = _dbConnection.Query<TC_SeccionArchivo>(s_command, new { I_TipArchivoEntFinanID = tipArchivoEntFinanID }, commandType: CommandType.Text).ToList();
                 }
             }
             catch (Exception ex)

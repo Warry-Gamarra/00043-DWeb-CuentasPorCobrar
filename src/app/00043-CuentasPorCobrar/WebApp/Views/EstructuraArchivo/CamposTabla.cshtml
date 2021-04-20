@@ -1,0 +1,44 @@
+﻿@model IEnumerable<WebApp.ViewModels.CamposTablaViewModel>
+@using GridMvc.Html
+
+<div class="container-fluid">
+    <div class="col-12">
+        <section class="content-header">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb float-right small d-none d-sm-inline-flex">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")"><i class="fa fa-home">&nbsp;</i>Inicio</a></li>
+                    <li class="breadcrumb-item"><span><i class="fa bi-tools">&nbsp;</i>Mantenimiento </span></li>
+                    <li class="breadcrumb-item active"><span><i class="fa fa-columns">&nbsp;</i>@ViewBag.Title </span></li>
+                </ol>
+            </nav>
+            <h1 class="">@ViewBag.Title <small></small></h1>
+        </section>
+    </div>
+    <br />
+
+    <div class="col-12">
+        <a href="@Url.Action("CampoCreate", "EstructuraArchivo")" class="btn btn-primary float-right modal-link">
+            <i class="fa fa-plus-circle"></i> Agregar Campo
+        </a>
+
+        <p class="h3"><small>Campos de tabla registrados</small></p>
+        <br />
+
+        <br />
+        <div class="table-responsive" style="min-height:350px">
+            @Html.Grid(Model).Columns(columns =>
+            {
+                columns.Add(c => c.TipoArchivoDesc).Titled("Tipo archivo").Filterable(true);
+                columns.Add(c => c.DescCampo).Titled("Descripción").Filterable(true);
+                columns.Add(c => c.NombreTabla).Titled("Tabla").Filterable(true);
+                columns.Add(c => c.NombreCampoTabla).Titled("Campo").Filterable(true);
+                columns.Add(c => c.Habilitado).SetWidth(100).Css("text-center").Encoded(false).Sanitized(false)
+                        .RenderValueAs(model => model.Habilitado.Value ?
+                                                                @Html.Raw("<span id=\"td" + @model.CampoId + "\"><button type=\"submit\" class=\"btn btn-xs btn-success\" onclick=\"ChangeStateReloadPage(" + @model.CampoId + ", " + @model.Habilitado.ToString().ToLower() + ", '" + @Url.Action("CampoChangeState", "EstructuraArchivo") + "');\"><i class=\"fa fa-check-circle-o\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Habilitado</span></button></span>")
+                                                                : @Html.Raw("<span id=\"td" + @model.CampoId + "\"><button type=\"submit\" class=\"btn btn-xs btn-secondary\" onclick=\"ChangeStateReloadPage(" + @model.CampoId + ", " + @model.Habilitado.ToString().ToLower() + ", '" + @Url.Action("CampoChangeState", "EstructuraArchivo") + "');\"><i class=\"fa fa-minus-circle\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Deshabilitado</span></button></span>"))
+                .Filterable(true).SetWidth(160).Titled("Estado");
+                columns.Add().SetWidth(200).Css("text-right").Encoded(false).Sanitized(false).RenderValueAs(model => @<a href="@Url.Action("CampoEdit", "EstructuraArchivo", new { campoId = model.CampoId, area = "" })" class="modal-link"><i class="fa fa-pencil-square-o" aria-hidden="true">&nbsp;</i><span class="d-none d-md-inline-block">Editar</span></a>);
+             }).WithPaging(15).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
+        </div>
+    </div>
+</div>

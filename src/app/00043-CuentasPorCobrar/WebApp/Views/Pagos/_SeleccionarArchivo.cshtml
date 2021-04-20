@@ -5,7 +5,7 @@
 <script src="~/Assets/fileInput/js/locales/es.js"></script>
 <script src="~/Assets/jquery/jquery.form.js"></script>
 
-@using (Html.BeginForm("", "Pagos", FormMethod.Post, new { id = "form-upload", enctype = "multipart/form-data" }))
+@using (Html.BeginForm("CargarArchivoPago", "Pagos", FormMethod.Post, new { id = "form-upload", enctype = "multipart/form-data" }))
 {
     <div class="modal-header">
         <h5 class="modal-title"><i class="fa fa-paperclip text-primary">&nbsp;</i>Adjuntar archivo de pago @ViewBag.Tipo</h5>
@@ -15,6 +15,7 @@
     </div>
     <div class="modal-body">
         <div class="col-md-12">
+            @Html.HiddenFor(model => model.TipoArchivo)
             <div class="form-group form-row" id="div-file">
                 <label class="control-label col-form-label col-md-3 col-sm-4 col-12">Seleccione archivo</label>
                 <div class="col-md-9 col-sm-10 col-12">
@@ -49,12 +50,12 @@
                     <div class="form-row" id="info-adicional">
                         <div class="form-group col-3">
                             <label class="control-label">Año</label>
-                            @Html.DropDownListFor(model => model.Anio, ViewBag.EntidadesFinancieras as SelectList, "[ SELECCIONAR ]", new { @class = "form-control" })
+                            @Html.DropDownListFor(model => model.Anio, ViewBag.Anios as SelectList, "[ SELECCIONAR ]", new { @class = "form-control" })
                             <p class="text-danger small">@Html.ValidationMessageFor(model => model.Anio)</p>
                         </div>
                         <div class="form-group col-5">
                             <label class="control-label">Periodo</label>
-                            @Html.DropDownListFor(model => model.Periodo, ViewBag.EntidadesFinancieras as SelectList, "[ SELECCIONAR ]", new { @class = "form-control" })
+                            @Html.DropDownListFor(model => model.Periodo, ViewBag.Periodos as SelectList, "[ SELECCIONAR ]", new { @class = "form-control" })
                             <p class="text-danger small">@Html.ValidationMessageFor(model => model.Periodo)</p>
                         </div>
                     </div>
@@ -80,7 +81,7 @@
         showCaption: true,
         dropZoneEnabled: false,
         language: 'es',
-        allowedFileExtensions: ["dbf", "xls", "xlsx"],
+        allowedFileExtensions: ["txt"],
         showPreview: false,
         showUpload: false,
         elErrorContainer: '#error-pago'
@@ -126,14 +127,17 @@
     })
 
     function mostrarOpcionesAdicionales() {
-        debugger
         let option = $('input[name=info-file]:checked').val();
 
         if (option == 1) {
             $('#info-adicional').hide();
+            $('#Anio').attr('required', false);
+            $('#Periodo').attr('required', false);
         }
         else {
             $('#info-adicional').show();
+            $('#Anio').attr('required', true);
+            $('#Periodo').attr('required', true);
         }
     }
 </script>

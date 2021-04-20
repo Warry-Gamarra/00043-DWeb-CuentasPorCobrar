@@ -64,3 +64,30 @@ select distinct cp_pri.descripcio, monto from cp_pri
 inner join cp_des on cp_pri.cuota_pago = cp_des.CUOTA_PAGO 
 where cp_des.ELIMINADO = 0 and cp_pri.eliminado = 0
 and cp_des.CODIGO_BNC is not null
+
+
+SELECT * FROM cp_pri WHERE clasificad = '1540020315'
+
+select * from cp_pri where agrupa = 1 and tipo_oblig = 1
+
+select distinct id_cp_agrp from cp_pri where agrupa = 1
+
+SELECT distinct descripcio, grado  FROM cp_pri 
+WHERE  clasificad = '1230010100'
+
+SELECT * FROM ec_det WHERE concepto = 1
+select * from cp_des where CUOTA_PAGO in (484, 485, 486)
+select * from cp_pri where CUOTA_PAGO in (484, 485, 486)
+SELECT * FROM ec_det WHERE cod_alu = '2016232483' and ano = 2018 
+
+select * from cp_des where CUOTA_PAGO in (440, 441)
+select * from cp_pri where CUOTA_PAGO in (440, 441)
+SELECT * FROM ec_det WHERE cod_alu = '2016232483' and ano = 2018 
+
+select * from cp_des where CUOTA_PAGO in (463, 464)
+select * from cp_pri where CUOTA_PAGO in (463, 464)
+SELECT * FROM ec_det WHERE concepto = 7396 and ano = 2019 
+
+
+
+SELECT * FROM ec_det WHERE cuota_pago = 441 and ano = 2018 

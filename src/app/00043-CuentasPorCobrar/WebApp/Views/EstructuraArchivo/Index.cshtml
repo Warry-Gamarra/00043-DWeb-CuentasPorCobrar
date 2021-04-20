@@ -1,4 +1,4 @@
-﻿@*@model IEnumerable<WebApp.ViewModels.EntidadFinancieraViewModel>*@
+﻿@model IEnumerable<WebApp.ViewModels.ArchivoIntercambioViewModel>
 @using GridMvc.Html
 
 <div class="container-fluid">
@@ -7,8 +7,8 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb float-right small d-none d-sm-inline-flex">
                     <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")"><i class="fa fa-home">&nbsp;</i>Inicio</a></li>
-                    <li class="breadcrumb-item"><span><i class="fa fa-cogs">&nbsp;</i>Configuración </span></li>
-                    <li class="breadcrumb-item active"><span><i class="fa fa-copy">&nbsp;</i>@ViewBag.Title </span></li>
+                    <li class="breadcrumb-item"><span><i class="fa bi-tools">&nbsp;</i>Mantenimiento </span></li>
+                    <li class="breadcrumb-item active"><span><i class="fa fa-files-o">&nbsp;</i>@ViewBag.Title </span></li>
                 </ol>
             </nav>
             <h1 class="">@ViewBag.Title <small></small></h1>
@@ -17,15 +17,29 @@
     <br />
 
     <div class="col-12">
-        <a href="@Url.Action("Create", "EntidadFinanciera")" class="btn btn-primary float-right modal-link">
-            <i class="fa fa-plus-circle"></i> Agregar estructura
+        <a href="@Url.Action("Create", "EstructuraArchivo", new { banco = 0 })" class="btn btn-primary float-right modal-link">
+            <i class="fa bi-file-plus"></i> Agregar archivo intercambio
         </a>
 
-        <p class="h3"><small>Estructuras de archivo registradas</small></p>
+        <p class="h3"><small>Archivo de intercambio registrados</small></p>
         <br />
 
         <br />
         <div class="table-responsive" style="min-height:350px">
+            @Html.Grid(Model).Columns(columns =>
+            {
+                columns.Add(c => c.EntiFinan).Titled("Entidad Financiera").Filterable(true);
+                columns.Add(c => c.TipoArchivo).Titled("Archivo").Filterable(true);
+                columns.Add(c => c.CantSecciones).Titled("Secciones").Filterable(true);
+                columns.Add(c => c.CantColumns).Titled("Columnas").Filterable(true);
+                columns.Add(c => c.Habilitado).SetWidth(100).Css("text-center").Encoded(false).Sanitized(false)
+                        .RenderValueAs(model => model.Habilitado.Value ?
+                                                                @Html.Raw("<span id=\"td" + @model.ArchivoIntercambioID + "\"><button type=\"submit\" class=\"btn btn-xs btn-success\" onclick=\"ChangeStateReloadPage(" + @model.ArchivoIntercambioID + ", " + @model.Habilitado.ToString().ToLower() + ", '" + @Url.Action("ChangeState", "EstructuraArchivo") + "');\"><i class=\"fa fa-check-circle-o\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Habilitado</span></button></span>")
+                                                                : @Html.Raw("<span id=\"td" + @model.ArchivoIntercambioID + "\"><button type=\"submit\" class=\"btn btn-xs btn-secondary\" onclick=\"ChangeStateReloadPage(" + @model.ArchivoIntercambioID + ", " + @model.Habilitado.ToString().ToLower() + ", '" + @Url.Action("ChangeState", "EstructuraArchivo") + "');\"><i class=\"fa fa-minus-circle\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Deshabilitado</span></button></span>"))
+                .Filterable(true).SetWidth(160).Titled("Estado");
+                columns.Add().SetWidth(200).Css("text-right").Encoded(false).Sanitized(false).RenderValueAs(model => @<a href="@Url.Action("RegistrarSecciones", "EstructuraArchivo", new { id = model.ArchivoIntercambioID, area = "" })" class="modal-link"><i class="fa bi-layout-text-window-reverse" aria-hidden="true">&nbsp;</i><span class="d-none d-md-inline-block">Estructura archivo</span></a>);
+                columns.Add().SetWidth(100).Css("text-right").Encoded(false).Sanitized(false).RenderValueAs(model => @<a href="@Url.Action("Edit", "EstructuraArchivo", new { id = model.ArchivoIntercambioID, banco = 0, area = "" })" class="modal-link"><i class="fa fa-pencil-square-o" aria-hidden="true">&nbsp;</i><span class="d-none d-md-inline-block">Editar</span></a>);
+            }).WithPaging(15).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
 
         </div>
     </div>

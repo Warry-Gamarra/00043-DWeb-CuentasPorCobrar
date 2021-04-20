@@ -75,9 +75,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\ArchivoIntercambio.cs" />
+    <Compile Include="Entities\CampoTablaPago.cs" />
+    <Compile Include="Entities\ColumnaSeccion.cs" />
     <Compile Include="Entities\MatriculaDTO.cs" />
     <Compile Include="Entities\MatriculaEntity.cs" />
     <Compile Include="Entities\PagoObligacionEntity.cs" />
+    <Compile Include="Entities\SeccionArchivo.cs" />
     <Compile Include="Helpers\Constantes.cs" />
     <Compile Include="Helpers\Tipos.cs" />
     <Compile Include="Helpers\DataMatriculaResponse.cs" />
@@ -94,6 +98,8 @@
     <Compile Include="Entities\HelperResources.cs" />
     <Compile Include="Entities\CatalogoOpcionEntity.cs" />
     <Compile Include="Entities\CategoriaPago.cs" />
+    <Compile Include="Services\IArchivoIntercambio.cs" />
+    <Compile Include="Services\ICampoTablaPago.cs" />
     <Compile Include="Services\Implementations\EstudianteService.cs" />
     <Compile Include="Entities\EntidadFinanciera.cs" />
     <Compile Include="Entities\CorreoAplicacion.cs" />

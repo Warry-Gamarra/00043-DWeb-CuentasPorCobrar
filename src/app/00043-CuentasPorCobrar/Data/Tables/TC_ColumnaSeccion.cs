@@ -26,6 +26,38 @@ namespace Data.Tables
         public int I_CampoPagoID { get; set; }
 
         public string T_SecArchivoDesc { get; set; }
+        public int I_TipArchivoEntFinanID { get; set; }
+        public string T_CampoPagoNom { get; set; }
+        public string T_TablaPagoNom { get; set; }
+        public string T_CampoInfoDesc { get; set; }
+
+
+        public List<TC_ColumnaSeccion> Find()
+        {
+            List<TC_ColumnaSeccion> result = new List<TC_ColumnaSeccion>();
+
+            try
+            {
+                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
+                {
+                    string s_command = @"SELECT TAEF.I_TipArchivoEntFinanID, SA.T_SecArchivoDesc, CTP.T_CampoInfoDesc, CTP.T_CampoPagoNom, CTP.T_TablaPagoNom, CS.* 
+                                         FROM TC_SeccionArchivo SA
+	                                         INNER JOIN TC_ColumnaSeccion CS ON CS.I_SecArchivoID = SA.I_SecArchivoID
+ 	                                         INNER JOIN TI_TipoArchivo_EntidadFinanciera TAEF ON SA.I_TipArchivoEntFinanID = TAEF.I_TipArchivoEntFinanID
+	                                         INNER JOIN TS_CampoTablaPago CTP ON CTP.I_CampoPagoID = CS.I_CampoPagoID
+                                         WHERE CS.B_Eliminado = 0;";
+
+                    result = _dbConnection.Query<TC_ColumnaSeccion>(s_command, commandType: CommandType.Text).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
+
 
         public List<TC_ColumnaSeccion> FindBySectionID(int sectionId)
         {

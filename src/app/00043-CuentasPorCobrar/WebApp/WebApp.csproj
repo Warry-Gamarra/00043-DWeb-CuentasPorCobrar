@@ -555,8 +555,9 @@
     <Content Include="Views\Pagos\_ResultadoCargaPago.cshtml" />
     <Compile Include="ViewModels\EstructuraArchivoViewModels.cs" />
     <Content Include="Views\EstructuraArchivo\CamposTabla.cshtml" />
-    <Content Include="Views\EstructuraArchivo\_RegistroEstructuraArchivo.cshtml" />
+    <Content Include="Views\EstructuraArchivo\_RegistroArchivoIntercambio.cshtml" />
     <Content Include="Views\EstructuraArchivo\_RegistroCampoTabla.cshtml" />
+    <Content Include="Views\EstructuraArchivo\_RegistroEstructuraArchivo.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

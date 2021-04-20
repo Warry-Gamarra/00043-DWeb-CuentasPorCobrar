@@ -13,7 +13,7 @@ namespace Data.Tables
     public class TS_CampoTablaPago
     {
         public int I_CampoPagoID { get; set; }
-        public string T_TablaNom { get; set; }
+        public string T_TablaPagoNom { get; set; }
         public string T_CampoPagoNom { get; set; }
         public string T_CampoInfoDesc { get; set; }
         public int I_TipoArchivoID { get; set; }
@@ -78,8 +78,10 @@ namespace Data.Tables
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
                     parameters.Add(name: "I_CampoPagoID", dbType: DbType.Int32, value: this.I_CampoPagoID);
+                    parameters.Add(name: "T_TablaPagoNom", dbType: DbType.String, size: 50, value: this.T_TablaPagoNom);
                     parameters.Add(name: "T_CampoPagoNom", dbType: DbType.String, size: 50, value: this.T_CampoPagoNom);
                     parameters.Add(name: "T_CampoInfoDesc", dbType: DbType.String, size: 50, value: this.T_CampoInfoDesc);
+                    parameters.Add(name: "I_TipoArchivoID", dbType: DbType.Int32, value: this.I_TipoArchivoID);
                     parameters.Add(name: "D_FecCre", dbType: DbType.DateTime, value: this.D_FecCre);
                     parameters.Add(name: "CurrentUserId", dbType: DbType.Int32, value: this.I_UsuarioCre);
 
@@ -111,8 +113,10 @@ namespace Data.Tables
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
                     parameters.Add(name: "I_CampoPagoID", dbType: DbType.Int32, value: this.I_CampoPagoID);
+                    parameters.Add(name: "T_TablaPagoNom", dbType: DbType.String, size: 50, value: this.T_TablaPagoNom);
                     parameters.Add(name: "T_CampoPagoNom", dbType: DbType.String, size: 50, value: this.T_CampoPagoNom);
                     parameters.Add(name: "T_CampoInfoDesc", dbType: DbType.String, size: 50, value: this.T_CampoInfoDesc);
+                    parameters.Add(name: "I_TipoArchivoID", dbType: DbType.Int32, value: this.I_TipoArchivoID);
                     parameters.Add(name: "D_FecMod", dbType: DbType.DateTime, value: this.D_FecMod);
                     parameters.Add(name: "CurrentUserId", dbType: DbType.Int32, value: this.I_UsuarioCre);
 
@@ -146,13 +150,13 @@ namespace Data.Tables
                 {
                     parameters.Add(name: "I_CampoPagoID", dbType: DbType.Int32, value: this.I_CampoPagoID);
                     parameters.Add(name: "B_Habilitado", dbType: DbType.Boolean, value: this.B_Habilitado);
-                    parameters.Add(name: "D_FecUpdate", dbType: DbType.DateTime, value: this.D_FecMod);
+                    parameters.Add(name: "D_FecMod", dbType: DbType.DateTime, value: this.D_FecMod);
                     parameters.Add(name: "CurrentUserId", dbType: DbType.Int32, value: currentUserId);
 
                     parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);
                     parameters.Add(name: "T_Message", dbType: DbType.String, size: 4000, direction: ParameterDirection.Output);
 
-                    _dbConnection.Execute("USP_U_ActualizarEstadoColumnaSeccion", parameters, commandType: CommandType.StoredProcedure);
+                    _dbConnection.Execute("USP_U_ActualizarEstadoCampoTablaPago", parameters, commandType: CommandType.StoredProcedure);
 
                     result.Value = parameters.Get<bool>("B_Result");
                     result.Message = parameters.Get<string>("T_Message");
@@ -175,9 +179,30 @@ namespace Data.Tables
             {
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    string s_command = @"SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE'";
+                    string s_command = @"SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES";
 
                     result = _dbConnection.Query<string>(s_command, commandType: CommandType.Text).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
+
+        public List<string> GetColumns(string tableName)
+        {
+            var result = new List<string>();
+
+            try
+            {
+                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
+                {
+                    string s_command = @"SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @TABLE_NAME";
+
+                    result = _dbConnection.Query<string>(s_command, new { TABLE_NAME = tableName }, commandType: CommandType.Text).ToList();
                 }
             }
             catch (Exception ex)

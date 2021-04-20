@@ -671,7 +671,7 @@ CREATE TABLE TS_CampoTablaPago
 	T_TablaPagoNom       varchar(50)  NULL ,
 	T_CampoPagoNom       varchar(50)  NULL ,
 	T_CampoInfoDesc      varchar(50)  NULL,
-	I_TipoArchivoID      int  NULL ,
+	I_TipoArchivoID      int  NOT NULL ,
 	B_Habilitado         bit  NOT NULL ,
 	B_Eliminado          bit  NOT NULL ,
 	I_UsuarioCre         int  NULL ,

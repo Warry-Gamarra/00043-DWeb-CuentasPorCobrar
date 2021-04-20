@@ -201,3 +201,100 @@ WHERE TP_CD.ELIMINADO = 0 AND CODIGO_BNC IN (
 
 
 
+SELECT * FROM TC_CategoriaPago WHERE I_CatPagoID = 36
+
+/* CONSULTAS DE TASAS QUE COINCIDEN CON LOS DATOS IMPORTADOS DE CUOTA Y CATEGORIA DE PAGO*/
+
+SELECT * FROM temporal_pagos..cp_pri cp_pri
+INNER JOIN TC_Proceso P ON cp_pri.cuota_pago = P.I_ProcesoID
+WHERE I_CatPagoID = 36 AND cp_pri.clasific_5 <> ''
+ORDER BY descripcio
+--UNION 
+SELECT * FROM temporal_pagos..cp_pri cp_pri
+INNER JOIN TC_Proceso P ON cp_pri.cuota_pago = P.I_ProcesoID
+WHERE I_CatPagoID = 36 AND cp_pri.clasific_5 = ''
+ORDER BY descripcio
+
+/* CONSULTAS DE TASAS QUE COINCIDEN CON LOS DATOS IMPORTADOS DE CUOTA Y CATEGORIA DE PAGO CON DESCRIPCIONES REPETIDAS Y CLASIF 5 DIGITOS */
+SELECT cp_pri.clasificad, cp_pri.descripcio, COUNT(cp_pri.id_cp) FROM temporal_pagos..cp_pri cp_pri
+INNER JOIN TC_Proceso P ON cp_pri.cuota_pago = P.I_ProcesoID
+WHERE I_CatPagoID = 36 AND cp_pri.clasific_5 <> ''
+GROUP BY cp_pri.clasificad, cp_pri.descripcio
+HAVING COUNT(cp_pri.id_cp) > 1
+ORDER BY 1
+
+SELECT cp_pri.descripcio, COUNT(cp_pri.id_cp) FROM temporal_pagos..cp_pri cp_pri
+INNER JOIN TC_Proceso P ON cp_pri.cuota_pago = P.I_ProcesoID
+WHERE I_CatPagoID = 36 AND cp_pri.clasific_5 <> ''
+GROUP BY cp_pri.descripcio
+HAVING COUNT(cp_pri.id_cp) > 1
+ORDER BY 1
+
+
+SELECT *
+FROM temporal_pagos..cp_pri 
+WHERE cuota_pago = 484
+
+SELECT cp_pri.clasificad, cp_pri.grado
+		,(SELECT top 1 a.descripcio from temporal_pagos..cp_pri a 
+			where a.clasificad = cp_pri.clasificad and a.grado = cp_pri.grado order by ano desc)
+		,(SELECT top 1 a.monto_min from temporal_pagos..cp_pri a 
+			where a.clasificad = cp_pri.clasificad and a.grado = cp_pri.grado order by ano desc)
+		,(SELECT top 1 a.monto from temporal_pagos..cp_pri a 
+			where a.clasificad = cp_pri.clasificad and a.grado = cp_pri.grado order by ano desc)
+		,COUNT(cp_pri.id_cp)
+FROM temporal_pagos..cp_pri cp_pri
+left join temporal_pagos..cp_pri cp_pri_agrupa on cp_pri.id_cp_agrp = cp_pri_agrupa.id_cp
+INNER JOIN TC_Proceso P ON cp_pri.cuota_pago = P.I_ProcesoID
+WHERE I_CatPagoID <> 36
+GROUP BY cp_pri.clasificad, cp_pri.grado
+ORDER BY 1,2
+
+SELECT cp_pri.clasificad
+		,(SELECT top 1 a.descripcio from temporal_pagos..cp_pri a 
+			where a.clasificad = cp_pri.clasificad order by ano desc) as descripcio
+		,(SELECT top 1 a.monto_min from temporal_pagos..cp_pri a  
+			where a.clasificad = cp_pri.clasificad order by ano desc) as monto_min
+		,(SELECT top 1 a.monto from temporal_pagos..cp_pri a 
+			where a.clasificad = cp_pri.clasificad order by ano desc) as monto
+		,COUNT(cp_pri.id_cp) as registros
+FROM temporal_pagos..cp_pri cp_pri
+left join temporal_pagos..cp_pri cp_pri_agrupa on cp_pri.id_cp_agrp = cp_pri_agrupa.id_cp
+INNER JOIN TC_Proceso P ON cp_pri.cuota_pago = P.I_ProcesoID
+WHERE I_CatPagoID <> 36 and cp_pri.eliminado = 0 and cp_pri.clasificad <> ''-- AND cp_pri.ano in ('2020', '2019', '2018')
+GROUP BY cp_pri.clasificad
+ORDER BY 1
+
+
+SELECT ' VALUES ('		
+		, '1, 0, 0,' 
+		, '''' + cp_pri.clasificad + '''', ','
+		,IIF((SELECT top 1 a.calcular from temporal_pagos..cp_pri a  
+			where a.clasificad = cp_pri.clasificad order by ano desc) <> '', 1, 0) as b_calcular
+		, ','
+		, (SELECT top 1 IIF(a.calcular <> '', a.calcular, null) from temporal_pagos..cp_pri a  
+			where a.clasificad = cp_pri.clasificad order by ano desc) as calcular
+		, ', 1 , 0,'
+		,(SELECT top 1 a.monto from temporal_pagos..cp_pri a 
+			where a.clasificad = cp_pri.clasificad order by ano desc) as monto
+		, ','
+		,(SELECT top 1 a.monto_min from temporal_pagos..cp_pri a  
+			where a.clasificad = cp_pri.clasificad order by ano desc) as monto_min
+		, ','
+		,(SELECT top 1 '''' + a.descripcio + '''' from temporal_pagos..cp_pri a 
+			where a.clasificad = cp_pri.clasificad order by ano desc) as descripcio
+		, ')'
+FROM temporal_pagos..cp_pri cp_pri
+left join temporal_pagos..cp_pri cp_pri_agrupa on cp_pri.id_cp_agrp = cp_pri_agrupa.id_cp
+INNER JOIN TC_Proceso P ON cp_pri.cuota_pago = P.I_ProcesoID
+WHERE I_CatPagoID <> 36 and cp_pri.eliminado = 0 and cp_pri.clasificad <> ''-- AND cp_pri.ano in ('2020', '2019', '2018')
+GROUP BY cp_pri.clasificad
+ORDER BY 1
+
+select * from TI_ConceptoPago
+select * from TC_Concepto
+
+select * from TC_CatalogoOpcion
+
+
+select * from TC_Proceso where I_ProcesoID = 63

@@ -1,7 +1,14 @@
-﻿<link href="~/Assets/fileInput/css/fileinput.min.css" rel="stylesheet" />
+﻿@model IEnumerable<WebApp.ViewModels.ArchivoImportadoViewModel>
+
+<link href="~/Assets/fileInput/css/fileinput.min.css" rel="stylesheet" />
 <script src="~/Assets/fileInput/js/fileinput.min.js"></script>
 <script src="~/Assets/fileInput/js/locales/es.js"></script>
 <script src="~/Assets/jquery/jquery.form.js"></script>
+<link href="~/Assets/datatables/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
+
+<script src="~/Assets/datatables/js/datatables.min.js"></script>
+<script src="~/Assets/datatables/js/dataTables.bootstrap4.min.js"></script>
+
 
 <div class="container-fluid">
     <div class="col-12">
@@ -16,44 +23,98 @@
             <h1 class="">@ViewBag.Title <small></small></h1>
         </section>
     </div>
-    <div class="col-12 my-4">
-        <p class="h5 text-secondary">Recepción de información enviada por el BANCO</p>
-        <a href="@Url.Action("SeleccionarArchivo","Pagos", new { area = "", tipo = "obligaciones" })" class="btn btn-primary px-5 modal-link-lg"><i class="fa fa-paperclip">&nbsp;</i> Adjuntar archivo</a>
-    </div>
-    <div class="col-12 my-4">
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover table-sm">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>Obs</th>
-                        <th>Nro</th>
-                        <th>Codigo</th>
-                        <th>Apellidos y nombres</th>
-                        <th>Cuota</th>
-                        <th>Concepto</th>
-                        <th>Importe</th>
-                        <th>Total</th>
-                        <th>Fec. Venc.</th>
-                        <th>Agencia</th>
-                        <th>Fec. Pago</th>
-                        <th>Cod RC</th>
-                        <th>Periodo</th>
-                        <th>Operación</th>
-                        <th>Cod. Cajero</th>
-                        <th>Impreso</th>
-                        <th>Registrado</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td colspan="17"> No se ha cargado informacion de pagos</td>
-                    </tr>
-                </tbody>
-            </table>
+    <div class="mt-4">
+        <div class="col-12">
+            <a href="@Url.Action("SeleccionarArchivoObligaciones", "Pagos", new { area = ""})" class="btn btn-primary px-5 modal-link-lg float-right"><i class="fa fa-paperclip">&nbsp;</i> Adjuntar archivo</a>
+            <p class="h5 text-secondary">Recepción de información enviada por el BANCO</p>
         </div>
     </div>
+    <div class="mt-5">
+        <div class="col-12">
+            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                <li class="nav-item w-50" role="presentation">
+                    <a class="nav-link h5 text-center active" id="pills-files-tab" data-toggle="pill" href="#pills-files" role="tab" aria-controls="pills-files" aria-selected="true">
+                        <i class="fa fa-fw fa-files-o">&nbsp;</i> Archivos de pago Cargados
+                    </a>
+                </li>
+                <li class="nav-item w-50" role="presentation">
+                    <a class="nav-link h5 text-center" id="pills-results-tab" data-toggle="pill" href="#pills-results" role="tab" aria-controls="pills-results" aria-selected="false">
+                        <i class="fa fa-fw bi-file-earmark-check">&nbsp;</i> Resultados de la carga
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content" id="pills-tabContent">
+                <div class="tab-pane fade show active" id="pills-files" role="tabpanel" aria-labelledby="pills-files-tab">
+                    <div class="col-12 my-4">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover table-sm" id="tbl_files">
+                                <thead>
+                                    <tr class="thead-light">
+                                        <th>Nombre archivo</th>
+                                        <th>Entidad financiera</th>
+                                        <th>Tipo archivo</th>
+                                        <th class="text-center">Fecha carga</th>
+                                        <th class="text-center">Tamaño</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.FileName</td>
+                                            <td>@item.EntidadFinanciera</td>
+                                            <td>@item.TipoArchivo</td>
+                                            <td>@item.FecCarga</td>
+                                            <td>@item.FileSize</td>
+                                            <td>
+                                                <a href="@item.UrlFile"><i class="fa fa-download">&nbsp;</i>Descargar</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="pills-results" role="tabpanel" aria-labelledby="pills-results-tab">
+                    <div class="col-12 my-4" id="resultado_carga">
+                        <p class="alert alert-info">
+                            <i class="fa bi-info-circle">&nbsp;</i> No hay información de algún archivo cargado recientemiente para mostrar
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <script>
 
+<script>
+    $(document).ready(function () {
+        $('#tbl_files').DataTable({
+            "language": {
+                "zeroRecords": "No se encontraron resultados para la búsqueda",
+                "info": "Mostrando _START_ - _END_ de _TOTAL_ registros encontrados",
+                "lengthMenu": "Mostrar _MENU_ resultados por página",
+                "infoEmpty": "No se encontraron resultados disponibles",
+                "infoFiltered": "(filtrado de _MAX_ registros)",
+                "loadingRecords": "Cargando...",
+                "processing": "Procesando...",
+                "search": "Buscar:",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Ultimo",
+                    "previous": "Anterior",
+                    "next": "Siguiente"
+                }
+            },
+            "lengthChange": false,
+            "searching": true,
+            "pageLength": 10,
+            "order": [[1, "asc"]]
+        });
 
-    </script>
+    })
+
+</script>
