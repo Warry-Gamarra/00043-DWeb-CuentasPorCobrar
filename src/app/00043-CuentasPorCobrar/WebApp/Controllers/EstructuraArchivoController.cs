@@ -139,13 +139,9 @@ namespace WebApp.Controllers
             ViewBag.Title = "Editar campos de pago";
 
             CamposTablaViewModel model = _estructuraArchivo.ObtenerCampoTabla(campoId);
-            List<SelectViewModel> lstColumns = new List<SelectViewModel>
-            {
-                new SelectViewModel() { Value = model.NombreCampoTabla, TextDisplay = model.NombreCampoTabla }
-            };
 
             ViewBag.Tablas = new SelectList(_estructuraArchivo.ObtenerTablasBD(), "Value", "TextDisplay", model.NombreTabla);
-            ViewBag.ColumnasTabla = new SelectList(lstColumns, "Value", "TextDisplay");
+            ViewBag.ColumnasTabla = new SelectList(_estructuraArchivo.ObtenerColumnasTabla(model.NombreTabla), "Value", "TextDisplay");
             ViewBag.TipoArchivo = _estructuraArchivo.ObtenerTiposArchivo();
 
             return PartialView("_RegistroCampoTabla", model);

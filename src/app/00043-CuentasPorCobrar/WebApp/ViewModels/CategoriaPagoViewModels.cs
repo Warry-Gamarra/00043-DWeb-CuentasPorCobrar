@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using System.Web.Script.Serialization;
 
 namespace WebApp.ViewModels
 {
@@ -39,7 +40,7 @@ namespace WebApp.ViewModels
     {
         public int? Id { get; set; }
 
-        [Display(Name="Descripción")]
+        [Display(Name = "Descripción")]
         [Required]
         public string Nombre { get; set; }
 
@@ -61,8 +62,8 @@ namespace WebApp.ViewModels
 
         [Display(Name = "Cuentas Habilitadas")]
         public int[] CuentasDeposito { get; set; }
-        public bool  MostrarCodBanco { get; set; } 
-        public int[] CtasBcoComercio { get; set; } 
+        public bool MostrarCodBanco { get; set; }
+        public int[] CtasBcoComercio { get; set; }
 
         public CategoriaPagoRegistroViewModel() { }
 
@@ -78,4 +79,25 @@ namespace WebApp.ViewModels
             this.CuentasDeposito = categoriaPago.CuentasDeposito.ToArray();
         }
     }
+
+    public class ConceptoCategoriaPagoViewModel
+    {
+        public int? CategoriaId { get; set; }
+        public List<CatalogoConceptosViewModel> Conceptos { get; set; }
+        public string StrListaConceptos
+        {
+            get
+            {
+                return new JavaScriptSerializer().Serialize(this.Conceptos);
+            }
+        }
+
+
+        public ConceptoCategoriaPagoViewModel()
+        {
+            this.Conceptos = new List<CatalogoConceptosViewModel>();
+
+        }
+    }
+
 }

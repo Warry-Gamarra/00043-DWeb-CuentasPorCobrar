@@ -97,5 +97,33 @@ namespace WebApp.Models
             return result;
         }
 
+
+        public ConceptoCategoriaPagoViewModel GetConceptosCategoria(int categoriaId)
+        {
+            var result = new ConceptoCategoriaPagoViewModel()
+            {
+                CategoriaId = categoriaId,
+                Conceptos = _categoriaPago.GetConceptos(categoriaId).Select(x => new CatalogoConceptosViewModel(x)).ToList()
+            };
+
+            return result;
+        }
+
+        public Response CategoriaConceptosSave(ConceptoCategoriaPagoViewModel model, int currentUserId)
+        {
+            List<int> conceptosId = model.Conceptos.Select(x => x.Id.Value).ToList();
+
+            Response result = _categoriaPago.ConceptosSave(model.CategoriaId.Value, conceptosId);
+
+            if (result.Value)
+            {
+                result.Success(false);
+            }
+            else
+            {
+                result.Error(true);
+            }
+            return result;
+        }
     }
 }

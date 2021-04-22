@@ -51,6 +51,11 @@ function FormatearNumero(number, decimals = 2, round = true) {
     }
 }
 
+function htmlDecode(input) {
+    var element = document.createElement('textarea');
+    element.innerHTML = input;
+    return element.value;
+}
 
 
 

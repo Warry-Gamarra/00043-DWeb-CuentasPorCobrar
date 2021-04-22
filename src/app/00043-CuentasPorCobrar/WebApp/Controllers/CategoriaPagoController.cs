@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 using WebApp.Models;
 using WebApp.ViewModels;
 using WebMatrix.WebData;
@@ -24,20 +25,20 @@ namespace WebApp.Controllers
             _cuentasDeposito = new CuentaDepositoModel();
         }
 
-        [Route("mantenimiento/categorias-de-pago")]
+        [Route("mantenimiento/plantilla-cuota-de-pago")]
         public ActionResult Index()
         {
-            ViewBag.Title = "Categorías de Pago";
+            ViewBag.Title = "Plantillas de Cuota de Pago";
             var model = _categoriaPago.Find();
             return View(model);
         }
 
 
-        [Route("mantenimiento/categorias-de-pago/nuevo")]
+        [Route("mantenimiento/plantilla-cuota-de-pago/nuevo")]
         [HttpGet]
         public ActionResult Create()
         {
-            ViewBag.Title = "Nuevo categoría de pago";
+            ViewBag.Title = "Nuevo plantilla de cuota de pago";
 
             ViewBag.Niveles = new SelectList(_conceptoPago.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.Grado), "Value", "TextDisplay");
             ViewBag.TiposAlumno = new SelectList(_conceptoPago.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.TipoAlumno), "Value", "TextDisplay");
@@ -49,11 +50,11 @@ namespace WebApp.Controllers
             });
         }
 
-        [Route("mantenimiento/categorias-de-pago/editar/{id}")]
+        [Route("mantenimiento/plantilla-cuota-de-pago/editar/{id}")]
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            ViewBag.Title = "Editar categoría de pago";
+            ViewBag.Title = "Editar plantilla de cuota de pago";
 
             var model = _categoriaPago.Find(id);
             ViewBag.Niveles = new SelectList(_conceptoPago.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.Grado), "Value", "TextDisplay");
@@ -95,5 +96,46 @@ namespace WebApp.Controllers
             return PartialView("_MsgPartialWR", result);
         }
 
+
+        [Route("mantenimiento/plantilla-cuota-de-pago/{id}/conceptos-registro/")]
+        [HttpGet]
+        public ActionResult AgregarConceptos(int id)
+        {
+            ViewBag.Title = "Editar plantilla de cuota de pago";
+
+            var model = _categoriaPago.GetConceptosCategoria(id);
+            var lstConceptos = _conceptoPago.Listar_CatalogoConceptos(TipoObligacion.Matricula);
+
+            ViewBag.Conceptos = new SelectList(lstConceptos, "Id", "NombreConcepto");
+            ViewBag.ConceptosJson = new JavaScriptSerializer().Serialize(lstConceptos);
+
+            return PartialView("_RegistrarConceptoCategoria", model);
+        }
+
+
+        [HttpPost]
+        public ActionResult ConceptosPlantillaSave(ConceptoCategoriaPagoViewModel model)
+        {
+            Response result = new Response();
+
+            if (ModelState.IsValid)
+            {
+                result = _categoriaPago.CategoriaConceptosSave(model, WebSecurity.CurrentUserId);
+            }
+            else
+            {
+                string details = "";
+                foreach (ModelState modelState in ViewData.ModelState.Values)
+                {
+                    foreach (ModelError error in modelState.Errors)
+                    {
+                        details += error.ErrorMessage + "\n ";
+                    }
+                }
+
+                ResponseModel.Error(result, "Ha ocurrido un error con el envio de datos: \n" + details);
+            }
+            return PartialView("_MsgPartialWR", result);
+        }
     }
 }

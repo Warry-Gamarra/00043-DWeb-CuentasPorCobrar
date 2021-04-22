@@ -378,7 +378,7 @@ CREATE TABLE TR_ObligacionAluCab
 	CONSTRAINT FK_Proceso_ObligacionAluCab FOREIGN KEY (I_ProcesoID) REFERENCES TC_Proceso(I_ProcesoID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION,
-CONSTRAINT FK_MatriculaAlumno_ObligacionAluCab FOREIGN KEY (I_MatAluID) REFERENCES TC_MatriculaAlumno(I_MatAluID)
+	CONSTRAINT FK_MatriculaAlumno_ObligacionAluCab FOREIGN KEY (I_MatAluID) REFERENCES TC_MatriculaAlumno(I_MatAluID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 )
@@ -405,6 +405,22 @@ CREATE TABLE TC_Concepto
 	I_UsuarioMod         int  NULL ,
 	D_FecMod             datetime  NULL ,
 	CONSTRAINT PK_Concepto PRIMARY KEY  CLUSTERED (I_ConceptoID ASC)
+)
+go
+
+
+
+CREATE TABLE TI_ConceptoCategoriaPago
+( 
+	I_CatPagoID          int NOT NULL ,
+	I_ConceptoID         int NOT NULL ,
+	CONSTRAINT PK_ConceptoCategoriaPago PRIMARY KEY  CLUSTERED (I_CatPagoID, I_ConceptoID ASC),
+	CONSTRAINT FK_Categoria_ConceptoCategoriaPago FOREIGN KEY (I_CatPagoID) REFERENCES TC_CategoriaPago(I_CatPagoID)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION,
+	CONSTRAINT FK_Concepto_ConceptoCategoriaPago FOREIGN KEY (I_ConceptoID) REFERENCES TC_Concepto(I_ConceptoID)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
 )
 go
 
@@ -474,10 +490,10 @@ CREATE TABLE TI_ConceptoPago
 	I_TipoDescuentoID    int  NULL ,
 	CONSTRAINT PK_ConceptoPago PRIMARY KEY  CLUSTERED (I_ConcPagID ASC),
 	CONSTRAINT FK_Concepto_ConceptoPago FOREIGN KEY (I_ConceptoID) REFERENCES TC_Concepto(I_ConceptoID),
-CONSTRAINT FK_Periodo_ConceptoPagoPeriodo FOREIGN KEY (I_ProcesoID) REFERENCES TC_Proceso(I_ProcesoID)
+	CONSTRAINT FK_Periodo_ConceptoPagoPeriodo FOREIGN KEY (I_ProcesoID) REFERENCES TC_Proceso(I_ProcesoID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION,
-CONSTRAINT FK_TipoDescuento_ConceptoPago FOREIGN KEY (I_TipoDescuentoID) REFERENCES TC_TipoDescuento(I_TipoDescuentoID)
+	CONSTRAINT FK_TipoDescuento_ConceptoPago FOREIGN KEY (I_TipoDescuentoID) REFERENCES TC_TipoDescuento(I_TipoDescuentoID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 )

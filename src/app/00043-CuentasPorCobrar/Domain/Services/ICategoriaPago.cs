@@ -14,5 +14,8 @@ namespace Domain.Services
         CategoriaPago Find(int categoriaId);
         Response Save(CategoriaPago categoriaPago, int currentUserId, SaveOption saveOption);
         Response ChangeState(int categoriaId, bool currentState, int currentUserId);
+
+        List<ConceptoEntity> GetConceptos(int categoriaId);
+        Response ConceptosSave(int categoriaId, List<int> conceptos);
     }
 }

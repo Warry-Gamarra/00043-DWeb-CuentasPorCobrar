@@ -1045,8 +1045,6 @@ BEGIN
 					       TRG.D_FecMod = @D_FecCre,
 					       TRG.I_UsuarioMod = @CurrentUserId;
 
-
-
 		SET @B_Result = 1
 		SET @T_Message = 'Nuevo registro agregado.'
 	END TRY
@@ -1151,6 +1149,42 @@ BEGIN
 	END CATCH
 END
 GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_IU_GrabarConceptosCategoriaPago')
+	DROP PROCEDURE [dbo].[USP_IU_GrabarConceptosCategoriaPago]
+GO
+
+CREATE PROCEDURE [dbo].[USP_IU_GrabarConceptosCategoriaPago]
+	 @I_CatPagoID	int
+	,@Tbl_Conceptos	[dbo].[type_SelectItems] READONLY
+
+	,@B_Result bit OUTPUT
+	,@T_Message nvarchar(4000) OUTPUT	
+AS
+BEGIN
+  SET NOCOUNT ON
+  	BEGIN TRY				
+		MERGE TI_ConceptoCategoriaPago AS TRG
+		USING @Tbl_Conceptos AS SRC
+		ON  TRG.I_CatPagoID = @I_CatPagoID AND TRG.I_ConceptoID = SRC.C_ID
+		WHEN NOT MATCHED BY TARGET THEN 
+				INSERT (I_CatPagoID, I_ConceptoID )
+				VALUES	(@I_CatPagoID, CAST(SRC.C_ID as int))
+		WHEN NOT MATCHED BY SOURCE THEN 
+				DELETE;
+
+		SET @B_Result = 1
+		SET @T_Message = 'Conceptos registrados.'
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+
+END
+GO
+
 
 
 /*-------------------------- */

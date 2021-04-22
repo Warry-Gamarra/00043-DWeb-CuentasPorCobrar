@@ -25,7 +25,7 @@
             <div class="form-group row">
                 @Html.LabelFor(model => model.NombreTabla, new { @class = "col-md-3 control-label" })
                 <div class="col-md-9">
-                    @Html.DropDownListFor(model => model.NombreTabla, ViewBag.Tablas as SelectList, "[ SELECCIONAR ]", new { @class = "form-control" })
+                    @Html.DropDownListFor(model => model.NombreTabla, ViewBag.Tablas as SelectList, "[ SELECCIONAR ]", new { @class = "form-control select-filter" })
                     <p class="text-danger small">@Html.ValidationMessageFor(model => model.NombreTabla)</p>
                 </div>
             </div>
@@ -69,51 +69,57 @@
 }
 
 <script>
-            $(document).on('ready', function () {
-                $('#btnsubmit').removeClass('disabled');
-                GetColumns($('#NombreTabla').val());
-            });
+    $(document).on('ready', function () {
+        $('#btnsubmit').removeClass('disabled');
+        GetColumns($('#NombreTabla').val());
+    });
 
-            $("form").submit(function () {
-                if (parseInt($("#submited").val()) > 0) {
-                    return false;
-                }
-            });
+    $("form").submit(function () {
+        if (parseInt($("#submited").val()) > 0) {
+            return false;
+        }
+    });
 
+    $('.select-filter').select2({
+        dropdownParent: $('#modal-container'),
+        placeholder: "[ SELECCIONAR ]"
+    }).on('hide', function (e) {
+        e.stopPropagation();
+    });
 
-            $('#NombreTabla').on('change', function () {
-                GetColumns($('#NombreTabla').val());
-            })
+    $('#NombreTabla').on('change', function () {
+        GetColumns($('#NombreTabla').val());
+    })
 
-            function GetColumns(value, text) {
-                if (value === "" || value == null) {
-                    return false;
-                }
+    function GetColumns(value, text) {
+        if (value === "" || value == null) {
+            return false;
+        }
 
-                $.ajax({
-                    url: ('@Url.Action("GetColumnasPorTabla", "Service", new { httproute = "ActionApi" })?nombreTabla=' + value),
-                    type: 'GET',
-                    contentType: 'application/json; charset=utf-8',
-                    dataType: 'json',
-                    cache: false,
-                    beforeSend: function () {
-                        $('#NombreCampoTabla').html('<option>[ cargando ... ]</option>');
-                    },
-                    success: function (data) {
-                        let options = '<option>[ SELECCIONAR ]</option>';
-                        $.each(data, function (index, item) {
-                            options += '<option value="' + item['Value'] +'">'+ item['TextDisplay'] +'</option>'
-                        })
-
-                        $('#NombreCampoTabla').html(options);
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        $('#NombreCampoTabla').html('<option>[ SELECCIONAR ]</option>');
-
-                        alert(jqXHR.responseText)
-                    }
+        $.ajax({
+            url: ('@Url.Action("GetColumnasPorTabla", "Service", new { httproute = "ActionApi" })?nombreTabla=' + value),
+            type: 'GET',
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            cache: false,
+            beforeSend: function () {
+                $('#NombreCampoTabla').html('<option>[ cargando ... ]</option>');
+            },
+            success: function (data) {
+                let options = '<option>[ SELECCIONAR ]</option>';
+                $.each(data, function (index, item) {
+                    options += '<option value="' + item['Value'] +'">'+ item['TextDisplay'] +'</option>'
                 })
+
+                $('#NombreCampoTabla').html(options);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                $('#NombreCampoTabla').html('<option>[ SELECCIONAR ]</option>');
+
+                alert(jqXHR.responseText)
             }
+        })
+    }
 
 </script>
 

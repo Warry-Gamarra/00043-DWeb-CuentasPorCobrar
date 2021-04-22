@@ -31,7 +31,7 @@
             <a class="navbar-brand" href="#">
                 <img class="img-fluid" style="max-width: 130px;" src="~/Assets/images/logo.png" alt="UNFV">
             </a>
-            <a class="navbar-brand navbar-title d-none d-sm-inline-block" href="" rel="home" title="Universidad Nacional Federico Villarreal">
+            <a class="navbar-brand navbar-title d-none d-sm-inline-block" href="#" rel="home" title="Universidad Nacional Federico Villarreal">
                 @AppName
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -170,12 +170,12 @@
 
             $('#modal-container-lg').on('hide.bs.modal', function () {
                 $(this).removeData('bs.modal');
-                $('#modal-container-md .modal-content').html('<p style="margin:50px;" class="text-center text-muted"><i class="fa fa-spin fa-3x fa-cog"></i></p>');
+                $('#modal-container-lg .modal-content').html('<p style="margin:50px;" class="text-center text-muted"><i class="fa fa-spin fa-3x fa-cog"></i></p>');
             });
 
             $('#modal-container-xl').on('hide.bs.modal', function () {
                 $(this).removeData('bs.modal');
-                $('#modal-container-lg .modal-content').html('<p style="margin:50px;" class="text-center text-muted"><i class="fa fa-spin fa-3x fa-cog"></i></p>');
+                $('#modal-container-xl .modal-content').html('<p style="margin:50px;" class="text-center text-muted"><i class="fa fa-spin fa-3x fa-cog"></i></p>');
             });
 
             $('.select-filter').select2({

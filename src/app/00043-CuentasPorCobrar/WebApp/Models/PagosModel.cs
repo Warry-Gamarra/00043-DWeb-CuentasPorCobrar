@@ -93,7 +93,7 @@ namespace WebApp.Models
         {
             string line;
             int fila = 0;
-            List<SeccionArchivoViewModel> estructuraArchivo = _estructuraArchivoModel.ObtenerEstructuraArchivo(entFinanId, TipoArchivoEntFinan.Pago_Obligacion);
+            List<SeccionArchivoViewModel> estructuraArchivo = _estructuraArchivoModel.ObtenerEstructuraArchivo(entFinanId, TipoArchivoEntFinan.Recaudacion_Obligaciones);
 
             if (estructuraArchivo.Count == 0)
             {
@@ -111,7 +111,7 @@ namespace WebApp.Models
             var col_Moneda = columnas.FirstOrDefault(x => x.CampoTablaNom == "C_Moneda");
             var col_MontoPago = columnas.FirstOrDefault(x => x.CampoTablaNom == "I_MontoPago");
             var col_LugarPago = columnas.FirstOrDefault(x => x.CampoTablaNom == "T_LugarPago");
-            var col_CodAlu = columnas.FirstOrDefault(x => x.CampoTablaNom == "C_CodAlu");
+            var col_CodAlu = columnas.FirstOrDefault(x => x.CampoTablaNom == "C_CodDepositante");
             var col_CodRc = columnas.FirstOrDefault(x => x.CampoTablaNom == "C_CodRc");
             var col_ProcesoID = columnas.FirstOrDefault(x => x.CampoTablaNom == "I_ProcesoID");
             var col_FecVencto = columnas.FirstOrDefault(x => x.CampoTablaNom == "D_FecVencto");

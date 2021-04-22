@@ -40,7 +40,7 @@ namespace WebApp.Controllers
         {
             ViewBag.Title = "Procesos y Conceptos";
 
-            var lista = procesoModel.Listar_Procesos(2021);
+            var lista = procesoModel.Listar_Procesos(DateTime.Now.Year);
 
             return View(lista);
         }

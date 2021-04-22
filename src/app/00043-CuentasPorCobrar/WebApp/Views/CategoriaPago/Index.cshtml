@@ -7,7 +7,7 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb float-right small d-none d-sm-inline-flex">
                     <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")"><i class="fa fa-home">&nbsp;</i>Inicio</a></li>
-                    <li class="breadcrumb-item"><span><i class="fa bi-tools">&nbsp;</i>Matenimiento </span></li>
+                    <li class="breadcrumb-item"><span><i class="fa bi-tools">&nbsp;</i>Mantenimiento </span></li>
                     <li class="breadcrumb-item active"><span><i class="fa bi-grid-1x2-fill">&nbsp;</i>@ViewBag.Title </span></li>
                 </ol>
             </nav>
@@ -18,7 +18,7 @@
 
     <div class="col-12">
         <a href="@Url.Action("Create", "CategoriaPago")" class="btn btn-primary float-right modal-link">
-            <i class="fa bi-grid-1x2-fill"></i> Agregar categoria
+            <i class="fa bi-grid-1x2-fill"></i> Agregar plantilla Cuota
         </a>
 
         <p class="h3"><small>@ViewBag.Title registradas</small></p>
@@ -27,17 +27,19 @@
         <br />
         <div class="table-responsive" style="min-height:350px">
             @Html.Grid(Model).Columns(columns => {
-                   columns.Add(c => c.Nombre).SetWidth(350).Titled("Descripción").Filterable(true);
-                   columns.Add(c => c.NivelGrado).Titled("Nivel").Filterable(true);
-                   columns.Add(c => c.TipoAlumno).Titled("Tipo Alumno").Filterable(true);
-                   columns.Add(c => c.EsObligacion).Titled("Tipo").Filterable(true);
-                   columns.Add(c => c.Habilitado).SetWidth(100).Css("text-center").Encoded(false).Sanitized(false)
-                                       .RenderValueAs(model => model.Habilitado ?
+                    columns.Add(c => c.Nombre).SetWidth(350).Titled("Descripción").Filterable(true);
+                    columns.Add(c => c.NivelGrado).Titled("Nivel").Filterable(true);
+                    columns.Add(c => c.TipoAlumno).Titled("Tipo Alumno").Filterable(true);
+                    columns.Add(c => c.EsObligacion).Titled("Tipo").Filterable(true);
+                    columns.Add(c => c.Habilitado).SetWidth(100).Css("text-center").Encoded(false).Sanitized(false)
+                                        .RenderValueAs(model => model.Habilitado ?
                                                                                 @Html.Raw("<span id=\"td" + @model.Id + "\"><button type=\"submit\" class=\"btn btn-xs btn-success\" onclick=\"ChangeStateReloadPage(" + @model.Id + ", " + @model.Habilitado.ToString().ToLower() + ", '" + @Url.Action("ChangeState", "CategoriaPago") + "');\"><i class=\"fa fa-check-circle-o\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Habilitado</span></button></span>")
                                                                                 : @Html.Raw("<span id=\"td" + @model.Id + "\"><button type=\"submit\" class=\"btn btn-xs btn-secondary\" onclick=\"ChangeStateReloadPage(" + @model.Id + ", " + @model.Habilitado.ToString().ToLower() + ", '" + @Url.Action("ChangeState", "CategoriaPago") + "');\"><i class=\"fa fa-minus-circle\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Deshabilitado</span></button></span>"))
-                                       .Filterable(true).SetWidth(160).Titled("Estado");
+                                        .Filterable(true).SetWidth(160).Titled("Estado");
+                    columns.Add().SetWidth(250).Css("text-right").Encoded(false).Sanitized(false).
+                                        RenderValueAs(model => @<a href="@Url.Action("AgregarConceptos", "CategoriaPago", new { id = model.Id })" class="modal-link-lg"><i class="fa bi-ui-checks-grid" aria-hidden="true">&nbsp;</i><span class="d-none d-md-inline-block">Agregar conceptos</span></a>);
 
-                   columns.Add().SetWidth(200).Css("text-right").Encoded(false).Sanitized(false).RenderValueAs(model => @<a href="@Url.Action("Edit", "CategoriaPago", new { id = model.Id, area = "" })" class="modal-link"><i class="fa fa-pencil-square-o" aria-hidden="true">&nbsp;</i><span class="d-none d-md-inline-block">Editar</span></a>);
+                    columns.Add().SetWidth(120).Css("text-right").Encoded(false).Sanitized(false).RenderValueAs(model => @<a href="@Url.Action("Edit", "CategoriaPago", new { id = model.Id, area = "" })" class="modal-link"><i class="fa fa-pencil-square-o" aria-hidden="true">&nbsp;</i><span class="d-none d-md-inline-block">Editar</span></a>);
             }).WithPaging(12).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
         </div>
     </div>

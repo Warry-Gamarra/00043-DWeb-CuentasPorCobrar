@@ -114,6 +114,12 @@
   background: var(--cs-bg-primary-2);
 }
 
+.side-nav > li > ul > li.dropdown-header {
+  font-size: .9rem;
+  color: #b2babf;
+  padding-bottom: 0rem;
+}
+
 .side-nav > li > ul > li > a {
   font-size: 0.9em;
   display: block;

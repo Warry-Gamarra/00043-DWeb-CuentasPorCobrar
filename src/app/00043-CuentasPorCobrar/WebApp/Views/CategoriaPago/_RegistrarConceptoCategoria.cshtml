@@ -1,0 +1,118 @@
+﻿@model WebApp.ViewModels.ConceptoCategoriaPagoViewModel
+
+@Scripts.Render("~/bundles/jqueryval")
+<div class="modal-header bg-dark-gray" style="border-radius: .2rem .2rem 0px 0px">
+    <h5 class="modal-title text-center"><i class="fa fa-tag">&nbsp;</i> @ViewBag.Title </h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+
+@using (Ajax.BeginForm("ConceptosPlantillaSave", "CategoriaPago", new { area = "" }, new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "div_msg", OnBegin = "Load", OnComplete = "Stop" }))
+{
+    @Html.Hidden("Submited", 0)
+    @Html.AntiForgeryToken()
+    <div class="modal-body">
+        <div class="container-fluid" id="content-body">
+            <div class="row">
+                <div class="container-fluid">
+                    <div class="form-group form-row mt-4" id="search-container">
+                        <label for="inputConcepto" class="control-label col-sm-3 d-sm-inline-block d-none text-right ">Buscar concepto:</label>
+                        <div class="col-sm-5 col-9">
+                            @Html.DropDownList("inputConcepto", ViewBag.Conceptos as SelectList, "", new { Class = "select-filter form-control form-control-sm" })
+                        </div>
+                        <div class="col-sm-4 col-3">
+                            <button type="button" id="btn-agregar" class="btn btn-sm btn-outline-info"><i class="fa fa-check">&nbsp;</i> Seleccionar</button>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <p class="h5 mt-2 border-bottom">Conceptos de pago</p>
+                        <div id="table-conceptos">
+                            @Html.HiddenFor(model => model.CategoriaId)
+
+                            <table class="table table-hover table-sm">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>Concepto</th>
+                                        <th class="text-center">Cod. Clasificador</th>
+                                        <th class="text-right">Monto Mínimo</th>
+                                        <th class="text-right">Monto</th>
+                                        <th style="width:100px;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer" id="div_msg">
+        <button type="submit" class="btn btn-primary" id="btn-agregar"><i class="fa fa-save">&nbsp;</i>Guardar</button>
+        <button type="button" class="btn btn-secondary" id="btnCancel" data-dismiss="modal"><i class="fa fa-times-circle-o">&nbsp;</i>Cancelar</button>
+    </div>
+}
+
+<script>
+    $('.select-filter').select2({
+        dropdownParent: $('#modal-container-lg'),
+        placeholder: "[ SELECCIONAR ]"
+    }).on('hide', function (e) {
+        e.stopPropagation();
+    });
+
+    conceptos = [];
+    catalogo_conceptos = JSON.parse(htmlDecode('@ViewBag.ConceptosJson'));
+    conceptos = JSON.parse(htmlDecode('@Model.StrListaConceptos'));
+    drawTable(conceptos)
+
+    $('#btn-agregar').on('click', function (event) {
+        event.preventDefault();
+
+        let selectedValue = $('#inputConcepto').val();
+        if (selectedValue === "" || selectedValue == null) {
+            return false;
+        }
+
+        $('#inputConcepto option[value="' + selectedValue + '"]').remove();
+        conceptos.push(catalogo_conceptos.find(concepto => concepto['Id'] == selectedValue));
+        drawTable(conceptos);
+    })
+
+    $('#table-conceptos>table>tbody').on('click', 'button.remove-item', function (event) {
+        event.preventDefault();
+        let indexRow = $(this).data('index');
+        let conceptoDesc = conceptos[indexRow]['NombreConcepto'];
+        let opt = new Option(conceptos[indexRow]['Id'], conceptoDesc);
+        conceptos.splice(indexRow, 1);
+        drawTable(conceptos);
+        $(opt).html(conceptoDesc);
+        $('#inputConcepto').append(opt);
+    });
+
+    function drawTable(conceptos) {
+        let rowsTemplate = ''
+        $.each(conceptos, function (index, itemValue) {
+            rowsTemplate += `<tr>
+                                <td> ${itemValue.NombreConcepto} </td>
+                                <td class="text-center"> ${itemValue.Clasificador} </td>
+                                <td class="text-right"> ${itemValue.MontoMinimo.toFixed(2)}</td>
+                                <td class="text-right"> ${itemValue.Monto.toFixed(2)}</td>
+                                <td class="text-right">
+                                    <input type="hidden" name="Conceptos[${index}].Id" value="${itemValue.Id}"/>
+                                    <button class="btn btn-sm btn-outline-danger remove-item" data-index="${index}" data-id="${itemValue.Id}">
+                                        <i class="fa fa-trash-o"></i>
+                                    </button>
+                                </td>
+                            </tr>`;
+        })
+        $('#table-conceptos>table>tbody').html(rowsTemplate);
+    }
+
+    function GetConcepto(conceptoId) {
+    }
+
+    $('#modal-container-lg').on('hide.bs.modal', function (event) {
+        conceptos = null;
+    })
+</script>

@@ -28,10 +28,12 @@ namespace Domain.Entities
 
 
         private readonly TC_CategoriaPago _categoriaPago;
+        private readonly TI_ConceptoCategoriaPago _conceptoCategoriaPago;
 
         public CategoriaPago()
         {
             _categoriaPago = new TC_CategoriaPago();
+            _conceptoCategoriaPago = new TI_ConceptoCategoriaPago();
         }
 
         public CategoriaPago(TC_CategoriaPago table)
@@ -123,6 +125,42 @@ namespace Domain.Entities
                 Value = false,
                 Message = "Operación Inváiida."
             };
+        }
+
+        public Response ConceptosSave(int categoriaId, List<int> conceptosId)
+        {
+            DataTable dataTable = new DataTable();
+            dataTable.Columns.Add("C_ID");
+            dataTable.Columns.Add("B_Habilitado");
+
+            _conceptoCategoriaPago.I_CatPagoID = categoriaId;
+            foreach (var conceptoId in conceptosId)
+            {
+                dataTable.Rows.Add(conceptoId, true);
+            }
+
+            var result = new Response(_conceptoCategoriaPago.Save(dataTable));
+
+            return result;
+        }
+
+        public List<ConceptoEntity> GetConceptos(int categoriaId)
+        {
+            List<ConceptoEntity> conceptoEntities = new List<ConceptoEntity>();
+
+            foreach (var item in _conceptoCategoriaPago.FindByCategoriaID(categoriaId))
+            {
+                conceptoEntities.Add(new ConceptoEntity()
+                {
+                    I_ConceptoID = item.I_ConceptoID.Value,
+                    T_ConceptoDesc = item.T_ConceptoDesc,
+                    T_Clasificador = item.T_Clasificador,
+                    I_Monto = item.I_Monto,
+                    I_MontoMinimo = item.I_MontoMinimo
+                });
+            }
+
+            return conceptoEntities;
         }
     }
 }
