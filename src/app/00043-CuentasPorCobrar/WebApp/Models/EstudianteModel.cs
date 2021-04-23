@@ -105,7 +105,7 @@ namespace WebApp.Models
 
         private DataMatriculaResponse GuardarDatosRepositorio(string filePath, TipoAlumno tipoAlumno, int currentUserId)
         {
-            var matriculaSource = MatriculaSourceFactory.GetMatriculaSource(Path.GetExtension(filePath));
+            var matriculaSource = MatriculaSourceFactory.Get(Path.GetExtension(filePath));
 
             var dataMatriculas = matriculaSource.GetList(filePath);
 
@@ -125,9 +125,49 @@ namespace WebApp.Models
             catch (Exception) { }
         }
 
-        public bool CargarMultasPorNoVotar(string pathFile, HttpPostedFileBase file, TipoAlumno tipoAlumno, int currentUserId)
+        public MultaNoVotarResponse CargarMultasPorNoVotar(string serverPath, HttpPostedFileBase file, int currentUserId)
         {
-            throw new NotImplementedException();
+            if (file == null)
+            {
+                return new MultaNoVotarResponse()
+                {
+                    Message = "No existe archivo seleccionado"
+                };
+            }
+
+            MultaNoVotarResponse response;
+            string fileName = "";
+            
+            try
+            {
+                fileName = GuardarArchivoEnHost(serverPath, file);
+
+                response = GuardarDatosRepositorio(serverPath + fileName, currentUserId);
+            }
+            catch (Exception ex)
+            {
+                response = new MultaNoVotarResponse()
+                {
+                    Message = ex.Message
+                };
+            }
+            finally
+            {
+                RemoverArchivo(serverPath, fileName);
+            }
+
+            return response;
+        }
+
+        private MultaNoVotarResponse GuardarDatosRepositorio(string filePath, int currentUserId)
+        {
+            var alumnosSinVotoSoruce = AlumnosSinVotoSourceFactory.Get(Path.GetExtension(filePath));
+
+            var alumnosSinVoto = alumnosSinVotoSoruce.GetList(filePath);
+
+            var result = _estudiante.GrabarMultas(alumnosSinVoto, currentUserId);
+
+            return result;
         }
     }
 }

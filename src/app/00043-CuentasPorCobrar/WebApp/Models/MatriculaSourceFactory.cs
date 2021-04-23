@@ -8,7 +8,7 @@ namespace WebApp.Models
 {
     public class MatriculaSourceFactory
     {
-        public static IMatriculaSource GetMatriculaSource(string extension)
+        public static IMatriculaSource Get(string extension)
         {
             IMatriculaSource matriculaSource;
 

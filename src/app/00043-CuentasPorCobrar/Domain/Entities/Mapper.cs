@@ -271,5 +271,53 @@ namespace Domain.Entities
 
             return ctaDepoProceso;
         }
+
+        public static AlumnoSinVotoRegistradoEntity AlumnoSinVotoEntity_To_AlumnoSinVotoRegistradoEntity(AlumnoSinVotoEntity alumnoSinVotoEntity, bool B_Success, string T_Message)
+        {
+            var alumnosSinVotoRegistrado = new AlumnoSinVotoRegistradoEntity()
+            {
+                C_CodRC = alumnoSinVotoEntity.C_CodRC,
+                C_CodAlu = alumnoSinVotoEntity.C_CodAlu,
+                I_Anio = alumnoSinVotoEntity.I_Anio,
+                C_Periodo = alumnoSinVotoEntity.C_Periodo,
+                B_Success = B_Success,
+                T_Message = T_Message
+            };
+
+            return alumnosSinVotoRegistrado;
+        }
+
+        public static DataTable AlumnoSinVotoEntity_To_DataTable(List<AlumnoSinVotoEntity> alumnosSinVotoEntity)
+        {
+            DataTable dataTable = new DataTable();
+            dataTable.Columns.Add("I_Anio");
+            dataTable.Columns.Add("C_Periodo");
+            dataTable.Columns.Add("C_CodRC");
+            dataTable.Columns.Add("C_CodAlu");
+
+            alumnosSinVotoEntity.ForEach(x => dataTable.Rows.Add(
+                x.I_Anio,
+                x.C_Periodo,
+                x.C_CodAlu,
+                x.C_CodRC
+            ));
+
+            return dataTable;
+        }
+
+        public static AlumnoSinVotoRegistradoEntity MultaNoVotarResult_To_AlumnoSinVotoRegistradoEntity(MultaNoVotarResult result)
+        {
+            var alumnoSinVotoRegistradoEntity = new AlumnoSinVotoRegistradoEntity()
+            {
+                I_Anio = result.I_Anio,
+                C_Periodo = result.C_Periodo,
+                C_CodAlu = result.C_CodAlu,
+                C_CodRC = result.C_CodRC,
+                B_Success = result.B_Success,
+                T_Message = result.T_Message
+            };
+
+            return alumnoSinVotoRegistradoEntity;
+        }
     }
 }

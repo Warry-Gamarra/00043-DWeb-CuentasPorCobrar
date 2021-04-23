@@ -51,13 +51,6 @@ namespace WebApp.Controllers
             return PartialView("_SeleccionarArchivo", model);
         }
 
-        [Route("operaciones/cargar-multas-posgrado")]
-        public ActionResult CargarArchivoMultaPosgrado()
-        {
-            var model = _seleccionarArchivoModel.Init(TipoAlumno.Posgrado, TipoArchivoAlumno.MultaNoVotar);
-            return PartialView("_SeleccionarArchivo", model);
-        }
-               
         [HttpPost]
         public ActionResult CargarArchivoMatricula(HttpPostedFileBase file, TipoAlumno tipoAlumno)
         {
@@ -69,26 +62,8 @@ namespace WebApp.Controllers
 
             return Json(response, JsonRequestBehavior.AllowGet);
         }
-        
-        [HttpPost]
-        [Route("operaciones/cargar-multas-pregrado")]
-        public ActionResult CargarArchivoMultaPregrado(HttpPostedFileBase file, TipoAlumno tipoAlumno)
-        {
-            var result = _seleccionarArchivoModel.CargarMultasPorNoVotar(Server.MapPath("~/Upload/MultaNoVotar/"), file, tipoAlumno, WebSecurity.CurrentUserId);
-
-            return Json(result, JsonRequestBehavior.AllowGet);
-        }
-        
-        [HttpPost]
-        [Route("operaciones/cargar-multas-posgrado")]
-        public ActionResult CargarArchivoMultaPosgrado(HttpPostedFileBase file, TipoAlumno tipoAlumno)
-        {
-            var result = _seleccionarArchivoModel.CargarMultasPorNoVotar(Server.MapPath("~/Upload/MultaNoVotar/"), file, tipoAlumno, WebSecurity.CurrentUserId);
-
-            return Json(result, JsonRequestBehavior.AllowGet);
-        }
-
-        public ActionResult DescargarObservadorPregrado()
+       
+        public ActionResult DescargarRegistrosObservados()
         {
             if (Session["MATRICULA_RESPONSE"] == null)
                 return  RedirectToAction("cargar-estudiantes", "operaciones");
@@ -135,6 +110,58 @@ namespace WebApp.Controllers
                     var content = stream.ToArray();
 
                     return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Resultado.xlsx");
+                }
+            }
+        }
+
+        [HttpPost]
+        public ActionResult CargarArchivoMulta(HttpPostedFileBase file, TipoAlumno tipoAlumno)
+        {
+            var result = _seleccionarArchivoModel.CargarMultasPorNoVotar(Server.MapPath("~/Upload/MultaNoVotar/"), file, WebSecurity.CurrentUserId);
+
+            var response = Mapper.MultaNoVotarResponse_To_Response(result);
+
+            Session["MULTA_SIN_REGISTRAR_RESPONSE"] = result.AlumnoSinVotoRegistrado;
+
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult DescargarMultasSinRegistrar()
+        {
+            if (Session["MULTA_SIN_REGISTRAR_RESPONSE"] == null)
+                return RedirectToAction("cargar-estudiantes", "operaciones");
+
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.Worksheets.Add("Students");
+                var currentRow = 1;
+
+                #region Header
+                worksheet.Cell(currentRow, 1).Value = "Año";
+                worksheet.Cell(currentRow, 2).Value = "P";
+                worksheet.Cell(currentRow, 3).Value = "Cod_alu";
+                worksheet.Cell(currentRow, 4).Value = "Cod_rc";
+                worksheet.Cell(currentRow, 5).Value = "Observación";
+                #endregion
+
+                #region Body
+                foreach (var item in (List<Domain.Entities.AlumnoSinVotoRegistradoEntity>)Session["MULTA_SIN_REGISTRAR_RESPONSE"])
+                {
+                    currentRow++;
+                    worksheet.Cell(currentRow, 1).Value = item.I_Anio;
+                    worksheet.Cell(currentRow, 2).SetValue<string>(item.C_Periodo);
+                    worksheet.Cell(currentRow, 3).SetValue<string>(item.C_CodAlu);
+                    worksheet.Cell(currentRow, 4).SetValue<string>(item.C_CodRC);
+                    worksheet.Cell(currentRow, 5).SetValue<string>(item.T_Message);
+                }
+                #endregion
+
+                using (var stream = new MemoryStream())
+                {
+                    workbook.SaveAs(stream);
+                    var content = stream.ToArray();
+
+                    return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Resultado del Registro de Multas.xlsx");
                 }
             }
         }

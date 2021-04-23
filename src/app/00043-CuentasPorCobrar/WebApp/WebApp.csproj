@@ -421,6 +421,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountModel.cs" />
+    <Compile Include="Models\AlumnosSinVotoExcelSource.cs" />
+    <Compile Include="Models\AlumnosSinVotoSourceFactory.cs" />
     <Compile Include="Models\CategoriaPagoModel.cs" />
     <Compile Include="Models\CtaDepoProcesoModel.cs" />
     <Compile Include="Models\CuotaPagoModel.cs" />
@@ -441,6 +443,7 @@
     <Compile Include="Models\Facades\IObligacionServiceFacade.cs" />
     <Compile Include="Models\Facades\IProgramasClientFacade.cs" />
     <Compile Include="Models\Facades\ProgramasClientFacade.cs" />
+    <Compile Include="Models\IAlumnosSinVotoSource.cs" />
     <Compile Include="Models\IMatriculaSource.cs" />
     <Compile Include="Models\MatriculaDbfSource.cs" />
     <Compile Include="Models\MatriculaExcelSource.cs" />

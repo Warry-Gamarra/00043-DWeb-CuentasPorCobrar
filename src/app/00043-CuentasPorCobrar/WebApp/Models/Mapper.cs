@@ -218,5 +218,38 @@ namespace WebApp.Models
             };
             return model;
         }
+
+        public static AlumnoSinVotoEntity MatriculaReader_To_AlumnoSinVotoEntity(IExcelDataReader reader)
+        {
+            string stringValue; int intValue;
+
+            var alumnoSinVotoEntity = new AlumnoSinVotoEntity()
+            {
+                C_Periodo = reader.GetValue(1)?.ToString(),
+                C_CodAlu = reader.GetValue(2)?.ToString(),
+                C_CodRC = reader.GetValue(3)?.ToString()
+            };
+
+            if (reader.GetValue(0) != null)
+            {
+                stringValue = reader.GetValue(0).ToString();
+
+                if (int.TryParse(stringValue, out intValue))
+                    alumnoSinVotoEntity.I_Anio = intValue;
+            }
+
+            return alumnoSinVotoEntity;
+        }
+
+        public static Response MultaNoVotarResponse_To_Response(MultaNoVotarResponse multaNoVotarResponse)
+        {
+            var response = new Response()
+            {
+                Value = multaNoVotarResponse.Success,
+                Message = multaNoVotarResponse.Message
+            };
+
+            return response;
+        }
     }
 }

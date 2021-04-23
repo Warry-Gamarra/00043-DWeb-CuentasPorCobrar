@@ -777,3 +777,19 @@ go
 
 
 
+CREATE TABLE TC_AlumnoMultaNoVotar
+( 
+	I_AluMultaID           int IDENTITY ( 1,1 ) ,
+	C_CodRc              varchar(3)  NOT NULL ,
+	C_CodAlu             varchar(20)  NOT NULL ,
+	I_Anio               int  NOT NULL ,
+	I_Periodo            int  NOT NULL ,
+	B_Habilitado         bit  NOT NULL ,
+	B_Eliminado          bit  NOT NULL ,
+	I_UsuarioCre         int  NULL ,
+	D_FecCre             datetime  NULL ,
+	I_UsuarioMod         int  NULL ,
+	D_FecMod             datetime  NULL ,
+	CONSTRAINT PK_AlumnoMultaNoVotar PRIMARY KEY  CLUSTERED (I_AluMultaID ASC)
+)
+go

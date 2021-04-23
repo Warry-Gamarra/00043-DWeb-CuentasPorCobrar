@@ -24,7 +24,7 @@ namespace Domain.Helpers
 
             if (DataMatriculasObs.Count > 0)
                 Message = Message + " Se ha encontrado: " + DataMatriculasObs.Count.ToString() +
-                    " observacion(es). Haga <a href='/Estudiantes/DescargarObservadorPregrado'>click aquí</a> para descargar la lista de observaciones.";
+                    " observacion(es). Haga <a href='/Estudiantes/DescargarRegistrosObservados'>click aquí</a> para descargar la lista de observaciones.";
         }
 
         public bool Success { get; set; }
