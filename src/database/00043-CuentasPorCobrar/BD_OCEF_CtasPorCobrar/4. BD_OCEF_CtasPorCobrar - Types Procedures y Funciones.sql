@@ -224,6 +224,16 @@ BEGIN
 		VALUES(@I_CatPagoID, @I_Anio, @D_FecVencto, @T_ProcesoDesc, @N_CodBanco, @I_Prioridad, @I_Periodo, 0, 1, 0, @I_UsuarioCre, getdate())
 		
 		SET @I_ProcesoID = SCOPE_IDENTITY()
+
+		INSERT INTO TI_ConceptoPago
+				   (I_ProcesoID, I_ConceptoID, T_ConceptoPagoDesc, T_Clasificador, B_Calculado, I_Calculado, B_AnioPeriodo, I_Anio, I_Periodo, B_ConceptoAgrupa, 
+				    M_Monto, M_MontoMinimo, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
+			SELECT @I_ProcesoID, CCP.I_ConceptoID, C.T_ConceptoDesc, C.T_Clasificador, C.B_Calculado, C.I_Calculado, 1, @I_Anio, @I_Periodo, C.B_ConceptoAgrupa,  
+					C.I_Monto,C.I_MontoMinimo, 1 as B_Habilitado, 0 as B_Eliminado, @I_UsuarioCre, getdate()
+			  FROM TI_ConceptoCategoriaPago CCP
+				   INNER JOIN TC_Concepto C ON CCP.I_ConceptoID = C.I_ConceptoID
+			 WHERE I_CatPagoID = @I_CatPagoID
+
 		SET @B_Result = 1
 		SET @T_Message = 'Inserción de datos correcta.'
 	END TRY
@@ -993,6 +1003,9 @@ IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.DOMAINS WHERE DOMAIN_NAME = 'type_Se
 	IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarCategoriaPago')
 		DROP PROCEDURE [dbo].[USP_U_ActualizarCategoriaPago]
 
+	IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_IU_GrabarConceptosCategoriaPago')
+		DROP PROCEDURE [dbo].[USP_IU_GrabarConceptosCategoriaPago]
+
 	DROP TYPE [dbo].[type_SelectItems]
 END
 GO
@@ -1171,7 +1184,7 @@ BEGIN
 		WHEN NOT MATCHED BY TARGET THEN 
 				INSERT (I_CatPagoID, I_ConceptoID )
 				VALUES	(@I_CatPagoID, CAST(SRC.C_ID as int))
-		WHEN NOT MATCHED BY SOURCE THEN 
+		WHEN NOT MATCHED BY SOURCE AND TRG.I_CatPagoID = @I_CatPagoID THEN 
 				DELETE;
 
 		SET @B_Result = 1
