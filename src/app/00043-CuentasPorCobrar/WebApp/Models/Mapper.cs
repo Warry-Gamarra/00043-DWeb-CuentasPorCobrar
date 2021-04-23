@@ -219,11 +219,11 @@ namespace WebApp.Models
             return model;
         }
 
-        public static AlumnoSinVotoEntity MatriculaReader_To_AlumnoSinVotoEntity(IExcelDataReader reader)
+        public static AlumnoMultaNoVotarEntity MatriculaReader_To_AlumnoMultaNoVotarEntity(IExcelDataReader reader)
         {
             string stringValue; int intValue;
 
-            var alumnoSinVotoEntity = new AlumnoSinVotoEntity()
+            var alumnoSinVotoEntity = new AlumnoMultaNoVotarEntity()
             {
                 C_Periodo = reader.GetValue(1)?.ToString(),
                 C_CodAlu = reader.GetValue(2)?.ToString(),

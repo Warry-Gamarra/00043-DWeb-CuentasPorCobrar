@@ -165,7 +165,7 @@ namespace WebApp.Models
 
             var alumnosSinVoto = alumnosSinVotoSoruce.GetList(filePath);
 
-            var result = _estudiante.GrabarMultas(alumnosSinVoto, currentUserId);
+            var result = _estudiante.GrabarAlumnosConMultaPorVoto(alumnosSinVoto, currentUserId);
 
             return result;
         }

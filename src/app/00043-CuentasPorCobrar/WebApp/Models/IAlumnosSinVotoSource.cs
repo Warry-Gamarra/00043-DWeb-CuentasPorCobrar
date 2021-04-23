@@ -8,6 +8,6 @@ namespace WebApp.Models
 {
     public interface IAlumnosSinVotoSource
     {
-        List<AlumnoSinVotoEntity> GetList(string filePath);
+        List<AlumnoMultaNoVotarEntity> GetList(string filePath);
     }
 }

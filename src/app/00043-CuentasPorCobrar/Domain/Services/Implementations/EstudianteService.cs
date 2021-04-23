@@ -156,69 +156,69 @@ namespace Domain.Services.Implementations
             return dataMatricula.B_Ingresante == null;
         }
 
-        public MultaNoVotarResponse GrabarMultas(List<AlumnoSinVotoEntity> alumnoSinVotoEntity, int currentUserId)
+        public MultaNoVotarResponse GrabarAlumnosConMultaPorVoto(List<AlumnoMultaNoVotarEntity> alumnoMultaNoVotarEntity, int currentUserId)
         {
-            var observados = new List<AlumnoSinVotoRegistradoEntity>();
+            var observados = new List<MultaNoVotarSinRegistrarEntity>();
 
             //Validando el código de alumno.
             observados.AddRange(
-                alumnoSinVotoEntity.Where(a => CampoCodigoAlumnoIncorrecto(a.C_CodAlu)).
-                    Select(a => Mapper.AlumnoSinVotoEntity_To_AlumnoSinVotoRegistradoEntity(a, false, "El campo Código de alumno es incorrecto."))
+                alumnoMultaNoVotarEntity.Where(a => CampoCodigoAlumnoIncorrecto(a.C_CodAlu)).
+                    Select(a => Mapper.AlumnoMultaNoVotarEntity_To_MultaNoVotarSinRegistrarEntity(a, false, "El campo Código de alumno es incorrecto."))
             );
 
-            alumnoSinVotoEntity.RemoveAll(a => CampoCodigoAlumnoIncorrecto(a.C_CodAlu));
+            alumnoMultaNoVotarEntity.RemoveAll(a => CampoCodigoAlumnoIncorrecto(a.C_CodAlu));
 
             //Validando el cod_rc.
             observados.AddRange(
-                alumnoSinVotoEntity.Where(a => CampoCodRcIncorrecto(a.C_CodRC)).
-                    Select(a => Mapper.AlumnoSinVotoEntity_To_AlumnoSinVotoRegistradoEntity(a, false, "El campo Cod_Rc es incorrecto."))
+                alumnoMultaNoVotarEntity.Where(a => CampoCodRcIncorrecto(a.C_CodRC)).
+                    Select(a => Mapper.AlumnoMultaNoVotarEntity_To_MultaNoVotarSinRegistrarEntity(a, false, "El campo Cod_Rc es incorrecto."))
             );
 
-            alumnoSinVotoEntity.RemoveAll(a => CampoCodRcIncorrecto(a.C_CodRC));
+            alumnoMultaNoVotarEntity.RemoveAll(a => CampoCodRcIncorrecto(a.C_CodRC));
 
             //Validando códigos duplicados.
-            var codigosRepetidos = alumnoSinVotoEntity.GroupBy(x => new { x.C_CodRC, x.C_CodAlu }).Where(x => x.Count() > 1);
+            var codigosRepetidos = alumnoMultaNoVotarEntity.GroupBy(x => new { x.C_CodRC, x.C_CodAlu }).Where(x => x.Count() > 1);
 
             if (codigosRepetidos != null && codigosRepetidos.Count() > 0)
             {
                 codigosRepetidos.ToList().ForEach(
                     c => c.ToList().ForEach(rep => {
-                        observados.Add(Mapper.AlumnoSinVotoEntity_To_AlumnoSinVotoRegistradoEntity(rep, false, "Código de alumno repetido."));
+                        observados.Add(Mapper.AlumnoMultaNoVotarEntity_To_MultaNoVotarSinRegistrarEntity(rep, false, "Código de alumno repetido."));
 
-                        alumnoSinVotoEntity.RemoveAll(a => a.C_CodRC == rep.C_CodRC && a.C_CodAlu == rep.C_CodAlu);
+                        alumnoMultaNoVotarEntity.RemoveAll(a => a.C_CodRC == rep.C_CodRC && a.C_CodAlu == rep.C_CodAlu);
                     })
                 );
             }
 
             //Validando el campo año.
             observados.AddRange(
-                alumnoSinVotoEntity.Where(a => CampoAnioIncorrecto(a.I_Anio)).
-                    Select(a => Mapper.AlumnoSinVotoEntity_To_AlumnoSinVotoRegistradoEntity(a, false, "El campo Año es incorrecto."))
+                alumnoMultaNoVotarEntity.Where(a => CampoAnioIncorrecto(a.I_Anio)).
+                    Select(a => Mapper.AlumnoMultaNoVotarEntity_To_MultaNoVotarSinRegistrarEntity(a, false, "El campo Año es incorrecto."))
             );
 
-            alumnoSinVotoEntity.RemoveAll(a => CampoAnioIncorrecto(a.I_Anio));
+            alumnoMultaNoVotarEntity.RemoveAll(a => CampoAnioIncorrecto(a.I_Anio));
 
             //Validando el campo periodo.
             observados.AddRange(
-                alumnoSinVotoEntity.Where(a => CampoPeriodoIncorrecto(a.C_Periodo)).
-                    Select(a => Mapper.AlumnoSinVotoEntity_To_AlumnoSinVotoRegistradoEntity(a, false, "El campo Periodo es incorrecto."))
+                alumnoMultaNoVotarEntity.Where(a => CampoPeriodoIncorrecto(a.C_Periodo)).
+                    Select(a => Mapper.AlumnoMultaNoVotarEntity_To_MultaNoVotarSinRegistrarEntity(a, false, "El campo Periodo es incorrecto."))
             );
 
-            alumnoSinVotoEntity.RemoveAll(a => CampoPeriodoIncorrecto(a.C_Periodo));
+            alumnoMultaNoVotarEntity.RemoveAll(a => CampoPeriodoIncorrecto(a.C_Periodo));
 
-            if (alumnoSinVotoEntity.Count > 0)
+            if (alumnoMultaNoVotarEntity.Count > 0)
             {
-                var grabarAlumnosSinVoto = new USP_IU_GrabarAlumnosSinVoto()
+                var grabarAlumnosSinVoto = new USP_I_GrabarAlumnoMultaNoVotar()
                 {
                     UserID = currentUserId,
                     D_FecRegistro = DateTime.Now
                 };
 
-                var dataTable = Mapper.AlumnoSinVotoEntity_To_DataTable(alumnoSinVotoEntity);
+                var dataTable = Mapper.AlumnoMultaNoVotarEntity_To_DataTable(alumnoMultaNoVotarEntity);
 
                 var grabarAlumnosSinVotoResult = grabarAlumnosSinVoto.Execute(dataTable);
 
-                observados.AddRange(grabarAlumnosSinVotoResult.Select(r => Mapper.MultaNoVotarResult_To_AlumnoSinVotoRegistradoEntity(r)));
+                observados.AddRange(grabarAlumnosSinVotoResult.Select(r => Mapper.MultaNoVotarResult_To_MultaNoVotarSinRegistrarEntity(r)));
             }
 
             var result = new MultaNoVotarResponse(observados);

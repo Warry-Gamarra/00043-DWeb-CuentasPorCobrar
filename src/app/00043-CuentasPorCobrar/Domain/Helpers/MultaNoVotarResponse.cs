@@ -11,19 +11,19 @@ namespace Domain.Helpers
     {
         public MultaNoVotarResponse()
         {
-            AlumnoSinVotoRegistrado = new List<AlumnoSinVotoRegistradoEntity>();
+            MultasSinRegistrar = new List<MultaNoVotarSinRegistrarEntity>();
         }
 
-        public MultaNoVotarResponse(List<AlumnoSinVotoRegistradoEntity> alumnoSinVotoRegistrado)
+        public MultaNoVotarResponse(List<MultaNoVotarSinRegistrarEntity> multasSinRegistrar)
         {
-            this.AlumnoSinVotoRegistrado = alumnoSinVotoRegistrado;
+            this.MultasSinRegistrar = multasSinRegistrar;
 
             Success = true;
 
             Message = "El registro de los alumnos que no votaron ha finalizado.";
 
-            if (AlumnoSinVotoRegistrado.Count > 0)
-                Message = Message + " Se ha encontrado: " + AlumnoSinVotoRegistrado.Count.ToString() +
+            if (MultasSinRegistrar.Count > 0)
+                Message = Message + " Se ha encontrado: " + MultasSinRegistrar.Count.ToString() +
                     " observacion(es). Haga <a href='/Estudiantes/DescargarMultasSinRegistrar'>click aquí</a> para descargar la lista de observaciones.";
         }
 
@@ -31,6 +31,6 @@ namespace Domain.Helpers
 
         public string Message { get; set; }
 
-        public List<AlumnoSinVotoRegistradoEntity> AlumnoSinVotoRegistrado { get; set; }
+        public List<MultaNoVotarSinRegistrarEntity> MultasSinRegistrar { get; set; }
     }
 }

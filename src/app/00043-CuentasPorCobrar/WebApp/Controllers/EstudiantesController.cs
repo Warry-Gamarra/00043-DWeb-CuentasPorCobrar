@@ -121,14 +121,14 @@ namespace WebApp.Controllers
 
             var response = Mapper.MultaNoVotarResponse_To_Response(result);
 
-            Session["MULTA_SIN_REGISTRAR_RESPONSE"] = result.AlumnoSinVotoRegistrado;
+            Session["MULTAS_SIN_REGISTRAR_RESPONSE"] = result.MultasSinRegistrar;
 
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult DescargarMultasSinRegistrar()
         {
-            if (Session["MULTA_SIN_REGISTRAR_RESPONSE"] == null)
+            if (Session["MULTAS_SIN_REGISTRAR_RESPONSE"] == null)
                 return RedirectToAction("cargar-estudiantes", "operaciones");
 
             using (var workbook = new XLWorkbook())
@@ -145,7 +145,7 @@ namespace WebApp.Controllers
                 #endregion
 
                 #region Body
-                foreach (var item in (List<Domain.Entities.AlumnoSinVotoRegistradoEntity>)Session["MULTA_SIN_REGISTRAR_RESPONSE"])
+                foreach (var item in (List<Domain.Entities.MultaNoVotarSinRegistrarEntity>)Session["MULTAS_SIN_REGISTRAR_RESPONSE"])
                 {
                     currentRow++;
                     worksheet.Cell(currentRow, 1).Value = item.I_Anio;

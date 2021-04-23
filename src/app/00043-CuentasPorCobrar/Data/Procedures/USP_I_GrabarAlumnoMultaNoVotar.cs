@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Data.Procedures
 {
-    public class USP_IU_GrabarAlumnosSinVoto
+    public class USP_I_GrabarAlumnoMultaNoVotar
     {
         public int UserID { get; set; }
         public DateTime D_FecRegistro { get; set; }
@@ -25,12 +25,12 @@ namespace Data.Procedures
 
             try
             {
-                string s_command = @"USP_IU_GrabarAlumnosSinVoto";
+                string s_command = @"USP_I_GrabarAlumnoMultaNoVotar";
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
                     parameters = new DynamicParameters();
-                    parameters.Add(name: "Tbl_AlumnosSinVoto", value: dataTable.AsTableValuedParameter("dbo.type_dataAlumnoSinVoto"));
+                    parameters.Add(name: "Tbl_AlumnosMultaNoVotar", value: dataTable.AsTableValuedParameter("dbo.type_dataAlumnoMultaNoVotar"));
                     parameters.Add(name: "D_FecRegistro", dbType: DbType.DateTime, value: this.D_FecRegistro);
                     parameters.Add(name: "UserID", dbType: DbType.Int32, value: this.UserID);
                     parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);

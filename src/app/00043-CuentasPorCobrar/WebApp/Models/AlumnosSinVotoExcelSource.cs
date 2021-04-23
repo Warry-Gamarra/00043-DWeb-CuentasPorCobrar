@@ -12,9 +12,9 @@ namespace WebApp.Models
     {
         readonly string[] expectedColNames = { "Año", "p", "Cod_alu", "Cod_rc" };
 
-        public List<AlumnoSinVotoEntity> GetList(string filePath)
+        public List<AlumnoMultaNoVotarEntity> GetList(string filePath)
         {
-            var alumnosSinVoto = new List<AlumnoSinVotoEntity>();
+            var alumnoMultaNoVotarEntity = new List<AlumnoMultaNoVotarEntity>();
 
             using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
             {
@@ -42,7 +42,7 @@ namespace WebApp.Models
                             }
                             else
                             {
-                                alumnosSinVoto.Add(Mapper.MatriculaReader_To_AlumnoSinVotoEntity(reader));
+                                alumnoMultaNoVotarEntity.Add(Mapper.MatriculaReader_To_AlumnoMultaNoVotarEntity(reader));
                             }
                         }
 
@@ -51,7 +51,7 @@ namespace WebApp.Models
                 }
             }
 
-            return alumnosSinVoto;
+            return alumnoMultaNoVotarEntity;
         }
     }
 }
