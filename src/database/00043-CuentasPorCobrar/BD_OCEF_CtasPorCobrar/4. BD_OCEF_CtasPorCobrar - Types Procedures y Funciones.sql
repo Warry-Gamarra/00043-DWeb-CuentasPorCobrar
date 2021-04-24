@@ -3050,7 +3050,7 @@ GO
 /*-----------------------------------------------------------*/
 IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.DOMAINS WHERE DOMAIN_NAME = 'type_dataAlumnoMultaNoVotar') BEGIN
 	IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_GrabarAlumnoMultaNoVotar')
-		DROP PROCEDURE [dbo].[USP_IU_GrabarAlumnoMultaNoVotar]
+		DROP PROCEDURE [dbo].[USP_I_GrabarAlumnoMultaNoVotar]
 
 	DROP TYPE [dbo].[type_dataAlumnoMultaNoVotar]
 END
