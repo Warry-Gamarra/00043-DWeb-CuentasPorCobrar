@@ -686,6 +686,7 @@ CREATE PROCEDURE [dbo].[USP_I_GrabarEntidadFinanciera]
 	 @I_EntidadFinanID	int
 	,@T_EntidadDesc		varchar(250)
 	,@B_Habilitado		bit
+	,@B_Archivos		bit
 	,@D_FecCre			datetime
 	,@CurrentUserId		int
 
@@ -702,9 +703,12 @@ BEGIN
 
 		SET @I_EntidadFinanID = SCOPE_IDENTITY();
 
-		INSERT INTO TI_TipoArchivo_EntidadFinanciera(I_EntidadFinanID, I_TipoArchivoID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
-							SELECT @I_EntidadFinanID, I_TipoArchivoID, 0, 0, @CurrentUserId, @D_FecCre
-							FROM TC_TipoArchivo
+		IF (@B_Archivos = 1)
+		BEGIN
+			INSERT INTO TI_TipoArchivo_EntidadFinanciera(I_EntidadFinanID, I_TipoArchivoID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
+								SELECT @I_EntidadFinanID, I_TipoArchivoID, 0, 0, @CurrentUserId, @D_FecCre
+								FROM TC_TipoArchivo
+		END
 
 		COMMIT TRANSACTION
 

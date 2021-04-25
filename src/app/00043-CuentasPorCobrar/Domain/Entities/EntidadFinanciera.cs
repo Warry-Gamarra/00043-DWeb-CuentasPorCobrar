@@ -57,12 +57,7 @@ namespace Domain.Entities
             var archivosEntidad = _archivoEntFinanRepository.Find();
             foreach (var item in _entFinanRepository.Find())
             {
-                bool tieneArchivos = false;
-                if (archivosEntidad.Where(x => x.I_EntidadFinanID == item.I_EntidadFinanID).Count() > 0)
-                {
-                    tieneArchivos = true;
-                }
-
+                bool tieneArchivos = ExisteListaArchivos(item.I_EntidadFinanID, archivosEntidad);
                 result.Add(new EntidadFinanciera(item, tieneArchivos));
             }
 
@@ -76,12 +71,7 @@ namespace Domain.Entities
 
             if (data != null)
             {
-                bool tieneArchivos = false;
-                if (archivosEntidad.Where(x => x.I_EntidadFinanID == data.I_EntidadFinanID).Count() > 0)
-                {
-                    tieneArchivos = true;
-                }
-
+                bool tieneArchivos = ExisteListaArchivos(entidadFinanId, archivosEntidad); ;
                 return new EntidadFinanciera(data, tieneArchivos);
             }
             return new EntidadFinanciera()
@@ -104,7 +94,7 @@ namespace Domain.Entities
             {
                 case SaveOption.Insert:
                     _entFinanRepository.D_FecCre = DateTime.Now;
-                    return new Response(_entFinanRepository.Insert(currentUserId));
+                    return new Response(_entFinanRepository.Insert(entidadFinanciera.ArchivosEntidad, currentUserId));
 
                 case SaveOption.Update:
                     _entFinanRepository.D_FecMod = DateTime.Now;
@@ -125,6 +115,16 @@ namespace Domain.Entities
             _archivoEntFinanRepository.D_FecCre = DateTime.Now;
 
             return new Response(_archivoEntFinanRepository.HabilitarArchivosEntidadFinanciera());
+        }
+
+
+        private bool ExisteListaArchivos(int entidadFinancieraId, List<TI_TipoArchivo_EntidadFinanciera> archivosEntidad)
+        {
+            if (archivosEntidad.Where(x => x.I_EntidadFinanID == entidadFinancieraId).Count() > 0)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

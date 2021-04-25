@@ -36,10 +36,10 @@ namespace WebApp.ViewModels
         [Required]
         public string NombreEntidad { get; set; }
 
-        [Display(Name = "Estado")]
+        [Display(Name = "Habilitado")]
         public bool Habilitado { get; set; }
 
-        [Display(Name = "Tipos de archivo")]
+        [Display(Name = "Habilitar archivos para configuración")]
         public bool HabilitarArchivos { get; set; }
 
 

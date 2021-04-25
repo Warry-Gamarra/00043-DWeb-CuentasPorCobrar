@@ -51,7 +51,7 @@ namespace WebApp.Models
                 Id = model.Id.HasValue ? model.Id.Value : 0,
                 Nombre = model.NombreEntidad,
                 Habilitado = model.Habilitado,
-                
+                ArchivosEntidad = model.HabilitarArchivos,
                 FechaActualiza =  DateTime.Now
             };
 

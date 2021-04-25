@@ -38,7 +38,7 @@ namespace WebApp.Controllers
         [HttpGet]
         public ActionResult Create()
         {
-            ViewBag.Title = "Agregar Entidad Financiera";
+            ViewBag.Title = "Agregar entidad financiera";
 
             return PartialView("_RegistrarEntidadFinanciera", new EntidadFinancieraRegistroViewModel());
         }
@@ -47,7 +47,7 @@ namespace WebApp.Controllers
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            ViewBag.Title = "Editar Clasificador";
+            ViewBag.Title = "Editar entidad financiera";
 
             return PartialView("_RegistrarEntidadFinanciera", _entidadFinanciera.Find(id));
         }

@@ -7,7 +7,7 @@
     <h5 class="modal-title text-center"><i class="fa fa-bank">&nbsp;</i> @ViewBag.Title</h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 </div>
-@using (Ajax.BeginForm("Save", "EntidadFinanciera", new { area = "" }, new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "div_msg", OnBegin = "Load", OnSuccess="Submited", OnComplete = "Stop" }))
+@using (Ajax.BeginForm("Save", "EntidadFinanciera", new { area = "" }, new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "div_msg", OnBegin = "Load", OnSuccess = "Submited", OnComplete = "Stop" }))
 {
     @Html.AntiForgeryToken()
     <div class="modal-body">
@@ -23,25 +23,29 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-md-4 control-label">@Html.DisplayNameFor(model => model.Habilitado)</label>
+                <label class="col-md-4 control-label" for="Habilitado">@Html.DisplayNameFor(model => model.Habilitado)</label>
                 <div class="col-md-8">
                     @Html.CheckBoxFor(model => model.Habilitado)
-                    <label class="form-check-label" for="Habilitado">
-                        Habilitar
-                    </label>
                 </div>
             </div>
 
             <fieldset>
                 <legend class="fa-1x">Archivos de intercambio</legend>
-                <div class="form-group row">
-                    <label class="col-md-4 control-label">@Html.DisplayNameFor(model => model.HabilitarArchivos)</label>
-                    <div class="col-md-8">
-                        @Html.CheckBoxFor(model => model.HabilitarArchivos)
-                        <label class="form-check-label" for="HabilitarArchivos">
-                            Habilitar
-                        </label>
-                    </div>
+                <div class="form-group form-row">
+                    <label class="col-md-7 control-label form-check-label" for="HabilitarArchivos">@Html.DisplayNameFor(model => model.HabilitarArchivos)</label>
+                    @*@Html.CheckBoxFor(model => model.HabilitarArchivos)*@
+                    @if (Model.Id.HasValue)
+                    {
+                        <div class="col-md-5">
+                            @Html.CheckBoxFor(model => model.HabilitarArchivos, new { disabled = "disabled" })
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="col-md-5">
+                            @Html.CheckBoxFor(model => model.HabilitarArchivos)
+                        </div>
+                    }
                 </div>
             </fieldset>
         </div>
