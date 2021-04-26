@@ -16,5 +16,6 @@ namespace Domain.Entities
         public int I_Periodo { get; set; }
         public decimal M_MontoMinimo { get; set; }
         public decimal M_Monto { get; set; }
+        public bool B_Habilitado { get; set; }
     }
 }

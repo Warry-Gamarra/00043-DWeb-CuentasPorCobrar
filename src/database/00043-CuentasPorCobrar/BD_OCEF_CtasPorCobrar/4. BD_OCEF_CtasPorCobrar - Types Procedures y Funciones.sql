@@ -371,12 +371,12 @@ AS
 BEGIN
 	SET NOCOUNT ON;
 	SELECT c.I_ConcPagID, catg.T_CatPagoDesc, p.T_ProcesoDesc, ISNULL(c.T_ConceptoPagoDesc, cp.T_ConceptoDesc) as T_ConceptoDesc, c.I_Anio, 
-			c.I_Periodo, c.M_Monto, c.M_MontoMinimo 
+			c.I_Periodo, c.M_Monto, c.M_MontoMinimo, c.B_Habilitado 
 	FROM dbo.TI_ConceptoPago c
 		INNER JOIN dbo.TC_Concepto cp ON cp.I_ConceptoID = c.I_ConceptoID
 		INNER JOIN dbo.TC_Proceso p ON p.I_ProcesoID = c.I_ProcesoID
 		INNER JOIN dbo.TC_CategoriaPago catg ON catg.I_CatPagoID = p.I_CatPagoID
-	WHERE c.B_Habilitado = 1 AND c.B_Eliminado = 0 
+	WHERE  c.B_Eliminado = 0 
 			AND (@I_ProcesoID IS NULL OR c.I_ProcesoID = @I_ProcesoID)
 			AND (@B_Obligacion IS NULL OR catg.B_Obligacion = @B_Obligacion)
 END
@@ -547,6 +547,39 @@ BEGIN
 		
 		SET @B_Result = 1
 		SET @T_Message = 'Actualización de datos correcta.'
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+END
+GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarEstadoConceptoPago')
+	DROP PROCEDURE [dbo].[USP_U_ActualizarEstadoConceptoPago]
+GO
+
+CREATE PROCEDURE [dbo].[USP_U_ActualizarEstadoConceptoPago]
+	 @I_ConcPagID	int
+	,@B_Habilitado	bit
+	,@D_FecMod		datetime
+	,@CurrentUserId	int
+
+	,@B_Result	bit OUTPUT
+	,@T_Message nvarchar(4000) OUTPUT	
+AS
+BEGIN
+  SET NOCOUNT ON
+  	BEGIN TRY
+		UPDATE	TI_ConceptoPago
+		SET		B_Habilitado = @B_Habilitado,
+				D_FecMod = @D_FecMod,
+				I_UsuarioMod = @CurrentUserId
+				WHERE I_ConcPagID = @I_ConcPagID
+			
+		SET @B_Result = 1
+		SET @T_Message = 'Actualización de datos correcta'
 	END TRY
 	BEGIN CATCH
 		SET @B_Result = 0

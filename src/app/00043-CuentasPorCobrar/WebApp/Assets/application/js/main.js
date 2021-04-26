@@ -34,8 +34,8 @@ function onComplete() {
 }
 
 function FormatearNumero(number, decimals = 2, round = true) {
-    if (isNaN(number) || number.lenght == 0) number = 0; 
-        
+    if (isNaN(number) || number.lenght == 0) number = 0;
+
     if (round) {
         return parseFloat(number).toFixed(decimals);
     }
@@ -90,5 +90,42 @@ function ChangeStateReloadPage(RowID, B_habilitado, ActionName) {
             toastr.error("No se pudo actualizar el estado. Intente nuevamente en unos segundos.<br /> Si el problema persiste comuníquese con el área de soporte de la aplicación.");
         }
     });
+}
 
+function ChangeState(RowID, B_habilitado, ActionName) {
+    var parametros = {
+        RowID: RowID,
+        B_habilitado: B_habilitado
+    };
+    $.ajax({
+        cache: false,
+        url: ActionName,
+        type: "POST",
+        data: parametros,
+        dataType: "json",
+        beforeSend: function () {
+            $('#loader' + RowID).css("display", "inline");
+        },
+        success: function (data) {
+            $('#loader' + RowID).css("display", "none");
+            if (data['Value']) {
+                if (B_habilitado) {
+                    $('#td' + RowID).html(`<button type="submit" class="btn btn-xs btn-secondary" onclick="ChangeState(${ RowID }, false, '${ ActionName }');"><i class="fa fa-minus-circle">&nbsp;</i><span class="d-none d-md-inline-block">Deshabilitado</span></button>`);
+                }
+                else {
+                    $('#td' + RowID).html(`<button type="submit" class="btn btn-xs btn-success" onclick="ChangeState(${ RowID }, true, '${ ActionName }');"><i class="fa fa-check-circle">&nbsp;</i><span class="d-none d-md-inline-block">Habilitado</span></button>`);
+                }
+
+                toastr.succees(data['Message']);
+            }
+            else {
+                toastr.warning(data['Message']);
+            }
+        },
+        error: function () {
+            $('#loader' + RowID).css("display", "none");
+
+            toastr.error("No se pudo actualizar el estado. Intente nuevamente en unos segundos.<br /> Si el problema persiste comuníquese con el área de soporte de la aplicación.");
+        }
+    });
 }

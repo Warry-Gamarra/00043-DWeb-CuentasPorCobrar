@@ -14,10 +14,12 @@ namespace Domain.Services
     public class ConceptoPagoService
     {
         private readonly TC_Concepto _concepto;
+        private readonly TI_ConceptoPago _conceptoPago;
 
         public ConceptoPagoService()
         {
             _concepto = new TC_Concepto();
+            _conceptoPago = new TI_ConceptoPago();
         }
 
         public Response ChangeState(int ConceptoId, bool currentState, int currentUserId)
@@ -27,6 +29,15 @@ namespace Domain.Services
             _concepto.D_FecMod = DateTime.Now;
 
             return new Response(_concepto.ChangeState(currentUserId));
+        }
+
+        public Response ChangeStateConceptoProceso(int conceptoPagoId, bool currentState, int currentUserId)
+        {
+            _conceptoPago.I_ConcPagID = conceptoPagoId;
+            _conceptoPago.B_Habilitado = !currentState;
+            _conceptoPago.D_FecMod = DateTime.Now;
+
+            return new Response(_conceptoPago.ChangeState(currentUserId));
         }
 
         public Response Save(ConceptoEntity concepto, int currentUserId, SaveOption saveOption)
@@ -61,7 +72,6 @@ namespace Domain.Services
             };
         }
 
-
         public ConceptoEntity GetConcepto(int conceptoId)
         {
             var result = new ConceptoEntity();
@@ -81,13 +91,39 @@ namespace Domain.Services
             return result;
         }
 
-        public List<ConceptoPago> Listar_ConceptoPago_Proceso_Habilitados(int procesoID)
+        public List<ConceptoPago> Listar_ConceptoPago_Proceso(int procesoID)
         {
             try
             {
                 var lista = USP_S_ConceptoPago.Execute(procesoID);
 
                 var result = lista.Select(x => new ConceptoPago()
+                {
+                    I_ConcPagID = x.I_ConcPagID.Value,
+                    T_CatPagoDesc = x.T_CatPagoDesc,
+                    T_ProcesoDesc = x.T_ProcesoDesc,
+                    T_ConceptoDesc = x.T_ConceptoDesc,
+                    I_Anio = x.I_Anio,
+                    I_Periodo = x.I_Periodo,
+                    M_Monto = x.M_Monto,
+                    B_Habilitado = x.B_Habilitado
+                }).ToList();
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public List<ConceptoPago> Listar_ConceptoPago_Proceso_Habilitados(int procesoID)
+        {
+            try
+            {
+                var lista = USP_S_ConceptoPago.Execute(procesoID);
+
+                var result = lista.Where(x => x.B_Habilitado).Select(x => new ConceptoPago()
                 {
                     I_ConcPagID = x.I_ConcPagID.Value,
                     T_CatPagoDesc = x.T_CatPagoDesc,
@@ -105,7 +141,6 @@ namespace Domain.Services
                 return null;
             }
         }
-
 
         public List<ConceptoPago> Listar_ConceptoPago_TipoObligacion_Habilitados(int? procesoID, TipoObligacion tipoObligacion)
         {

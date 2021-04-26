@@ -14,14 +14,17 @@ namespace WebApp.Controllers
     [Authorize]
     public class ConceptoPagoController : Controller
     {
-        ProcesoModel procesoModel;
-        private readonly ConceptoPagoModel _conceptoModel;
+        private readonly ProcesoModel _procesoModel;
+        private readonly ConceptoPagoModel _conceptoPagoModel;
+        private readonly ConceptoModel _conceptoModel;
+        private readonly SelectModel _selectModel;
 
         public ConceptoPagoController()
         {
-            procesoModel = new ProcesoModel();
-            _conceptoModel = new ConceptoPagoModel();
-
+            _procesoModel = new ProcesoModel();
+            _conceptoPagoModel = new ConceptoPagoModel();
+            _conceptoModel = new ConceptoModel();
+            _selectModel = new SelectModel();
         }
 
         [Route("configuracion/cuotas-de-pago-y-conceptos/{procesoId}/agregar-concepto-obligacion/")]
@@ -30,7 +33,7 @@ namespace WebApp.Controllers
             ViewBag.Title = "Registrar Concepto";
             ViewBag.Conceptos = new SelectList(_conceptoModel.Listar_CatalogoConceptos(TipoObligacion.Matricula), "Id", "NombreConcepto");
 
-            var model = new RegistroConceptosProcesoViewModel(procesoId, _conceptoModel)
+            var model = new RegistroConceptosProcesoViewModel(procesoId, _conceptoPagoModel)
             {
                 MostrarFormulario = false
             };
@@ -43,7 +46,7 @@ namespace WebApp.Controllers
         public ActionResult EditObligacion(int procesoId, int id)
         {
             ViewBag.Title = "Editar Concepto";
-            var model = _conceptoModel.ObtenerConceptoPagoProceso(procesoId, id);
+            var model = _conceptoPagoModel.ObtenerConceptoPagoProceso(procesoId, id);
 
             return PartialView("_RegistrarConceptosPagoProceso", model);
         }
@@ -56,7 +59,7 @@ namespace WebApp.Controllers
             ViewBag.Conceptos = new SelectList(_conceptoModel.Listar_CatalogoConceptos(TipoObligacion.OtrosPagos), "Id", "NombreConcepto");
 
 
-            var model = new RegistroConceptosProcesoViewModel(procesoId, _conceptoModel)
+            var model = new RegistroConceptosProcesoViewModel(procesoId, _conceptoPagoModel)
             {
                 MostrarFormulario = true
             };
@@ -71,12 +74,18 @@ namespace WebApp.Controllers
             ViewBag.Title = "Editar Concepto";
             ViewBag.Conceptos = new SelectList(_conceptoModel.Listar_CatalogoConceptos(), "Id", "NombreConcepto");
 
-            var model = _conceptoModel.ObtenerConceptoPagoProceso(procesoId, id);
+            var model = _conceptoPagoModel.ObtenerConceptoPagoProceso(procesoId, id);
 
             return PartialView("_RegistrarConceptosPagoTasa", model);
         }
 
 
+        public JsonResult ChangeState(int RowID, bool B_habilitado)
+        {
+            var result = _conceptoPagoModel.ChangeState(RowID, B_habilitado, WebSecurity.CurrentUserId, Url.Action("ChangeState", "ConceptoPago"));
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -86,7 +95,7 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                result = _conceptoModel.Grabar_ConceptoPago(model.ConceptoPago, WebSecurity.CurrentUserId);
+                result = _conceptoPagoModel.Grabar_ConceptoPago(model.ConceptoPago, WebSecurity.CurrentUserId);
 
                 if (!result.Value)
                 {
@@ -107,11 +116,6 @@ namespace WebApp.Controllers
                 ResponseModel.Error(result, "Ha ocurrido un error con el envio de datos.\n" + details);
             }
 
-            //ViewBag.Title = model.I_ConcPagID.HasValue ? "Editar registro" : "Nuevo registro";
-
-            //Cargar_Listas();
-
-            //return JsonView(result, "_MantenimientoConceptoPago", model);
             return PartialView("_MsgPartial", result);
         }
 
@@ -146,23 +150,23 @@ namespace WebApp.Controllers
         {
             ViewBag.Lista_Combo_ConceptoPago = _conceptoModel.Listar_Combo_Concepto();
 
-            ViewBag.Lista_Opciones_TipoAlumno = _conceptoModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.TipoAlumno);
+            ViewBag.Lista_Opciones_TipoAlumno = _selectModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.TipoAlumno);
 
-            ViewBag.Lista_Opciones_Grado = _conceptoModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.Grado);
+            ViewBag.Lista_Opciones_Grado = _selectModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.Grado);
 
-            ViewBag.Lista_Opciones_TipoObligacion = _conceptoModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.TipoObligacion);
+            ViewBag.Lista_Opciones_TipoObligacion = _selectModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.TipoObligacion);
 
-            ViewBag.Lista_Combo_Procesos = _conceptoModel.Listar_Combo_Procesos();
+            ViewBag.Lista_Combo_Procesos = _conceptoPagoModel.Listar_Combo_Procesos();
 
-            ViewBag.Lista_Opciones_CampoCalculado = _conceptoModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.CampoCalculado);
+            ViewBag.Lista_Opciones_CampoCalculado = _selectModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.CampoCalculado);
 
-            ViewBag.Lista_Anios = procesoModel.Listar_Anios();
+            ViewBag.Lista_Anios = _procesoModel.Listar_Anios();
 
-            ViewBag.Lista_Combo_Periodo = _conceptoModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.Periodo);
+            ViewBag.Lista_Combo_Periodo = _selectModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.Periodo);
 
-            ViewBag.Lista_Combo_GrupoCodRc = _conceptoModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.GrupoCodRc);
+            ViewBag.Lista_Combo_GrupoCodRc = _selectModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.GrupoCodRc);
 
-            ViewBag.Lista_Combo_CodIngreso = _conceptoModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.CodIngreso);
+            ViewBag.Lista_Combo_CodIngreso = _selectModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.CodIngreso);
 
         }
     }

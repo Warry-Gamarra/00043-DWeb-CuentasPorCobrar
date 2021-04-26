@@ -26,8 +26,8 @@
                    columns.Add(c => c.Monto).Titled("Monto").Css("text-right").Filterable(false);
                    columns.Add(c => c.Habilitado).SetWidth(100).Css("text-center").Encoded(false).Sanitized(false)
                          .RenderValueAs(model => model.Habilitado ?
-                                                              @Html.Raw("<span id=\"td" + @model.ConceptoPagoID + "\"><button type=\"submit\" class=\"btn btn-xs btn-success\" onclick=\"ChangeStateReloadPage(" + @model.ConceptoPagoID + ", " + @model.Habilitado.ToString().ToLower() + ", '" + @Url.Action("ChangeState", "ConceptoPago") + "');\"><i class=\"fa fa-check-circle-o\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Habilitado</span></button></span>")
-                                                         : @Html.Raw("<span id=\"td" + @model.ConceptoPagoID + "\"><button type=\"submit\" class=\"btn btn-xs btn-secondary\" onclick=\"ChangeStateReloadPage(" + @model.ConceptoPagoID + ", " + @model.Habilitado.ToString().ToLower() + ", '" + @Url.Action("ChangeState", "ConceptoPago") + "');\"><i class=\"fa fa-minus-circle\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Deshabilitado</span></button></span>"))
+                                                              @Html.Raw("<span id=\"td" + @model.ConceptoPagoID + "\"><button type=\"submit\" class=\"btn btn-xs btn-success\" onclick=\"ChangeState(" + @model.ConceptoPagoID + ", " + @model.Habilitado.ToString().ToLower() + ", '" + @Url.Action("ChangeState", "ConceptoPago") + "');\"><i class=\"fa fa-check-circle-o\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Habilitado</span></button></span>")
+                                                         : @Html.Raw("<span id=\"td" + @model.ConceptoPagoID + "\"><button type=\"submit\" class=\"btn btn-xs btn-secondary\" onclick=\"ChangeState(" + @model.ConceptoPagoID + ", " + @model.Habilitado.ToString().ToLower() + ", '" + @Url.Action("ChangeState", "ConceptoPago") + "');\"><i class=\"fa fa-minus-circle\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Deshabilitado</span></button></span>"))
                          .Filterable(false).SetWidth(160).Titled("Estado");
                    columns.Add().SetWidth(100).Css("text-right").Encoded(false).Sanitized(false).
                    RenderValueAs(model => @<a href="@Url.Action("EditObligacion", "ConceptoPago", new { procesoId = model.ProcesoId, id = model.ConceptoPagoID })" class="btn-editar"><i class="fa fa-pencil-square-o" aria-hidden="true">&nbsp;</i><span class="d-none d-md-inline-block">Editar</span></a>);
@@ -35,7 +35,7 @@
         </div>
         <div class="modal-footer" id="div_msg" style="margin: -0.75rem -1.5rem;">
             <a href="@Url.Action("CreateObligacion","ConceptoPago", new { procesoId = ViewBag.ProcesoId })" class="btn btn-primary" id="btn-agregar"><i class="fa bi-ui-checks-grid">&nbsp;</i>Agregar concepto</a>
-            <button type="button" class="btn btn-secondary" id="btnCancel" data-dismiss="modal"><i class="fa fa-times-circle-o">&nbsp;</i>Cancelar</button>
+            <button type="button" class="btn btn-secondary" id="btnCancel" data-dismiss="modal"><i class="fa fa-times-circle-o">&nbsp;</i>Cerrar</button>
         </div>
     </div>
 </div>
