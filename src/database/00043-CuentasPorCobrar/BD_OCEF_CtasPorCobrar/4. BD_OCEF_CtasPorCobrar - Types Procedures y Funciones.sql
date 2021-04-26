@@ -1623,7 +1623,7 @@ BEGIN
 			 	VALUES (src.C_CodRc, src.C_CodAlu, src.I_Anio, src.I_Periodo, src.C_EstMat, src.C_Ciclo, src.B_Ingresante, src.I_CredDesaprob, 1, 0, @UserID, @D_FecRegistro);
 
 			--Informar relación de alumnos que ya tienen obligaciones pagadas y de alumnos inexistentes.
-			SELECT DISTINCT tmp.C_CodRC, tmp.C_CodAlu, tmp.I_Anio, tmp.C_Periodo, tmp.C_EstMat, tmp.C_Ciclo, tmp.B_Ingresante, tmp.I_CredDesaprob, 0 as B_Success, 'El alumno tiene obligaciones registradas pagadas.' AS T_Message 
+			SELECT DISTINCT tmp.C_CodRC, tmp.C_CodAlu, tmp.I_Anio, tmp.C_Periodo, tmp.C_EstMat, tmp.C_Ciclo, tmp.B_Ingresante, tmp.I_CredDesaprob, 0 as B_Success, 'El alumno tiene obligaciones pagadas.' AS T_Message 
 			FROM #Tmp_Matricula tmp
 			INNER JOIN dbo.TC_MatriculaAlumno mat ON tmp.C_CodRc = mat.C_CodRc AND tmp.C_CodAlu = mat.C_CodAlu AND tmp.I_Anio = mat.I_Anio AND tmp.I_Periodo = mat.I_Periodo AND mat.B_Eliminado = 0
 			INNER JOIN dbo.TR_ObligacionAluCab obl ON obl.I_MatAluID = mat.I_MatAluID AND obl.B_Eliminado = 0 AND obl.B_Pagado = 1
@@ -1932,7 +1932,7 @@ BEGIN
 
 	--3ro Comienzo con el calculo las obligaciones por alumno almacenandolas en @Tmp_Procesos.
 	declare @Tmp_Procesos table (I_ProcesoID int, I_ConcPagID int, M_Monto decimal(15,2), D_FecVencto datetime, I_TipoObligacion int, I_Prioridad tinyint)
-
+	
 	declare @C_Moneda varchar(3) = 'PEN',
 			@D_CurrentDate datetime = getdate(),
 			@I_FilaActual int = 1,
@@ -1969,6 +1969,11 @@ BEGIN
 			@D_FecVenctoActual datetime,
 			@I_ProcesoID int,
 			@B_Pagado bit
+
+	declare @Tmp_grupo_otros_pagos table (id int, I_ProcesoID int)
+	declare @I_FilaActual_OtrsPag int,
+			@I_CantRegistros_OtrsPag int,
+			@I_ProcesoID_OtrsPag int
 
 	while (@I_FilaActual <= @I_CantRegistros) begin
 		begin tran
@@ -2192,50 +2197,54 @@ BEGIN
 				end
 				else
 				begin
-					print 'Modificacion de Otros pagos'
-					--Se puede modificar el nro.de pagos
-					--Se puede modificar el monto
-					--Se puede modificar la fecha de vencimiento
-					--select * from @Tmp_Procesos p where p.I_Prioridad = 2
-					--select * from dbo.TR_ObligacionAluCab cab
-					--inner join dbo.TR_ObligacionAluDet det on det.I_ObligacionAluID = cab.I_ObligacionAluID
-					--where cab.B_Eliminado = 0 and det.B_Eliminado = 0 and cab.I_MatAluID = @I_MatAluID and
-					--	cab.I_ProcesoID in (select p.I_ProcesoID from @Tmp_Procesos p where p.I_Prioridad = 2))
+					if exists(select id from @Tmp_grupo_otros_pagos) begin
+						delete @Tmp_grupo_otros_pagos
+					end
 
-					--if exists(select *
-					--	from dbo.TR_ObligacionAluCab cab
-					--	where cab.B_Eliminado = 0 and cab.I_MatAluID = @I_MatAluID and
-					--		cab.I_ProcesoID in (select p.I_ProcesoID from @Tmp_Procesos p where p.I_Prioridad = 2))
-					--begin
-					--	select *
-					--	from dbo.TR_ObligacionAluCab cab
-					--	where cab.B_Eliminado = 0 and cab.I_MatAluID = @I_MatAluID and
-					--		cab.I_ProcesoID in (select p.I_ProcesoID from @Tmp_Procesos p where p.I_Prioridad = 2)
+					insert @Tmp_grupo_otros_pagos(id, I_ProcesoID)
+					select ROW_NUMBER() OVER (ORDER BY I_ProcesoID), I_ProcesoID from @Tmp_Procesos p
+					where p.I_Prioridad = 2
+					group by p.I_ProcesoID
+					
+					set @I_FilaActual_OtrsPag = 1
+					set @I_CantRegistros_OtrsPag = (select max(id) from @Tmp_grupo_otros_pagos)
 
+					while (@I_FilaActual_OtrsPag <= @I_CantRegistros_OtrsPag) begin
+						--Los otros pagos se agrupan primero por proceso y luego por fecha de vcto.
+						set @I_ProcesoID_OtrsPag = (select I_ProcesoID from @Tmp_grupo_otros_pagos where id = @I_FilaActual_OtrsPag)
 
-					--end
+						if exists(select cab.I_ObligacionAluID from dbo.TR_ObligacionAluCab cab
+							inner join dbo.TR_ObligacionAluDet det on det.I_ObligacionAluID = cab.I_ObligacionAluID
+							where cab.B_Eliminado = 0 and det.B_Eliminado = 0 and cab.I_MatAluID = @I_MatAluID and 
+							cab.I_ProcesoID = @I_ProcesoID_OtrsPag AND cab.B_Pagado = 1) begin
+							
+							print 'Existen al menos un pago realizado.'
+
+						end
+						else begin
+							update d set d.B_Habilitado = 0, d.B_Eliminado = 1, d.I_UsuarioMod = @I_UsuarioCre, d.D_FecMod = @D_CurrentDate
+							from dbo.TR_ObligacionAluCab c
+							inner join dbo.TR_ObligacionAluDet d on d.I_ObligacionAluID = c.I_ObligacionAluID
+							where d.B_Eliminado = 0 and c.B_Eliminado = 0 and c.I_MatAluID = @I_MatAluID and c.I_ProcesoID = @I_ProcesoID_OtrsPag
+
+							update dbo.TR_ObligacionAluCab set B_Habilitado = 0, B_Eliminado = 1, I_UsuarioMod = @I_UsuarioCre, D_FecMod = @D_CurrentDate
+							where B_Eliminado = 0 and I_MatAluID = @I_MatAluID and I_ProcesoID = @I_ProcesoID_OtrsPag
+
+							insert dbo.TR_ObligacionAluCab(I_ProcesoID, I_MatAluID, C_Moneda, I_MontoOblig, B_Pagado, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, D_FecVencto)
+							select p.I_ProcesoID, @I_MatAluID, @C_Moneda, Sum(p.M_Monto), 0, 1, 0, @I_UsuarioCre, @D_CurrentDate, p.D_FecVencto from @Tmp_Procesos p
+							where p.I_Prioridad = 2 and p.I_ProcesoID = @I_ProcesoID_OtrsPag
+							group by p.I_ProcesoID, p.D_FecVencto
+
+							insert dbo.TR_ObligacionAluDet(I_ObligacionAluID, I_ConcPagID, I_Monto, B_Pagado, D_FecVencto, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
+							select cab.I_ObligacionAluID, p.I_ConcPagID, p.M_Monto, 0, p.D_FecVencto, 1, 0, @I_UsuarioCre, @D_CurrentDate from @Tmp_Procesos p
+							inner join dbo.TR_ObligacionAluCab cab on cab.B_Habilitado = 1 and cab.B_Eliminado = 0 and p.I_ProcesoID = cab.I_ProcesoID and DATEDIFF(Day, p.D_FecVencto, cab.D_FecVencto) = 0
+							where p.I_Prioridad = 2 and p.I_ProcesoID = @I_ProcesoID_OtrsPag
+						end
+
+						set @I_FilaActual_OtrsPag = (@I_FilaActual_OtrsPag + 1)
+					end
 				end
 			end
-
-			----Inserción de Cabecera
-			--insert dbo.TR_ObligacionAluCab(I_ProcesoID, I_MatAluID, C_Moneda, I_MontoOblig, B_Pagado, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, D_FecVencto)
-			--select distinct p.I_ProcesoID, @I_MatAluID, @C_Moneda, 0, 0, 1, 0, @I_UsuarioCre, @D_CurrentDate, P.D_FecVencto from @Tmp_Procesos p
-			--left join dbo.TR_ObligacionAluCab cab on cab.I_ProcesoID = p.I_ProcesoID and cab.I_MatAluID = @I_MatAluID and cab.B_Eliminado = 0
-			--where cab.I_ProcesoID is null
-
-			----Inserción de los Detalles
-			--insert dbo.TR_ObligacionAluDet(I_ObligacionAluID, I_ConcPagID, I_Monto, B_Pagado, D_FecVencto, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
-			--select cab.I_ObligacionAluID, tmp.I_ConcPagID, tmp.M_Monto, 0, tmp.D_FecVencto, 1, 0, @I_UsuarioCre, @D_CurrentDate from dbo.TR_ObligacionAluCab cab
-			--inner join @Tmp_Procesos tmp on tmp.I_ProcesoID = cab.I_ProcesoID
-			--where cab.B_Eliminado = 0 and cab.I_MatAluID = @I_MatAluID and 
-			--	not exists(select det.I_ObligacionAluDetID from dbo.TR_ObligacionAluDet det 
-			--		where det.B_Eliminado = 0 and det.I_ObligacionAluID = cab.I_ObligacionAluID and det.I_ConcPagID = tmp.I_ConcPagID)
-
-			--update dbo.TR_ObligacionAluCab set I_MontoOblig = I_Total, I_UsuarioMod = @I_UsuarioCre, D_FecMod = @D_CurrentDate
-			--from (select cab.I_ObligacionAluID, sum(det.I_Monto) as I_Total from dbo.TR_ObligacionAluCab cab
-			--	inner join dbo.TR_ObligacionAluDet det on det.I_ObligacionAluID = cab.I_ObligacionAluID
-			--	where cab.B_Eliminado = 0 and det.B_Eliminado = 0 and cab.I_MatAluID = @I_MatAluID
-			--	group by cab.I_ObligacionAluID) grupo where grupo.I_ObligacionAluID = dbo.TR_ObligacionAluCab.I_ObligacionAluID
 
 			commit tran
 		end try
