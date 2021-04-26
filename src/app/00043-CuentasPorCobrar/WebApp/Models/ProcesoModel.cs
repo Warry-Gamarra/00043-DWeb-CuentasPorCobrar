@@ -27,6 +27,24 @@ namespace WebApp.Models
             _categoriaPagoModel = new CategoriaPagoModel();
         }
 
+
+        public List<ConceptoPagoViewModel> ObtenerConceptosProceso(int procesoID)
+        {
+            var lista = _conceptoPagoService.Listar_ConceptoPago_Proceso(procesoID);
+
+            var result = lista.Select(x => new ConceptoPagoViewModel()
+            {
+                ProcesoId = procesoID,
+                DescProceso = string.IsNullOrEmpty(x.T_ProcesoDesc) ? $"{x.I_Anio}-{x.I_Periodo}-{x.T_CatPagoDesc}" : x.T_ProcesoDesc,
+                ConceptoPagoID = x.I_ConcPagID,
+                ConceptoDesc = x.T_ConceptoDesc,
+                Monto = x.M_Monto,
+                Habilitado = x.B_Habilitado
+            }).ToList();
+
+            return result;
+        }
+
         public List<ConceptoPagoViewModel> ObtenerConceptosProcesoHabilitados(int procesoID)
         {
             var lista = _conceptoPagoService.Listar_ConceptoPago_Proceso_Habilitados(procesoID);

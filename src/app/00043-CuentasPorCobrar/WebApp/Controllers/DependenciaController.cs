@@ -51,7 +51,7 @@ namespace WebApp.Controllers
 
         public JsonResult ChangeState(int RowID, bool B_habilitado)
         {
-            var result = _dependenciaModel.ChangeState(RowID, B_habilitado, WebSecurity.CurrentUserId, Url.Action("", ""));
+            var result = _dependenciaModel.ChangeState(RowID, B_habilitado, WebSecurity.CurrentUserId, Url.Action("ChangeState", "Dependencia"));
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }

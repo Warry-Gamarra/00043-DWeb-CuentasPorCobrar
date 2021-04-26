@@ -16,7 +16,7 @@ namespace WebApp.Controllers
     {
         ProcesoModel procesoModel;
         private readonly int? _dependenciaUsuarioId;
-        private readonly SelectModels _selectModel;
+        private readonly SelectModel _selectModel;
         private readonly ConceptoPagoModel _conceptoModel;
         private readonly CategoriaPagoModel _categoriaPagoModel;
         private readonly CuentaDepositoModel _cuentasDeposito;
@@ -24,7 +24,7 @@ namespace WebApp.Controllers
         public ProcesosController()
         {
             procesoModel = new ProcesoModel();
-            _selectModel = new SelectModels();
+            _selectModel = new SelectModel();
             _conceptoModel = new ConceptoPagoModel();
             _categoriaPagoModel = new CategoriaPagoModel();
             _cuentasDeposito = new CuentaDepositoModel();
@@ -185,7 +185,7 @@ namespace WebApp.Controllers
             ViewBag.Title = procesoModel.Obtener_Proceso(procesoId).DescProceso;
             ViewBag.ProcesoId = procesoId;
 
-            var model = procesoModel.ObtenerConceptosProcesoHabilitados(procesoId);
+            var model = procesoModel.ObtenerConceptosProceso(procesoId);
 
             return PartialView("_ListadoConceptosProceso", model);
         }
@@ -196,7 +196,7 @@ namespace WebApp.Controllers
         {
             ViewBag.ProcesoId = procesoId;
 
-            var model = procesoModel.ObtenerConceptosProcesoHabilitados(procesoId);
+            var model = procesoModel.ObtenerConceptosProceso(procesoId);
 
             return PartialView("_ListadoTasasProcesoGrupos", model);
         }

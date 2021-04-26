@@ -15,13 +15,15 @@ namespace WebApp.Controllers
     [Route("mantenimiento/conceptos-de-pago/{action}")]
     public class ConceptoController : Controller
     {
-        ConceptoPagoModel conceptoPagoModel;
-        ProcesoModel procesoModel;
+        private readonly ConceptoModel conceptoModel;
+        private readonly ProcesoModel procesoModel;
+        private readonly SelectModel selectModel;
 
         public ConceptoController()
         {
-            conceptoPagoModel = new ConceptoPagoModel();
+            conceptoModel = new ConceptoModel();
             procesoModel = new ProcesoModel();
+            selectModel = new SelectModel();
         }
 
         [Route("mantenimiento/conceptos-de-pago")]
@@ -29,7 +31,7 @@ namespace WebApp.Controllers
         {
             ViewBag.Title = "Conceptos de Pago";
 
-            var lista = conceptoPagoModel.Listar_CatalogoConceptos();
+            var lista = conceptoModel.Listar_CatalogoConceptos();
 
             return View(lista);
         }
@@ -39,7 +41,7 @@ namespace WebApp.Controllers
         public ActionResult Create()
         {
             ViewBag.Title = "Nuevo concepto de pago";
-            ViewBag.Lista_Opciones_CampoCalculado = conceptoPagoModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.CampoCalculado);
+            ViewBag.Lista_Opciones_CampoCalculado = selectModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.CampoCalculado);
             ViewBag.CalculadoVisible = "none";
 
             return PartialView("_RegistrarConcepto", new CatalogoConceptosRegistroViewModel());
@@ -50,9 +52,9 @@ namespace WebApp.Controllers
         public ActionResult Edit(int id)
         {
             ViewBag.Title = "Editar concepto de pago";
-            ViewBag.Lista_Opciones_CampoCalculado = conceptoPagoModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.CampoCalculado);
+            ViewBag.Lista_Opciones_CampoCalculado = selectModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.CampoCalculado);
 
-            CatalogoConceptosRegistroViewModel model = conceptoPagoModel.ObtenerConcepto(id);
+            CatalogoConceptosRegistroViewModel model = conceptoModel.ObtenerConcepto(id);
 
             ViewBag.CalculadoVisible = model.Calculado ? "block" : "none";
 
@@ -61,7 +63,7 @@ namespace WebApp.Controllers
 
         public JsonResult ChangeState(int RowID, bool B_habilitado)
         {
-            var result = conceptoPagoModel.ChangeState(RowID, B_habilitado, WebSecurity.CurrentUserId, Url.Action("ChangeState", "EntidadFinanciera"));
+            var result = conceptoModel.ChangeState(RowID, B_habilitado, WebSecurity.CurrentUserId, Url.Action("ChangeState", "Concepto"));
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
@@ -73,7 +75,7 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                result = conceptoPagoModel.Save(model, WebSecurity.CurrentUserId);
+                result = conceptoModel.Save(model, WebSecurity.CurrentUserId);
             }
             else
             {

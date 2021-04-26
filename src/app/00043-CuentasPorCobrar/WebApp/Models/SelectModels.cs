@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Helpers;
 using Domain.Services;
 using System;
 using System.Collections.Generic;
@@ -8,14 +9,14 @@ using WebApp.ViewModels;
 
 namespace WebApp.Models
 {
-    public class SelectModels
+    public class SelectModel
     {
         private readonly IRoles _roles;
         private readonly IDependencia _dependencia;
         private readonly ConceptoPagoService _conceptoPagoService;
         private readonly EntidadFinanciera _entidadFinanciera;
 
-        public SelectModels()
+        public SelectModel()
         {
             _roles = new RolAplicacion();
             _dependencia = new Dependencia();
@@ -99,6 +100,24 @@ namespace WebApp.Models
             foreach (var item in _entidadFinanciera.Find().Where(x => x.Habilitado))
             {
                 result.Add(new SelectViewModel() { Value = item.Id.ToString(), TextDisplay = item.Nombre.ToUpper() });
+            }
+
+            return result;
+        }
+
+        public List<SelectViewModel> Listar_Combo_CatalogoOpcion_X_Parametro(Parametro tipoParametroID)
+        {
+            List<SelectViewModel> result = new List<SelectViewModel>();
+
+            var lista = _conceptoPagoService.Listar_CatalogoOpcion_Habilitadas_X_Parametro(tipoParametroID);
+
+            if (lista != null)
+            {
+                result = lista.Select(x => new SelectViewModel()
+                {
+                    Value = x.I_OpcionID.ToString(),
+                    TextDisplay = x.T_OpcionDesc
+                }).ToList();
             }
 
             return result;

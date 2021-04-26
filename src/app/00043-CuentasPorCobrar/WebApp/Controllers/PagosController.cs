@@ -20,7 +20,7 @@ namespace WebApp.Controllers
         private readonly IObligacionServiceFacade obligacionServiceFacade;
         private readonly IAlumnosClientFacade alumnosClientFacade;
         private readonly IProgramasClientFacade programasClientFacade;
-        private readonly SelectModels selectModels;
+        private readonly SelectModel selectModels;
         private readonly PagosModel pagosModel;
 
         public PagosController()
@@ -30,7 +30,7 @@ namespace WebApp.Controllers
             obligacionServiceFacade = new ObligacionServiceFacade();
             alumnosClientFacade = new AlumnosClientFacade();
             programasClientFacade = new ProgramasClientFacade();
-            selectModels = new SelectModels();
+            selectModels = new SelectModel();
             pagosModel = new PagosModel();
         }
 

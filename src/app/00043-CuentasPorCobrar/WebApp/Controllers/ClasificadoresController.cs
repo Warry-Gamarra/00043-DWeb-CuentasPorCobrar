@@ -15,12 +15,12 @@ namespace WebApp.Controllers
     public class ClasificadoresController : Controller
     {
         public readonly ClasificadorModel _clasificador;
-        public readonly SelectModels _selectModels;
+        public readonly SelectModel _selectModels;
 
         public ClasificadoresController()
         {
             _clasificador = new ClasificadorModel();
-            _selectModels = new SelectModels();
+            _selectModels = new SelectModel();
         }
 
 
@@ -56,7 +56,7 @@ namespace WebApp.Controllers
 
         public JsonResult ChangeState(int RowID, bool B_habilitado)
         {
-            var result = _clasificador.ChangeState(RowID, B_habilitado, WebSecurity.CurrentUserId, Url.Action("", ""));
+            var result = _clasificador.ChangeState(RowID, B_habilitado, WebSecurity.CurrentUserId, Url.Action("ChangeState", "Clasificadores"));
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }

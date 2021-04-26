@@ -424,6 +424,7 @@
     <Compile Include="Models\AlumnosSinVotoExcelSource.cs" />
     <Compile Include="Models\AlumnosSinVotoSourceFactory.cs" />
     <Compile Include="Models\CategoriaPagoModel.cs" />
+    <Compile Include="Models\ConceptoModel.cs" />
     <Compile Include="Models\CtaDepoProcesoModel.cs" />
     <Compile Include="Models\CuotaPagoModel.cs" />
     <Compile Include="Models\DependenciaModel.cs" />

@@ -17,12 +17,14 @@ namespace WebApp.Controllers
         private readonly CategoriaPagoModel _categoriaPago;
         private readonly ConceptoPagoModel _conceptoPago;
         private readonly CuentaDepositoModel _cuentasDeposito;
+        private readonly SelectModel _selectModel;
 
         public CategoriaPagoController()
         {
             _categoriaPago = new CategoriaPagoModel();
             _conceptoPago = new ConceptoPagoModel();
             _cuentasDeposito = new CuentaDepositoModel();
+            _selectModel = new SelectModel();
         }
 
         [Route("mantenimiento/plantilla-cuota-de-pago")]
@@ -40,8 +42,8 @@ namespace WebApp.Controllers
         {
             ViewBag.Title = "Nuevo plantilla de cuota de pago";
 
-            ViewBag.Niveles = new SelectList(_conceptoPago.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.Grado), "Value", "TextDisplay");
-            ViewBag.TiposAlumno = new SelectList(_conceptoPago.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.TipoAlumno), "Value", "TextDisplay");
+            ViewBag.Niveles = new SelectList(_selectModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.Grado), "Value", "TextDisplay");
+            ViewBag.TiposAlumno = new SelectList(_selectModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.TipoAlumno), "Value", "TextDisplay");
             ViewBag.CtasDeposito = new SelectList(_cuentasDeposito.Find(), "Id", "DescripcionFull", "EntidadFinanciera", null, null);
 
             return PartialView("_RegistrarCategoria", new CategoriaPagoRegistroViewModel()
@@ -57,8 +59,8 @@ namespace WebApp.Controllers
             ViewBag.Title = "Editar plantilla de cuota de pago";
 
             var model = _categoriaPago.Find(id);
-            ViewBag.Niveles = new SelectList(_conceptoPago.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.Grado), "Value", "TextDisplay");
-            ViewBag.TiposAlumno = new SelectList(_conceptoPago.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.TipoAlumno), "Value", "TextDisplay");
+            ViewBag.Niveles = new SelectList(_selectModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.Grado), "Value", "TextDisplay");
+            ViewBag.TiposAlumno = new SelectList(_selectModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.TipoAlumno), "Value", "TextDisplay");
             ViewBag.CtasDeposito = new SelectList(_cuentasDeposito.Find(), "Id", "DescripcionFull", "EntidadFinanciera", model.CuentasDeposito, null);
 
             return PartialView("_RegistrarCategoria", model);
@@ -66,7 +68,7 @@ namespace WebApp.Controllers
 
         public JsonResult ChangeState(int RowID, bool B_habilitado)
         {
-            var result = _categoriaPago.ChangeState(RowID, B_habilitado, WebSecurity.CurrentUserId, Url.Action("ChangeState", "EntidadFinanciera"));
+            var result = _categoriaPago.ChangeState(RowID, B_habilitado, WebSecurity.CurrentUserId, Url.Action("ChangeState", "CategoriaPago"));
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }

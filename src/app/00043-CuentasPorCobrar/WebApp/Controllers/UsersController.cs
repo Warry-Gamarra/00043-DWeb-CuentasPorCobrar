@@ -15,13 +15,13 @@ namespace WebApp.Controllers
     public class UsersController : Controller
     {
         public readonly UsersModel _usersModel;
-        public readonly SelectModels _selectControl;
+        public readonly SelectModel _selectControl;
         public readonly DependenciaModel _dependenciaModel;
 
         public UsersController()
         {
             _usersModel = new UsersModel();
-            _selectControl = new SelectModels();
+            _selectControl = new SelectModel();
             _dependenciaModel = new DependenciaModel();
         }
 
@@ -73,7 +73,7 @@ namespace WebApp.Controllers
         [HttpPost]
         public JsonResult ChangeState(int RowID, bool B_habilitado)
         {
-            var result = _usersModel.ChangeState(RowID, B_habilitado, WebSecurity.CurrentUserId, Url.Action("", ""));
+            var result = _usersModel.ChangeState(RowID, B_habilitado, WebSecurity.CurrentUserId, Url.Action("ChangeState", "Users"));
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }

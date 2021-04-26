@@ -15,6 +15,7 @@ namespace WebApp.Controllers
     {
         private readonly ProcesoModel procesoModel;
         private readonly ConceptoPagoModel conceptoPagoModel;
+        private readonly ConceptoModel conceptoModel;
         private readonly CategoriaPagoModel categoriaPagoModel;
         private readonly EstructuraArchivoModel estructuraArchivoModel;
         IObligacionServiceFacade _obligacionServiceFacade;
@@ -23,6 +24,7 @@ namespace WebApp.Controllers
         {
             procesoModel = new ProcesoModel();
             conceptoPagoModel = new ConceptoPagoModel();
+            conceptoModel = new ConceptoModel();
             categoriaPagoModel = new CategoriaPagoModel();
             estructuraArchivoModel = new EstructuraArchivoModel();
             _obligacionServiceFacade = new ObligacionServiceFacade();
@@ -75,7 +77,7 @@ namespace WebApp.Controllers
                 throw new HttpResponseException(error);
             }
 
-            var model = conceptoPagoModel.ObtenerConcepto(id);
+            var model = conceptoModel.ObtenerConcepto(id);
 
             return model;
         }

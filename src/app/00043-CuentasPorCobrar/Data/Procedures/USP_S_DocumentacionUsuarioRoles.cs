@@ -41,7 +41,7 @@ namespace Data.Procedures
             {
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    parameters.Add(name: "I_RutaDocID", dbType: DbType.Byte, value: this.I_RutaDocID);
+                    parameters.Add(name: "I_RutaDocID", dbType: DbType.Int32, value: this.I_RutaDocID);
                     parameters.Add(name: "T_DocDesc", dbType: DbType.String, size: 50, value: this.T_DocDesc);
                     parameters.Add(name: "T_RutaDocumento", dbType: DbType.String, size: 500, value: this.T_RutaDocumento);
                     parameters.Add(name: "Tbl_Roles", value: dtRoles.AsTableValuedParameter("dbo.type_roles"));
@@ -74,7 +74,7 @@ namespace Data.Procedures
             {
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    parameters.Add(name: "I_RutaDocID", dbType: DbType.Byte, value: this.I_RutaDocID);
+                    parameters.Add(name: "I_RutaDocID", dbType: DbType.Int32, value: this.I_RutaDocID);
                     parameters.Add(name: "B_Habilitado", dbType: DbType.Boolean, value: this.B_Habilitado);
                     parameters.Add(name: "IdUser", dbType: DbType.Int32, value: currentUserId);
 
@@ -104,7 +104,7 @@ namespace Data.Procedures
             {
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    parameters.Add(name: "I_RutaDocID", dbType: DbType.Byte, value: this.I_RutaDocID);
+                    parameters.Add(name: "I_RutaDocID", dbType: DbType.Int32, value: this.I_RutaDocID);
                     parameters.Add(name: "T_DocDesc", dbType: DbType.String, size: 50, value: this.T_DocDesc);
                     parameters.Add(name: "T_RutaDocumento", dbType: DbType.String, size: 500, value: this.T_RutaDocumento);
                     parameters.Add(name: "Tbl_Roles", value: dtRoles.AsTableValuedParameter("dbo.type_roles"));

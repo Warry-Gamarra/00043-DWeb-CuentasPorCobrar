@@ -15,12 +15,12 @@ namespace WebApp.Controllers
     {
         public readonly EntidadFinancieraModel _entidadFinanciera;
         public readonly CuentaDepositoModel _cuentaDeposito;
-        public readonly SelectModels _selectModels;
+        public readonly SelectModel _selectModels;
 
         public EntidadFinancieraController()
         {
             _entidadFinanciera = new EntidadFinancieraModel();
-            _selectModels = new SelectModels();
+            _selectModels = new SelectModel();
             _cuentaDeposito = new CuentaDepositoModel();
         }
 

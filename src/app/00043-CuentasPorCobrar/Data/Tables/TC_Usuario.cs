@@ -51,7 +51,7 @@ namespace Data.Tables
             {
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    parameters.Add(name: "UserId", dbType: DbType.Byte, value: this.UserId);
+                    parameters.Add(name: "UserId", dbType: DbType.Int32, value: this.UserId);
                     parameters.Add(name: "B_Habilitado", dbType: DbType.Boolean, value: this.B_Habilitado);
                     parameters.Add(name: "D_FecActualiza", dbType: DbType.DateTime, value: this.D_FecActualiza);
                     parameters.Add(name: "CurrentUserId", dbType: DbType.Int32, value: currentUserId);
