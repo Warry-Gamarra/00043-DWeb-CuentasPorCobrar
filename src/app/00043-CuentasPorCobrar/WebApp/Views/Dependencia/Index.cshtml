@@ -33,14 +33,16 @@
                                         columns.Add(c => c.DependDesc).Titled("Descripción").Filterable(true);
                                         columns.Add(c => c.TipoDependencia).Filterable(true).Titled("Tipo de dependencia");
 
-                                        columns.Add(c => c.B_Habilitado).SetWidth(180).Css("text-center").Encoded(false).Sanitized(false).RenderValueAs(model => model.B_Habilitado
-                                                                                                                                                    ? @Html.Raw("<span id=\"td" + @model.DependenciaID + "\"><button type=\"submit\" class=\"btn btn-xs btn-success\" onclick=\"ChangeStateReloadPage(" + @model.DependenciaID + ", " + @model.B_Habilitado.ToString().ToLower() + ", '" + Url.Action("ChangeState", "Dependencia") + "');\"><i class=\"fa fa-check-circle-o\">&nbsp;</i><span class=\"hidden-xs hidden-sm\">Habilitado</span></button></span>")
-                                                                                                                                                    : @Html.Raw("<span id=\"td" + @model.DependenciaID + "\"><button type=\"submit\" class=\"btn btn-xs btn-secondary\" onclick=\"ChangeStateReloadPage(" + @model.DependenciaID + ", " + @model.B_Habilitado.ToString().ToLower() + ", '" + Url.Action("ChangeState", "Dependencia") + "');\"><i class=\"fa fa-minus-circle\">&nbsp;</i><span class=\"hidden-xs hidden-sm\">Deshabilitado</span></button></span>")).Filterable(true).Titled("Estado");
-                                        columns.Add().SetWidth(200).Css("text-center").Encoded(false).Sanitized(false).RenderValueAs(model => model.Academico
-                                                                                                                                                    ? @Html.Raw("<a class=\"btn btn-xs btn-info\" href=\"" + Url.Action("ConfigFacultad", "Dependencia") + "\"><i class=\"fa fa-cog\">&nbsp;</i> Ajustes</a>")
-                                                                                                                                                    : @Html.Raw(""));
+                                        columns.Add(c => c.B_Habilitado).SetWidth(180).Css("text-center").Encoded(false).Sanitized(false)
+                                                                        .RenderValueAs(model => model.B_Habilitado
+                                                                                                ? @Html.Raw("<span id=\"td" + @model.DependenciaID + "\"><button type=\"submit\" class=\"btn btn-xs btn-success\" onclick=\"ChangeStateReloadPage(" + @model.DependenciaID + ", " + @model.B_Habilitado.ToString().ToLower() + ", '" + Url.Action("ChangeState", "Dependencia") + "');\"><i class=\"fa fa-check-circle-o\">&nbsp;</i><span class=\"hidden-xs hidden-sm\">Habilitado</span></button></span>")
+                                                                                                : @Html.Raw("<span id=\"td" + @model.DependenciaID + "\"><button type=\"submit\" class=\"btn btn-xs btn-secondary\" onclick=\"ChangeStateReloadPage(" + @model.DependenciaID + ", " + @model.B_Habilitado.ToString().ToLower() + ", '" + Url.Action("ChangeState", "Dependencia") + "');\"><i class=\"fa fa-minus-circle\">&nbsp;</i><span class=\"hidden-xs hidden-sm\">Deshabilitado</span></button></span>")).Filterable(true).Titled("Estado");
+                                        columns.Add().SetWidth(200).Css("text-center").Encoded(false).Sanitized(false)
+                                                     .RenderValueAs(model => model.Academico
+                                                                            ? @Html.Raw("<a class=\"btn btn-xs btn-info\" href=\"" + Url.Action("ConfigFacultad", "Dependencia") + "\"><i class=\"fa fa-cog\">&nbsp;</i> Ajustes</a>")
+                                                                            : @Html.Raw(""));
                                         columns.Add().SetWidth(150).Css("text-right").Encoded(false).Sanitized(false).RenderValueAs(model => @<a href="@Url.Action("Edit", "Dependencia", new { id = model.DependenciaID, area = "" })" class="modal-link"><i class="fa fa-pencil-square-o" aria-hidden="true">&nbsp;</i><span class="hidden-xs hidden-sm">Editar</span></a>);
-                                         }
+                                    }
             ).WithPaging(15).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
 
         </div>

@@ -33,10 +33,9 @@ namespace WebApp.Controllers
         [HttpGet]
         public ActionResult Create()
         {
-            var model = _dependenciaModel.Find();
             ViewBag.Title = "Agregar Dependencias";
 
-            return PartialView("_RegistrarDependencia", model);
+            return PartialView("_RegistrarDependencia", new DependenciaRegistroViewModel());
         }
 
         [Route("mantenimiento/dependencia/editar/{id}")]

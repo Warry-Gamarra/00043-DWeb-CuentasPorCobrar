@@ -51,7 +51,7 @@ namespace WebApp.Controllers
         {
             ViewBag.Title = "Agregar Usuario";
             ViewBag.Roles = new SelectList(_selectControl.GetRoles(), dataValueField: "Value", dataTextField: "TextDisplay");
-            ViewBag.Dependencias = new SelectList(_dependenciaModel.Find(), dataValueField: "DependenciaID", dataTextField: "DependDesc");
+            ViewBag.Dependencias = new SelectList(_dependenciaModel.Find(enabled: true), dataValueField: "DependenciaID", dataTextField: "DependDesc");
                  
             UserRegisterViewModel model = new UserRegisterViewModel();
             return PartialView("_RegisterUser", model);
@@ -62,7 +62,7 @@ namespace WebApp.Controllers
         {
             ViewBag.Title = "Editar Usuario";
             ViewBag.Roles = new SelectList(_selectControl.GetRoles(), dataValueField: "Value", dataTextField: "TextDisplay");
-            ViewBag.Dependencias = new SelectList(_dependenciaModel.Find(), dataValueField: "DependenciaID", dataTextField: "DependDesc");
+            ViewBag.Dependencias = new SelectList(_dependenciaModel.Find(enabled: true), dataValueField: "DependenciaID", dataTextField: "DependDesc");
 
             var model = _usersModel.Find(id);
 

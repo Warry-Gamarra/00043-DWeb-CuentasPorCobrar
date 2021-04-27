@@ -30,6 +30,18 @@ namespace WebApp.Models
             return result;
         }
 
+        public List<DependenciaViewModel> Find(bool enabled)
+        {
+            var result = new List<DependenciaViewModel>();
+
+            foreach (var item in _dependencia.Find().Where(x => x.Habilitado == enabled))
+            {
+                result.Add(new DependenciaViewModel(item));
+            }
+
+            return result;
+        }
+
         public DependenciaRegistroViewModel Find(int dependenciaId)
         {
             var model = _dependencia.Find(dependenciaId);
