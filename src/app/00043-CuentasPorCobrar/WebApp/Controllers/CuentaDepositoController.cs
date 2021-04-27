@@ -36,7 +36,7 @@ namespace WebApp.Controllers
         public ActionResult Create()
         {
             ViewBag.Title = "Agregar Cuenta de Depósito";
-            ViewBag.EntidadFinanciera = new SelectList(_entidadFinanciera.Find(), "Id", "NombreEntidad");
+            ViewBag.EntidadFinanciera = new SelectList(_entidadFinanciera.Find(enabled: true), "Id", "NombreEntidad");
 
             return PartialView("_RegistrarCuentaDeposito", new CuentaDepositoRegistroViewModel());
         }
@@ -46,7 +46,7 @@ namespace WebApp.Controllers
         public ActionResult Edit(int id)
         {
             ViewBag.Title = "Editar Cuenta de Depósito";
-            ViewBag.EntidadFinanciera = new SelectList(_entidadFinanciera.Find(), "Id", "NombreEntidad");
+            ViewBag.EntidadFinanciera = new SelectList(_entidadFinanciera.Find(enabled: true), "Id", "NombreEntidad");
 
             return PartialView("_RegistrarCuentaDeposito", _cuentaDeposito.Find(id));
         }
@@ -83,6 +83,5 @@ namespace WebApp.Controllers
             }
             return PartialView("_MsgPartialWR", result);
         }
-
     }
 }

@@ -51,7 +51,7 @@ namespace WebApp.Controllers
             ViewBag.Title = "Agregar archivo de intercambio";
             if (banco == 0)
             {
-                ViewBag.EntidadesFinancieras = new SelectList(_entidadFinanciera.Find(), "Id", "NombreEntidad");
+                ViewBag.EntidadesFinancieras = new SelectList(_entidadFinanciera.Find(enabled: true), "Id", "NombreEntidad");
             }
             else
             {
@@ -68,7 +68,7 @@ namespace WebApp.Controllers
             ViewBag.Title = "Editar archivo de intercambio";
 
             var model = _estructuraArchivo.ObtenerArchivoIntercambio(id);
-            ViewBag.EntidadesFinancieras = new SelectList(_entidadFinanciera.Find(), "Id", "NombreEntidad");
+            ViewBag.EntidadesFinancieras = new SelectList(_entidadFinanciera.Find(enabled: true), "Id", "NombreEntidad");
             ViewBag.TiposArchivo = _estructuraArchivo.ObtenerTiposArchivo();
 
             return PartialView("_RegistroArchivoIntercambio", model);
@@ -188,7 +188,7 @@ namespace WebApp.Controllers
         public ActionResult RegistrarSecciones(int id = 0)
         {
             ViewBag.Title = "Agregar estructura de archivo";
-            ViewBag.EntidadesFinancieras = new SelectList(_entidadFinanciera.Find(), "Id", "NombreEntidad");
+            ViewBag.EntidadesFinancieras = new SelectList(_entidadFinanciera.Find(enabled: true), "Id", "NombreEntidad");
             ViewBag.TiposArchivo = _estructuraArchivo.ObtenerTiposArchivo();
 
             return PartialView("_RegistroEstructuraArchivo", new List<SeccionArchivoViewModel>());

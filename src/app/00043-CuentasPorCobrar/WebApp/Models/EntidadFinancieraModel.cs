@@ -29,6 +29,18 @@ namespace WebApp.Models
             return result;
         }
 
+        public List<EntidadFinancieraViewModel> Find(bool enabled)
+        {
+            List<EntidadFinancieraViewModel> result = new List<EntidadFinancieraViewModel>();
+
+            foreach (var item in _entidadFinanciera.Find().Where(x => x.Habilitado == enabled))
+            {
+                result.Add(new EntidadFinancieraViewModel(item));
+            }
+
+            return result;
+        }
+
         public EntidadFinancieraRegistroViewModel Find(int entidadFinancieraId)
         {
             return new EntidadFinancieraRegistroViewModel(_entidadFinanciera.Find(entidadFinancieraId));
