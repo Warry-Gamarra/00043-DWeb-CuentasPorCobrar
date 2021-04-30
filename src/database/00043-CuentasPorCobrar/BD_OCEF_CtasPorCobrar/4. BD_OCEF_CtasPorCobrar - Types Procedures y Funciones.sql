@@ -2050,7 +2050,7 @@ BEGIN
 
 	--3ro Comienzo con el calculo las obligaciones por alumno almacenandolas en @Tmp_Procesos.
 	declare @Tmp_Procesos table (I_ProcesoID int, I_ConcPagID int, M_Monto decimal(15,2), D_FecVencto datetime, I_TipoObligacion int, I_Prioridad tinyint)
-	
+
 	declare @C_Moneda varchar(3) = 'PEN',
 			@D_CurrentDate datetime = getdate(),
 			@I_FilaActual int = 1,
@@ -2298,23 +2298,27 @@ BEGIN
 			--Grabando otros pagos
 			if exists(select p.I_ProcesoID from @Tmp_Procesos p where p.I_Prioridad = 2)
 			begin
-
 				if not exists(select cab.I_ObligacionAluID from dbo.TR_ObligacionAluCab cab
 					where cab.B_Eliminado = 0 and cab.I_MatAluID = @I_MatAluID and
 						cab.I_ProcesoID in (select p.I_ProcesoID from @Tmp_Procesos p where p.I_Prioridad = 2))
 				begin
+				--Nuevos registros de obligaciones
+					--Insert de cabecera
 					insert dbo.TR_ObligacionAluCab(I_ProcesoID, I_MatAluID, C_Moneda, I_MontoOblig, B_Pagado, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, D_FecVencto)
 					select p.I_ProcesoID, @I_MatAluID, @C_Moneda, Sum(p.M_Monto), 0, 1, 0, @I_UsuarioCre, @D_CurrentDate, p.D_FecVencto from @Tmp_Procesos p
 					where p.I_Prioridad = 2
 					group by p.I_ProcesoID, p.D_FecVencto
 
+					--Insert de detalle
 					insert dbo.TR_ObligacionAluDet(I_ObligacionAluID, I_ConcPagID, I_Monto, B_Pagado, D_FecVencto, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
 					select cab.I_ObligacionAluID, p.I_ConcPagID, p.M_Monto, 0, p.D_FecVencto, 1, 0, @I_UsuarioCre, @D_CurrentDate from @Tmp_Procesos p
-					inner join dbo.TR_ObligacionAluCab cab on cab.B_Habilitado = 1 and cab.B_Eliminado = 0 and p.I_ProcesoID = cab.I_ProcesoID and DATEDIFF(Day, p.D_FecVencto, cab.D_FecVencto) = 0
+					inner join dbo.TR_ObligacionAluCab cab on cab.B_Habilitado = 1 and cab.B_Eliminado = 0 and p.I_ProcesoID = cab.I_ProcesoID and cab.I_MatAluID = @I_MatAluID and
+						DATEDIFF(Day, p.D_FecVencto, cab.D_FecVencto) = 0
 					where p.I_Prioridad = 2
 				end
 				else
 				begin
+				--Edición de obligaciones
 					if exists(select id from @Tmp_grupo_otros_pagos) begin
 						delete @Tmp_grupo_otros_pagos
 					end
@@ -2355,7 +2359,8 @@ BEGIN
 
 							insert dbo.TR_ObligacionAluDet(I_ObligacionAluID, I_ConcPagID, I_Monto, B_Pagado, D_FecVencto, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
 							select cab.I_ObligacionAluID, p.I_ConcPagID, p.M_Monto, 0, p.D_FecVencto, 1, 0, @I_UsuarioCre, @D_CurrentDate from @Tmp_Procesos p
-							inner join dbo.TR_ObligacionAluCab cab on cab.B_Habilitado = 1 and cab.B_Eliminado = 0 and p.I_ProcesoID = cab.I_ProcesoID and DATEDIFF(Day, p.D_FecVencto, cab.D_FecVencto) = 0
+							inner join dbo.TR_ObligacionAluCab cab on cab.B_Habilitado = 1 and cab.B_Eliminado = 0 and p.I_ProcesoID = cab.I_ProcesoID  and cab.I_MatAluID = @I_MatAluID and
+								DATEDIFF(Day, p.D_FecVencto, cab.D_FecVencto) = 0
 							where p.I_Prioridad = 2 and p.I_ProcesoID = @I_ProcesoID_OtrsPag
 						end
 

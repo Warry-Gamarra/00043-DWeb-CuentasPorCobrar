@@ -69,11 +69,16 @@ namespace WebApp.Models.Facades
                 throw new Exception("No existen Cuotas de Pago para el período " + anio.ToString() + " - " + periodoDesc + ".");
             }
 
-            int procesoID = procesos.First().I_ProcesoID;
+            int procesosSinConceptos = 0;
 
-            var conceptosPago = _conceptoPagoService.Listar_ConceptoPago_Proceso_Habilitados(procesoID);
+            procesos.ToList().ForEach(p => {
+                if (_conceptoPagoService.Listar_ConceptoPago_Proceso_Habilitados(p.I_ProcesoID).Count == 0)
+                {
+                    procesosSinConceptos++;
+                }
+            });
 
-            if (conceptosPago.Count() == 0)
+            if (procesos.Count() == procesosSinConceptos)
             {
                 throw new Exception("No existen Conceptos de Pago para el período " + anio.ToString() + " - " + periodoDesc + ".");
             }
