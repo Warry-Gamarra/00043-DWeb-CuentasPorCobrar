@@ -3079,6 +3079,7 @@ GO
 CREATE PROCEDURE [dbo].[USP_I_GrabarSeccionArchivo]
 	 @I_SecArchivoID	int
 	,@T_SecArchivoDesc	varchar(50)
+	,@I_TipoSeccion		tinyint
 	,@I_FilaInicio		smallint
 	,@I_FilaFin			smallint
 	,@I_TipArchivoEntFinanID	int
@@ -3091,8 +3092,8 @@ AS
 BEGIN
   SET NOCOUNT ON
   	BEGIN TRY
-		INSERT INTO TC_SeccionArchivo(T_SecArchivoDesc, I_FilaInicio, I_FilaFin, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, I_TipArchivoEntFinanID)
-							  VALUES (@T_SecArchivoDesc, @I_FilaInicio, @I_FilaFin, 1, 0, @CurrentUserId, @D_FecCre, @I_TipArchivoEntFinanID)
+		INSERT INTO TC_SeccionArchivo(T_SecArchivoDesc, I_TipoSeccion, I_FilaInicio, I_FilaFin, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, I_TipArchivoEntFinanID)
+							  VALUES (@T_SecArchivoDesc, @I_TipoSeccion, @I_FilaInicio, @I_FilaFin, 1, 0, @CurrentUserId, @D_FecCre, @I_TipArchivoEntFinanID)
 
 		SET @B_Result = 1
 		SET @T_Message = 'Nuevo registro agregado.'
@@ -3113,6 +3114,7 @@ GO
 CREATE PROCEDURE [dbo].[USP_U_ActualizarSeccionArchivo]
 	 @I_SecArchivoID	int
 	,@T_SecArchivoDesc	varchar(50)
+	,@I_TipoSeccion		tinyint
 	,@I_FilaInicio		smallint
 	,@I_FilaFin			smallint
 	,@I_TipArchivoEntFinanID	int
@@ -3128,6 +3130,7 @@ BEGIN
 	UPDATE	TC_SeccionArchivo 
 		SET	T_SecArchivoDesc = @T_SecArchivoDesc
 			, I_FilaInicio = @I_FilaInicio
+			, I_TipoSeccion = @I_TipoSeccion
 			, I_FilaFin = @I_FilaFin
 			, I_TipArchivoEntFinanID = @I_TipArchivoEntFinanID
 			, D_FecMod = @D_FecMod
