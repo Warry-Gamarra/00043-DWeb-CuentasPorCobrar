@@ -707,6 +707,7 @@ CREATE TABLE TC_SeccionArchivo
 ( 
 	I_SecArchivoID       int IDENTITY ( 1,1 ) ,
 	T_SecArchivoDesc     varchar(50)  NOT NULL ,
+	I_TipoSeccion		 tinyint NOT NULL,
 	I_FilaInicio         smallint  NOT NULL ,
 	I_FilaFin            smallint  NULL ,
 	B_Habilitado         bit  NOT NULL ,
