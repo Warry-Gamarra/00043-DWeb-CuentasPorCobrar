@@ -15,7 +15,9 @@ namespace Domain.Services
 
         Response Generar_Obligaciones_Posgrado(int anio, int periodo, int currentUserID);
 
-        Response Generar_Obligaciones_PorAlumno(int anio, int periodo, string codAlu, string codRc, int currentUserID);
+        Response Generar_ObligacionesPregrado_PorAlumno(int anio, int periodo, string codAlu, string codRc, int currentUserID);
+
+        Response Generar_ObligacionesPosgrado_PorAlumno(int anio, int periodo, string codAlu, string codRc, int currentUserID);
 
         IEnumerable<ObligacionDetalleDTO> Obtener_DetallePago(int anio, int periodo, string codAlu, string codRc);
 

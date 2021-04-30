@@ -104,7 +104,8 @@ namespace WebApp.Models
             {
                 C_CodAlu = alumno.C_CodAlu,
                 C_RcCod = alumno.C_RcCod,
-                T_EspDesc = alumno.T_DenomProg
+                T_EspDesc = alumno.T_DenomProg,
+                N_Grado = alumno.N_Grado
             };
 
             return result;

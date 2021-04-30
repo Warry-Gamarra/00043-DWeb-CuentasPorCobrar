@@ -18,5 +18,7 @@ namespace Domain.Services
         IEnumerable<MatriculaDTO> GetMatriculaPosgrado(int anio, int periodo);
 
         MultaNoVotarResponse GrabarAlumnosConMultaPorVoto(List<AlumnoMultaNoVotarEntity> alumnoMultaNoVotarEntity, int currentUserId);
+
+        MatriculaDTO GetMatricula(int anio, int periodo, string codAlu, string codRc);
     }
 }

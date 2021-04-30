@@ -68,6 +68,7 @@
   <ItemGroup>
     <Compile Include="Connection\Database.cs" />
     <Compile Include="Connection\ResponseData.cs" />
+    <Compile Include="Procedures\USP_IU_GenerarObligacionesPosgrado_X_Ciclo.cs" />
     <Compile Include="Procedures\USP_IU_GenerarObligacionesPregrado_X_Ciclo.cs" />
     <Compile Include="Procedures\USP_I_GrabarAlumnoMultaNoVotar.cs" />
     <Compile Include="Procedures\USP_I_GrabarPagoObligaciones.cs" />

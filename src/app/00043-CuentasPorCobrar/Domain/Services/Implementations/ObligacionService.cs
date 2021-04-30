@@ -31,14 +31,43 @@ namespace Domain.Services.Implementations
 
         public Response Generar_Obligaciones_Posgrado(int anio, int periodo, int currentUserID)
         {
-            throw new NotImplementedException();
+            ResponseData result;
+
+            var generarObligaciones = new USP_IU_GenerarObligacionesPosgrado_X_Ciclo()
+            {
+                I_Anio = anio,
+                I_Periodo = periodo,
+                I_UsuarioCre = currentUserID
+            };
+
+            result = generarObligaciones.Execute();
+
+            return new Response(result);
         }
 
-        public Response Generar_Obligaciones_PorAlumno(int anio, int periodo, string codAlu, string codRc, int currentUserID)
+        public Response Generar_ObligacionesPregrado_PorAlumno(int anio, int periodo, string codAlu, string codRc, int currentUserID)
         {
             ResponseData result;
 
             var generarObligaciones = new USP_IU_GenerarObligacionesPregrado_X_Ciclo()
+            {
+                I_Anio = anio,
+                I_Periodo = periodo,
+                C_CodAlu = codAlu,
+                C_CodRc = codRc,
+                I_UsuarioCre = currentUserID
+            };
+
+            result = generarObligaciones.Execute();
+
+            return new Response(result);
+        }
+
+        public Response Generar_ObligacionesPosgrado_PorAlumno(int anio, int periodo, string codAlu, string codRc, int currentUserID)
+        {
+            ResponseData result;
+
+            var generarObligaciones = new USP_IU_GenerarObligacionesPosgrado_X_Ciclo()
             {
                 I_Anio = anio,
                 I_Periodo = periodo,

@@ -10,7 +10,7 @@ namespace WebApp.Models.Facades
     {
         Response Generar_Obligaciones(int anio, int periodo, TipoEstudio tipoEstudio, string codFacultad, int currentUserID);
 
-        Response Generar_Obligaciones_PorAlumno(int anio, int periodo, string codAlu, string codRc, int currentUserID);
+        Response Generar_Obligaciones_PorAlumno(int anio, int periodo, string codAlu, string codRc, string nivel, int currentUserID);
 
         List<ObligacionDetalleModel> Obtener_DetallePago(int anio, int periodo, string codAlu, string codRc);
 

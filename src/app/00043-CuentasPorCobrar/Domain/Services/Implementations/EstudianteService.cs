@@ -225,5 +225,19 @@ namespace Domain.Services.Implementations
 
             return result;
         }
+
+        public MatriculaDTO GetMatricula(int anio, int periodo, string codAlu, string codRc)
+        {
+            MatriculaDTO result = null;
+
+            var matricula = VW_MatriculaAlumno.GetMatricula(anio, periodo, codAlu, codRc);
+
+            if (matricula != null)
+            {
+                result = Mapper.MatriculaDTO_To_VW_MatriculaAlumno(matricula);
+            }
+
+            return result;
+        }
     }
 }

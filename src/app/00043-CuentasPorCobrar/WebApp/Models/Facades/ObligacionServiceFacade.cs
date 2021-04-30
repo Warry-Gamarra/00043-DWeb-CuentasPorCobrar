@@ -21,6 +21,9 @@ namespace WebApp.Models.Facades
         private const string C_NivelMaestria = "2";
         private const string C_NivelDoctorado = "3";
 
+        private const string C_TipoAlumnoIngresante = "2";
+        private const string C_TipoAlumnoRegular = "1";
+
         public ObligacionServiceFacade()
         {
             _obligacionService = new ObligacionService();
@@ -118,9 +121,83 @@ namespace WebApp.Models.Facades
             }
         }
 
-        public Response Generar_Obligaciones_PorAlumno(int anio, int periodo, string codAlu, string codRc, int currentUserID)
+        public Response Generar_Obligaciones_PorAlumno(int anio, int periodo, string codAlu, string codRc, string nivel, int currentUserID)
         {
-            return _obligacionService.Generar_Obligaciones_PorAlumno(anio, periodo, codAlu, codRc, currentUserID);
+            TipoEstudio tipoEstudio;
+
+            if (nivel == C_NivelPregrado)
+            {
+                tipoEstudio = TipoEstudio.Pregrado;
+            }
+            else if (nivel == C_NivelMaestria || nivel == C_NivelDoctorado)
+            {
+                tipoEstudio = TipoEstudio.Posgrado;
+            }
+            else
+            {
+                throw new NotImplementedException("Ha ocurrido un error al identificar si el alumno es de Pregrado o Posgrado.");
+            }
+
+            var matricula = _estudianteService.GetMatricula(anio, periodo, codAlu, codRc);
+
+            if (matricula == null)
+            {
+                throw new Exception("El alumno no es encuentra matriculado en el período actual.");
+            }
+
+            string tipoAlumno = matricula.B_Ingresante.Value ? C_TipoAlumnoIngresante : C_TipoAlumnoRegular;
+
+            IEnumerable<Proceso> procesos = _procesoService.Listar_Procesos().Where(x => x.C_Nivel == nivel && x.C_TipoAlumno == tipoAlumno);
+
+            if (procesos.Count() == 0)
+            {
+                throw new Exception("No existen Cuotas de Pago para " + tipoEstudio.ToString() + ".");
+            }
+
+            procesos = procesos.Where(x => x.I_Anio == anio);
+
+            if (procesos.Count() == 0)
+            {
+                throw new Exception("No existen Cuotas de Pago para el año " + anio.ToString() + ".");
+            }
+
+            var periodos = _catalogoService.Listar_Catalogo(Parametro.Periodo);
+
+            var periodoDesc = periodos.Where(x => x.I_OpcionID == periodo).First().T_OpcionDesc;
+
+            procesos = procesos.Where(x => x.I_Periodo == periodo);
+
+            if (procesos.Count() == 0)
+            {
+                throw new Exception("No existen Cuotas de Pago para el período " + anio.ToString() + " - " + periodoDesc + ".");
+            }
+
+            int procesosSinConceptos = 0;
+
+            procesos.ToList().ForEach(p =>
+            {
+                if (_conceptoPagoService.Listar_ConceptoPago_Proceso_Habilitados(p.I_ProcesoID).Count == 0)
+                {
+                    procesosSinConceptos++;
+                }
+            });
+
+            if (procesos.Count() == procesosSinConceptos)
+            {
+                throw new Exception("No existen Conceptos de Pago para el período " + anio.ToString() + " - " + periodoDesc + ".");
+            }
+
+            switch (tipoEstudio)
+            {
+                case TipoEstudio.Pregrado:
+                    return _obligacionService.Generar_ObligacionesPregrado_PorAlumno(anio, periodo, codAlu, codRc, currentUserID);
+
+                case TipoEstudio.Posgrado:
+                    return _obligacionService.Generar_ObligacionesPosgrado_PorAlumno(anio, periodo, codAlu, codRc, currentUserID);
+
+                default:
+                    throw new NotImplementedException("Ha ocurrido un error al identificar si el alumno es de Pregrado o Posgrado.");
+            }
         }
 
         public List<ObligacionDetalleModel> Obtener_DetallePago(int anio, int periodo, string codAlu, string codRc)

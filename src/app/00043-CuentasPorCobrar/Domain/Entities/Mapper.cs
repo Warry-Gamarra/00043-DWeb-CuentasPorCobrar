@@ -207,7 +207,10 @@ namespace Domain.Entities
                 N_CodBanco = uspProceso.N_CodBanco,
                 B_Obligacion = uspProceso.B_Obligacion,
                 I_Nivel = uspProceso.I_Nivel,
-                C_Nivel = uspProceso.C_Nivel
+                C_Nivel = uspProceso.C_Nivel,
+                I_TipoAlumno = uspProceso.I_TipoAlumno,
+                T_TipoAlumno = uspProceso.T_TipoAlumno,
+                C_TipoAlumno = uspProceso.C_TipoAlumno
             };
 
             return proceso;

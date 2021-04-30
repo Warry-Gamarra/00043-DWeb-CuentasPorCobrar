@@ -162,7 +162,9 @@ namespace WebApp.Controllers
                 throw new Exception("El alumno no existe en la especialidad seleccionada.");
             }
 
-            var result = obligacionServiceFacade.Generar_Obligaciones_PorAlumno(anio, periodo, codAlu, codRc, 0);
+            int currentUserID = WebSecurity.CurrentUserId;
+
+            var result = obligacionServiceFacade.Generar_Obligaciones_PorAlumno(anio, periodo, codAlu, codRc, alumno.First().N_Grado, currentUserID);
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }        

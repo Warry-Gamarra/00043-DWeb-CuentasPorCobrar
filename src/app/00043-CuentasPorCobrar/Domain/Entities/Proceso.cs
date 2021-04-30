@@ -22,5 +22,8 @@ namespace Domain.Entities
         public bool B_Obligacion { get; set; }
         public int I_Nivel { get; set; }
         public string C_Nivel { get; set; }
+        public int I_TipoAlumno { get; set; }
+        public string T_TipoAlumno { get; set; }
+        public string C_TipoAlumno { get; set; }
     }
 }

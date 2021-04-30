@@ -12,5 +12,7 @@ namespace WebApp.Models
         public string C_RcCod { get; set; }
 
         public string T_EspDesc { get; set; }
+
+        public string N_Grado { get; set; }
     }
 }
