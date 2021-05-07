@@ -11,4 +11,11 @@ namespace Domain.Helpers
         public int CuentaDepoId { get; set; }
         public int EntidadFinanId { get; set; }
     }
+
+
+    public struct Posicion
+    {
+        public int Inicial { get; set; }
+        public int Final { get; set; }
+    }
 }

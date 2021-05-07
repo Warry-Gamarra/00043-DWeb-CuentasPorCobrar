@@ -14,6 +14,7 @@ namespace Data.Tables
     {
         public int I_SecArchivoID { get; set; }
         public string T_SecArchivoDesc { get; set; }
+        public int I_TipoSeccion { get; set; }
         public int I_FilaInicio { get; set; }
         public int I_FilaFin { get; set; }
         public bool B_Habilitado { get; set; }
@@ -95,10 +96,11 @@ namespace Data.Tables
                 {
                     parameters.Add(name: "I_SecArchivoID", dbType: DbType.Int32, value: this.I_SecArchivoID);
                     parameters.Add(name: "T_SecArchivoDesc", dbType: DbType.String, size: 50, value: this.T_SecArchivoDesc);
+                    parameters.Add(name: "I_TipoSeccion", dbType: DbType.Byte, value: this.I_TipoSeccion);
                     parameters.Add(name: "I_FilaInicio", dbType: DbType.Int16, value: this.I_FilaInicio);
                     parameters.Add(name: "I_FilaFin", dbType: DbType.Int16, value: this.I_FilaFin);
                     parameters.Add(name: "I_TipArchivoEntFinanID", dbType: DbType.Int32, value: this.I_TipArchivoEntFinanID);
-                    parameters.Add(name: "D_FecMod", dbType: DbType.DateTime, value: this.D_FecCre);
+                    parameters.Add(name: "D_FecCre", dbType: DbType.DateTime, value: this.D_FecCre);
                     parameters.Add(name: "CurrentUserId", dbType: DbType.Int32, value: this.I_UsuarioCre);
 
                     parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);
@@ -130,6 +132,8 @@ namespace Data.Tables
                 {
                     parameters.Add(name: "I_SecArchivoID", dbType: DbType.Int32, value: this.I_SecArchivoID);
                     parameters.Add(name: "T_SecArchivoDesc", dbType: DbType.String, size: 50, value: this.T_SecArchivoDesc);
+                    parameters.Add(name: "I_TipoSeccion", dbType: DbType.Byte, value: this.I_TipoSeccion);
+                    parameters.Add(name: "I_FilaInicio", dbType: DbType.Int16, value: this.I_FilaInicio);
                     parameters.Add(name: "I_FilaInicio", dbType: DbType.Int16, value: this.I_FilaInicio);
                     parameters.Add(name: "I_FilaFin", dbType: DbType.Int16, value: this.I_FilaFin);
                     parameters.Add(name: "I_TipArchivoEntFinanID", dbType: DbType.Int32, value: this.I_TipArchivoEntFinanID);

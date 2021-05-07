@@ -3219,6 +3219,7 @@ GO
 
 CREATE PROCEDURE [dbo].[USP_U_ActualizarColumnaSeccion]
 	 @I_ColSecID		int
+	,@I_CampoPagoID		int
 	,@T_ColSecDesc		varchar(50)
 	,@I_ColumnaInicio	smallint
 	,@I_ColumnaFin		smallint
@@ -3234,6 +3235,7 @@ BEGIN
   	BEGIN TRY
 	UPDATE	TC_ColumnaSeccion 
 		SET	T_ColSecDesc = @T_ColSecDesc
+			, I_CampoPagoID = @I_CampoPagoID
 			, I_ColumnaInicio = @I_ColumnaInicio
 			, I_ColumnaFin = @I_ColumnaFin
 			, I_SecArchivoID = @I_SecArchivoID

@@ -31,6 +31,7 @@ namespace Domain.Entities
             _columnaSeccion = new TC_ColumnaSeccion();
         }
 
+
         public Response ChangeState(int tipArchivoEntFinanID, bool currentState, int currentUserId)
         {
             _tipoArchivo_Entidad.I_TipArchivoEntFinanID = tipArchivoEntFinanID;
@@ -102,6 +103,7 @@ namespace Domain.Entities
             };
         }
 
+
         public List<SeccionArchivo> FindSeccionesArchivos()
         {
             List<SeccionArchivo> result = new List<SeccionArchivo>();
@@ -120,7 +122,8 @@ namespace Domain.Entities
                     ArchivoEntrada = item.B_ArchivoEntrada,
                     EntidadDesc = item.T_EntidadDesc,
                     EntidadFinanID = item.I_EntidadFinanID,
-                    TipoArchivoID = item.I_TipoArchivoID
+                    TipoArchivoID = item.I_TipoArchivoID,
+                    TipoSeccionID = item.I_TipoSeccion
                 });
             }
 
@@ -171,7 +174,8 @@ namespace Domain.Entities
                     ArchivoEntrada = item.B_ArchivoEntrada,
                     EntidadDesc = item.T_EntidadDesc,
                     EntidadFinanID = item.I_EntidadFinanID,
-                    TipoArchivoID = item.I_TipoArchivoID
+                    TipoArchivoID = item.I_TipoArchivoID,
+                    TipoSeccionID = item.I_TipoSeccion
                 });
             }
 
@@ -195,7 +199,7 @@ namespace Domain.Entities
                     CampoPagoID = item.I_CampoPagoID,
                     ColSecID = item.I_ColSecID,
                     ColSecDesc = item.T_ColSecDesc,
-                    CampoPagoDesc = item.T_CampoInfoDesc,
+                    CampoPagoDesc = string.IsNullOrEmpty(item.T_CampoInfoDesc) ? "no relacionado" : item.T_CampoInfoDesc,
                     CampoPagoNom = item.T_CampoPagoNom,
                     TablaPagoNom = item.T_TablaPagoNom
                 });
@@ -223,51 +227,41 @@ namespace Domain.Entities
             return new Response(_columnaSeccion.ChangeState(currentUserId));
         }
 
-
-
-        public Response EstructuraSeccionSave(SeccionArchivo seccionesArchivo, List<ColumnaSeccion> columnasSeccion, int currentUserId, SaveOption saveOption)
+        public Response EstructuraSeccionSave(SeccionArchivo seccionesArchivo, int currentUserId, SaveOption saveOption)
         {
             Response resultSeccion;
-            String ColumnErrors = "";
+
+            _seccionArchivo.I_SecArchivoID = seccionesArchivo.SecArchivoID;
+            _seccionArchivo.T_SecArchivoDesc = seccionesArchivo.SecArchivoDesc;
+            _seccionArchivo.I_FilaInicio = seccionesArchivo.FilaInicio;
+            _seccionArchivo.I_FilaFin = seccionesArchivo.FilaFin;
+            _seccionArchivo.I_TipArchivoEntFinanID = seccionesArchivo.TipArchivoEntFinanID;
+            _seccionArchivo.I_TipoSeccion = seccionesArchivo.TipoSeccionID;
 
             switch (saveOption)
             {
                 case SaveOption.Insert:
-                    _tipoArchivo_Entidad.D_FecCre = DateTime.Now;
-                    _tipoArchivo_Entidad.I_UsuarioCre = currentUserId;
-                    resultSeccion = new Response(_tipoArchivo_Entidad.Insert());
+                    _seccionArchivo.D_FecCre = DateTime.Now;
+                    _seccionArchivo.I_UsuarioCre = currentUserId;
+                    resultSeccion = new Response(_seccionArchivo.Insert());
                     break;
                 case SaveOption.Update:
-                    _tipoArchivo_Entidad.D_FecMod = DateTime.Now;
-                    _tipoArchivo_Entidad.I_UsuarioMod = currentUserId;
-                    resultSeccion = new Response(_tipoArchivo_Entidad.Update());
+                    _seccionArchivo.D_FecMod = DateTime.Now;
+                    _seccionArchivo.I_UsuarioMod = currentUserId;
+                    resultSeccion = new Response(_seccionArchivo.Update());
                     break;
                 default:
                     return new Response()
                     {
                         Value = false,
                         Message = "Operación Inváiida."
-                    }; 
+                    };
             }
 
-            if (resultSeccion.Value)
-            {
-                foreach (var columna in columnasSeccion)
-                {
-                    var resultColumnas = EstructuraColumnaSeccionSave(columna, currentUserId, columna.ColSecID == 0 ? SaveOption.Insert : SaveOption.Update);
-
-                    if (!resultColumnas.Value)
-                    {
-                        ColumnErrors += "- " + resultColumnas.Message + "\n";
-                    }
-                }
-            }
-
-            return new Response { Value = resultSeccion.Value, Message = resultSeccion.Message, Action = ColumnErrors };
+            return new Response { Value = resultSeccion.Value, Message = resultSeccion.Message };
         }
 
-
-        private Response EstructuraColumnaSeccionSave(ColumnaSeccion columnaSeccion, int currentUserId, SaveOption saveOption)
+        public Response EstructuraColumnaSeccionSave(ColumnaSeccion columnaSeccion, int currentUserId, SaveOption saveOption)
         {
             _columnaSeccion.I_SecArchivoID = columnaSeccion.SecArchivoID;
             _columnaSeccion.I_ColSecID = columnaSeccion.ColSecID;

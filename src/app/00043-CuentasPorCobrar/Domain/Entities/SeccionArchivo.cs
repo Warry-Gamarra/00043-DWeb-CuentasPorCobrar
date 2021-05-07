@@ -14,6 +14,7 @@ namespace Domain.Entities
         public int FilaFin { get; set; }
         public bool Habilitado { get; set; }
         public int TipArchivoEntFinanID { get; set; }
+        public int TipoSeccionID { get; set; }
 
         public string TipoArchivDesc { get; set; }
         public bool ArchivoEntrada { get; set; }

@@ -179,7 +179,9 @@ namespace Data.Tables
             {
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    string s_command = @"SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES";
+                    string s_command = @"SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES
+                                         UNION 
+                                         SELECT DOMAIN_NAME FROM INFORMATION_SCHEMA.DOMAINS WHERE DATA_TYPE = 'table type'";
 
                     result = _dbConnection.Query<string>(s_command, commandType: CommandType.Text).ToList();
                 }
@@ -200,7 +202,11 @@ namespace Data.Tables
             {
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    string s_command = @"SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @TABLE_NAME";
+                    string s_command = @"SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @TABLE_NAME 
+                                         UNION
+                                         SELECT C.name as COLUMN_NAME from sys.table_types TT 
+                                                INNER JOIN sys.columns C ON C.object_id = TT.type_table_object_id
+                                         WHERE tt.name = @TABLE_NAME";
 
                     result = _dbConnection.Query<string>(s_command, new { TABLE_NAME = tableName }, commandType: CommandType.Text).ToList();
                 }
