@@ -393,6 +393,7 @@ CREATE TABLE TC_Concepto
 	T_Clasificador       varchar(50)  NULL ,
 	I_Monto				 decimal(15,2) NOT NULL ,
 	I_MontoMinimo		 decimal(15,2) NOT NULL ,
+	B_EsObligacion		bit  NOT NULL ,
 	B_EsPagoMatricula    bit  NOT NULL ,
 	B_EsPagoExtmp        bit  NOT NULL ,
 	B_ConceptoAgrupa     bit  NOT NULL ,

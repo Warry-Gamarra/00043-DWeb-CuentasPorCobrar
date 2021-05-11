@@ -252,5 +252,34 @@ namespace WebApp.Models
 
             return response;
         }
+
+        public static MatriculaModel MatriculaDTO_To_MatriculaModel(MatriculaDTO matriculaDTO)
+        {
+            var matriculaModel = new MatriculaModel()
+            {
+                I_MatAluID = matriculaDTO.I_MatAluID,
+                C_CodAlu = matriculaDTO.C_CodAlu,
+                C_RcCod = matriculaDTO.C_RcCod,
+                T_Nombre = matriculaDTO.T_Nombre,
+                T_ApePaterno = matriculaDTO.T_ApePaterno,
+                T_ApeMaterno = matriculaDTO.T_ApeMaterno,
+                N_Grado = matriculaDTO.N_Grado,
+                I_Anio = matriculaDTO.I_Anio,
+                I_Periodo = matriculaDTO.I_Periodo,
+                C_CodFac = matriculaDTO.C_CodFac,
+                C_EstMat = matriculaDTO.C_EstMat,
+                C_Ciclo = matriculaDTO.C_Ciclo,
+                B_Ingresante = matriculaDTO.B_Ingresante,
+                I_CredDesaprob = matriculaDTO.I_CredDesaprob,
+                B_Habilitado = matriculaDTO.B_Habilitado,
+                C_Periodo = matriculaDTO.C_Periodo,
+                T_Periodo = matriculaDTO.T_Periodo,
+                T_DenomProg = matriculaDTO.T_DenomProg,
+                T_ModIngDesc = matriculaDTO.T_ModIngDesc,
+                B_TieneMultaPorNoVotar = matriculaDTO.B_TieneMultaPorNoVotar
+            };
+
+            return matriculaModel;
+        }
     }
 }

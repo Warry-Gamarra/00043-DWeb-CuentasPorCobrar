@@ -16,6 +16,7 @@ namespace Data.Tables
         public string T_ConceptoDesc { get; set; }
         public string T_Clasificador { get; set; }
         public bool B_EsPagoMatricula { get; set; }
+        public bool B_EsObligacion { get; set; }
         public bool B_EsPagoExtmp { get; set; }
         public bool B_ConceptoAgrupa { get; set; }
         public bool B_Calculado { get; set; }
@@ -59,9 +60,9 @@ namespace Data.Tables
             {
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    var s_command = @"SELECT c.* FROM TC_Concepto c WHERE c.B_Eliminado = 0 AND B_EsPagoMatricula = @B_EsPagoMatricula";
+                    var s_command = @"SELECT c.* FROM TC_Concepto c WHERE c.B_Eliminado = 0 AND c.B_EsObligacion = @B_EsObligacion";
 
-                    result = _dbConnection.Query<TC_Concepto>(s_command, new { B_EsPagoMatricula = esObligacion ? 1 : 0 }, commandType: CommandType.Text).ToList();
+                    result = _dbConnection.Query<TC_Concepto>(s_command, new { B_EsObligacion = esObligacion ? 1 : 0 }, commandType: CommandType.Text).ToList();
                 }
             }
             catch (Exception ex)

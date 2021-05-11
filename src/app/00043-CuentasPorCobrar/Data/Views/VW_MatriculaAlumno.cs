@@ -41,6 +41,16 @@ namespace Data.Views
         public byte? I_CredDesaprob { get; set; }
 
         public bool B_Habilitado { get; set; }
+        
+        public string C_Periodo { get; set; }
+
+        public string T_Periodo { get; set; }
+
+        public string T_DenomProg { get; set; }
+
+        public string T_ModIngDesc { get; set; }
+
+        public bool B_TieneMultaPorNoVotar { get; set; }
 
         public static IEnumerable<VW_MatriculaAlumno> GetPregrado(int anio, int periodo)
         {
