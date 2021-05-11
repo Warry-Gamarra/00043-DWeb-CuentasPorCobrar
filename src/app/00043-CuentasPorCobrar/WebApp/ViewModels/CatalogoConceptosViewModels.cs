@@ -71,6 +71,15 @@ namespace WebApp.ViewModels
         public int TipoCalculo { get; set; }
         public int TipoObligacion { get; set; }
 
+        [Display(Name = "Grupo Cod_Rc")]
+        [RequiredWhenBoolenIsTrue("B_GrupoCodRc")]
+        public int? I_GrupoCodRc { get; set; }
+
+        [Display(Name = "Especialidad")]
+        [RequiredWhenBoolenIsTrue("B_Especialidad")]
+        public char? C_CodRc { get; set; }
+
+
         public CatalogoConceptosRegistroViewModel() { }
 
         public CatalogoConceptosRegistroViewModel(ConceptoEntity concepto)

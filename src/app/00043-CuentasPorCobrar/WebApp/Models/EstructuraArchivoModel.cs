@@ -283,6 +283,7 @@ namespace WebApp.Models
                                                         .FirstOrDefault(x => x.Habilitado &&
                                                                              x.EntidadFinanID == entidadFinancieraId &&
                                                                              x.TipoArchivoID == (int)tipoArchivoEntFinan);
+
             if (archivoIntercambio != null)
             {
                 List<SeccionArchivo> secciones = _archivoIntercambio.FindSeccionesArchivos(archivoIntercambio.TipArchivoEntFinanID.Value);
@@ -295,6 +296,8 @@ namespace WebApp.Models
                         SecArchivoID = seccion.SecArchivoID,
                         FilPosicionIni = seccion.FilaInicio,
                         FilPosicionFin = seccion.FilaFin,
+                        SecArchivoDesc = seccion.SecArchivoDesc,
+                        TipoSeccion = Enum.GetValues(typeof(TipoSeccionArchivo)).Cast<TipoSeccionArchivo>().SingleOrDefault(x => (int)x == seccion.TipoSeccionID),
                         ColumnasSeccion = _archivoIntercambio.FindColumnasSeccion(seccion.SecArchivoID)
                                                              .Select(x => new ColumnaSeccionViewModel
                                                              {
@@ -302,7 +305,7 @@ namespace WebApp.Models
                                                                  ColPosicionIni = x.ColumnaInicio,
                                                                  ColPosicionFin = x.ColumnaFin,
                                                                  CampoTablaId = x.CampoPagoID,
-                                                                 CampoTablaNom = x.CampoPagoNom,
+                                                                 CampoTablaNom = string.IsNullOrEmpty(x.CampoPagoNom) ? x.ColSecID.ToString(): x.CampoPagoNom ,
                                                                  TablaCampoNom = x.TablaPagoNom
                                                              })
                                                              .ToList()

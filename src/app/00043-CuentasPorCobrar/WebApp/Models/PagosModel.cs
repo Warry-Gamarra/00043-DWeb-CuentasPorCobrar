@@ -19,6 +19,7 @@ namespace WebApp.Models
         public PagosModel()
         {
             _obligacionService = new ObligacionService();
+            _estructuraArchivoModel = new EstructuraArchivoModel();
         }
 
         public Response CargarArchivoPagos(string serverPath, HttpPostedFileBase file, CargarArchivoViewModel model, int currentUserId)
@@ -33,27 +34,37 @@ namespace WebApp.Models
 
             Response response;
             string fileName = "";
-
-            switch (model.TipoArchivo)
-            {
-                case TipoPago.Obligacion:
-                    serverPath += "Obligaciones/";
-                    break;
-                case TipoPago.Tasa:
-                    serverPath += "Tasas/";
-                    break;
-                default:
-                    break;
-            }
+            string filePathSaved = "";
 
             try
             {
-                fileName = GuardarArchivoEnHost(serverPath, model.EntidadFinanciera, file);
+                fileName = GenerarNombreArchivo(model.EntidadFinanciera, file);
+                filePathSaved = GuardarArchivoPagoEnHost(serverPath, fileName, model.TipoArchivo, file);
 
-                response = GuardarDatosObligaciones(serverPath + fileName, model.EntidadFinanciera, currentUserId);
+                List<PagoObligacionEntity> lstPagoObligaciones = LeerDetalleArchivoPagoObligaciones(filePathSaved, model.EntidadFinanciera);
+
+                if (lstPagoObligaciones != null)
+                {
+                    response = _obligacionService.Grabar_Pago_Obligaciones(lstPagoObligaciones, currentUserId);
+                }
+                else
+                {
+                    response = new Response() { Message = "No se encontró una estructura de columnas configuradas para el archivo" };
+                }
+
+                if (response.Value)
+                {
+                    response.Success(false);
+                }
+                else
+                {
+                    EliminarArchivoHost(serverPath, fileName);
+                    response.Error(false);
+                }
             }
             catch (Exception ex)
             {
+                EliminarArchivoHost(serverPath, fileName);
                 response = new Response()
                 {
                     Message = ex.Message
@@ -63,17 +74,35 @@ namespace WebApp.Models
             return response;
         }
 
-        private string GuardarArchivoEnHost(string serverPath, int entFinanId, HttpPostedFileBase file)
+        private string GenerarNombreArchivo(int entFinanId, HttpPostedFileBase file)
         {
+            return entFinanId.ToString() + "_"
+                    + Path.GetFileNameWithoutExtension(file.FileName) + "_"
+                    + Guid.NewGuid() + Path.GetExtension(file.FileName);
+        }
+
+        private string GuardarArchivoPagoEnHost(string serverPath, string fileName, TipoPago tipoPago, HttpPostedFileBase file)
+        {
+            string filePath;
             try
             {
-                string fileName = entFinanId.ToString() + "_" 
-                                  + Path.GetFileNameWithoutExtension(file.FileName) + "_" 
-                                  + Guid.NewGuid() + Path.GetExtension(file.FileName);
+                switch (tipoPago)
+                {
+                    case TipoPago.Obligacion:
+                        serverPath += "Obligaciones/";
+                        break;
+                    case TipoPago.Tasa:
+                        serverPath += "Tasas/";
+                        break;
+                    default:
+                        break;
+                }
 
-                file.SaveAs(serverPath + fileName);
+                filePath = serverPath + fileName;
 
-                return fileName;
+                file.SaveAs(filePath);
+
+                return filePath;
             }
             catch (Exception ex)
             {
@@ -81,18 +110,15 @@ namespace WebApp.Models
             }
         }
 
-        private Response GuardarDatosObligaciones(string filePath, int entFinanId, int currentUserId)
+        private void EliminarArchivoHost(string serverPath, string fileName)
         {
-            var result = new Response();
-            var lista = LeerEstructuraArchivoPagoObligaciones(filePath, entFinanId);
-            return result;
+            File.Delete(serverPath + fileName);
         }
 
-
-        private List<PagoObligacionEntity> LeerEstructuraArchivoPagoObligaciones(string filePath, int entFinanId)
+        private List<PagoObligacionEntity> LeerDetalleArchivoPagoObligaciones(string filePath, int entFinanId)
         {
-            string line;
-            int fila = 0;
+            string fileLine;
+            List<string> linesFile = new List<string>();
             List<SeccionArchivoViewModel> estructuraArchivo = _estructuraArchivoModel.ObtenerEstructuraArchivo(entFinanId, TipoArchivoEntFinan.Recaudacion_Obligaciones);
 
             if (estructuraArchivo.Count == 0)
@@ -100,47 +126,47 @@ namespace WebApp.Models
                 return null;
             }
 
-            var detalle = estructuraArchivo[1];
-            var columnas = detalle.ColumnasSeccion;
+            var detalle = estructuraArchivo.Find(x => x.TipoSeccion == TipoSeccionArchivo.Detalle_Recaudacion);
+            if (detalle == null)
+            {
+                return null;
+            }
 
-            var col_CodOperacion = columnas.FirstOrDefault(x => x.CampoTablaNom == "C_CodOperacion");
-            var col_NomDepositante = columnas.FirstOrDefault(x => x.CampoTablaNom == "T_NomDepositante");
-            var col_Referencia = columnas.FirstOrDefault(x => x.CampoTablaNom == "C_Referencia");
-            var col_FecPago = columnas.FirstOrDefault(x => x.CampoTablaNom == "D_FecPago");
-            var col_Cantidad = columnas.FirstOrDefault(x => x.CampoTablaNom == "I_Cantidad");
-            var col_Moneda = columnas.FirstOrDefault(x => x.CampoTablaNom == "C_Moneda");
-            var col_MontoPago = columnas.FirstOrDefault(x => x.CampoTablaNom == "I_MontoPago");
-            var col_LugarPago = columnas.FirstOrDefault(x => x.CampoTablaNom == "T_LugarPago");
-            var col_CodAlu = columnas.FirstOrDefault(x => x.CampoTablaNom == "C_CodDepositante");
-            var col_CodRc = columnas.FirstOrDefault(x => x.CampoTablaNom == "C_CodRc");
-            var col_ProcesoID = columnas.FirstOrDefault(x => x.CampoTablaNom == "I_ProcesoID");
-            var col_FecVencto = columnas.FirstOrDefault(x => x.CampoTablaNom == "D_FecVencto");
+            var columnas = detalle.ColumnasSeccion.ToDictionary(x => x.CampoTablaNom, x => new Posicion { Inicial = x.ColPosicionIni, Final = x.ColPosicionFin });
 
             StreamReader file = new StreamReader(filePath);
 
             var result = new List<PagoObligacionEntity>();
 
-            while ((line = file.ReadLine()) != null)
+            while ((fileLine = file.ReadLine()) != null)
             {
-                fila++;
-                if (detalle.FilPosicionIni <= fila && (fila <= detalle.FilPosicionFin || detalle.FilPosicionFin == 0))
-                {
-                    var pagoEntity = new PagoObligacionEntity();
-
-                    pagoEntity.C_CodOperacion = line.Substring(col_CodOperacion.ColPosicionIni - 1, col_CodOperacion.ColPosicionFin - 1);
-                    pagoEntity.T_NomDepositante = line.Substring(col_NomDepositante.ColPosicionIni - 1, col_NomDepositante.ColPosicionFin - 1);
-                    pagoEntity.C_Referencia = line.Substring(col_Referencia.ColPosicionIni - 1, col_Referencia.ColPosicionFin - 1);
-                    pagoEntity.D_FecPago = DateTime.Parse(line.Substring(col_FecPago.ColPosicionIni - 1, col_FecPago.ColPosicionFin - 1));
-                    pagoEntity.I_Cantidad = int.Parse(line.Substring(col_Cantidad.ColPosicionIni - 1, col_Cantidad.ColPosicionFin - 1));
-                    pagoEntity.C_Moneda = line.Substring(col_Moneda.ColPosicionIni - 1, col_Moneda.ColPosicionFin - 1);
-                    pagoEntity.I_MontoPago = decimal.Parse(line.Substring(col_MontoPago.ColPosicionIni - 1, col_MontoPago.ColPosicionFin - 1));
-                    pagoEntity.T_LugarPago = line.Substring(col_LugarPago.ColPosicionIni - 1, col_LugarPago.ColPosicionFin - 1);
-                    pagoEntity.C_CodAlu = line.Substring(col_CodAlu.ColPosicionIni - 1, col_CodAlu.ColPosicionFin - 1);
-                    pagoEntity.C_CodRc = line.Substring(col_CodRc.ColPosicionIni - 1, col_CodRc.ColPosicionFin - 1);
-                    pagoEntity.I_ProcesoID = int.Parse(line.Substring(col_ProcesoID.ColPosicionIni - 1, col_ProcesoID.ColPosicionFin - 1));
-                    pagoEntity.D_FecVencto = DateTime.Parse(line.Substring(col_FecVencto.ColPosicionIni - 1, col_FecVencto.ColPosicionFin - 1));
-                }
+                linesFile.Add(fileLine);
             }
+
+            detalle.FilPosicionFin = detalle.FilPosicionFin == 0 ? linesFile.Count() : detalle.FilPosicionFin;
+
+            for (int i = detalle.FilPosicionIni - 1; i < detalle.FilPosicionFin; i++)
+            {
+                string line = linesFile[i];
+                var pagoEntity = new PagoObligacionEntity();
+
+                pagoEntity.C_CodOperacion = line.Substring(columnas["C_CodOperacion"].Inicial - 1, columnas["C_CodOperacion"].Final - 1);
+                pagoEntity.T_NomDepositante = line.Substring(columnas["T_NomDepositante"].Inicial - 1, columnas["T_NomDepositante"].Final - 1);
+                pagoEntity.C_Referencia = line.Substring(columnas["C_Referencia"].Inicial - 1, columnas["C_Referencia"].Final - 1);
+                pagoEntity.D_FecPago = DateTime.Parse(line.Substring(columnas["D_FecPago"].Inicial - 1, columnas["D_FecPago"].Final - 1));
+                pagoEntity.I_Cantidad = int.Parse(line.Substring(columnas["I_Cantidad"].Inicial - 1, columnas["I_Cantidad"].Final - 1));
+                pagoEntity.C_Moneda = line.Substring(columnas["C_Moneda"].Inicial - 1, columnas["C_Moneda"].Final - 1);
+                pagoEntity.I_MontoPago = decimal.Parse(line.Substring(columnas["I_MontoPago"].Inicial - 1, columnas["I_MontoPago"].Final - 1));
+                pagoEntity.T_LugarPago = line.Substring(columnas["T_LugarPago"].Inicial - 1, columnas["T_LugarPago"].Final - 1);
+                pagoEntity.C_CodAlu = line.Substring(columnas["C_CodAlu"].Inicial - 1, columnas["C_CodAlu"].Final - 1);
+                pagoEntity.C_CodRc = line.Substring(columnas["C_CodRc"].Inicial - 1, columnas["C_CodRc"].Final - 1);
+                pagoEntity.I_ProcesoID = int.Parse(line.Substring(columnas["I_ProcesoID"].Inicial - 1, columnas["I_ProcesoID"].Final - 1));
+                pagoEntity.D_FecVencto = DateTime.Parse(line.Substring(columnas["D_FecVencto"].Inicial - 1, columnas["D_FecVencto"].Final - 1));
+
+                result.Add(pagoEntity);
+            }
+
+            file.Dispose();
 
             return result;
         }

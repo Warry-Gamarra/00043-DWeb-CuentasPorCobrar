@@ -244,7 +244,9 @@ namespace Domain.Services
                     I_UsuarioCre = x.I_UsuarioCre,
                     D_FecCre = x.D_FecCre,
                     I_UsuarioMod = x.I_UsuarioMod,
-                    D_FecMod = x.D_FecMod
+                    D_FecMod = x.D_FecMod,
+                    I_Monto = x.I_Monto,
+                    I_MontoMinimo = x.I_MontoMinimo,
                 }).ToList();
 
                 return result;

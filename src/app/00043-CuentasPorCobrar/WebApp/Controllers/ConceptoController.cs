@@ -41,7 +41,7 @@ namespace WebApp.Controllers
         public ActionResult Create()
         {
             ViewBag.Title = "Nuevo concepto de pago";
-            ViewBag.Lista_Opciones_CampoCalculado = selectModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.CampoCalculado);
+            Cargar_Listas();
             ViewBag.CalculadoVisible = "none";
 
             return PartialView("_RegistrarConcepto", new CatalogoConceptosRegistroViewModel());
@@ -52,7 +52,7 @@ namespace WebApp.Controllers
         public ActionResult Edit(int id)
         {
             ViewBag.Title = "Editar concepto de pago";
-            ViewBag.Lista_Opciones_CampoCalculado = selectModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.CampoCalculado);
+            Cargar_Listas();
 
             CatalogoConceptosRegistroViewModel model = conceptoModel.ObtenerConcepto(id);
 
@@ -93,5 +93,27 @@ namespace WebApp.Controllers
             return PartialView("_MsgPartialWR", result);
         }
 
+
+        private void Cargar_Listas()
+        {
+            ViewBag.Lista_Combo_ConceptoPago = conceptoModel.Listar_Combo_Concepto();
+
+            ViewBag.Lista_Opciones_TipoAlumno = selectModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.TipoAlumno);
+
+            ViewBag.Lista_Opciones_Grado = selectModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.Grado);
+
+            ViewBag.Lista_Opciones_TipoObligacion = selectModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.TipoObligacion);
+
+            ViewBag.Lista_Opciones_CampoCalculado = selectModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.CampoCalculado);
+
+            ViewBag.Lista_Anios = procesoModel.Listar_Anios();
+
+            ViewBag.Lista_Combo_Periodo = selectModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.Periodo);
+
+            ViewBag.Lista_Combo_GrupoCodRc = new SelectList(selectModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.GrupoCodRc), "Value", "TextDisplay");
+
+            ViewBag.Lista_Combo_CodIngreso = selectModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.CodIngreso);
+
+        }
     }
 }

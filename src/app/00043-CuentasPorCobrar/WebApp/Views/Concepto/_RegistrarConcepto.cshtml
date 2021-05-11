@@ -23,6 +23,27 @@
                 @Html.TextBoxFor(model => model.NombreConcepto, new { @class = "form-control" })
                 <p class="text-danger small">@Html.ValidationMessageFor(model => model.NombreConcepto)</p>
             </div>
+
+            <div class="form-group">
+                <div class="form-row">
+                    @Html.LabelFor(model => model.I_GrupoCodRc, new { @class = "control-label col-form-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.DropDownListFor(model => model.I_GrupoCodRc, ViewBag.Lista_Combo_GrupoCodRc as SelectList, "[ SELECCIONAR ]", new { @class = "form-control" })
+                        <p class="text-danger">@Html.ValidationMessageFor(model => model.I_GrupoCodRc)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-row">
+                    @Html.LabelFor(model => model.C_CodRc, new { @class = "control-label col-form-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.DropDownListFor(model => model.C_CodRc, ViewBag.Lista_Combo_GrupoCodRc as SelectList, "[ SELECCIONAR ]", new { @class = "form-control" })
+                        <p class="text-danger">@Html.ValidationMessageFor(model => model.C_CodRc)</p>
+                    </div>
+                </div>
+            </div>
+
             <div class="form-group">
                 <div class="form-row">
                     @Html.LabelFor(model => model.Clasificador, new { @class = "control-label col-form-label col-6" })
