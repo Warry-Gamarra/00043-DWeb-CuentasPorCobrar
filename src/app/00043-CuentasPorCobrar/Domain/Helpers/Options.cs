@@ -44,4 +44,9 @@ namespace Domain.Helpers
         Recaudacion_Tasas = 4
     }
 
+    public enum TipoSeccionArchivo
+    {
+        Cabecera_Resumen = 1,
+        Detalle_Recaudacion = 2
+    }
 }

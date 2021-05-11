@@ -1,0 +1,115 @@
+﻿@model IList<WebApp.ViewModels.SeccionArchivoViewModel>
+
+@Scripts.Render("~/bundles/jqueryval")
+
+<div class="modal-header bg-dark-gray" style="border-radius: .2rem .2rem 0px 0px">
+    <h5 class="modal-title text-center"><i class="fa bi-layout-text-window-reverse">&nbsp;</i> @ViewBag.Title</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+@using (Ajax.BeginForm("SeccionesColumnasSave", "EstructuraArchivo", new { area = "" }, new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "div_msg", OnBegin = "Load", OnSuccess = "Submited", OnComplete = "Stop" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="modal-body">
+        <div class="accordion" id="accordionExample">
+            @for (int i = 0; i < Model.Count(); i++)
+            {
+                string tipoSeccion = Model[i].TipoSeccion.ToString().Replace('_', ' ');
+                string data_seccion = Model[i].TipoSeccion.ToString();
+                <div class="card">
+                    <div class="card-header" id="headingOne">
+                        @Html.HiddenFor(model => Model[i].SecArchivoID, new { data_form = data_seccion })
+                        @Html.HiddenFor(model => Model[i].TipoSeccion)
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-row">
+                                    @Html.LabelFor(model => Model[i].TipoSeccion, new { Class = "control-label col-4 col-md-2" })
+                                    @Html.Label(tipoSeccion, new { Class = "col-8 col-md-10" })
+                                </div>
+                            </div>
+                            <div class="col-sm-5">
+                                @Html.LabelFor(model => Model[i].SecArchivoDesc, new { Class = "control-label" })
+                                @Html.TextBoxFor(model => Model[i].SecArchivoDesc, new { Class = "form-control form-control-sm", data_form = data_seccion })
+                            </div>
+                            <div class="col-sm-2">
+                                @Html.LabelFor(model => Model[i].FilPosicionIni, new { Class = "control-label" })
+                                @Html.TextBoxFor(model => Model[i].FilPosicionIni, new { Class = "form-control form-control-sm text-right", data_form = data_seccion })
+                            </div>
+                            <div class="col-sm-2">
+                                @Html.LabelFor(model => Model[i].FilPosicionFin, new { Class = "control-label" })
+                                @Html.LabelFor(model => Model[i].FilPosicionFin, new { Class = "control-label" })
+                                @Html.TextBoxFor(model => Model[i].FilPosicionFin, new { Class = "form-control form-control-sm text-right", data_form = data_seccion })
+                            </div>
+                            <div class="col-sm-3">
+                                <label>&nbsp;</label>
+                                <div>
+                                    <a class="btn btn-sm btn-secondary" data-target=""><i class="fa fa-pencil-square-o">&nbsp;</i> Editar</a>
+                                    <a class="btn btn-sm btn-outline-secondary" data-toggle="collapse" data-target="#@Model[i].TipoSeccion.ToString()" aria-expanded="true" aria-controls="collapseOne">
+                                        <i class="fa fa-columns">&nbsp;</i> Columnas
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="@Model[i].TipoSeccion.ToString()" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                        <div class="card-body">
+                            <table class="table table-sm" id="tabla_@tipoSeccion">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>Descripción</th>
+                                        <th>Campo aplicación</th>
+                                        <th>Pos. Inicio</th>
+                                        <th>Pos. Final</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model[i].ColumnasSeccion.Count == 0){
+                                        <tr><td colspan="5">No se encontraron columnas para la sección</td></tr>
+                                    }
+                                    else
+                                    {
+                                        foreach (var item in Model[i].ColumnasSeccion)
+                                        {
+                                            <tr>
+                                                <td>@Html.TextBoxFor(col => item.ColSecDesc, new { Class = "form-control form-control-sm" }) </td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                            <button id="btn_addColumn_tipoSeccion`" type="button" class="btn btn-sm btn-info"><i class="fa fa-plus">&nbsp;</i>agregar columna</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="modal-footer" id="div_msg">
+        <div class="col-md-12" style="display:none" id="loading">
+            <h6>Actualizando los datos...</h6>
+
+            <div class="progress">
+                <div class="indeterminate"></div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary" id="btnsubmit"><i class="fa fa-save"></i>&nbsp;Guardar</button>
+        <button type="button" class="btn btn-secondary" id="btnCancel" data-dismiss="modal"><i class="fa fa-times-circle-o">&nbsp;</i>Cancelar</button>
+    </div>
+}
+
+<script>
+    $(document).on('ready', function () {
+        $('#btnsubmit').removeClass('disabled');
+    });
+
+    $("form").submit(function () {
+        if (parseInt($("#submited").val()) > 0) {
+            return false;
+        }
+    });
+</script>

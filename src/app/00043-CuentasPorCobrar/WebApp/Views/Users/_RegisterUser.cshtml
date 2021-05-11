@@ -61,25 +61,8 @@
                         </div>
                     </div>
                 </fieldset>
-                @*@Html.ValidationSummary()*@
             </div>
-            @*<div class="col-md-7">
-                <fieldset class="col-md-12">
-                    <legend>Facultades asignadas</legend>
 
-                    <div class="col-md-12" style="padding-left:20px;">
-                        @for (int i = 0; i < Model.dependencias.Count; i++)
-                        {
-                            <div class="checkbox">
-                                <label style="margin:-6px 0px;">
-                                    @Html.HiddenFor(m => m.dependencias[i].I_DependID)
-                                    @Html.CheckBoxFor(model => model.dependencias[i].B_Habilitado, new { @class = "facultad" }) @Model.dependencias[i].T_DependDesc
-                                </label>
-                            </div>
-                        }
-                    </div>
-                </fieldset>
-            </div>*@
         </div>
     </div>
 

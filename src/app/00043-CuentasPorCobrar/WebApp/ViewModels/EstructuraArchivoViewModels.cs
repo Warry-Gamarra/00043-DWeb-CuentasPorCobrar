@@ -33,6 +33,7 @@ namespace WebApp.ViewModels
         [Required]
         [Display(Name = "Entidad Financiera")]
         public int EntiFinanId { get; set; }
+        public string EntiFinanNom { get; set; }
 
         [Required]
         [Display(Name = "Tipo de archivo")]
@@ -45,10 +46,30 @@ namespace WebApp.ViewModels
     public class SeccionArchivoViewModel
     {
         public int SecArchivoID { get; set; }
+
+        [Display(Name = "Nombre de la sección:")]
         public string SecArchivoDesc { get; set; }
+        [Display(Name = "Tipo de sección:")]
+        public TipoSeccionArchivo TipoSeccion { get; set; }
+
+        [Display(Name = "Fila inicio:")]
         public int FilPosicionIni { get; set; }
+
+        [Display(Name = "Fila fin:")]
         public int FilPosicionFin { get; set; }
+
+        [Display(Name = "Longitud:")]
+        public int Longitud
+        {
+            get
+            {
+                int length = (this.FilPosicionFin - this.FilPosicionIni < 0) ? 0 : this.FilPosicionFin - this.FilPosicionIni + 1;
+                return length;
+            }
+        }
+
         public int EstructArchivoID { get; set; }
+        public TipoArchivoEntFinan TipoArchivoEnt { get; set; }
         public IList<ColumnaSeccionViewModel> ColumnasSeccion { get; set; }
     }
 
@@ -57,13 +78,32 @@ namespace WebApp.ViewModels
     {
         public int SeccionArchivo { get; set; }
         public int ColumnSecID { get; set; }
+
+        [Display(Name = "Nombre de la campo:")]
         public string ColSecDesc { get; set; }
+
+        [Display(Name = "Columna inicio:")]
         public int ColPosicionIni { get; set; }
+
+        [Display(Name = "Columna Final:")]
         public int ColPosicionFin { get; set; }
-        public int CampoTablaId { get; set; }
+
+        [Display(Name = "Campo de tabla:")]
+        public int? CampoTablaId { get; set; }
+
         public string CampoTablaDesc { get; set; }
         public string CampoTablaNom { get; set; }
         public string TablaCampoNom { get; set; }
+
+        [Display(Name = "Longitud:")]
+        public int Longitud
+        {
+            get
+            {
+                int length = (this.ColPosicionFin - this.ColPosicionIni< 0) ? 0 : this.ColPosicionFin - this.ColPosicionIni+ 1;
+                return length;
+            }
+        }
 
     }
 

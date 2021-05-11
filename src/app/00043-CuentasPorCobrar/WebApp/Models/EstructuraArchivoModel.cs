@@ -49,7 +49,8 @@ namespace WebApp.Models
             {
                 EstructArchivoID = data.TipArchivoEntFinanID.Value,
                 TipoArchivo = tiposArchivo.FirstOrDefault(x => (int)x == data.TipoArchivoID),
-                EntiFinanId = data.EntidadFinanID
+                EntiFinanId = data.EntidadFinanID,
+                EntiFinanNom = data.EntidadFinan
             };
 
             return result;
@@ -220,70 +221,60 @@ namespace WebApp.Models
         }
 
 
-
-        public Response GrabarSeccionesArchivo(List<SeccionArchivoViewModel> lstSeccionArchivoViewModel, int currentUserId)
+        public List<SeccionArchivoViewModel> ObtenerEstructuraArchivo(int tipoArchivoEntId)
         {
-            Response result = new Response() { Value = true };
+            List<SeccionArchivoViewModel> result = new List<SeccionArchivoViewModel>();
 
-            foreach (var seccionArchivoViewModel in lstSeccionArchivoViewModel)
+            List<SeccionArchivo> secciones = _archivoIntercambio.FindSeccionesArchivos(tipoArchivoEntId);
+
+            if (secciones == null || secciones.Count == 0)
             {
-                var seccionArchivo = new SeccionArchivo()
-                {
-                    TipArchivoEntFinanID = seccionArchivoViewModel.EstructArchivoID,
-                    SecArchivoID = seccionArchivoViewModel.SecArchivoID,
-                    SecArchivoDesc = seccionArchivoViewModel.SecArchivoDesc,
-                    FilaInicio = seccionArchivoViewModel.FilPosicionIni,
-                    FilaFin = seccionArchivoViewModel.FilPosicionFin,
-                };
-
-
-                var lstColumnasSeccion = new List<ColumnaSeccion>();
-                foreach (var columna in seccionArchivoViewModel.ColumnasSeccion)
-                {
-                    lstColumnasSeccion.Add(new ColumnaSeccion()
-                    {
-                        SecArchivoID = columna.SeccionArchivo,
-                        ColSecID = columna.ColumnSecID,
-                        ColSecDesc = columna.ColSecDesc,
-                        ColumnaInicio = columna.ColPosicionIni,
-                        ColumnaFin = columna.ColPosicionFin,
-                        CampoPagoID = columna.CampoTablaId,
-                    });
-                };
-
-                var loopResult = _archivoIntercambio.EstructuraSeccionSave(seccionArchivo, lstColumnasSeccion, currentUserId,
-                    (seccionArchivoViewModel.EstructArchivoID == 0 ? SaveOption.Insert : SaveOption.Update));
-
-                result.Value = result.Value && loopResult.Value;
-                if (result.Value)
-                {
-                    result.Message = loopResult.Message;
-                }
-                else
-                {
-                    result.Message += "- " + loopResult.Message + "\n";
-                }
-
-            }
-
-            if (result.Value)
-            {
-                if (string.IsNullOrEmpty(result.Action))
-                {
-                    result.Success(false);
-                }
-                else
-                {
-                    result.Warning(false);
-                }
+                return SeccionesArchivoInit(tipoArchivoEntId);
             }
             else
             {
-                result.Error(true);
+                foreach (var item in Enum.GetValues(typeof(TipoSeccionArchivo)).Cast<TipoSeccionArchivo>())
+                {
+                    var seccion = secciones.Find(x => x.TipoSeccionID == (int)item);
+                    if (seccion == null)
+                    {
+                        result.Add(new SeccionArchivoViewModel()
+                        {
+                            EstructArchivoID = tipoArchivoEntId,
+                            TipoSeccion = item,
+                            ColumnasSeccion = new List<ColumnaSeccionViewModel>()
+                        });
+                    }
+                    else
+                    {
+                        result.Add(new SeccionArchivoViewModel()
+                        {
+                            TipoSeccion = item,
+                            EstructArchivoID = seccion.TipArchivoEntFinanID,
+                            SecArchivoID = seccion.SecArchivoID,
+                            SecArchivoDesc = seccion.SecArchivoDesc,
+                            FilPosicionIni = seccion.FilaInicio,
+                            FilPosicionFin = seccion.FilaFin,
+                            ColumnasSeccion = _archivoIntercambio.FindColumnasSeccion(seccion.SecArchivoID)
+                                                                     .Select(x => new ColumnaSeccionViewModel
+                                                                     {
+                                                                         ColumnSecID = x.ColSecID,
+                                                                         ColPosicionIni = x.ColumnaInicio,
+                                                                         ColPosicionFin = x.ColumnaFin,
+                                                                         CampoTablaId = x.CampoPagoID,
+                                                                         CampoTablaNom = x.CampoPagoNom,
+                                                                         TablaCampoNom = x.TablaPagoNom,
+                                                                         ColSecDesc = x.ColSecDesc,
+                                                                         CampoTablaDesc = x.CampoPagoDesc
+                                                                     })
+                                                                     .ToList()
+                        });
+                    }
+                }
             }
+
             return result;
         }
-
 
         public List<SeccionArchivoViewModel> ObtenerEstructuraArchivo(int entidadFinancieraId, TipoArchivoEntFinan tipoArchivoEntFinan)
         {
@@ -319,8 +310,144 @@ namespace WebApp.Models
                 }
             }
 
+            return result;
+        }
+
+
+        public List<SeccionArchivoViewModel> SeccionesArchivoInit(int tipoArchivoEntId)
+        {
+            List<SeccionArchivoViewModel> result = new List<SeccionArchivoViewModel>();
+
+            foreach (var item in Enum.GetValues(typeof(TipoSeccionArchivo)).Cast<TipoSeccionArchivo>())
+            {
+                result.Add(new SeccionArchivoViewModel()
+                {
+                    EstructArchivoID = tipoArchivoEntId,
+                    TipoSeccion = item,
+                    ColumnasSeccion = new List<ColumnaSeccionViewModel>()
+                });
+            }
 
             return result;
         }
+
+        public SeccionArchivoViewModel ObtenerSeccionArchivo(int SeccionId)
+        {
+            SeccionArchivoViewModel result = new SeccionArchivoViewModel();
+            var seccion = _archivoIntercambio.FindSeccionesArchivos().Find(x => x.SecArchivoID == SeccionId);
+
+            if (seccion != null)
+            {
+                result.TipoSeccion = Enum.GetValues(typeof(TipoSeccionArchivo)).Cast<TipoSeccionArchivo>().Single(x => (int)x == seccion.TipoSeccionID);
+                result.EstructArchivoID = seccion.TipArchivoEntFinanID;
+                result.SecArchivoID = seccion.SecArchivoID;
+                result.SecArchivoDesc = seccion.SecArchivoDesc;
+                result.FilPosicionIni = seccion.FilaInicio;
+                result.FilPosicionFin = seccion.FilaFin;
+                result.TipoArchivoEnt = Enum.GetValues(typeof(TipoArchivoEntFinan)).Cast<TipoArchivoEntFinan>().Single(x => (int)x == seccion.TipoArchivoID);
+                result.ColumnasSeccion = _archivoIntercambio.FindColumnasSeccion(seccion.SecArchivoID)
+                                                        .Select(x => new ColumnaSeccionViewModel
+                                                        {
+                                                            ColumnSecID = x.ColSecID,
+                                                            ColPosicionIni = x.ColumnaInicio,
+                                                            ColPosicionFin = x.ColumnaFin,
+                                                            CampoTablaId = x.CampoPagoID,
+                                                            CampoTablaNom = x.CampoPagoNom,
+                                                            TablaCampoNom = x.TablaPagoNom,
+                                                            ColSecDesc = x.ColSecDesc,
+                                                            CampoTablaDesc = x.CampoPagoDesc
+                                                        })
+                                                        .ToList();
+            }
+            return result;
+        }
+
+        public Response GrabarSeccionArchivo(SeccionArchivoViewModel seccionArchivoViewModel, int currentUserId)
+        {
+            Response result = new Response() { Value = true };
+
+            var seccionArchivo = new SeccionArchivo()
+            {
+                TipArchivoEntFinanID = seccionArchivoViewModel.EstructArchivoID,
+                SecArchivoID = seccionArchivoViewModel.SecArchivoID,
+                SecArchivoDesc = seccionArchivoViewModel.SecArchivoDesc,
+                FilaInicio = seccionArchivoViewModel.FilPosicionIni,
+                FilaFin = seccionArchivoViewModel.FilPosicionFin,
+                TipoSeccionID = (int)seccionArchivoViewModel.TipoSeccion
+            };
+
+            result = _archivoIntercambio.EstructuraSeccionSave(seccionArchivo, currentUserId, (seccionArchivoViewModel.SecArchivoID == 0 ? SaveOption.Insert : SaveOption.Update));
+
+            if (result.Value)
+            {
+                result.Success(false);
+            }
+            else
+            {
+                result.Error(true);
+            }
+            return result;
+        }
+
+
+        public ColumnaSeccionViewModel ColumnaSeccionArchivoInit(int seccionArchivoId)
+        {
+            ColumnaSeccionViewModel result = new ColumnaSeccionViewModel
+            {
+                SeccionArchivo = seccionArchivoId,
+            };
+
+            return result;
+        }
+
+        public ColumnaSeccionViewModel ObtenerColumnaSeccionArchivo(int seccionId, int columnaSeccionId)
+        {
+            var columnasSeccion = _archivoIntercambio.FindColumnasSeccion(seccionId).Find(x => x.ColSecID == columnaSeccionId);
+            ColumnaSeccionViewModel result = new ColumnaSeccionViewModel()
+            {
+                SeccionArchivo = columnasSeccion.SecArchivoID,
+                ColumnSecID = columnasSeccion.ColSecID,
+                ColPosicionIni = columnasSeccion.ColumnaInicio,
+                ColPosicionFin = columnasSeccion.ColumnaFin,
+                CampoTablaId = columnasSeccion.CampoPagoID,
+                CampoTablaNom = columnasSeccion.CampoPagoNom,
+                TablaCampoNom = columnasSeccion.TablaPagoNom,
+                ColSecDesc = columnasSeccion.ColSecDesc,
+                CampoTablaDesc = columnasSeccion.CampoPagoDesc
+            };
+
+            return result;
+        }
+
+        public Response GrabarColumnaSeccionArchivo(ColumnaSeccionViewModel columnaSeccionViewModel, int currentUserId)
+        {
+            Response result = new Response() { Value = true };
+
+            var columnasSeccion = new ColumnaSeccion()
+            {
+                SecArchivoID = columnaSeccionViewModel.SeccionArchivo,
+                ColSecID = columnaSeccionViewModel.ColumnSecID,
+                ColSecDesc = columnaSeccionViewModel.ColSecDesc,
+                ColumnaInicio = columnaSeccionViewModel.ColPosicionIni,
+                ColumnaFin = columnaSeccionViewModel.ColPosicionFin,
+                CampoPagoID = columnaSeccionViewModel.CampoTablaId,
+            };
+
+            result = _archivoIntercambio.EstructuraColumnaSeccionSave(columnasSeccion, currentUserId,
+                (columnaSeccionViewModel.ColumnSecID == 0 ? SaveOption.Insert : SaveOption.Update));
+
+
+            if (result.Value)
+            {
+                result.Success(false);
+            }
+            else
+            {
+                result.Error(true);
+            }
+            return result;
+        }
+
+
     }
 }

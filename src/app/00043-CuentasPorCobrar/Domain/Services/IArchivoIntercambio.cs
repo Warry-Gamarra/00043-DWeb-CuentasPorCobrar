@@ -22,9 +22,9 @@ namespace Domain.Services
         List<ColumnaSeccion> FindColumnasSeccion(int SeccionArchivoId);
 
 
-        Response EstructuraSeccionSave(SeccionArchivo seccionesArchivo, List<ColumnaSeccion> columnasSeccion, int currentUserId, SaveOption saveOption);
+        Response EstructuraSeccionSave(SeccionArchivo seccionesArchivo, int currentUserId, SaveOption saveOption);
         Response SeccionChangeState(int seccionArchivoId, bool currentState, int currentUserId);
         Response ColumnaChangeState(int columnaSeccionId, bool currentState, int currentUserId);
-
+        Response EstructuraColumnaSeccionSave(ColumnaSeccion columnaSeccion, int currentUserId, SaveOption saveOption);
     }
 }

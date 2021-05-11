@@ -23,7 +23,7 @@ namespace Data.Tables
         public int I_UsuarioMod { get; set; }
         public DateTime D_FecMod { get; set; }
         public int I_SecArchivoID { get; set; }
-        public int I_CampoPagoID { get; set; }
+        public int? I_CampoPagoID { get; set; }
 
         public string T_SecArchivoDesc { get; set; }
         public int I_TipArchivoEntFinanID { get; set; }
@@ -67,12 +67,13 @@ namespace Data.Tables
             {
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    string s_command = @"SELECT SA.T_SecArchivoDesc, CS.* 
+                    string s_command = @"SELECT SA.T_SecArchivoDesc, CTP.T_CampoInfoDesc, CTP.T_CampoPagoNom, CTP.T_TablaPagoNom, CS.* 
                                          FROM TC_SeccionArchivo SA
 	                                         INNER JOIN TC_ColumnaSeccion CS ON CS.I_SecArchivoID = SA.I_SecArchivoID
+	                                         LEFT JOIN TS_CampoTablaPago CTP ON CTP.I_CampoPagoID = CS.I_CampoPagoID
                                          WHERE SA.I_SecArchivoID = @I_SecArchivoID;";
 
-                    result = _dbConnection.Query<TC_ColumnaSeccion>(s_command, new { I_EntidadFinanID = sectionId }, commandType: CommandType.Text).ToList();
+                    result = _dbConnection.Query<TC_ColumnaSeccion>(s_command, new { I_SecArchivoID = sectionId }, commandType: CommandType.Text).ToList();
                 }
             }
             catch (Exception ex)
@@ -128,6 +129,7 @@ namespace Data.Tables
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
                     parameters.Add(name: "I_ColSecID", dbType: DbType.Int32, value: this.I_ColSecID);
+                    parameters.Add(name: "I_CampoPagoID", dbType: DbType.Int32, value: this.I_CampoPagoID);
                     parameters.Add(name: "T_ColSecDesc", dbType: DbType.String, size: 50, value: this.T_ColSecDesc);
                     parameters.Add(name: "I_ColumnaInicio", dbType: DbType.Int16, value: this.I_ColumnaInicio);
                     parameters.Add(name: "I_ColumnaFin", dbType: DbType.Int16, value: this.I_ColumnaFin);

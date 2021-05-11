@@ -278,6 +278,18 @@ footer {
     border-radius: 3px;
 }
 
+a.btn-secondary, a.btn-info, a.btn-danger, a.btn-warning,
+a.btn-secondary:hover, a.btn-info:hover, a.btn-danger:hover, a.btn-warning:hover,
+a.btn-outline-primary:hover, a.btn-outline-secondary:hover, a.btn-outline-info:hover, a.btn-outline-danger:hover, a.btn-outline-warning:hover,
+a.btn-outline-primary:active, a.btn-outline-secondary:active, a.btn-outline-info:active, a.btn-outline-danger:active, a.btn-outline-warning:active,
+a.btn-secondary:active, a.btn-info:active, a.btn-danger:active, a.btn-warning:active {
+    color: #fff;
+}
+
+a.btn-outline-primary {
+    color: #007bff;
+}
+
 .control-label {
     font-weight: 600;
 }

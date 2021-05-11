@@ -14,7 +14,7 @@ namespace Domain.Entities
         public int ColumnaFin { get; set; }
         public bool Habilitado { get; set; }
         public int SecArchivoID { get; set; }
-        public int CampoPagoID { get; set; }
+        public int? CampoPagoID { get; set; }
         public string CampoPagoDesc { get; set; }
         public string CampoPagoNom { get; set; }
         public string TablaPagoNom { get; set; }

@@ -1,0 +1,158 @@
+﻿@model IList<WebApp.ViewModels.SeccionArchivoViewModel>
+
+
+@using GridMvc.Html
+
+<div class="container-fluid">
+    <div class="col-12">
+        <section class="content-header">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb float-right small d-none d-sm-inline-flex">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")"><i class="fa fa-home">&nbsp;</i>Inicio</a></li>
+                    <li class="breadcrumb-item"><span><i class="fa bi-tools">&nbsp;</i>Mantenimiento </span></li>
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "EstructuraArchivo")"><span><i class="fa fa-files-o">&nbsp;</i>Archivos de intercambio </span></a></li>
+                    <li class="breadcrumb-item"><a href="@Url.Action("Banco", "EstructuraArchivo", new { id = ViewBag.BancoId })"><span><i class="fa ">&nbsp;</i>@ViewBag.Banco </span></a></li>
+                    <li class="breadcrumb-item active"><span><i class="fa ">&nbsp;</i>@ViewBag.Title </span></li>
+                </ol>
+            </nav>
+            <h1 class="">Estructura Archivo:<br /> <small>@ViewBag.Banco - @ViewBag.Title</small></h1>
+        </section>
+    </div>
+    <br />
+    <div class="col-12">
+        <div class="accordion" id="accordionSeccions">
+            @foreach (var seccion in Model)
+            {
+                string tipoSeccion = seccion.TipoSeccion.ToString().Replace('_', ' ');
+                string show = seccion.TipoSeccion.ToString() == ViewBag.TipoSeccion ? "show" : "";
+                <div class="row">
+                    <div class="col-5">
+                        <div class="card">
+                            <div class="card-header" id="heading_@seccion.SecArchivoID">
+                                <button class="btn btn-lg btn-link btn-block text-left" data-toggle="collapse" data-target="#@seccion.TipoSeccion.ToString()" aria-expanded="true" aria-controls="collapse_@tipoSeccion">@tipoSeccion </button>
+                            </div>
+                            <div id="@seccion.TipoSeccion.ToString()" class="collapse @show" aria-labelledby="heading_@tipoSeccion" data-parent="#accordionSeccions">
+                                <div class="card-body">
+                                    @if (seccion.SecArchivoID == 0)
+                                    {
+                                        <div class="row">
+                                            <div class="col-12 text-center">
+                                                <a class="btn btn-primary modal-link" href="@Url.Action("AgregarSeccionArchivo", "EstructuraArchivo", new { archivoId = seccion.EstructArchivoID, tipoSeccion = seccion.TipoSeccion })">
+                                                    <i class="fa fa-pencil-square-o">&nbsp;</i> Registrar sección
+                                                </a>
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="form-row">
+                                                    @Html.LabelFor(model => seccion.SecArchivoDesc, new { Class = "control-label col-4" })
+                                                    <div class="col-8">
+                                                        @Html.DisplayFor(model => seccion.SecArchivoDesc, new { Class = "form-control form-control-sm text-right" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="form-row">
+                                                    @Html.LabelFor(model => seccion.FilPosicionIni, new { Class = "control-label col-4" })
+                                                    <div class="col-8">
+                                                        @Html.DisplayFor(model => seccion.FilPosicionIni, new { Class = "form-control form-control-sm text-right" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="form-row">
+                                                    @Html.LabelFor(model => seccion.FilPosicionFin, new { Class = "control-label col-4" })
+                                                    <div class="col-8">
+                                                        @Html.DisplayFor(model => seccion.FilPosicionFin, new { Class = "form-control form-control-sm text-right" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="form-row">
+                                                    @Html.LabelFor(model => seccion.Longitud, new { Class = "control-label col-4" })
+                                                    <div class="col-8">
+                                                        @Html.DisplayFor(model => seccion.Longitud, new { Class = "form-control form-control-sm text-right" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12 text-right">
+                                                <a class="btn btn-sm btn-primary modal-link" data-target="" href="@Url.Action("EditarSeccionArchivo", "EstructuraArchivo", new {archivoId = seccion.EstructArchivoID, id = seccion.SecArchivoID })"><i class="fa fa-pencil-square-o">&nbsp;</i> Editar</a>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-7">
+                        <div id="@seccion.TipoSeccion.ToString()" class="collapse @show" aria-labelledby="heading_@tipoSeccion" data-parent="#accordionSeccions">
+                            <div class="card-body">
+                                @if (seccion.SecArchivoID != 0)
+                                {
+                                    <table class="table table-sm" id="tabla_@tipoSeccion">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th>Descripción</th>
+                                                <th>Campo aplicación</th>
+                                                <th>Pos. Inicio</th>
+                                                <th>Pos. Final</th>
+                                                <th>Longitud</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (seccion.ColumnasSeccion.Count == 0)
+                                            {
+                                                <tr><td colspan="5" class="text-secondary font-italic">No se encontraron columnas para la sección</td></tr>
+                                            }
+                                            else
+                                            {
+                                                foreach (var item in seccion.ColumnasSeccion)
+                                                {
+                                                    <tr>
+                                                        <td>@item.ColSecDesc</td>
+                                                        <td>@item.CampoTablaDesc</td>
+                                                        <td class="text-center">@item.ColPosicionIni</td>
+                                                        <td class="text-center">@item.ColPosicionFin</td>
+                                                        <td class="text-center">@item.Longitud</td>
+                                                        <td>
+                                                            <a class="modal-link pull-right" href="@Url.Action("EditarColumnasSeccion", "EstructuraArchivo", new {archivoId = seccion.EstructArchivoID, seccionId = seccion.SecArchivoID, id = item.ColumnSecID })">
+                                                                <i class="fa fa-pencil-square-o">&nbsp;</i>Editar
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                    <div class="text-right">
+                                        <a class="btn btn-sm btn-outline-info modal-link" href="@Url.Action("AgregarColumnasSeccion", "EstructuraArchivo", new {archivoId = seccion.EstructArchivoID, seccionId = seccion.SecArchivoID })">
+                                            <i class="fa fa-plus">&nbsp;</i>Agregar columna
+                                        </a>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    $(document).on('ready', function () {
+        $('#btnsubmit').removeClass('disabled');
+    });
+
+    $("form").submit(function () {
+        if (parseInt($("#submited").val()) > 0) {
+            return false;
+        }
+    });
+</script>

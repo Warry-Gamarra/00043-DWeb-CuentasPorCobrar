@@ -564,8 +564,12 @@
     <Content Include="Views\EstructuraArchivo\CamposTabla.cshtml" />
     <Content Include="Views\EstructuraArchivo\_RegistroArchivoIntercambio.cshtml" />
     <Content Include="Views\EstructuraArchivo\_RegistroCampoTabla.cshtml" />
-    <Content Include="Views\EstructuraArchivo\_RegistroEstructuraArchivo.cshtml" />
+    <Content Include="Views\EstructuraArchivo\_VerEstructuraArchivo.cshtml" />
     <Content Include="Views\CategoriaPago\_RegistrarConceptoCategoria.cshtml" />
+    <Content Include="Views\EstructuraArchivo\SeccionesEstructuraArchivo.cshtml" />
+    <Content Include="Views\EstructuraArchivo\_RegistroSeccionArchivo.cshtml" />
+    <Content Include="Views\EstructuraArchivo\_RegistroColumnaSeccion.cshtml" />
+    <Content Include="Views\EstructuraArchivo\ColumnasSeccionEstructuraArchivo.cshtml" />
     <Content Include="Views\Estudiantes\Consulta.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

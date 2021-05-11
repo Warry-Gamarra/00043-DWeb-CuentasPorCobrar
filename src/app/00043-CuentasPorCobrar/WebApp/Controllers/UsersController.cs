@@ -88,7 +88,6 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                //result = _usersModel.Save(model, WebSecurity.CurrentUserId);
                 result = _usersModel.Save(model, WebSecurity.CurrentUserId, Url.Action("Login", "Account", null, "http"));
             }
             else

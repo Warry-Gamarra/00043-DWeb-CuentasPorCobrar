@@ -323,6 +323,26 @@ INSERT INTO TC_TipoArchivo (I_TipoArchivoID, T_TipoArchivDesc, B_ArchivoEntrada,
 SET IDENTITY_INSERT TC_TipoArchivo OFF;
 
 
+
+SET IDENTITY_INSERT TS_CampoTablaPago ON;
+
+INSERT INTO TS_CampoTablaPago (I_CampoPagoID, T_TablaPagoNom, T_CampoPagoNom, T_CampoInfoDesc, I_TipoArchivoID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) VALUES (1, 'type_dataPago', 'C_CodAlu', 'Código de depositante', 3, 1, 0, 1, GETDATE())
+INSERT INTO TS_CampoTablaPago (I_CampoPagoID, T_TablaPagoNom, T_CampoPagoNom, T_CampoInfoDesc, I_TipoArchivoID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) VALUES (2, 'type_dataPago', 'C_CodOperacion', 'Código de operación', 3, 1, 0, 1, GETDATE())
+INSERT INTO TS_CampoTablaPago (I_CampoPagoID, T_TablaPagoNom, T_CampoPagoNom, T_CampoInfoDesc, I_TipoArchivoID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) VALUES (3, 'type_dataPago', 'C_Referencia', 'Código de referencia', 3, 1, 0, 1, GETDATE())
+INSERT INTO TS_CampoTablaPago (I_CampoPagoID, T_TablaPagoNom, T_CampoPagoNom, T_CampoInfoDesc, I_TipoArchivoID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) VALUES (4, 'type_dataPago', 'C_CodRc', 'Código de carrera', 3, 1, 0, 1, GETDATE())
+INSERT INTO TS_CampoTablaPago (I_CampoPagoID, T_TablaPagoNom, T_CampoPagoNom, T_CampoInfoDesc, I_TipoArchivoID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) VALUES (5, 'type_dataPago', 'C_Moneda', 'Moneda', 3, 1, 0, 1, GETDATE())
+INSERT INTO TS_CampoTablaPago (I_CampoPagoID, T_TablaPagoNom, T_CampoPagoNom, T_CampoInfoDesc, I_TipoArchivoID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) VALUES (6, 'type_dataPago', 'D_FecPago', 'Fec. Pago', 3, 1, 0, 1, GETDATE())
+INSERT INTO TS_CampoTablaPago (I_CampoPagoID, T_TablaPagoNom, T_CampoPagoNom, T_CampoInfoDesc, I_TipoArchivoID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) VALUES (7, 'type_dataPago', 'D_FecVencto', 'Fec. vencimiento', 3, 1, 0, 1, GETDATE())
+INSERT INTO TS_CampoTablaPago (I_CampoPagoID, T_TablaPagoNom, T_CampoPagoNom, T_CampoInfoDesc, I_TipoArchivoID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) VALUES (8, 'type_dataPago', 'I_Cantidad', 'Cantidad', 3, 1, 0, 1, GETDATE())
+INSERT INTO TS_CampoTablaPago (I_CampoPagoID, T_TablaPagoNom, T_CampoPagoNom, T_CampoInfoDesc, I_TipoArchivoID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) VALUES (9, 'type_dataPago', 'I_MontoPago', 'Monto de pago', 3, 1, 0, 1, GETDATE())
+INSERT INTO TS_CampoTablaPago (I_CampoPagoID, T_TablaPagoNom, T_CampoPagoNom, T_CampoInfoDesc, I_TipoArchivoID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) VALUES (10, 'type_dataPago', 'I_ProcesoID', 'Cuota de pago', 3, 1, 0, 1, GETDATE())
+INSERT INTO TS_CampoTablaPago (I_CampoPagoID, T_TablaPagoNom, T_CampoPagoNom, T_CampoInfoDesc, I_TipoArchivoID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) VALUES (11, 'type_dataPago', 'T_LugarPago', 'Lugar de pago', 3, 1, 0, 1, GETDATE())
+INSERT INTO TS_CampoTablaPago (I_CampoPagoID, T_TablaPagoNom, T_CampoPagoNom, T_CampoInfoDesc, I_TipoArchivoID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) VALUES (12, 'type_dataPago', 'T_NomDepositante', 'Nombre del depositante', 3, 1, 0, 1, GETDATE())
+
+SET IDENTITY_INSERT TS_CampoTablaPago OFF;
+
+
+
 --/*---------------------------------------------------------------------------------------------------------------------------------------*/
 --/*---------------------------------------------------------------------------------------------------------------------------------------*/
 --/*														MIGRACION DE DATOS DEL TEMPORAL DE PAGOS										 */

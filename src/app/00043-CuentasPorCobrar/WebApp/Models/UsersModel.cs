@@ -94,11 +94,12 @@ namespace WebApp.Models
                 }
             };
 
-            Helpers.Response result = _user.Save(user, currentUserId, userRegisterViewModel.UserId.HasValue ? SaveOption.Update : SaveOption.Insert);
+            var saveOption = userRegisterViewModel.UserId.HasValue ? SaveOption.Update : SaveOption.Insert;
+            Helpers.Response result = _user.Save(user, currentUserId, saveOption);
 
             if (result.Value)
             {
-                if (string.IsNullOrEmpty(urlLink))
+                if (saveOption == SaveOption.Update)
                 {
                     result.Success(false);
                 }
