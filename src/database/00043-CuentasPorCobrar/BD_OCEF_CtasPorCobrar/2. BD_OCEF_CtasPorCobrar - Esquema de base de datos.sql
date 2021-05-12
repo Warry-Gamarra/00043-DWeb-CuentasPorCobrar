@@ -392,6 +392,7 @@ CREATE TABLE TC_Concepto
 	T_ConceptoDesc       varchar(250)  NULL ,
 	T_Clasificador       varchar(250)  NULL ,
 	T_ClasifCorto        varchar(20)  NULL ,
+	B_EsObligacion		bit  NOT NULL ,
 	B_EsPagoMatricula    bit  NULL ,
 	B_EsPagoExtmp        bit  NULL ,
 	B_Fraccionable       char(18)  NULL ,

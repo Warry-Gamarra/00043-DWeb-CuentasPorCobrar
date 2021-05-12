@@ -436,10 +436,12 @@
     <Compile Include="Models\EstructuraArchivoModel.cs" />
     <Compile Include="Models\EstudianteModel.cs" />
     <Compile Include="Models\Facades\CatalogoServiceFacade.cs" />
+    <Compile Include="Models\Facades\MatriculaServiceFacade.cs" />
     <Compile Include="Models\Facades\GeneralServiceFacade.cs" />
     <Compile Include="Models\Facades\IAlumnosClientFacade.cs" />
     <Compile Include="Models\Facades\AlumnosClientFacade.cs" />
     <Compile Include="Models\Facades\ICatalogoServiceFacade.cs" />
+    <Compile Include="Models\Facades\IMatriculaServiceFacade.cs" />
     <Compile Include="Models\Facades\IGeneralServiceFacade.cs" />
     <Compile Include="Models\Facades\IObligacionServiceFacade.cs" />
     <Compile Include="Models\Facades\IProgramasClientFacade.cs" />
@@ -448,6 +450,7 @@
     <Compile Include="Models\IMatriculaSource.cs" />
     <Compile Include="Models\MatriculaDbfSource.cs" />
     <Compile Include="Models\MatriculaExcelSource.cs" />
+    <Compile Include="ViewModels\MatriculaViewModel.cs" />
     <Compile Include="Models\MatriculaSourceFactory.cs" />
     <Compile Include="Models\PagosModel.cs" />
     <Compile Include="Models\TransferenciaInformacionBCP.cs" />
@@ -567,6 +570,7 @@
     <Content Include="Views\EstructuraArchivo\_RegistroSeccionArchivo.cshtml" />
     <Content Include="Views\EstructuraArchivo\_RegistroColumnaSeccion.cshtml" />
     <Content Include="Views\EstructuraArchivo\ColumnasSeccionEstructuraArchivo.cshtml" />
+    <Content Include="Views\Estudiantes\Consulta.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

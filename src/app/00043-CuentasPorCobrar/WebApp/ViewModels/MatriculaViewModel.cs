@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Web;
 
-namespace Domain.Entities
+namespace WebApp.ViewModels
 {
-    public class MatriculaDTO
+    public class MatriculaModel
     {
         public int I_MatAluID { get; set; }
 
@@ -34,6 +33,14 @@ namespace Domain.Entities
 
         public bool? B_Ingresante { get; set; }
 
+        public string T_EsIngresante
+        {
+            get
+            {
+                return B_Ingresante.HasValue ? (B_Ingresante.Value ? "Ingresante" : "Regular") : "";
+            }
+        }
+
         public byte? I_CredDesaprob { get; set; }
 
         public bool B_Habilitado { get; set; }
@@ -47,5 +54,13 @@ namespace Domain.Entities
         public string T_ModIngDesc { get; set; }
 
         public bool B_TieneMultaPorNoVotar { get; set; }
+
+        public string T_TieneMultaPorNoVotar
+        {
+            get
+            {
+                return B_TieneMultaPorNoVotar ? "Si" : "No";
+            }
+        }
     }
 }

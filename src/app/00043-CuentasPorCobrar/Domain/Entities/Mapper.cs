@@ -97,7 +97,12 @@ namespace Domain.Entities
                 C_Ciclo = matriculaAlumno.C_Ciclo,
                 B_Ingresante = matriculaAlumno.B_Ingresante,
                 I_CredDesaprob = matriculaAlumno.I_CredDesaprob,
-                B_Habilitado = matriculaAlumno.B_Habilitado
+                B_Habilitado = matriculaAlumno.B_Habilitado,
+                C_Periodo = matriculaAlumno.C_Periodo,
+                T_Periodo = matriculaAlumno.T_Periodo,
+                T_DenomProg = matriculaAlumno.T_DenomProg,
+                T_ModIngDesc = matriculaAlumno.T_ModIngDesc,
+                B_TieneMultaPorNoVotar = matriculaAlumno.B_TieneMultaPorNoVotar
             };
 
             return matriculaDTO;

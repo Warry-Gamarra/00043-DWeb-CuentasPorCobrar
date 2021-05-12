@@ -7,6 +7,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using WebApp.Models;
+using WebApp.Models.Facades;
+using WebApp.ViewModels;
 using WebMatrix.WebData;
 
 namespace WebApp.Controllers
@@ -16,9 +18,18 @@ namespace WebApp.Controllers
     {
         private readonly EstudianteModel _seleccionarArchivoModel;
 
+        IGeneralServiceFacade generalServiceFacade;
+        ICatalogoServiceFacade catalogoServiceFacade;
+        IProgramasClientFacade programasClientFacade;
+        IMatriculaServiceFacade matriculaServiceFacade;
+
         public EstudiantesController()
         {
             _seleccionarArchivoModel = new EstudianteModel();
+            generalServiceFacade = new GeneralServiceFacade();
+            catalogoServiceFacade = new CatalogoServiceFacade();
+            programasClientFacade = new ProgramasClientFacade();
+            matriculaServiceFacade = new MatriculaServiceFacade();
         }
 
         [Route("operaciones/cargar-estudiantes")]
@@ -164,6 +175,44 @@ namespace WebApp.Controllers
                     return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Resultado del Registro de Multas.xlsx");
                 }
             }
+        }
+
+        //[Route("consulta/estudiantes")]
+        public ActionResult Consulta(int? anio, int? periodo, string facultad, string codAlumno, TipoEstudio tipoEstudio = TipoEstudio.Pregrado)
+        {
+            ViewBag.Title = "Consulta de Alumnos";
+
+            //Listas
+            ViewBag.Anios = generalServiceFacade.Listar_Anios();
+            ViewBag.Periodos = catalogoServiceFacade.Listar_Periodos();
+            ViewBag.TipoEstudios = generalServiceFacade.Listar_TipoEstudios();
+            ViewBag.Facultades = programasClientFacade.GetFacultades(tipoEstudio);
+
+            //Valores por defecto
+            ViewBag.CurrentYear = anio.HasValue ? anio.Value : DateTime.Now.Year;
+            ViewBag.DefaultPeriodo = periodo.HasValue ? periodo.Value : 15;
+            ViewBag.DefaultTipoEstudio = tipoEstudio;
+            ViewBag.DefaultFacultad = facultad;
+            ViewBag.CodigoAlumno = codAlumno;
+
+            IEnumerable<MatriculaModel> consultaMatricula;
+
+            if (anio.HasValue && periodo.HasValue)
+                consultaMatricula = matriculaServiceFacade.GetMatriculas(anio.Value, periodo.Value, tipoEstudio);
+            else
+                consultaMatricula = new List<MatriculaModel>();
+
+            if (!String.IsNullOrEmpty(facultad) && !String.IsNullOrWhiteSpace(facultad))
+            {
+                consultaMatricula = consultaMatricula.Where(m => m.C_CodFac.Equals(facultad));
+            }
+
+            if (!String.IsNullOrEmpty(codAlumno) && !String.IsNullOrWhiteSpace(codAlumno))
+            {
+                consultaMatricula = consultaMatricula.Where(m => m.C_CodAlu.Equals(codAlumno));
+            }
+
+            return View("Consulta", consultaMatricula);
         }
     }
 }
