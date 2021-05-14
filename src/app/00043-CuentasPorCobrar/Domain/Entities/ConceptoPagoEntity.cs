@@ -46,5 +46,6 @@ namespace Domain.Entities
         public bool B_Habilitado { get; set; }
         public int? I_UsuarioCre { get; set; }
         public int? I_UsuarioMod { get; set; }
+        public string C_Moneda { get; set; }
     }
 }

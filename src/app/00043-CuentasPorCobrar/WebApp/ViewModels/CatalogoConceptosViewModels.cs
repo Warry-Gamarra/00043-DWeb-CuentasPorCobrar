@@ -79,6 +79,20 @@ namespace WebApp.ViewModels
         [RequiredWhenBoolenIsTrue("B_Especialidad")]
         public char? C_CodRc { get; set; }
 
+        public string T_ClasifCorto { get; set; }
+        public bool B_Fraccionable { get; set; }
+        public bool B_ConceptoGeneral { get; set; }
+        public bool B_AgrupaConcepto { get; set; }
+        public int? I_TipoObligacion { get; set; }
+        public bool B_GrupoCodRc { get; set; }
+        public bool B_ModalidadIngreso { get; set; }
+        public int? I_ModalidadIngresoID { get; set; }
+        public int? I_ConceptoAgrupaID { get; set; }
+        public byte? N_NroPagos { get; set; }
+        public bool B_Porcentaje { get; set; }
+        public string C_Moneda { get; set; }
+        public string T_DescripcionLarga { get; set; }
+        public string T_Documento { get; set; }
 
         public CatalogoConceptosRegistroViewModel() { }
 
@@ -94,6 +108,21 @@ namespace WebApp.ViewModels
             this.MontoMinimo = concepto.I_MontoMinimo;
             this.Calculado = concepto.B_Calculado;
             this.TipoCalculo = concepto.I_Calculado;
+
+            this.T_ClasifCorto = concepto.T_ClasifCorto;
+            this.B_Fraccionable = concepto.B_Fraccionable ?? false;
+            this.B_ConceptoGeneral = concepto.B_ConceptoGeneral ?? false;
+            this.B_AgrupaConcepto = concepto.B_AgrupaConcepto ?? false;
+            this.I_TipoObligacion = concepto.I_TipoObligacion;
+            this.B_GrupoCodRc = concepto.B_GrupoCodRc ?? false;
+            this.B_ModalidadIngreso = concepto.B_ModalidadIngreso ?? false;
+            this.I_ModalidadIngresoID = concepto.I_ModalidadIngresoID;
+            this.I_ConceptoAgrupaID = concepto.I_ConceptoAgrupaID;
+            this.N_NroPagos = concepto.N_NroPagos;
+            this.B_Porcentaje = concepto.B_Porcentaje ?? false;
+            this.C_Moneda = concepto.C_Moneda;
+            this.T_DescripcionLarga = concepto.T_DescripcionLarga;
+            this.T_Documento = concepto.T_Documento;
         }
     }
 
