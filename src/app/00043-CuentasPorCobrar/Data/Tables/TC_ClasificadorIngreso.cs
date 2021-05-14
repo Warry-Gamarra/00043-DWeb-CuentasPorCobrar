@@ -30,7 +30,7 @@ namespace Data.Tables
             {
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    string s_command = @"SELECT I_ClasificadorID, T_ClasificadorDesc, T_ClasificadorCod, T_ClasificadorUnfv, B_Habilitado, D_FecCre, D_FecMod 
+                    string s_command = @"SELECT I_ClasificadorID, N_Anio, T_ClasificadorDesc, T_ClasificadorCod, T_ClasificadorUnfv, B_Habilitado, D_FecCre, D_FecMod 
                                         FROM TC_ClasificadorIngreso WHERE B_Eliminado = 0;";
 
                     result = _dbConnection.Query<TC_ClasificadorIngreso>(s_command, commandType: CommandType.Text).ToList();
@@ -52,7 +52,7 @@ namespace Data.Tables
             {
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    var s_command = @"SELECT I_ClasificadorID, T_ClasificadorDesc, T_ClasificadorCod, T_ClasificadorUnfv, B_Habilitado, D_FecCre, D_FecMod 
+                    var s_command = @"SELECT I_ClasificadorID, N_Anio, T_ClasificadorDesc, T_ClasificadorCod, T_ClasificadorUnfv, B_Habilitado, D_FecCre, D_FecMod 
                                         FROM TC_ClasificadorIngreso WHERE I_ClasificadorID = @I_ClasificadorID AND B_Eliminado = 0;;";
 
                     result = _dbConnection.QueryFirstOrDefault<TC_ClasificadorIngreso>(s_command, new { I_ClasificadorID = clasificadorId }, commandType: CommandType.Text);

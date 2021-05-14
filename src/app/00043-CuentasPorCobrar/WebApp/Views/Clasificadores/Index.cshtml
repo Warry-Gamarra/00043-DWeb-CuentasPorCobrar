@@ -29,7 +29,7 @@
         <div class="table-responsive" style="min-height:300px">
             @Html.Grid(Model).Columns(columns =>
                             {
-                                columns.Add(c => c.AnioEjercicio).Titled("Año").Filterable(true);
+                                columns.Add(c => c.AnioEjercicio).Css("text-center").Titled("Año").Filterable(true);
                                 columns.Add(c => c.CodClasificador).Titled("Código").Filterable(true);
                                 columns.Add(c => c.Descripcion).Titled("Descripción").Filterable(true);
                                 columns.Add(c => c.CodigoEquivalente).Titled("Código 12 dígitos").Filterable(true);
