@@ -87,5 +87,8 @@ namespace WebApp.ViewModels
         public string T_DescripcionLarga { get; set; }
         public string T_Documento { get; set; }
         public bool? B_Habilitado { get; set; }
+
+        public string T_ClasifCorto { get; set; }
+        public string C_Moneda { get; set; }
     }
 }

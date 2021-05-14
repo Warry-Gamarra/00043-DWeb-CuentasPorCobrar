@@ -74,19 +74,38 @@ namespace Domain.Services
 
         public ConceptoEntity GetConcepto(int conceptoId)
         {
-            var result = new ConceptoEntity();
             TC_Concepto concepto = TC_Concepto.Find(conceptoId);
 
-            result.I_ConceptoID = concepto.I_ConceptoID;
-            result.T_ConceptoDesc = concepto.T_ConceptoDesc.ToUpper();
-            result.T_Clasificador = concepto.T_Clasificador;
-            result.B_EsPagoMatricula = concepto.B_EsPagoMatricula;
-            result.B_EsPagoExtmp = concepto.B_EsPagoExtmp;
-            result.B_ConceptoAgrupa = concepto.B_ConceptoAgrupa;
-            result.B_Calculado = concepto.B_Calculado;
-            result.I_Calculado = concepto.I_Calculado;
-            result.I_Monto = concepto.I_Monto;
-            result.I_MontoMinimo = concepto.I_MontoMinimo;
+            var result = new ConceptoEntity()
+            {
+                I_ConceptoID = concepto.I_ConceptoID,
+                T_ConceptoDesc = concepto.T_ConceptoDesc.ToUpper(),
+                T_Clasificador = concepto.T_Clasificador,
+                T_ClasifCorto = concepto.T_ClasifCorto,
+                B_EsObligacion = concepto.B_EsObligacion,
+                B_EsPagoMatricula = concepto.B_EsPagoMatricula,
+                B_EsPagoExtmp = concepto.B_EsPagoExtmp,
+                B_Fraccionable = concepto.B_Fraccionable,
+                B_ConceptoGeneral = concepto.B_ConceptoGeneral,
+                B_AgrupaConcepto = concepto.B_AgrupaConcepto,
+                I_TipoObligacion = concepto.I_TipoObligacion,
+                B_Calculado = concepto.B_Calculado,
+                I_Calculado = concepto.I_Calculado,
+                B_GrupoCodRc = concepto.B_GrupoCodRc,
+                I_GrupoCodRc = concepto.I_GrupoCodRc,
+                B_ModalidadIngreso = concepto.B_ModalidadIngreso,
+                I_ModalidadIngresoID = concepto.I_ModalidadIngresoID,
+                B_ConceptoAgrupa = concepto.B_ConceptoAgrupa,
+                I_ConceptoAgrupaID = concepto.I_ConceptoAgrupaID,
+                N_NroPagos = concepto.N_NroPagos,
+                B_Porcentaje = concepto.B_Porcentaje,
+                C_Moneda = concepto.C_Moneda,
+                I_Monto = concepto.I_Monto,
+                I_MontoMinimo = concepto.I_MontoMinimo,
+                T_DescripcionLarga = concepto.T_DescripcionLarga,
+                T_Documento = concepto.T_Documento,
+                B_Habilitado = concepto.B_Habilitado
+            };
 
             return result;
         }
@@ -322,7 +341,8 @@ namespace Domain.Services
                         M_MontoMinimo = conceptoPago.M_MontoMinimo,
                         T_DescripcionLarga = conceptoPago.T_DescripcionLarga,
                         T_Documento = conceptoPago.T_Documento,
-                        I_UsuarioCre = conceptoPago.I_UsuarioCre.GetValueOrDefault()
+                        I_UsuarioCre = conceptoPago.I_UsuarioCre.GetValueOrDefault(),
+                        C_Moneda = conceptoPago.C_Moneda
                     };
 
                     result = grabarConceptoPago.Execute();
@@ -368,7 +388,8 @@ namespace Domain.Services
                         T_DescripcionLarga = conceptoPago.T_DescripcionLarga,
                         T_Documento = conceptoPago.T_Documento,
                         B_Habilitado = conceptoPago.B_Habilitado,
-                        I_UsuarioMod = conceptoPago.I_UsuarioMod.GetValueOrDefault()
+                        I_UsuarioMod = conceptoPago.I_UsuarioMod.GetValueOrDefault(),
+                        C_Moneda = conceptoPago.C_Moneda
                     };
 
                     result = actualizarConceptoPago.Execute();

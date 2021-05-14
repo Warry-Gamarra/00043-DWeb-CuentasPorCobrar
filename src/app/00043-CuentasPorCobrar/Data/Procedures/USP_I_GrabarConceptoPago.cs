@@ -47,6 +47,7 @@ namespace Data.Procedures
         public string T_DescripcionLarga { get; set; }
         public string T_Documento { get; set; }
         public int I_UsuarioCre { get; set; }
+        public string C_Moneda { get; set; }
 
         public ResponseData Execute()
         {
@@ -94,6 +95,7 @@ namespace Data.Procedures
                     parameters.Add(name: "T_DescripcionLarga", dbType: DbType.String, value: this.T_DescripcionLarga);
                     parameters.Add(name: "T_Documento", dbType: DbType.String, value: this.T_Documento);
                     parameters.Add(name: "I_UsuarioCre", dbType: DbType.Int32, value: this.I_UsuarioCre);
+                    parameters.Add(name: "C_Moneda", dbType: DbType.String, value: this.C_Moneda);
 
                     parameters.Add(name: "I_ConcPagID", dbType: DbType.Int32, direction: ParameterDirection.Output);
                     parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);

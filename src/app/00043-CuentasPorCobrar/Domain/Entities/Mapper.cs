@@ -327,5 +327,30 @@ namespace Domain.Entities
 
             return multaNoVotarSinRegistrar;
         }
+
+        public static PagoGeneralPorFechaDTO USP_S_PagosGeneralPorFecha_To_PagoGeneralPorFechaDTO(USP_S_PagosGeneralPorFecha sp)
+        {
+            var result = new PagoGeneralPorFechaDTO()
+            {
+                I_ConceptoID = sp.I_ConceptoID,
+                T_ConceptoPagoDesc = sp.T_ConceptoPagoDesc,
+                I_MontoTotal = sp.I_MontoTotal
+            };
+
+            return result;
+        }
+
+        public static PagoPorFacultadYFechaDTO USP_S_PagosPorFacultadYFecha_To_PagoPorFacultadYFechaDTO(USP_S_PagosPorFacultadYFecha sp)
+        {
+            var result = new PagoPorFacultadYFechaDTO()
+            {
+                C_CodFac = sp.C_CodFac,
+                I_ConceptoID = sp.I_ConceptoID,
+                T_ConceptoPagoDesc = sp.T_ConceptoPagoDesc,
+                I_MontoTotal = sp.I_MontoTotal
+            };
+
+            return result;
+        }
     }
 }

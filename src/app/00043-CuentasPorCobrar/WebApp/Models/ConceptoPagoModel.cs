@@ -124,7 +124,8 @@ namespace WebApp.Models
                 T_Documento = model.T_Documento,
                 B_Habilitado = model.B_Habilitado.HasValue ? model.B_Habilitado.GetValueOrDefault() : true,
                 I_UsuarioCre = currentUserId,
-                I_UsuarioMod = currentUserId
+                I_UsuarioMod = currentUserId,
+                C_Moneda = model.C_Moneda
             };
 
             var result = conceptoPagoService.Grabar_ConceptoPago(conceptoPagoEntity, saveOption);
