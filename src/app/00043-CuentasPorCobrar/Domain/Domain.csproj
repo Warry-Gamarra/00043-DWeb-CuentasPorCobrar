@@ -83,6 +83,8 @@
     <Compile Include="Entities\MatriculaEntity.cs" />
     <Compile Include="Entities\MultaNoVotarSinRegistrarEntity.cs" />
     <Compile Include="Entities\PagoObligacionEntity.cs" />
+    <Compile Include="Entities\PagoGeneralPorFechaDTO.cs" />
+    <Compile Include="Entities\PagoPorFacultadYFechaDTO.cs" />
     <Compile Include="Entities\SeccionArchivo.cs" />
     <Compile Include="Helpers\Constantes.cs" />
     <Compile Include="Helpers\MultaNoVotarResponse.cs" />
@@ -133,8 +135,10 @@
     <Compile Include="Services\Implementations\CatalogoService.cs" />
     <Compile Include="Services\ICatalogoService.cs" />
     <Compile Include="Services\Implementations\GeneralService.cs" />
+    <Compile Include="Services\Implementations\ReporteService.cs" />
     <Compile Include="Services\IObligacionService.cs" />
     <Compile Include="Services\IProcesoService.cs" />
+    <Compile Include="Services\IReporteService.cs" />
     <Compile Include="Services\IRoles.cs" />
     <Compile Include="Services\IUser.cs" />
     <Compile Include="Services\Implementations\ObligacionService.cs" />

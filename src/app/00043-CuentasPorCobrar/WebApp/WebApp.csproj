@@ -436,6 +436,7 @@
     <Compile Include="Models\EstructuraArchivoModel.cs" />
     <Compile Include="Models\EstudianteModel.cs" />
     <Compile Include="Models\Facades\CatalogoServiceFacade.cs" />
+    <Compile Include="Models\Facades\IReporteServiceFacade.cs" />
     <Compile Include="Models\Facades\MatriculaServiceFacade.cs" />
     <Compile Include="Models\Facades\GeneralServiceFacade.cs" />
     <Compile Include="Models\Facades\IAlumnosClientFacade.cs" />
@@ -446,6 +447,7 @@
     <Compile Include="Models\Facades\IObligacionServiceFacade.cs" />
     <Compile Include="Models\Facades\IProgramasClientFacade.cs" />
     <Compile Include="Models\Facades\ProgramasClientFacade.cs" />
+    <Compile Include="Models\Facades\ReporteServiceFacade.cs" />
     <Compile Include="Models\IAlumnosSinVotoSource.cs" />
     <Compile Include="Models\IMatriculaSource.cs" />
     <Compile Include="Models\MatriculaDbfSource.cs" />
@@ -480,8 +482,12 @@
     <Compile Include="ViewModels\ConceptoPagoViewModel.cs" />
     <Compile Include="ViewModels\EstudiantesViewModels.cs" />
     <Compile Include="ViewModels\FiltroEnvioObligacionesModel.cs" />
+    <Compile Include="ViewModels\PagosGeneralesPorFechaViewModel.cs" />
+    <Compile Include="ViewModels\PagosPorFacultadYFechaViewModel.cs" />
     <Compile Include="ViewModels\PagosViewModels.cs" />
     <Compile Include="ViewModels\ProcesoViewModel.cs" />
+    <Compile Include="ViewModels\ReportePagosGeneralesPorFecha.cs" />
+    <Compile Include="ViewModels\ReportePagosPorFacultadYFechaViewModel.cs" />
     <Compile Include="ViewModels\RolesViewModel.cs" />
     <Compile Include="ViewModels\SelectViewModel.cs" />
     <Compile Include="ViewModels\UserManualViewModel.cs" />
@@ -571,6 +577,8 @@
     <Content Include="Views\EstructuraArchivo\_RegistroColumnaSeccion.cshtml" />
     <Content Include="Views\EstructuraArchivo\ColumnasSeccionEstructuraArchivo.cshtml" />
     <Content Include="Views\Estudiantes\Consulta.cshtml" />
+    <Content Include="Views\EstadosCuenta\PagosPorFecha.cshtml" />
+    <Content Include="Views\EstadosCuenta\PagosPorFacultad.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

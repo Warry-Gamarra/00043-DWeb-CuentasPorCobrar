@@ -3545,11 +3545,11 @@ GO
 
 
 
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_ReportePagosGeneralPorFecha')
-	DROP PROCEDURE [dbo].[USP_S_ReportePagosGeneralPorFecha]
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_PagosGeneralPorFecha')
+	DROP PROCEDURE [dbo].[USP_S_PagosGeneralPorFecha]
 GO
 
-CREATE PROCEDURE [dbo].[USP_S_ReportePagosGeneralPorFecha]
+CREATE PROCEDURE [dbo].[USP_S_PagosGeneralPorFecha]
 @D_FechaIni date,
 @D_FechaFin date
 AS
@@ -3567,7 +3567,7 @@ BEGIN
 	order by conpag.T_ConceptoPagoDesc
 
 	/*
-	EXEC USP_S_ReportePagosGeneralPorFecha 
+	EXEC USP_S_PagosGeneralPorFecha 
 		@D_FechaIni = '20210101', 
 		@D_FechaFin = '20211231'
 	*/
@@ -3576,15 +3576,14 @@ GO
 
 
 
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_ReportePagosPorFacultadYFecha')
-	DROP PROCEDURE [dbo].[USP_S_ReportePagosPorFacultadYFecha]
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_PagosPorFacultadYFecha')
+	DROP PROCEDURE [dbo].[USP_S_PagosPorFacultadYFecha]
 GO
 
-CREATE PROCEDURE [dbo].[USP_S_ReportePagosPorFacultadYFecha]
-@I_Anio int,
+CREATE PROCEDURE [dbo].[USP_S_PagosPorFacultadYFecha]
+@C_CodFac	varchar(2),
 @D_FechaIni date,
-@D_FechaFin date,
-@C_CodFac	varchar(2)
+@D_FechaFin date
 AS
 BEGIN
 	select mat.C_CodFac, conpag.I_ConceptoID, conpag.T_ConceptoPagoDesc, SUM(det.I_Monto) AS I_MontoTotal 
@@ -3599,5 +3598,12 @@ BEGIN
 		and mat.C_CodFac = @C_CodFac
 	group by mat.C_CodFac, conpag.I_ConceptoID, conpag.T_ConceptoPagoDesc
 	order by conpag.T_ConceptoPagoDesc
+
+	/*
+	EXEC USP_S_PagosPorFacultadYFecha 
+		@D_FechaIni = '20210101', 
+		@D_FechaFin = '20211231',
+		@C_CodFac = 'IN'
+	*/
 END
 GO
