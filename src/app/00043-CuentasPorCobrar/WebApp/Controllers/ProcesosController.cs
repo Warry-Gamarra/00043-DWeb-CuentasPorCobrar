@@ -14,7 +14,7 @@ namespace WebApp.Controllers
     [Authorize]
     public class ProcesosController : Controller
     {
-        ProcesoModel procesoModel;
+        private readonly ProcesoModel _procesoModel;
         private readonly int? _dependenciaUsuarioId;
         private readonly SelectModel _selectModel;
         private readonly ConceptoPagoModel _conceptoModel;
@@ -23,7 +23,7 @@ namespace WebApp.Controllers
 
         public ProcesosController()
         {
-            procesoModel = new ProcesoModel();
+            _procesoModel = new ProcesoModel();
             _selectModel = new SelectModel();
             _conceptoModel = new ConceptoPagoModel();
             _categoriaPagoModel = new CategoriaPagoModel();
@@ -40,7 +40,7 @@ namespace WebApp.Controllers
         {
             ViewBag.Title = "Procesos y Conceptos";
 
-            var lista = procesoModel.Listar_Procesos(DateTime.Now.Year);
+            var lista = _procesoModel.Listar_Procesos(DateTime.Now.Year);
 
             return View(lista);
         }
@@ -58,7 +58,7 @@ namespace WebApp.Controllers
 
             ViewBag.Message = TempData["Message"];
 
-            return View("Obligaciones", procesoModel.Listar_Procesos(anio.Value));
+            return View("Obligaciones", _procesoModel.Listar_Procesos(anio.Value));
         }
 
         [Route("configuracion/cuotas-de-pago-y-conceptos/{anio}/nueva-cuota-pago")]
@@ -83,11 +83,11 @@ namespace WebApp.Controllers
         {
             ViewBag.Title = "Editar Cuota de Pago";
 
-            RegistroProcesoViewModel model = procesoModel.Obtener_Proceso(id);
+            RegistroProcesoViewModel model = _procesoModel.Obtener_Proceso(id);
 
             var ctasCategoria = new List<SelectViewModel>();
 
-            foreach (var item in procesoModel.Listar_Combo_CtaDepositoHabilitadas(model.CategoriaId.Value).Select(x => x.ItemsGroup))
+            foreach (var item in _procesoModel.Listar_Combo_CtaDepositoHabilitadas(model.CategoriaId.Value).Select(x => x.ItemsGroup))
             {
                 ctasCategoria.AddRange(item);
             }
@@ -105,7 +105,7 @@ namespace WebApp.Controllers
         {
             ViewBag.Title = "Tasas y Servicios";
 
-            var lista = procesoModel.Listar_Tasas();
+            var lista = _procesoModel.Listar_Tasas();
 
             ViewBag.Conceptos = new SelectList(_conceptoModel.Listar_CatalogoConceptos(TipoObligacion.OtrosPagos), "Id", "NombreConcepto");
             ViewBag.Dependencias = new SelectList(_selectModel.GetDependencias(), "Value", "TextDisplay", _dependenciaUsuarioId);
@@ -133,11 +133,11 @@ namespace WebApp.Controllers
         {
             ViewBag.Title = "Editar Cuota de Pago";
 
-            RegistroProcesoViewModel model = procesoModel.Obtener_Proceso(id);
+            RegistroProcesoViewModel model = _procesoModel.Obtener_Proceso(id);
 
             var ctasCategoria = new List<SelectViewModel>();
 
-            foreach (var item in procesoModel.Listar_Combo_CtaDepositoHabilitadas(model.CategoriaId.Value).Select(x => x.ItemsGroup))
+            foreach (var item in _procesoModel.Listar_Combo_CtaDepositoHabilitadas(model.CategoriaId.Value).Select(x => x.ItemsGroup))
             {
                 ctasCategoria.AddRange(item);
             }
@@ -158,7 +158,7 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                result = procesoModel.Grabar_Proceso(model, WebSecurity.CurrentUserId);
+                result = _procesoModel.Grabar_Proceso(model, WebSecurity.CurrentUserId);
             }
             else
             {
@@ -182,10 +182,10 @@ namespace WebApp.Controllers
         [Route("configuracion/cuotas-de-pago-y-conceptos/{procesoId}/conceptos-de-pago")]
         public ActionResult VerConceptos(int procesoId)
         {
-            ViewBag.Title = procesoModel.Obtener_Proceso(procesoId).DescProceso;
+            ViewBag.Title = _procesoModel.Obtener_Proceso(procesoId).DescProceso;
             ViewBag.ProcesoId = procesoId;
 
-            var model = procesoModel.ObtenerConceptosProceso(procesoId);
+            var model = _procesoModel.ObtenerConceptosProceso(procesoId);
 
             return PartialView("_ListadoConceptosProceso", model);
         }
@@ -196,7 +196,7 @@ namespace WebApp.Controllers
         {
             ViewBag.ProcesoId = procesoId;
 
-            var model = procesoModel.ObtenerConceptosProceso(procesoId);
+            var model = _procesoModel.ObtenerConceptosProceso(procesoId);
 
             return PartialView("_ListadoTasasProcesoGrupos", model);
         }
@@ -204,7 +204,7 @@ namespace WebApp.Controllers
 
         public ActionResult BuscarTasas(int? concepto, int? dependencia)
         {
-            var model = procesoModel.ObtenerConceptosTipoObligacionHabilitados(null, TipoObligacion.OtrosPagos);
+            var model = _procesoModel.ObtenerConceptosTipoObligacionHabilitados(null, TipoObligacion.OtrosPagos);
 
             return PartialView("_ListadoTasasProcesoBusqueda", model);
         }

@@ -18,11 +18,11 @@ namespace WebApp.Models
             _clasificadores = new ClasificadorDeIngreso();
         }
 
-        public List<ClasificadorViewModel> Find()
+        public List<ClasificadorViewModel> Find(string anio)
         {
             var result = new List<ClasificadorViewModel>();
 
-            foreach (var item in _clasificadores.Find())
+            foreach (var item in _clasificadores.Find(anio))
             {
                 result.Add(new ClasificadorViewModel(item));
             }

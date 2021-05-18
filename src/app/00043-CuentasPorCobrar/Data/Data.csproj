@@ -94,7 +94,7 @@
     <Compile Include="Views\VW_CtaDepositoProceso.cs" />
     <Compile Include="Views\VW_MatriculaAlumno.cs" />
     <Compile Include="Types\DataMatriculaResult.cs" />
-    <Compile Include="Tables\TC_ClasificadorIngreso.cs" />
+    <Compile Include="Tables\TC_ClasificadorPresupuestal.cs" />
     <Compile Include="Tables\TC_Concepto.cs" />
     <Compile Include="Tables\TC_DependenciaUNFV.cs" />
     <Compile Include="Tables\TC_CatalogoOpcion.cs" />

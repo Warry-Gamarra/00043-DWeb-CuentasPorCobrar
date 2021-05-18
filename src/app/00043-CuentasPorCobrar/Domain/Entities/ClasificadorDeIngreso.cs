@@ -20,16 +20,16 @@ namespace Domain.Entities
         public DateTime FecUpdated { get; set; }
         public Response Response { get; set; }
 
-        private readonly TC_ClasificadorIngreso _clasificadorRepository;
+        private readonly TC_ClasificadorPresupuestal _clasificadorRepository;
         public ClasificadorDeIngreso()
         {
-            _clasificadorRepository = new TC_ClasificadorIngreso();
+            _clasificadorRepository = new TC_ClasificadorPresupuestal();
         }
 
-        public ClasificadorDeIngreso(TC_ClasificadorIngreso table)
+        public ClasificadorDeIngreso(TC_ClasificadorPresupuestal table)
         {
             this.Id = table.I_ClasificadorID;
-            this.CodigoMef = table.T_ClasificadorCod;
+            //this.CodigoMef = table.T_ClasificadorCod;
             this.Descripcion = table.T_ClasificadorDesc;
             this.CodigoUnfv = table.T_ClasificadorUnfv;
             this.AnioEjercicio = table.N_Anio;
@@ -48,10 +48,10 @@ namespace Domain.Entities
             return new Response(_clasificadorRepository.ChangeState(currentUserId));
         }
 
-        public List<ClasificadorDeIngreso> Find()
+        public List<ClasificadorDeIngreso> Find(string anio)
         {
             var result = new List<ClasificadorDeIngreso>();
-            foreach (var item in _clasificadorRepository.Find())
+            foreach (var item in _clasificadorRepository.Find(anio.ToString()))
             {
                 result.Add(new ClasificadorDeIngreso(item));
             }
@@ -67,7 +67,7 @@ namespace Domain.Entities
         public Response Save(ClasificadorDeIngreso clasificadorDeIngreso, int currentUserId, SaveOption saveOption)
         {
             _clasificadorRepository.I_ClasificadorID = clasificadorDeIngreso.Id.Value;
-            _clasificadorRepository.T_ClasificadorCod = clasificadorDeIngreso.CodigoMef;
+            //_clasificadorRepository.T_ClasificadorCod = clasificadorDeIngreso.CodigoMef;
             _clasificadorRepository.T_ClasificadorDesc = clasificadorDeIngreso.Descripcion;
             _clasificadorRepository.N_Anio = clasificadorDeIngreso.AnioEjercicio;
             _clasificadorRepository.T_ClasificadorUnfv = clasificadorDeIngreso.CodigoUnfv;

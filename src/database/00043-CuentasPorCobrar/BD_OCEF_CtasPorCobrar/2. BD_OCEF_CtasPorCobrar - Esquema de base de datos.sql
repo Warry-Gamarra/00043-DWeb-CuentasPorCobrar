@@ -191,7 +191,7 @@ CREATE TABLE TI_UsuarioDatosUsuario
 	CONSTRAINT FK_Usuario_UsuarioDatosUsuario FOREIGN KEY (UserId) REFERENCES TC_Usuario(UserId)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION,
-CONSTRAINT FK_DatosUsuario_UsuarioDatosUsuario FOREIGN KEY (I_DatosUsuarioID) REFERENCES TC_DatosUsuario(I_DatosUsuarioID)
+	CONSTRAINT FK_DatosUsuario_UsuarioDatosUsuario FOREIGN KEY (I_DatosUsuarioID) REFERENCES TC_DatosUsuario(I_DatosUsuarioID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 )
@@ -234,7 +234,7 @@ CREATE TABLE TS_DocumentosRoles
 	CONSTRAINT FK_Roles_DocumentosRoles FOREIGN KEY (RoleId) REFERENCES webpages_Roles(RoleId)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION,
-CONSTRAINT FK_RutaDocumentacion_DocumentosRoles FOREIGN KEY (I_RutaDocID) REFERENCES TS_RutaDocumentacion(I_RutaDocID)
+	CONSTRAINT FK_RutaDocumentacion_DocumentosRoles FOREIGN KEY (I_RutaDocID) REFERENCES TS_RutaDocumentacion(I_RutaDocID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 )
@@ -392,7 +392,7 @@ CREATE TABLE TC_Concepto
 	T_ConceptoDesc       varchar(250)  NULL ,
 	T_Clasificador       varchar(250)  NULL ,
 	T_ClasifCorto        varchar(20)  NULL ,
-	B_EsObligacion		bit  NOT NULL ,
+	B_EsObligacion		 bit  NOT NULL ,
 	B_EsPagoMatricula    bit  NULL ,
 	B_EsPagoExtmp        bit  NULL ,
 	B_Fraccionable       bit  NULL ,
@@ -409,7 +409,7 @@ CREATE TABLE TC_Concepto
 	I_ConceptoAgrupaID   int  NULL ,
 	N_NroPagos           tinyint  NULL ,
 	B_Porcentaje         bit  NULL ,
-	C_Moneda             char(18)  NULL ,
+	C_Moneda             varchar(5)  NULL ,
 	I_Monto              decimal(15,2)  NULL ,
 	I_MontoMinimo        decimal(15,2)  NULL ,
 	T_DescripcionLarga   varchar(250)  NULL ,
@@ -491,7 +491,7 @@ CREATE TABLE TI_ConceptoPago
 	I_ConceptoAfectaID   int  NULL ,
 	N_NroPagos           tinyint  NULL ,
 	B_Porcentaje         bit  NULL ,
-	C_Moneda             char(18)  NULL ,
+	C_Moneda             varchar(5)  NULL ,
 	M_Monto              decimal(15,2)  NULL ,
 	M_MontoMinimo        decimal(15,2)  NULL ,
 	T_DescripcionLarga   varchar(250)  NULL ,
@@ -554,10 +554,10 @@ CREATE TABLE TRI_PagoProcesadoUnfv
 	CONSTRAINT FK_PagoBanco_PagoProcesadoUnfv FOREIGN KEY (I_PagoBancoID) REFERENCES TR_PagoBanco(I_PagoBancoID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION,
-CONSTRAINT FK_ObligacionAluCab_PagoProcesadoUnfv FOREIGN KEY (I_ObligacionAluID) REFERENCES TR_ObligacionAluCab(I_ObligacionAluID)
+	CONSTRAINT FK_ObligacionAluCab_PagoProcesadoUnfv FOREIGN KEY (I_ObligacionAluID) REFERENCES TR_ObligacionAluCab(I_ObligacionAluID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION,
-CONSTRAINT FK_TasaUnfv_PagoProcesadoUnfv FOREIGN KEY (I_TasaUnfvID) REFERENCES TR_TasaUnfv(I_TasaUnfvID)
+	CONSTRAINT FK_TasaUnfv_PagoProcesadoUnfv FOREIGN KEY (I_TasaUnfvID) REFERENCES TR_TasaUnfv(I_TasaUnfvID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 )
@@ -586,25 +586,6 @@ CREATE TABLE TR_ObligacionAluDet
 	CONSTRAINT FK_ObligacionAluCab_ObligacionAluDet FOREIGN KEY (I_ObligacionAluID) REFERENCES TR_ObligacionAluCab(I_ObligacionAluID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
-)
-go
-
-
-
-CREATE TABLE TC_ClasificadorIngreso
-( 
-	I_ClasificadorID     int IDENTITY ( 1,1 ) ,
-	T_ClasificadorDesc   varchar(250)  NOT NULL ,
-	T_ClasificadorCod    varchar(50)  NULL ,
-	T_ClasificadorUnfv   varchar(50)  NULL ,
-	N_Anio				 varchar(4)  NULL,
-	B_Habilitado         bit  NOT NULL ,
-	B_Eliminado          bit  NOT NULL ,
-	I_UsuarioCre         int  NULL ,
-	D_FecCre             datetime  NULL ,
-	I_UsuarioMod         int  NULL ,
-	D_FecMod             datetime  NULL ,
-	CONSTRAINT PK_ClasificadorIngreso PRIMARY KEY  CLUSTERED (I_ClasificadorID ASC)
 )
 go
 
@@ -647,7 +628,7 @@ CREATE TABLE TI_CtaDepo_Proceso
 	CONSTRAINT FK_Proceso_CuentaDepoProceso FOREIGN KEY (I_ProcesoID) REFERENCES TC_Proceso(I_ProcesoID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION,
-CONSTRAINT FK_CuentaDeposito_CtaDepoProceso FOREIGN KEY (I_CtaDepositoID) REFERENCES TC_CuentaDeposito(I_CtaDepositoID)
+	CONSTRAINT FK_CuentaDeposito_CtaDepoProceso FOREIGN KEY (I_CtaDepositoID) REFERENCES TC_CuentaDeposito(I_CtaDepositoID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 )
@@ -791,9 +772,6 @@ go
 
 
 
-
-
-
 CREATE TABLE TC_AlumnoMultaNoVotar
 ( 
 	I_AluMultaID           int IDENTITY ( 1,1 ) ,
@@ -810,3 +788,63 @@ CREATE TABLE TC_AlumnoMultaNoVotar
 	CONSTRAINT PK_AlumnoMultaNoVotar PRIMARY KEY  CLUSTERED (I_AluMultaID ASC)
 )
 go
+
+
+
+CREATE TABLE TC_ClasificadorPresupuestal
+( 
+	I_ClasificadorID     int IDENTITY ( 1,1 ) ,
+	C_TipoTransCod       varchar(2)  NULL ,
+	C_GenericaCod        varchar(2)  NULL ,
+	C_SubGeneCod         varchar(5)  NULL ,
+	C_EspecificaCod      varchar(5)  NULL ,
+	T_ClasificadorDesc   varchar(250)  NOT NULL ,
+	T_ClasificadorDetalle varchar(max)  NULL ,
+	B_Eliminado          bit  NOT NULL ,
+	I_UsuarioCre         int  NULL ,
+	D_FecCre             datetime  NULL ,
+	I_UsuarioMod         int  NULL ,
+	D_FecMod             datetime  NULL ,
+	CONSTRAINT PK_ClasificadorIngreso PRIMARY KEY  CLUSTERED (I_ClasificadorID ASC)
+)
+go
+
+
+
+CREATE TABLE TC_ClasificadorAnio
+( 
+	I_ClasificadorID     int  NOT NULL ,
+	N_Anio               varchar(4)  NOT NULL ,
+	B_Habilitado         bit  NOT NULL ,
+	B_Eliminado          bit  NOT NULL ,
+	I_UsuarioCre         int  NULL ,
+	D_FecCre             datetime  NULL ,
+	I_UsuarioMod         int  NULL ,
+	D_FecMod             datetime  NULL ,
+	CONSTRAINT PK_ClasificadorAnio PRIMARY KEY  CLUSTERED (I_ClasificadorID ASC,N_Anio ASC),
+	CONSTRAINT FK_ClasificadorPresupuestal_ClasificadorAnio FOREIGN KEY (I_ClasificadorID) REFERENCES TC_ClasificadorPresupuestal(I_ClasificadorID)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+)
+go
+
+
+
+CREATE TABLE TC_ClasificAnioClasificConcepto
+( 
+	I_ClasificadorID     int  NOT NULL ,
+	N_Anio               varchar(4)  NOT NULL ,
+	C_ClasificConceptoCod varchar(20)  NOT NULL ,
+	B_Habilitado         bit  NOT NULL ,
+	B_Eliminado          bit  NOT NULL ,
+	I_UsuarioCre         int  NULL ,
+	D_FecCre             datetime  NULL ,
+	I_UsuarioMod         int  NULL ,
+	D_FecMod             datetime  NULL ,
+	CONSTRAINT PK_ClasificAnioClasificConcepto PRIMARY KEY  CLUSTERED (I_ClasificadorID ASC,N_Anio ASC,C_ClasificConceptoCod ASC),
+	CONSTRAINT FK_ClasificadorAnio_ClasificAnioClasifConcepto FOREIGN KEY (I_ClasificadorID,N_Anio) REFERENCES TC_ClasificadorAnio(I_ClasificadorID,N_Anio)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+)
+go
+

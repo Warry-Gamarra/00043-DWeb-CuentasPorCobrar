@@ -11,11 +11,10 @@ using WebMatrix.WebData;
 namespace WebApp.Controllers
 {
     [Authorize]
-    [Route("configuracion/clasificadores-de-ingreso/{action}")]
     public class ClasificadoresController : Controller
     {
-        public readonly ClasificadorModel _clasificador;
-        public readonly SelectModel _selectModels;
+        private readonly ClasificadorModel _clasificador;
+        private readonly SelectModel _selectModels;
 
         public ClasificadoresController()
         {
@@ -25,16 +24,20 @@ namespace WebApp.Controllers
 
 
         // GET: Clasificadores
-        [Route("configuracion/clasificadores-de-ingreso")]
-        public ActionResult Index()
+        [Route("configuracion/clasificadores-presupuestal")]
+        public ActionResult Index(int? anio)
         {
-            ViewBag.Title = "Clasificadores de Ingreso";
-            var model = _clasificador.Find();
+            ViewBag.Title = "Clasificadores Presupuestales";
+            ViewBag.Anios = new SelectList(_selectModels.GetAnios(1990), "Value", "TextDisplay", anio);
+
+            anio = anio ?? DateTime.Now.Year;
+
+            var model = _clasificador.Find(anio.Value.ToString());
 
             return View(model);
         }
 
-        [Route("configuracion/clasificadores-de-ingreso/nuevo")]
+        [Route("configuracion/clasificadores-presupuestal/nuevo")]
         [HttpGet]
         public ActionResult Create()
         {
@@ -44,7 +47,7 @@ namespace WebApp.Controllers
             return PartialView("_RegistrarClasificador", new ClasificadorRegistrarViewModel());
         }
 
-        [Route("configuracion/clasificadores-de-ingreso/editar/{id}")]
+        [Route("configuracion/clasificadores-presupuestal/editar/{id}")]
         [HttpGet]
         public ActionResult Edit(int id)
         {

@@ -15,34 +15,48 @@
             <h1 class="">@ViewBag.Title <small></small></h1>
         </section>
     </div>
-    <br />
 
-    <div class="col-12">
-        <a href="@Url.Action("Create", "Clasificadores")" class="btn btn-primary float-right modal-link">
+    <div class="col-12 mt-5">
+        <p class="h3"><small>Clasificadores presupuestales Registrados</small></p>
+        <a href="@Url.Action("Create", "Clasificadores")" class="btn btn-primary float-right modal-link-lg mb-5">
             <i class="fa fa-plus-circle"></i> Agregar Clasificador
         </a>
-
-        <p class="h3"><small>Clasificadores de Ingreso Registrados</small></p>
-        <br />
-
-        <br />
-        <div class="table-responsive" style="min-height:300px">
-            @Html.Grid(Model).Columns(columns =>
-                            {
-                                columns.Add(c => c.AnioEjercicio).Css("text-center").Titled("Año").Filterable(true);
-                                columns.Add(c => c.CodClasificador).Titled("Código").Filterable(true);
-                                columns.Add(c => c.Descripcion).Titled("Descripción").Filterable(true);
-                                columns.Add(c => c.CodigoEquivalente).Titled("Código 12 dígitos").Filterable(true);
-                                columns.Add(c => c.Habilitado).SetWidth(100).Css("text-center").Encoded(false).Sanitized(false)
-                                       .RenderValueAs(model => model.Habilitado ?
-                                                                            @Html.Raw("<span id=\"td" + @model.Id + "\"><button type=\"submit\" class=\"btn btn-xs btn-success\" onclick=\"ChangeStateReloadPage(" + @model.Id + ", " + @model.Habilitado.ToString().ToLower() + ", '" + @Url.Action("ChangeState", "Clasificadores") + "');\"><i class=\"fa fa-check-circle-o\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Habilitado</span></button></span>")
-                                                                            : @Html.Raw("<span id=\"td" + @model.Id + "\"><button type=\"submit\" class=\"btn btn-xs btn-secondary\" onclick=\"ChangeStateReloadPage(" + @model.Id + ", " + @model.Habilitado.ToString().ToLower() + ", '" + @Url.Action("ChangeState", "Clasificadores") + "');\"><i class=\"fa fa-minus-circle\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Deshabilitado</span></button></span>"))
-                                       .Filterable(true).SetWidth(160).Titled("Estado");
-                                columns.Add().SetWidth(200).Css("text-right").Encoded(false).Sanitized(false).RenderValueAs(model => @<a href="@Url.Action("Edit", "Clasificadores", new { id = model.Id, area = "" })" class="modal-link"><i class="fa fa-pencil-square-o" aria-hidden="true">&nbsp;</i><span class="d-none d-md-inline-block">Editar</span></a>);
-                                 }
-                            ).WithPaging(10).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
+        <div class="row d-flex justify-content-end">
+            <div class="col-lg-4 col-12">
+                <div class="form-group form-row">
+                    <label for="inputAnio" class="col-7 col-form-label text-right">Año: </label>
+                    <div class="col-5">
+                        @Html.DropDownList("inputAnio", ViewBag.Anios as SelectList, new { Class = "form-control text-center" })
+                    </div>
+                </div>
+            </div>
         </div>
 
+        <div class="table-responsive" style="min-height:300px">
+            @Html.Grid(Model).Columns(columns =>
+            {
+                   //columns.Add(c => c.AnioEjercicio).Css("text-center").Titled("Año").Filterable(true);
+                   columns.Add(c => c.CodClasificador).Titled("Código").Filterable(true);
+                   columns.Add(c => c.Descripcion).Titled("Descripción").Filterable(true);
+                   columns.Add(c => c.CodigoEquivalente).Titled("Código 12 dígitos").Filterable(true);
+                   columns.Add(c => c.Habilitado).SetWidth(100).Css("text-center").Encoded(false).Sanitized(false)
+                          .RenderValueAs(model => model.Habilitado ?
+                                                               @Html.Raw("<span id=\"td" + @model.Id + "\"><button type=\"submit\" class=\"btn btn-xs btn-success\" onclick=\"ChangeStateReloadPage(" + @model.Id + ", " + @model.Habilitado.ToString().ToLower() + ", '" + @Url.Action("ChangeState", "Clasificadores") + "');\"><i class=\"fa fa-check-circle-o\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Habilitado</span></button></span>")
+                                                               : @Html.Raw("<span id=\"td" + @model.Id + "\"><button type=\"submit\" class=\"btn btn-xs btn-secondary\" onclick=\"ChangeStateReloadPage(" + @model.Id + ", " + @model.Habilitado.ToString().ToLower() + ", '" + @Url.Action("ChangeState", "Clasificadores") + "');\"><i class=\"fa fa-minus-circle\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Deshabilitado</span></button></span>"))
+                          .Filterable(true).SetWidth(160).Titled("Estado");
+                   columns.Add().SetWidth(200).Css("text-right").Encoded(false).Sanitized(false).RenderValueAs(model => @<a href="@Url.Action("Edit", "Clasificadores", new { id = model.Id, area = "" })" class="modal-link"><i class="fa fa-pencil-square-o" aria-hidden="true">&nbsp;</i><span class="d-none d-md-inline-block">Editar</span></a>);
+                 }).WithPaging(10).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
+        </div>
     </div>
 </div>
 
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#inputAnio').on('change', function () {
+                location.href = '@Url.Action("Index","Clasificadores")' + '?anio=' + $(this).val();
+            })
+
+        })
+    </script>
+}

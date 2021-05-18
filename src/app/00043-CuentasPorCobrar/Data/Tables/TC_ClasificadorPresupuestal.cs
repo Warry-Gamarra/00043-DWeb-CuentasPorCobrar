@@ -10,11 +10,15 @@ using System.Threading.Tasks;
 
 namespace Data.Tables
 {
-    public class TC_ClasificadorIngreso
+    public class TC_ClasificadorPresupuestal
     {
         public int I_ClasificadorID { get; set; }
+        public string C_TipoTransCod { get; set; }
+        public string C_GenericaCod { get; set; }
+        public string C_SubGeneCod { get; set; }
+        public string C_EspecificaCod { get; set; }
         public string T_ClasificadorDesc { get; set; }
-        public string T_ClasificadorCod { get; set; }
+        public string T_ClasificadorDetalle { get; set; }
         public string N_Anio { get; set; }
         public string T_ClasificadorUnfv { get; set; }
         public bool B_Habilitado { get; set; }
@@ -22,18 +26,21 @@ namespace Data.Tables
         public DateTime? D_FecMod { get; set; }
 
 
-        public List<TC_ClasificadorIngreso> Find()
+        public List<TC_ClasificadorPresupuestal> Find(string anio)
         {
-            List<TC_ClasificadorIngreso> result = new List<TC_ClasificadorIngreso>();
+            List<TC_ClasificadorPresupuestal> result = new List<TC_ClasificadorPresupuestal>();
 
             try
             {
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    string s_command = @"SELECT I_ClasificadorID, N_Anio, T_ClasificadorDesc, T_ClasificadorCod, T_ClasificadorUnfv, B_Habilitado, D_FecCre, D_FecMod 
-                                        FROM TC_ClasificadorIngreso WHERE B_Eliminado = 0;";
+                    string s_command = @"SELECT  CP.I_ClasificadorID, C_TipoTransCod, C_GenericaCod, C_SubGeneCod, C_EspecificaCod, T_ClasificadorDesc, T_ClasificadorDetalle
+		                                         , CA.N_Anio
+                                           FROM  TC_ClasificadorPresupuestal CP
+		                                         LEFT JOIN TC_ClasificadorAnio CA ON CP.I_ClasificadorID = CA.I_ClasificadorID
+                                          WHERE	CA.N_Anio = @N_Anio AND CA.B_Eliminado = 0 AND CP.B_Eliminado = 0;";
 
-                    result = _dbConnection.Query<TC_ClasificadorIngreso>(s_command, commandType: CommandType.Text).ToList();
+                    result = _dbConnection.Query<TC_ClasificadorPresupuestal>(s_command, new { N_Anio = anio }, commandType: CommandType.Text).ToList();
                 }
             }
             catch (Exception ex)
@@ -44,18 +51,22 @@ namespace Data.Tables
             return result;
         }
 
-        public TC_ClasificadorIngreso Find(int clasificadorId)
+        public TC_ClasificadorPresupuestal Find(int clasificadorId)
         {
-            TC_ClasificadorIngreso result = new TC_ClasificadorIngreso();
+            TC_ClasificadorPresupuestal result = new TC_ClasificadorPresupuestal();
 
             try
             {
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    var s_command = @"SELECT I_ClasificadorID, N_Anio, T_ClasificadorDesc, T_ClasificadorCod, T_ClasificadorUnfv, B_Habilitado, D_FecCre, D_FecMod 
-                                        FROM TC_ClasificadorIngreso WHERE I_ClasificadorID = @I_ClasificadorID AND B_Eliminado = 0;;";
+                    var s_command = @"SELECT  CP.I_ClasificadorID, C_TipoTransCod, C_GenericaCod, C_SubGeneCod, C_EspecificaCod, T_ClasificadorDesc, T_ClasificadorDetalle
+		                                      , CA.N_Anio, CACC.C_ClasificConceptoCod
+                                        FROM  TC_ClasificadorPresupuestal CP
+		                                      LEFT JOIN TC_ClasificadorAnio CA ON CA.I_ClasificadorID = CP.I_ClasificadorID 
+		                                      LEFT JOIN TC_ClasificAnioClasificConcepto CACC ON CACC.I_ClasificadorID = CP.I_ClasificadorID AND CACC.N_Anio = CA.N_Anio
+                                       WHERE  CP.I_ClasificadorID = @I_ClasificadorID AND CACC.B_Eliminado = 0 AND CP.B_Eliminado = 0;";
 
-                    result = _dbConnection.QueryFirstOrDefault<TC_ClasificadorIngreso>(s_command, new { I_ClasificadorID = clasificadorId }, commandType: CommandType.Text);
+                    result = _dbConnection.QueryFirstOrDefault<TC_ClasificadorPresupuestal>(s_command, new { I_ClasificadorID = clasificadorId }, commandType: CommandType.Text);
                 }
             }
             catch (Exception ex)
@@ -107,9 +118,12 @@ namespace Data.Tables
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
                     parameters.Add(name: "I_ClasificadorID", dbType: DbType.Int32, value: this.I_ClasificadorID);
+                    parameters.Add(name: "C_TipoTransCod", dbType: DbType.String, size: 2, value: this.C_TipoTransCod);
+                    parameters.Add(name: "C_GenericaCod", dbType: DbType.String, size: 2, value: this.C_GenericaCod);
+                    parameters.Add(name: "C_SubGeneCod", dbType: DbType.String, size: 5, value: this.C_SubGeneCod);
+                    parameters.Add(name: "C_EspecificaCod", dbType: DbType.String, size: 5, value: this.C_EspecificaCod);
                     parameters.Add(name: "T_ClasificadorDesc", dbType: DbType.String, size: 250, value: this.T_ClasificadorDesc);
-                    parameters.Add(name: "T_ClasificadorCod", dbType: DbType.String, size: 50, value: this.T_ClasificadorCod);
-                    parameters.Add(name: "T_ClasificadorUnfv", dbType: DbType.String, size: 50, value: this.T_ClasificadorUnfv);
+                    parameters.Add(name: "T_ClasificadorDetalle", dbType: DbType.String, size: 4000, value: this.T_ClasificadorDetalle);
                     parameters.Add(name: "N_Anio", dbType: DbType.String, size: 4, value: this.N_Anio);
                     parameters.Add(name: "D_FecCre", dbType: DbType.DateTime, value: this.D_FecMod);
                     parameters.Add(name: "CurrentUserId", dbType: DbType.Int32, value: currentUserId);
@@ -142,8 +156,12 @@ namespace Data.Tables
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
                     parameters.Add(name: "I_ClasificadorID", dbType: DbType.Int32, value: this.I_ClasificadorID);
+                    parameters.Add(name: "C_TipoTransCod", dbType: DbType.String, size: 2, value: this.C_TipoTransCod);
+                    parameters.Add(name: "C_GenericaCod", dbType: DbType.String, size: 2, value: this.C_GenericaCod);
+                    parameters.Add(name: "C_SubGeneCod", dbType: DbType.String, size: 5, value: this.C_SubGeneCod);
+                    parameters.Add(name: "C_EspecificaCod", dbType: DbType.String, size: 5, value: this.C_EspecificaCod);
                     parameters.Add(name: "T_ClasificadorDesc", dbType: DbType.String, size: 250, value: this.T_ClasificadorDesc);
-                    parameters.Add(name: "T_ClasificadorCod", dbType: DbType.String, size: 50, value: this.T_ClasificadorCod);
+                    parameters.Add(name: "T_ClasificadorDetalle", dbType: DbType.String, size: 4000, value: this.T_ClasificadorDetalle);
                     parameters.Add(name: "T_ClasificadorUnfv", dbType: DbType.String, size: 50, value: this.T_ClasificadorUnfv);
                     parameters.Add(name: "N_Anio", dbType: DbType.String, size: 4, value: this.N_Anio);
                     parameters.Add(name: "D_FecMod", dbType: DbType.DateTime, value: this.D_FecMod);

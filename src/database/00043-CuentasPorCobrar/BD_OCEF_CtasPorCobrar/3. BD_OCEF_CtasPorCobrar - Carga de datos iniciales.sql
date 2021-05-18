@@ -476,8 +476,8 @@ SET IDENTITY_INSERT TC_Concepto ON
 GO
 
 -- INSERTAR CONCEPTOS agrupa = 1
-INSERT INTO TC_Concepto (I_ConceptoID, T_ConceptoDesc, T_Clasificador, I_Monto, I_MontoMinimo, B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado)
-				SELECT id_cp, descripcio, clasificad, monto, monto_min, 1, 0, 1, 0, NULL, 1,eliminado
+INSERT INTO TC_Concepto (I_ConceptoID, T_ConceptoDesc, T_Clasificador, I_Monto, I_MontoMinimo, B_EsObligacion, B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, B_Calculado, I_Calculado, B_Habilitado, B_Eliminado)
+				SELECT id_cp, descripcio, clasificad, monto, monto_min, 1, 1, 0, 1, 0, NULL, 1,eliminado
 				FROM temporal_pagos..cp_pri 
 				WHERE agrupa = 1 and tipo_oblig = 1
 
@@ -681,3 +681,15 @@ GO
 --				WHERE tipo_oblig = 1
 
 --GO
+
+
+--INSERT INTO TC_ClasificadorPresupuestal (C_TipoTransCod, C_GenericaCod, C_SubGeneCod, C_EspecificaCod, T_ClasificadorDesc, T_ClasificadorDetalle, B_Eliminado, I_UsuarioCre, D_FecCre)
+--								SELECT SUBSTRING(CLASIFICADOR, 1, 1), SUBSTRING(CLASIFICADOR, 3, 1)
+--									  , CASE CHARINDEX('.', CLASIFICADOR, 5) WHEN 0 THEN IIF(LEN(SUBSTRING(CLASIFICADOR, 5, 4)) = 0, NULL, REPLACE(SUBSTRING(CLASIFICADOR, 5, 4), ' ','')) ELSE REPLACE(SUBSTRING(CLASIFICADOR, 5, (CHARINDEX('.', CLASIFICADOR, 5) - 5)), ' ','') END
+--									  , CASE CHARINDEX('.', CLASIFICADOR, 5) WHEN 0 THEN NULL ELSE REPLACE(SUBSTRING(CLASIFICADOR, CHARINDEX('.', CLASIFICADOR, 5) + 1, 4), ' ','') END
+--									  , DESCRIPCION, DESCRIPCION_DETALLADA, 0, 1, GETDATE()
+--								  FROM temporal_pagos..Clasificadores
+
+--INSERT INTO TC_ClasificadorAnio (I_ClasificadorID, N_Anio, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) 
+--						SELECT  I_ClasificadorID, '2021', 1, 0, I_UsuarioCre, D_FecCre
+--						  FROM  TC_ClasificadorPresupuestal
