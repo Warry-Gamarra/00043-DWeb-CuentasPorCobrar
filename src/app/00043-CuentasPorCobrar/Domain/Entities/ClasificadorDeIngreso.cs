@@ -12,7 +12,7 @@ namespace Domain.Entities
     public class ClasificadorDeIngreso : IClasificadores
     {
         public int? Id { get; set; }
-        public string CodigoMef { get; set; }
+        public string CodClasificador { get; set; }
         public string Descripcion { get; set; }
         public string AnioEjercicio { get; set; }
         public string CodigoUnfv { get; set; }
@@ -29,7 +29,9 @@ namespace Domain.Entities
         public ClasificadorDeIngreso(TC_ClasificadorPresupuestal table)
         {
             this.Id = table.I_ClasificadorID;
-            //this.CodigoMef = table.T_ClasificadorCod;
+            this.CodClasificador = table.C_TipoTransCod + "." + table.C_GenericaCod + 
+                                   (string.IsNullOrEmpty(table.C_SubGeneCod) ? "" : "." + table.C_SubGeneCod ) +
+                                   (string.IsNullOrEmpty(table.C_EspecificaCod) ? "" : "." + table.C_EspecificaCod);
             this.Descripcion = table.T_ClasificadorDesc;
             this.CodigoUnfv = table.T_ClasificadorUnfv;
             this.AnioEjercicio = table.N_Anio;

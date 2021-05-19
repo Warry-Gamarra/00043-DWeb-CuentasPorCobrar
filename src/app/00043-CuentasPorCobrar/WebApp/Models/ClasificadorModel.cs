@@ -50,7 +50,7 @@ namespace WebApp.Models
             ClasificadorDeIngreso clasificadorDeIngreso = new ClasificadorDeIngreso()
             {
                 Id = clasificadorViewModel.Id.HasValue ? clasificadorViewModel.Id.Value : 0,
-                CodigoMef = clasificadorViewModel.CodClasificador,
+                CodClasificador = clasificadorViewModel.CodClasificador,
                 Descripcion = clasificadorViewModel.Descripcion,
                 CodigoUnfv = clasificadorViewModel.CodigoEquivalente,
                 AnioEjercicio = clasificadorViewModel.AnioEjercicio,

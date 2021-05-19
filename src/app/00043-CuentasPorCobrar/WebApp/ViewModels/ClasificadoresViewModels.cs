@@ -21,7 +21,7 @@ namespace WebApp.ViewModels
 
         public ClasificadorViewModel(ClasificadorDeIngreso clasificadorDeIngreso) {
             this.Id = clasificadorDeIngreso.Id;
-            this.CodClasificador = clasificadorDeIngreso.CodigoMef;
+            this.CodClasificador = clasificadorDeIngreso.CodClasificador;
             this.CodigoEquivalente = clasificadorDeIngreso.CodigoUnfv;
             this.Habilitado = clasificadorDeIngreso.Habilitado;
             this.Descripcion = clasificadorDeIngreso.Descripcion;
@@ -56,7 +56,7 @@ namespace WebApp.ViewModels
         public ClasificadorRegistrarViewModel(ClasificadorDeIngreso clasificadorDeIngreso)
         {
             this.Id = clasificadorDeIngreso.Id;
-            this.CodClasificador = clasificadorDeIngreso.CodigoMef;
+            this.CodClasificador = clasificadorDeIngreso.CodClasificador;
             this.CodigoEquivalente = clasificadorDeIngreso.CodigoUnfv;
             this.Descripcion = clasificadorDeIngreso.Descripcion;
             this.AnioEjercicio = clasificadorDeIngreso.AnioEjercicio;

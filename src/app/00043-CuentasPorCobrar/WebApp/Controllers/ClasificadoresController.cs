@@ -24,7 +24,7 @@ namespace WebApp.Controllers
 
 
         // GET: Clasificadores
-        [Route("configuracion/clasificadores-presupuestal")]
+        [Route("mantenimiento/clasificadores-presupuestales")]
         public ActionResult Index(int? anio)
         {
             ViewBag.Title = "Clasificadores Presupuestales";
@@ -37,7 +37,7 @@ namespace WebApp.Controllers
             return View(model);
         }
 
-        [Route("configuracion/clasificadores-presupuestal/nuevo")]
+        [Route("mantenimiento/clasificadores-presupuestales/nuevo")]
         [HttpGet]
         public ActionResult Create()
         {
@@ -47,7 +47,7 @@ namespace WebApp.Controllers
             return PartialView("_RegistrarClasificador", new ClasificadorRegistrarViewModel());
         }
 
-        [Route("configuracion/clasificadores-presupuestal/editar/{id}")]
+        [Route("mantenimiento/clasificadores-presupuestales/editar/{id}")]
         [HttpGet]
         public ActionResult Edit(int id)
         {

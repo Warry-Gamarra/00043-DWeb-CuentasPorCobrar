@@ -35,10 +35,10 @@ namespace Data.Tables
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
                     string s_command = @"SELECT  CP.I_ClasificadorID, C_TipoTransCod, C_GenericaCod, C_SubGeneCod, C_EspecificaCod, T_ClasificadorDesc, T_ClasificadorDetalle
-		                                         , CA.N_Anio
+		                                         , CA.N_Anio, CP.D_FecCre, CP.D_FecMod, CA.B_Habilitado
                                            FROM  TC_ClasificadorPresupuestal CP
-		                                         LEFT JOIN TC_ClasificadorAnio CA ON CP.I_ClasificadorID = CA.I_ClasificadorID
-                                          WHERE	CA.N_Anio = @N_Anio AND CA.B_Eliminado = 0 AND CP.B_Eliminado = 0;";
+		                                         LEFT JOIN TC_ClasificadorAnio CA ON CP.I_ClasificadorID = CA.I_ClasificadorID AND CA.N_Anio = @N_Anio
+                                          WHERE	 CA.B_Eliminado = 0 AND CP.B_Eliminado = 0;";
 
                     result = _dbConnection.Query<TC_ClasificadorPresupuestal>(s_command, new { N_Anio = anio }, commandType: CommandType.Text).ToList();
                 }
@@ -60,7 +60,7 @@ namespace Data.Tables
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
                     var s_command = @"SELECT  CP.I_ClasificadorID, C_TipoTransCod, C_GenericaCod, C_SubGeneCod, C_EspecificaCod, T_ClasificadorDesc, T_ClasificadorDetalle
-		                                      , CA.N_Anio, CACC.C_ClasificConceptoCod
+		                                      , CA.N_Anio, CACC.C_ClasificConceptoCod, CP.D_FecCre, CP.D_FecMod
                                         FROM  TC_ClasificadorPresupuestal CP
 		                                      LEFT JOIN TC_ClasificadorAnio CA ON CA.I_ClasificadorID = CP.I_ClasificadorID 
 		                                      LEFT JOIN TC_ClasificAnioClasificConcepto CACC ON CACC.I_ClasificadorID = CP.I_ClasificadorID AND CACC.N_Anio = CA.N_Anio
