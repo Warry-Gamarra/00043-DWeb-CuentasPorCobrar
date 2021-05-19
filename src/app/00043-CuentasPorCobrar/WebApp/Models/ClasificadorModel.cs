@@ -15,7 +15,7 @@ namespace WebApp.Models
 
         public ClasificadorModel()
         {
-            _clasificadores = new ClasificadorDeIngreso();
+            _clasificadores = new ClasificadorPresupuestal();
         }
 
         public List<ClasificadorViewModel> Find(string anio)
@@ -47,13 +47,14 @@ namespace WebApp.Models
 
         public Response Save(ClasificadorRegistrarViewModel clasificadorViewModel, int currentUserId)
         {
-            ClasificadorDeIngreso clasificadorDeIngreso = new ClasificadorDeIngreso()
+            ClasificadorPresupuestal clasificadorDeIngreso = new ClasificadorPresupuestal()
             {
                 Id = clasificadorViewModel.Id.HasValue ? clasificadorViewModel.Id.Value : 0,
                 CodClasificador = clasificadorViewModel.CodClasificador,
                 Descripcion = clasificadorViewModel.Descripcion,
+                DescripDetalle = clasificadorViewModel.DescripDetalle,
                 CodigoUnfv = clasificadorViewModel.CodigoEquivalente,
-                AnioEjercicio = clasificadorViewModel.AnioEjercicio,
+                //AnioEjercicio = clasificadorViewModel.AnioEjercicio,
                 Habilitado = true,
                 FecUpdated = DateTime.Now
             };

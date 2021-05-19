@@ -94,7 +94,7 @@
     <Compile Include="Entities\MatriculaObsEntity.cs" />
     <Compile Include="Helpers\Options.cs" />
     <Compile Include="Helpers\Parametro.cs" />
-    <Compile Include="Entities\ClasificadorDeIngreso.cs" />
+    <Compile Include="Entities\ClasificadorPresupuestal.cs" />
     <Compile Include="Entities\ConceptoEntity.cs" />
     <Compile Include="Entities\ConceptoPago.cs" />
     <Compile Include="Entities\ConceptoPagoEntity.cs" />

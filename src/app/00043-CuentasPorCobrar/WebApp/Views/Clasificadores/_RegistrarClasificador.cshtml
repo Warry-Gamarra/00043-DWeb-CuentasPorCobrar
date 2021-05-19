@@ -15,28 +15,35 @@
             @Html.HiddenFor(model => model.Id)
 
             <div class="form-group row">
-                @Html.LabelFor(model => model.Descripcion, new { @class = "col-md-4" })
-                <div class="col-md-8">
-                    @Html.TextAreaFor(model => model.Descripcion, new { @class = "form-control" })
+                @Html.LabelFor(model => model.Descripcion, new { @class = "col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.Descripcion, new { @class = "form-control" })
                     <p class="text-danger small">@Html.ValidationMessageFor(model => model.Descripcion)</p>
                 </div>
             </div>
+            <div class="form-group row">
+                @Html.LabelFor(model => model.DescripDetalle, new { @class = "col-md-2",  })
+                <div class="col-md-10">
+                    @Html.TextAreaFor(model => model.DescripDetalle, new { @class = "form-control", rows = "5" })
+                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.DescripDetalle)</p>
+                </div>
+            </div>
             <div class="row form-group">
-                @Html.LabelFor(model => model.CodClasificador, new { @class = "col-md-4" })
-                <div class="col-md-6">
+                @Html.LabelFor(model => model.CodClasificador, new { @class = "col-md-2" })
+                <div class="col-md-3">
                     @Html.TextBoxFor(model => model.CodClasificador, new { @class = "form-control" })
                     <p class="text-danger small">@Html.ValidationMessageFor(model => model.CodClasificador)</p>
                 </div>
             </div>
-            <div class="row form-group">
-                @Html.LabelFor(model => model.AnioEjercicio, new { @class = "col-md-4" })
-                <div class="col-md-4">
+            @*<div class="row form-group">
+                @Html.LabelFor(model => model.AnioEjercicio, new { @class = "col-md-2" })
+                <div class="col-md-2">
                     @Html.DropDownListFor(model => model.AnioEjercicio, ViewBag.Anios as SelectList, "[ TODOS ]", new { @class = "form-control" })
                     <p class="text-danger small">@Html.ValidationMessageFor(model => model.AnioEjercicio)</p>
                 </div>
-            </div>
+            </div>*@
             <div class="row form-group">
-                @Html.LabelFor(model => model.CodigoEquivalente, new { @class = "col-md-4" })
+                @Html.LabelFor(model => model.CodigoEquivalente, new { @class = "col-md-2" })
                 <div class="col-md-6">
                     @Html.TextBoxFor(model => model.CodigoEquivalente, new { @class = "form-control" })
                     <p class="text-danger small">@Html.ValidationMessageFor(model => model.CodigoEquivalente)</p>

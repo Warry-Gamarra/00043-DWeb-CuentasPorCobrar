@@ -13,19 +13,18 @@ namespace WebApp.ViewModels
         public string CodClasificador { get; set; }
         public string Descripcion { get; set; }
         public string DescripDetalle { get; set; }
-        public string AnioEjercicio { get; set; }
         public string CodigoEquivalente { get; set; }
         public bool Habilitado { get; set; }
 
         public ClasificadorViewModel() { }
 
-        public ClasificadorViewModel(ClasificadorDeIngreso clasificadorDeIngreso) {
-            this.Id = clasificadorDeIngreso.Id;
-            this.CodClasificador = clasificadorDeIngreso.CodClasificador;
-            this.CodigoEquivalente = clasificadorDeIngreso.CodigoUnfv;
-            this.Habilitado = clasificadorDeIngreso.Habilitado;
-            this.Descripcion = clasificadorDeIngreso.Descripcion;
-            this.AnioEjercicio = clasificadorDeIngreso.AnioEjercicio;
+        public ClasificadorViewModel(ClasificadorPresupuestal clasificador) {
+            this.Id = clasificador.Id;
+            this.CodClasificador = clasificador.CodClasificador;
+            this.CodigoEquivalente = clasificador.CodigoUnfv;
+            this.Habilitado = clasificador.Habilitado;
+            this.Descripcion = clasificador.Descripcion;
+            this.DescripDetalle = clasificador.DescripDetalle;
         }
 
     }
@@ -45,21 +44,19 @@ namespace WebApp.ViewModels
         [Display(Name = "Descripción")]
         public string DescripDetalle { get; set; }
 
-        [Display(Name = "Ejercicio (Año)")]
-        public string AnioEjercicio { get; set; }
         [Display(Name = "Equivalente UNFV")]
         [Required]
         public string CodigoEquivalente { get; set; }
 
         public ClasificadorRegistrarViewModel() { }
 
-        public ClasificadorRegistrarViewModel(ClasificadorDeIngreso clasificadorDeIngreso)
+        public ClasificadorRegistrarViewModel(ClasificadorPresupuestal clasificador)
         {
-            this.Id = clasificadorDeIngreso.Id;
-            this.CodClasificador = clasificadorDeIngreso.CodClasificador;
-            this.CodigoEquivalente = clasificadorDeIngreso.CodigoUnfv;
-            this.Descripcion = clasificadorDeIngreso.Descripcion;
-            this.AnioEjercicio = clasificadorDeIngreso.AnioEjercicio;
+            this.Id = clasificador.Id;
+            this.CodClasificador = clasificador.CodClasificador;
+            this.CodigoEquivalente = clasificador.CodigoUnfv;
+            this.Descripcion = clasificador.Descripcion;
+            this.DescripDetalle = clasificador.DescripDetalle;
         }
 
     }

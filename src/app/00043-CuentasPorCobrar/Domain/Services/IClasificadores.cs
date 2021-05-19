@@ -10,9 +10,9 @@ namespace Domain.Services
 {
     public interface IClasificadores
     {
-        List<ClasificadorDeIngreso> Find(string anio);
-        ClasificadorDeIngreso Find(int clasificadorId);
-        Response Save(ClasificadorDeIngreso clasificadorDeIngreso, int currentUserId, SaveOption saveOption);
+        List<ClasificadorPresupuestal> Find(string anio);
+        ClasificadorPresupuestal Find(int clasificadorId);
+        Response Save(ClasificadorPresupuestal clasificadorDeIngreso, int currentUserId, SaveOption saveOption);
         Response ChangeState(int clasificadorId, bool currentState, int currentUserId);
 
     }

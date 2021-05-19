@@ -5,9 +5,9 @@ GO
 /*------------------------------------------ Correos ---------------------------------------------------*/
 
 
-INSERT INTO [dbo].[TS_CorreoAplicacion](T_DireccionCorreo, T_PasswordCorreo, T_Seguridad, T_HostName, I_Puerto, D_FecUpdate, B_Habilitado, B_Eliminado)
-	 VALUES (N'wgamarra@unfv.edu.pe', N'WgBHAEEAUABtAHAATAAxAEAAMgAwADEANgA=', 'TLS', 'smtp.office365.com', 587, GETDATE(), 1, 0)
-GO
+--INSERT INTO [dbo].[TS_CorreoAplicacion](T_DireccionCorreo, T_PasswordCorreo, T_Seguridad, T_HostName, I_Puerto, D_FecUpdate, B_Habilitado, B_Eliminado)
+--	 VALUES (N'wgamarra@unfv.edu.pe', N'WgBHAEEAUABtAHAATAAxAEAAMgAwADEANgA=', 'TLS', 'smtp.office365.com', 587, GETDATE(), 1, 0)
+--GO
 
 
 INSERT TC_Parametro(T_ParametroDesc, B_Habilitado, B_Eliminado) VALUES('TIPO ALUMNO', 1, 0)

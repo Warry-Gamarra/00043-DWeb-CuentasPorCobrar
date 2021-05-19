@@ -34,11 +34,12 @@ namespace Data.Tables
             {
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    string s_command = @"SELECT  CP.I_ClasificadorID, C_TipoTransCod, C_GenericaCod, C_SubGeneCod, C_EspecificaCod, T_ClasificadorDesc, T_ClasificadorDetalle
-		                                         , CA.N_Anio, CP.D_FecCre, CP.D_FecMod, CA.B_Habilitado
+                    string s_command = @"SELECT  CP.I_ClasificadorID, CP.C_TipoTransCod, CP.C_GenericaCod, CP.C_SubGeneCod, CP.C_EspecificaCod, CP.T_ClasificadorDesc, CP.T_ClasificadorDetalle
+		                                         , CP.D_FecCre, CP.D_FecMod, CEA.N_Anio, CEA.B_Habilitado, CEA.D_FecCre AS D_FecCreAnio, CEA.D_FecMod AS D_FecModAnio
                                            FROM  TC_ClasificadorPresupuestal CP
-		                                         LEFT JOIN TC_ClasificadorAnio CA ON CP.I_ClasificadorID = CA.I_ClasificadorID AND CA.N_Anio = @N_Anio
-                                          WHERE	 CA.B_Eliminado = 0 AND CP.B_Eliminado = 0;";
+												 LEFT JOIN TC_ClasificadorEquivalencia CE ON CP.I_ClasificadorID = CE.I_ClasificadorID
+		                                         LEFT JOIN (SELECT * FROM TC_ClasificadorEquivalenciaAnio WHERE N_Anio = @N_Anio AND B_Eliminado = 0) CEA ON CE.I_ClasifEquivalenciaID = CEA.I_ClasifEquivalenciaID
+                                          WHERE	 CP.B_Eliminado = 0;";
 
                     result = _dbConnection.Query<TC_ClasificadorPresupuestal>(s_command, new { N_Anio = anio }, commandType: CommandType.Text).ToList();
                 }
@@ -59,12 +60,8 @@ namespace Data.Tables
             {
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    var s_command = @"SELECT  CP.I_ClasificadorID, C_TipoTransCod, C_GenericaCod, C_SubGeneCod, C_EspecificaCod, T_ClasificadorDesc, T_ClasificadorDetalle
-		                                      , CA.N_Anio, CACC.C_ClasificConceptoCod, CP.D_FecCre, CP.D_FecMod
-                                        FROM  TC_ClasificadorPresupuestal CP
-		                                      LEFT JOIN TC_ClasificadorAnio CA ON CA.I_ClasificadorID = CP.I_ClasificadorID 
-		                                      LEFT JOIN TC_ClasificAnioClasificConcepto CACC ON CACC.I_ClasificadorID = CP.I_ClasificadorID AND CACC.N_Anio = CA.N_Anio
-                                       WHERE  CP.I_ClasificadorID = @I_ClasificadorID AND CACC.B_Eliminado = 0 AND CP.B_Eliminado = 0;";
+                    string s_command = @"SELECT  * FROM  TC_ClasificadorPresupuestal CP
+                                          WHERE  CP.I_ClasificadorID = @I_ClasificadorID AND CP.B_Eliminado = 0;";
 
                     result = _dbConnection.QueryFirstOrDefault<TC_ClasificadorPresupuestal>(s_command, new { I_ClasificadorID = clasificadorId }, commandType: CommandType.Text);
                 }

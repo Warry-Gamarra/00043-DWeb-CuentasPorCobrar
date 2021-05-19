@@ -811,18 +811,18 @@ go
 
 
 
-CREATE TABLE TC_ClasificadorAnio
+CREATE TABLE TC_ClasificadorEquivalencia
 ( 
+	I_ClasifEquivalenciaID  int IDENTITY ( 1,1 ) ,
+	C_ClasificConceptoCod	varchar(20)  NOT NULL ,
 	I_ClasificadorID     int  NOT NULL ,
-	N_Anio               varchar(4)  NOT NULL ,
-	B_Habilitado         bit  NOT NULL ,
 	B_Eliminado          bit  NOT NULL ,
 	I_UsuarioCre         int  NULL ,
 	D_FecCre             datetime  NULL ,
 	I_UsuarioMod         int  NULL ,
 	D_FecMod             datetime  NULL ,
-	CONSTRAINT PK_ClasificadorAnio PRIMARY KEY  CLUSTERED (I_ClasificadorID ASC,N_Anio ASC),
-	CONSTRAINT FK_ClasificadorPresupuestal_ClasificadorAnio FOREIGN KEY (I_ClasificadorID) REFERENCES TC_ClasificadorPresupuestal(I_ClasificadorID)
+	CONSTRAINT PK_ClasificadorEquivalencia PRIMARY KEY  CLUSTERED (I_ClasifEquivalenciaID ASC),
+	CONSTRAINT FK_ClasificadorPresupuestal_ClasificadorEquivalencia FOREIGN KEY (I_ClasificadorID) REFERENCES TC_ClasificadorPresupuestal(I_ClasificadorID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 )
@@ -830,19 +830,18 @@ go
 
 
 
-CREATE TABLE TC_ClasificAnioClasificConcepto
+CREATE TABLE TC_ClasificadorEquivalenciaAnio
 ( 
-	I_ClasificadorID     int  NOT NULL ,
-	N_Anio               varchar(4)  NOT NULL ,
-	C_ClasificConceptoCod varchar(20)  NOT NULL ,
+	N_Anio					varchar(4)  NOT NULL ,
+	I_ClasifEquivalenciaID  int  NOT NULL ,
 	B_Habilitado         bit  NOT NULL ,
 	B_Eliminado          bit  NOT NULL ,
 	I_UsuarioCre         int  NULL ,
 	D_FecCre             datetime  NULL ,
 	I_UsuarioMod         int  NULL ,
 	D_FecMod             datetime  NULL ,
-	CONSTRAINT PK_ClasificAnioClasificConcepto PRIMARY KEY  CLUSTERED (I_ClasificadorID ASC,N_Anio ASC,C_ClasificConceptoCod ASC),
-	CONSTRAINT FK_ClasificadorAnio_ClasificAnioClasifConcepto FOREIGN KEY (I_ClasificadorID,N_Anio) REFERENCES TC_ClasificadorAnio(I_ClasificadorID,N_Anio)
+	CONSTRAINT PK_ClasificadorEquivalenciaAnio PRIMARY KEY  CLUSTERED (N_Anio ASC, I_ClasifEquivalenciaID ASC),
+	CONSTRAINT FK_ClasificadorEquivalencia_ClasificadorEquivalenciaAnio FOREIGN KEY (I_ClasifEquivalenciaID) REFERENCES TC_ClasificadorEquivalencia(I_ClasifEquivalenciaID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 )
