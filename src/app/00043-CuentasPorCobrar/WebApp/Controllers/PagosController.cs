@@ -114,7 +114,7 @@ namespace WebApp.Controllers
         }
 
 
-        [Route("operaciones/cargar-pagos/obligaciones")]
+        //[Route("operaciones/cargar-pagos/obligaciones")]
         public ActionResult ImportarPagoObligaciones()
         {
             ViewBag.Title = "Cargar pagos de obligaciones";
@@ -135,8 +135,7 @@ namespace WebApp.Controllers
             return PartialView("_SeleccionarArchivo", model);
         }
 
-
-        [Route("operaciones/cargar-pagos/tasas")]
+        //[Route("operaciones/cargar-pagos/tasas")]
         public ActionResult ImportarPagoTasas()
         {
             ViewBag.Title = "Cargar pagos de tasas";
@@ -164,6 +163,40 @@ namespace WebApp.Controllers
             var result = pagosModel.CargarArchivoPagos(Server.MapPath("~/Upload/Pagos/"), file, model, WebSecurity.CurrentUserId);
 
             return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        //[Route("operaciones/cargar-pagos/registro-manual")]
+        public ActionResult RegistrarObligacionManual()
+        {
+            
+            ViewBag.Anios = new SelectList(generalServiceFacade.Listar_Anios(), "Value", "TextDisplay");
+            ViewBag.Periodos = new SelectList(catalogoServiceFacade.Listar_Periodos(), "Value", "TextDisplay");
+            ViewBag.Especialidades = new SelectList(new List<SelectViewModel>(), "Value", "TextDisplay");
+            ViewBag.Proceso = new SelectList(new List<SelectViewModel>(), "Value", "TextDisplay");
+            ViewBag.EntidadesFinancieras = new SelectList(ListaEntidadesFinancieras(), "Value", "TextDisplay");
+            
+            var model = new ObligacionManualViewModel();
+
+            return PartialView("_RegistrarObligacion", model);
+        }
+
+        [HttpPost]
+        public ActionResult RegistrarObligacionManual(ObligacionManualViewModel model)
+        {
+            Object result = null;
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        //[Route("operaciones/cargar-pagos/registro-manual")]
+        public ActionResult RegistrarTasaManual()
+        {
+            ViewBag.Tasas = new SelectList(new List<SelectViewModel>(), "Value", "TextDisplay");
+            ViewBag.EntidadesFinancieras = new SelectList(ListaEntidadesFinancieras(), "Value", "TextDisplay");
+
+            var model = new TasaManualViewModel();
+
+            return PartialView("_RegistrarTasa", model);
         }
     }
 }

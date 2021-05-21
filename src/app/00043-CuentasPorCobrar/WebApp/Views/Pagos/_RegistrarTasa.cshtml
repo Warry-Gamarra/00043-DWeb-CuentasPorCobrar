@@ -1,0 +1,471 @@
+﻿@model WebApp.ViewModels.TasaManualViewModel
+
+<link href="~/Assets/fileInput/css/fileinput.min.css" rel="stylesheet" />
+<script src="~/Assets/fileInput/js/fileinput.min.js"></script>
+<script src="~/Assets/fileInput/js/locales/es.js"></script>
+<script src="~/Assets/jquery/jquery.form.js"></script>
+
+@using (Html.BeginForm("RegistrarObligacionManual", "Pagos", FormMethod.Post, new { id = "form-obligacion-manual" }))
+{
+    <div class="modal-header">
+        <h5 class="modal-title">
+            <i class="fa fa-paperclip text-primary">&nbsp;</i>
+            Registro de pago de tasas
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="col-md-12">
+            @Html.HiddenFor(model => model.moneda)
+            @Html.HiddenFor(model => model.tipoPago)
+
+            <div class="form-group form-row">
+                <label for="codigoDepositante" class="control-label col-form-label col-md-3 col-sm-4 col-12">Código del depositante</label>
+                <div class="col-md-9 col-sm-10 col-12">
+                    @Html.TextBoxFor(m => m.codigoDepositante, new { @class = "form-control" })
+                    <p class="text-danger small">@Html.ValidationMessageFor(m => m.codigoDepositante)</p>
+                </div>
+            </div>
+
+            <div class="form-group form-row">
+                <label for="nombreDepositante" class="control-label col-form-label col-md-3 col-sm-4 col-12">Nombre del depositante</label>
+                <div class="col-md-9 col-sm-10 col-12">
+                    @Html.TextBoxFor(m => m.nombreDepositante, new { @class = "form-control" })
+                    <p class="text-danger small">@Html.ValidationMessageFor(m => m.nombreDepositante)</p>
+                </div>
+            </div>
+
+            <div class="form-group form-row">
+                <label for="tasa" class="control-label col-form-label col-md-3 col-sm-4 col-12">Tasa</label>
+                <div class="col-md-5 col-sm-4 col-12">
+                    @*@Html.DropDownListFor(model => model.tasa, ViewBag.Tasas as SelectList, new { @class = "form-control" })*@
+                    <select class="form-control" id="tasa" name="tasa">
+                        <option>1RA PENSION POR CICLO LIMA Y PROVIN(S/. 250)</option>
+                        <option>2DA PENSION POR CICLO LIMA Y PROVIN(S/. 250)</option>
+                        <option>A LA LUZ DE LA SOMBRA(S/. 28)</option>
+                        <option>ABSORCION CONCRETO ENDURECIDO(S/. 15)</option>
+                        <option>ABSORCION DEL LADRILLO(S/. 15)</option>
+                        <option>ACAD_DEPORTIVA - COMUNIDAD UNFV(S/. 50)</option>
+                        <option>ACAD_DEPORTIVA - PARTICULAR(S/. 80)</option>
+                        <option>ACEPT.CONYU-HIJO DOC.Y ADM-PADR.FAM(S/. 25)</option>
+                        <option>ACIDO URICO(S/. 10)</option>
+                        <option>ACOMP. Y ORIENTACION VOCACIONAL(S/. 10)</option>
+                        <option>ACTUALIZACIËN DE MATR?CULA(S/. 50)</option>
+                        <option>ACTUALIZACION MATRICULA(S/. 50)</option>
+                        <option>ADHER.AGREG.GRUESO-REVEST.DESPRENDI(S/. 115)</option>
+                        <option>ADHER.EN AGREGADO FINO-RIEDEL Y WEB(S/. 115)</option>
+                        <option>ADHERENCIA EN GRAVA (ASFALTO)(S/. 50)</option>
+                        <option>ADMISION PROSPECTO Y CARPETA(S/. 60)</option>
+                        <option>AGLUTINACIONES EN PLACA(S/. 15)</option>
+                        <option>ALABEO DEL LADRILLO(S/. 10)</option>
+                        <option>ALQ. AUDITORIO/EXTERNO (01 HR)(S/. 200)</option>
+                        <option>ALQ. AUDITORIO/INTERNO (01 HR)(S/. 150)</option>
+                        <option>ALQ. AULA - EXTERNO (01 HR)(S/. 200)</option>
+                        <option>ALQ. AULA - INTERNO (01 HR)(S/. 100)</option>
+                        <option>ALQ. INFRA. P. EVEN. EXTR-UNFV-PART(S/. 0)</option>
+                        <option>ALQ.AULA EQUIPO MULT.HORA EUPG EXT(S/. 180)</option>
+                        <option>ALQ.AULA.EQUIP.MULTI.XHORA.USUA/INT(S/. 100)</option>
+                        <option>ALQ.LABORATORI.COMP.HORA.EUPG.EXT(S/. 300)</option>
+                        <option>ALQ.LABORATORIO.COMP.HORA.EUPG.INT(S/. 100)</option>
+                        <option>ALQ_CAM_F?TBOL _N -PARTICULAR/HR(S/. 150)</option>
+                        <option>ALQ_LOZA_MULTI_N - PARTICULAR/HR(S/. 70)</option>
+                        <option>Alumnos Pregrado (DESC 25%)(S/. 300)</option>
+                        <option>Alumnos Pregrado (DESC 25%)(S/. 360)</option>
+                        <option>Alumnos Pregrado (DESC 25%)(S/. 750)</option>
+                        <option>Alumnos Pregrado (DESC 25%)(S/. 900)</option>
+                        <option>Alumnos Pregrado (DESC 25)%(S/. 340)</option>
+                        <option>ALVEOL.CONYU-HIJO DOC.ADM Y PADR.AL(S/. 8)</option>
+                        <option>ALVEOLITIS - DOCENTES Y ADMINISTRAT(S/. 5)</option>
+                        <option>ALVEOLITIS(S/. 5)</option>
+                        <option>AMPLIACIËN CR?DITO POR CICLO(S/. 55)</option>
+                        <option>AMPLIACION DE CREDITO(S/. 100)</option>
+                        <option>ANAL.CLIN.-CULT.Y ANTIBIO-HEMOCULTI(S/. 12)</option>
+                        <option>ANALI.CLI.-CULT.Y ANTIBIOGR.-UROCUL(S/. 10)</option>
+                        <option>ANALISIS GRANUL. POR SEDIMENTACION(S/. 120)</option>
+                        <option>ANALISIS GRANULOMETRICO POR SEDIMEN(S/. 120)</option>
+                        <option>ANTI AHV(S/. 10)</option>
+                        <option>ANTIESTRPTOLISINA (ASO)(S/. 15)</option>
+                        <option>ANTIGE.DE SUPER. HEPATITIS B(HBSAG)(S/. 30)</option>
+                        <option>ANULACIËN DE MATR?CULA(S/. 100)</option>
+                        <option>ANULACION DE MATRICULA(S/. 100)</option>
+                        <option>ANULACION DE MATRICULA-FAC.ED(S/. 100)</option>
+                        <option>APICEPTOMIA - DOCENTES Y ADMINISTRA(S/. 20)</option>
+                        <option>APICEPTOMIA (ALUMNOS)(S/. 20)</option>
+                        <option>APLI.SELL-X CUADR-CONY.HIJO DOC-ADM(S/. 15)</option>
+                        <option>APLIC.AGENT.FISICO-COMPRESA CALIENT(S/. 10)</option>
+                        <option>APLIC.DE SELLANT.X CUADR-DOCE Y ADM(S/. 10)</option>
+                        <option>APLIC.DE SELLANTES (X CUADR)-ALUMNO(S/. 10)</option>
+                        <option>APLIC_SELLANTESxCUADRANTE(S/. 15)</option>
+                        <option>APLICAC.AGENTES FISICOS-ULTRASONIDO(S/. 10)</option>
+                        <option>APLICACION AGENTE FISICO-INFRARROJO(S/. 10)</option>
+                        <option>APLICACION DE AGENTES FISICOS TENS(S/. 10)</option>
+                        <option>APROBACION DE PLA DE TESIS(S/. 300)</option>
+                        <option>APROBACION DE PLAN DE TESIS(S/. 200)</option>
+                        <option>APROBACION DE PLAN DE TESIS(S/. 300)</option>
+                        <option>APROBACION DEL PLAN DE TESIS-FAC.ED(S/. 120)</option>
+                        <option>APROBACION PLAN DE TESIS(S/. 300)</option>
+                        <option>APROBACION PLAN TESIS(S/. 300)</option>
+                        <option>ARENA CALIBRA DENSID. CAMPO (1KG)(S/. 20)</option>
+                        <option>ASES.PLAN TESIS O MONO-FAC.TE-2D ES(S/. 120)</option>
+                        <option>ASESOR DE TESIS -DOCTORADO(S/. 1000)</option>
+                        <option>ASESOR DE TESIS -EUPG DOCTORADO(S/. 800)</option>
+                        <option>ASESOR DE TESIS -MAESTRIA(S/. 900)</option>
+                        <option>ASESOR DE TESIS(S/. 300)</option>
+                        <option>ASESOR DE TESIS-FAC.ED(S/. 120)</option>
+                        <option>ASESOR DEL TRABAJO DE TESIS(S/. 200)</option>
+                        <option>ASESOR TRAB.TESI-FAC.TEC.ME-2DA ESP(S/. 200)</option>
+                        <option>ASESOR?A-PLAN DE TESIS (TESIS-MONOG(S/. 80)</option>
+                        <option>ASESORIA DE PLAN DE TESIS(S/. 140)</option>
+                        <option>ASESORIA DE PLAN DE TESIS(S/. 200)</option>
+                        <option>ASESORIA DE PLAN DE TESIS(S/. 300)</option>
+                        <option>ASESORIA DE TESIS(S/. 200)</option>
+                        <option>ASESORIA DE TESIS(S/. 220)</option>
+                        <option>ASESORIA DE TESIS(S/. 300)</option>
+                        <option>ASESORIA PLAN D TESIS(S/. 120)</option>
+                        <option>ASESORIA PLAN DE TESIS(S/. 100)</option>
+                        <option>ASESORIA PLAN DE TESIS(S/. 140)</option>
+                        <option>ASESORIA PLAN DE TESIS(S/. 150)</option>
+                        <option>ASESORIA PLAN DE TESIS(S/. 80)</option>
+                        <option>ASESORIA PLAN TESIS(S/. 120)</option>
+                        <option>ASESORIA PLAN TESIS(S/. 140)</option>
+                        <option>ASIGNATURA CONVALIDADA(S/. 100)</option>
+                        <option>AUSP. SEMI. NAC. ENT-ORG.EMPRE PRIV(S/. 500)</option>
+                        <option>AUSP.CON.INT.ORG.INST.SEC.SALUD.ASO(S/. 500)</option>
+                        <option>AUSP.CONF.INTE.ORG EMPR. PRIVADAS(S/. 1000)</option>
+                        <option>AUSP.CONG.INTER.ORG.ENTID.EDUCATIVA(S/. 500)</option>
+                        <option>AUSP.CONG.NAC. ORG.ENTID.EDUCATIVA(S/. 300)</option>
+                        <option>AUSP.CONG.NAC.ORG.INST.SECT.SAL.ASO(S/. 400)</option>
+                        <option>AUSP.CONG.NAC.ORGANIZ.EMP. PRIVADAS(S/. 800)</option>
+                        <option>AUSP.CUR.INTER.ORG.INST.SEC.SAL.ASO(S/. 200)</option>
+                        <option>AUSP.CUR.NAC.ORG.INST.SECT.SAL.ASO(S/. 100)</option>
+                        <option>AUSP.SEM.INTER.ORG.INST.SECT.SALUD(S/. 300)</option>
+                        <option>AUSP.SEM.NAC.ENTI.ORG.INST.SEC.SAUD(S/. 250)</option>
+                        <option>AUSP.SEMI.INTER.ORG.EMPRE. PRIVADAS(S/. 600)</option>
+                        <option>AUSP.SEMI.INTER.ORG.ENTID.EDUCATI.(S/. 300)</option>
+                        <option>AUSPI.SEMI.NAC.ENT.ORG.ENTID.EDUCA.(S/. 200)</option>
+                        <option>AUSPICIO CUR.INTER.-ORG. ENTID.EDUC(S/. 150)</option>
+                        <option>AUSPICIO CURSOS NAC.-ORG ENTID.EDU(S/. 80)</option>
+                        <option>AUSPICIO DE CONGRESO NAC-ORGANIZ PO(S/. 300)</option>
+                        <option>BILIRRUBINA DIRECTA(S/. 10)</option>
+                        <option>BILURRUBINA TOTAL(S/. 10)</option>
+                        <option>BK DIRECTO(S/. 4)</option>
+                        <option>BK ESPUTO(S/. 10)</option>
+                        <option>BLOQUES EXAGONALES DE CONCRETO(S/. 2.5)</option>
+                        <option>BUS.INFO-MEDLINE-IMPR.40 REF-PER.UN(S/. 8)</option>
+                        <option>BUSQ.INFOR.MEDLINE-DISQ.REF-PERS-UN(S/. 6)</option>
+                        <option>BUSQ.INFOR.MEDLINE-DISQUET.50 REFER(S/. 9)</option>
+                        <option>BUSQ.INFOR.MEDLINE-IMPRESO 40 REFER(S/. 10)</option>
+                        <option>C_ DOCENTES O ADMINISTRATIVOS(S/. 100)</option>
+                        <option>C_ALUMNOS EUDED (CICLO)(S/. 100)</option>
+                        <option>C_CAPACITACION/ACTUALIZACION(S/. 250)</option>
+                        <option>C_EXAMEN DE RESIDENTADO MEDICO(S/. 230)</option>
+                        <option>C_MAESTR?A Y DOCTORADO (CICLO)(S/. 190)</option>
+                        <option>C_MEN - FRENOCTOMIA COLGAJOS(S/. 25)</option>
+                        <option>C_MEN - GINGIVOPLASTIAxCUADRANTE(S/. 20)</option>
+                        <option>C_MEN - GINGIVOPLASTIAxCUADRANTE(S/. 25)</option>
+                        <option>C_MEN - PERIAPLICAL/APICEPTOMIA(S/. 20)</option>
+                        <option>C_MEN - PERIAPLICAL/APICEPTOMIA(S/. 25)</option>
+                        <option>C_MEN - PERIODONTAL/DEB ABSCESOS(S/. 25)</option>
+                        <option>C_MEN - PERIODONTAL/DEB_ABSCESOS(S/. 10)</option>
+                        <option>C_MEN - PERIODONTAL/DEB_ABSCESOS(S/. 25)</option>
+                        <option>C_MEN -FRENOCTOMIA COLGAJOS(S/. 25)</option>
+                        <option>CALCIO SERICO(S/. 6)</option>
+                        <option>CAMBIO DE PLAN DE ESTUDIOS(S/. 20)</option>
+                        <option>CAMBIO DE TURNO(S/. 25)</option>
+                        <option>CARACT. FISICAS ARENA O GRAVA(S/. 172)</option>
+                        <option>CARAS FRACTURADAS(S/. 50)</option>
+                        <option>CARILLAS DE PORCELANA(S/. 100)</option>
+                        <option>CARN? ATENCIËN BIBLIO./EXTERNO(S/. 10)</option>
+                        <option>CARPET, PROSPECT.Y EXAM.ADM.PROCUNE(S/. 80)</option>
+                        <option>CARPETA DE ADMISION(S/. 75)</option>
+                        <option>CARPETA DE INSCRIPCIËN(S/. 60)</option>
+                        <option>CARPETA DE INSCRIPCION(S/. 50)</option>
+                        <option>CARPETA DE INSCRIPCION(S/. 60)</option>
+                        <option>CARPETA DE MATRICULA-DIPLOM.FOPCA(S/. 25)</option>
+                        <option>CARPETA DEADMISION(S/. 75)</option>
+                        <option>CARPETA INSCRIPCION DIPLOMADO(S/. 50)</option>
+                        <option>CARPETA INSCRIPCION(S/. 50)</option>
+                        <option>CARPETADE ADMISION(S/. 75)</option>
+                        <option>CARTA DE PRESENTACION(S/. 20)</option>
+                        <option>CAUTERIZACION (DOCENTE Y ADMINISTR)(S/. 10)</option>
+                        <option>CAUTERIZACION DE POLIPOS(S/. 10)</option>
+                        <option>CBCT RETENCION DENTARIA-PAC CLIN(S/. 70)</option>
+                        <option>CBCT RETENCION DENTARIA-PAC EXT(S/. 100)</option>
+                        <option>CEIFICADO DE INGRESO(S/. 50)</option>
+                        <option>CEMENT.PUENTE O CORONA-DOCEN Y ADMI(S/. 5)</option>
+                        <option>CEMENTACIËN PROVISIONAL POR PZA(S/. 10)</option>
+                        <option>CERT.DE ESTU-2DA ESP(ANUAL)RES.MED(S/. 50)</option>
+                        <option>CERT.ESTUD(XAÐO)-FAC.TEC.MED-2DA ES(S/. 20)</option>
+                        <option>CERT.ING.-2DA ESP-FAC.ODO-MOD.NO ES(S/. 25)</option>
+                        <option>CERTIF.DE ESTUDIOS-2DA ESPEC(CICLO)(S/. 8)</option>
+                        <option>CERTIF.SALUD PARA POST. A LA UNFV(S/. 20)</option>
+                        <option>CERTIFICADO DE ESTUDIO POR AÐO(S/. 30)</option>
+                        <option>CERTIFICADO DE ESTUDIO POR SEMESTRE(S/. 25)</option>
+                        <option>CERTIFICADO DE ESTUDIO(POR AÐO)(S/. 30)</option>
+                        <option>CERTIFICADO DE ESTUDIO(S/. 30)</option>
+                        <option>CERTIFICADO DE ESTUDIOS (POR AÐO)(S/. 30)</option>
+                        <option>CERTIFICADO DE ESUDIO(POR AÐO)(S/. 30)</option>
+                        <option>CERTIFICADO DE INGRESO(S/. 50)</option>
+                        <option>CERTIFICADO ESTUDIO POR AÐO(S/. 30)</option>
+                        <option>CERTIFICADO ESTUDIO PORAÐO(S/. 30)</option>
+                        <option>CERTIFICADO ESTUDIOS (POR SEMES.)(S/. 15)</option>
+                        <option>CERTIFICADODE ESTUDIO(S/. 30)</option>
+                        <option>CERTIFICADOS DE ESTUDIOS (POR SEM.)(S/. 10)</option>
+                        <option>CERTIFICDO D ESTUDIO POR AÐO(S/. 50)</option>
+                        <option>CIBERPOLITICA(S/. 27)</option>
+                        <option>CICLO DE REGULARIZ-(X CREDIT)-EUDED(S/. 40)</option>
+                        <option>CICLO EXTRAORDINARIO (siete sem)(S/. 550)</option>
+                        <option>CICLO REGULARIZACIËN (CR?DITO)(S/. 75)</option>
+                        <option>CIRUGIA DE CHALAZION (DOC.Y ADMINI)(S/. 20)</option>
+                        <option>CLASIF. SUELOS (SUCS Y AASHTO)(S/. 15)</option>
+                        <option>CNSTANCIA DE MATRICULA FAU(S/. 45)</option>
+                        <option>CNSTANCIA ESUDIO DIPLOMADO(S/. 40)</option>
+                        <option>CNTROL DE CALIDAD DE ASFALTO LIQUID(S/. 400)</option>
+                        <option>COLESTEROL HDL(S/. 10)</option>
+                        <option>COLESTEROL LDL(S/. 10)</option>
+                        <option>COMPENDIO DE EX?MENES(S/. 15)</option>
+                        <option>COMPR. NO CONF. SUELOS COHESIVOS(S/. 100)</option>
+                        <option>COMPR. TEST. DIAM. (INCLUYE TALLADO(S/. 35)</option>
+                        <option>COMPRENS.TESTIGO DIAMANT.NO INCL.TA(S/. 35)</option>
+                        <option>COMPRENSION DE LADRILLO(S/. 10)</option>
+                        <option>COMPRESION CUBOS DE MORTEROS(S/. 6)</option>
+                        <option>COMPRESION NO CONFINADA(S/. 115)</option>
+                        <option>CON_CREDITAJE ACAD?MICO(S/. 20)</option>
+                        <option>CONCESIONARIOS DE SERVICIO DE FOTOC(S/. 0)</option>
+                        <option>CONGRESO DE INVEST-ALUM Y TRAB-UNFV(S/. 30)</option>
+                        <option>CONGRESO DE INVESTIGA-DOCENTE UNFV(S/. 60)</option>
+                        <option>CONGRESO INVESTIGA-ALUMNO EXT-UNFV(S/. 50)</option>
+                        <option>CONGRESO INVESTIGA-DOCENTE EXT-UNFV(S/. 100)</option>
+                        <option>CONST.  NOTAS CURSO DE ACTUALIZACIO(S/. 5)</option>
+                        <option>CONST. INGRESO-FAC.TEC.MED -2DA ESP(S/. 100)</option>
+                        <option>CONST.EXPEDITO-FAC.TEC.MEDI-2DA ESP(S/. 50)</option>
+                        <option>CONST.MATRI-FAC.TEC.MEDICA-2DA ESPE(S/. 50)</option>
+                        <option>CONST.NO ADEUDAR-FA.TEC.MED-2DA ESP(S/. 40)</option>
+                        <option>CONST.NOTAS(X CICLO) PROCU / PROLIC(S/. 5)</option>
+                        <option>CONST.TITULO POR ESP.(RES.MEDICO)(S/. 45)</option>
+                        <option>CONSTAN. DE NO ADEU. LIB. A LA BIB.(S/. 20)</option>
+
+                    </select>
+
+                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.tasa)</p>
+                </div>
+                <label class="control-label col-form-label col-md-2 col-sm-4 col-12">Cantidad</label>
+                <div class="col-md-2 col-sm-4 col-12">
+                    @Html.TextBoxFor(m => m.cantidad, new { @class = "form-control" })
+                    <p class="text-dangersmall">@Html.ValidationMessageFor(m => m.cantidad)</p>
+                </div>
+            </div>
+
+            <div class="form-group form-row">
+                <label for="codigoOperacion" class="control-label col-form-label col-md-3 col-sm-4 col-12">Código de operación</label>
+                <div class="col-md-9 col-sm-10 col-12">
+                    @Html.TextBoxFor(m => m.codigoOperacion, new { @class = "form-control" })
+                    <p class="text-dangersmall">@Html.ValidationMessageFor(m => m.codigoOperacion)</p>
+                </div>
+            </div>
+
+            <div class="form-group form-row">
+                <label for="codigoReferencia" class="control-label col-form-label col-md-3 col-sm-4 col-12">Código de referencia</label>
+                <div class="col-md-9 col-sm-10 col-12">
+                    @Html.TextBoxFor(m => m.codigoReferencia, new { @class = "form-control" })
+                    <p class="text-danger small">@Html.ValidationMessageFor(m => m.codigoReferencia)</p>
+                </div>
+            </div>
+
+            <div class="form-group form-row">
+                <label for="EntidadFinanciera" class="control-label col-form-label col-md-3 col-sm-4 col-12">Entidad financiera</label>
+                <div class="col-md-9 col-sm-10 col-12">
+                    @Html.DropDownListFor(model => model.idEntidadFinanciera, ViewBag.EntidadesFinancieras as SelectList, "[ SELECCIONAR ]", new { @class = "form-control" })
+                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.idEntidadFinanciera)</p>
+                </div>
+            </div>
+
+            <div class="form-group form-row">
+                <label for="fechaPago" class="control-label col-form-label col-md-3 col-sm-4 col-12">Fecha de pago</label>
+                <div class="col-md-9 col-sm-10 col-12">
+                    <div class="input-group date">
+                        @Html.TextBoxFor(m => m.fechaPago, new { @class = "form-control" })
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="fa fa-calendar-o"></i></span>
+                        </div>
+                    </div>
+                    <p class="text-danger small">@Html.ValidationMessageFor(m => m.fechaPago)</p>
+                </div>
+            </div>
+
+            <div class="form-group form-row">
+                <label for="lugarPago" class="control-label col-form-label col-md-3 col-sm-4 col-12">Lugar de pago</label>
+                <div class="col-md-9 col-sm-10 col-12">
+                    @Html.TextBoxFor(m => m.lugarPago, new { @class = "form-control" })
+                    <p class="text-danger small">@Html.ValidationMessageFor(m => m.lugarPago)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-info">Grabar pago</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+    </div>
+}
+
+
+<script>
+    const MESSAGE_TYPE = {
+        INFO: 'info',
+        SUCCESS: 'success',
+        WARNING: 'warning',
+        ERROR: 'error'
+    };
+
+    $('.input-group.date').datepicker({
+        todayBtn: 'linked',
+        language: 'es',
+        format: 'dd/MM/yyyy',
+        autoclose: true,
+        startDate: '-0d',
+        weekStart: 0,
+        orientation: 'bottom auto',
+        calendarWeeks: true,
+    }).on('hide', function (e) {
+        e.stopPropagation();
+    });
+
+    //$(document).on('click', '#btnConsultarObligacionAlumno', function () {
+    //    let anio = $('#cmbAnioIndividual').val();
+    //    let periodo = $('#cmbPeriodoIndividual').val();
+    //    let codAlu = $('#txtCodAlumno').val();
+    //    let especialidad = $('#cmbEspecialidad').val();
+
+    //    if (codAlu === null || codAlu.length !== 10) {
+    //        MostrarMensajeObligacionesPorAlumno('El campo Código de Alumno es requerido.', MESSAGE_TYPE.WARNING);
+    //    } else if (especialidad === null || especialidad.length === '') {
+    //        ObtenerEspecialidadesAlumno(codAlu);
+    //    } else {
+    //        BuscarObligacionesAlumno(anio, periodo, especialidad, codAlu);
+    //    }
+    //});
+
+    $(document).on('keypress', '#form-obligacion-manual #codigoAlumno', function (e) {
+        if (e.which === 13) {
+            e.preventDefault();
+
+            let codAlu = $('#form-obligacion-manual #codigoAlumno').val();
+
+            if (codAlu === null || codAlu.length !== 10) {
+                MostrarMensajeObligacionesPorAlumno('El campo Código de Alumno es requerido.', MESSAGE_TYPE.WARNING);
+            } else {
+                ObtenerEspecialidadesAlumno(codAlu);
+            }
+
+        }
+    });
+
+    function MostrarMensajeObligacionesPorAlumno(errorMessage, messageType) {
+        Swal.fire({
+            title: '',
+            text: errorMessage,
+            icon: messageType,
+            timer: 6000
+        });
+    }
+
+    function ObtenerEspecialidadesAlumno(codAlu) {
+        let parametros = {
+            codAlu: codAlu
+        };
+
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Action("ObtenerEspecialidadesAlumno", "Obligaciones")',
+            data: parametros,
+            dataType: 'json',
+            beforeSend: function () {
+                llenarComboEspecialidades(null);
+            },
+            success: function (data) {
+                llenarComboEspecialidades(data);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                let jsonException = JSON.parse(xhr.responseText);
+                MostrarMensajeObligacionesPorAlumno(jsonException.Message, MESSAGE_TYPE.ERROR);
+            }
+        });
+    }
+
+    function llenarComboEspecialidades(especialidades) {
+        let cmbEspecialidad = $('#form-obligacion-manual #codRc');
+
+        cmbEspecialidad.empty();
+
+        if (especialidades !== null) {
+            let html = '';
+
+            $.each(especialidades, function (i, item) {
+                html += '<option value="' + item.C_RcCod + '">' + item.T_EspDesc + '</option>';
+
+                if (i === 0) {
+                    let anio = $('#form-obligacion-manual #anio').val();
+                    let periodo = $('#form-obligacion-manual #idPeriodo').val();
+                    let codAlu = $('#form-obligacion-manual #codigoAlumno').val();
+
+                    BuscarObligacionesAlumno(anio, periodo, item.C_RcCod, codAlu);
+                }
+            });
+
+            cmbEspecialidad.html(html);
+        }
+    }
+
+    function BuscarObligacionesAlumno(anio, periodo, codRc, codAlu) {
+
+        let cmbNombreAlumno = $('#form-obligacion-manual #nombreAlumno');
+        let cmbObligaciones = $('#form-obligacion-manual #idOligacionCab');
+
+        let parametros = {
+            anio: anio,
+            periodo: periodo,
+            codRc: codRc,
+            codAlu: codAlu
+        };
+
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Action("BuscarObligacionesAlumno", "Obligaciones")',
+            data: parametros,
+            dataType: 'json',
+            beforeSend: function () {
+                cmbNombreAlumno.val('');
+                cmbObligaciones.empty();
+                
+            },
+            success: function (data) {
+                if (data) {
+                    if (data.alumno !== null) {
+                        let nombreAlumno = data.alumno.T_Nombre + ' ' + 
+                            data.alumno.T_ApePaterno + ' ' + 
+                            data.alumno.T_ApeMaterno;
+
+                        cmbNombreAlumno.val(nombreAlumno.trim());
+                    }
+                        
+                    if (data.cuotas_pago !== null) {
+                        let html = '';
+
+                        $.each(data.cuotas_pago, function (i, item) {
+                            html += '<option value="' + item.I_ObligacionAluID + '">' +
+                                item.T_ProcesoDesc + ' ( S/. ' + item.T_MontoOblig + ' - F.Vcto. ' + item.T_FecVencto + ')</option>';
+                        });
+
+                        cmbObligaciones.html(html);
+                    }
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                var jsonException = JSON.parse(xhr.responseText);
+                MostrarMensajeObligacionesPorAlumno(jsonException.Message, MESSAGE_TYPE.ERROR);
+            }
+        });
+    }
+</script>
