@@ -38,8 +38,8 @@ namespace Domain.Entities
             this.GenericaCod = table.C_GenericaCod;
             this.SubGeneCod = table.C_SubGeneCod;
             this.EspecificaCod = table.C_EspecificaCod;
-            this.CodClasificador = table.C_TipoTransCod + "." + table.C_GenericaCod + 
-                                   (string.IsNullOrEmpty(table.C_SubGeneCod) ? "" : "." + table.C_SubGeneCod ) +
+            this.CodClasificador = table.C_TipoTransCod + "." + table.C_GenericaCod +
+                                   (string.IsNullOrEmpty(table.C_SubGeneCod) ? "" : "." + table.C_SubGeneCod) +
                                    (string.IsNullOrEmpty(table.C_EspecificaCod) ? "" : "." + table.C_EspecificaCod);
             this.Descripcion = table.T_ClasificadorDesc;
             this.DescripDetalle = table.T_ClasificadorDetalle;
@@ -57,7 +57,8 @@ namespace Domain.Entities
             _clasificadorRepository.D_FecMod = DateTime.Now;
             _clasificadorRepository.B_Habilitado = !currentState;
 
-            return new Response(_clasificadorRepository.ChangeState(currentUserId));
+            //return new Response(_clasificadorRepository.ChangeState(currentUserId));
+            return new Response();
         }
 
         public List<ClasificadorPresupuestal> Find(string anio)
@@ -76,20 +77,23 @@ namespace Domain.Entities
             return new ClasificadorPresupuestal(_clasificadorRepository.Find(clasificadorId));
         }
 
-        public Response Save(ClasificadorPresupuestal clasificadorDeIngreso, int currentUserId, SaveOption saveOption)
+        public Response Save(ClasificadorPresupuestal clasificadorPresupuestal, int currentUserId, SaveOption saveOption)
         {
-            _clasificadorRepository.I_ClasificadorID = clasificadorDeIngreso.Id.Value;
-            //_clasificadorRepository.T_ClasificadorCod = clasificadorDeIngreso.CodigoMef;
-            _clasificadorRepository.T_ClasificadorDesc = clasificadorDeIngreso.Descripcion;
-            _clasificadorRepository.N_Anio = clasificadorDeIngreso.AnioEjercicio;
-            _clasificadorRepository.T_ClasificadorUnfv = clasificadorDeIngreso.CodigoUnfv;
-            _clasificadorRepository.D_FecMod = clasificadorDeIngreso.FecUpdated;
+            _clasificadorRepository.I_ClasificadorID = clasificadorPresupuestal.Id.Value;
+            _clasificadorRepository.C_TipoTransCod = clasificadorPresupuestal.TipoTransCod;
+            _clasificadorRepository.C_GenericaCod = clasificadorPresupuestal.GenericaCod;
+            _clasificadorRepository.C_SubGeneCod = clasificadorPresupuestal.SubGeneCod;
+            _clasificadorRepository.C_EspecificaCod = clasificadorPresupuestal.EspecificaCod;
+            _clasificadorRepository.T_ClasificadorDesc = clasificadorPresupuestal.Descripcion;
+            _clasificadorRepository.T_ClasificadorDetalle = clasificadorPresupuestal.DescripDetalle;
 
             switch (saveOption)
             {
                 case SaveOption.Insert:
+                    _clasificadorRepository.D_FecCre = clasificadorPresupuestal.FecUpdated;
                     return new Response(_clasificadorRepository.Insert(currentUserId));
                 case SaveOption.Update:
+                    _clasificadorRepository.D_FecMod = clasificadorPresupuestal.FecUpdated;
                     return new Response(_clasificadorRepository.Update(currentUserId));
             }
 

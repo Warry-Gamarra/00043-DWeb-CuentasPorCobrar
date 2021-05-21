@@ -683,12 +683,12 @@ GO
 --GO
 
 
---INSERT INTO TC_ClasificadorPresupuestal (C_TipoTransCod, C_GenericaCod, C_SubGeneCod, C_EspecificaCod, T_ClasificadorDesc, T_ClasificadorDetalle, B_Eliminado, I_UsuarioCre, D_FecCre)
---								SELECT SUBSTRING(CLASIFICADOR, 1, 1), SUBSTRING(CLASIFICADOR, 3, 1)
---									  , CASE CHARINDEX('.', CLASIFICADOR, 5) WHEN 0 THEN IIF(LEN(SUBSTRING(CLASIFICADOR, 5, 4)) = 0, NULL, REPLACE(SUBSTRING(CLASIFICADOR, 5, 4), ' ','')) ELSE REPLACE(SUBSTRING(CLASIFICADOR, 5, (CHARINDEX('.', CLASIFICADOR, 5) - 5)), ' ','') END
---									  , CASE CHARINDEX('.', CLASIFICADOR, 5) WHEN 0 THEN NULL ELSE REPLACE(SUBSTRING(CLASIFICADOR, CHARINDEX('.', CLASIFICADOR, 5) + 1, 4), ' ','') END
---									  , DESCRIPCION, DESCRIPCION_DETALLADA, 0, 1, GETDATE()
---								  FROM temporal_pagos..Clasificadores
+INSERT INTO TC_ClasificadorPresupuestal (C_TipoTransCod, C_GenericaCod, C_SubGeneCod, C_EspecificaCod, T_ClasificadorDesc, T_ClasificadorDetalle, B_Eliminado, I_UsuarioCre, D_FecCre)
+								SELECT SUBSTRING(CLASIFICADOR, 1, 1), SUBSTRING(CLASIFICADOR, 3, 1)
+									  , CASE CHARINDEX('.', CLASIFICADOR, 5) WHEN 0 THEN IIF(LEN(SUBSTRING(CLASIFICADOR, 5, 4)) = 0, NULL, REPLACE(SUBSTRING(CLASIFICADOR, 5, 4), ' ','')) ELSE REPLACE(SUBSTRING(CLASIFICADOR, 5, (CHARINDEX('.', CLASIFICADOR, 5) - 5)), ' ','') END
+									  , CASE CHARINDEX('.', CLASIFICADOR, 5) WHEN 0 THEN NULL ELSE REPLACE(SUBSTRING(CLASIFICADOR, CHARINDEX('.', CLASIFICADOR, 5) + 1, 4), ' ','') END
+									  , DESCRIPCION, DESCRIPCION_DETALLADA, 0, 1, GETDATE()
+								  FROM temporal_pagos..Clasificadores
 
 --INSERT INTO TC_ClasificadorAnio (I_ClasificadorID, N_Anio, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) 
 --						SELECT  I_ClasificadorID, '2021', 1, 0, I_UsuarioCre, D_FecCre
