@@ -37,7 +37,7 @@
             {
                        columns.Add(c => c.CodClasificador).SetWidth(150).Titled("Clasificador").Filterable(true);
                        columns.Add().Css("text-center px-0").Encoded(false).Sanitized(false)
-                              .RenderValueAs(model => @<button type="button" class="btn btn-xs btn-info" title="ver detalle" data-toggle="modal" data-target="#detalleClasif" data-title="@Html.Raw(model.CodClasificador + " - " + model.Descripcion)" data-detalle="@Html.Raw(model.DescripDetalle)"><i class="fa fa-info-circle" aria-hidden="true"></i></button>);
+                              .RenderValueAs(model => @<button type="button" class="btn btn-xs btn-link" title="ver detalle" data-toggle="modal" data-target="#detalleClasif" data-title="@Html.Raw(model.CodClasificador + " - " + model.Descripcion)" data-detalle="@Html.Raw(model.DescripDetalle)"><i class="fa bi-info-circle" aria-hidden="true"></i></button>);
                        columns.Add(c => c.Descripcion).Titled("Descripción").Filterable(true);
                        columns.Add(c => c.Habilitado).SetWidth(100).Css("text-center").Encoded(false).Sanitized(false)
                               .RenderValueAs(model => model.Habilitado ?
@@ -67,7 +67,7 @@
                 </dl>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-ban">&nbsp;</i> Cerrar</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times-circle">&nbsp;</i> Cerrar</button>
             </div>
         </div>
     </div>

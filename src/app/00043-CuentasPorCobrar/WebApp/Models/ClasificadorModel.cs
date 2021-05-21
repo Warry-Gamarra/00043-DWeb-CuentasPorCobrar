@@ -47,19 +47,22 @@ namespace WebApp.Models
 
         public Response Save(ClasificadorRegistrarViewModel clasificadorViewModel, int currentUserId)
         {
-            ClasificadorPresupuestal clasificadorDeIngreso = new ClasificadorPresupuestal()
+            ClasificadorPresupuestal clasificadorPresupuestal = new ClasificadorPresupuestal()
             {
                 Id = clasificadorViewModel.Id.HasValue ? clasificadorViewModel.Id.Value : 0,
-                CodClasificador = clasificadorViewModel.CodClasificador,
-                Descripcion = clasificadorViewModel.Descripcion,
-                DescripDetalle = clasificadorViewModel.DescripDetalle,
+                TipoTransCod = clasificadorViewModel.TipoTransaccion.ToString(),
+                GenericaCod = clasificadorViewModel.Generica.ToString(),
+                SubGeneCod = clasificadorViewModel.SubGenerica.HasValue ? clasificadorViewModel.SubGenerica.Value.ToString(): null,
+                EspecificaCod = clasificadorViewModel.Especifica.HasValue ? clasificadorViewModel.Especifica.Value.ToString() : null,
+                Descripcion = clasificadorViewModel.Descripcion.ToUpper(),
+                DescripDetalle = clasificadorViewModel.DescripDetalle.ToUpper(),
                 CodigoUnfv = clasificadorViewModel.CodigoEquivalente,
                 //AnioEjercicio = clasificadorViewModel.AnioEjercicio,
                 Habilitado = true,
                 FecUpdated = DateTime.Now
             };
 
-            Response result = _clasificadores.Save(clasificadorDeIngreso, currentUserId, (clasificadorDeIngreso.Id == 0 ? SaveOption.Insert : SaveOption.Update));
+            Response result = _clasificadores.Save(clasificadorPresupuestal, currentUserId, (clasificadorPresupuestal.Id == 0 ? SaveOption.Insert : SaveOption.Update));
 
             if (result.Value)
             {

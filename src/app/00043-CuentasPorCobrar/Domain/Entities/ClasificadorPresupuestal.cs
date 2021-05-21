@@ -12,6 +12,10 @@ namespace Domain.Entities
     public class ClasificadorPresupuestal : IClasificadores
     {
         public int? Id { get; set; }
+        public string TipoTransCod { get; set; }
+        public string GenericaCod { get; set; }
+        public string SubGeneCod { get; set; }
+        public string EspecificaCod { get; set; }
         public string CodClasificador { get; set; }
         public string Descripcion { get; set; }
         public string DescripDetalle { get; set; }
@@ -30,6 +34,10 @@ namespace Domain.Entities
         public ClasificadorPresupuestal(TC_ClasificadorPresupuestal table)
         {
             this.Id = table.I_ClasificadorID;
+            this.TipoTransCod = table.C_TipoTransCod;
+            this.GenericaCod = table.C_GenericaCod;
+            this.SubGeneCod = table.C_SubGeneCod;
+            this.EspecificaCod = table.C_EspecificaCod;
             this.CodClasificador = table.C_TipoTransCod + "." + table.C_GenericaCod + 
                                    (string.IsNullOrEmpty(table.C_SubGeneCod) ? "" : "." + table.C_SubGeneCod ) +
                                    (string.IsNullOrEmpty(table.C_EspecificaCod) ? "" : "." + table.C_EspecificaCod);

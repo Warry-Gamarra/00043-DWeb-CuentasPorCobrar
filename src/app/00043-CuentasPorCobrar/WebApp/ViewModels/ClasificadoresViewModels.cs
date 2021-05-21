@@ -33,9 +33,24 @@ namespace WebApp.ViewModels
     public class ClasificadorRegistrarViewModel
     {
         public int? Id { get; set; }
-        [Display(Name = "Código MEF")]
+
+        [Display(Name = "Tipo tran.")]
         [Required]
-        public string CodClasificador { get; set; }
+        [Range(1, 9)]
+        public int TipoTransaccion { get; set; }
+
+        [Display(Name = "Genérica")]
+        [Required]
+        [Range(1, 9)]
+        public int Generica { get; set; }
+
+        [Display(Name = "SubGenérica")]
+        [Range(1, 9999)]
+        public int? SubGenerica { get; set; }
+
+        [Display(Name = "Específica")]
+        [Range(1,9999)]
+        public int? Especifica { get; set; }
 
         [Display(Name = "Descripción")]
         [Required]
@@ -53,7 +68,10 @@ namespace WebApp.ViewModels
         public ClasificadorRegistrarViewModel(ClasificadorPresupuestal clasificador)
         {
             this.Id = clasificador.Id;
-            this.CodClasificador = clasificador.CodClasificador;
+            this.TipoTransaccion = Convert.ToInt32(clasificador.TipoTransCod);
+            this.Generica = Convert.ToInt32(clasificador.GenericaCod);
+            this.SubGenerica = Convert.ToInt32(clasificador.SubGeneCod);
+            this.Especifica = Convert.ToInt32(clasificador.EspecificaCod);
             this.CodigoEquivalente = clasificador.CodigoUnfv;
             this.Descripcion = clasificador.Descripcion;
             this.DescripDetalle = clasificador.DescripDetalle;
