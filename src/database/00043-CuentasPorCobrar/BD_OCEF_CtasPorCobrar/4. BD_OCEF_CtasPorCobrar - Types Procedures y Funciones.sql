@@ -1489,11 +1489,11 @@ GO
 /*-------------------------- */
 
 
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_GrabarClasificadorIngreso')
-	DROP PROCEDURE [dbo].[USP_I_GrabarClasificadorIngreso]
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_GrabarClasificadorPresupuestal')
+	DROP PROCEDURE [dbo].[USP_I_GrabarClasificadorPresupuestal]
 GO
 
-CREATE PROCEDURE [dbo].[USP_I_GrabarClasificadorIngreso]
+CREATE PROCEDURE [dbo].[USP_I_GrabarClasificadorPresupuestal]
 	 @I_ClasificadorID		int
 	,@C_TipoTransCod		varchar(2)
 	,@C_GenericaCod			varchar(2)
@@ -1526,47 +1526,47 @@ END
 GO
 
 
---IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarClasificadorIngreso')
---	DROP PROCEDURE [dbo].[USP_U_ActualizarClasificadorIngreso]
---GO
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarClasificadorPresupuestal')
+	DROP PROCEDURE [dbo].[USP_U_ActualizarClasificadorPresupuestal]
+GO
 
---CREATE PROCEDURE [dbo].[USP_U_ActualizarClasificadorIngreso]
---	 @I_ClasificadorID		int
---	,@C_TipoTransCod		varchar(2)
---	,@C_GenericaCod			varchar(2)
---	,@C_SubGeneCod			varchar(2)
---	,@C_EspecificaCod		varchar(5)
---	,@T_ClasificadorDesc	varchar(250)
---	,@T_ClasificadorDetalle	varchar(max)
---	,@N_Anio			varchar(4)
---	,@D_FecMod			datetime
---	,@CurrentUserId		int
+CREATE PROCEDURE [dbo].[USP_U_ActualizarClasificadorPresupuestal]
+	 @I_ClasificadorID		int
+	,@C_TipoTransCod		varchar(2)
+	,@C_GenericaCod			varchar(2)
+	,@C_SubGeneCod			varchar(2)
+	,@C_EspecificaCod		varchar(5)
+	,@T_ClasificadorDesc	varchar(250)
+	,@T_ClasificadorDetalle	varchar(max)
+	,@N_Anio			varchar(4)
+	,@D_FecMod			datetime
+	,@CurrentUserId		int
 
---	,@B_Result bit OUTPUT
---	,@T_Message nvarchar(4000) OUTPUT	
---AS
---BEGIN
---  SET NOCOUNT ON
---  	BEGIN TRY
---	UPDATE	TC_ClasificadorIngreso 
---		SET	T_ClasificadorDesc = @T_ClasificadorDesc
---			,T_ClasificadorCod = @T_ClasificadorCod
---			,T_ClasificadorUnfv = @T_ClasificadorUnfv
---			,N_Anio = @N_Anio
---			, D_FecMod = @D_FecMod
---			, I_UsuarioMod = @CurrentUserId
---		WHERE I_ClasificadorID = @I_ClasificadorID
+	,@B_Result bit OUTPUT
+	,@T_Message nvarchar(4000) OUTPUT	
+AS
+BEGIN
+  SET NOCOUNT ON
+  	BEGIN TRY
+	UPDATE	TC_ClasificadorIngreso 
+		SET	T_ClasificadorDesc = @T_ClasificadorDesc
+			,T_ClasificadorCod = @T_ClasificadorCod
+			,T_ClasificadorUnfv = @T_ClasificadorUnfv
+			,N_Anio = @N_Anio
+			, D_FecMod = @D_FecMod
+			, I_UsuarioMod = @CurrentUserId
+		WHERE I_ClasificadorID = @I_ClasificadorID
 			
---		SET @B_Result = 1
---		SET @T_Message = 'Actualización de datos correcta'
---	END TRY
---	BEGIN CATCH
---		SET @B_Result = 0
---		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
---	END CATCH
+		SET @B_Result = 1
+		SET @T_Message = 'Actualización de datos correcta'
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
 
---END
---GO
+END
+GO
 
 
 --IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarEstadoClasificadorIngreso')

@@ -56,12 +56,9 @@ namespace WebApp.ViewModels
         [Required]
         public string Descripcion { get; set; }
 
-        [Display(Name = "Descripción")]
+        [Display(Name = "Descripción Detallada")]
         public string DescripDetalle { get; set; }
 
-        [Display(Name = "Equivalente UNFV")]
-        [Required]
-        public string CodigoEquivalente { get; set; }
 
         public ClasificadorRegistrarViewModel() { }
 
@@ -72,7 +69,6 @@ namespace WebApp.ViewModels
             this.Generica = Convert.ToInt32(clasificador.GenericaCod);
             this.SubGenerica = Convert.ToInt32(clasificador.SubGeneCod);
             this.Especifica = Convert.ToInt32(clasificador.EspecificaCod);
-            this.CodigoEquivalente = clasificador.CodigoUnfv;
             this.Descripcion = clasificador.Descripcion;
             this.DescripDetalle = clasificador.DescripDetalle;
         }

@@ -56,7 +56,7 @@ namespace WebApp.Models
                 EspecificaCod = clasificadorViewModel.Especifica.HasValue ? clasificadorViewModel.Especifica.Value.ToString() : null,
                 Descripcion = clasificadorViewModel.Descripcion.ToUpper(),
                 DescripDetalle = clasificadorViewModel.DescripDetalle.ToUpper(),
-                CodigoUnfv = clasificadorViewModel.CodigoEquivalente,
+                //CodigoUnfv = clasificadorViewModel.CodigoEquivalente,
                 //AnioEjercicio = clasificadorViewModel.AnioEjercicio,
                 Habilitado = true,
                 FecUpdated = DateTime.Now
