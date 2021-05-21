@@ -482,6 +482,7 @@
     <Compile Include="ViewModels\ConceptoPagoViewModel.cs" />
     <Compile Include="ViewModels\EstudiantesViewModels.cs" />
     <Compile Include="ViewModels\FiltroEnvioObligacionesModel.cs" />
+    <Compile Include="ViewModels\ObligacionManualViewModel.cs" />
     <Compile Include="ViewModels\PagosGeneralesPorFechaViewModel.cs" />
     <Compile Include="ViewModels\PagosPorFacultadYFechaViewModel.cs" />
     <Compile Include="ViewModels\PagosViewModels.cs" />
@@ -490,6 +491,7 @@
     <Compile Include="ViewModels\ReportePagosPorFacultadYFechaViewModel.cs" />
     <Compile Include="ViewModels\RolesViewModel.cs" />
     <Compile Include="ViewModels\SelectViewModel.cs" />
+    <Compile Include="ViewModels\TasaManualViewModel.cs" />
     <Compile Include="ViewModels\UserManualViewModel.cs" />
     <Compile Include="ViewModels\UsersViewModels.cs" />
   </ItemGroup>
@@ -579,6 +581,8 @@
     <Content Include="Views\Estudiantes\Consulta.cshtml" />
     <Content Include="Views\EstadosCuenta\PagosPorFecha.cshtml" />
     <Content Include="Views\EstadosCuenta\PagosPorFacultad.cshtml" />
+    <Content Include="Views\Pagos\_RegistrarObligacion.cshtml" />
+    <Content Include="Views\Pagos\_RegistrarTasa.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
