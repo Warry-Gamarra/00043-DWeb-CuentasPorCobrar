@@ -591,6 +591,28 @@ go
 
 
 
+CREATE TABLE TR_DevolucionPago
+( 
+	I_DevolucionPagoID   int IDENTITY ( 1,1 ) ,
+	I_PagoProcesID		 int  NULL ,
+	I_MontoPagoDev       decimal(15,2)  NULL ,
+	D_FecDevAprob        datetime  NULL ,
+	D_FecDevPago         datetime  NULL ,
+	D_FecProc	         datetime  NULL ,
+	B_Eliminado          bit  NOT NULL ,
+	I_UsuarioCre         int  NULL ,
+	D_FecCre             datetime  NULL ,
+	I_UsuarioMod         int  NULL ,
+	D_FecMod             datetime  NULL ,
+	CONSTRAINT PK_DevolucionPago PRIMARY KEY  CLUSTERED (I_DevolucionPagoID ASC),
+	CONSTRAINT FK_PagoProcesadoUnfv_DevolucionPago FOREIGN KEY (I_PagoProcesID) REFERENCES TRI_PagoProcesadoUnfv(I_PagoProcesID)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+)
+go
+
+
+
 CREATE TABLE TC_CuentaDeposito
 ( 
 	I_CtaDepositoID      int IDENTITY ( 1,1 ) ,
