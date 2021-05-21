@@ -3613,3 +3613,9 @@ BEGIN
 	*/
 END
 GO
+
+
+--select distinct '<option>' + descripcio + '(S/. ' + cast(monto as varchar) + ')' + '</option>'
+--from temporal_pagos.dbo.cp_pri 
+--where clasific_5 is not null and len(clasific_5) > 0
+--ORDER BY 1
