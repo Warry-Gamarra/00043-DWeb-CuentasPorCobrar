@@ -585,6 +585,7 @@
     <Content Include="Views\Pagos\_RegistrarObligacion.cshtml" />
     <Content Include="Views\Pagos\_RegistrarTasa.cshtml" />
     <Content Include="Views\Devoluciones\Index.cshtml" />
+    <Content Include="Views\Clasificadores\_RegistrarEquivalenciasAnio.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

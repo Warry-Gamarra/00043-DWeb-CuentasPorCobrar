@@ -56,7 +56,7 @@ namespace WebApp.ViewModels
         [Required]
         public string Descripcion { get; set; }
 
-        [Display(Name = "Descripción Detallada")]
+        [Display(Name = "Descripción detallada")]
         public string DescripDetalle { get; set; }
 
 
