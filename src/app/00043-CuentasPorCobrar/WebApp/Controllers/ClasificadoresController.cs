@@ -56,15 +56,8 @@ namespace WebApp.Controllers
             return PartialView("_RegistrarClasificador", _clasificador.Find(id));
         }
 
-        [Route("mantenimiento/clasificadores-presupuestales/{anio}/equivalencias/{id}")]
-        public ActionResult HabilitarEquivalencias(int id, int anio)
-        {
-            ViewBag.Title = "Equivalencias clasificador - " + anio.ToString();
-
-            return PartialView("_RegistrarEquivalenciasAnio", _clasificador.Find(id));
-        }
-
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Save(ClasificadorRegistrarViewModel model)
         {
             Response result = new Response();
@@ -89,7 +82,24 @@ namespace WebApp.Controllers
             return PartialView("_MsgPartialWR", result);
         }
 
+
+        [Route("mantenimiento/clasificadores-presupuestales/{anio}/equivalencias/{id}")]
+        public ActionResult HabilitarEquivalencias(int id, int anio)
+        {
+            ViewBag.Title = "Equivalencias clasificador - " + anio.ToString();
+
+            var clasificador = _clasificador.Find(id);
+            var model = new ClasificadorEquivalenciasAnioViewModel()
+            {
+                Anio = anio,
+                Clasificador = $"{clasificador.CodClasificador} - {clasificador.Descripcion}",
+            };
+
+            return PartialView("_RegistrarEquivalenciasAnio", model);
+        }
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult SaveEquivalencias(ClasificadorRegistrarViewModel model)
         {
             Response result = new Response();

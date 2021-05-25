@@ -1,4 +1,4 @@
-﻿@model WebApp.ViewModels.ClasificadorRegistrarViewModel
+﻿@model WebApp.ViewModels.ClasificadorEquivalenciasAnioViewModel
 
 @Scripts.Render("~/bundles/jqueryval")
 
@@ -12,47 +12,48 @@
     @Html.AntiForgeryToken()
     <div class="modal-body">
         <div class="container-fluid">
-            @Html.HiddenFor(model => model.Id)
-
             <div class="form-group form-row">
-                <div class="col-md-2 d-flex align-items-center">
-                    @Html.Label("lblClasificador", "Clasificador", new { @class = "control-label mt-3" })
+                <div class="col-2">
+                    @Html.LabelFor(model => model.Anio, new { @class = "control-label col-12", })
+                    @Html.Label(Model.Anio.ToString(), new { @class = " col-12" })
+                    @Html.HiddenFor(model => model.Anio)
                 </div>
-                <div class="col-md-10 form-row">
-                    <div class="col-2">
-                        @Html.LabelFor(model => model.TipoTransaccion, new { @class = "control-label" })
-                        @Html.TextBoxFor(model => model.TipoTransaccion, new { @class = "form-control num-cod" })
-                        <p class="text-danger small">@Html.ValidationMessageFor(model => model.TipoTransaccion)</p>
-                    </div>
-                    <div class="col-2">
-                        @Html.LabelFor(model => model.Generica, new { @class = "control-label" })
-                        @Html.TextBoxFor(model => model.Generica, new { @class = "form-control num-cod" })
-                        <p class="text-danger small">@Html.ValidationMessageFor(model => model.Generica)</p>
-                    </div>
-                    <div class="col-3">
-                        @Html.LabelFor(model => model.SubGenerica, new { @class = "control-label" })
-                        @Html.TextBoxFor(model => model.SubGenerica, new { @class = "form-control num-cod" })
-                        <p class="text-danger small">@Html.ValidationMessageFor(model => model.SubGenerica)</p>
-                    </div>
-                    <div class="col-3">
-                        @Html.LabelFor(model => model.Especifica, new { @class = "control-label" })
-                        @Html.TextBoxFor(model => model.Especifica, new { @class = "form-control num-cod" })
-                        <p class="text-danger small">@Html.ValidationMessageFor(model => model.Especifica)</p>
-                    </div>
+                <div class="col-10">
+                    @Html.LabelFor(model => model.Clasificador, new { @class = "control-label col-12", })
+                    @Html.Label(Model.Clasificador, new { @class = "col-12" })
+                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.Anio)</p>
                 </div>
             </div>
             <div class="form-group form-row">
-                @Html.LabelFor(model => model.Descripcion, new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.TextBoxFor(model => model.Descripcion, new { @class = "form-control text-uppercase" })
-                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.Descripcion)</p>
-                </div>
-            </div>
-            <div class="form-group form-row">
-                @Html.LabelFor(model => model.DescripDetalle, new { @class = "control-label col-md-2", })
-                <div class="col-md-10">
-                    @Html.TextAreaFor(model => model.DescripDetalle, new { @class = "form-control text-uppercase", rows = "5" })
-                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.DescripDetalle)</p>
+                @Html.LabelFor(model => model.EquivalenciasConcepto, new { @class = "control-label col-md-2", })
+                <div class="col-md-10 col-11">
+                    <div class="col-12 form-row mb-3">
+                        <div class="col-9 input-group">
+                            <div class="input-group-prepend">
+                                <button id="btn-buscar" class="btn btn-sm btn-outline-primary" type="button"><i class="fa fa-search px-1"></i></button>
+                            </div>
+                            <input id="txt-buscarCodigo" type="text" class="form-control input-sm disabled" placeholder="" disabled>
+                        </div>
+                        <div class="col-3">
+                            <button id="btn-agregar" class="btn btn-outline-success" title="agregar" data-tooltip="tooltip" data-placement="bottom"><i class="fa fa-plus">&nbsp;</i> Agregar</button>
+                        </div>
+                    </div>
+                    <div class="col-xs-offset-1">
+                        @if (Model.EquivalenciasConcepto.Count == 0)
+                        {
+                            <div class="text-"></div>
+                        }
+                        else
+                        {
+                            for (int i = 0; i < Model.EquivalenciasConcepto.Count(); i++)
+                            {
+                                <label class="checkbox col-md-6">
+                                    @Html.HiddenFor(m => m.EquivalenciasConcepto[i].ConceptoEquivDesc)
+                                    @Html.CheckBoxFor(m => m.EquivalenciasConcepto[i].Habilitado) @Model.EquivalenciasConcepto[i].ConceptoEquivDesc
+                                </label>
+                            }
+                        }
+                    </div>
                 </div>
             </div>
         </div>
@@ -73,10 +74,9 @@
 }
 
 <script>
-    $(document).on('ready', function () {
-        $('#btnsubmit').removeClass('disabled');
 
-    });
+    $('#btnsubmit').removeClass('disabled');
+    $('[data-tooltip="tooltip"]').tooltip();
 
     $("form").submit(function () {
         if (parseInt($("#submited").val()) > 0) {
@@ -84,25 +84,24 @@
         }
     });
 
-    $('.num-cod').on('focus', function () {
-        $(this).select();
+    $('#btn-buscar').on('click', function (event) {
+        event.preventDefault();
+
+        if ($('#txt-buscarCodigo').hasClass('disabled')) {
+            $('#txt-buscarCodigo').prop('disabled', false);
+            $('#txt-buscarCodigo').removeClass('disabled')
+        }
+        else {
+            $('#txt-buscarCodigo').prop('disabled', true);
+            $('#txt-buscarCodigo').addClass('disabled')
+        }
     })
 
-    if ($('#TipoTransaccion').val() == 0) {
-        $('#TipoTransaccion').val('');
-    }
+    $('#btn-agregar').on('click', function (event) {
+        event.preventDefault();
+    })
 
-    if ($('#Generica').val() == 0) {
-        $('#Generica').val('');
-    }
 
-    if ($('#SubGenerica').val() == 0) {
-        $('#SubGenerica').val('');
-    }
-
-    if ($('#Especifica').val() == 0) {
-        $('#Especifica').val('');
-    }
 
 
 </script>

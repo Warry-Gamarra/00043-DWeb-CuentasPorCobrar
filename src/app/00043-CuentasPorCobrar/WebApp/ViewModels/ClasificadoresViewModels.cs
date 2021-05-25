@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -18,7 +19,8 @@ namespace WebApp.ViewModels
 
         public ClasificadorViewModel() { }
 
-        public ClasificadorViewModel(ClasificadorPresupuestal clasificador) {
+        public ClasificadorViewModel(ClasificadorPresupuestal clasificador)
+        {
             this.Id = clasificador.Id;
             this.CodClasificador = clasificador.CodClasificador;
             this.CodigoEquivalente = clasificador.CodigoUnfv;
@@ -49,7 +51,7 @@ namespace WebApp.ViewModels
         public int? SubGenerica { get; set; }
 
         [Display(Name = "Específica")]
-        [Range(1,9999)]
+        [Range(1, 9999)]
         public int? Especifica { get; set; }
 
         [Display(Name = "Descripción")]
@@ -58,6 +60,8 @@ namespace WebApp.ViewModels
 
         [Display(Name = "Descripción detallada")]
         public string DescripDetalle { get; set; }
+
+        public string CodClasificador { get; set; }
 
 
         public ClasificadorRegistrarViewModel() { }
@@ -71,7 +75,28 @@ namespace WebApp.ViewModels
             this.Especifica = Convert.ToInt32(clasificador.EspecificaCod);
             this.Descripcion = clasificador.Descripcion;
             this.DescripDetalle = clasificador.DescripDetalle;
+            this.CodClasificador = clasificador.CodClasificador;
         }
 
+    }
+
+    public class ClasificadorEquivalenciasAnioViewModel
+    {
+        public int? Id { get; set; }
+
+        [Display(Name = "Año:")]
+        public int Anio { get; set; }
+
+        [Display(Name = "Clasificador:")]
+        public string Clasificador { get; set; }
+
+        [Display(Name = "Equivalencias")]
+        public List<ClasificadorEquivalencia> EquivalenciasConcepto { get; set; }
+
+
+        public ClasificadorEquivalenciasAnioViewModel()
+        {
+            this.EquivalenciasConcepto = new List<ClasificadorEquivalencia>();
+        }
     }
 }
