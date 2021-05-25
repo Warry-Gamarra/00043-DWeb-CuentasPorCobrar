@@ -231,7 +231,7 @@ namespace WebApp.Controllers
                 {
                     if (string.IsNullOrEmpty(result.Message))
                     {
-                        ResponseModel.Error(result, "La valor ingresado en contraseña actual no corresponde a la contraseña actual", true);
+                        ResponseModel.Error(result, "El valor ingresado en el campo contraseña no corresponde a la contraseña actual", true);
                     }
                     else
                     {

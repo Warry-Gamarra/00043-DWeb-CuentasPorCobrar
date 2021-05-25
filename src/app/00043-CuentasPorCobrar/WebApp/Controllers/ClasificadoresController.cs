@@ -27,10 +27,11 @@ namespace WebApp.Controllers
         [Route("mantenimiento/clasificadores-presupuestales")]
         public ActionResult Index(int? anio)
         {
+            anio = anio ?? DateTime.Now.Year;
+
             ViewBag.Title = "Clasificadores Presupuestales";
             ViewBag.Anios = new SelectList(_selectModels.GetAnios(1990), "Value", "TextDisplay", anio);
-
-            anio = anio ?? DateTime.Now.Year;
+            ViewBag.Anio = anio.ToString();
 
             var model = _clasificador.Find(anio.Value.ToString());
 
@@ -42,7 +43,6 @@ namespace WebApp.Controllers
         public ActionResult Create()
         {
             ViewBag.Title = "Agregar Clasificador";
-            ViewBag.Anios = new SelectList(_selectModels.GetAnios(2000), "Value", "TextDisplay");
 
             return PartialView("_RegistrarClasificador", new ClasificadorRegistrarViewModel());
         }
@@ -52,20 +52,45 @@ namespace WebApp.Controllers
         public ActionResult Edit(int id)
         {
             ViewBag.Title = "Editar Clasificador";
-            ViewBag.Anios = new SelectList(_selectModels.GetAnios(2000), "Value", "TextDisplay");
 
             return PartialView("_RegistrarClasificador", _clasificador.Find(id));
         }
 
-        public JsonResult ChangeState(int RowID, bool B_habilitado)
+        [Route("mantenimiento/clasificadores-presupuestales/{anio}/equivalencias/{id}")]
+        public ActionResult HabilitarEquivalencias(int id, int anio)
         {
-            var result = _clasificador.ChangeState(RowID, B_habilitado, WebSecurity.CurrentUserId, Url.Action("ChangeState", "Clasificadores"));
+            ViewBag.Title = "Equivalencias clasificador - " + anio.ToString();
 
-            return Json(result, JsonRequestBehavior.AllowGet);
+            return PartialView("_RegistrarEquivalenciasAnio", _clasificador.Find(id));
         }
 
         [HttpPost]
         public ActionResult Save(ClasificadorRegistrarViewModel model)
+        {
+            Response result = new Response();
+
+            if (ModelState.IsValid)
+            {
+                result = _clasificador.Save(model, WebSecurity.CurrentUserId);
+            }
+            else
+            {
+                string details = "";
+                foreach (ModelState modelState in ViewData.ModelState.Values)
+                {
+                    foreach (ModelError error in modelState.Errors)
+                    {
+                        details += error.ErrorMessage + " / ";
+                    }
+                }
+
+                ResponseModel.Error(result, "Ha ocurrido un error con el envio de datos. " + details);
+            }
+            return PartialView("_MsgPartialWR", result);
+        }
+
+        [HttpPost]
+        public ActionResult SaveEquivalencias(ClasificadorRegistrarViewModel model)
         {
             Response result = new Response();
 

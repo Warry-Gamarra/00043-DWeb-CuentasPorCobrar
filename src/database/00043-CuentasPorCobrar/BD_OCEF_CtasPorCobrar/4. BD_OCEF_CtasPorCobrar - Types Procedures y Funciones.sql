@@ -22,12 +22,12 @@ AS
 BEGIN
   SET NOCOUNT ON
   	BEGIN TRY
-		UPDATE	TS_CorreoAplicacion  
+		 UPDATE	TS_CorreoAplicacion  
 			SET	B_Habilitado = 0
 				, D_FecUpdate = @D_FecUpdate
 			
 		INSERT INTO TS_CorreoAplicacion (T_DireccionCorreo, T_PasswordCorreo, T_Seguridad, T_HostName, I_Puerto, B_Habilitado, D_FecUpdate, B_Eliminado)
-								VALUES	 (@T_DireccionCorreo, @T_PasswordCorreo, @T_Seguridad, @T_HostName, @I_Puerto, 1, @D_FecUpdate, 0)
+								VALUES	(@T_DireccionCorreo, @T_PasswordCorreo, @T_Seguridad, @T_HostName, @I_Puerto, 1, @D_FecUpdate, 0)
 		
 
 		SET @B_Result = 1
@@ -1501,7 +1501,6 @@ CREATE PROCEDURE [dbo].[USP_I_GrabarClasificadorPresupuestal]
 	,@C_EspecificaCod		varchar(5)
 	,@T_ClasificadorDesc	varchar(250)
 	,@T_ClasificadorDetalle	varchar(max)
-	,@N_Anio			varchar(4)
 	,@D_FecCre			datetime
 	,@CurrentUserId		int
 
@@ -1534,11 +1533,10 @@ CREATE PROCEDURE [dbo].[USP_U_ActualizarClasificadorPresupuestal]
 	 @I_ClasificadorID		int
 	,@C_TipoTransCod		varchar(2)
 	,@C_GenericaCod			varchar(2)
-	,@C_SubGeneCod			varchar(2)
+	,@C_SubGeneCod			varchar(5)
 	,@C_EspecificaCod		varchar(5)
 	,@T_ClasificadorDesc	varchar(250)
 	,@T_ClasificadorDetalle	varchar(max)
-	,@N_Anio			varchar(4)
 	,@D_FecMod			datetime
 	,@CurrentUserId		int
 
@@ -1548,11 +1546,13 @@ AS
 BEGIN
   SET NOCOUNT ON
   	BEGIN TRY
-	UPDATE	TC_ClasificadorIngreso 
+	UPDATE	TC_ClasificadorPresupuestal 
 		SET	T_ClasificadorDesc = @T_ClasificadorDesc
-			,T_ClasificadorCod = @T_ClasificadorCod
-			,T_ClasificadorUnfv = @T_ClasificadorUnfv
-			,N_Anio = @N_Anio
+			,C_TipoTransCod	= @C_TipoTransCod
+			,C_GenericaCod = @C_GenericaCod
+			,C_SubGeneCod = @C_SubGeneCod
+			,C_EspecificaCod = @C_EspecificaCod
+			,T_ClasificadorDetalle= @T_ClasificadorDetalle
 			, D_FecMod = @D_FecMod
 			, I_UsuarioMod = @CurrentUserId
 		WHERE I_ClasificadorID = @I_ClasificadorID
