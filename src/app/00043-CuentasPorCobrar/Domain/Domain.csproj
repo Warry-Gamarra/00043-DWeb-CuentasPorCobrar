@@ -78,6 +78,7 @@
     <Compile Include="Entities\AlumnoMultaNoVotarEntity.cs" />
     <Compile Include="Entities\ArchivoIntercambio.cs" />
     <Compile Include="Entities\CampoTablaPago.cs" />
+    <Compile Include="Entities\ClasificadorEquivalencia.cs" />
     <Compile Include="Entities\ColumnaSeccion.cs" />
     <Compile Include="Entities\MatriculaDTO.cs" />
     <Compile Include="Entities\MatriculaEntity.cs" />
@@ -105,6 +106,7 @@
     <Compile Include="Entities\CategoriaPago.cs" />
     <Compile Include="Services\IArchivoIntercambio.cs" />
     <Compile Include="Services\ICampoTablaPago.cs" />
+    <Compile Include="Services\IClasificadorEquivalencia.cs" />
     <Compile Include="Services\Implementations\EstudianteService.cs" />
     <Compile Include="Entities\EntidadFinanciera.cs" />
     <Compile Include="Entities\CorreoAplicacion.cs" />

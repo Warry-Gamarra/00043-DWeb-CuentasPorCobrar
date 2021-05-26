@@ -87,16 +87,29 @@ namespace WebApp.ViewModels
         [Display(Name = "Año:")]
         public int Anio { get; set; }
 
+        public int ClasificadorId { get; set; }
+
         [Display(Name = "Clasificador:")]
         public string Clasificador { get; set; }
 
         [Display(Name = "Equivalencias")]
-        public List<ClasificadorEquivalencia> EquivalenciasConcepto { get; set; }
+        public List<ClasificadorEquivalenciaViewModel> EquivalenciasConcepto { get; set; }
 
 
         public ClasificadorEquivalenciasAnioViewModel()
         {
-            this.EquivalenciasConcepto = new List<ClasificadorEquivalencia>();
+            this.EquivalenciasConcepto = new List<ClasificadorEquivalenciaViewModel>();
         }
+    }
+
+
+    public class ClasificadorEquivalenciaViewModel
+    {
+        public int ClasificadorId { get; set; }
+        public int ClasificadorEquivId { get; set; }
+        public string ConceptoEquivCod { get; set; }
+        public string ConceptoEquivDesc { get; set; }
+        public bool Habilitado { get; set; }
+
     }
 }

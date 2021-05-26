@@ -6,77 +6,81 @@
     <h5 class="modal-title text-center"><i class="fa bi-bar-chart-steps">&nbsp;</i> @ViewBag.Title</h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 </div>
-@using (Ajax.BeginForm("SaveEquivalencias", "Clasificadores", new { area = "" }, new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "div_msg", OnBegin = "Load", OnSuccess = "Submited", OnComplete = "Stop" }))
-{
-    @Html.Hidden("submited", 0)
-    @Html.AntiForgeryToken()
-    <div class="modal-body">
-        <div class="container-fluid">
-            <div class="form-group form-row">
-                <div class="col-2">
-                    @Html.LabelFor(model => model.Anio, new { @class = "control-label col-12", })
-                    @Html.Label(Model.Anio.ToString(), new { @class = " col-12" })
+<div class="modal-body">
+    <div class="container-fluid">
+        <div class="form-group form-row">
+
+            <div class="col-2">
+                @Html.LabelFor(model => model.Anio, new { @class = "control-label col-12", })
+                @Html.Label(Model.Anio.ToString(), new { @class = " col-12" })
+            </div>
+            <div class="col-10">
+                @Html.LabelFor(model => model.Clasificador, new { @class = "control-label col-12", })
+                @Html.Label(Model.Clasificador, new { @class = "col-12" })
+                <p class="text-danger small">@Html.ValidationMessageFor(model => model.Anio)</p>
+            </div>
+        </div>
+        <div class="form-group form-row">
+            @Html.LabelFor(model => model.EquivalenciasConcepto, new { @class = "control-label col-md-2", })
+            <div class="col-md-10 col-11">
+                <div class="col-12 form-row mb-3">
+                    @using (Ajax.BeginForm("AgregarConceptoEquivalencia", "Clasificadores", new { area = "" }, new AjaxOptions
+                    {
+                        HttpMethod = "POST",
+                        InsertionMode = InsertionMode.Replace,
+                        UpdateTargetId = "listado_equivalencias",
+                        OnBegin = "LoadingListado",
+                        OnComplete = "Completed"
+                    }))
+                    {
+                        <div class="col-10">
+                            @Html.HiddenFor(model => model.ClasificadorId)
+                            @Html.DropDownList("ConceptoEquivCod", ViewBag.Conceptos as SelectList, "", new { Class = "select-filter form-control form-control-sm" })
+                        </div>
+                        <div class="col-2">
+                            <button type="submit" id="btn-agregar" class="btn btn-sm btn-outline-primary" title="agregar" data-tooltip="tooltip" data-placement="bottom"><i class="fa fa-plus">&nbsp;</i> Agregar</button>
+                        </div>
+                    }
+                </div>
+
+                <div id="search-loader" class="container-fluid" style="display:none;">
+                    <div class="d-flex justify-content-center">
+                        <div class="spinner-border text-info" role="status" style="width: 5rem; height: 5rem;">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <span id="load-message" class="h5 mt-4"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-offset-1" id="listado_equivalencias">
                     @Html.HiddenFor(model => model.Anio)
-                </div>
-                <div class="col-10">
-                    @Html.LabelFor(model => model.Clasificador, new { @class = "control-label col-12", })
-                    @Html.Label(Model.Clasificador, new { @class = "col-12" })
-                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.Anio)</p>
-                </div>
-            </div>
-            <div class="form-group form-row">
-                @Html.LabelFor(model => model.EquivalenciasConcepto, new { @class = "control-label col-md-2", })
-                <div class="col-md-10 col-11">
-                    <div class="col-12 form-row mb-3">
-                        <div class="col-9 input-group">
-                            <div class="input-group-prepend">
-                                <button id="btn-buscar" class="btn btn-sm btn-outline-primary" type="button"><i class="fa fa-search px-1"></i></button>
-                            </div>
-                            <input id="txt-buscarCodigo" type="text" class="form-control input-sm disabled" placeholder="" disabled>
-                        </div>
-                        <div class="col-3">
-                            <button id="btn-agregar" class="btn btn-outline-success" title="agregar" data-tooltip="tooltip" data-placement="bottom"><i class="fa fa-plus">&nbsp;</i> Agregar</button>
-                        </div>
-                    </div>
-                    <div class="col-xs-offset-1">
-                        @if (Model.EquivalenciasConcepto.Count == 0)
-                        {
-                            <div class="text-"></div>
-                        }
-                        else
-                        {
-                            for (int i = 0; i < Model.EquivalenciasConcepto.Count(); i++)
-                            {
-                                <label class="checkbox col-md-6">
-                                    @Html.HiddenFor(m => m.EquivalenciasConcepto[i].ConceptoEquivDesc)
-                                    @Html.CheckBoxFor(m => m.EquivalenciasConcepto[i].Habilitado) @Model.EquivalenciasConcepto[i].ConceptoEquivDesc
-                                </label>
-                            }
-                        }
-                    </div>
+                    @Html.Partial("_ListadoEquivalencias", Model.EquivalenciasConcepto)
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="modal-footer" id="div_msg">
-        <div class="col-md-12" style="display:none" id="loading">
-            <h6>Actualizando los datos...</h6>
+<div class="modal-footer" id="div_msg">
+    <div class="col-md-12" style="display:none" id="loading">
+        <h6>Actualizando los datos...</h6>
 
-            <div class="progress">
-                <div class="indeterminate"></div>
-            </div>
+        <div class="progress">
+            <div class="indeterminate"></div>
         </div>
-
-        <button type="submit" class="btn btn-primary" id="btnsubmit"><i class="fa fa-save"></i>&nbsp;Guardar</button>
-        <button type="button" class="btn btn-secondary" id="btnCancel" data-dismiss="modal"><i class="fa fa-times-circle-o">&nbsp;</i>Cancelar</button>
     </div>
-}
+
+    <button type="submit" class="btn btn-primary" id="btnsubmit"><i class="fa fa-save"></i>&nbsp;Guardar</button>
+    <button type="button" class="btn btn-secondary" id="btnCancel" data-dismiss="modal"><i class="fa fa-times-circle-o">&nbsp;</i>Cancelar</button>
+</div>
 
 <script>
 
     $('#btnsubmit').removeClass('disabled');
     $('[data-tooltip="tooltip"]').tooltip();
+
 
     $("form").submit(function () {
         if (parseInt($("#submited").val()) > 0) {
@@ -84,24 +88,75 @@
         }
     });
 
-    $('#btn-buscar').on('click', function (event) {
-        event.preventDefault();
 
-        if ($('#txt-buscarCodigo').hasClass('disabled')) {
-            $('#txt-buscarCodigo').prop('disabled', false);
-            $('#txt-buscarCodigo').removeClass('disabled')
+    $('.select-filter').select2({
+        dropdownParent: $('#modal-container-lg'),
+        placeholder: "[ SELECCIONAR ]",
+        tags: true
+    }).on('hide', function (e) {
+        e.stopPropagation();
+    });
+
+
+    function LoadingListado() {
+        $('#listado_equivalencias').hide();
+        $('#search-loader').show();
+    }
+
+    function Completed() {
+        let selectedValue = $('#ConceptoEquivCod').val();
+        if (selectedValue === "" || selectedValue == null) {
+            return false;
         }
-        else {
-            $('#txt-buscarCodigo').prop('disabled', true);
-            $('#txt-buscarCodigo').addClass('disabled')
-        }
+
+        $('#ConceptoEquivCod option[value="' + selectedValue + '"]').remove();
+        $('#search-loader').hide();
+    }
+
+
+    $('.chk_equivalencia').on('change', function (event) {
+        let element = event.relatedTarget();
+
+        alert(element.id);
     })
 
-    $('#btn-agregar').on('click', function (event) {
-        event.preventDefault();
-    })
 
+    function guardarEquivalencia(codConcepto, idEquivalencia, state, chec) {
+        let equivalenciaData = {
+            clasificadorId = $('#ClasificadorId').val(),
+            equivalenciaCod = codConcepto,
+            equivalenciaId = idEquivalencia,
+            anio = $('#Anio').val(),
+            enable = state
+        };
 
+        $.ajax({
+            url: '@Url.Action("SaveEquivalenciaAnio", "Clasificadores")',
+            type: 'POST',
+            data: equivalenciaData,
+            dataType: 'json',
+            cache: false,
+            beforeSend: function () {
+                $('#loader_' + codConcepto).show();
+            },
+            success: function (data) {
+                $('#loader_' + codConcepto).hide();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                toastr.error(jqXHR.responseText)
+                if (state) {
+                    $('#chk_' + codConcepto).prop('checked', false);
+                }
+                else {
+                    $('#chk_' + codConcepto).prop('checked', true);
+                }
+           },
+            complete: function () {
+                $('#loader_' + codConcepto).hide();
+            }
+
+        });
+    }
 
 
 </script>

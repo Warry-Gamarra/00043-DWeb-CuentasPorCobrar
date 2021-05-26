@@ -13,7 +13,5 @@ namespace Domain.Services
         List<ClasificadorPresupuestal> Find(string anio);
         ClasificadorPresupuestal Find(int clasificadorId);
         Response Save(ClasificadorPresupuestal clasificadorDeIngreso, int currentUserId, SaveOption saveOption);
-        Response ChangeState(int clasificadorId, bool currentState, int currentUserId);
-
     }
 }

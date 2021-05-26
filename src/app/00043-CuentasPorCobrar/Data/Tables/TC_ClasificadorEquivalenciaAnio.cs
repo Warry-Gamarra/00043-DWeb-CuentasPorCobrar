@@ -13,6 +13,7 @@ namespace Data.Tables
     public class TC_ClasificadorEquivalenciaAnio
     {
         public int I_ClasifEquivalenciaID { get; set; }
+        public int I_ClasificadorID { get; set; }
         public string N_Anio { get; set; }
         public string C_ClasificConceptoCod { get; set; }
         public string C_ClasificConceptoDesc { get; set; }
@@ -24,22 +25,22 @@ namespace Data.Tables
         public DateTime? D_FecMod { get; set; }
 
 
-        public List<TC_ClasificadorPresupuestal> Find(int clasificadorId, string anio)
+        public List<TC_ClasificadorEquivalenciaAnio> Find(string anio)
         {
-            List<TC_ClasificadorPresupuestal> result = new List<TC_ClasificadorPresupuestal>();
+            List<TC_ClasificadorEquivalenciaAnio> result = new List<TC_ClasificadorEquivalenciaAnio>();
 
             try
             {
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
                     string s_command = @"SELECT  CEA.I_ClasifEquivalenciaID, CEA.N_Anio, CEA.B_Habilitado, CE.I_ClasificadorID, CE.C_ClasificConceptoCod, C.T_ConceptoDesc
-                                                 , CEA.D_FecCre, CEA.D_FecMod, CEA.I_UsuarioCre, CEA.I_UsuarioMod
+                                                 , CEA.D_FecCre, CEA.D_FecMod, CEA.I_UsuarioCre, CEA.I_UsuarioMod 
                                            FROM  TC_ClasificadorEquivalencia CE
-												 LEFT JOIN TC_Concepto C ON C.T_Clasificador = CE.C_ClasificConceptoCod
-		                                         LEFT JOIN (SELECT * FROM TC_ClasificadorEquivalenciaAnio WHERE N_Anio = @N_Anio AND B_Eliminado = 0) CEA ON CE.I_ClasifEquivalenciaID = CEA.I_ClasifEquivalenciaID
-                                          WHERE	 CE.I_ClasificadorID = @I_ClasificadorID AND CEA.B_Eliminado = 0;";
+												 INNER JOIN TC_Concepto C ON C.T_Clasificador = CE.C_ClasificConceptoCod
+		                                         INNER JOIN TC_ClasificadorEquivalenciaAnio CEA ON CE.I_ClasifEquivalenciaID = CEA.I_ClasifEquivalenciaID
+                                          WHERE	 N_Anio = @N_Anio AND CEA.B_Eliminado = 0;";
 
-                    result = _dbConnection.Query<TC_ClasificadorPresupuestal>(s_command, new { I_ClasificadorID = clasificadorId, N_Anio = anio }, commandType: CommandType.Text).ToList();
+                    result = _dbConnection.Query<TC_ClasificadorEquivalenciaAnio>(s_command, new { N_Anio = anio }, commandType: CommandType.Text).ToList();
                 }
             }
             catch (Exception ex)
@@ -50,9 +51,36 @@ namespace Data.Tables
             return result;
         }
 
-        public List<TC_ClasificadorPresupuestal> Find(int clasificadorId)
+
+        public List<TC_ClasificadorEquivalenciaAnio> Find(int clasificadorId, string anio)
         {
-            List<TC_ClasificadorPresupuestal> result = new List<TC_ClasificadorPresupuestal>();
+            List<TC_ClasificadorEquivalenciaAnio> result = new List<TC_ClasificadorEquivalenciaAnio>();
+
+            try
+            {
+                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
+                {
+                    string s_command = @"SELECT  CE.I_ClasifEquivalenciaID, CEA.N_Anio, CEA.B_Habilitado, CE.I_ClasificadorID, CE.C_ClasificConceptoCod, C.T_ConceptoDesc
+                                                 , CEA.D_FecCre, CEA.D_FecMod, CEA.I_UsuarioCre, CEA.I_UsuarioMod
+                                           FROM  TC_ClasificadorEquivalencia CE
+												 LEFT JOIN TC_Concepto C ON C.T_Clasificador = CE.C_ClasificConceptoCod
+		                                         LEFT JOIN (SELECT * FROM TC_ClasificadorEquivalenciaAnio WHERE N_Anio = @N_Anio AND B_Eliminado = 0) CEA ON CE.I_ClasifEquivalenciaID = CEA.I_ClasifEquivalenciaID
+                                          WHERE	 CE.I_ClasificadorID = @I_ClasificadorID AND CEA.B_Eliminado = 0;";
+
+                    result = _dbConnection.Query<TC_ClasificadorEquivalenciaAnio>(s_command, new { I_ClasificadorID = clasificadorId, N_Anio = anio }, commandType: CommandType.Text).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
+
+        public List<TC_ClasificadorEquivalenciaAnio> Find(int clasificadorId)
+        {
+            List<TC_ClasificadorEquivalenciaAnio> result = new List<TC_ClasificadorEquivalenciaAnio>();
 
             try
             {
@@ -65,7 +93,7 @@ namespace Data.Tables
 												 LEFT JOIN TC_Concepto C ON C.T_Clasificador = CE.C_ClasificConceptoCod
                                           WHERE	 CE.I_ClasificadorID = @I_ClasificadorID AND CEA.B_Eliminado = 0;";
 
-                    result = _dbConnection.Query<TC_ClasificadorPresupuestal>(s_command, new { I_ClasificadorID = clasificadorId }, commandType: CommandType.Text).ToList();
+                    result = _dbConnection.Query<TC_ClasificadorEquivalenciaAnio>(s_command, new { I_ClasificadorID = clasificadorId }, commandType: CommandType.Text).ToList();
                 }
             }
             catch (Exception ex)

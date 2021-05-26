@@ -123,5 +123,18 @@ namespace WebApp.Models
             return result;
         }
 
+
+        public List<SelectViewModel> GetCodigoClasificadorConceptos()
+        {
+            List<SelectViewModel> result = new List<SelectViewModel>();
+
+            foreach (var item in _conceptoPagoService.Listar_Concepto_All())
+            {
+                result.Add(new SelectViewModel() { Value = item.T_Clasificador, TextDisplay = item.T_Clasificador + " - " + item.T_ConceptoDesc.ToUpper() });
+            }
+
+            return result;
+        }
+
     }
 }

@@ -87,11 +87,26 @@ namespace WebApp.Controllers
         public ActionResult HabilitarEquivalencias(int id, int anio)
         {
             ViewBag.Title = "Equivalencias clasificador - " + anio.ToString();
+            ViewBag.Conceptos = new SelectList(_selectModels.GetCodigoClasificadorConceptos(), "Value", "TextDisplay");
 
             var clasificador = _clasificador.Find(id);
-            var model = new ClasificadorEquivalenciasAnioViewModel()
+            if (clasificador == null)
+            {
+                Response result = new Response()
+                {
+                    Value = false,
+                    Message = "No se obtuvo respuesta para el clasificador seleccionado"
+                };
+
+                result.Error(false);
+                return PartialView("_MsgModalBodyPartial", result);
+            }
+
+
+            ClasificadorEquivalenciasAnioViewModel model = new ClasificadorEquivalenciasAnioViewModel()
             {
                 Anio = anio,
+                ClasificadorId = clasificador.Id.Value,
                 Clasificador = $"{clasificador.CodClasificador} - {clasificador.Descripcion}",
             };
 
@@ -100,28 +115,20 @@ namespace WebApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult SaveEquivalencias(ClasificadorRegistrarViewModel model)
+        public ActionResult AgregarConceptoEquivalencia(ClasificadorEquivalenciaViewModel model)
         {
-            Response result = new Response();
+            var result = _clasificador.SaveEquivalencia(null, model.ClasificadorId, model.ConceptoEquivCod, WebSecurity.CurrentUserId);
 
-            if (ModelState.IsValid)
-            {
-                result = _clasificador.Save(model, WebSecurity.CurrentUserId);
-            }
-            else
-            {
-                string details = "";
-                foreach (ModelState modelState in ViewData.ModelState.Values)
-                {
-                    foreach (ModelError error in modelState.Errors)
-                    {
-                        details += error.ErrorMessage + " / ";
-                    }
-                }
+            return PartialView("_RegistrarEquivalenciasAnio", model);
+        }
 
-                ResponseModel.Error(result, "Ha ocurrido un error con el envio de datos. " + details);
-            }
-            return PartialView("_MsgPartialWR", result);
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult SaveEquivalenciaAnio(int? equivalenciaId, string anio, bool enable)
+        {
+            var result = _clasificador.SaveEquivalenciaAnio(equivalenciaId.Value, anio, enable, WebSecurity.CurrentUserId);
+
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
     }
 }

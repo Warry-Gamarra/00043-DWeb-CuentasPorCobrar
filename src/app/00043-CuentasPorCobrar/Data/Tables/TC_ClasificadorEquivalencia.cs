@@ -79,11 +79,13 @@ namespace Data.Tables
                     parameters.Add(name: "D_FecCre", dbType: DbType.DateTime, value: this.D_FecMod);
                     parameters.Add(name: "CurrentUserId", dbType: DbType.Int32, value: currentUserId);
 
+                    parameters.Add(name: "I_ClasifEquivalenciaID", dbType: DbType.Int32, direction: ParameterDirection.Output);
                     parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);
                     parameters.Add(name: "T_Message", dbType: DbType.String, size: 4000, direction: ParameterDirection.Output);
 
                     _dbConnection.Execute("USP_I_GrabarClasificadorEquivalencia", parameters, commandType: CommandType.StoredProcedure);
 
+                    result.CurrentID = parameters.Get<string>("I_ClasifEquivalenciaID");
                     result.Value = parameters.Get<bool>("B_Result");
                     result.Message = parameters.Get<string>("T_Message");
                 }

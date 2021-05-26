@@ -50,17 +50,6 @@ namespace Domain.Entities
             this.Response = new Response() { Value = true };
         }
 
-
-        public Response ChangeState(int clasificadorId, bool currentState, int currentUserId)
-        {
-            _clasificadorRepository.I_ClasificadorID = clasificadorId;
-            _clasificadorRepository.D_FecMod = DateTime.Now;
-            _clasificadorRepository.B_Habilitado = !currentState;
-
-            //return new Response(_clasificadorRepository.ChangeState(currentUserId));
-            return new Response();
-        }
-
         public List<ClasificadorPresupuestal> Find(string anio)
         {
             var result = new List<ClasificadorPresupuestal>();
@@ -103,5 +92,6 @@ namespace Domain.Entities
                 Message = "Operación Inváiida."
             };
         }
+
     }
 }
