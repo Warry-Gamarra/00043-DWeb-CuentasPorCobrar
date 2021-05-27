@@ -14,14 +14,14 @@ namespace WebApp.Models
         private readonly IRoles _roles;
         private readonly IDependencia _dependencia;
         private readonly ConceptoPagoService _conceptoPagoService;
-        private readonly EntidadFinanciera _entidadFinanciera;
+        private readonly EntidadRecaudadora _entidadFinanciera;
 
         public SelectModel()
         {
             _roles = new RolAplicacion();
             _dependencia = new Dependencia();
             _conceptoPagoService = new ConceptoPagoService();
-            _entidadFinanciera = new EntidadFinanciera();
+            _entidadFinanciera = new EntidadRecaudadora();
         }
 
         public List<SelectViewModel> GetRoles()

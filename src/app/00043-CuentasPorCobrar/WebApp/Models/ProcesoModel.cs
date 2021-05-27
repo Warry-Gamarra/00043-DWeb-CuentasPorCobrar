@@ -14,7 +14,7 @@ namespace WebApp.Models
     {
         private readonly IProcesoService _procesoService;
         private readonly ConceptoPagoService _conceptoPagoService;
-        private readonly IEntidadFinanciera _entidadFinanciera;
+        private readonly IEntidadRecaudadora _entidadFinanciera;
         private readonly ICuentaDeposito _cuentaDeposito;
         private readonly CategoriaPagoModel _categoriaPagoModel;
 
@@ -22,7 +22,7 @@ namespace WebApp.Models
         {
             _procesoService = new ProcesoService();
             _conceptoPagoService = new ConceptoPagoService();
-            _entidadFinanciera = new EntidadFinanciera();
+            _entidadFinanciera = new EntidadRecaudadora();
             _cuentaDeposito = new CuentaDeposito();
             _categoriaPagoModel = new CategoriaPagoModel();
         }

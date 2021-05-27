@@ -12,13 +12,13 @@ namespace WebApp.Models
     public class CategoriaPagoModel
     {
         private readonly ICategoriaPago _categoriaPago;
-        private readonly IEntidadFinanciera _entidadFinanciera;
+        private readonly IEntidadRecaudadora _entidadFinanciera;
         private readonly ICuentaDeposito _cuentaDeposito;
 
         public CategoriaPagoModel()
         {
             _categoriaPago = new CategoriaPago();
-            _entidadFinanciera = new EntidadFinanciera();
+            _entidadFinanciera = new EntidadRecaudadora();
             _cuentaDeposito = new CuentaDeposito();
         }
 

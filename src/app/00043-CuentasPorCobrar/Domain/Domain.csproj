@@ -108,7 +108,7 @@
     <Compile Include="Services\ICampoTablaPago.cs" />
     <Compile Include="Services\IClasificadorEquivalencia.cs" />
     <Compile Include="Services\Implementations\EstudianteService.cs" />
-    <Compile Include="Entities\EntidadFinanciera.cs" />
+    <Compile Include="Entities\EntidadRecaudadora.cs" />
     <Compile Include="Entities\CorreoAplicacion.cs" />
     <Compile Include="Entities\Mapper.cs" />
     <Compile Include="Entities\ObligacionDetalleDTO.cs" />
@@ -130,7 +130,7 @@
     <Compile Include="Services\IClasificadores.cs" />
     <Compile Include="Services\ICorreoAplicacion.cs" />
     <Compile Include="Services\ICuentaDeposito.cs" />
-    <Compile Include="Services\IEntidadFinanciera.cs" />
+    <Compile Include="Services\IEntidadRecaudadora.cs" />
     <Compile Include="Services\IEstudianteService.cs" />
     <Compile Include="Services\IHelpResources.cs" />
     <Compile Include="Services\IDependencia.cs" />

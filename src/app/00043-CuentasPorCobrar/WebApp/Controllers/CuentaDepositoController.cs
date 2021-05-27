@@ -14,12 +14,12 @@ namespace WebApp.Controllers
     public class CuentaDepositoController : Controller
     {
         public readonly CuentaDepositoModel _cuentaDeposito;
-        public readonly EntidadFinancieraModel _entidadFinanciera;
+        public readonly EntidadRecaudadoraModel _entidadFinanciera;
 
         public CuentaDepositoController()
         {
             _cuentaDeposito = new CuentaDepositoModel();
-            _entidadFinanciera = new EntidadFinancieraModel();
+            _entidadFinanciera = new EntidadRecaudadoraModel();
         }
 
 

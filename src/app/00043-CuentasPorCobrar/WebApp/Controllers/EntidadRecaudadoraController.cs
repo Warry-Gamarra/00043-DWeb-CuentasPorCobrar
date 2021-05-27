@@ -11,62 +11,62 @@ using WebMatrix.WebData;
 namespace WebApp.Controllers
 {
     [Authorize]
-    public class EntidadFinancieraController : Controller
+    public class EntidadRecaudadoraController : Controller
     {
-        public readonly EntidadFinancieraModel _entidadFinanciera;
+        public readonly EntidadRecaudadoraModel _entidadRecaudadora;
         public readonly CuentaDepositoModel _cuentaDeposito;
         public readonly SelectModel _selectModels;
 
-        public EntidadFinancieraController()
+        public EntidadRecaudadoraController()
         {
-            _entidadFinanciera = new EntidadFinancieraModel();
+            _entidadRecaudadora = new EntidadRecaudadoraModel();
             _selectModels = new SelectModel();
             _cuentaDeposito = new CuentaDepositoModel();
         }
 
 
-        [Route("mantenimiento/entidades-financieras")]
+        [Route("mantenimiento/entidades-recaudadoras")]
         public ActionResult Index()
         {
-            ViewBag.Title = "Entidades Financieras";
-            var model = _entidadFinanciera.Find();
+            ViewBag.Title = "Entidades Recaudadoras";
+            var model = _entidadRecaudadora.Find();
 
             return View(model);
         }
 
-        [Route("mantenimiento/entidades-financieras/nuevo")]
+        [Route("mantenimiento/entidades-recaudadoras/nuevo")]
         [HttpGet]
         public ActionResult Create()
         {
-            ViewBag.Title = "Agregar entidad financiera";
+            ViewBag.Title = "Agregar entidad recaudadora";
 
-            return PartialView("_RegistrarEntidadFinanciera", new EntidadFinancieraRegistroViewModel());
+            return PartialView("_RegistrarEntidadFinanciera", new EntidadRecaudadoraRegistroViewModel());
         }
 
-        [Route("mantenimiento/entidades-financieras/editar/{id}")]
+        [Route("mantenimiento/entidades-recaudadoras/editar/{id}")]
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            ViewBag.Title = "Editar entidad financiera";
+            ViewBag.Title = "Editar entidad recaudadora";
 
-            return PartialView("_RegistrarEntidadFinanciera", _entidadFinanciera.Find(id));
+            return PartialView("_RegistrarEntidadFinanciera", _entidadRecaudadora.Find(id));
         }
 
         public JsonResult ChangeState(int RowID, bool B_habilitado)
         {
-            var result = _entidadFinanciera.ChangeState(RowID, B_habilitado, WebSecurity.CurrentUserId, Url.Action("ChangeState", "EntidadFinanciera"));
+            var result = _entidadRecaudadora.ChangeState(RowID, B_habilitado, WebSecurity.CurrentUserId, Url.Action("ChangeState", "EntidadRecaudadora"));
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
-        public ActionResult Save(EntidadFinancieraRegistroViewModel model)
+        public ActionResult Save(EntidadRecaudadoraRegistroViewModel model)
         {
             Response result = new Response();
 
             if (ModelState.IsValid)
             {
-                result = _entidadFinanciera.Save(model, WebSecurity.CurrentUserId);
+                result = _entidadRecaudadora.Save(model, WebSecurity.CurrentUserId);
             }
             else
             {
@@ -86,12 +86,12 @@ namespace WebApp.Controllers
 
         public JsonResult HabilitarArchivos(int RowID)
         {
-            var result = _entidadFinanciera.HabilitarArchivos(RowID, WebSecurity.CurrentUserId, Url.Action("Banco", "EstructuraArchivo", new { id = RowID }));
+            var result = _entidadRecaudadora.HabilitarArchivos(RowID, WebSecurity.CurrentUserId, Url.Action("Banco", "EstructuraArchivo", new { id = RowID }));
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
-        [Route("mantenimiento/entidades-financieras/{id}/{banco}/numeros-de-cuenta")]
+        [Route("mantenimiento/entidades-recaudadoras/{id}/{banco}/numeros-de-cuenta")]
         public ActionResult CuentasDeposito(int id, string banco)
         {
             ViewBag.Title = $"Números de cuenta: { banco }";

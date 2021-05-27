@@ -405,7 +405,7 @@
     <Compile Include="Controllers\DependenciaController.cs" />
     <Compile Include="Controllers\DeudasController.cs" />
     <Compile Include="Controllers\DevolucionesController.cs" />
-    <Compile Include="Controllers\EntidadFinancieraController.cs" />
+    <Compile Include="Controllers\EntidadRecaudadoraController.cs" />
     <Compile Include="Controllers\EstadosCuentaController.cs" />
     <Compile Include="Controllers\EstructuraArchivoController.cs" />
     <Compile Include="Controllers\EstudiantesController.cs" />
@@ -432,7 +432,7 @@
     <Compile Include="Models\ClasificadorModel.cs" />
     <Compile Include="Models\CuentaDepositoModel.cs" />
     <Compile Include="Models\CustomAttribute.cs" />
-    <Compile Include="Models\EntidadFinancieraModel.cs" />
+    <Compile Include="Models\EntidadRecaudadoraModel.cs" />
     <Compile Include="Models\EspecialidadAlumnoModel.cs" />
     <Compile Include="Models\EstructuraArchivoModel.cs" />
     <Compile Include="Models\EstudianteModel.cs" />
@@ -453,6 +453,7 @@
     <Compile Include="Models\IMatriculaSource.cs" />
     <Compile Include="Models\MatriculaDbfSource.cs" />
     <Compile Include="Models\MatriculaExcelSource.cs" />
+    <Compile Include="ViewModels\DevolucionesViewModel.cs" />
     <Compile Include="ViewModels\MatriculaViewModel.cs" />
     <Compile Include="Models\MatriculaSourceFactory.cs" />
     <Compile Include="Models\PagosModel.cs" />
@@ -477,7 +478,7 @@
     <Compile Include="ViewModels\CategoriaPagoViewModels.cs" />
     <Compile Include="ViewModels\ClasificadoresViewModels.cs" />
     <Compile Include="ViewModels\DependenciaViewModels.cs" />
-    <Compile Include="ViewModels\EntidadFinancieraViewModels.cs" />
+    <Compile Include="ViewModels\EntidadRecaudadoraViewModels.cs" />
     <Compile Include="ViewModels\CuentaDepositoViewModels.cs" />
     <Compile Include="ViewModels\CorreoAplicacionViewModel.cs" />
     <Compile Include="ViewModels\ConceptoPagoViewModel.cs" />
@@ -534,9 +535,9 @@
     <Content Include="Views\Estudiantes\Index.cshtml" />
     <Content Include="Views\Clasificadores\Index.cshtml" />
     <Content Include="Views\Clasificadores\_RegistrarClasificador.cshtml" />
-    <Content Include="Views\EntidadFinanciera\Index.cshtml" />
+    <Content Include="Views\EntidadRecaudadora\Index.cshtml" />
     <Content Include="Views\CuentaDeposito\Index.cshtml" />
-    <Content Include="Views\EntidadFinanciera\_RegistrarEntidadFinanciera.cshtml" />
+    <Content Include="Views\EntidadRecaudadora\_RegistrarEntidadFinanciera.cshtml" />
     <Content Include="Views\ConceptoPago\_MantenimientoConceptoPago.cshtml" />
     <Content Include="Views\CuentaDeposito\_RegistrarCuentaDeposito.cshtml" />
     <Content Include="Views\Dependencia\Index.cshtml" />
@@ -558,7 +559,7 @@
     <Content Include="Views\Concepto\_RegistrarConcepto.cshtml" />
     <Content Include="Views\Pagos\ImportarPagoTasas.cshtml" />
     <Content Include="Views\Pagos\ExportarDatosPago.cshtml" />
-    <Content Include="Views\EntidadFinanciera\_CuentasBanco.cshtml" />
+    <Content Include="Views\EntidadRecaudadora\_CuentasBanco.cshtml" />
     <Content Include="Views\Obligaciones\Generar.cshtml" />
     <Content Include="Views\ConceptoPago\_RegistrarConceptosPagoTasa.cshtml" />
     <Content Include="Views\Procesos\_ListadoTasasProcesoGrupos.cshtml" />
