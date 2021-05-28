@@ -585,9 +585,10 @@
     <Content Include="Views\EstadosCuenta\PagosPorFacultad.cshtml" />
     <Content Include="Views\Pagos\_RegistrarObligacion.cshtml" />
     <Content Include="Views\Pagos\_RegistrarTasa.cshtml" />
-    <Content Include="Views\Devoluciones\Index.cshtml" />
+    <Content Include="Views\Devolucion\Index.cshtml" />
     <Content Include="Views\Clasificadores\_RegistrarEquivalenciasAnio.cshtml" />
     <Content Include="Views\Clasificadores\_ListadoEquivalencias.cshtml" />
+    <Content Include="Views\Devolucion\_RegistrarDevolucionPago.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
