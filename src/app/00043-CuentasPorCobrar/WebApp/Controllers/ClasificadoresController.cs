@@ -86,7 +86,7 @@ namespace WebApp.Controllers
         [Route("mantenimiento/clasificadores-presupuestales/{anio}/equivalencias/{id}")]
         public ActionResult HabilitarEquivalencias(int id, int anio)
         {
-            ViewBag.Title = "Equivalencias clasificador - " + anio.ToString();
+            ViewBag.Title = $"Equivalencias del clasificador para el año { anio.ToString() } ";
             ViewBag.Conceptos = new SelectList(_selectModels.GetCodigoClasificadorConceptos(), "Value", "TextDisplay");
 
             var clasificador = _clasificador.Find(id);
@@ -108,25 +108,26 @@ namespace WebApp.Controllers
                 Anio = anio,
                 ClasificadorId = clasificador.Id.Value,
                 Clasificador = $"{clasificador.CodClasificador} - {clasificador.Descripcion}",
+                EquivalenciasConcepto = _clasificador.FindEquivalencias(clasificador.Id.Value, anio.ToString())
             };
 
             return PartialView("_RegistrarEquivalenciasAnio", model);
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult AgregarConceptoEquivalencia(ClasificadorEquivalenciaViewModel model)
+        public ActionResult AgregarConceptoEquivalencia(ClasificadorEquivalenciaViewModel model, int anio)
         {
             var result = _clasificador.SaveEquivalencia(null, model.ClasificadorId, model.ConceptoEquivCod, WebSecurity.CurrentUserId);
 
-            return PartialView("_RegistrarEquivalenciasAnio", model);
+            var listadoEquivalenciasModel = _clasificador.FindEquivalencias(model.ClasificadorId, anio.ToString());
+
+            return PartialView("_ListadoEquivalencias", listadoEquivalenciasModel);
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult SaveEquivalenciaAnio(int? equivalenciaId, string anio, bool enable)
+        public ActionResult SaveEquivalenciaAnio(int equivalenciaId, string anio, bool enable)
         {
-            var result = _clasificador.SaveEquivalenciaAnio(equivalenciaId.Value, anio, enable, WebSecurity.CurrentUserId);
+            var result = _clasificador.SaveEquivalenciaAnio(equivalenciaId, anio, enable, WebSecurity.CurrentUserId);
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }

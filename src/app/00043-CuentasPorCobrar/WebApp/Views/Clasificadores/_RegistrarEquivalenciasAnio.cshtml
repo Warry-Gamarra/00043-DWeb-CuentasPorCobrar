@@ -10,20 +10,20 @@
     <div class="container-fluid">
         <div class="form-group form-row">
 
-            <div class="col-2">
-                @Html.LabelFor(model => model.Anio, new { @class = "control-label col-12", })
-                @Html.Label(Model.Anio.ToString(), new { @class = " col-12" })
+            <div class="col-md-2 col-3">
+                @Html.LabelFor(model => model.Anio, new { @class = "control-label", })
+                @Html.Label(Model.Anio.ToString(), new { @class = "" })
             </div>
-            <div class="col-10">
-                @Html.LabelFor(model => model.Clasificador, new { @class = "control-label col-12", })
-                @Html.Label(Model.Clasificador, new { @class = "col-12" })
+            <div class="col-md-10 col-9">
+                @Html.LabelFor(model => model.Clasificador, new { @class = "control-label", })
+                @Html.Label(Model.Clasificador, new { @class = "" })
                 <p class="text-danger small">@Html.ValidationMessageFor(model => model.Anio)</p>
             </div>
         </div>
         <div class="form-group form-row">
-            @Html.LabelFor(model => model.EquivalenciasConcepto, new { @class = "control-label col-md-2", })
-            <div class="col-md-10 col-11">
-                <div class="col-12 form-row mb-3">
+            @Html.LabelFor(model => model.EquivalenciasConcepto, new { @class = "control-label col-md-2 col-3", })
+            <div class="col-md-10 col-9">
+                <div class="mb-3">
                     @using (Ajax.BeginForm("AgregarConceptoEquivalencia", "Clasificadores", new { area = "" }, new AjaxOptions
                     {
                         HttpMethod = "POST",
@@ -33,12 +33,15 @@
                         OnComplete = "Completed"
                     }))
                     {
-                        <div class="col-10">
-                            @Html.HiddenFor(model => model.ClasificadorId)
-                            @Html.DropDownList("ConceptoEquivCod", ViewBag.Conceptos as SelectList, "", new { Class = "select-filter form-control form-control-sm" })
-                        </div>
-                        <div class="col-2">
-                            <button type="submit" id="btn-agregar" class="btn btn-sm btn-outline-primary" title="agregar" data-tooltip="tooltip" data-placement="bottom"><i class="fa fa-plus">&nbsp;</i> Agregar</button>
+                        <div class="form-row">
+                            <div class="col-9">
+                                @Html.HiddenFor(model => model.Anio)
+                                @Html.HiddenFor(model => model.ClasificadorId)
+                                @Html.DropDownList("ConceptoEquivCod", ViewBag.Conceptos as SelectList, "", new { Class = "select-filter form-control form-control-sm" })
+                            </div>
+                            <div class="col-3">
+                                <button type="submit" id="btn-agregar" class="btn btn-sm btn-outline-primary" title="agregar" data-tooltip="tooltip" data-placement="bottom"><i class="fa fa-plus"></i><span class="d-none d-sm-block d-md-inline-block">&nbsp;Agregar</span></button>
+                            </div>
                         </div>
                     }
                 </div>
@@ -55,7 +58,6 @@
                 </div>
 
                 <div class="col-xs-offset-1" id="listado_equivalencias">
-                    @Html.HiddenFor(model => model.Anio)
                     @Html.Partial("_ListadoEquivalencias", Model.EquivalenciasConcepto)
                 </div>
             </div>
@@ -72,21 +74,13 @@
         </div>
     </div>
 
-    <button type="submit" class="btn btn-primary" id="btnsubmit"><i class="fa fa-save"></i>&nbsp;Guardar</button>
-    <button type="button" class="btn btn-secondary" id="btnCancel" data-dismiss="modal"><i class="fa fa-times-circle-o">&nbsp;</i>Cancelar</button>
+    <button type="button" class="btn btn-secondary" id="btnCancel" data-dismiss="modal"><i class="fa fa-times-circle-o">&nbsp;</i>Cerrar</button>
 </div>
 
 <script>
 
     $('#btnsubmit').removeClass('disabled');
     $('[data-tooltip="tooltip"]').tooltip();
-
-
-    $("form").submit(function () {
-        if (parseInt($("#submited").val()) > 0) {
-            return false;
-        }
-    });
 
 
     $('.select-filter').select2({
@@ -97,6 +91,9 @@
         e.stopPropagation();
     });
 
+    $(".modal").on('hide.bs.modal', function () {
+        location.reload();
+    })
 
     function LoadingListado() {
         $('#listado_equivalencias').hide();
@@ -111,53 +108,9 @@
 
         $('#ConceptoEquivCod option[value="' + selectedValue + '"]').remove();
         $('#search-loader').hide();
+        $('#listado_equivalencias').show();
+
     }
-
-
-    $('.chk_equivalencia').on('change', function (event) {
-        let element = event.relatedTarget();
-
-        alert(element.id);
-    })
-
-
-    function guardarEquivalencia(codConcepto, idEquivalencia, state, chec) {
-        let equivalenciaData = {
-            clasificadorId = $('#ClasificadorId').val(),
-            equivalenciaCod = codConcepto,
-            equivalenciaId = idEquivalencia,
-            anio = $('#Anio').val(),
-            enable = state
-        };
-
-        $.ajax({
-            url: '@Url.Action("SaveEquivalenciaAnio", "Clasificadores")',
-            type: 'POST',
-            data: equivalenciaData,
-            dataType: 'json',
-            cache: false,
-            beforeSend: function () {
-                $('#loader_' + codConcepto).show();
-            },
-            success: function (data) {
-                $('#loader_' + codConcepto).hide();
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                toastr.error(jqXHR.responseText)
-                if (state) {
-                    $('#chk_' + codConcepto).prop('checked', false);
-                }
-                else {
-                    $('#chk_' + codConcepto).prop('checked', true);
-                }
-           },
-            complete: function () {
-                $('#loader_' + codConcepto).hide();
-            }
-
-        });
-    }
-
 
 </script>
 

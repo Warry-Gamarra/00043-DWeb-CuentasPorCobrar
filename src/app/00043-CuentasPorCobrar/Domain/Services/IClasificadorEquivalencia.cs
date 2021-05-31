@@ -12,6 +12,7 @@ namespace Domain.Services
     {
         List<ClasificadorEquivalencia> Find(string anio);
         List<ClasificadorEquivalencia> Find(int clasificadorId);
+        List<ClasificadorEquivalencia> Find(int clasificadorId, string anio);
         Response Save(ClasificadorEquivalencia clasificadorEquivalencia, int currentUserId, SaveOption saveOption);
         Response SaveAnio(ClasificadorEquivalencia clasificadorEquivalencia, string anio, int currentUserId, SaveOption saveOption);
     }

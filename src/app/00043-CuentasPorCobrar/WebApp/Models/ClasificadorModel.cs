@@ -65,6 +65,46 @@ namespace WebApp.Models
             return result;
         }
 
+
+        public List<ClasificadorEquivalenciaViewModel> FindEquivalencias(int clasificadorId)
+        {
+            List<ClasificadorEquivalenciaViewModel> result = new List<ClasificadorEquivalenciaViewModel>();
+
+            foreach (var item in _clasificadorEquivalencia.Find(clasificadorId))
+            {
+                result.Add(new ClasificadorEquivalenciaViewModel()
+                {
+                    ClasificadorId = item.ClasificadorId,
+                    ClasificadorEquivId = item.ClasificadorEquivId.Value,
+                    ConceptoEquivDesc = item.ConceptoEquivDesc,
+                    ConceptoEquivCod = item.ConceptoEquivCod,
+                    Habilitado = item.Habilitado
+                });
+            }
+
+            return result;
+        }
+
+        public List<ClasificadorEquivalenciaViewModel> FindEquivalencias(int clasificadorId, string anio)
+        {
+            List<ClasificadorEquivalenciaViewModel> result = new List<ClasificadorEquivalenciaViewModel>();
+
+            foreach (var item in _clasificadorEquivalencia.Find(clasificadorId, anio))
+            {
+                result.Add(new ClasificadorEquivalenciaViewModel()
+                {
+                    ClasificadorId = item.ClasificadorId,
+                    ClasificadorEquivId = item.ClasificadorEquivId.Value,
+                    ConceptoEquivDesc = item.ConceptoEquivDesc,
+                    ConceptoEquivCod = item.ConceptoEquivCod,
+                    Habilitado = item.Habilitado
+                });
+            }
+
+            return result;
+        }
+
+
         public Response SaveEquivalencia(int? equivalenciaId, int clasificadorId, string codEquiv, int currentUserId)
         {
             ClasificadorEquivalencia clasificadorEquivalencia = new ClasificadorEquivalencia
@@ -84,12 +124,13 @@ namespace WebApp.Models
             ClasificadorEquivalencia clasificadorEquivalencia = new ClasificadorEquivalencia()
             {
                 ClasificadorEquivId = equivalenciaId,
+                AnioEjercicio = anio,                
                 Habilitado = currentState
             };
 
             var clasificadorEquivalenciaAnio = _clasificadorEquivalencia.Find(anio).Where(x => x.ClasificadorEquivId == equivalenciaId);
 
-            Response result = _clasificadorEquivalencia.SaveAnio(clasificadorEquivalencia, anio, currentUserId, (clasificadorEquivalenciaAnio == null ? SaveOption.Insert : SaveOption.Update));
+            Response result = _clasificadorEquivalencia.SaveAnio(clasificadorEquivalencia, anio, currentUserId, (clasificadorEquivalenciaAnio.Count() == 0 ? SaveOption.Insert : SaveOption.Update));
 
             return result;
         }

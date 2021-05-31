@@ -1569,37 +1569,108 @@ END
 GO
 
 
---IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarEstadoClasificadorIngreso')
---	DROP PROCEDURE [dbo].[USP_U_ActualizarEstadoClasificadorIngreso]
---GO
 
---CREATE PROCEDURE [dbo].[USP_U_ActualizarEstadoClasificadorIngreso]
---	 @I_ClasificadorID		int
---	,@B_Habilitado		bit
---	,@D_FecMod			datetime
---	,@CurrentUserId		int
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_GrabarClasificadorEquivalencia')
+	DROP PROCEDURE [dbo].[USP_I_GrabarClasificadorEquivalencia]
+GO
 
---	,@B_Result bit OUTPUT
---	,@T_Message nvarchar(4000) OUTPUT	
---AS
---BEGIN
---  SET NOCOUNT ON
---  	BEGIN TRY
---		UPDATE	TC_ClasificadorIngreso 
---		SET		B_Habilitado = @B_Habilitado,
---				D_FecMod = @D_FecMod,
---				I_UsuarioMod = @CurrentUserId
---				WHERE I_ClasificadorID = @I_ClasificadorID
+CREATE PROCEDURE [dbo].[USP_I_GrabarClasificadorEquivalencia]
+	 @I_ClasificadorID		int
+	,@C_ClasificConceptoCod	varchar(20)
+	,@D_FecCre			datetime
+	,@CurrentUserId		int
+
+	,@I_ClasifEquivalenciaID int OUTPUT
+	,@B_Result bit OUTPUT
+	,@T_Message nvarchar(4000) OUTPUT	
+AS
+BEGIN
+  SET NOCOUNT ON
+  	BEGIN TRY
+		INSERT INTO TC_ClasificadorEquivalencia (C_ClasificConceptoCod, I_ClasificadorID, B_Eliminado, I_UsuarioCre, D_FecCre)
+								         VALUES (@C_ClasificConceptoCod, @I_ClasificadorID, 0, @CurrentUserId, @D_FecCre)
+
+		SET @I_ClasifEquivalenciaID = SCOPE_IDENTITY();
+		SET @B_Result = 1
+		SET @T_Message = 'Nuevo registro agregado.'
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+
+END
+GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_GrabarClasificadorEquivalenciaAnio')
+	DROP PROCEDURE [dbo].[USP_I_GrabarClasificadorEquivalenciaAnio]
+GO
+
+CREATE PROCEDURE [dbo].[USP_I_GrabarClasificadorEquivalenciaAnio]
+	 @I_ClasifEquivalenciaID	int
+	,@N_Anio			varchar(4)
+	,@D_FecCre			datetime
+	,@CurrentUserId		int
+
+	,@B_Result bit OUTPUT
+	,@T_Message nvarchar(4000) OUTPUT	
+AS
+BEGIN
+  SET NOCOUNT ON
+  	BEGIN TRY
+		INSERT INTO TC_ClasificadorEquivalenciaAnio (N_Anio, I_ClasifEquivalenciaID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
+								             VALUES (@N_Anio, @I_ClasifEquivalenciaID, 1, 0, @CurrentUserId, @D_FecCre)
+
+		SET @B_Result = 1
+		SET @T_Message = 'Codigo equivalente habilitado'
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+
+END
+GO
+
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarEstadoClasificadorEquivlenciaAnio')
+	DROP PROCEDURE [dbo].[USP_U_ActualizarEstadoClasificadorEquivlenciaAnio]
+GO
+
+CREATE PROCEDURE [dbo].[USP_U_ActualizarEstadoClasificadorEquivlenciaAnio]
+	 @I_ClasifEquivalenciaID	int
+	,@N_Anio			varchar(4)
+	,@B_Habilitado		bit
+	,@D_FecMod			datetime
+	,@CurrentUserId		int
+
+	,@B_Result bit OUTPUT
+	,@T_Message nvarchar(4000) OUTPUT	
+AS
+BEGIN
+  SET NOCOUNT ON
+  	BEGIN TRY
+		UPDATE	TC_ClasificadorEquivalenciaAnio
+		SET		B_Habilitado = @B_Habilitado,
+				D_FecMod = @D_FecMod,
+				I_UsuarioMod = @CurrentUserId
+				WHERE I_ClasifEquivalenciaID = @I_ClasifEquivalenciaID
+					  AND N_Anio = @N_Anio
 			
---		SET @B_Result = 1
---		SET @T_Message = 'Actualización de datos correcta'
---	END TRY
---	BEGIN CATCH
---		SET @B_Result = 0
---		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
---	END CATCH
---END
---GO
+		SET @B_Result = 1
+		IF (@B_Habilitado = 1)
+			SET @T_Message = 'Codigo equivalente habilitado.'
+		ELSE
+			SET @T_Message = 'Codigo equivalente deshabilitado.'
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+END
+GO
 
 
 /*-----------------------------------------------------------*/

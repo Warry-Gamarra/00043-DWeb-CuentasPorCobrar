@@ -38,11 +38,22 @@ namespace Domain.Entities
         {
             this.ClasificadorEquivId = table.I_ClasifEquivalenciaID;
             this.ClasificadorId = table.I_ClasificadorID;
+            this.ConceptoEquivCod = table.C_ClasificConceptoCod;
+            this.ConceptoEquivDesc = table.T_ConceptoDesc;
             this.AnioEjercicio = table.N_Anio;
             this.Habilitado = table.B_Habilitado;
-            this.FecUpdated = table.D_FecMod.HasValue ? table.D_FecMod.Value : table.D_FecCre.Value;
             this.Response = new Response() { Value = true };
         }
+
+        public ClasificadorEquivalencia(TC_ClasificadorEquivalencia table)
+        {
+            this.ClasificadorEquivId = table.I_ClasifEquivalenciaID;
+            this.ClasificadorId = table.I_ClasificadorID;
+            this.ConceptoEquivCod = table.C_ClasificConceptoCod;
+            this.ConceptoEquivDesc = table.T_ConceptoDesc;
+            this.Response = new Response() { Value = true };
+        }
+
 
         public List<ClasificadorEquivalencia> Find(string anio)
         {
@@ -58,7 +69,18 @@ namespace Domain.Entities
         public List<ClasificadorEquivalencia> Find(int clasificadorId)
         {
             var result = new List<ClasificadorEquivalencia>();
-            foreach (var item in _clasificadorEquivAnioRepository.Find(clasificadorId))
+            foreach (var item in _clasificadorEquivRepository.Find(clasificadorId))
+            {
+                result.Add(new ClasificadorEquivalencia(item));
+            }
+
+            return result;
+        }
+
+        public List<ClasificadorEquivalencia> Find(int clasificadorId, string anio)
+        {
+            var result = new List<ClasificadorEquivalencia>();
+            foreach (var item in _clasificadorEquivAnioRepository.Find(clasificadorId, anio))
             {
                 result.Add(new ClasificadorEquivalencia(item));
             }

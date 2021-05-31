@@ -3,17 +3,86 @@
 <div>
     @if (Model.Count() == 0)
     {
-        <div class="text-secondary text-italic">No se encontraron equivalencias para el clasificador el @ViewBag.Anio</div>
+        <div class="text-secondary font-italic">No se encontraron equivalencias para el clasificador seleccionado</div>
     }
     else
     {
         foreach (var item in Model)
         {
-            <label class="checkbox col-md-6">
-                <input type="checkbox" id="chk_@item.ConceptoEquivCod" name="chk_@item.ConceptoEquivCod" value="@item.Habilitado" class="chk_equivalencia" data-clasifEquivId="@item.ClasificadorEquivId" />
-                @item.ConceptoEquivDesc
-            </label>
-            <span id="loader_@item.ConceptoEquivCod" class="spinner-border text-info" role="status" style="display:none;"></span>
+            <div class="form-check mt-1">
+                @*<input type="checkbox" id="chk_@item.ConceptoEquivCod" name="chk_@item.ConceptoEquivCod" value="@item.Habilitado" class="form-check-input chk_equivalencia"
+                       data-clasif_equiv_id="@item.ClasificadorEquivId" data-cod_concepto="@item.ConceptoEquivCod" />*@
+                @Html.CheckBoxFor(model => item.Habilitado, new { @id= "chk_" + item.ConceptoEquivCod, @class = "form-check-input chk_equivalencia",  @data_clasif_equiv_id = item.ClasificadorEquivId, @data_cod_concepto = item.ConceptoEquivCod })
+                <label class="form-check-label" for="chk_@item.ConceptoEquivCod">
+                    @item.ConceptoEquivDesc
+                </label>
+                <span id="loader_@item.ConceptoEquivCod" class="spinner-border spinner-border-sm text-info mx-2" role="status" style="display:none;"></span>
+            </div>
         }
     }
 </div>
+
+<script>
+
+    $('.chk_equivalencia').on('change', function (event) {
+        let state = false;
+        let codConcepto = $(this).data('cod-concepto');
+        let idEquivalencia = $(this).data('clasif-equiv-id');
+
+        if ($(this).is(':checked')) {
+            state = true;
+        }
+        else {
+            state = false;
+        }
+
+        guardarEquivalencia(codConcepto, idEquivalencia, state);
+    })
+
+
+    function guardarEquivalencia(codConcepto, idEquivalencia, state) {
+        let equivalenciaData = {
+            clasificadorId : $('#ClasificadorId').val(),
+            equivalenciaCod : codConcepto,
+            equivalenciaId : idEquivalencia,
+            anio : $('#Anio').val(),
+            enable : state
+        };
+
+        $.ajax({
+            url: '@Url.Action("SaveEquivalenciaAnio", "Clasificadores")',
+            type: 'POST',
+            data: equivalenciaData,
+            dataType: 'json',
+            cache: false,
+            beforeSend: function () {
+                $('#loader_' + codConcepto).show();
+            },
+            success: function (data) {
+                $('#loader_' + codConcepto).hide();
+
+                if (data.Value) {
+                    toastr.success(data.Message)
+                }
+                else {
+                    toastr.error(data.Message)
+                }
+
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                toastr.error(jqXHR.responseText)
+                if (state) {
+                    $('#chk_' + codConcepto).prop('checked', false);
+                }
+                else {
+                    $('#chk_' + codConcepto).prop('checked', true);
+                }
+           },
+            complete: function () {
+                $('#loader_' + codConcepto).hide();
+            }
+
+        });
+    }
+
+</script>

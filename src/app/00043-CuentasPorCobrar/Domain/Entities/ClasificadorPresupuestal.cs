@@ -20,10 +20,17 @@ namespace Domain.Entities
         public string Descripcion { get; set; }
         public string DescripDetalle { get; set; }
         public string AnioEjercicio { get; set; }
-        public string CodigoUnfv { get; set; }
+        public int CantEquiv { get; set; }
         public bool Habilitado { get; set; }
         public DateTime FecUpdated { get; set; }
         public Response Response { get; set; }
+        public bool CodigoUnfv
+        {
+            get
+            {
+                return CantEquiv > 0 ? true : false;
+            }
+        }
 
         private readonly TC_ClasificadorPresupuestal _clasificadorRepository;
         public ClasificadorPresupuestal()
@@ -43,7 +50,7 @@ namespace Domain.Entities
                                    (string.IsNullOrEmpty(table.C_EspecificaCod) ? "" : "." + table.C_EspecificaCod);
             this.Descripcion = table.T_ClasificadorDesc;
             this.DescripDetalle = table.T_ClasificadorDetalle;
-            this.CodigoUnfv = table.T_ClasificadorUnfv;
+            this.CantEquiv = table.N_CantEquiv;
             this.AnioEjercicio = table.N_Anio;
             this.Habilitado = table.B_Habilitado;
             this.FecUpdated = table.D_FecMod.HasValue ? table.D_FecMod.Value : table.D_FecCre.Value;

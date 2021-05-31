@@ -16,7 +16,7 @@ namespace Data.Tables
         public int I_ClasificadorID { get; set; }
         public string N_Anio { get; set; }
         public string C_ClasificConceptoCod { get; set; }
-        public string C_ClasificConceptoDesc { get; set; }
+        public string T_ConceptoDesc { get; set; }
         public bool B_Habilitado { get; set; }
         public bool B_Eliminado { get; set; }
         public int I_UsuarioCre { get; set; }
@@ -65,7 +65,7 @@ namespace Data.Tables
                                            FROM  TC_ClasificadorEquivalencia CE
 												 LEFT JOIN TC_Concepto C ON C.T_Clasificador = CE.C_ClasificConceptoCod
 		                                         LEFT JOIN (SELECT * FROM TC_ClasificadorEquivalenciaAnio WHERE N_Anio = @N_Anio AND B_Eliminado = 0) CEA ON CE.I_ClasifEquivalenciaID = CEA.I_ClasifEquivalenciaID
-                                          WHERE	 CE.I_ClasificadorID = @I_ClasificadorID AND CEA.B_Eliminado = 0;";
+                                          WHERE	 CE.I_ClasificadorID = @I_ClasificadorID";
 
                     result = _dbConnection.Query<TC_ClasificadorEquivalenciaAnio>(s_command, new { I_ClasificadorID = clasificadorId, N_Anio = anio }, commandType: CommandType.Text).ToList();
                 }
@@ -87,11 +87,11 @@ namespace Data.Tables
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
                     string s_command = @"SELECT  CEA.I_ClasifEquivalenciaID, CEA.N_Anio, CEA.B_Habilitado, CE.I_ClasificadorID, CE.C_ClasificConceptoCod, C.T_ConceptoDesc
-                                                 , CEA.D_FecCre, CEA.D_FecMod, CEA.I_UsuarioCre, CEA.I_UsuarioMod
+                                                 , CE.D_FecCre, CE.D_FecMod, CE.I_UsuarioCre, CE.I_UsuarioMod
                                            FROM  TC_ClasificadorEquivalencia CE
-		                                         INNER JOIN TC_ClasificadorEquivalenciaAnio CEA ON CE.I_ClasifEquivalenciaID = CEA.I_ClasifEquivalenciaID
-												 LEFT JOIN TC_Concepto C ON C.T_Clasificador = CE.C_ClasificConceptoCod
-                                          WHERE	 CE.I_ClasificadorID = @I_ClasificadorID AND CEA.B_Eliminado = 0;";
+		                                         LEFT JOIN TC_ClasificadorEquivalenciaAnio CEA ON CE.I_ClasifEquivalenciaID = CEA.I_ClasifEquivalenciaID
+												 INNER JOIN TC_Concepto C ON C.T_Clasificador = CE.C_ClasificConceptoCod
+                                          WHERE	 CE.I_ClasificadorID = @I_ClasificadorID AND CE.B_Eliminado = 0;";
 
                     result = _dbConnection.Query<TC_ClasificadorEquivalenciaAnio>(s_command, new { I_ClasificadorID = clasificadorId }, commandType: CommandType.Text).ToList();
                 }
@@ -148,7 +148,7 @@ namespace Data.Tables
                 {
                     parameters.Add(name: "I_ClasifEquivalenciaID", dbType: DbType.Int32, value: this.I_ClasifEquivalenciaID);
                     parameters.Add(name: "N_Anio", dbType: DbType.String, size: 4, value: this.N_Anio);
-                    parameters.Add(name: "D_FecCre", dbType: DbType.DateTime, value: this.D_FecMod);
+                    parameters.Add(name: "D_FecCre", dbType: DbType.DateTime, value: this.D_FecCre);
                     parameters.Add(name: "CurrentUserId", dbType: DbType.Int32, value: currentUserId);
 
                     parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);

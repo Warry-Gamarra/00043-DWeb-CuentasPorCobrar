@@ -14,8 +14,8 @@ namespace WebApp.ViewModels
         public string CodClasificador { get; set; }
         public string Descripcion { get; set; }
         public string DescripDetalle { get; set; }
-        public string CodigoEquivalente { get; set; }
-        public bool Habilitado { get; set; }
+        public int CantCodEquiv { get; set; }
+        public bool CodigoEquivalente { get; set; }
 
         public ClasificadorViewModel() { }
 
@@ -24,7 +24,7 @@ namespace WebApp.ViewModels
             this.Id = clasificador.Id;
             this.CodClasificador = clasificador.CodClasificador;
             this.CodigoEquivalente = clasificador.CodigoUnfv;
-            this.Habilitado = clasificador.Habilitado;
+            this.CantCodEquiv = clasificador.CantEquiv;
             this.Descripcion = clasificador.Descripcion;
             this.DescripDetalle = clasificador.DescripDetalle;
         }
@@ -110,6 +110,5 @@ namespace WebApp.ViewModels
         public string ConceptoEquivCod { get; set; }
         public string ConceptoEquivDesc { get; set; }
         public bool Habilitado { get; set; }
-
     }
 }
