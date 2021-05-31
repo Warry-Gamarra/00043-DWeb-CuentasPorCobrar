@@ -39,7 +39,7 @@ namespace Data.Tables
                                            FROM  TC_ClasificadorPresupuestal CP
 		                                         LEFT JOIN (SELECT CE.I_ClasificadorID, COUNT(CEA.I_ClasifEquivalenciaID) AS N_CantEquiv
 					                                          FROM TC_ClasificadorEquivalencia CE
-						                                           LEFT JOIN TC_ClasificadorEquivalenciaAnio CEA ON CE.I_ClasifEquivalenciaID = CEA.I_ClasifEquivalenciaID AND CEA.N_Anio = @N_Anio 
+						                                           LEFT JOIN TC_ClasificadorEquivalenciaAnio CEA ON CE.I_ClasifEquivalenciaID = CEA.I_ClasifEquivalenciaID AND CEA.N_Anio = @N_Anio AND CEA.B_Habilitado = 1 
 					                                         WHERE CE.B_Eliminado = 0 GROUP BY CE.I_ClasificadorID) CA ON CP.I_ClasificadorID = CA.I_ClasificadorID
                                           WHERE	CP.B_Eliminado = 0;";
 
