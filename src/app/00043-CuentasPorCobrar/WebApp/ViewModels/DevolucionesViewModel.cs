@@ -14,7 +14,19 @@ namespace WebApp.ViewModels
         public string EntidadRecaudadora { get; set; }
         public DateTime? FecRegistro { get; set; }
         public decimal Monto { get; set; }
-        public string Concepto{ get; set; }
+        public string Concepto { get; set; }
+
+        public DevolucionesViewModel() { }
+
+        public DevolucionesViewModel(DevolucionPago devolucionPago)
+        {
+            this.DevolucionId = devolucionPago.DevolucionId;
+            this.EntidadRecaudadora = devolucionPago.EntidadRecaudadoraDesc;
+            this.Concepto = devolucionPago.ConceptoPago;
+            this.NroRecibo = devolucionPago.ReferenciaPago;
+            this.Monto = devolucionPago.MontoDevolucion;
+            this.FecRegistro = devolucionPago.FecAprueba;
+        }
     }
 
     public class RegistrarDevolucionPagoViewModel
@@ -46,6 +58,9 @@ namespace WebApp.ViewModels
 
         [Display(Name = "Fecha de devolución")]
         public DateTime? FecDevuelve { get; set; }
+
+        [Display(Name = "Nro SIAF")]
+        public int NroSIAF { get; set; }
 
         public RegistrarDevolucionPagoViewModel() { }
 

@@ -108,6 +108,7 @@
     <Compile Include="Services\IArchivoIntercambio.cs" />
     <Compile Include="Services\ICampoTablaPago.cs" />
     <Compile Include="Services\IClasificadorEquivalencia.cs" />
+    <Compile Include="Services\IDevolucionPago.cs" />
     <Compile Include="Services\Implementations\EstudianteService.cs" />
     <Compile Include="Entities\EntidadRecaudadora.cs" />
     <Compile Include="Entities\CorreoAplicacion.cs" />

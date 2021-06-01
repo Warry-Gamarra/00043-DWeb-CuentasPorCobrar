@@ -432,6 +432,7 @@
     <Compile Include="Models\ClasificadorModel.cs" />
     <Compile Include="Models\CuentaDepositoModel.cs" />
     <Compile Include="Models\CustomAttribute.cs" />
+    <Compile Include="Models\DevolucionPagoModel.cs" />
     <Compile Include="Models\EntidadRecaudadoraModel.cs" />
     <Compile Include="Models\EspecialidadAlumnoModel.cs" />
     <Compile Include="Models\EstructuraArchivoModel.cs" />

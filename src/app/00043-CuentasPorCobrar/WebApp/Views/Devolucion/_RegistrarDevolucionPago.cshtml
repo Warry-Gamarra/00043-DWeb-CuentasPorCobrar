@@ -7,7 +7,7 @@
     <h5 class="modal-title text-center"><i class="fa bi-box-arrow-right">&nbsp;</i> @ViewBag.Title</h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 </div>
-@using (Ajax.BeginForm("Save", "EntidadRecaudadora", new { area = "" }, new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "div_msg", OnBegin = "Load", OnSuccess = "Submited", OnComplete = "Stop" }))
+@using (Ajax.BeginForm("Save", "Devolucion", new { area = "" }, new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "div_msg", OnBegin = "Load", OnSuccess = "Submited", OnComplete = "Stop" }))
 {
     @Html.AntiForgeryToken()
     <div class="modal-body">
