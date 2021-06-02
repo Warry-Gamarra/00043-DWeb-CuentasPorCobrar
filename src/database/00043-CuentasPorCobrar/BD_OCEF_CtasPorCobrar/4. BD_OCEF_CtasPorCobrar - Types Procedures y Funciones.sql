@@ -3535,6 +3535,8 @@ GO
 
 
 /*-----------------------------------------------------------*/
+
+
 IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.DOMAINS WHERE DOMAIN_NAME = 'type_dataAlumnoMultaNoVotar') BEGIN
 	IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_GrabarAlumnoMultaNoVotar')
 		DROP PROCEDURE [dbo].[USP_I_GrabarAlumnoMultaNoVotar]
@@ -3621,6 +3623,116 @@ END
 GO
 
 
+
+/*---------------------------- -------------*/
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_GrabarDevolucionPago')
+	DROP PROCEDURE [dbo].[USP_I_GrabarDevolucionPago]
+GO
+
+CREATE PROCEDURE [dbo].[USP_I_GrabarDevolucionPago]
+	 @I_DevolucionPagoID int
+	,@I_PagoProcesID	int
+	,@I_MontoPagoDev	decimal(15,2)
+	,@D_FecDevAprob		datetime
+	,@D_FecDevPago		datetime
+	,@D_FecProc			datetime
+	,@D_FecCre			datetime
+	,@CurrentUserId		int
+
+	,@B_Result bit OUTPUT
+	,@T_Message nvarchar(4000) OUTPUT	
+AS
+BEGIN
+  SET NOCOUNT ON
+  	BEGIN TRY
+		INSERT INTO TR_DevolucionPago (I_PagoProcesID, I_MontoPagoDev, D_FecDevAprob, D_FecDevPago, D_FecProc, B_Anulado, I_UsuarioCre, D_FecCre)
+							   VALUES (@I_PagoProcesID, @I_MontoPagoDev, @D_FecDevAprob, @D_FecDevPago, @D_FecProc, 0, @CurrentUserId, @D_FecCre)
+
+		SET @B_Result = 1
+		SET @T_Message = 'Nuevo registro agregado.'
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+
+END
+GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarDevolucionPago')
+	DROP PROCEDURE [dbo].[USP_U_ActualizarDevolucionPago]
+GO
+
+CREATE PROCEDURE [dbo].[USP_U_ActualizarDevolucionPago]
+	 @I_DevolucionPagoID int
+	,@I_MontoPagoDev	decimal(15,2)
+	,@D_FecDevAprob		datetime
+	,@D_FecDevPago		datetime
+	,@D_FecMod			datetime
+	,@CurrentUserId		int
+
+	,@B_Result bit OUTPUT
+	,@T_Message nvarchar(4000) OUTPUT	
+AS
+BEGIN
+  SET NOCOUNT ON
+  	BEGIN TRY
+	UPDATE	TR_DevolucionPago 
+		SET	 I_MontoPagoDev = @I_MontoPagoDev
+			, D_FecDevAprob = @D_FecDevAprob
+			, D_FecDevPago = @D_FecDevPago
+			, D_FecMod = @D_FecMod
+			, I_UsuarioMod = @CurrentUserId
+		WHERE I_DevolucionPagoID = @I_DevolucionPagoID
+			
+		SET @B_Result = 1
+		SET @T_Message = 'Actualización de datos correcta'
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+
+END
+GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_AnularDevolucionPago')
+	DROP PROCEDURE [dbo].[USP_U_AnularDevolucionPago]
+GO
+
+CREATE PROCEDURE [dbo].[USP_U_AnularDevolucionPago]
+	 @I_DevolucionPagoID int
+	,@D_FecMod			datetime
+	,@CurrentUserId		int
+
+	,@B_Result bit OUTPUT
+	,@T_Message nvarchar(4000) OUTPUT	
+AS
+BEGIN
+  SET NOCOUNT ON
+  	BEGIN TRY
+		UPDATE	TR_DevolucionPago 
+		SET		B_Anulado = 1,
+				D_FecMod = @D_FecMod,
+				I_UsuarioMod = @CurrentUserId
+		WHERE   I_DevolucionPagoID = @I_DevolucionPagoID
+			
+		SET @B_Result = 1
+		SET @T_Message = 'Actualización de datos correcta'
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+END
+GO
+
+
+/*---------------------------- -------------*/
 
 IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_PagosGeneralPorFecha')
 	DROP PROCEDURE [dbo].[USP_S_PagosGeneralPorFecha]

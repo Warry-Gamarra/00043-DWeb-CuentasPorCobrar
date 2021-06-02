@@ -18,11 +18,11 @@ namespace Data.Tables
         public DateTime? D_FecDevAprob { get; set; }
         public DateTime? D_FecDevPago { get; set; }
         public DateTime? D_FecProc { get; set; }
-        public bool B_Eliminado { get; set; }
         public int? I_UsuarioCre { get; set; }
         public DateTime? D_FecCre { get; set; }
         public int? I_UsuarioMod { get; set; }
         public DateTime? D_FecMod { get; set; }
+        public bool B_Anulado { get; set; }
 
         public List<TR_DevolucionPago> Find()
         {
@@ -30,7 +30,7 @@ namespace Data.Tables
 
             try
             {
-                string s_command = @"select t.* from dbo.TC_CategoriaPago t  WHERE B_Eliminado = 0;";
+                string s_command = @"select t.* from dbo.TC_CategoriaPago t WHERE B_Eliminado = 0;";
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
@@ -66,7 +66,7 @@ namespace Data.Tables
             return result;
         }
 
-        public ResponseData ChangeState(int currentUserId)
+        public ResponseData AnularDevolcionPago(int currentUserId)
         {
             ResponseData result = new ResponseData();
             DynamicParameters parameters = new DynamicParameters();
@@ -75,16 +75,14 @@ namespace Data.Tables
             {
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    //parameters.Add(name: "I_ClasifEquivalenciaID", dbType: DbType.Int32, value: this.I_ClasifEquivalenciaID);
-                    //parameters.Add(name: "N_Anio", dbType: DbType.String, size: 4, value: this.N_Anio);
-                    //parameters.Add(name: "B_Habilitado", dbType: DbType.Boolean, value: this.B_Habilitado);
+                    parameters.Add(name: "I_DevolucionPagoID", dbType: DbType.Int32, value: this.I_DevolucionPagoID);
                     parameters.Add(name: "D_FecMod", dbType: DbType.DateTime, value: this.D_FecMod);
                     parameters.Add(name: "CurrentUserId", dbType: DbType.Int32, value: currentUserId);
 
                     parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);
                     parameters.Add(name: "T_Message", dbType: DbType.String, size: 4000, direction: ParameterDirection.Output);
 
-                    _dbConnection.Execute("USP_U_ActualizarEstadoDevolucionPago", parameters, commandType: CommandType.StoredProcedure);
+                    _dbConnection.Execute("USP_U_AnularDevolucionPago", parameters, commandType: CommandType.StoredProcedure);
 
                     result.Value = parameters.Get<bool>("B_Result");
                     result.Message = parameters.Get<string>("T_Message");
@@ -133,6 +131,41 @@ namespace Data.Tables
 
             return result;
         }
+
+        public ResponseData Update(int currentUserId)
+        {
+            ResponseData result = new ResponseData();
+            DynamicParameters parameters = new DynamicParameters();
+
+            try
+            {
+                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
+                {
+                    parameters.Add(name: "I_DevolucionPagoID", dbType: DbType.Int32, value: this.I_DevolucionPagoID);
+                    parameters.Add(name: "I_MontoPagoDev", dbType: DbType.Decimal, value: this.I_PagoProcesID);
+                    parameters.Add(name: "D_FecDevAprob", dbType: DbType.Decimal, value: this.D_FecDevAprob);
+                    parameters.Add(name: "D_FecDevPago", dbType: DbType.Decimal, value: this.D_FecDevPago);
+                    parameters.Add(name: "D_FecMod", dbType: DbType.DateTime, value: this.D_FecMod);
+                    parameters.Add(name: "CurrentUserId", dbType: DbType.Int32, value: currentUserId);
+
+                    parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);
+                    parameters.Add(name: "T_Message", dbType: DbType.String, size: 4000, direction: ParameterDirection.Output);
+
+                    _dbConnection.Execute("USP_U_ActualizarDevolucionPago", parameters, commandType: CommandType.StoredProcedure);
+
+                    result.Value = parameters.Get<bool>("B_Result");
+                    result.Message = parameters.Get<string>("T_Message");
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Value = false;
+                result.Message = ex.Message;
+            }
+
+            return result;
+        }
+
 
     }
 }

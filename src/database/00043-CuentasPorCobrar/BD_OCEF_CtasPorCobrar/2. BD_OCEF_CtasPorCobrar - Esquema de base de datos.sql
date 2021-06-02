@@ -599,7 +599,7 @@ CREATE TABLE TR_DevolucionPago
 	D_FecDevAprob        datetime  NULL ,
 	D_FecDevPago         datetime  NULL ,
 	D_FecProc	         datetime  NULL ,
-	B_Eliminado          bit  NOT NULL ,
+	B_Anulado			 bit  NOT NULL ,
 	I_UsuarioCre         int  NULL ,
 	D_FecCre             datetime  NULL ,
 	I_UsuarioMod         int  NULL ,
