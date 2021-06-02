@@ -3802,3 +3802,42 @@ GO
 --from temporal_pagos.dbo.cp_pri 
 --where clasific_5 is not null and len(clasific_5) > 0
 --ORDER BY 1
+
+
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_DevolucionPago')
+	DROP VIEW [dbo].[VW_DevolucionPago]
+GO
+
+CREATE VIEW [dbo].[VW_DevolucionPago]
+AS
+(
+	SELECT DP.*, PP.I_MontoPagado, PP.N_NroSIAF, PB.I_EntidadFinanID, PB.C_CodOperacion, PB.C_Referencia, PB.D_FecPago
+		   , EF.T_EntidadDesc, (CL.C_TipoTransCod + '.' + CL.C_GenericaCod + '.' + CL.C_SubGeneCod + '.' + CL.C_EspecificaCod) AS C_CodClasificador
+		   , CP.T_ConceptoPagoDesc 
+	  FROM TR_DevolucionPago DP
+		   INNER JOIN TRI_PagoProcesadoUnfv PP ON DP.I_PagoProcesID = PP.I_PagoProcesID 
+		   INNER JOIN TR_PagoBanco PB ON PP.I_PagoBancoID = PB.I_PagoBancoID
+		   INNER JOIN TC_EntidadFinanciera EF ON PB.I_EntidadFinanID = EF.I_EntidadFinanID
+		   INNER JOIN TR_ObligacionAluCab OC ON OC.I_ObligacionAluID = PP.I_ObligacionAluID
+		   INNER JOIN TR_ObligacionAluDet OD ON OD.I_ObligacionAluID = OC.I_ObligacionAluID 
+		   INNER JOIN TI_ConceptoPago CP ON CP.I_ConcPagID = OD.I_ConcPagID
+		   LEFT JOIN TC_ClasificadorEquivalencia CE ON CE.C_ClasificConceptoCod = CP.T_Clasificador
+		   LEFT JOIN TC_ClasificadorEquivalenciaAnio CEA ON CEA.I_ClasifEquivalenciaID = ce.I_ClasifEquivalenciaID
+		   LEFT JOIN TC_ClasificadorPresupuestal CL ON CL.I_ClasificadorID = CE.I_ClasificadorID
+	UNION
+	SELECT DP.*, PP.I_MontoPagado, PP.N_NroSIAF, PB.I_EntidadFinanID, PB.C_CodOperacion, PB.C_Referencia, PB.D_FecPago
+		   , EF.T_EntidadDesc, (CL.C_TipoTransCod + '.' + CL.C_GenericaCod + '.' + CL.C_SubGeneCod + '.' + CL.C_EspecificaCod) AS C_CodClasificador
+		   , CP.T_ConceptoPagoDesc
+	  FROM TR_DevolucionPago DP
+		   INNER JOIN TRI_PagoProcesadoUnfv PP ON DP.I_PagoProcesID = PP.I_PagoProcesID 
+		   INNER JOIN TR_PagoBanco PB ON PP.I_PagoBancoID = PB.I_PagoBancoID
+		   INNER JOIN TC_EntidadFinanciera EF ON PB.I_EntidadFinanID = EF.I_EntidadFinanID
+		   INNER JOIN TR_TasaUnfv TU ON TU.I_TasaUnfvID = PP.I_TasaUnfvID
+		   INNER JOIN TI_ConceptoPago CP ON CP.I_ConcPagID = TU.I_ConcPagID
+		   LEFT JOIN TC_ClasificadorEquivalencia CE ON CE.C_ClasificConceptoCod = CP.T_Clasificador
+		   LEFT JOIN TC_ClasificadorEquivalenciaAnio CEA ON CEA.I_ClasifEquivalenciaID = ce.I_ClasifEquivalenciaID
+		   LEFT JOIN TC_ClasificadorPresupuestal CL ON CL.I_ClasificadorID = CE.I_ClasificadorID
+)
+
+GO

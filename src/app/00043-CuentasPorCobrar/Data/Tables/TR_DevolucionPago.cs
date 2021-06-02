@@ -30,7 +30,7 @@ namespace Data.Tables
 
             try
             {
-                string s_command = @"select t.* from dbo.TC_CategoriaPago t WHERE B_Eliminado = 0;";
+                string s_command = @"select t.* from dbo.TR_DevolucionPago t;";
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
@@ -45,17 +45,17 @@ namespace Data.Tables
             return result;
         }
 
-        public TR_DevolucionPago Find(int I_CatPagoID)
+        public TR_DevolucionPago Find(int devolucionPagoID)
         {
             TR_DevolucionPago result;
 
             try
             {
-                string s_command = @"select t.* from dbo.TC_CategoriaPago t where t.I_CatPagoID = @I_CatPagoID";
+                string s_command = @"select t.* from dbo.TR_DevolucionPago t where t.I_DevolucionPagoID = @I_DevolucionPagoID";
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    result = _dbConnection.Query<TR_DevolucionPago>(s_command, new { I_CatPagoID = I_CatPagoID }, commandType: CommandType.Text).FirstOrDefault();
+                    result = _dbConnection.Query<TR_DevolucionPago>(s_command, new { I_DevolucionPagoID = devolucionPagoID }, commandType: CommandType.Text).FirstOrDefault();
                 }
             }
             catch (Exception ex)

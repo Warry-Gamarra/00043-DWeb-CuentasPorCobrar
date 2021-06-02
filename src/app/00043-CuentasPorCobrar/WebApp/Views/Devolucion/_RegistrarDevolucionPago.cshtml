@@ -26,7 +26,12 @@
             <div class="form-group row">
                 @Html.LabelFor(model => model.ReferenciaPago, new { @class = "col-md-4 control-label" })
                 <div class="col-md-8">
-                    @Html.TextBoxFor(model => model.ReferenciaPago, new { @class = "form-control text-uppercase" })
+                    <div class="input-group">
+                        @Html.TextBoxFor(model => model.ReferenciaPago, new { @class = "form-control text-uppercase" })
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-info" type="button" id="button-search" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-search"></i></button>
+                        </div>
+                    </div>
                     <p class="text-danger small">@Html.ValidationMessageFor(model => model.ReferenciaPago)</p>
                 </div>
             </div>
@@ -44,9 +49,17 @@
                 </div>
             </div>
             <div class="form-group row">
+                @Html.LabelFor(model => model.NroSIAF, new { @class = "col-md-4 control-label" })
+                <div class="col-md-4">
+                    @Html.TextBoxFor(model => model.NroSIAF, new { @class = "form-control text-right", @readonly = "readonly" })
+                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.NroSIAF)</p>
+                </div>
+            </div>
+
+            <div class="form-group row">
                 @Html.LabelFor(model => model.MontoDevolucion, new { @class = "col-md-4 control-label" })
                 <div class="col-md-4">
-                    @Html.TextBoxFor(model => model.MontoDevolucion, new { @class = "form-control text-right", disabled = "disabled" })
+                    @Html.TextBoxFor(model => model.MontoDevolucion, new { @class = "form-control text-right", @readonly = "readonly" })
                     <p class="text-danger small">@Html.ValidationMessageFor(model => model.MontoDevolucion)</p>
                 </div>
                 <div class="col-md-4">
@@ -100,6 +113,29 @@
     </div>
 }
 
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index:9999">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Buscar pagos</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">seleccionar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script>
     $('#btnsubmit').removeClass('disabled');
 
@@ -108,6 +144,16 @@
             return false;
         }
     });
+
+    $('#chk-monto').on('change', function () {
+
+        if ($(this).is(':checked')) {
+            $('#MontoDevolucion').prop('readonly', false);
+        }
+        else {
+            $('#MontoDevolucion').prop('readonly', true);
+        }
+    })
 
     $('.input-group.date').datepicker({
         todayBtn: 'linked',

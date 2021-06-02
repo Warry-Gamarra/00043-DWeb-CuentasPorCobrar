@@ -34,11 +34,9 @@ namespace WebApp.Models
             return new RegistrarDevolucionPagoViewModel(_devolucionPago.Find(entidadFinancieraId));
         }
 
-        public Response ChangeState(int entidadFinancieraId, bool currentState, int currentUserId, string returnUrl)
+        public Response AnularDevolucion(int entidadFinancieraId, int currentUserId)
         {
-            Response result = _devolucionPago.ChangeState(entidadFinancieraId, currentState, currentUserId);
-
-            result.Redirect = returnUrl;
+            Response result = _devolucionPago.AnularDevolucion(entidadFinancieraId, currentUserId);
 
             return result;
         }

@@ -1,4 +1,5 @@
 ﻿using Data.Tables;
+using Data.Views;
 using Domain.Helpers;
 using Domain.Services;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class DevolucionPago: IDevolucionPago
+    public class DevolucionPago : IDevolucionPago
     {
         public int? DevolucionId { get; set; }
         public int EntidadRecaudadoraId { get; set; }
@@ -27,14 +28,18 @@ namespace Domain.Entities
 
         private readonly TR_DevolucionPago _devolucionPagoRepository;
 
-        public DevolucionPago() {
+        public DevolucionPago()
+        {
             _devolucionPagoRepository = new TR_DevolucionPago();
         }
 
-        public DevolucionPago(TR_DevolucionPago table)
+        public DevolucionPago(VW_DevolucionPago table)
         {
             this.DevolucionId = table.I_DevolucionPagoID;
             this.PagoReferenciaId = table.I_PagoProcesID;
+            this.ReferenciaPago = table.C_CodOperacion;
+            this.Clasificador = table.C_CodClasificador;
+            this.ConceptoPago = table.T_ConceptoPagoDesc;
             this.MontoDevolucion = table.I_MontoPagoDev;
             this.FecAprueba = table.D_FecDevAprob.Value;
             this.FecDevuelve = table.D_FecDevPago;
@@ -42,16 +47,11 @@ namespace Domain.Entities
         }
 
 
-        public Response ChangeState(int devolucionPagoId, bool currentState, int currentUserId)
-        {
-            throw new NotImplementedException();
-        }
-
         public List<DevolucionPago> Find()
         {
             List<DevolucionPago> result = new List<DevolucionPago>();
 
-            foreach (var item in _devolucionPagoRepository.Find())
+            foreach (var item in VW_DevolucionPago.Find())
             {
                 result.Add(new DevolucionPago(item));
             }
@@ -59,14 +59,48 @@ namespace Domain.Entities
             return result;
         }
 
-        public DevolucionPago Find(int devolucionPagoId)
+        public DevolucionPago Find(int devolucionId)
         {
-            throw new NotImplementedException();
+            DevolucionPago result = new DevolucionPago(VW_DevolucionPago.Find(devolucionId));
+
+            return result;
+        }
+
+        public Response AnularDevolucion(int pagoProcesadoId, int currentUserId)
+        {
+            _devolucionPagoRepository.I_PagoProcesID = pagoProcesadoId;
+            _devolucionPagoRepository.D_FecMod = DateTime.Now;
+
+            var result = new Response(_devolucionPagoRepository.AnularDevolcionPago(currentUserId));
+
+            return result;
         }
 
         public Response Save(DevolucionPago devolucionPago, int currentUserId, SaveOption saveOption)
         {
-            throw new NotImplementedException();
+            _devolucionPagoRepository.I_DevolucionPagoID = devolucionPago.DevolucionId ?? 0;
+            _devolucionPagoRepository.I_MontoPagoDev = devolucionPago.MontoDevolucion;
+            _devolucionPagoRepository.D_FecDevAprob = devolucionPago.FecAprueba;
+            _devolucionPagoRepository.D_FecDevPago = devolucionPago.FecDevuelve;
+
+            switch (saveOption)
+            {
+                case SaveOption.Insert:
+                    _devolucionPagoRepository.I_PagoProcesID = devolucionPago.PagoReferenciaId;
+                    _devolucionPagoRepository.D_FecProc = devolucionPago.FecPagoRef;
+                    _devolucionPagoRepository.D_FecCre = DateTime.Now;
+                    return new Response(_devolucionPagoRepository.Insert(currentUserId));
+
+                case SaveOption.Update:
+                    _devolucionPagoRepository.D_FecMod = DateTime.Now;
+                    return new Response(_devolucionPagoRepository.Update(currentUserId));
+            }
+
+            return new Response()
+            {
+                Value = false,
+                Message = "Operación Inválida."
+            };
         }
     }
 }
