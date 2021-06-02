@@ -68,7 +68,7 @@ namespace Domain.Services
             return new Response()
             {
                 Value = false,
-                Message = "Operación Inváiida."
+                Message = "Operación Inválida."
             };
         }
 
