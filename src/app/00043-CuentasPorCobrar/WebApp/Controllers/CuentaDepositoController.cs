@@ -14,12 +14,12 @@ namespace WebApp.Controllers
     public class CuentaDepositoController : Controller
     {
         public readonly CuentaDepositoModel _cuentaDeposito;
-        public readonly EntidadFinancieraModel _entidadFinanciera;
+        public readonly EntidadRecaudadoraModel _entidadRecaudadora;
 
         public CuentaDepositoController()
         {
             _cuentaDeposito = new CuentaDepositoModel();
-            _entidadFinanciera = new EntidadFinancieraModel();
+            _entidadRecaudadora = new EntidadRecaudadoraModel();
         }
 
 
@@ -36,7 +36,7 @@ namespace WebApp.Controllers
         public ActionResult Create()
         {
             ViewBag.Title = "Agregar Cuenta de Depósito";
-            ViewBag.EntidadFinanciera = new SelectList(_entidadFinanciera.Find(enabled: true), "Id", "NombreEntidad");
+            ViewBag.EntidadRecaudadora = new SelectList(_entidadRecaudadora.Find(enabled: true), "Id", "NombreEntidad");
 
             return PartialView("_RegistrarCuentaDeposito", new CuentaDepositoRegistroViewModel());
         }
@@ -46,7 +46,7 @@ namespace WebApp.Controllers
         public ActionResult Edit(int id)
         {
             ViewBag.Title = "Editar Cuenta de Depósito";
-            ViewBag.EntidadFinanciera = new SelectList(_entidadFinanciera.Find(enabled: true), "Id", "NombreEntidad");
+            ViewBag.EntidadRecaudadora = new SelectList(_entidadRecaudadora.Find(enabled: true), "Id", "NombreEntidad");
 
             return PartialView("_RegistrarCuentaDeposito", _cuentaDeposito.Find(id));
         }

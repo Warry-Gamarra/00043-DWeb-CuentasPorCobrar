@@ -1,13 +1,13 @@
 ﻿
-@model WebApp.ViewModels.EntidadFinancieraRegistroViewModel
+@model WebApp.ViewModels.EntidadRecaudadoraRegistroViewModel
 
 @Scripts.Render("~/bundles/jqueryval")
 
 <div class="modal-header bg-dark-gray" style="border-radius: .2rem .2rem 0px 0px">
-    <h5 class="modal-title text-center"><i class="fa fa-bank">&nbsp;</i> @ViewBag.Title</h5>
+    <h5 class="modal-title text-center"><i class="fa bi-cash-coin">&nbsp;</i> @ViewBag.Title</h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 </div>
-@using (Ajax.BeginForm("Save", "EntidadFinanciera", new { area = "" }, new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "div_msg", OnBegin = "Load", OnSuccess = "Submited", OnComplete = "Stop" }))
+@using (Ajax.BeginForm("Save", "EntidadRecaudadora", new { area = "" }, new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "div_msg", OnBegin = "Load", OnSuccess = "Submited", OnComplete = "Stop" }))
 {
     @Html.AntiForgeryToken()
     <div class="modal-body">

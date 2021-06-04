@@ -14,14 +14,14 @@ namespace WebApp.Models
         private readonly IRoles _roles;
         private readonly IDependencia _dependencia;
         private readonly ConceptoPagoService _conceptoPagoService;
-        private readonly EntidadFinanciera _entidadFinanciera;
+        private readonly EntidadRecaudadora _entidadFinanciera;
 
         public SelectModel()
         {
             _roles = new RolAplicacion();
             _dependencia = new Dependencia();
             _conceptoPagoService = new ConceptoPagoService();
-            _entidadFinanciera = new EntidadFinanciera();
+            _entidadFinanciera = new EntidadRecaudadora();
         }
 
         public List<SelectViewModel> GetRoles()
@@ -118,6 +118,19 @@ namespace WebApp.Models
                     Value = x.I_OpcionID.ToString(),
                     TextDisplay = x.T_OpcionDesc
                 }).ToList();
+            }
+
+            return result;
+        }
+
+
+        public List<SelectViewModel> GetCodigoClasificadorConceptos()
+        {
+            List<SelectViewModel> result = new List<SelectViewModel>();
+
+            foreach (var item in _conceptoPagoService.Listar_Concepto_All())
+            {
+                result.Add(new SelectViewModel() { Value = item.T_Clasificador, TextDisplay = item.T_Clasificador + " - " + item.T_ConceptoDesc.ToUpper() });
             }
 
             return result;

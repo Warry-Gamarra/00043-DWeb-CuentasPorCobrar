@@ -19,12 +19,4 @@ namespace Domain.Helpers
         public int Final { get; set; }
     }
 
-
-    public struct ClasificadorEquivalencia
-    {
-        public int ClasificadorEquivId { get; set; }
-        public string ConceptoEquivDesc { get; set; }
-        public bool Habilitado { get; set; }
-    }
-
 }

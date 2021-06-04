@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class EntidadFinanciera : IEntidadFinanciera
+    public class EntidadRecaudadora : IEntidadRecaudadora
     {
         public int Id { get; set; }
         public string Nombre { get; set; }
@@ -19,28 +19,25 @@ namespace Domain.Entities
         public Response Response { get; set; }
 
 
-
         private readonly TC_EntidadFinanciera _entFinanRepository;
         private readonly TI_TipoArchivo_EntidadFinanciera _archivoEntFinanRepository;
 
-        public EntidadFinanciera()
+        public EntidadRecaudadora()
         {
             _entFinanRepository = new TC_EntidadFinanciera();
             _archivoEntFinanRepository = new TI_TipoArchivo_EntidadFinanciera();
             this.Response = new Response() { Value = true };
         }
 
-        public EntidadFinanciera(TC_EntidadFinanciera table, bool tieneArchivos)
+        public EntidadRecaudadora(TC_EntidadFinanciera table, bool tieneArchivos)
         {
             this.Id = table.I_EntidadFinanID;
             this.Nombre = table.T_EntidadDesc;
             this.Habilitado = table.B_Habilitado;
             this.ArchivosEntidad = tieneArchivos;
-            this.FechaActualiza = table.D_FecMod.HasValue ? table.D_FecMod.Value : table.D_FecCre;
+            this.FechaActualiza = table.D_FecMod ?? table.D_FecCre;
             this.Response = new Response() { Value = true };
         }
-
-
 
         public Response ChangeState(int entidadFinanId, bool currentState, int currentUserId)
         {
@@ -51,30 +48,30 @@ namespace Domain.Entities
             return new Response(_entFinanRepository.ChangeState(currentUserId));
         }
 
-        public List<EntidadFinanciera> Find()
+        public List<EntidadRecaudadora> Find()
         {
-            var result = new List<EntidadFinanciera>();
+            var result = new List<EntidadRecaudadora>();
             var archivosEntidad = _archivoEntFinanRepository.Find();
             foreach (var item in _entFinanRepository.Find())
             {
                 bool tieneArchivos = ExisteListaArchivos(item.I_EntidadFinanID, archivosEntidad);
-                result.Add(new EntidadFinanciera(item, tieneArchivos));
+                result.Add(new EntidadRecaudadora(item, tieneArchivos));
             }
 
             return result;
         }
 
-        public EntidadFinanciera Find(int entidadFinanId)
+        public EntidadRecaudadora Find(int entidadRecaudadoraId)
         {
-            var data = _entFinanRepository.Find(entidadFinanId);
-            var archivosEntidad = _archivoEntFinanRepository.FindByEntityID(entidadFinanId);
+            var data = _entFinanRepository.Find(entidadRecaudadoraId);
+            var archivosEntidad = _archivoEntFinanRepository.FindByEntityID(entidadRecaudadoraId);
 
             if (data != null)
             {
-                bool tieneArchivos = ExisteListaArchivos(entidadFinanId, archivosEntidad); ;
-                return new EntidadFinanciera(data, tieneArchivos);
+                bool tieneArchivos = ExisteListaArchivos(entidadRecaudadoraId, archivosEntidad); ;
+                return new EntidadRecaudadora(data, tieneArchivos);
             }
-            return new EntidadFinanciera()
+            return new EntidadRecaudadora()
             {
                 Response = new Response()
                 {
@@ -84,17 +81,17 @@ namespace Domain.Entities
             };
         }
 
-        public Response Save(EntidadFinanciera entidadFinanciera, int currentUserId, SaveOption saveOption)
+        public Response Save(EntidadRecaudadora entidadRecaudadora, int currentUserId, SaveOption saveOption)
         {
-            _entFinanRepository.I_EntidadFinanID = entidadFinanciera.Id;
-            _entFinanRepository.T_EntidadDesc = entidadFinanciera.Nombre;
-            _entFinanRepository.B_Habilitado = entidadFinanciera.Habilitado;
+            _entFinanRepository.I_EntidadFinanID = entidadRecaudadora.Id;
+            _entFinanRepository.T_EntidadDesc = entidadRecaudadora.Nombre;
+            _entFinanRepository.B_Habilitado = entidadRecaudadora.Habilitado;
 
             switch (saveOption)
             {
                 case SaveOption.Insert:
                     _entFinanRepository.D_FecCre = DateTime.Now;
-                    return new Response(_entFinanRepository.Insert(entidadFinanciera.ArchivosEntidad, currentUserId));
+                    return new Response(_entFinanRepository.Insert(entidadRecaudadora.ArchivosEntidad, currentUserId));
 
                 case SaveOption.Update:
                     _entFinanRepository.D_FecMod = DateTime.Now;
@@ -104,13 +101,13 @@ namespace Domain.Entities
             return new Response()
             {
                 Value = false,
-                Message = "Operación Inváiida."
+                Message = "Operación Inválida."
             };
         }
 
-        public Response HabilitarArchivos(int entidadFinanId, int currentUserId)
+        public Response HabilitarArchivos(int entidadRecaudadoraId, int currentUserId)
         {
-            _archivoEntFinanRepository.I_EntidadFinanID = entidadFinanId;
+            _archivoEntFinanRepository.I_EntidadFinanID = entidadRecaudadoraId;
             _archivoEntFinanRepository.I_UsuarioCre = currentUserId;
             _archivoEntFinanRepository.D_FecCre = DateTime.Now;
 
@@ -118,9 +115,9 @@ namespace Domain.Entities
         }
 
 
-        private bool ExisteListaArchivos(int entidadFinancieraId, List<TI_TipoArchivo_EntidadFinanciera> archivosEntidad)
+        private bool ExisteListaArchivos(int entidadRecaudadoraId, List<TI_TipoArchivo_EntidadFinanciera> archivosEntidad)
         {
-            if (archivosEntidad.Where(x => x.I_EntidadFinanID == entidadFinancieraId).Count() > 0)
+            if (archivosEntidad.Where(x => x.I_EntidadFinanID == entidadRecaudadoraId).Count() > 0)
             {
                 return true;
             }

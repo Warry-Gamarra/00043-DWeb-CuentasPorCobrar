@@ -15,12 +15,12 @@ namespace WebApp.Controllers
     [Authorize]
     public class EstructuraArchivoController : Controller
     {
-        private readonly EntidadFinancieraModel _entidadFinanciera;
+        private readonly EntidadRecaudadoraModel _entidadFinanciera;
         private readonly EstructuraArchivoModel _estructuraArchivo;
 
         public EstructuraArchivoController()
         {
-            _entidadFinanciera = new EntidadFinancieraModel();
+            _entidadFinanciera = new EntidadRecaudadoraModel();
             _estructuraArchivo = new EstructuraArchivoModel();
         }
 

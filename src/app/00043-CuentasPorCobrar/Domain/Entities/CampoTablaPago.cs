@@ -95,7 +95,7 @@ namespace Domain.Entities
             return new Response()
             {
                 Value = false,
-                Message = "Operación Inváiida."
+                Message = "Operación Inválida."
             };
         }
 
