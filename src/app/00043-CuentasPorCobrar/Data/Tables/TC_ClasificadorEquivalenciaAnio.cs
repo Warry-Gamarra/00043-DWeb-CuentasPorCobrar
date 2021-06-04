@@ -123,7 +123,7 @@ namespace Data.Tables
                     parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);
                     parameters.Add(name: "T_Message", dbType: DbType.String, size: 4000, direction: ParameterDirection.Output);
 
-                    _dbConnection.Execute("USP_U_ActualizarEstadoClasificadorEquivlenciaAnio", parameters, commandType: CommandType.StoredProcedure);
+                    _dbConnection.Execute("USP_U_ActualizarEstadoClasificadorEquivalenciaAnio", parameters, commandType: CommandType.StoredProcedure);
 
                     result.Value = parameters.Get<bool>("B_Result");
                     result.Message = parameters.Get<string>("T_Message");

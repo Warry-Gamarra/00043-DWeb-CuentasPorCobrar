@@ -1,0 +1,108 @@
+﻿@model WebApp.ViewModels.ClasificadorRegistrarViewModel
+
+@Scripts.Render("~/bundles/jqueryval")
+
+<div class="modal-header bg-dark-gray" style="border-radius: .2rem .2rem 0px 0px">
+    <h5 class="modal-title text-center"><i class="fa bi-bar-chart-steps">&nbsp;</i> @ViewBag.Title</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+@using (Ajax.BeginForm("Save", "Clasificadores", new { area = "" }, new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "div_msg", OnBegin = "Load", OnSuccess = "Submited", OnComplete = "Stop" }))
+{
+    @Html.Hidden("submited", 0)
+    @Html.AntiForgeryToken()
+    <div class="modal-body">
+        <div class="container-fluid">
+            @Html.HiddenFor(model => model.Id)
+
+            <div class="form-group form-row">
+                <div class="col-md-2 d-flex align-items-center">
+                    @Html.Label("lblClasificador", "Clasificador", new { @class = "control-label mt-3" })
+                </div>
+                <div class="col-md-10 form-row">
+                    <div class="col-2">
+                        @Html.LabelFor(model => model.TipoTransaccion, new { @class = "control-label" })
+                        @Html.TextBoxFor(model => model.TipoTransaccion, new { @class = "form-control num-cod" })
+                        <p class="text-danger small">@Html.ValidationMessageFor(model => model.TipoTransaccion)</p>
+                    </div>
+                    <div class="col-2">
+                        @Html.LabelFor(model => model.Generica, new { @class = "control-label" })
+                        @Html.TextBoxFor(model => model.Generica, new { @class = "form-control num-cod" })
+                        <p class="text-danger small">@Html.ValidationMessageFor(model => model.Generica)</p>
+                    </div>
+                    <div class="col-3">
+                        @Html.LabelFor(model => model.SubGenerica, new { @class = "control-label" })
+                        @Html.TextBoxFor(model => model.SubGenerica, new { @class = "form-control num-cod" })
+                        <p class="text-danger small">@Html.ValidationMessageFor(model => model.SubGenerica)</p>
+                    </div>
+                    <div class="col-3">
+                        @Html.LabelFor(model => model.Especifica, new { @class = "control-label" })
+                        @Html.TextBoxFor(model => model.Especifica, new { @class = "form-control num-cod" })
+                        <p class="text-danger small">@Html.ValidationMessageFor(model => model.Especifica)</p>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-row">
+                @Html.LabelFor(model => model.Descripcion, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.Descripcion, new { @class = "form-control text-uppercase" })
+                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.Descripcion)</p>
+                </div>
+            </div>
+            <div class="form-group form-row">
+                @Html.LabelFor(model => model.DescripDetalle, new { @class = "control-label col-md-2", })
+                <div class="col-md-10">
+                    @Html.TextAreaFor(model => model.DescripDetalle, new { @class = "form-control text-uppercase", rows = "5" })
+                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.DescripDetalle)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer" id="div_msg">
+        <div class="col-md-12" style="display:none" id="loading">
+            <h6>Actualizando los datos...</h6>
+
+            <div class="progress">
+                <div class="indeterminate"></div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="btnsubmit"><i class="fa fa-save"></i>&nbsp;Guardar</button>
+        <button type="button" class="btn btn-secondary" id="btnCancel" data-dismiss="modal"><i class="fa fa-times-circle-o">&nbsp;</i>Cancelar</button>
+    </div>
+}
+
+<script>
+    $(document).on('ready', function () {
+        $('#btnsubmit').removeClass('disabled');
+
+    });
+
+    $("form").submit(function () {
+        if (parseInt($("#submited").val()) > 0) {
+            return false;
+        }
+    });
+
+    $('.num-cod').on('focus', function () {
+        $(this).select();
+    })
+
+    if ($('#TipoTransaccion').val() == 0) {
+        $('#TipoTransaccion').val('');
+    }
+
+    if ($('#Generica').val() == 0) {
+        $('#Generica').val('');
+    }
+
+    if ($('#SubGenerica').val() == 0) {
+        $('#SubGenerica').val('');
+    }
+
+    if ($('#Especifica').val() == 0) {
+        $('#Especifica').val('');
+    }
+
+
+</script>

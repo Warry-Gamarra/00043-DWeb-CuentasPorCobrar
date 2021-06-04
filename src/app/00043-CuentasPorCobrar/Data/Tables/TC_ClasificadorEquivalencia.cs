@@ -96,7 +96,7 @@ namespace Data.Tables
 
                     _dbConnection.Execute("USP_I_GrabarClasificadorEquivalencia", parameters, commandType: CommandType.StoredProcedure);
 
-                    result.CurrentID = parameters.Get<string>("I_ClasifEquivalenciaID");
+                    result.CurrentID = parameters.Get<int>("I_ClasifEquivalenciaID").ToString();
                     result.Value = parameters.Get<bool>("B_Result");
                     result.Message = parameters.Get<string>("T_Message");
                 }

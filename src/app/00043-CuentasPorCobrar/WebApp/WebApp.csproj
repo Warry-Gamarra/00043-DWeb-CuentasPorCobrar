@@ -593,6 +593,7 @@
     <Content Include="Views\Clasificadores\_RegistrarEquivalenciasAnio.cshtml" />
     <Content Include="Views\Clasificadores\_ListadoEquivalencias.cshtml" />
     <Content Include="Views\Devolucion\_RegistrarDevolucionPago.cshtml" />
+    <Content Include="Views\Clasificadores\_RegistrarCopiaEquivalenciasAnio.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -114,10 +114,19 @@ namespace WebApp.Controllers
             return PartialView("_RegistrarEquivalenciasAnio", model);
         }
 
+        [Route("mantenimiento/clasificadores-presupuestales/{anio}/equivalencias/{id}")]
+        public ActionResult CopiarEquivalenciasAnioLote(int id, int anio)
+        {
+            ViewBag.Title = $"Equivalencias del clasificador para el año { anio.ToString() } ";
+            ViewBag.Conceptos = new SelectList(_selectModels.GetCodigoClasificadorConceptos(), "Value", "TextDisplay");
+
+            return PartialView("_RegistrarCopiaEquivalenciasAnio");
+        }
+
         [HttpPost]
         public ActionResult AgregarConceptoEquivalencia(ClasificadorEquivalenciaViewModel model, int anio)
         {
-            var result = _clasificador.SaveEquivalencia(null, model.ClasificadorId, model.ConceptoEquivCod, WebSecurity.CurrentUserId);
+            var result = _clasificador.SaveEquivalencia(model, anio, WebSecurity.CurrentUserId, true);
 
             var listadoEquivalenciasModel = _clasificador.FindEquivalencias(model.ClasificadorId, anio.ToString());
 
