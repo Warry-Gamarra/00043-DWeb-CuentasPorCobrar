@@ -3615,7 +3615,19 @@ END
 GO
 
 
---select distinct '<option>' + descripcio + '(S/. ' + cast(monto as varchar) + ')' + '</option>'
---from temporal_pagos.dbo.cp_pri 
---where clasific_5 is not null and len(clasific_5) > 0
---ORDER BY 1
+
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_Tasas')
+	DROP VIEW [dbo].[VW_Tasas]
+GO
+
+CREATE VIEW [dbo].[VW_Tasas]
+AS
+SELECT t.I_TasaUnfvID, t.C_CodTasa, cp.T_ConceptoPagoDesc, t.I_MontoTasa, cp.T_Clasificador,
+	t.B_Habilitado
+FROM dbo.TR_TasaUnfv t
+INNER JOIN dbo.TI_ConceptoPago cp on cp.I_ConcPagID = t.I_ConcPagID and cp.B_Eliminado = 0
+WHERE t.B_Eliminado = 0
+GO
+
+select t.* from dbo.VW_Tasas t where t.B_Habilitado = 1

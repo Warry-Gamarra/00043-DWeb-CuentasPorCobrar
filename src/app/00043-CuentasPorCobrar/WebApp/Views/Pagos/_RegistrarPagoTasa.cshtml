@@ -1,16 +1,11 @@
-﻿@model WebApp.ViewModels.ObligacionManualViewModel
+﻿@model WebApp.ViewModels.PagoTasaViewModel
 
-<link href="~/Assets/fileInput/css/fileinput.min.css" rel="stylesheet" />
-<script src="~/Assets/fileInput/js/fileinput.min.js"></script>
-<script src="~/Assets/fileInput/js/locales/es.js"></script>
-<script src="~/Assets/jquery/jquery.form.js"></script>
-
-@using (Html.BeginForm("RegistrarObligacionManual", "Pagos", FormMethod.Post, new { id = "form-obligacion-manual" }))
+@using (Html.BeginForm("RegistrarPagoTasa", "Pagos", FormMethod.Post, new { id = "form-obligacion-manual" }))
 {
     <div class="modal-header">
         <h5 class="modal-title">
             <i class="fa fa-paperclip text-primary">&nbsp;</i>
-            Registro de obligaciones
+            Registro de pago de tasas
         </h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -18,52 +13,38 @@
     </div>
     <div class="modal-body">
         <div class="col-md-12">
-            @Html.HiddenFor(model => model.cantidad)
             @Html.HiddenFor(model => model.moneda)
             @Html.HiddenFor(model => model.tipoPago)
 
             <div class="form-group form-row">
-                <label class="control-label col-form-label col-md-3 col-sm-4 col-12">Año</label>
-                <div class="col-md-3 col-sm-4 col-12">
-                    @Html.DropDownListFor(model => model.anio, ViewBag.Anios as SelectList, new { @class = "form-control" })
-                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.anio)</p>
-                </div>
-                <label class="control-label col-form-label col-md-3 col-sm-4 col-12">Periodo</label>
-                <div class="col-md-3 col-sm-4 col-12">
-                    @Html.DropDownListFor(model => model.idPeriodo, ViewBag.Periodos as SelectList, new { @class = "form-control" })
-                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.idPeriodo)</p>
+                <label for="codigoDepositante" class="control-label col-form-label col-md-3 col-sm-4 col-12">Código del depositante</label>
+                <div class="col-md-9 col-sm-10 col-12">
+                    @Html.TextBoxFor(m => m.codigoDepositante, new { @class = "form-control" })
+                    <p class="text-danger small">@Html.ValidationMessageFor(m => m.codigoDepositante)</p>
                 </div>
             </div>
 
             <div class="form-group form-row">
-                <label for="codigoAlumno" class="control-label col-form-label col-md-3 col-sm-4 col-12">Código de alumno</label>
+                <label for="nombreDepositante" class="control-label col-form-label col-md-3 col-sm-4 col-12">Nombre del depositante</label>
                 <div class="col-md-9 col-sm-10 col-12">
-                    @Html.TextBoxFor(m => m.codigoAlumno, new { @class = "form-control" })
-                    <p class="text-danger small">@Html.ValidationMessageFor(m => m.codigoAlumno)</p>
+                    @Html.TextBoxFor(m => m.nombreDepositante, new { @class = "form-control" })
+                    <p class="text-danger small">@Html.ValidationMessageFor(m => m.nombreDepositante)</p>
                 </div>
             </div>
 
             <div class="form-group form-row">
-                <label for="codRc" class="control-label col-form-label col-md-3 col-sm-4 col-12">Especialidad</label>
+                <label for="tasa" class="control-label col-form-label col-md-3 col-sm-4 col-12">Tasa</label>
                 <div class="col-md-9 col-sm-10 col-12">
-                    @Html.DropDownListFor(model => model.codRc, ViewBag.Especialidades as SelectList, new { @class = "form-control" })
-                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.codRc)</p>
+                    @Html.DropDownListFor(model => model.tasa, ViewBag.Tasas as SelectList, "", new { @class = "select-filter form-control" })
+                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.tasa)</p>
                 </div>
             </div>
 
             <div class="form-group form-row">
-                <label for="nombreAlumno" class="control-label col-form-label col-md-3 col-sm-4 col-12">Nombre del alumno</label>
+                <label class="control-label col-form-label col-md-3 col-sm-4 col-12">Cantidad</label>
                 <div class="col-md-9 col-sm-10 col-12">
-                    @Html.TextBoxFor(m => m.nombreAlumno, new { @class = "form-control", @disabled = "disabled" })
-                    <p class="text-danger small">@Html.ValidationMessageFor(m => m.nombreAlumno)</p>
-                </div>
-            </div>
-
-            <div class="form-group form-row">
-                <label for="idOligacionCab" class="control-label col-form-label col-md-3 col-sm-4 col-12">Obligación</label>
-                <div class="col-md-9 col-sm-10 col-12">
-                    @Html.DropDownListFor(model => model.idOligacionCab, ViewBag.Proceso as SelectList, new { @class = "form-control" })
-                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.idOligacionCab)</p>
+                    @Html.TextBoxFor(m => m.cantidad, new { @class = "form-control" })
+                    <p class="text-dangersmall">@Html.ValidationMessageFor(m => m.cantidad)</p>
                 </div>
             </div>
 
@@ -94,7 +75,7 @@
             <div class="form-group form-row">
                 <label for="fechaPago" class="control-label col-form-label col-md-3 col-sm-4 col-12">Fecha de pago</label>
                 <div class="col-md-9 col-sm-10 col-12">
-                    <div class="input-group date" >
+                    <div class="input-group date">
                         @Html.TextBoxFor(m => m.fechaPago, new { @class = "form-control" })
                         <div class="input-group-append">
                             <span class="input-group-text"><i class="fa fa-calendar-o"></i></span>
@@ -128,33 +109,28 @@
         ERROR: 'error'
     };
 
-    $('.input-group.date').datepicker({
-        todayBtn: 'linked',
-        language: 'es',
-        format: 'dd/MM/yyyy',
-        autoclose: true,
-        startDate: '-0d',
-        weekStart: 0,
-        orientation: 'bottom auto',
-        calendarWeeks: true,
-    }).on('hide', function (e) {
-        e.stopPropagation();
+    $(document).ready(function () {
+        $('.input-group.date').datepicker({
+            todayBtn: 'linked',
+            language: 'es',
+            format: 'dd/MM/yyyy',
+            autoclose: true,
+            weekStart: 0,
+            orientation: 'bottom auto',
+            calendarWeeks: true,
+        }).on('hide', function (e) {
+            e.stopPropagation();
+        });
+
+        $('.select-filter').select2({
+            dropdownParent: $('#modal-container-lg'),
+            theme: 'bootstrap4',
+            placeholder: 'SELECCIONAR',
+            allowClear: true
+        }).on('closing', function (e) {
+            e.stopPropagation();
+        });
     });
-
-    //$(document).on('click', '#btnConsultarObligacionAlumno', function () {
-    //    let anio = $('#cmbAnioIndividual').val();
-    //    let periodo = $('#cmbPeriodoIndividual').val();
-    //    let codAlu = $('#txtCodAlumno').val();
-    //    let especialidad = $('#cmbEspecialidad').val();
-
-    //    if (codAlu === null || codAlu.length !== 10) {
-    //        MostrarMensajeObligacionesPorAlumno('El campo Código de Alumno es requerido.', MESSAGE_TYPE.WARNING);
-    //    } else if (especialidad === null || especialidad.length === '') {
-    //        ObtenerEspecialidadesAlumno(codAlu);
-    //    } else {
-    //        BuscarObligacionesAlumno(anio, periodo, especialidad, codAlu);
-    //    }
-    //});
 
     $(document).on('keypress', '#form-obligacion-manual #codigoAlumno', function (e) {
         if (e.which === 13) {
@@ -167,7 +143,6 @@
             } else {
                 ObtenerEspecialidadesAlumno(codAlu);
             }
-
         }
     });
 

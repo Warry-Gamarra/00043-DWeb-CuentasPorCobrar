@@ -352,5 +352,20 @@ namespace Domain.Entities
 
             return result;
         }
+
+        public static TasaDTO VW_Tasas_To_TasaDTO(VW_Tasas tasa)
+        {
+            var result = new TasaDTO()
+            {
+                I_TasaUnfvID = tasa.I_TasaUnfvID,
+                C_CodTasa = tasa.C_CodTasa,
+                T_ConceptoPagoDesc = tasa.T_ConceptoPagoDesc,
+                I_MontoTasa = tasa.I_MontoTasa,
+                T_clasificador = tasa.T_clasificador,
+                B_Habilitado = tasa.B_Habilitado
+            };
+
+            return result;
+        }
     }
 }

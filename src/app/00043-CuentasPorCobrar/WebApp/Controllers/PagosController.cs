@@ -22,6 +22,7 @@ namespace WebApp.Controllers
         private readonly IProgramasClientFacade programasClientFacade;
         private readonly SelectModel selectModels;
         private readonly PagosModel pagosModel;
+        private ITasaServiceFacade tasaService;
 
         public PagosController()
         {
@@ -32,6 +33,7 @@ namespace WebApp.Controllers
             programasClientFacade = new ProgramasClientFacade();
             selectModels = new SelectModel();
             pagosModel = new PagosModel();
+            tasaService = new TasaServiceFacade();
         }
 
         // GET: Pagos
@@ -165,8 +167,8 @@ namespace WebApp.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
-        //[Route("operaciones/cargar-pagos/registro-manual")]
-        public ActionResult RegistrarObligacionManual()
+        [HttpGet]
+        public ActionResult RegistrarPagoObligacion()
         {
             
             ViewBag.Anios = new SelectList(generalServiceFacade.Listar_Anios(), "Value", "TextDisplay");
@@ -175,28 +177,57 @@ namespace WebApp.Controllers
             ViewBag.Proceso = new SelectList(new List<SelectViewModel>(), "Value", "TextDisplay");
             ViewBag.EntidadesFinancieras = new SelectList(ListaEntidadesFinancieras(), "Value", "TextDisplay");
             
-            var model = new ObligacionManualViewModel();
+            var model = new PagoObligacionViewModel();
 
-            return PartialView("_RegistrarObligacion", model);
+            return PartialView("_RegistrarPagoObligacion", model);
         }
 
         [HttpPost]
-        public ActionResult RegistrarObligacionManual(ObligacionManualViewModel model)
+        [ValidateAntiForgeryToken]
+        public ActionResult RegistrarPagoObligacion(PagoObligacionViewModel model)
+        {
+            Response result = new Response();
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    int currentUserID = WebSecurity.CurrentUserId;
+
+                    result = pagosModel.GrabarPagoObligacion(model, currentUserID);
+
+                    if (!result.Value)
+                    {
+                        throw new Exception(result.Message);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ResponseModel.Error(result, ex.Message);
+                }
+            }
+
+            //return Json(result, JsonRequestBehavior.AllowGet);
+            return PartialView("_MsgPartialWR", result);
+        }
+
+        [HttpGet]
+        public ActionResult RegistrarPagoTasa()
+        {
+            ViewBag.Tasas = new SelectList(tasaService.listarTasas(), "Value", "TextDisplay");
+            ViewBag.EntidadesFinancieras = new SelectList(ListaEntidadesFinancieras(), "Value", "TextDisplay");
+
+            var model = new PagoTasaViewModel();
+
+            return PartialView("_RegistrarPagoTasa", model);
+        }
+
+        [HttpPost]
+        public ActionResult RegistrarPagoTasa(PagoTasaViewModel model)
         {
             Object result = null;
 
             return Json(result, JsonRequestBehavior.AllowGet);
-        }
-
-        //[Route("operaciones/cargar-pagos/registro-manual")]
-        public ActionResult RegistrarTasaManual()
-        {
-            ViewBag.Tasas = new SelectList(new List<SelectViewModel>(), "Value", "TextDisplay");
-            ViewBag.EntidadesFinancieras = new SelectList(ListaEntidadesFinancieras(), "Value", "TextDisplay");
-
-            var model = new TasaManualViewModel();
-
-            return PartialView("_RegistrarTasa", model);
         }
     }
 }

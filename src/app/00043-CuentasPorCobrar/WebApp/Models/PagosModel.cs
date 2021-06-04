@@ -171,5 +171,15 @@ namespace WebApp.Models
             return result;
         }
 
+
+        public Response GrabarPagoObligacion(PagoObligacionViewModel model, int currentUserId)
+        {
+            var lista = new List<PagoObligacionEntity>();
+
+            lista.Add(Mapper.PagoObligacionViewModel_To_PagoObligacionEntity(model));
+
+            return _obligacionService.Grabar_Pago_Obligaciones(lista, currentUserId);
+        }
+
     }
 }

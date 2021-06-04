@@ -6,7 +6,7 @@ using System.Web;
 
 namespace WebApp.ViewModels
 {
-    public class TasaManualViewModel
+    public class PagoTasaViewModel
     {
         public string codigoDepositante { get; set; }
 

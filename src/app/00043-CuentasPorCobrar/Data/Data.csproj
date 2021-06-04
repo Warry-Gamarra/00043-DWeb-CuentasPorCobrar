@@ -111,6 +111,7 @@
     <Compile Include="Tables\Webpages_Roles.cs" />
     <Compile Include="Views\VW_CuotasPago.cs" />
     <Compile Include="Views\VW_DetalleObligaciones.cs" />
+    <Compile Include="Views\VW_Tasas.cs" />
     <Compile Include="Views\VW_Usuario.cs" />
     <Compile Include="Tables\TS_CorreoAplicacion.cs" />
   </ItemGroup>
