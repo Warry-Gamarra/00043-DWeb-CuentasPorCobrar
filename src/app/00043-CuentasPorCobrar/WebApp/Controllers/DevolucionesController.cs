@@ -10,13 +10,13 @@ using WebMatrix.WebData;
 
 namespace WebApp.Controllers
 {
-    public class DevolucionController : Controller
+    public class DevolucionesController : Controller
     {
         // GET: Devoluciones
         public readonly EntidadRecaudadoraModel _entidadRecaudadora;
         public readonly DevolucionPagoModel _devolucionPagoModel;
 
-        public DevolucionController()
+        public DevolucionesController()
         {
             _entidadRecaudadora = new EntidadRecaudadoraModel();
             _devolucionPagoModel = new DevolucionPagoModel();
@@ -37,6 +37,8 @@ namespace WebApp.Controllers
         {
             ViewBag.Title = "Nueva devolución de pago";
             ViewBag.EntidadRecaudadora = new SelectList(_entidadRecaudadora.Find(enabled: true), "Id", "NombreEntidad");
+            ViewBag.Mensaje = "Ingrese los datos del pago de referencia para la devolución";
+            ViewBag.Color = "secondary";
 
             return PartialView("_RegistrarDevolucionPago", new RegistrarDevolucionPagoViewModel());
         }
@@ -51,6 +53,25 @@ namespace WebApp.Controllers
             ViewBag.EntidadRecaudadora = new SelectList(_entidadRecaudadora.Find(enabled: true), "Id", "NombreEntidad", model.EntidadRecaudadora);
 
             return PartialView("_RegistrarDevolucionPago", model);
+        }
+
+        [HttpGet]
+        public ActionResult BuscarPagoDevolucion(int entidadId, string codreferencia)
+        {
+            var model = new DatosPagoViewModel();
+
+            if (model.PagoId == 0)
+            {
+                ViewBag.Mensaje = "No se encontró ningún pago para el codigo ingresado";
+                ViewBag.Color = "danger";
+            }
+            else
+            {
+                ViewBag.Mensaje = "Ingrese los datos del pago de referencia para la devolución";
+                ViewBag.Color = "secondary";
+            }
+
+            return PartialView("_ResultadoBusquedaPago", model);
         }
 
 

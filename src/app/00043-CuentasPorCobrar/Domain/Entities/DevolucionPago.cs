@@ -24,6 +24,7 @@ namespace Domain.Entities
         public DateTime? FecAprueba { get; set; }
         public DateTime? FecDevuelve { get; set; }
         public string NroSIAF { get; set; }
+        public string Comentario { get; set; }
 
 
         private readonly TR_DevolucionPago _devolucionPagoRepository;

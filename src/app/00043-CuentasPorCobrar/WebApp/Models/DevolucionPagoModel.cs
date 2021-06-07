@@ -52,7 +52,6 @@ namespace WebApp.Models
                 MontoDevolucion = model.MontoDevolucion,
                 FecAprueba = model.FecAprueba,
                 FecDevuelve = model.FecDevuelve,
-                NroSIAF = model.NroSIAF.ToString()
             };
 
             Response result = _devolucionPago.Save(devolucionPago, currentUserId, (devolucionPago.DevolucionId == 0 ? SaveOption.Insert : SaveOption.Update));
