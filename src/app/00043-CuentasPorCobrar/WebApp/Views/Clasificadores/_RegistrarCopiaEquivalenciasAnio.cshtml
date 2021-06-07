@@ -31,7 +31,7 @@
             <div class="card" id="card_equiv_anio" style="display:none">
                 <div class="card-body">
                     <h5 class="card-title">Equivalencias</h5>
-                    <p class="card-text text-secondary" id="msg_result">Se encontraron <span id="camt_equiv" class="font-bold"></span> para el año seleecionado.</p>
+                    <p class="card-text text-secondary" id="msg_result">Se encontraron <span id="cant_equiv" class="font-bold"></span> para el año seleccionado.</p>
                 </div>
             </div>
             <div id="loader" class="container-fluid" style="display:none;">
@@ -56,7 +56,7 @@
             </div>
         </div>
 
-        <button type="submit" class="btn btn-primary" id="btnsubmit"><i class="fa fa-save"></i>&nbsp;Guardar</button>
+        <button type="submit" class="btn btn-primary" id="btnsubmit"><i class="fa fa-save"></i>&nbsp;Copiar equivalencias</button>
         <button type="button" class="btn btn-secondary" id="btnCancel" data-dismiss="modal"><i class="fa fa-times-circle-o">&nbsp;</i>Cancelar</button>
     </div>
 }
@@ -85,7 +85,7 @@
                 $('#loader').show();
             },
             success: function (data) {
-                $('#camt_equiv').text(data);
+                $('#cant_equiv').text(data);
                 $('#card_equiv_anio').show();
             },
             error: function (jqXHR, textStatus, errorThrown) {

@@ -128,7 +128,7 @@ namespace Domain.Entities
         {
 
             _clasificadorEquivAnioRepository.I_ClasifEquivalenciaID = clasificadorEquivalencia.ClasificadorEquivId.Value;
-            _clasificadorEquivAnioRepository.N_Anio = clasificadorEquivalencia.AnioEjercicio;
+            _clasificadorEquivAnioRepository.N_Anio = anio;
             _clasificadorEquivAnioRepository.B_Habilitado = clasificadorEquivalencia.Habilitado;
 
             switch (saveOption)

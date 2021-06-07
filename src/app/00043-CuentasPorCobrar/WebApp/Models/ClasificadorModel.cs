@@ -196,6 +196,7 @@ namespace WebApp.Models
 
             if (result.Value)
             {
+                result.Message = "Equivalencias de clasificadores copiados correctamente";
                 result.Success(false);
             }
             else
