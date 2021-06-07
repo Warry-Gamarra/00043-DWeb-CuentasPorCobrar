@@ -89,6 +89,25 @@ namespace WebApp.Models
             return result;
         }
 
+        public List<ClasificadorEquivalenciaViewModel> FindEquivalencias(string anio)
+        {
+            List<ClasificadorEquivalenciaViewModel> result = new List<ClasificadorEquivalenciaViewModel>();
+
+            foreach (var item in _clasificadorEquivalencia.Find(anio))
+            {
+                result.Add(new ClasificadorEquivalenciaViewModel()
+                {
+                    ClasificadorId = item.ClasificadorId,
+                    ClasificadorEquivId = item.ClasificadorEquivId,
+                    ConceptoEquivDesc = item.ConceptoEquivDesc,
+                    ConceptoEquivCod = item.ConceptoEquivCod,
+                    Habilitado = item.Habilitado
+                });
+            }
+
+            return result;
+        }
+
         public List<ClasificadorEquivalenciaViewModel> FindEquivalencias(int clasificadorId, string anio)
         {
             List<ClasificadorEquivalenciaViewModel> result = new List<ClasificadorEquivalenciaViewModel>();
@@ -133,7 +152,6 @@ namespace WebApp.Models
             ClasificadorEquivalencia clasificadorEquivalencia = new ClasificadorEquivalencia()
             {
                 ClasificadorEquivId = equivalenciaId,
-                AnioEjercicio = anio,
                 Habilitado = currentState
             };
 
@@ -144,5 +162,48 @@ namespace WebApp.Models
             return result;
         }
 
+
+        public Response SaveEquivalenciaAnio(ClonarEquivalenciasClasificadorViewModel model, int currentUserId)
+        {
+
+            Response result = new Response();
+
+            var clasificadoresEquivalenciaAnioDestino = _clasificadorEquivalencia.Find(model.AnioDestino);
+            var clasificadoresEquivalenciaAnioOrigen = _clasificadorEquivalencia.Find(model.AnioOrigen);
+
+            foreach (var item in clasificadoresEquivalenciaAnioDestino)
+            {
+                ClasificadorEquivalencia clasificadorEquivalencia = new ClasificadorEquivalencia()
+                {
+                    ClasificadorEquivId = item.ClasificadorEquivId,
+                    Habilitado = false
+                };
+
+                result = _clasificadorEquivalencia.SaveAnio(clasificadorEquivalencia, model.AnioDestino, currentUserId, SaveOption.Update);
+            }
+
+
+            foreach (var item in clasificadoresEquivalenciaAnioOrigen)
+            {
+                ClasificadorEquivalencia clasificadorEquivalencia = new ClasificadorEquivalencia()
+                {
+                    ClasificadorEquivId = item.ClasificadorEquivId,
+                    Habilitado = item.Habilitado
+                };
+
+                result = _clasificadorEquivalencia.SaveAnio(clasificadorEquivalencia, model.AnioDestino, currentUserId, (clasificadoresEquivalenciaAnioDestino.FirstOrDefault(x => x.ClasificadorEquivId == item.ClasificadorEquivId) == null ? SaveOption.Insert : SaveOption.Update));
+            }
+
+            if (result.Value)
+            {
+                result.Success(false);
+            }
+            else
+            {
+                result.Error(false);
+            }
+
+            return result;
+        }
     }
 }

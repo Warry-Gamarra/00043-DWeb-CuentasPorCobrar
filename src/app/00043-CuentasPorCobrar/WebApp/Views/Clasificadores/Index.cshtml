@@ -17,9 +17,9 @@
     </div>
 
     <div class="col-12 mt-5">
-        <p class="h3"><small>Clasificadores presupuestales Registrados</small></p>
-        <a href="@Url.Action("CopiarEquivalenciasAnioLote", "Clasificadores")" class="btn btn-primary float-left modal-link-lg mb-5">
-            <i class="fa fa-copy"></i> Copiar Configuración
+        <p class="h3 mb-4"><small>Clasificadores presupuestales Registrados</small></p>
+        <a href="@Url.Action("ClonarEquivalenciasAnio", "Clasificadores", new { area = "", anio = ViewBag.Anio })" class="btn btn-outline-primary float-left modal-link mb-5">
+            <i class="fa fa-clone"></i> Copiar configuración
         </a>
         <a href="@Url.Action("Create", "Clasificadores")" class="btn btn-primary float-right modal-link-lg mb-5">
             <i class="fa fa-plus-circle"></i> Agregar Clasificador

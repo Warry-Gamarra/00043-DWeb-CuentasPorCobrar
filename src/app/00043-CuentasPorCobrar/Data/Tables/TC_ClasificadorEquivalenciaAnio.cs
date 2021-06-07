@@ -25,6 +25,28 @@ namespace Data.Tables
         public DateTime? D_FecMod { get; set; }
 
 
+        public List<TC_ClasificadorEquivalenciaAnio> Find()
+        {
+            List<TC_ClasificadorEquivalenciaAnio> result = new List<TC_ClasificadorEquivalenciaAnio>();
+
+            try
+            {
+                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
+                {
+                    string s_command = @"SELECT * FROM TC_ClasificadorEquivalenciaAnio WHERE B_Eliminado = 0;";
+
+                    result = _dbConnection.Query<TC_ClasificadorEquivalenciaAnio>(s_command, commandType: CommandType.Text).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
+
+
         public List<TC_ClasificadorEquivalenciaAnio> Find(string anio)
         {
             List<TC_ClasificadorEquivalenciaAnio> result = new List<TC_ClasificadorEquivalenciaAnio>();

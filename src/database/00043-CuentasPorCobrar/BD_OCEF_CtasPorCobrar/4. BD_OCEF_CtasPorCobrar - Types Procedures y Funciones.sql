@@ -1672,48 +1672,48 @@ END
 GO
 
 
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarEstadoClasifEquivAnioPorLote')
-	DROP PROCEDURE [dbo].[USP_U_ActualizarEstadoClasifEquivAnioPorLote]
-GO
+--IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarEstadoClasifEquivAnioPorLote')
+--	DROP PROCEDURE [dbo].[USP_U_ActualizarEstadoClasifEquivAnioPorLote]
+--GO
 
-CREATE PROCEDURE [dbo].[USP_U_ActualizarEstadoClasifEquivAnioPorLote]
-(
-	@N_AnioConfigOrigen		varchar(4)
-	,@N_AnioConfigDestino	varchar(4)
-	,@I_CurrentUserID		int
-	,@D_FecCre			datetime
+--CREATE PROCEDURE [dbo].[USP_U_ActualizarEstadoClasifEquivAnioPorLote]
+--(
+--	@N_AnioConfigOrigen		varchar(4)
+--	,@N_AnioConfigDestino	varchar(4)
+--	,@I_CurrentUserID		int
+--	,@D_FecCre			datetime
 
-	,@B_Result			bit OUTPUT
-	,@T_Message			nvarchar(4000) OUTPUT
-)
-AS
-BEGIN	
-	BEGIN TRANSACTION
-	BEGIN TRY
+--	,@B_Result			bit OUTPUT
+--	,@T_Message			nvarchar(4000) OUTPUT
+--)
+--AS
+--BEGIN	
+--	BEGIN TRANSACTION
+--	BEGIN TRY
 
-		MERGE  TC_ClasificadorEquivalenciaAnio
-		USING  (SELECT * FROM TC_ClasificadorEquivalenciaAnio WHERE N_Anio = @N_AnioConfigOrigen) AS origen
-		ON	origen.I_ClasifEquivalenciaID = TC_ClasificadorEquivalenciaAnio.I_ClasifEquivalenciaID
-		WHEN MATCHED AND TC_ClasificadorEquivalenciaAnio.N_Anio = @N_AnioConfigDestino THEN
-			UPDATE SET TC_ClasificadorEquivalenciaAnio.B_Habilitado = origen.B_Habilitado
-				,TC_ClasificadorEquivalenciaAnio.D_FecMod = @D_FecCre
-				,TC_ClasificadorEquivalenciaAnio.I_UsuarioMod = @I_CurrentUserID
-		WHEN NOT MATCHED BY TARGET THEN
-			INSERT (N_Anio, I_ClasifEquivalenciaID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
-			VALUES (@N_AnioConfigDestino, origen.I_ClasifEquivalenciaID, origen.B_Habilitado,  0, @I_CurrentUserID, @D_FecCre);
+--		MERGE  TC_ClasificadorEquivalenciaAnio
+--		USING  (SELECT * FROM TC_ClasificadorEquivalenciaAnio WHERE N_Anio = @N_AnioConfigOrigen) AS origen
+--		ON	origen.I_ClasifEquivalenciaID = TC_ClasificadorEquivalenciaAnio.I_ClasifEquivalenciaID
+--		WHEN MATCHED AND TC_ClasificadorEquivalenciaAnio.N_Anio = @N_AnioConfigDestino THEN
+--			UPDATE SET TC_ClasificadorEquivalenciaAnio.B_Habilitado = origen.B_Habilitado
+--				,TC_ClasificadorEquivalenciaAnio.D_FecMod = @D_FecCre
+--				,TC_ClasificadorEquivalenciaAnio.I_UsuarioMod = @I_CurrentUserID
+--		WHEN NOT MATCHED BY TARGET THEN
+--			INSERT (N_Anio, I_ClasifEquivalenciaID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
+--			VALUES (@N_AnioConfigDestino, origen.I_ClasifEquivalenciaID, origen.B_Habilitado,  0, @I_CurrentUserID, @D_FecCre);
 		
-		SET @B_Result = 1
-		SET @T_Message = 'La operación se realizó correctamente.'
+--		SET @B_Result = 1
+--		SET @T_Message = 'La operación se realizó correctamente.'
 
-		COMMIT TRANSACTION
-	END TRY
-	BEGIN CATCH
-		ROLLBACK TRANSACTION
-		SET @B_Result = 0
-		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10))
-	END CATCH
-END
-GO
+--		COMMIT TRANSACTION
+--	END TRY
+--	BEGIN CATCH
+--		ROLLBACK TRANSACTION
+--		SET @B_Result = 0
+--		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10))
+--	END CATCH
+--END
+--GO
 
 
 /*-----------------------------------------------------------*/

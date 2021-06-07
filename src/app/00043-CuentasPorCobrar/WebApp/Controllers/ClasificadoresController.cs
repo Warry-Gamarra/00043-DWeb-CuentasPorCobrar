@@ -114,14 +114,22 @@ namespace WebApp.Controllers
             return PartialView("_RegistrarEquivalenciasAnio", model);
         }
 
-        [Route("mantenimiento/clasificadores-presupuestales/{anio}/equivalencias/{id}")]
-        public ActionResult CopiarEquivalenciasAnioLote(int id, int anio)
+        [Route("mantenimiento/clasificadores-presupuestales/clonar-equivalencias/{anio}")]
+        public ActionResult ClonarEquivalenciasAnio(int anio)
         {
-            ViewBag.Title = $"Equivalencias del clasificador para el año { anio.ToString() } ";
-            ViewBag.Conceptos = new SelectList(_selectModels.GetCodigoClasificadorConceptos(), "Value", "TextDisplay");
+            ViewBag.Title = $"Clonar equivalencias para el año { anio.ToString() } ";
+            ViewBag.Anios = new SelectList(_selectModels.GetAniosClasificador(anio), "Value", "TextDisplay");
 
-            return PartialView("_RegistrarCopiaEquivalenciasAnio");
+            return PartialView("_RegistrarCopiaEquivalenciasAnio", new ClonarEquivalenciasClasificadorViewModel(anio));
         }
+
+        public ActionResult BuscarEquivalenciasAnio(int anio)
+        {
+            var result = _clasificador.FindEquivalencias(anio.ToString()).Count();
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
 
         [HttpPost]
         public ActionResult AgregarConceptoEquivalencia(ClasificadorEquivalenciaViewModel model, int anio)
@@ -139,6 +147,15 @@ namespace WebApp.Controllers
             var result = _clasificador.SaveEquivalenciaAnio(equivalenciaId, anio, enable, WebSecurity.CurrentUserId);
 
             return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+
+        [HttpPost]
+        public ActionResult ClonarEquivalenciaAnio(ClonarEquivalenciasClasificadorViewModel model)
+        {
+            var result = _clasificador.SaveEquivalenciaAnio(model, WebSecurity.CurrentUserId);
+
+            return PartialView("_MsgPartialWR", result);
         }
     }
 }
