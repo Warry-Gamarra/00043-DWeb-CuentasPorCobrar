@@ -114,6 +114,7 @@ namespace WebApp.Controllers
             return PartialView("_RegistrarEquivalenciasAnio", model);
         }
 
+
         [Route("mantenimiento/clasificadores-presupuestales/clonar-equivalencias/{anio}")]
         public ActionResult ClonarEquivalenciasAnio(int anio)
         {
@@ -122,6 +123,7 @@ namespace WebApp.Controllers
 
             return PartialView("_RegistrarCopiaEquivalenciasAnio", new ClonarEquivalenciasClasificadorViewModel(anio));
         }
+
 
         public ActionResult BuscarEquivalenciasAnio(int anio)
         {
