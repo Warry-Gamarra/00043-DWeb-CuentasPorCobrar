@@ -3681,6 +3681,7 @@ CREATE PROCEDURE [dbo].[USP_I_GrabarDevolucionPago]
 	,@D_FecDevAprob		datetime
 	,@D_FecDevPago		datetime
 	,@D_FecProc			datetime
+	,@T_Comentario		varchar(500)
 	,@D_FecCre			datetime
 	,@CurrentUserId		int
 
@@ -3690,8 +3691,8 @@ AS
 BEGIN
   SET NOCOUNT ON
   	BEGIN TRY
-		INSERT INTO TR_DevolucionPago (I_PagoProcesID, I_MontoPagoDev, D_FecDevAprob, D_FecDevPago, D_FecProc, B_Anulado, I_UsuarioCre, D_FecCre)
-							   VALUES (@I_PagoProcesID, @I_MontoPagoDev, @D_FecDevAprob, @D_FecDevPago, @D_FecProc, 0, @CurrentUserId, @D_FecCre)
+		INSERT INTO TR_DevolucionPago (I_PagoProcesID, I_MontoPagoDev, D_FecDevAprob, D_FecDevPago, D_FecProc, T_Comentario, B_Anulado, I_UsuarioCre, D_FecCre)
+							   VALUES (@I_PagoProcesID, @I_MontoPagoDev, @D_FecDevAprob, @D_FecDevPago, @D_FecProc, @T_Comentario, 0, @CurrentUserId, @D_FecCre)
 
 		SET @B_Result = 1
 		SET @T_Message = 'Nuevo registro agregado.'
@@ -3714,6 +3715,7 @@ CREATE PROCEDURE [dbo].[USP_U_ActualizarDevolucionPago]
 	,@I_MontoPagoDev	decimal(15,2)
 	,@D_FecDevAprob		datetime
 	,@D_FecDevPago		datetime
+	,@T_Comentario		varchar(500)
 	,@D_FecMod			datetime
 	,@CurrentUserId		int
 
@@ -3727,6 +3729,7 @@ BEGIN
 		SET	 I_MontoPagoDev = @I_MontoPagoDev
 			, D_FecDevAprob = @D_FecDevAprob
 			, D_FecDevPago = @D_FecDevPago
+			, T_Comentario = @T_Comentario
 			, D_FecMod = @D_FecMod
 			, I_UsuarioMod = @CurrentUserId
 		WHERE I_DevolucionPagoID = @I_DevolucionPagoID
@@ -3881,8 +3884,8 @@ AS
 		   LEFT JOIN TC_ClasificadorEquivalencia CE ON CE.C_ClasificConceptoCod = CP.T_Clasificador
 		   LEFT JOIN TC_ClasificadorEquivalenciaAnio CEA ON CEA.I_ClasifEquivalenciaID = ce.I_ClasifEquivalenciaID
 		   LEFT JOIN TC_ClasificadorPresupuestal CL ON CL.I_ClasificadorID = CE.I_ClasificadorID
-)
 
+)
 GO
 
 

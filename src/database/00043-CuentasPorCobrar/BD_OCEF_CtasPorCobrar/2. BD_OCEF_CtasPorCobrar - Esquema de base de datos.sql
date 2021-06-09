@@ -602,6 +602,7 @@ CREATE TABLE TR_DevolucionPago
 	D_FecDevAprob        datetime  NULL ,
 	D_FecDevPago         datetime  NULL ,
 	D_FecProc	         datetime  NULL ,
+	T_Comentario		 varchar(500)  NULL ,
 	B_Anulado			 bit  NOT NULL ,
 	I_UsuarioCre         int  NULL ,
 	D_FecCre             datetime  NULL ,

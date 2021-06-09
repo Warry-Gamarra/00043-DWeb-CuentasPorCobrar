@@ -18,6 +18,7 @@ namespace Data.Views
         public DateTime? D_FecDevAprob { get; set; }
         public DateTime? D_FecDevPago { get; set; }
         public DateTime? D_FecProc { get; set; }
+        public string T_Comentario { get; set; }
         public int? I_UsuarioCre { get; set; }
         public DateTime? D_FecCre { get; set; }
         public int? I_UsuarioMod { get; set; }

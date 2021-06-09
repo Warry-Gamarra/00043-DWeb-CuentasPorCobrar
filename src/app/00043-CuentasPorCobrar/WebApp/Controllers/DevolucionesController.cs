@@ -13,20 +13,25 @@ namespace WebApp.Controllers
     public class DevolucionesController : Controller
     {
         // GET: Devoluciones
-        public readonly EntidadRecaudadoraModel _entidadRecaudadora;
-        public readonly DevolucionPagoModel _devolucionPagoModel;
+        private readonly EntidadRecaudadoraModel _entidadRecaudadora;
+        private readonly DevolucionPagoModel _devolucionPagoModel;
+        private readonly SelectModel _selectModels;
 
         public DevolucionesController()
         {
             _entidadRecaudadora = new EntidadRecaudadoraModel();
             _devolucionPagoModel = new DevolucionPagoModel();
+            _selectModels = new SelectModel();
         }
 
         [Route("operaciones/devolucion-pagos")]
-        public ActionResult Index()
+        public ActionResult Index(int? anio)
         {
+            anio = anio ?? DateTime.Now.Year;
             ViewBag.Title = "Devolución de pagos";
-            var model = new List<DevolucionesViewModel>();
+            ViewBag.Anios = new SelectList(_selectModels.GetAnios(1990), "Value", "TextDisplay", anio);
+
+            var model = _devolucionPagoModel.Find().Where(x => x.FecAprobacion.Value.Year == anio.Value);
 
             return View(model);
         }
@@ -51,6 +56,8 @@ namespace WebApp.Controllers
 
             var model = _devolucionPagoModel.Find(id);
             ViewBag.EntidadRecaudadora = new SelectList(_entidadRecaudadora.Find(enabled: true), "Id", "NombreEntidad", model.EntidadRecaudadora);
+            ViewBag.Mensaje = "Ingrese los datos del pago de referencia para la devolución";
+            ViewBag.Color = "secondary";
 
             return PartialView("_RegistrarDevolucionPago", model);
         }
@@ -74,6 +81,12 @@ namespace WebApp.Controllers
             return PartialView("_ResultadoBusquedaPago", model);
         }
 
+        public JsonResult ChangeState(int devolucionId)
+        {
+            var result = _devolucionPagoModel.AnularDevolucion(devolucionId, WebSecurity.CurrentUserId);
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]

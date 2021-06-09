@@ -99,9 +99,6 @@
                 </div>
 
             </fieldset>
-
-
-
         </div>
     </div>
 
@@ -119,9 +116,7 @@
 }
 
 <script>
-
-    calcualarDevolucion();
-
+    cargarMontos();
     $('#btnsubmit').removeClass('disabled');
 
     $("form").submit(function () {
@@ -151,7 +146,7 @@
             $('#MontoDescuento').select();
         }
         else {
-            $('#MontoDescuento').val(0.00);
+            $('#MontoDescuento').val((0).toFixed(2));
             $('#MontoDescuento').prop('disabled', true);
             calcualarDevolucion();
         }
@@ -165,6 +160,24 @@
         let descuento = parseFloat($(this).val());
         $('#MontoDescuento').val(descuento.toFixed(2));
     })
+
+    function cargarMontos() {
+
+        const totalPago = $('#MontoPago').val();
+        const totalDevolucion = parseFloat($('#MontoDevolucion').val());
+        let totalDescuento = parseFloat($('#MontoDescuento').val());
+
+        if (!isNaN(totalPago) && !isNaN(totalDevolucion)) {
+            totalDescuento = parseFloat(totalPago) - parseFloat(totalDevolucion);
+        }
+        else {
+            totalDevolucion = 0;
+            totalDescuento = 0;
+        }
+
+        $('#MontoDescuento').val(totalDescuento.toFixed(2));
+        $('#MontoDevolucion').val(totalDevolucion.toFixed(2));
+    }
 
     function calcualarDevolucion() {
 
@@ -188,21 +201,43 @@
         const entidadId = $('#EntidadRecaudadora').val();
         const codreferencia = $('#ReferenciaPago').val();
 
+        toastr.options.positionClass = 'toast-top-center';
+
+        if (entidadId == '') {
+            Swal.fire({
+                text: 'seleccione la entidad recaudadora',
+                icon: 'warning',
+                confirmButtonText: 'Aceptar'
+            });
+
+            $('#EntidadRecaudadora').focus();
+            return false;
+        }
+        if (codreferencia == '') {
+            Swal.fire({
+                text: 'Ingrese el código de referencia o liquidación del pago',
+                icon: 'warning',
+                confirmButtonText: 'Aceptar'
+            });
+
+            $('#ReferenciaPago').select();
+            return false;
+        }
+
         $.ajax({
             url: '@Url.Action("BuscarPagoDevolucion", "Devoluciones")' + '?entidadId=' + entidadId + '&codreferencia=' + codreferencia,
             type: 'GET',
             cache: false,
-            beforeSend: function () {                
-                $('#busqueda_pago').hide();                
-                $('#loader').show();                
+            beforeSend: function () {
+                $('#busqueda_pago').hide();
+                $('#loader').show();
             },
             success: function (data) {
-                debugger
-
                 $('#busqueda_pago').html(data);
-                $('#busqueda_pago').show();                
+                $('#busqueda_pago').show();
             },
             error: function (jqXHR, textStatus, errorThrown) {
+                toastr.options.positionClass = 'toast-bottom-right';
                 toastr.error(jqXHR.responseText);
             },
             complete: function () {

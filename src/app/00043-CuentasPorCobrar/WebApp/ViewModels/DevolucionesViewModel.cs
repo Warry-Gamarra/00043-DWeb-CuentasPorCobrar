@@ -12,9 +12,10 @@ namespace WebApp.ViewModels
         public int? DevolucionId { get; set; }
         public string NroRecibo { get; set; }
         public string EntidadRecaudadora { get; set; }
-        public DateTime? FecRegistro { get; set; }
+        public DateTime? FecAprobacion { get; set; }
         public decimal Monto { get; set; }
         public string Concepto { get; set; }
+        public bool Anulado { get; set; }
 
         public DevolucionesViewModel() { }
 
@@ -25,7 +26,7 @@ namespace WebApp.ViewModels
             this.Concepto = devolucionPago.ConceptoPago;
             this.NroRecibo = devolucionPago.ReferenciaPago;
             this.Monto = devolucionPago.MontoDevolucion;
-            this.FecRegistro = devolucionPago.FecAprueba;
+            this.FecAprobacion = devolucionPago.FecAprueba;
         }
     }
 
@@ -67,7 +68,7 @@ namespace WebApp.ViewModels
         [Display(Name = "Fec. Devolución")]
         public DateTime? FecDevuelve { get; set; }
 
-        [Display(Name = "Observaciones o comentarios")]
+        [Display(Name = "Comentarios")]
         public string Comentario { get; set; }
 
         public RegistrarDevolucionPagoViewModel()

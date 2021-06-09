@@ -29,14 +29,14 @@ namespace WebApp.Models
             return result;
         }
 
-        public RegistrarDevolucionPagoViewModel Find(int entidadFinancieraId)
+        public RegistrarDevolucionPagoViewModel Find(int devolucionId)
         {
-            return new RegistrarDevolucionPagoViewModel(_devolucionPago.Find(entidadFinancieraId));
+            return new RegistrarDevolucionPagoViewModel(_devolucionPago.Find(devolucionId));
         }
 
-        public Response AnularDevolucion(int entidadFinancieraId, int currentUserId)
+        public Response AnularDevolucion(int devolucionPagoId, int currentUserId)
         {
-            Response result = _devolucionPago.AnularDevolucion(entidadFinancieraId, currentUserId);
+            Response result = _devolucionPago.AnularDevolucion(devolucionPagoId, currentUserId);
 
             return result;
         }

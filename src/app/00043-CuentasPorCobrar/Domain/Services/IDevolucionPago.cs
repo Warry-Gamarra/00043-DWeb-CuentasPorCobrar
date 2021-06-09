@@ -13,6 +13,6 @@ namespace Domain.Services
         List<DevolucionPago> Find();
         DevolucionPago Find(int devolucionPagoId);
         Response Save(DevolucionPago devolucionPago, int currentUserId, SaveOption saveOption);
-        Response AnularDevolucion(int pagoProcesadoId, int currentUserId);
+        Response AnularDevolucion(int devolucionPagoId, int currentUserId);
     }
 }

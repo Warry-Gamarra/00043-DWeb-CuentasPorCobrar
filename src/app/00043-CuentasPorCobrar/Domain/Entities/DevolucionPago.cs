@@ -45,6 +45,7 @@ namespace Domain.Entities
             this.FecAprueba = table.D_FecDevAprob.Value;
             this.FecDevuelve = table.D_FecDevPago;
             this.FecPagoRef = table.D_FecProc.Value;
+            this.Comentario = table.T_Comentario;
         }
 
 
@@ -67,9 +68,9 @@ namespace Domain.Entities
             return result;
         }
 
-        public Response AnularDevolucion(int pagoProcesadoId, int currentUserId)
+        public Response AnularDevolucion(int devolucionPagoId, int currentUserId)
         {
-            _devolucionPagoRepository.I_PagoProcesID = pagoProcesadoId;
+            _devolucionPagoRepository.I_DevolucionPagoID = devolucionPagoId;
             _devolucionPagoRepository.D_FecMod = DateTime.Now;
 
             var result = new Response(_devolucionPagoRepository.AnularDevolcionPago(currentUserId));
@@ -83,6 +84,7 @@ namespace Domain.Entities
             _devolucionPagoRepository.I_MontoPagoDev = devolucionPago.MontoDevolucion;
             _devolucionPagoRepository.D_FecDevAprob = devolucionPago.FecAprueba;
             _devolucionPagoRepository.D_FecDevPago = devolucionPago.FecDevuelve;
+            _devolucionPagoRepository.T_Comentario = devolucionPago.Comentario;
 
             switch (saveOption)
             {
