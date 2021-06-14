@@ -881,6 +881,8 @@ CREATE TABLE TR_ImportacionArchivo
 	T_NomArchivo        varchar(250)  NOT NULL ,
 	T_UrlArchivo		varchar(500)  NOT NULL ,
 	I_CantFilas         int  NOT NULL ,
+	I_EntidadID			int  NOT NULL ,
+	I_TipoArchivo		int  NOT NULL ,
 	B_Eliminado         bit  NOT NULL ,
 	I_UsuarioCre        int  NOT NULL ,
 	D_FecCre            datetime  NULL ,

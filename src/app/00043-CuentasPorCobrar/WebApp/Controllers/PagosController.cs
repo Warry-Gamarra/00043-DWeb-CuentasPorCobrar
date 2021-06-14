@@ -37,10 +37,13 @@ namespace WebApp.Controllers
         }
 
         // GET: Pagos
-        public ActionResult Index()
+        [Route("consultas/pagos-realizados/{anio}")]
+        public ActionResult Index(int anio)
         {
             ViewBag.Title = "Pagos Registrados";
-            return View();
+
+            var model = new List<DatosPagoViewModel>();
+            return View(model);
         }
 
 

@@ -1,0 +1,71 @@
+﻿@model IEnumerable<WebApp.ViewModels.DatosPagoViewModel>
+
+<link href="~/Assets/datatables/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
+
+<script src="~/Assets/datatables/js/datatables.min.js"></script>
+<script src="~/Assets/datatables/js/dataTables.bootstrap4.min.js"></script>
+
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover table-sm" id="tbl_pagos">
+        <thead>
+            <tr class="thead-light">
+                <th class="text-center">Entidad recaudadora</th>
+                <th class="text-center">Concepto</th>
+                <th class="text-center">Fecha de pago</th>
+                <th class="text-center">Monto pagado</th>
+                <th class="text-center">Lugar de pago</th>
+                <th class="text-center">Nro. SIAF</th>
+                <th>Tipo archivo</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.EntidadRecaudadora</td>
+                    <td>@item.Concepto</td>
+                    <td class="text-center">@item.FecPago</td>
+                    <td class="text-right">@item.MontoPago</td>
+                    <td>@item.LugarPago</td>
+                    <td class="text-right">@item.NroSIAF</td>
+                    <td>
+                        <a href="@item.PagoId"><i class="fa fa-download">&nbsp;</i>Detalles</a>
+                        <a href="@item.PagoId"><i class="fa fa-download">&nbsp;</i>Editar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#tbl_pagos').DataTable({
+            "language": {
+                "zeroRecords": "No se encontraron resultados para la búsqueda",
+                "info": "Mostrando _START_ - _END_ de _TOTAL_ registros encontrados",
+                "lengthMenu": "Mostrar _MENU_ resultados por página",
+                "infoEmpty": "No se encontraron resultados disponibles",
+                "infoFiltered": "(filtrado de _MAX_ registros)",
+                "loadingRecords": "Cargando...",
+                "processing": "Procesando...",
+                "search": "Buscar:",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Ultimo",
+                    "previous": "Anterior",
+                    "next": "Siguiente"
+                }
+            },
+            "lengthChange": false,
+            "searching": true,
+            "pageLength": 10,
+            "order": [[1, "asc"]]
+        });
+
+    })
+
+</script>
+

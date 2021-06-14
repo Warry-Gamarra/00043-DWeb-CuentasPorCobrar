@@ -8,7 +8,7 @@
             </a>
             <ul id="inquiries" class="collapse">
                 <li><a href="@Url.Action("Index", "EstadosCuenta")"><i class="fa fa-fw fa-tasks"></i>&nbsp; Estados de cuenta</a></li>
-                <li><a href="@Url.Action("Index", "Pagos")"><i class="fa fa-fw fa-database"></i>&nbsp; Pagos registrados</a></li>
+                <li><a href="@Url.Action("Index", "Pagos", new { anio = DateTime.Now.Year })"><i class="fa fa-fw fa-database"></i>&nbsp; Pagos registrados</a></li>
                 <li><a href="@Url.Action("Index", "Deudas")"><i class="fa fa-fw bi-receipt-cutoff"></i>&nbsp; Deudas registradas</a></li>
                 <li><a href="@Url.Action("Generar", "Obligaciones")"><i class="fa fa-fw fa-th-large"></i>&nbsp; Consolidado por clasificador</a></li>
             </ul>
