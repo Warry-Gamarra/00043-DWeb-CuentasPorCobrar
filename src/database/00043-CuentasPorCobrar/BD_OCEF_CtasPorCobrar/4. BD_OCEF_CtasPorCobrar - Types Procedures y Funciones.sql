@@ -3780,6 +3780,41 @@ GO
 
 /*---------------------------- -------------*/
 
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_GrabarImportacionArchivo')
+	DROP PROCEDURE [dbo].[USP_I_GrabarImportacionArchivo]
+GO
+
+CREATE PROCEDURE [dbo].[USP_I_GrabarImportacionArchivo]
+	 @I_ImportacionID	int
+	,@T_NomArchivo		varchar(50)
+	,@T_UrlArchivo		varchar(500)
+	,@I_CantFilas		int
+	,@D_FecCre			datetime
+	,@CurrentUserId		int
+
+	,@B_Result bit OUTPUT
+	,@T_Message nvarchar(4000) OUTPUT	
+AS
+BEGIN
+  SET NOCOUNT ON
+  	BEGIN TRY
+		INSERT INTO TR_ImportacionArchivo (T_NomArchivo, T_UrlArchivo, I_CantFilas, B_Eliminado, I_UsuarioCre, D_FecCre, I_UsuarioMod, D_FecMod) 
+			VALUES (@T_NomArchivo, @T_UrlArchivo, @I_CantFilas, 0, @CurrentUserId, @D_FecCre, NULL, NULL)
+			
+		SET @B_Result = 1
+		SET @T_Message = 'Actualización de datos correcta'
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+END
+GO
+
+
+
+/*---------------------------- -------------*/
+
 IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_PagosGeneralPorFecha')
 	DROP PROCEDURE [dbo].[USP_S_PagosGeneralPorFecha]
 GO
