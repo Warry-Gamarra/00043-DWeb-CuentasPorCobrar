@@ -1,0 +1,248 @@
+﻿
+@model WebApp.ViewModels.RegistrarDevolucionPagoViewModel
+
+@Scripts.Render("~/bundles/jqueryval")
+
+<div class="modal-header bg-dark-gray" style="border-radius: .2rem .2rem 0px 0px">
+    <h5 class="modal-title text-center"><i class="fa bi-box-arrow-right">&nbsp;</i> @ViewBag.Title</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+@using (Ajax.BeginForm("Save", "Devoluciones", new { area = "" }, new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "div_msg", OnBegin = "Load", OnSuccess = "Submited", OnComplete = "Stop" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="modal-body">
+        <div class="container-fluid mt-2">
+            <fieldset>
+                <legend class="h5 border-bottom">Búsqueda de pagos</legend>
+                <div class="form-group row">
+                    <div class="col-md-6">
+                        @Html.LabelFor(model => model.EntidadRecaudadora, new { @class = "control-label" })
+                        @Html.DropDownListFor(model => model.EntidadRecaudadora, ViewBag.EntidadRecaudadora as SelectList, "[ SELECIONAR ENTIDAD ]", new { @class = "form-control form-control-sm" })
+                        <p class="text-danger small">@Html.ValidationMessageFor(model => model.EntidadRecaudadora)</p>
+                    </div>
+                    <div class="col-md-6">
+                        @Html.LabelFor(model => model.ReferenciaPago, new { @class = "control-label" })
+                        @Html.TextBoxFor(model => model.ReferenciaPago, new { @class = "form-control form-control-sm text-uppercase" })
+                        <p class="text-danger small">@Html.ValidationMessageFor(model => model.ReferenciaPago)</p>
+                    </div>
+
+                    <div class="col-12">
+                        <button class="btn btn-sm btn-info pull-right mb-2" type="button" id="btn-pago-search"><i class="fa fa-search">&nbsp;</i>Buscar pago</button>
+                    </div>
+                </div>
+            </fieldset>
+
+            <div id="busqueda_pago" class="mb-4">
+                @Html.Partial("_ResultadoBusquedaPago", Model.DatosPago)
+            </div>
+
+            <fieldset>
+                <legend class="h5 border-bottom">Datos de la devolución</legend>
+                @Html.Hidden("submited", 0)
+                @Html.HiddenFor(model => model.DevolucionId)
+
+                <div id="datepicker" class="input-daterange">
+                    <div class="form-group row">
+                        @Html.LabelFor(model => model.FecAprueba, new { @class = "col-md-4 col-form-label control-label" })
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                @Html.HiddenFor(model => model.FecAprueba, new { @class = "form-control" })
+                                @Html.TextBox("txtFecAprueba", Model.FecAprueba, "{0:dd/MM/yyyy}", new { @class = "form-control", required = "required" })
+                                <div class="input-group-append">
+                                    <span class="input-group-text"><i class="fa fa-calendar-o"></i></span>
+                                </div>
+                            </div>
+                            <p class="text-danger small">@Html.ValidationMessageFor(model => model.FecAprueba)</p>
+                        </div>
+
+                        @Html.LabelFor(model => model.FecDevuelve, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                @Html.HiddenFor(model => model.FecDevuelve, new { @class = "form-control" })
+                                @Html.TextBox("txtFecDevuelve", Model.FecDevuelve, "{0:dd/MM/yyyy}", new { @class = "form-control" })
+                                <div class="input-group-append">
+                                    <span class="input-group-text"><i class="fa fa-calendar-o"></i></span>
+                                </div>
+                            </div>
+                            <p class="text-danger small">@Html.ValidationMessageFor(model => model.FecDevuelve)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-row mb-2">
+                        @Html.LabelFor(model => model.MontoDescuento, new { @class = "col-md-6 col-form-label control-label" })
+                        <div class="col-10 col-md-4">
+                            @Html.TextBoxFor(model => model.MontoDescuento, new { @class = "form-control text-right", @disabled = "disabled" })
+                        </div>
+                        <div class="col-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" title="Habilitar descuentos" data-toggle="tooltip" value="" id="chk-monto">
+                            </div>
+                        </div>
+                        <p class="text-danger float-right small">@Html.ValidationMessageFor(model => model.MontoDescuento)</p>
+                    </div>
+                    <div class="form-row">
+                        @Html.LabelFor(model => model.MontoDevolucion, new { @class = "col-md-6 col-form-label control-label pt-2" })
+                        <div class="col-md-4 border-top pt-2">
+                            @Html.TextBoxFor(model => model.MontoDevolucion, new { @class = "form-control text-right", @readonly = "readonly" })
+                        </div>
+                        <p class="text-danger float-right small">@Html.ValidationMessageFor(model => model.MontoDevolucion)</p>
+                    </div>
+                </div>
+
+                <div class="form-group form-row">
+                    @Html.LabelFor(model => model.Comentario, new { @class = "col-md-4 col-form-label control-label" })
+                    <div class="col-md-8">
+                        @Html.TextAreaFor(model => model.Comentario, new { @class = "form-control", rows = "3" })
+                        <p class="text-danger small">@Html.ValidationMessageFor(model => model.Comentario)</p>
+                    </div>
+                </div>
+
+            </fieldset>
+        </div>
+    </div>
+
+    <div class="modal-footer" id="div_msg">
+        <div class="col-md-12" style="display:none" id="loading">
+            <h6>Actualizando los datos...</h6>
+
+            <div class="progress">
+                <div class="indeterminate"></div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary" id="btnsubmit"><i class="fa fa-save"></i>&nbsp;Guardar</button>
+        <button type="button" class="btn btn-secondary" id="btnCancel" data-dismiss="modal"><i class="fa fa-times-circle-o">&nbsp;</i>Cancelar</button>
+    </div>
+}
+
+<script>
+    cargarMontos();
+    $('#btnsubmit').removeClass('disabled');
+
+    $("form").submit(function () {
+        if (parseInt($("#submited").val()) > 0) {
+            return false;
+        }
+    });
+
+    $('#datepicker.input-daterange').datepicker({
+        todayBtn: 'linked',
+        language: 'es',
+        format: 'dd/MM/yyyy',
+        autoclose: true,
+        weekStart: 0,
+        orientation: 'bottom auto',
+        daysOfWeekDisabled: '0,6',
+        calendarWeeks: true
+    }).on('hide', function (e) {
+        e.stopPropagation();
+    });
+
+
+    $('#chk-monto').on('change', function () {
+
+        if ($(this).is(':checked')) {
+            $('#MontoDescuento').prop('disabled', false);
+            $('#MontoDescuento').select();
+        }
+        else {
+            $('#MontoDescuento').val((0).toFixed(2));
+            $('#MontoDescuento').prop('disabled', true);
+            calcualarDevolucion();
+        }
+    })
+
+    $('#MontoDescuento').on('keyup', function () {
+        calcualarDevolucion()
+    })
+
+    $('#MontoDescuento').on('blur', function () {
+        let descuento = parseFloat($(this).val());
+        $('#MontoDescuento').val(descuento.toFixed(2));
+    })
+
+    function cargarMontos() {
+
+        const totalPago = $('#MontoPago').val();
+        const totalDevolucion = parseFloat($('#MontoDevolucion').val());
+        let totalDescuento = parseFloat($('#MontoDescuento').val());
+
+        if (!isNaN(totalPago) && !isNaN(totalDevolucion)) {
+            totalDescuento = parseFloat(totalPago) - parseFloat(totalDevolucion);
+        }
+        else {
+            totalDevolucion = 0;
+            totalDescuento = 0;
+        }
+
+        $('#MontoDescuento').val(totalDescuento.toFixed(2));
+        $('#MontoDevolucion').val(totalDevolucion.toFixed(2));
+    }
+
+    function calcualarDevolucion() {
+
+        const totalPago = $('#MontoPago').val();
+        let totalDevolucion = parseFloat($('#MontoDevolucion').val());
+        let descuento = parseFloat($('#MontoDescuento').val());
+
+        if (!isNaN(totalPago) && !isNaN(descuento)) {
+            totalDevolucion = parseFloat(totalPago) - parseFloat(descuento);
+        }
+        else {
+            totalDevolucion = 0;
+            descuento = 0;
+        }
+
+        $('#MontoDevolucion').val(totalDevolucion.toFixed(2));
+    }
+
+    $('#btn-pago-search').on('click', function (event) {
+        event.preventDefault();
+        const entidadId = $('#EntidadRecaudadora').val();
+        const codreferencia = $('#ReferenciaPago').val();
+
+        toastr.options.positionClass = 'toast-top-center';
+
+        if (entidadId == '') {
+            Swal.fire({
+                text: 'seleccione la entidad recaudadora',
+                icon: 'warning',
+                confirmButtonText: 'Aceptar'
+            });
+
+            $('#EntidadRecaudadora').focus();
+            return false;
+        }
+        if (codreferencia == '') {
+            Swal.fire({
+                text: 'Ingrese el código de referencia o liquidación del pago',
+                icon: 'warning',
+                confirmButtonText: 'Aceptar'
+            });
+
+            $('#ReferenciaPago').select();
+            return false;
+        }
+
+        $.ajax({
+            url: '@Url.Action("BuscarPagoDevolucion", "Devoluciones")' + '?entidadId=' + entidadId + '&codreferencia=' + codreferencia,
+            type: 'GET',
+            cache: false,
+            beforeSend: function () {
+                $('#busqueda_pago').hide();
+                $('#loader').show();
+            },
+            success: function (data) {
+                $('#busqueda_pago').html(data);
+                $('#busqueda_pago').show();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                toastr.options.positionClass = 'toast-bottom-right';
+                toastr.error(jqXHR.responseText);
+            },
+            complete: function () {
+                $('#loader').hide();
+            }
+        });
+    })
+</script>

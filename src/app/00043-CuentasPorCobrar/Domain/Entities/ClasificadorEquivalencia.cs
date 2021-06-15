@@ -55,6 +55,18 @@ namespace Domain.Entities
         }
 
 
+        public List<ClasificadorEquivalencia> Find_All_Years()
+        {
+            var result = new List<ClasificadorEquivalencia>();
+            foreach (var item in _clasificadorEquivAnioRepository.Find())
+            {
+                result.Add(new ClasificadorEquivalencia(item));
+            }
+
+            return result;
+        }
+
+
         public List<ClasificadorEquivalencia> Find(string anio)
         {
             var result = new List<ClasificadorEquivalencia>();

@@ -10,6 +10,7 @@ namespace Domain.Services
 {
     public interface IClasificadorEquivalencia
     {
+        List<ClasificadorEquivalencia> Find_All_Years();
         List<ClasificadorEquivalencia> Find(string anio);
         List<ClasificadorEquivalencia> Find(int clasificadorId);
         List<ClasificadorEquivalencia> Find(int clasificadorId, string anio);

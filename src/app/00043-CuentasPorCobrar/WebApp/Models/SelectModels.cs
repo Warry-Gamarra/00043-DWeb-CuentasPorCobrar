@@ -15,6 +15,7 @@ namespace WebApp.Models
         private readonly IDependencia _dependencia;
         private readonly ConceptoPagoService _conceptoPagoService;
         private readonly EntidadRecaudadora _entidadFinanciera;
+        private readonly IClasificadorEquivalencia _clasificadorEquivalencia;
 
         public SelectModel()
         {
@@ -22,6 +23,7 @@ namespace WebApp.Models
             _dependencia = new Dependencia();
             _conceptoPagoService = new ConceptoPagoService();
             _entidadFinanciera = new EntidadRecaudadora();
+            _clasificadorEquivalencia = new ClasificadorEquivalencia();
         }
 
         public List<SelectViewModel> GetRoles()
@@ -134,6 +136,20 @@ namespace WebApp.Models
             }
 
             return result;
+        }
+
+        public List<SelectViewModel> GetAniosClasificador(int maxAnio)
+        {
+            List<SelectViewModel> result = new List<SelectViewModel>();
+
+            foreach (var item in _clasificadorEquivalencia.Find_All_Years()
+                                                          .Where(x => int.Parse(x.AnioEjercicio) < maxAnio)
+                                                          .Select(x => x.AnioEjercicio).Distinct())
+            {
+                result.Add(new SelectViewModel() { Value = item, TextDisplay = item });
+            }
+
+            return result.OrderByDescending(x => x.Value).ToList();
         }
 
     }

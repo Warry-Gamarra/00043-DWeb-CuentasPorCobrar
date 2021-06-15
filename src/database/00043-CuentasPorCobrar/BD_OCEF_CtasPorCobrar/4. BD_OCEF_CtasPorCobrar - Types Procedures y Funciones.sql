@@ -1634,12 +1634,11 @@ END
 GO
 
 
-
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarEstadoClasificadorEquivlenciaAnio')
-	DROP PROCEDURE [dbo].[USP_U_ActualizarEstadoClasificadorEquivlenciaAnio]
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarEstadoClasificadorEquivalenciaAnio')
+	DROP PROCEDURE [dbo].[USP_U_ActualizarEstadoClasificadorEquivalenciaAnio]
 GO
 
-CREATE PROCEDURE [dbo].[USP_U_ActualizarEstadoClasificadorEquivlenciaAnio]
+CREATE PROCEDURE [dbo].[USP_U_ActualizarEstadoClasificadorEquivalenciaAnio]
 	 @I_ClasifEquivalenciaID	int
 	,@N_Anio			varchar(4)
 	,@B_Habilitado		bit
@@ -1661,9 +1660,9 @@ BEGIN
 			
 		SET @B_Result = 1
 		IF (@B_Habilitado = 1)
-			SET @T_Message = 'Codigo equivalente habilitado.'
+			SET @T_Message = 'Código equivalente habilitado.'
 		ELSE
-			SET @T_Message = 'Codigo equivalente deshabilitado.'
+			SET @T_Message = 'Código equivalente deshabilitado.'
 	END TRY
 	BEGIN CATCH
 		SET @B_Result = 0
@@ -1671,6 +1670,50 @@ BEGIN
 	END CATCH
 END
 GO
+
+
+--IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarEstadoClasifEquivAnioPorLote')
+--	DROP PROCEDURE [dbo].[USP_U_ActualizarEstadoClasifEquivAnioPorLote]
+--GO
+
+--CREATE PROCEDURE [dbo].[USP_U_ActualizarEstadoClasifEquivAnioPorLote]
+--(
+--	@N_AnioConfigOrigen		varchar(4)
+--	,@N_AnioConfigDestino	varchar(4)
+--	,@I_CurrentUserID		int
+--	,@D_FecCre			datetime
+
+--	,@B_Result			bit OUTPUT
+--	,@T_Message			nvarchar(4000) OUTPUT
+--)
+--AS
+--BEGIN	
+--	BEGIN TRANSACTION
+--	BEGIN TRY
+
+--		MERGE  TC_ClasificadorEquivalenciaAnio
+--		USING  (SELECT * FROM TC_ClasificadorEquivalenciaAnio WHERE N_Anio = @N_AnioConfigOrigen) AS origen
+--		ON	origen.I_ClasifEquivalenciaID = TC_ClasificadorEquivalenciaAnio.I_ClasifEquivalenciaID
+--		WHEN MATCHED AND TC_ClasificadorEquivalenciaAnio.N_Anio = @N_AnioConfigDestino THEN
+--			UPDATE SET TC_ClasificadorEquivalenciaAnio.B_Habilitado = origen.B_Habilitado
+--				,TC_ClasificadorEquivalenciaAnio.D_FecMod = @D_FecCre
+--				,TC_ClasificadorEquivalenciaAnio.I_UsuarioMod = @I_CurrentUserID
+--		WHEN NOT MATCHED BY TARGET THEN
+--			INSERT (N_Anio, I_ClasifEquivalenciaID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
+--			VALUES (@N_AnioConfigDestino, origen.I_ClasifEquivalenciaID, origen.B_Habilitado,  0, @I_CurrentUserID, @D_FecCre);
+		
+--		SET @B_Result = 1
+--		SET @T_Message = 'La operación se realizó correctamente.'
+
+--		COMMIT TRANSACTION
+--	END TRY
+--	BEGIN CATCH
+--		ROLLBACK TRANSACTION
+--		SET @B_Result = 0
+--		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10))
+--	END CATCH
+--END
+--GO
 
 
 /*-----------------------------------------------------------*/
@@ -3636,6 +3679,7 @@ CREATE PROCEDURE [dbo].[USP_I_GrabarDevolucionPago]
 	,@D_FecDevAprob		datetime
 	,@D_FecDevPago		datetime
 	,@D_FecProc			datetime
+	,@T_Comentario		varchar(500)
 	,@D_FecCre			datetime
 	,@CurrentUserId		int
 
@@ -3645,8 +3689,8 @@ AS
 BEGIN
   SET NOCOUNT ON
   	BEGIN TRY
-		INSERT INTO TR_DevolucionPago (I_PagoProcesID, I_MontoPagoDev, D_FecDevAprob, D_FecDevPago, D_FecProc, B_Anulado, I_UsuarioCre, D_FecCre)
-							   VALUES (@I_PagoProcesID, @I_MontoPagoDev, @D_FecDevAprob, @D_FecDevPago, @D_FecProc, 0, @CurrentUserId, @D_FecCre)
+		INSERT INTO TR_DevolucionPago (I_PagoProcesID, I_MontoPagoDev, D_FecDevAprob, D_FecDevPago, D_FecProc, T_Comentario, B_Anulado, I_UsuarioCre, D_FecCre)
+							   VALUES (@I_PagoProcesID, @I_MontoPagoDev, @D_FecDevAprob, @D_FecDevPago, @D_FecProc, @T_Comentario, 0, @CurrentUserId, @D_FecCre)
 
 		SET @B_Result = 1
 		SET @T_Message = 'Nuevo registro agregado.'
@@ -3669,6 +3713,7 @@ CREATE PROCEDURE [dbo].[USP_U_ActualizarDevolucionPago]
 	,@I_MontoPagoDev	decimal(15,2)
 	,@D_FecDevAprob		datetime
 	,@D_FecDevPago		datetime
+	,@T_Comentario		varchar(500)
 	,@D_FecMod			datetime
 	,@CurrentUserId		int
 
@@ -3682,6 +3727,7 @@ BEGIN
 		SET	 I_MontoPagoDev = @I_MontoPagoDev
 			, D_FecDevAprob = @D_FecDevAprob
 			, D_FecDevPago = @D_FecDevPago
+			, T_Comentario = @T_Comentario
 			, D_FecMod = @D_FecMod
 			, I_UsuarioMod = @CurrentUserId
 		WHERE I_DevolucionPagoID = @I_DevolucionPagoID
@@ -3728,6 +3774,41 @@ BEGIN
 	END CATCH
 END
 GO
+
+
+/*---------------------------- -------------*/
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_GrabarImportacionArchivo')
+	DROP PROCEDURE [dbo].[USP_I_GrabarImportacionArchivo]
+GO
+
+CREATE PROCEDURE [dbo].[USP_I_GrabarImportacionArchivo]
+	 @I_ImportacionID	int
+	,@T_NomArchivo		varchar(50)
+	,@T_UrlArchivo		varchar(500)
+	,@I_CantFilas		int
+	,@D_FecCre			datetime
+	,@CurrentUserId		int
+
+	,@B_Result bit OUTPUT
+	,@T_Message nvarchar(4000) OUTPUT	
+AS
+BEGIN
+  SET NOCOUNT ON
+  	BEGIN TRY
+		INSERT INTO TR_ImportacionArchivo (T_NomArchivo, T_UrlArchivo, I_CantFilas, B_Eliminado, I_UsuarioCre, D_FecCre, I_UsuarioMod, D_FecMod) 
+			VALUES (@T_NomArchivo, @T_UrlArchivo, @I_CantFilas, 0, @CurrentUserId, @D_FecCre, NULL, NULL)
+			
+		SET @B_Result = 1
+		SET @T_Message = 'Actualización de datos correcta'
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+END
+GO
+
 
 
 /*---------------------------- -------------*/
@@ -3829,6 +3910,7 @@ AS
 		   LEFT JOIN TC_ClasificadorEquivalencia CE ON CE.C_ClasificConceptoCod = CP.T_Clasificador
 		   LEFT JOIN TC_ClasificadorEquivalenciaAnio CEA ON CEA.I_ClasifEquivalenciaID = ce.I_ClasifEquivalenciaID
 		   LEFT JOIN TC_ClasificadorPresupuestal CL ON CL.I_ClasificadorID = CE.I_ClasificadorID
+
 )
 GO
 
@@ -3839,11 +3921,11 @@ GO
 
 CREATE VIEW [dbo].[VW_Tasas]
 AS
-SELECT t.I_TasaUnfvID, t.C_CodTasa, cp.T_ConceptoPagoDesc, t.I_MontoTasa, cp.T_Clasificador,
-	t.B_Habilitado
-FROM dbo.TR_TasaUnfv t
-INNER JOIN dbo.TI_ConceptoPago cp on cp.I_ConcPagID = t.I_ConcPagID and cp.B_Eliminado = 0
-WHERE t.B_Eliminado = 0
+	SELECT	t.I_TasaUnfvID, t.C_CodTasa, cp.T_ConceptoPagoDesc, t.I_MontoTasa, cp.T_Clasificador,
+			t.B_Habilitado
+	  FROM dbo.TR_TasaUnfv t
+			INNER JOIN dbo.TI_ConceptoPago cp on cp.I_ConcPagID = t.I_ConcPagID and cp.B_Eliminado = 0
+	 WHERE t.B_Eliminado = 0
 GO
 
 

@@ -25,6 +25,28 @@ namespace Data.Tables
         public DateTime? D_FecMod { get; set; }
 
 
+        public List<TC_ClasificadorEquivalenciaAnio> Find()
+        {
+            List<TC_ClasificadorEquivalenciaAnio> result = new List<TC_ClasificadorEquivalenciaAnio>();
+
+            try
+            {
+                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
+                {
+                    string s_command = @"SELECT * FROM TC_ClasificadorEquivalenciaAnio WHERE B_Eliminado = 0;";
+
+                    result = _dbConnection.Query<TC_ClasificadorEquivalenciaAnio>(s_command, commandType: CommandType.Text).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
+
+
         public List<TC_ClasificadorEquivalenciaAnio> Find(string anio)
         {
             List<TC_ClasificadorEquivalenciaAnio> result = new List<TC_ClasificadorEquivalenciaAnio>();
@@ -123,7 +145,7 @@ namespace Data.Tables
                     parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);
                     parameters.Add(name: "T_Message", dbType: DbType.String, size: 4000, direction: ParameterDirection.Output);
 
-                    _dbConnection.Execute("USP_U_ActualizarEstadoClasificadorEquivlenciaAnio", parameters, commandType: CommandType.StoredProcedure);
+                    _dbConnection.Execute("USP_U_ActualizarEstadoClasificadorEquivalenciaAnio", parameters, commandType: CommandType.StoredProcedure);
 
                     result.Value = parameters.Get<bool>("B_Result");
                     result.Message = parameters.Get<string>("T_Message");

@@ -18,6 +18,7 @@ namespace Data.Tables
         public DateTime? D_FecDevAprob { get; set; }
         public DateTime? D_FecDevPago { get; set; }
         public DateTime? D_FecProc { get; set; }
+        public string T_Comentario { get; set; }
         public int? I_UsuarioCre { get; set; }
         public DateTime? D_FecCre { get; set; }
         public int? I_UsuarioMod { get; set; }
@@ -30,7 +31,7 @@ namespace Data.Tables
 
             try
             {
-                string s_command = @"select t.* from dbo.TR_DevolucionPago t;";
+                string s_command = @"SELECT D.* FROM dbo.TR_DevolucionPago D;";
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
@@ -51,7 +52,7 @@ namespace Data.Tables
 
             try
             {
-                string s_command = @"select t.* from dbo.TR_DevolucionPago t where t.I_DevolucionPagoID = @I_DevolucionPagoID";
+                string s_command = @"SELECT D.* FROM dbo.TR_DevolucionPago D WHERE D.I_DevolucionPagoID = @I_DevolucionPagoID;";
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
@@ -93,6 +94,7 @@ namespace Data.Tables
                 result.Value = false;
                 result.Message = ex.Message;
             }
+
             return result;
         }
 
@@ -108,9 +110,10 @@ namespace Data.Tables
                     parameters.Add(name: "I_DevolucionPagoID", dbType: DbType.Int32, value: this.I_DevolucionPagoID);
                     parameters.Add(name: "I_PagoProcesID", dbType: DbType.Int32, value: this.I_PagoProcesID);
                     parameters.Add(name: "I_MontoPagoDev", dbType: DbType.Decimal, value: this.I_PagoProcesID);
-                    parameters.Add(name: "D_FecDevAprob", dbType: DbType.Decimal, value: this.D_FecDevAprob);
-                    parameters.Add(name: "D_FecDevPago", dbType: DbType.Decimal, value: this.D_FecDevPago);
-                    parameters.Add(name: "D_FecProc", dbType: DbType.Decimal, value: this.D_FecProc);
+                    parameters.Add(name: "D_FecDevAprob", dbType: DbType.DateTime, value: this.D_FecDevAprob);
+                    parameters.Add(name: "D_FecDevPago", dbType: DbType.DateTime, value: this.D_FecDevPago);
+                    parameters.Add(name: "T_Comentario", dbType: DbType.String, value: this.T_Comentario);
+                    parameters.Add(name: "D_FecProc", dbType: DbType.DateTime, value: this.D_FecProc);
                     parameters.Add(name: "D_FecCre", dbType: DbType.DateTime, value: this.D_FecCre);
                     parameters.Add(name: "CurrentUserId", dbType: DbType.Int32, value: currentUserId);
 
@@ -143,8 +146,9 @@ namespace Data.Tables
                 {
                     parameters.Add(name: "I_DevolucionPagoID", dbType: DbType.Int32, value: this.I_DevolucionPagoID);
                     parameters.Add(name: "I_MontoPagoDev", dbType: DbType.Decimal, value: this.I_PagoProcesID);
-                    parameters.Add(name: "D_FecDevAprob", dbType: DbType.Decimal, value: this.D_FecDevAprob);
-                    parameters.Add(name: "D_FecDevPago", dbType: DbType.Decimal, value: this.D_FecDevPago);
+                    parameters.Add(name: "D_FecDevAprob", dbType: DbType.DateTime, value: this.D_FecDevAprob);
+                    parameters.Add(name: "D_FecDevPago", dbType: DbType.DateTime, value: this.D_FecDevPago);
+                    parameters.Add(name: "T_Comentario", dbType: DbType.String, value: this.T_Comentario);
                     parameters.Add(name: "D_FecMod", dbType: DbType.DateTime, value: this.D_FecMod);
                     parameters.Add(name: "CurrentUserId", dbType: DbType.Int32, value: currentUserId);
 

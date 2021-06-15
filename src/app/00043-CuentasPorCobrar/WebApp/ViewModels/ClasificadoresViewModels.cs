@@ -106,9 +106,26 @@ namespace WebApp.ViewModels
     public class ClasificadorEquivalenciaViewModel
     {
         public int ClasificadorId { get; set; }
-        public int ClasificadorEquivId { get; set; }
+        public int? ClasificadorEquivId { get; set; }
         public string ConceptoEquivCod { get; set; }
         public string ConceptoEquivDesc { get; set; }
         public bool Habilitado { get; set; }
+    }
+
+
+    public class ClonarEquivalenciasClasificadorViewModel
+    {
+        [Display(Name = "Año a copiar")]
+        public string AnioOrigen { get; set; }
+
+        [Display(Name = "Año destino")]
+        public string AnioDestino { get; set; }
+
+        public ClonarEquivalenciasClasificadorViewModel(){}
+
+        public ClonarEquivalenciasClasificadorViewModel(int anioDestino)
+        {
+            this.AnioDestino = anioDestino.ToString();
+        }
     }
 }

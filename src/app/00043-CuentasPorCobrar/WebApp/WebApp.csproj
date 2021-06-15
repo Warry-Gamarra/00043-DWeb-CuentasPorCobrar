@@ -456,6 +456,7 @@
     <Compile Include="Models\IMatriculaSource.cs" />
     <Compile Include="Models\MatriculaDbfSource.cs" />
     <Compile Include="Models\MatriculaExcelSource.cs" />
+    <Compile Include="ViewModels\PagosViewModels.cs" />
     <Compile Include="ViewModels\DevolucionesViewModel.cs" />
     <Compile Include="Models\TasaModel.cs" />
     <Compile Include="ViewModels\MatriculaViewModel.cs" />
@@ -491,7 +492,7 @@
     <Compile Include="ViewModels\PagoObligacionViewModel.cs" />
     <Compile Include="ViewModels\PagosGeneralesPorFechaViewModel.cs" />
     <Compile Include="ViewModels\PagosPorFacultadYFechaViewModel.cs" />
-    <Compile Include="ViewModels\PagosViewModels.cs" />
+    <Compile Include="ViewModels\CargaArchivosViewModels.cs" />
     <Compile Include="ViewModels\ProcesoViewModel.cs" />
     <Compile Include="ViewModels\ReportePagosGeneralesPorFecha.cs" />
     <Compile Include="ViewModels\ReportePagosPorFacultadYFechaViewModel.cs" />
@@ -592,7 +593,10 @@
     <Content Include="Views\Devoluciones\Index.cshtml" />
     <Content Include="Views\Clasificadores\_RegistrarEquivalenciasAnio.cshtml" />
     <Content Include="Views\Clasificadores\_ListadoEquivalencias.cshtml" />
-    <Content Include="Views\Devolucion\_RegistrarDevolucionPago.cshtml" />
+    <Content Include="Views\Devoluciones\_RegistrarDevolucionPago.cshtml" />
+    <Content Include="Views\Clasificadores\_RegistrarCopiaEquivalenciasAnio.cshtml" />
+    <Content Include="Views\Devoluciones\_ResultadoBusquedaPago.cshtml" />
+    <Content Include="Views\Pagos\_ResultadoConsultaPagos.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

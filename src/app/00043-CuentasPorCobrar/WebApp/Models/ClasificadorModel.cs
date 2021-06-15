@@ -44,7 +44,7 @@ namespace WebApp.Models
                 Id = clasificadorViewModel.Id.HasValue ? clasificadorViewModel.Id.Value : 0,
                 TipoTransCod = clasificadorViewModel.TipoTransaccion.ToString(),
                 GenericaCod = clasificadorViewModel.Generica.ToString(),
-                SubGeneCod = clasificadorViewModel.SubGenerica.HasValue ? clasificadorViewModel.SubGenerica.Value.ToString(): null,
+                SubGeneCod = clasificadorViewModel.SubGenerica.HasValue ? clasificadorViewModel.SubGenerica.Value.ToString() : null,
                 EspecificaCod = clasificadorViewModel.Especifica.HasValue ? clasificadorViewModel.Especifica.Value.ToString() : null,
                 Descripcion = clasificadorViewModel.Descripcion.ToUpper(),
                 DescripDetalle = clasificadorViewModel.DescripDetalle.ToUpper(),
@@ -56,6 +56,10 @@ namespace WebApp.Models
 
             if (result.Value)
             {
+                if (result.Value)
+                {
+
+                }
                 result.Success(false);
             }
             else
@@ -75,7 +79,26 @@ namespace WebApp.Models
                 result.Add(new ClasificadorEquivalenciaViewModel()
                 {
                     ClasificadorId = item.ClasificadorId,
-                    ClasificadorEquivId = item.ClasificadorEquivId.Value,
+                    ClasificadorEquivId = item.ClasificadorEquivId,
+                    ConceptoEquivDesc = item.ConceptoEquivDesc,
+                    ConceptoEquivCod = item.ConceptoEquivCod,
+                    Habilitado = item.Habilitado
+                });
+            }
+
+            return result;
+        }
+
+        public List<ClasificadorEquivalenciaViewModel> FindEquivalencias(string anio)
+        {
+            List<ClasificadorEquivalenciaViewModel> result = new List<ClasificadorEquivalenciaViewModel>();
+
+            foreach (var item in _clasificadorEquivalencia.Find(anio))
+            {
+                result.Add(new ClasificadorEquivalenciaViewModel()
+                {
+                    ClasificadorId = item.ClasificadorId,
+                    ClasificadorEquivId = item.ClasificadorEquivId,
                     ConceptoEquivDesc = item.ConceptoEquivDesc,
                     ConceptoEquivCod = item.ConceptoEquivCod,
                     Habilitado = item.Habilitado
@@ -94,7 +117,7 @@ namespace WebApp.Models
                 result.Add(new ClasificadorEquivalenciaViewModel()
                 {
                     ClasificadorId = item.ClasificadorId,
-                    ClasificadorEquivId = item.ClasificadorEquivId.Value,
+                    ClasificadorEquivId = item.ClasificadorEquivId,
                     ConceptoEquivDesc = item.ConceptoEquivDesc,
                     ConceptoEquivCod = item.ConceptoEquivCod,
                     Habilitado = item.Habilitado
@@ -105,16 +128,21 @@ namespace WebApp.Models
         }
 
 
-        public Response SaveEquivalencia(int? equivalenciaId, int clasificadorId, string codEquiv, int currentUserId)
+        public Response SaveEquivalencia(ClasificadorEquivalenciaViewModel model, int anio, int currentUserId, bool saveAnio)
         {
             ClasificadorEquivalencia clasificadorEquivalencia = new ClasificadorEquivalencia
             {
-                ClasificadorEquivId = equivalenciaId ?? 0,
-                ConceptoEquivCod = codEquiv,
-                ClasificadorId = clasificadorId,
+                ClasificadorEquivId = model.ClasificadorEquivId ?? 0,
+                ConceptoEquivCod = model.ConceptoEquivCod,
+                ClasificadorId = model.ClasificadorId,
             };
 
-            Response result = _clasificadorEquivalencia.Save(clasificadorEquivalencia, currentUserId, (equivalenciaId.HasValue ? SaveOption.Update : SaveOption.Insert));
+            Response result = _clasificadorEquivalencia.Save(clasificadorEquivalencia, currentUserId, (model.ClasificadorEquivId.HasValue ? SaveOption.Update : SaveOption.Insert));
+
+            if (result.Value && saveAnio)
+            {
+                result = SaveEquivalenciaAnio(int.Parse(result.CurrentID), anio.ToString(), true, currentUserId);
+            }
 
             return result;
         }
@@ -124,7 +152,6 @@ namespace WebApp.Models
             ClasificadorEquivalencia clasificadorEquivalencia = new ClasificadorEquivalencia()
             {
                 ClasificadorEquivId = equivalenciaId,
-                AnioEjercicio = anio,                
                 Habilitado = currentState
             };
 
@@ -135,5 +162,49 @@ namespace WebApp.Models
             return result;
         }
 
+
+        public Response SaveEquivalenciaAnio(ClonarEquivalenciasClasificadorViewModel model, int currentUserId)
+        {
+
+            Response result = new Response();
+
+            var clasificadoresEquivalenciaAnioDestino = _clasificadorEquivalencia.Find(model.AnioDestino);
+            var clasificadoresEquivalenciaAnioOrigen = _clasificadorEquivalencia.Find(model.AnioOrigen);
+
+            foreach (var item in clasificadoresEquivalenciaAnioDestino)
+            {
+                ClasificadorEquivalencia clasificadorEquivalencia = new ClasificadorEquivalencia()
+                {
+                    ClasificadorEquivId = item.ClasificadorEquivId,
+                    Habilitado = false
+                };
+
+                result = _clasificadorEquivalencia.SaveAnio(clasificadorEquivalencia, model.AnioDestino, currentUserId, SaveOption.Update);
+            }
+
+
+            foreach (var item in clasificadoresEquivalenciaAnioOrigen)
+            {
+                ClasificadorEquivalencia clasificadorEquivalencia = new ClasificadorEquivalencia()
+                {
+                    ClasificadorEquivId = item.ClasificadorEquivId,
+                    Habilitado = item.Habilitado
+                };
+
+                result = _clasificadorEquivalencia.SaveAnio(clasificadorEquivalencia, model.AnioDestino, currentUserId, (clasificadoresEquivalenciaAnioDestino.FirstOrDefault(x => x.ClasificadorEquivId == item.ClasificadorEquivId) == null ? SaveOption.Insert : SaveOption.Update));
+            }
+
+            if (result.Value)
+            {
+                result.Message = "Equivalencias de clasificadores copiados correctamente";
+                result.Success(false);
+            }
+            else
+            {
+                result.Error(false);
+            }
+
+            return result;
+        }
     }
 }

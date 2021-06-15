@@ -90,6 +90,7 @@
     <Compile Include="Tables\TC_ClasificadorEquivalenciaAnio.cs" />
     <Compile Include="Tables\TC_ClasificadorEquivalencia.cs" />
     <Compile Include="Tables\TI_ConceptoCategoriaPago.cs" />
+    <Compile Include="Tables\TR_ImportacionArchivos.cs" />
     <Compile Include="Tables\TR_DevolucionPago.cs" />
     <Compile Include="Tables\TR_ObligacionAluCab.cs" />
     <Compile Include="Tables\TS_CampoTablaPago.cs" />

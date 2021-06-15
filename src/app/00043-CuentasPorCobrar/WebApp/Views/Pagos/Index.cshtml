@@ -1,4 +1,6 @@
-﻿<div class="container-fluid">
+﻿@model IEnumerable<WebApp.ViewModels.DatosPagoViewModel>
+
+<div class="container-fluid">
     <div class="col-12">
         <section class="content-header">
             <nav aria-label="breadcrumb">
@@ -40,6 +42,9 @@
 
             </div>
         </div>
+    </div>
+    <div class="col-12 my-4">
+        @Html.Partial("_ResultadoConsultaPagos", Model)
     </div>
 </div>
 

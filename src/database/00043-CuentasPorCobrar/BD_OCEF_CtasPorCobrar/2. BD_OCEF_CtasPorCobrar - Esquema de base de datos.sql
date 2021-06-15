@@ -602,6 +602,7 @@ CREATE TABLE TR_DevolucionPago
 	D_FecDevAprob        datetime  NULL ,
 	D_FecDevPago         datetime  NULL ,
 	D_FecProc	         datetime  NULL ,
+	T_Comentario		 varchar(500)  NULL ,
 	B_Anulado			 bit  NOT NULL ,
 	I_UsuarioCre         int  NULL ,
 	D_FecCre             datetime  NULL ,
@@ -871,3 +872,26 @@ CREATE TABLE TC_ClasificadorEquivalenciaAnio
 		ON UPDATE NO ACTION
 )
 go
+
+
+
+CREATE TABLE TR_ImportacionArchivo
+( 
+	I_ImportacionID     int IDENTITY ( 1,1 ) ,
+	T_NomArchivo        varchar(250)  NOT NULL ,
+	T_UrlArchivo		varchar(500)  NOT NULL ,
+	I_CantFilas         int  NOT NULL ,
+	I_EntidadID			int  NOT NULL ,
+	I_TipoArchivo		int  NOT NULL ,
+	B_Eliminado         bit  NOT NULL ,
+	I_UsuarioCre        int  NOT NULL ,
+	D_FecCre            datetime  NULL ,
+	I_UsuarioMod        int  NULL ,
+	D_FecMod            datetime  NULL ,
+	CONSTRAINT PK_ImportacionArchivos PRIMARY KEY (I_ImportacionID ASC),
+	CONSTRAINT FK_Usuarios_ImportacionArchivos FOREIGN KEY (I_UsuarioCre) REFERENCES TC_Usuario(UserId)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+)
+GO
+

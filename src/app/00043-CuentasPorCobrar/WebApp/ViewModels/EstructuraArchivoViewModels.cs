@@ -26,6 +26,8 @@ namespace WebApp.ViewModels
             this.Habilitado = model.Habilitado;
         }
     }
+
+
     public class RegistrarArchivoIntercambioViewModel
     {
         public int EstructArchivoID { get; set; }
@@ -107,6 +109,7 @@ namespace WebApp.ViewModels
 
     }
 
+
     public class CamposTablaViewModel
     {
         public int? CampoId { get; set; }
@@ -144,5 +147,6 @@ namespace WebApp.ViewModels
             this.Habilitado = campoTablaPago.Habilitado;
         }
     }
+
 }
 
