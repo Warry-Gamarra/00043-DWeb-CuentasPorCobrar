@@ -28,5 +28,7 @@ namespace Domain.Services
         Response Grabar_Pago_Obligaciones(List<PagoObligacionEntity> dataPagoObligaciones, int currentUserID);
 
         IEnumerable<CtaDepoProceso> Obtener_CtaDeposito_X_Periodo(int anio, int periodo);
+
+        ObligacionAluCabEntity Obtener_ObligacionAluCab(int obligacionCabID);
     }
 }

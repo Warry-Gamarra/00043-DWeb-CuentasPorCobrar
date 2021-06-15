@@ -69,7 +69,7 @@ namespace WebApp.ViewModels
 
         [Display(Name = "Agrupa conceptos")]
         public int TipoCalculo { get; set; }
-        public int TipoObligacion { get; set; }
+        public int? TipoObligacion { get; set; }
 
         [Display(Name = "Grupo Cod_Rc")]
         [RequiredWhenBoolenIsTrue("B_GrupoCodRc")]
@@ -83,7 +83,6 @@ namespace WebApp.ViewModels
         public bool B_Fraccionable { get; set; }
         public bool B_ConceptoGeneral { get; set; }
         public bool B_AgrupaConcepto { get; set; }
-        public int? I_TipoObligacion { get; set; }
         public bool B_GrupoCodRc { get; set; }
         public bool B_ModalidadIngreso { get; set; }
         public int? I_ModalidadIngresoID { get; set; }
@@ -113,7 +112,7 @@ namespace WebApp.ViewModels
             this.B_Fraccionable = concepto.B_Fraccionable ?? false;
             this.B_ConceptoGeneral = concepto.B_ConceptoGeneral ?? false;
             this.B_AgrupaConcepto = concepto.B_AgrupaConcepto ?? false;
-            this.I_TipoObligacion = concepto.I_TipoObligacion;
+            this.TipoObligacion = concepto.I_TipoObligacion;
             this.B_GrupoCodRc = concepto.B_GrupoCodRc ?? false;
             this.B_ModalidadIngreso = concepto.B_ModalidadIngreso ?? false;
             this.I_ModalidadIngresoID = concepto.I_ModalidadIngresoID;

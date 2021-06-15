@@ -20,5 +20,6 @@ namespace Domain.Entities
         public string C_CodRc { get; set; }
         public int I_ProcesoID { get; set; }
         public DateTime D_FecVencto { get; set; }
+        public int I_EntidadFinanID { get; set; }
     }
 }

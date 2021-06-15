@@ -110,7 +110,7 @@
                 <label for="fechaPago" class="control-label col-form-label col-md-3 col-sm-4 col-12">Fecha de pago</label>
                 <div class="col-md-9 col-sm-10 col-12">
                     <div class="input-group date">
-                        @Html.TextBoxFor(m => m.fechaPago, new { @class = "form-control" })
+                        @Html.TextBoxFor(m => m.fechaPago, "{0:dd/MM/yyyy}", new { @class = "form-control", @readonly = "readonly" })
                         <div class="input-group-append">
                             <span class="input-group-text"><i class="fa fa-calendar-o"></i></span>
                         </div>
@@ -128,7 +128,7 @@
             </div>
         </div>
     </div>
-    <div class="modal-footer">
+    <div class="modal-footer" id="div_msg">
         <div class="col-md-12" style="display:none" id="loading">
             <h6>Actualizando los datos...</h6>
 
@@ -192,7 +192,7 @@
             }
         }
     });
-
+    
     function MostrarMensajeObligacionesPorAlumno(errorMessage, messageType) {
         Swal.fire({
             title: '',

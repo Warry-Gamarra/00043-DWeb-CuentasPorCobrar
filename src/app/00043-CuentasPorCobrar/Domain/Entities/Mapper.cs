@@ -227,7 +227,7 @@ namespace Domain.Entities
             dataTable.Columns.Add("C_CodOperacion");
             dataTable.Columns.Add("T_NomDepositante");
             dataTable.Columns.Add("C_Referencia");
-            dataTable.Columns.Add("D_FecPago");
+            dataTable.Columns.Add("D_FecPago").DataType = typeof(DateTime);
             dataTable.Columns.Add("I_Cantidad");
             dataTable.Columns.Add("C_Moneda");
             dataTable.Columns.Add("I_MontoPago");
@@ -235,7 +235,8 @@ namespace Domain.Entities
             dataTable.Columns.Add("C_CodAlu");
             dataTable.Columns.Add("C_CodRc");
             dataTable.Columns.Add("I_ProcesoID");
-            dataTable.Columns.Add("D_FecVencto");
+            dataTable.Columns.Add("D_FecVencto").DataType = typeof(DateTime);
+            dataTable.Columns.Add("I_EntidadFinanID");
 
             dataPagoObligaciones.ForEach(x => dataTable.Rows.Add(
                 x.C_CodOperacion,
@@ -249,7 +250,8 @@ namespace Domain.Entities
                 x.C_CodAlu,
                 x.C_CodRc,
                 x.I_ProcesoID,
-                x.D_FecVencto
+                x.D_FecVencto,
+                x.I_EntidadFinanID
             ));
 
             return dataTable;
@@ -363,6 +365,28 @@ namespace Domain.Entities
                 I_MontoTasa = tasa.I_MontoTasa,
                 T_clasificador = tasa.T_clasificador,
                 B_Habilitado = tasa.B_Habilitado
+            };
+
+            return result;
+        }
+
+        public static ObligacionAluCabEntity TR_ObligacionAluCab_To_ObligacionAluCabEntity(TR_ObligacionAluCab obligacionAluCab)
+        {
+            var result = new ObligacionAluCabEntity()
+            {
+                I_ObligacionAluID = obligacionAluCab.I_ObligacionAluID,
+                I_ProcesoID = obligacionAluCab.I_ProcesoID,
+                I_MatAluID = obligacionAluCab.I_MatAluID,
+                C_Moneda = obligacionAluCab.C_Moneda,
+                I_MontoOblig = obligacionAluCab.I_MontoOblig,
+                D_FecVencto = obligacionAluCab.D_FecVencto,
+                B_Pagado = obligacionAluCab.B_Pagado,
+                B_Habilitado = obligacionAluCab.B_Habilitado,
+                B_Eliminado = obligacionAluCab.B_Eliminado,
+                I_UsuarioCre = obligacionAluCab.I_UsuarioCre,
+                D_FecCre = obligacionAluCab.D_FecCre,
+                I_UsuarioMod = obligacionAluCab.I_UsuarioMod,
+                D_FecMod = obligacionAluCab.D_FecMod
             };
 
             return result;

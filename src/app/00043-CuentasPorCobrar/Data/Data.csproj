@@ -74,6 +74,7 @@
     <Compile Include="Procedures\USP_I_GrabarPagoObligaciones.cs" />
     <Compile Include="Procedures\USP_S_ReportePagosGeneralPorFecha.cs" />
     <Compile Include="Procedures\USP_S_ReportePagosPorFacultadYFecha.cs" />
+    <Compile Include="Procedures\USP_S_ValidarCodOperacion.cs" />
     <Compile Include="Procedures\USP_U_ActualizarConceptoPago.cs" />
     <Compile Include="Procedures\USP_I_GrabarConceptoPago.cs" />
     <Compile Include="Procedures\USP_IU_GrabarMatricula.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="Tables\TC_ClasificadorEquivalencia.cs" />
     <Compile Include="Tables\TI_ConceptoCategoriaPago.cs" />
     <Compile Include="Tables\TR_DevolucionPago.cs" />
+    <Compile Include="Tables\TR_ObligacionAluCab.cs" />
     <Compile Include="Tables\TS_CampoTablaPago.cs" />
     <Compile Include="Tables\TC_ColumnaSeccion.cs" />
     <Compile Include="Tables\TC_SeccionArchivo.cs" />

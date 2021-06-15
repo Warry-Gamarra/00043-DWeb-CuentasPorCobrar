@@ -84,6 +84,7 @@
     <Compile Include="Entities\MatriculaDTO.cs" />
     <Compile Include="Entities\MatriculaEntity.cs" />
     <Compile Include="Entities\MultaNoVotarSinRegistrarEntity.cs" />
+    <Compile Include="Entities\ObligacionAluCabEntity.cs" />
     <Compile Include="Entities\PagoObligacionEntity.cs" />
     <Compile Include="Entities\PagoGeneralPorFechaDTO.cs" />
     <Compile Include="Entities\PagoPorFacultadYFechaDTO.cs" />
@@ -106,7 +107,9 @@
     <Compile Include="Entities\HelperResources.cs" />
     <Compile Include="Entities\CatalogoOpcionEntity.cs" />
     <Compile Include="Entities\CategoriaPago.cs" />
+    <Compile Include="Services\Implementations\PagoService.cs" />
     <Compile Include="Services\Implementations\TasaService.cs" />
+    <Compile Include="Services\IPagoService.cs" />
     <Compile Include="Services\ITasaService.cs" />
     <Compile Include="Services\IArchivoIntercambio.cs" />
     <Compile Include="Services\ICampoTablaPago.cs" />

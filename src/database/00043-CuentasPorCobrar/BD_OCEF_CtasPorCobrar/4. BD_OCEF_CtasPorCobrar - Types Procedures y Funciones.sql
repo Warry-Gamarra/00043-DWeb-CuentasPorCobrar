@@ -347,9 +347,9 @@ BEGIN
 
 		INSERT INTO TI_ConceptoPago
 				   (I_ProcesoID, I_ConceptoID, T_ConceptoPagoDesc, T_Clasificador, B_Calculado, I_Calculado, B_AnioPeriodo, I_Anio, I_Periodo, B_ConceptoAgrupa, 
-				    M_Monto, M_MontoMinimo, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
+				    M_Monto, M_MontoMinimo, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, B_Migrado)
 			SELECT @I_ProcesoID, CCP.I_ConceptoID, C.T_ConceptoDesc, C.T_Clasificador, C.B_Calculado, C.I_Calculado, 1, @I_Anio, @I_Periodo, C.B_ConceptoAgrupa,  
-					C.I_Monto,C.I_MontoMinimo, 1 as B_Habilitado, 0 as B_Eliminado, @I_UsuarioCre, getdate()
+					C.I_Monto,C.I_MontoMinimo, 1 as B_Habilitado, 0 as B_Eliminado, @I_UsuarioCre, getdate(), 0
 			  FROM TI_ConceptoCategoriaPago CCP
 				   INNER JOIN TC_Concepto C ON CCP.I_ConceptoID = C.I_ConceptoID
 			 WHERE I_CatPagoID = @I_CatPagoID
@@ -3050,9 +3050,7 @@ BEGIN
 		p.C_Referencia, p.D_FecPago, p.I_Cantidad, p.C_Moneda, m.I_MontoOblig, p.I_MontoPago, p.T_LugarPago, p.I_EntidadFinanID
 	FROM @Tbl_Pagos p
 	INNER JOIN Matriculados m ON m.C_CodAlu = p.C_CodAlu AND m.C_CodRc = p.C_CodRc AND 
-		m.I_ProcesoID = p.I_ProcesoID AND DATEDIFF(DAY, m.D_FecVencto, p.D_FecVencto) = 0 --AND m.I_MontoOblig = p.I_MontoPago
-
-	--select * FROM @Tmp_PagoObligacion
+		m.I_ProcesoID = p.I_ProcesoID AND DATEDIFF(DAY, m.D_FecVencto, p.D_FecVencto) = 0
 
 	DECLARE @I_FilaActual		int = 1,
 			@I_CantRegistros	int = (select count(id) from @Tmp_PagoObligacion),
@@ -3798,13 +3796,6 @@ END
 GO
 
 
---select distinct '<option>' + descripcio + '(S/. ' + cast(monto as varchar) + ')' + '</option>'
---from temporal_pagos.dbo.cp_pri 
---where clasific_5 is not null and len(clasific_5) > 0
---ORDER BY 1
-
-
-
 IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_DevolucionPago')
 	DROP VIEW [dbo].[VW_DevolucionPago]
 GO
@@ -3839,7 +3830,6 @@ AS
 		   LEFT JOIN TC_ClasificadorEquivalenciaAnio CEA ON CEA.I_ClasifEquivalenciaID = ce.I_ClasifEquivalenciaID
 		   LEFT JOIN TC_ClasificadorPresupuestal CL ON CL.I_ClasificadorID = CE.I_ClasificadorID
 )
-
 GO
 
 
@@ -3856,4 +3846,36 @@ INNER JOIN dbo.TI_ConceptoPago cp on cp.I_ConcPagID = t.I_ConcPagID and cp.B_Eli
 WHERE t.B_Eliminado = 0
 GO
 
-select t.* from dbo.VW_Tasas t where t.B_Habilitado = 1
+
+
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_ValidarCodOperacion')
+	DROP PROCEDURE [dbo].[USP_S_ValidarCodOperacion]
+GO
+
+CREATE PROCEDURE [dbo].[USP_S_ValidarCodOperacion]
+@C_CodOperacion VARCHAR(50),
+@I_EntidadFinanID INT,
+@D_FecPago DATETIME =  NULL,
+@B_Correct BIT OUTPUT
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	DECLARE @I_BcoComercio INT = 1,
+			@I_BcoCredito INT = 2
+
+	SET @B_Correct = 0
+
+	IF (@I_EntidadFinanID = @I_BcoComercio) BEGIN
+		SET @B_Correct = CASE WHEN EXISTS(SELECT p.I_PagoBancoID FROM dbo.TR_PagoBanco p
+			WHERE p.B_Anulado = 0 AND @I_EntidadFinanID = @I_BcoComercio AND C_CodOperacion = @C_CodOperacion) THEN 0 ELSE 1 END
+	END
+
+	IF (@I_EntidadFinanID = @I_BcoCredito) BEGIN
+		SET @B_Correct = CASE WHEN EXISTS(SELECT p.I_PagoBancoID FROM dbo.TR_PagoBanco p
+			WHERE p.B_Anulado = 0 AND @I_EntidadFinanID = @I_BcoCredito AND DATEDIFF(HOUR, p.D_FecPago, @D_FecPago) = 0 AND C_CodOperacion = @C_CodOperacion) THEN 0 ELSE 1 END
+	END
+END
+GO

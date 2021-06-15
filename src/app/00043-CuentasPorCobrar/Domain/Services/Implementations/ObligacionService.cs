@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Data.Tables;
 
 namespace Domain.Services.Implementations
 {
@@ -142,6 +143,15 @@ namespace Domain.Services.Implementations
             var ctasDeposito = VW_CtaDepositoProceso.GetCtaDepositoByAnioPeriodo(anio, periodo);
 
             var result = ctasDeposito.Select(x => Mapper.VW_CtaDepositoProceso_To_CtaDepoProceso(x));
+
+            return result;
+        }
+
+        public ObligacionAluCabEntity Obtener_ObligacionAluCab(int obligacionCabID)
+        {
+            var obligacionAluCab = TR_ObligacionAluCab.FindByID(obligacionCabID);
+
+            var result = Mapper.TR_ObligacionAluCab_To_ObligacionAluCabEntity(obligacionAluCab);
 
             return result;
         }

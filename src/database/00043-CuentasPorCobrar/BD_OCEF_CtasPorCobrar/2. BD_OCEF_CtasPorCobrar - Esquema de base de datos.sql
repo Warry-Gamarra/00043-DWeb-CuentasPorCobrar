@@ -871,4 +871,3 @@ CREATE TABLE TC_ClasificadorEquivalenciaAnio
 		ON UPDATE NO ACTION
 )
 go
-

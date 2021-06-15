@@ -105,11 +105,7 @@ namespace WebApp.Models
 
         public CatalogoConceptosRegistroViewModel ObtenerConcepto(int conceptoId)
         {
-            var tipoObligacion = conceptoPagoService.Listar_CatalogoOpcion_Habilitadas_X_Parametro(Parametro.TipoObligacion);
-
             var result = new CatalogoConceptosRegistroViewModel(conceptoPagoService.GetConcepto(conceptoId));
-
-            result.TipoObligacion = tipoObligacion.Find(x => x.T_OpcionCod == Convert.ToInt32(result.EsMatricula).ToString()).I_OpcionID;
 
             return result;
         }

@@ -15,11 +15,17 @@ namespace WebApp.Models
     {
         private readonly ObligacionService _obligacionService;
         private readonly EstructuraArchivoModel _estructuraArchivoModel;
+        private IProcesoService procesoService;
+        private IObligacionService obligacionService;
+        private IPagoService pagoService;
 
         public PagosModel()
         {
             _obligacionService = new ObligacionService();
             _estructuraArchivoModel = new EstructuraArchivoModel();
+            procesoService = new ProcesoService();
+            obligacionService = new ObligacionService();
+            pagoService = new PagoService();
         }
 
         public Response CargarArchivoPagos(string serverPath, HttpPostedFileBase file, CargarArchivoViewModel model, int currentUserId)
@@ -174,11 +180,44 @@ namespace WebApp.Models
 
         public Response GrabarPagoObligacion(PagoObligacionViewModel model, int currentUserId)
         {
+            var response = new Response();
+
             var lista = new List<PagoObligacionEntity>();
 
-            lista.Add(Mapper.PagoObligacionViewModel_To_PagoObligacionEntity(model));
+            var obligacionAluCab = obligacionService.Obtener_ObligacionAluCab(model.idOligacionCab);
 
-            return _obligacionService.Grabar_Pago_Obligaciones(lista, currentUserId);
+            if (obligacionAluCab != null)
+            {
+                if (obligacionAluCab.B_Pagado.Value)
+                {
+                    return ResponseModel.Error(response, "La obligación seleccionada ya ha sido pagada.");
+                }
+
+                if (pagoService.validarCodOperacion(model.codigoOperacion, model.idEntidadFinanciera, model.fechaPago))
+                {
+                    var entity = Mapper.PagoObligacionViewModel_To_PagoObligacionEntity(model);
+
+                    entity.I_MontoPago = obligacionAluCab.I_MontoOblig.Value;
+
+                    entity.I_ProcesoID = obligacionAluCab.I_ProcesoID.Value;
+
+                    entity.D_FecVencto = obligacionAluCab.D_FecVencto.Value;
+
+                    lista.Add(entity);
+
+                    response = _obligacionService.Grabar_Pago_Obligaciones(lista, currentUserId);
+
+                    return ResponseModel.Success(response, true);
+                }
+                else
+                {
+                    return ResponseModel.Error(response, "El código de operación se encuentra repetido en el sistema.");
+                }
+            }
+            else
+            {
+                return ResponseModel.Error(response, "No se encuentra información acerca de la obligación seleccionada.");
+            }
         }
 
     }

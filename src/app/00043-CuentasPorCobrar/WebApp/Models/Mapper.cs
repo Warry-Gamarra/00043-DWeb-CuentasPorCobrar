@@ -314,16 +314,15 @@ namespace WebApp.Models
                 C_CodOperacion = model.codigoOperacion,
                 T_NomDepositante = model.nombreAlumno,
                 C_Referencia = model.codigoReferencia,
-                D_FecPago = new DateTime(2021, 6, 2),
+                D_FecPago = model.fechaPago.Value,
                 I_Cantidad = model.cantidad,
-                I_MontoPago = 158,
                 T_LugarPago = model.lugarPago,
                 C_CodAlu = model.codigoAlumno,
                 C_CodRc = model.codRc,
-                I_ProcesoID = 0,
                 C_Moneda = model.moneda,
-                D_FecVencto = new DateTime(2021, 5, 31)
+                I_EntidadFinanID = model.idEntidadFinanciera
             };
+
             return result;
         }
     }

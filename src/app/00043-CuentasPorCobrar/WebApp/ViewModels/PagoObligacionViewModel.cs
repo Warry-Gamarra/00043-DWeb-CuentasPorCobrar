@@ -36,7 +36,7 @@ namespace WebApp.ViewModels
         public int idEntidadFinanciera { get; set; }
 
         [Required]
-        public string fechaPago { get; set; }
+        public DateTime? fechaPago { get; set; }
 
         [Required]
         public string lugarPago { get; set; }
