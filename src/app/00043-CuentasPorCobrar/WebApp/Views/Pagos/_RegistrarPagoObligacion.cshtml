@@ -11,7 +11,7 @@
     {
         HttpMethod = "POST",
         InsertionMode = InsertionMode.Replace,
-        UpdateTargetId = "div_msg",
+        UpdateTargetId = "div_footer",
         OnBegin = "Load",
         OnComplete = "Stop"
     }, new { @id = "form-obligacion-manual" })
@@ -54,6 +54,12 @@
                     <div class="input-group-append">
                         <button id="btnConsultaOblAlumno" type="button" class="btn btn-primary"><i class="fa fa-search"></i></button>
                     </div>
+                </div>
+            </div>
+
+            <div class="form-group form-row">
+                <label class="control-label col-form-label col-md-3 col-sm-4 col-12"></label>
+                <div class="col-md-9 col-sm-10 col-12">
                     <p class="text-danger small">@Html.ValidationMessageFor(m => m.codigoAlumno)</p>
                 </div>
             </div>
@@ -85,21 +91,21 @@
             <div class="form-group form-row">
                 <label for="codigoOperacion" class="control-label col-form-label col-md-3 col-sm-4 col-12">Código de operación</label>
                 <div class="col-md-9 col-sm-10 col-12">
-                    @Html.TextBoxFor(m => m.codigoOperacion, new { @class = "form-control" })
-                    <p class="text-dangersmall">@Html.ValidationMessageFor(m => m.codigoOperacion)</p>
+                    @Html.TextBoxFor(m => m.codigoOperacion, new { @class = "form-control OnlyNumbers", @maxlength = "50" })
+                    <p class="text-danger small">@Html.ValidationMessageFor(m => m.codigoOperacion)</p>
                 </div>
             </div>
 
             <div class="form-group form-row">
                 <label for="codigoReferencia" class="control-label col-form-label col-md-3 col-sm-4 col-12">Código de referencia</label>
                 <div class="col-md-9 col-sm-10 col-12">
-                    @Html.TextBoxFor(m => m.codigoReferencia, new { @class = "form-control" })
+                    @Html.TextBoxFor(m => m.codigoReferencia, new { @class = "form-control", @maxlength = "50" })
                     <p class="text-danger small">@Html.ValidationMessageFor(m => m.codigoReferencia)</p>
                 </div>
             </div>
 
             <div class="form-group form-row">
-                <label for="EntidadFinanciera" class="control-label col-form-label col-md-3 col-sm-4 col-12">Entidad financiera</label>
+                <label for="idEntidadFinanciera" class="control-label col-form-label col-md-3 col-sm-4 col-12">Entidad financiera</label>
                 <div class="col-md-9 col-sm-10 col-12">
                     @Html.DropDownListFor(model => model.idEntidadFinanciera, ViewBag.EntidadesFinancieras as SelectList, "[ SELECCIONAR ]", new { @class = "form-control" })
                     <p class="text-danger small">@Html.ValidationMessageFor(model => model.idEntidadFinanciera)</p>
@@ -107,8 +113,18 @@
             </div>
 
             <div class="form-group form-row">
-                <label for="fechaPago" class="control-label col-form-label col-md-3 col-sm-4 col-12">Fecha de pago</label>
+                <label for="idCtaDeposito" class="control-label col-form-label col-md-3 col-sm-4 col-12">Cta. Depósito origen</label>
                 <div class="col-md-9 col-sm-10 col-12">
+                    @Html.DropDownListFor(model => model.idCtaDeposito, ViewBag.CtaDeposito as SelectList, "", new { @class = "form-control" })
+                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.idCtaDeposito)</p>
+                </div>
+            </div>
+
+            <div class="form-group form-row">
+                <label for="fechaPago" class="control-label col-form-label col-md-3 col-sm-4 col-12">
+                    Fecha de pago
+                </label>
+                <div class="col-md-5 col-sm-10 col-12">
                     <div class="input-group date">
                         @Html.TextBoxFor(m => m.fechaPago, "{0:dd/MM/yyyy}", new { @class = "form-control", @readonly = "readonly" })
                         <div class="input-group-append">
@@ -117,20 +133,26 @@
                     </div>
                     <p class="text-danger small">@Html.ValidationMessageFor(m => m.fechaPago)</p>
                 </div>
+                <div class="col-md-2 col-sm-4 col-12">
+                    @Html.DropDownListFor(model => model.horas, ViewBag.Horas as SelectList, new { @class = "form-control" })
+                </div>
+                <div class="col-md-2 col-sm-4 col-12">
+                    @Html.DropDownListFor(model => model.minutos, ViewBag.Minutos as SelectList, new { @class = "form-control" })
+                </div>
             </div>
 
             <div class="form-group form-row">
                 <label for="lugarPago" class="control-label col-form-label col-md-3 col-sm-4 col-12">Lugar de pago</label>
                 <div class="col-md-9 col-sm-10 col-12">
-                    @Html.TextBoxFor(m => m.lugarPago, new { @class = "form-control" })
+                    @Html.TextBoxFor(m => m.lugarPago, new { @class = "form-control", @maxlength = "250" })
                     <p class="text-danger small">@Html.ValidationMessageFor(m => m.lugarPago)</p>
                 </div>
             </div>
         </div>
     </div>
-    <div class="modal-footer" id="div_msg">
+    <div class="modal-footer" id="div_footer">
         <div class="col-md-12" style="display:none" id="loading">
-            <h6>Actualizando los datos...</h6>
+            <h6>Registrando pago...</h6>
 
             <div class="progress">
                 <div class="indeterminate"></div>
@@ -138,18 +160,12 @@
         </div>
 
         <button type="submit" class="btn btn-primary" id="btnsubmit"><i class="fa fa-save"></i> Grabar pago</button>
+        <button type="button" class="btn btn-info" id="btnNuevo"><i class="fa fa-file"></i> Limpiar campos</button>
         <button type="button" class="btn btn-secondary" id="btnCancel" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> Cancelar</button>
     </div>
 }
 
 <script>
-    const MESSAGE_TYPE = {
-        INFO: 'info',
-        SUCCESS: 'success',
-        WARNING: 'warning',
-        ERROR: 'error'
-    };
-
     $('.input-group.date').datepicker({
         todayBtn: 'linked',
         language: 'es',
@@ -157,40 +173,68 @@
         autoclose: true,
         weekStart: 0,
         orientation: 'bottom auto',
-        calendarWeeks: true,
     }).on('hide', function (e) {
         e.stopPropagation();
     });
 
-    $(document).on('click', '#btnConsultaOblAlumno', function () {
-        let anio = $('#form-obligacion-manual #anio').val();
-        let periodo = $('#form-obligacion-manual #idPeriodo').val();
-        let codAlu = $('#form-obligacion-manual #codigoAlumno').val();
-        let especialidad = $('#form-obligacion-manual #codRc').val();
-
-        if (codAlu === undefined) {
-            MostrarMensajeObligacionesPorAlumno('No se puede obtener el valor del campo Código de Alumno.', MESSAGE_TYPE.WARNING);
-        } else  if (codAlu === null || codAlu.length !== 10) {
-            MostrarMensajeObligacionesPorAlumno('El campo Código de Alumno es requerido.', MESSAGE_TYPE.WARNING);
-        } else if (especialidad === null || especialidad.length !== 3) {
-            ObtenerEspecialidadesAlumno(codAlu);
-        } else {
-            BuscarObligacionesAlumno(anio, periodo, especialidad, codAlu);
-        }
+    $('.OnlyNumbers').bind('keypress', function (e) {
+        return (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) ? false : true;
     });
 
     $(document).on('keypress', '#form-obligacion-manual #codigoAlumno', function (e) {
         if (e.which === 13) {
             e.preventDefault();
 
-            let codAlu = $('#form-obligacion-manual #codigoAlumno').val();
+            let codAlu = this.value;
 
-            if (codAlu === null || codAlu.length !== 10) {
-                MostrarMensajeObligacionesPorAlumno('El campo Código de Alumno es requerido.', MESSAGE_TYPE.WARNING);
+            if (codAlu === undefined) {
+                MostrarMensajeObligacionesPorAlumno('No se puede obtener el valor del campo Código de Alumno.', 'warning');
+            } else if (codAlu === null || codAlu.length !== 10) {
+                MostrarMensajeObligacionesPorAlumno('El campo Código de Alumno es requerido.', 'warning');
             } else {
                 ObtenerEspecialidadesAlumno(codAlu);
             }
         }
+    });
+
+    $(document).on('click', '#form-obligacion-manual #btnConsultaOblAlumno', function () {
+        let codAlu = $('#form-obligacion-manual #codigoAlumno').val();
+
+        if (codAlu === undefined) {
+            MostrarMensajeObligacionesPorAlumno('No se puede obtener el valor del campo Código de Alumno.', 'warning');
+        } else  if (codAlu === null || codAlu.length !== 10) {
+            MostrarMensajeObligacionesPorAlumno('El campo Código de Alumno es requerido.', 'warning');
+        } else {
+            ObtenerEspecialidadesAlumno(codAlu);
+        }
+    });
+
+    $(document).on('change', '#form-obligacion-manual #idEntidadFinanciera', function (e) {
+        let idEntidadFinanc = this.value;
+
+        ObtenerCtasDeposito(idEntidadFinanc);
+    });
+
+    $(document).on('click', '#form-obligacion-manual #btnNuevo', function (e) {
+        $('#form-obligacion-manual #codigoAlumno').val('');
+        limpiarComboEspecialidades();
+        $('#form-obligacion-manual #nombreAlumno').val('');
+        limpiarComboObligaciones();
+
+        $('#form-obligacion-manual #codigoOperacion').val('');
+        $('#form-obligacion-manual #codigoReferencia').val('');
+
+        $('#form-obligacion-manual #idEntidadFinanciera').val('');
+        limpiarCtasDeposito();
+
+        $('#form-obligacion-manual #fechaPago').val('');
+        $('#form-obligacion-manual #horas').val(0);
+        $('#form-obligacion-manual #minutos').val(0);
+
+        $('#form-obligacion-manual #lugarPago').val('');
+
+        $('#form-obligacion-manual #div_footer #div_msg').remove();
+        $('.field-validation-error').html('').addClass('field-validation-valid').removeClass('field-validation-error');
     });
     
     function MostrarMensajeObligacionesPorAlumno(errorMessage, messageType) {
@@ -213,14 +257,14 @@
             data: parametros,
             dataType: 'json',
             beforeSend: function () {
-                llenarComboEspecialidades(null);
+                limpiarComboEspecialidades()
             },
             success: function (data) {
                 llenarComboEspecialidades(data);
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 let jsonException = JSON.parse(xhr.responseText);
-                MostrarMensajeObligacionesPorAlumno(jsonException.Message, MESSAGE_TYPE.ERROR);
+                MostrarMensajeObligacionesPorAlumno(jsonException.Message, 'error');
             }
         });
     }
@@ -249,6 +293,10 @@
         }
     }
 
+    function limpiarComboEspecialidades() {
+        llenarComboEspecialidades(null);
+    }
+
     function BuscarObligacionesAlumno(anio, periodo, codRc, codAlu) {
 
         let cmbNombreAlumno = $('#form-obligacion-manual #nombreAlumno');
@@ -269,7 +317,6 @@
             beforeSend: function () {
                 cmbNombreAlumno.val('');
                 cmbObligaciones.empty();
-
             },
             success: function (data) {
                 if (data) {
@@ -281,31 +328,73 @@
                         cmbNombreAlumno.val(nombreAlumno.trim());
                     }
 
-                    if (data.cuotas_pago !== null) {
+                    if (data.cuotas_pago !== null && data.cuotas_pago.length > 0) {
                         let html = '';
-                        let cantObligaciones = 0;
+                        let cantObligacionesPagadas = 0;
 
                         $.each(data.cuotas_pago, function (i, item) {
-                            if (!item.B_Pagado) {
+                            if (item.B_Pagado) {
+                                cantObligacionesPagadas++;
+                            } else {
                                 html += '<option value="' + item.I_ObligacionAluID + '">' +
                                     item.T_ProcesoDesc + ' ( S/. ' + item.T_MontoOblig + ' - F.Vcto. ' + item.T_FecVencto + ')</option>';
-
-                                cantObligaciones++;
                             }
                         });
 
-                        if (cantObligaciones > 0) {
+                        if (cantObligacionesPagadas !== data.cuotas_pago.length) {
                             cmbObligaciones.html(html);
                         } else {
-                            MostrarMensajeObligacionesPorAlumno('El alumno no cuenta con obligaciones.', MESSAGE_TYPE.INFO);
+                            MostrarMensajeObligacionesPorAlumno('Las obligaciones de este alumno ya han sido pagadas.', 'info');    
                         }
+                    } else {
+                        MostrarMensajeObligacionesPorAlumno('El alumno no cuenta con obligaciones generadas para este ciclo.', 'info');
                     }
                 }
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 var jsonException = JSON.parse(xhr.responseText);
-                MostrarMensajeObligacionesPorAlumno(jsonException.Message, MESSAGE_TYPE.ERROR);
+                MostrarMensajeObligacionesPorAlumno(jsonException.Message, 'error');
             }
         });
+    }
+
+    function limpiarComboObligaciones() {
+        $('#form-obligacion-manual #idOligacionCab').empty();
+    }
+
+    function ObtenerCtasDeposito(idEntidadFinanc) {
+        let cmbCtasDeposito = $('#form-obligacion-manual #idCtaDeposito');
+
+        if (idEntidadFinanc !== undefined && idEntidadFinanc !== null && !isNaN(idEntidadFinanc) && idEntidadFinanc > 0) {
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("GetCtasDepositoPorBco", "Service", new { httproute = "ActionApi" })' + '/' + idEntidadFinanc,
+                dataType: 'json',
+                beforeSend: function () {
+                    cmbCtasDeposito.empty();
+                },
+                success: function (data) {
+                    if (data) {
+                        let html = '';
+
+                        $.each(data, function (i, item) {
+                            html += '<option value="' + item.Value + '">' + item.TextDisplay + '</option>';
+                        });
+
+                        cmbCtasDeposito.html(html);
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    var jsonException = JSON.parse(xhr.responseText);
+                    MostrarMensajeObligacionesPorAlumno(jsonException.Message, 'error');
+                }
+            });
+        } else {
+            cmbCtasDeposito.empty();
+        }
+    }
+
+    function limpiarCtasDeposito() {
+        $('#form-obligacion-manual #idCtaDeposito').empty();
     }
 </script>

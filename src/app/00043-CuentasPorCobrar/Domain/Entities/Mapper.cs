@@ -237,6 +237,7 @@ namespace Domain.Entities
             dataTable.Columns.Add("I_ProcesoID");
             dataTable.Columns.Add("D_FecVencto").DataType = typeof(DateTime);
             dataTable.Columns.Add("I_EntidadFinanID");
+            dataTable.Columns.Add("I_CtaDepositoID").AllowDBNull = true;
 
             dataPagoObligaciones.ForEach(x => dataTable.Rows.Add(
                 x.C_CodOperacion,
@@ -251,7 +252,8 @@ namespace Domain.Entities
                 x.C_CodRc,
                 x.I_ProcesoID,
                 x.D_FecVencto,
-                x.I_EntidadFinanID
+                x.I_EntidadFinanID,
+                x.I_CtaDepositoID
             ));
 
             return dataTable;

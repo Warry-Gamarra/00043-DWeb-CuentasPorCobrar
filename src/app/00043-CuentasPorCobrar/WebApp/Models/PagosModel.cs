@@ -190,7 +190,7 @@ namespace WebApp.Models
             {
                 if (obligacionAluCab.B_Pagado.Value)
                 {
-                    return ResponseModel.Error(response, "La obligación seleccionada ya ha sido pagada.");
+                    return ResponseModel.Info(response, "La obligación seleccionada ya ha sido pagada.");
                 }
 
                 if (pagoService.validarCodOperacion(model.codigoOperacion, model.idEntidadFinanciera, model.fechaPago))

@@ -1,4 +1,6 @@
-﻿using Domain.Helpers;
+﻿using Domain.Entities;
+using Domain.Helpers;
+using Domain.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +21,7 @@ namespace WebApp.Controllers
         private readonly CategoriaPagoModel categoriaPagoModel;
         private readonly EstructuraArchivoModel estructuraArchivoModel;
         IObligacionServiceFacade _obligacionServiceFacade;
+        ICuentaDeposito _cuentaDeposito;
 
         public ServiceController()
         {
@@ -28,6 +31,7 @@ namespace WebApp.Controllers
             categoriaPagoModel = new CategoriaPagoModel();
             estructuraArchivoModel = new EstructuraArchivoModel();
             _obligacionServiceFacade = new ObligacionServiceFacade();
+            _cuentaDeposito = new CuentaDeposito();
         }
 
         // GET: api/service/GetPrioridad/5
@@ -112,6 +116,29 @@ namespace WebApp.Controllers
             }
 
             var result = estructuraArchivoModel.ObtenerColumnasTabla(nombreTabla);
+
+            return result;
+        }
+
+        // GET: api/service/GetCtasDepositoPorBco/1
+        public IEnumerable<SelectViewModel> GetCtasDepositoPorBco(int id)
+        {
+            if (id == 0)
+            {
+                var error = new HttpResponseMessage(HttpStatusCode.NotAcceptable)
+                {
+                    Content = new StringContent("ID de banco incorrecto.")
+                };
+
+                throw new HttpResponseException(error);
+            }
+
+            var result = _cuentaDeposito.Find()
+                .Where(x => x.I_EntidadFinanId == id)
+                .Select(x => new SelectViewModel() {
+                    Value = x.I_CtaDepID.ToString(),
+                    TextDisplay = x.C_NumeroCuenta
+                });
 
             return result;
         }

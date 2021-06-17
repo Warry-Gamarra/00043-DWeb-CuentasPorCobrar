@@ -3041,7 +3041,8 @@ CREATE TYPE [dbo].[type_dataPago] AS TABLE(
 	C_CodRc				varchar(3),
 	I_ProcesoID			int,
 	D_FecVencto			datetime,
-	I_EntidadFinanID	int
+	I_EntidadFinanID	int,
+	I_CtaDepositoID		int
 )
 GO
 
@@ -3076,7 +3077,8 @@ BEGIN
 		I_MontoOblig		decimal(15,2),
 		I_MontoPago			decimal(15,2),
 		T_LugarPago			varchar(250),
-		I_EntidadFinanID	int
+		I_EntidadFinanID	int,
+		I_CtaDepositoID		int
 	);
 
 	WITH Matriculados(I_ObligacionAluID, C_CodAlu, C_CodRc, I_ProcesoID, D_FecVencto, B_Pagado, I_MontoOblig)
@@ -3088,9 +3090,9 @@ BEGIN
 		WHERE m.B_Eliminado = 0 AND cab.B_Eliminado = 0 AND cab.B_Pagado = 0
 	)
 	INSERT @Tmp_PagoObligacion(I_ObligacionAluID, C_CodOperacion, C_CodDepositante, T_NomDepositante, 
-		C_Referencia, D_FecPago, I_Cantidad, C_Moneda, I_MontoOblig, I_MontoPago, T_LugarPago, I_EntidadFinanID)
+		C_Referencia, D_FecPago, I_Cantidad, C_Moneda, I_MontoOblig, I_MontoPago, T_LugarPago, I_EntidadFinanID, I_CtaDepositoID)
 	SELECT m.I_ObligacionAluID, p.C_CodOperacion, p.C_CodAlu, p.T_NomDepositante,
-		p.C_Referencia, p.D_FecPago, p.I_Cantidad, p.C_Moneda, m.I_MontoOblig, p.I_MontoPago, p.T_LugarPago, p.I_EntidadFinanID
+		p.C_Referencia, p.D_FecPago, p.I_Cantidad, p.C_Moneda, m.I_MontoOblig, p.I_MontoPago, p.T_LugarPago, p.I_EntidadFinanID, I_CtaDepositoID
 	FROM @Tbl_Pagos p
 	INNER JOIN Matriculados m ON m.C_CodAlu = p.C_CodAlu AND m.C_CodRc = p.C_CodRc AND 
 		m.I_ProcesoID = p.I_ProcesoID AND DATEDIFF(DAY, m.D_FecVencto, p.D_FecVencto) = 0
@@ -3115,7 +3117,8 @@ BEGIN
 			@I_PagoDemas		decimal(15,2),
 			@B_PagoDemas		decimal(15,2),
 			@T_LugarPago		varchar(250),
-			@I_EntidadFinanID	int
+			@I_EntidadFinanID	int,
+			@I_CtaDepositoID	int
 	
 	WHILE (@I_FilaActual <= @I_CantRegistros) BEGIN
 		
@@ -3135,7 +3138,8 @@ BEGIN
 				@I_MontoOblig = I_MontoOblig,
 				@I_MontoPago = I_MontoPago, 
 				@T_LugarPago= T_LugarPago,
-				@I_EntidadFinanID = I_EntidadFinanID
+				@I_EntidadFinanID = I_EntidadFinanID,
+				@I_CtaDepositoID = I_CtaDepositoID
 			FROM @Tmp_PagoObligacion WHERE id = @I_FilaActual
 
 			INSERT dbo.TR_PagoBanco(C_CodOperacion, C_CodDepositante, T_NomDepositante, C_Referencia, D_FecPago, I_Cantidad, 
@@ -3144,8 +3148,6 @@ BEGIN
 				@C_Moneda, @I_MontoPago, @T_LugarPago, 0, @UserID, @D_FecRegistro, @I_EntidadFinanID)
 
 			SET @I_PagoBancoID = SCOPE_IDENTITY()
-
-			--PRINT '@I_PagoBancoID: ' + CAST(@I_PagoBancoID AS VARCHAR)
 
 			SET @I_SaldoAPagar = CASE WHEN (@I_MontoOblig > @I_MontoPago) THEN (@I_MontoOblig - @I_MontoPago) ELSE 0 END
 
@@ -3156,9 +3158,9 @@ BEGIN
 			SET @B_PagoDemas = CASE WHEN @I_PagoDemas > 0 THEN 1 ELSE 0 END
 
 			INSERT dbo.TRI_PagoProcesadoUnfv(I_PagoBancoID, I_ObligacionAluID, I_MontoPagado, I_SaldoAPagar, I_PagoDemas,
-				B_PagoDemas, D_FecCre, I_UsuarioCre, B_Anulado)
+				B_PagoDemas, D_FecCre, I_UsuarioCre, B_Anulado, I_CtaDepositoID)
 			VALUES(@I_PagoBancoID, @I_ObligacionAluID, @I_MontoPago, @I_SaldoAPagar, @I_PagoDemas, 
-				@B_PagoDemas, @D_FecRegistro, @UserID, 0)
+				@B_PagoDemas, @D_FecRegistro, @UserID, 0, @I_CtaDepositoID)
 
 			UPDATE dbo.TR_ObligacionAluCab SET B_Pagado = @B_Pagado, I_UsuarioMod = @UserID, D_FecMod = @D_FecRegistro
 			WHERE I_ObligacionAluID = @I_ObligacionAluID

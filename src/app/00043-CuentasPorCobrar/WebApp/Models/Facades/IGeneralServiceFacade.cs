@@ -11,5 +11,9 @@ namespace WebApp.Models.Facades
         IEnumerable<SelectViewModel> Listar_Anios();
 
         IEnumerable<SelectViewModel> Listar_TipoEstudios();
+
+        IEnumerable<SelectViewModel> Listar_Horas();
+
+        IEnumerable<SelectViewModel> Listar_Minutos();
     }
 }

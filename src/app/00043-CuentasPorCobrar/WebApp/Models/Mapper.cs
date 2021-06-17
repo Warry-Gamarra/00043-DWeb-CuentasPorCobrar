@@ -320,7 +320,8 @@ namespace WebApp.Models
                 C_CodAlu = model.codigoAlumno,
                 C_CodRc = model.codRc,
                 C_Moneda = model.moneda,
-                I_EntidadFinanID = model.idEntidadFinanciera
+                I_EntidadFinanID = model.idEntidadFinanciera,
+                I_CtaDepositoID = model.idCtaDeposito
             };
 
             return result;

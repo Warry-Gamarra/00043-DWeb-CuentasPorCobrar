@@ -12,5 +12,9 @@ namespace Domain.Services
         IEnumerable<int> Listar_Anios();
 
         IEnumerable<TipoEstudio> Listar_TipoEstudios();
+
+        IEnumerable<int> Listar_Horas();
+
+        IEnumerable<int> Listar_Minutos();
     }
 }

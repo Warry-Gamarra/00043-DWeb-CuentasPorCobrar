@@ -21,5 +21,6 @@ namespace Domain.Entities
         public int I_ProcesoID { get; set; }
         public DateTime D_FecVencto { get; set; }
         public int I_EntidadFinanID { get; set; }
+        public int? I_CtaDepositoID { get; set; }
     }
 }

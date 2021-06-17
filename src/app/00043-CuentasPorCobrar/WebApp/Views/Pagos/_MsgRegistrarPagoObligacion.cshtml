@@ -1,0 +1,18 @@
+﻿@model Domain.Helpers.Response
+
+
+<div class="col-md-12" style="display:none" id="loading">
+    <h6>Registrando pago...</h6>
+
+    <div class="progress">
+        <div class="indeterminate"></div>
+    </div>
+</div>
+
+<div class="col-12 text-center alert alert-@Model.Color" id="div_msg">
+    <i class="fa @Model.Icon">&nbsp;</i>@Html.Raw(Model.Message)
+</div>
+
+<button type="submit" class="btn btn-primary" id="btnsubmit"><i class="fa fa-save"></i> Grabar pago</button>
+<button type="button" class="btn btn-info" id="btnNuevo"><i class="fa fa-file"></i> Nuevo pago</button>
+<button type="button" class="btn btn-secondary" id="btnCancel" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> Cancelar</button>

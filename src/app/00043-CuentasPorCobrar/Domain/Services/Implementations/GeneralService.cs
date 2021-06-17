@@ -31,5 +31,29 @@ namespace Domain.Services.Implementations
 
             return result;
         }
+
+        public IEnumerable<int> Listar_Horas()
+        {
+            var lista = new List<int>();
+
+            for (int i = 0; i < 24; i++)
+            {
+                lista.Add(i);
+            }
+
+            return lista;
+        }
+
+        public IEnumerable<int> Listar_Minutos()
+        {
+            var lista = new List<int>();
+
+            for (int i = 0; i < 60; i++)
+            {
+                lista.Add(i);
+            }
+
+            return lista;
+        }
     }
 }

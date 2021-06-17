@@ -34,5 +34,30 @@ namespace WebApp.Models.Facades
 
             return result;
         }
+
+        public IEnumerable<SelectViewModel> Listar_Horas()
+        {
+            var lista = generalService.Listar_Horas();
+
+            var result = lista.Select(x => new SelectViewModel() {
+                Value = x.ToString(),
+                TextDisplay = x.ToString("D2")
+            });
+
+            return result;
+        }
+
+        public IEnumerable<SelectViewModel> Listar_Minutos()
+        {
+            var lista = generalService.Listar_Minutos();
+
+            var result = lista.Select(x => new SelectViewModel()
+            {
+                Value = x.ToString(),
+                TextDisplay = x.ToString("D2")
+            });
+
+            return result;
+        }
     }
 }

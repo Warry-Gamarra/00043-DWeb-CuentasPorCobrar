@@ -179,7 +179,11 @@ namespace WebApp.Controllers
             ViewBag.Especialidades = new SelectList(new List<SelectViewModel>(), "Value", "TextDisplay");
             ViewBag.Proceso = new SelectList(new List<SelectViewModel>(), "Value", "TextDisplay");
             ViewBag.EntidadesFinancieras = new SelectList(ListaEntidadesFinancieras(), "Value", "TextDisplay");
-            
+            ViewBag.CtaDeposito = new SelectList(new List<SelectViewModel>(), "Value", "TextDisplay");
+
+            ViewBag.Horas = new SelectList(generalServiceFacade.Listar_Horas(), "Value", "TextDisplay");
+            ViewBag.Minutos = new SelectList(generalServiceFacade.Listar_Minutos(), "Value", "TextDisplay");
+
             var model = new PagoObligacionViewModel();
 
             return PartialView("_RegistrarPagoObligacion", model);
@@ -197,6 +201,8 @@ namespace WebApp.Controllers
                 {
                     int currentUserID = WebSecurity.CurrentUserId;
 
+                    model.fechaPago = model.fechaPago.Value.AddHours(model.horas).AddMinutes(model.minutos);
+
                     result = pagosModel.GrabarPagoObligacion(model, currentUserID);
 
                     if (!result.Value)
@@ -209,9 +215,22 @@ namespace WebApp.Controllers
                     ResponseModel.Error(result, ex.Message);
                 }
             }
+            else
+            {
+                string details = "";
 
-            //return Json(result, JsonRequestBehavior.AllowGet);
-            return PartialView("_MsgPartialWR", result);
+                foreach (ModelState modelState in ViewData.ModelState.Values)
+                {
+                    foreach (ModelError error in modelState.Errors)
+                    {
+                        details += error.ErrorMessage + " / ";
+                    }
+                }
+
+                ResponseModel.Error(result, "Ha ocurrido un error con el envio de datos" + details);
+            }
+
+            return PartialView("_MsgRegistrarPagoObligacion", result);
         }
 
         [HttpGet]
