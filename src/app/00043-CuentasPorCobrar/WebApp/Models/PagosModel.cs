@@ -220,5 +220,9 @@ namespace WebApp.Models
             }
         }
 
+        public Response GrabarPagoTasa(PagoTasaViewModel model, int currentUserId)
+        {
+            throw new Exception();
+        }
     }
 }

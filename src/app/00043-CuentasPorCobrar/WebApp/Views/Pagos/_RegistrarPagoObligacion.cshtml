@@ -209,6 +209,15 @@
         }
     });
 
+    $(document).on('change', '#form-obligacion-manual #codRc', function () {
+        let anio = $('#form-obligacion-manual #anio').val();
+        let periodo = $('#form-obligacion-manual #idPeriodo').val();
+        let codRc = this.value;
+        let codAlu = $('#form-obligacion-manual #codigoAlumno').val();
+
+        BuscarObligacionesAlumno(anio, periodo, codRc, codAlu);
+    });
+
     $(document).on('change', '#form-obligacion-manual #idEntidadFinanciera', function (e) {
         let idEntidadFinanc = this.value;
 

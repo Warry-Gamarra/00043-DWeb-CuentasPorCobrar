@@ -238,6 +238,10 @@ namespace WebApp.Controllers
         {
             ViewBag.Tasas = new SelectList(tasaService.listarTasas(), "Value", "TextDisplay");
             ViewBag.EntidadesFinancieras = new SelectList(ListaEntidadesFinancieras(), "Value", "TextDisplay");
+            ViewBag.CtaDeposito = new SelectList(new List<SelectViewModel>(), "Value", "TextDisplay");
+
+            ViewBag.Horas = new SelectList(generalServiceFacade.Listar_Horas(), "Value", "TextDisplay");
+            ViewBag.Minutos = new SelectList(generalServiceFacade.Listar_Minutos(), "Value", "TextDisplay");
 
             var model = new PagoTasaViewModel();
 
@@ -247,9 +251,44 @@ namespace WebApp.Controllers
         [HttpPost]
         public ActionResult RegistrarPagoTasa(PagoTasaViewModel model)
         {
-            Object result = null;
+            Response result = new Response();
 
-            return Json(result, JsonRequestBehavior.AllowGet);
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    int currentUserID = WebSecurity.CurrentUserId;
+
+                    model.fechaPago = model.fechaPago.Value.AddHours(model.horas).AddMinutes(model.minutos);
+
+                    result = pagosModel.GrabarPagoTasa(model, currentUserID);
+
+                    if (!result.Value)
+                    {
+                        throw new Exception(result.Message);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ResponseModel.Error(result, ex.Message);
+                }
+            }
+            else
+            {
+                string details = "";
+
+                foreach (ModelState modelState in ViewData.ModelState.Values)
+                {
+                    foreach (ModelError error in modelState.Errors)
+                    {
+                        details += error.ErrorMessage + " / ";
+                    }
+                }
+
+                ResponseModel.Error(result, "Ha ocurrido un error con el envio de datos" + details);
+            }
+
+            return PartialView("_MsgRegistrarPagoObligacion", result);
         }
     }
 }
