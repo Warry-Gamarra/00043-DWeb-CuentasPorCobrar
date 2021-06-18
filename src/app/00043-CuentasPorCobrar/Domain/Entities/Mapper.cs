@@ -332,11 +332,24 @@ namespace Domain.Entities
             return multaNoVotarSinRegistrar;
         }
 
-        public static PagoGeneralPorFechaDTO USP_S_PagosGeneralPorFecha_To_PagoGeneralPorFechaDTO(USP_S_PagosGeneralPorFecha sp)
+        public static PagoPregradoPorFacultadDTO USP_S_ReportePagoObligacionesPregrado_To_PagoPregradoPorFacultadDTO(USP_S_ReportePagoObligacionesPregrado sp)
         {
-            var result = new PagoGeneralPorFechaDTO()
+            var result = new PagoPregradoPorFacultadDTO()
+            {
+                T_FacDesc = sp.T_FacDesc,
+                C_CodFac = sp.C_CodFac,
+                I_MontoTotal = sp.I_MontoTotal
+            };
+
+            return result;
+        }
+
+        public static PagoPregradoPorConceptoDTO USP_S_ReportePagoObligacionesPregrado_To_PagoPregradoPorConceptoDTO(USP_S_ReportePagoObligacionesPregrado sp)
+        {
+            var result = new PagoPregradoPorConceptoDTO()
             {
                 I_ConceptoID = sp.I_ConceptoID,
+                T_Clasificador = sp.T_Clasificador,
                 T_ConceptoPagoDesc = sp.T_ConceptoPagoDesc,
                 I_MontoTotal = sp.I_MontoTotal
             };
@@ -344,12 +357,14 @@ namespace Domain.Entities
             return result;
         }
 
-        public static PagoPorFacultadYFechaDTO USP_S_PagosPorFacultadYFecha_To_PagoPorFacultadYFechaDTO(USP_S_PagosPorFacultadYFecha sp)
+        public static ConceptoPregradoPorFacultadDTO USP_S_ReportePagoObligacionesPregrado_To_ConceptoPregradoPorFacultadDTO(USP_S_ReportePagoObligacionesPregrado sp)
         {
-            var result = new PagoPorFacultadYFechaDTO()
+            var result = new ConceptoPregradoPorFacultadDTO()
             {
+                T_FacDesc = sp.T_FacDesc,
                 C_CodFac = sp.C_CodFac,
                 I_ConceptoID = sp.I_ConceptoID,
+                T_Clasificador = sp.T_Clasificador,
                 T_ConceptoPagoDesc = sp.T_ConceptoPagoDesc,
                 I_MontoTotal = sp.I_MontoTotal
             };

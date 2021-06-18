@@ -16,83 +16,72 @@
     <div class="col-12 mt-4">
         <div class="row">
             <div class="col-12">
-                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-                    <li class="nav-item w-50" role="presentation">
-                        <a class="nav-link text-center" id="individial-tab" data-toggle="pill" href="#individial" role="tab" aria-controls="individial" aria-selected="false">
-                            <i class="fa fa-fw fa-user">&nbsp;</i> Consulta estudiantes
-                        </a>
-                    </li>
-                </ul>
-                <div class="tab-content" id="pills-tabContent">
-                    <div class="tab-pane fade show active" id="individial" role="tabpanel" aria-labelledby="individial-tab">
-                        <div class="card">
-                            <div class="card-body bg-light-gray">
-                                <form id="frmConsultaEstudianteMatricula" method="get" action="@Url.Action("Consulta", "Estudiantes")">
-                                    <div class="form-row">
-                                        <div class="form-group col-lg-1 col-md-2 col-6">
-                                            <label for="anio">Año</label>
-                                            @Html.DropDownList("anio", new SelectList(ViewBag.Anios, "Value", "TextDisplay", DateTime.Now.Year), new { @class = "form-control form-control-sm" })
-                                        </div>
-                                        <div class="form-group col-lg-1 col-md-2 col-6 ">
-                                            <label for="periodo">Periodo</label>
-                                            @Html.DropDownList("periodo", new SelectList(ViewBag.Periodos, "Value", "TextDisplay", "15"), null, new { @class = "form-control form-control-sm" })
-                                        </div>
-                                        <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
-                                            <label for="tipoEstudio">Tipo de estudio</label>
-                                            @Html.DropDownList("tipoEstudio", new SelectList(ViewBag.TipoEstudios, "Value", "TextDisplay", ViewBag.DefaultTipoEstudio), null, new { @class = "form-control form-control-sm" })
-                                        </div>
-                                        <div class="form-group col-lg-3 col-md-5 col-sm-12 col-12">
-                                            <label for="facultad">Facultades/Especialidades</label>
-                                            @Html.DropDownList("facultad", new SelectList(ViewBag.Facultades, "Value", "TextDisplay", ViewBag.DefaultFacultad), "TODOS", new { @class = "form-control form-control-sm" })
-                                        </div>
-                                        <div class="form-group col-lg-1 col-md-2 col-6">
-                                            <label for="codAlumno">Código de alumno</label>
-                                            @Html.TextBox("codAlumno", null, new { @class = "form-control form-control-sm" })
-                                        </div>
-                                        <div class="form-group col-lg-2 col-md-3 col-12">
-                                            <button type="submit" id="btnConsultarEstudiante" class="btn btn-block btn-outline-primary mt-4"><i class="fa fa-fw fa-search-plus"></i> Iniciar consulta</button>
-                                        </div>
-                                    </div>
-                                </form>
+                <div class="card">
+                    <div class="card-body bg-light-gray">
+                        <form id="frmConsultaEstudianteMatricula" method="get" action="@Url.Action("Consulta", "Estudiantes")">
+                            <div class="form-row">
+                                <div class="form-group col-lg-1 col-md-2 col-6">
+                                    <label for="anio">Año</label>
+                                    @Html.DropDownList("anio", new SelectList(ViewBag.Anios, "Value", "TextDisplay", DateTime.Now.Year), new { @class = "form-control form-control-sm" })
+                                </div>
+                                <div class="form-group col-lg-1 col-md-2 col-6 ">
+                                    <label for="periodo">Periodo</label>
+                                    @Html.DropDownList("periodo", new SelectList(ViewBag.Periodos, "Value", "TextDisplay", "15"), null, new { @class = "form-control form-control-sm" })
+                                </div>
+                                <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
+                                    <label for="tipoEstudio">Tipo de estudio</label>
+                                    @Html.DropDownList("tipoEstudio", new SelectList(ViewBag.TipoEstudios, "Value", "TextDisplay", ViewBag.DefaultTipoEstudio), null, new { @class = "form-control form-control-sm" })
+                                </div>
+                                <div class="form-group col-lg-3 col-md-5 col-sm-12 col-12">
+                                    <label for="facultad">Facultades/Especialidades</label>
+                                    @Html.DropDownList("facultad", new SelectList(ViewBag.Facultades, "Value", "TextDisplay", ViewBag.DefaultFacultad), "TODOS", new { @class = "form-control form-control-sm" })
+                                </div>
+                                <div class="form-group col-lg-1 col-md-2 col-6">
+                                    <label for="codAlumno">Código de alumno</label>
+                                    @Html.TextBox("codAlumno", null, new { @class = "form-control form-control-sm" })
+                                </div>
+                                <div class="form-group col-lg-2 col-md-3 col-12">
+                                    <button type="submit" id="btnConsultarEstudiante" class="btn btn-block btn-outline-primary mt-4"><i class="fa fa-fw fa-search-plus"></i> Iniciar consulta</button>
+                                </div>
                             </div>
-                        </div>
-
-                        <div class="table-responsive mt-4" style="max-height: 250px">
-                            <p class="h5">Estudiantes aptos para la generación de obligaciones</p>
-
-                            <table class="table table-sm table-hover">
-                                <thead class="thead-light">
-                                    <tr>
-                                        <th>Año</th>
-                                        <th>Periodo</th>
-                                        <th>Codigo alumno</th>
-                                        <th>Nombres</th>
-                                        <th>Apellidos</th>
-                                        <th>Especialidad</th>
-                                        <th>Tipo alumno</th>
-                                        <th>Créditos desaprobados</th>
-                                        <th>Multa por no votar</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var item in Model)
-                                    {
-                                        <tr>
-                                            <td>@item.I_Anio</td>
-                                            <td>@item.T_Periodo</td>
-                                            <td>@item.C_CodAlu</td>
-                                            <td>@item.T_Nombre</td>
-                                            <td>@item.T_ApePaterno @item.T_ApeMaterno</td>
-                                            <td>@item.T_DenomProg</td>
-                                            <td>@item.T_EsIngresante</td>
-                                            <td>@item.I_CredDesaprob</td>
-                                            <td>@item.T_TieneMultaPorNoVotar</td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
+                        </form>
                     </div>
+                </div>
+
+                <div class="table-responsive mt-4" style="max-height: 250px">
+                    <p class="h5">Estudiantes aptos para la generación de obligaciones</p>
+
+                    <table class="table table-sm table-hover">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Año</th>
+                                <th>Periodo</th>
+                                <th>Codigo alumno</th>
+                                <th>Nombres</th>
+                                <th>Apellidos</th>
+                                <th>Especialidad</th>
+                                <th>Tipo alumno</th>
+                                <th>Créditos desaprobados</th>
+                                <th>Multa por no votar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.I_Anio</td>
+                                    <td>@item.T_Periodo</td>
+                                    <td>@item.C_CodAlu</td>
+                                    <td>@item.T_Nombre</td>
+                                    <td>@item.T_ApePaterno @item.T_ApeMaterno</td>
+                                    <td>@item.T_DenomProg</td>
+                                    <td>@item.T_EsIngresante</td>
+                                    <td>@item.I_CredDesaprob</td>
+                                    <td>@item.T_TieneMultaPorNoVotar</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

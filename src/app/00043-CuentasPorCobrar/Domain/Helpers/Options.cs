@@ -49,4 +49,10 @@ namespace Domain.Helpers
         Cabecera_Resumen = 1,
         Detalle_Recaudacion = 2
     }
+
+    public enum TipoEstudio
+    {
+        Pregrado,
+        Posgrado
+    }
 }

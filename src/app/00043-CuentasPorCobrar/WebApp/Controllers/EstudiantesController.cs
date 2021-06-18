@@ -177,10 +177,10 @@ namespace WebApp.Controllers
             }
         }
 
-        //[Route("consulta/estudiantes")]
+        [Route("consulta/estudiantes")]
         public ActionResult Consulta(int? anio, int? periodo, string facultad, string codAlumno, TipoEstudio tipoEstudio = TipoEstudio.Pregrado)
         {
-            ViewBag.Title = "Consulta de Alumnos";
+            ViewBag.Title = "Consulta de Estudiantes";
 
             //Listas
             ViewBag.Anios = generalServiceFacade.Listar_Anios();

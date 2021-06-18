@@ -102,7 +102,7 @@ namespace WebApp.Controllers
             return result;
         }
 
-        // GET: api/service/GetCtasDepositoPorPeriodo?nombreTabla=TR_PagoBanco
+        // GET: api/service/GetColumnasPorTabla?nombreTabla=TR_PagoBanco
         public IEnumerable<SelectViewModel> GetColumnasPorTabla(string nombreTabla)
         {
             if (string.IsNullOrEmpty(nombreTabla))

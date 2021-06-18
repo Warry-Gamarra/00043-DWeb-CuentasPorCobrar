@@ -282,31 +282,6 @@ namespace WebApp.Models
             return matriculaModel;
         }
 
-        public static PagosGeneralesPorFechaViewModel PagoGeneralPorFechaDTO_To_PagosGeneralesPorFechaViewModel(PagoGeneralPorFechaDTO dto)
-        {
-            var result = new PagosGeneralesPorFechaViewModel()
-            {
-                I_ConceptoID = dto.I_ConceptoID,
-                T_ConceptoPagoDesc = dto.T_ConceptoPagoDesc,
-                I_MontoTotal = dto.I_MontoTotal
-            };
-
-            return result;
-        }
-
-        public static PagosPorFacultadYFechaViewModel PagoPorFacultadYFechaDTO_To_PagosPorFacultadYFechaViewModel(PagoPorFacultadYFechaDTO dto)
-        {
-            var result = new PagosPorFacultadYFechaViewModel()
-            {
-                C_CodFac = dto.C_CodFac,
-                I_ConceptoID = dto.I_ConceptoID,
-                T_ConceptoPagoDesc = dto.T_ConceptoPagoDesc,
-                I_MontoTotal = dto.I_MontoTotal
-            };
-
-            return result;
-        }
-
         public static PagoObligacionEntity PagoObligacionViewModel_To_PagoObligacionEntity(PagoObligacionViewModel model)
         {
             var result = new PagoObligacionEntity()

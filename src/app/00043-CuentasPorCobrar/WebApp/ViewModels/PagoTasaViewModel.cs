@@ -44,5 +44,10 @@ namespace WebApp.ViewModels
         public string moneda { get { return "PEN"; } }
 
         public TipoPago tipoPago { get { return TipoPago.Tasa; } }
+
+        public PagoTasaViewModel()
+        {
+            cantidad = 1;
+        }
     }
 }

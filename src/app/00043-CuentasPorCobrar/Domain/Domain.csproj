@@ -86,7 +86,7 @@
     <Compile Include="Entities\MultaNoVotarSinRegistrarEntity.cs" />
     <Compile Include="Entities\ObligacionAluCabEntity.cs" />
     <Compile Include="Entities\PagoObligacionEntity.cs" />
-    <Compile Include="Entities\PagoGeneralPorFechaDTO.cs" />
+    <Compile Include="Entities\PagoPregradoDTO.cs" />
     <Compile Include="Entities\PagoPorFacultadYFechaDTO.cs" />
     <Compile Include="Entities\SeccionArchivo.cs" />
     <Compile Include="Entities\TasaDTO.cs" />
@@ -131,7 +131,6 @@
     <Compile Include="Helpers\Crypto.cs" />
     <Compile Include="Helpers\HttpVerb.cs" />
     <Compile Include="Helpers\RandomPassword.cs" />
-    <Compile Include="Helpers\TipoEstudio.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\IGeneralService.cs" />
     <Compile Include="Services\ICategoriaPago.cs" />
@@ -145,10 +144,10 @@
     <Compile Include="Services\Implementations\CatalogoService.cs" />
     <Compile Include="Services\ICatalogoService.cs" />
     <Compile Include="Services\Implementations\GeneralService.cs" />
-    <Compile Include="Services\Implementations\ReporteService.cs" />
+    <Compile Include="Services\Implementations\ReportePregradoService.cs" />
     <Compile Include="Services\IObligacionService.cs" />
     <Compile Include="Services\IProcesoService.cs" />
-    <Compile Include="Services\IReporteService.cs" />
+    <Compile Include="Services\IReportePregradoService.cs" />
     <Compile Include="Services\IRoles.cs" />
     <Compile Include="Services\IUser.cs" />
     <Compile Include="Services\Implementations\ObligacionService.cs" />

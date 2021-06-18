@@ -1,0 +1,35 @@
+﻿@model WebApp.ViewModels.ReportePagosPorConceptoViewModel
+
+<p class="h3">@Model.Titulo <small>del @Model.FechaInicio al @Model.FechaFin</small></p>
+<br />
+<p class="h5 text-right">Fecha consulta: @Model.FechaActual : @Model.HoraActual</p>
+<br />
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover table-sm" id="tbl_pagos">
+        <thead>
+            <tr class="thead-light">
+                <th class="text-center">Clasificador</th>
+                <th class="text-center">Concepto</th>
+                <th class="text-center">Monto (S/. )</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.listaPagos)
+            {
+                <tr>
+                    <td class="text-center">@item.T_Clasificador</td>
+                    <td>@item.T_ConceptoPagoDesc</td>
+                    <td class="text-right">@item.I_MontoTotal</td>
+                </tr>
+            }
+            <tr>
+                <th></th>
+                <th class="text-right">Total</th>
+                <th class="text-right">@Model.MontoTotal</th>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+

@@ -414,3 +414,16 @@ SELECT
 FROM dbo.TC_ProgramaUnfv prog
 LEFT JOIN dbo.VW_CarreraProfesional c ON c.C_RcCod = prog.C_RcCod AND c.B_Eliminado = 0
 GO
+
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_Facultad')
+	DROP VIEW [dbo].[VW_Facultad]
+GO
+
+
+CREATE VIEW [dbo].[VW_Facultad]
+AS
+SELECT f.C_CodFac, f.T_FacDesc, f.T_FacAbrev, f.B_Habilitado FROM dbo.TC_Facultad f
+WHERE f.B_Eliminado = 0
+GO
