@@ -104,7 +104,7 @@ namespace Data.Tables
         }
 
 
-        public ResponseData HabilitarArchivosEntidadFinanciera()
+        public ResponseData HabilitarArchivosEntidadRecaudadora()
         {
             ResponseData result = new ResponseData();
             DynamicParameters parameters = new DynamicParameters();

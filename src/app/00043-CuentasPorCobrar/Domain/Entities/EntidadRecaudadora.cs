@@ -76,7 +76,7 @@ namespace Domain.Entities
                 Response = new Response()
                 {
                     Value = false,
-                    Message = "No se encontraron resultados para el identificador de la entidad financiera."
+                    Message = "No se encontraron resultados para el identificador de la entidad recaudadora."
                 }
             };
         }
@@ -111,7 +111,7 @@ namespace Domain.Entities
             _archivoEntFinanRepository.I_UsuarioCre = currentUserId;
             _archivoEntFinanRepository.D_FecCre = DateTime.Now;
 
-            return new Response(_archivoEntFinanRepository.HabilitarArchivosEntidadFinanciera());
+            return new Response(_archivoEntFinanRepository.HabilitarArchivosEntidadRecaudadora());
         }
 
 

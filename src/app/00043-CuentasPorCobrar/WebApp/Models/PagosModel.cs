@@ -44,10 +44,10 @@ namespace WebApp.Models
 
             try
             {
-                fileName = GenerarNombreArchivo(model.EntidadFinanciera, file);
+                fileName = GenerarNombreArchivo(model.EntidadRecaudadora, file);
                 filePathSaved = GuardarArchivoPagoEnHost(serverPath, fileName, model.TipoArchivo, file);
 
-                List<PagoObligacionEntity> lstPagoObligaciones = LeerDetalleArchivoPagoObligaciones(filePathSaved, model.EntidadFinanciera);
+                List<PagoObligacionEntity> lstPagoObligaciones = LeerDetalleArchivoPagoObligaciones(filePathSaved, model.EntidadRecaudadora);
 
                 if (lstPagoObligaciones != null)
                 {

@@ -28,7 +28,7 @@
         <div class="table-responsive" style="min-height:350px">
             @Html.Grid(Model).Columns(columns =>
             {
-                columns.Add(c => c.EntiFinan).Titled("Entidad Financiera").Filterable(true);
+                columns.Add(c => c.EntiFinan).Titled("Entidad Recaudadora").Filterable(true);
                 columns.Add(c => c.TipoArchivo).Titled("Archivo").Filterable(true);
                 columns.Add(c => c.CantSecciones).Titled("Secciones").Filterable(true);
                 columns.Add(c => c.CantColumns).Titled("Columnas").Filterable(true);

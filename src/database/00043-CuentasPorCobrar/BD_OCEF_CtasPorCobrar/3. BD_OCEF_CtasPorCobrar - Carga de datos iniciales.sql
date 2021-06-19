@@ -414,7 +414,7 @@ AS
 			)
 )
 
----INSERT INTO TC_Proceso (I_ProcesoID, I_CatPagoID, T_ProcesoDesc, I_Anio, I_Periodo, N_CodBanco, D_FecVencto, I_Prioridad, B_Mora, B_Migrado, B_Habilitado, B_Eliminado)
+INSERT INTO TC_Proceso (I_ProcesoID, I_CatPagoID, T_ProcesoDesc, I_Anio, I_Periodo, N_CodBanco, D_FecVencto, I_Prioridad, B_Mora, B_Migrado, B_Habilitado, B_Eliminado)
 SELECT	I_ProcesoID, I_CatPagoID, T_ProcesoDesc, I_Anio, co_periodo.I_OpcionID AS I_Periodo, N_CodBanco, D_FecVencto, I_Prioridad, B_Mora, B_Migrado, TEMP.B_Habilitado, TEMP.B_Eliminado
 FROM	TEMP_PROC TEMP
 		LEFT JOIN (SELECT DISTINCT cuota_pago, ano, p FROM temporal_pagos..cp_pri WHERE eliminado = 0) TP_CP ON TP_CP.cuota_pago = TEMP.I_ProcesoID

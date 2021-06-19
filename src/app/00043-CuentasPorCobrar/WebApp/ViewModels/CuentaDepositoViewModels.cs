@@ -38,7 +38,7 @@ namespace WebApp.ViewModels
     public class CuentaDepositoRegistroViewModel
     {
         public int? Id { get; set; }
-        [Display(Name = "Entidad Financiera")]
+        [Display(Name = "Entidad Recaudadora")]
         [Required]
         public int EntidadFinancieraId { get; set; }
 
