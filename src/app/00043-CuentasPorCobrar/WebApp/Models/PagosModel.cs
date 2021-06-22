@@ -60,6 +60,7 @@ namespace WebApp.Models
 
                 if (response.Value)
                 {
+
                     response.Success(false);
                 }
                 else
@@ -178,6 +179,12 @@ namespace WebApp.Models
         }
 
 
+        private void GrabarHistorialCargaArchivo()
+        {
+
+        }
+
+
         public Response GrabarPagoObligacion(PagoObligacionViewModel model, int currentUserId)
         {
             var response = new Response();
@@ -193,7 +200,7 @@ namespace WebApp.Models
                     return ResponseModel.Error(response, "La obligación seleccionada ya ha sido pagada.");
                 }
 
-                if (pagoService.validarCodOperacion(model.codigoOperacion, model.idEntidadFinanciera, model.fechaPago))
+                if (pagoService.ValidarCodOperacion(model.codigoOperacion, model.idEntidadFinanciera, model.fechaPago))
                 {
                     var entity = Mapper.PagoObligacionViewModel_To_PagoObligacionEntity(model);
 

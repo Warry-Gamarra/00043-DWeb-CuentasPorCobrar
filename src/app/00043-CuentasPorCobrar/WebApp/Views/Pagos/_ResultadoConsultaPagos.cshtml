@@ -1,8 +1,10 @@
 ﻿@model IEnumerable<WebApp.ViewModels.DatosPagoViewModel>
 
 <link href="~/Assets/datatables/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
+<link href="~/Assets/datatables/css/dataTables.checkboxes.css" rel="stylesheet" />
 
 <script src="~/Assets/datatables/js/datatables.min.js"></script>
+<script src="~/Assets/datatables/js/dataTables.checkboxes.min.js"></script>
 <script src="~/Assets/datatables/js/dataTables.bootstrap4.min.js"></script>
 
 
@@ -10,13 +12,13 @@
     <table class="table table-bordered table-hover table-sm" id="tbl_pagos">
         <thead>
             <tr class="thead-light">
+                <th></th>
                 <th class="text-center">Entidad recaudadora</th>
                 <th class="text-center">Concepto</th>
                 <th class="text-center">Fecha de pago</th>
                 <th class="text-center">Monto pagado</th>
                 <th class="text-center">Lugar de pago</th>
                 <th class="text-center">Nro. SIAF</th>
-                <th>Tipo archivo</th>
                 <th></th>
             </tr>
         </thead>
@@ -24,15 +26,17 @@
             @foreach (var item in Model)
             {
                 <tr>
+                    <td></td>
                     <td>@item.EntidadRecaudadora</td>
                     <td>@item.Concepto</td>
                     <td class="text-center">@item.FecPago</td>
                     <td class="text-right">@item.MontoPago</td>
                     <td>@item.LugarPago</td>
                     <td class="text-right">@item.NroSIAF</td>
-                    <td>
-                        <a href="@item.PagoId"><i class="fa fa-download">&nbsp;</i>Detalles</a>
-                        <a href="@item.PagoId"><i class="fa fa-download">&nbsp;</i>Editar</a>
+                    <td class="text-right">
+                        <a href="@Url.Action("Detalle","Pagos", new { id = item.PagoId })" class="ml-3 modal-link"><i class="fa bi-info-circle">&nbsp;</i>Detalles</a>
+                        <a href="@Url.Action("Create","Devoluciones", new { id = item.PagoId })" class="ml-3 modal-link"><i class="fa bi-box-arrow-down-right">&nbsp;</i>Devolución</a>
+                        <a href="javascript:;" class="ml-3" onclick="anularPago(@item.PagoId)"><i class="fa fa-ban">&nbsp;</i>Anular</a>
                     </td>
                 </tr>
             }
@@ -43,6 +47,18 @@
 <script>
     $(document).ready(function () {
         $('#tbl_pagos').DataTable({
+            "columnDefs": [
+                {
+                    "targets": 0,
+                    "className": 'select-checkbox',
+                    "checkboxes": {
+                        "selectRow": true
+                    }
+                }
+            ],
+            "select": {
+                "style": "multi"
+            },
             "language": {
                 "zeroRecords": "No se encontraron resultados para la búsqueda",
                 "info": "Mostrando _START_ - _END_ de _TOTAL_ registros encontrados",
@@ -60,12 +76,37 @@
                 }
             },
             "lengthChange": false,
-            "searching": true,
-            "pageLength": 10,
+            "searching": false,
+            "pageLength": 20,
             "order": [[1, "asc"]]
         });
 
     })
+
+    function anularPago(pagoId) {
+        Swal.fire({
+            title: 'Are you sure delete ' + pagoId + '?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                sendAnularPago(pagoId)
+                Swal.fire(
+                    'Deleted!',
+                    'Your file has been deleted.',
+                    'success'
+                )
+            }
+        })
+    }
+
+    function sendAnularPago(pagoId) {
+
+    }
 
 </script>
 

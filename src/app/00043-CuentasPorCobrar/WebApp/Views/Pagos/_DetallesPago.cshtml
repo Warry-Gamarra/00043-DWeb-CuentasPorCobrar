@@ -1,0 +1,36 @@
+﻿
+@model WebApp.ViewModels.DatosPagoViewModel
+
+<div class="modal-header bg-dark-gray" style="border-radius: .2rem .2rem 0px 0px">
+    <h5 class="modal-title text-center"><i class="fa bi-cash-coin">&nbsp;</i> @ViewBag.Title</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+
+    <div class="modal-body">
+        <div class="container-fluid">
+            @*<div class="form-group">
+                @Html.LabelFor(model => model.CategoriaId, new { @class = "control-label" })
+                @Html.DropDownListFor(model => model.CategoriaId, ViewBag.Categorias as SelectList, "", new { @class = "select-filter form-control text-uppercase", placeholder = "[SELECCIONAR DESC. CUOTA]" })
+                <p class="text-danger small">@Html.ValidationMessageFor(model => model.CategoriaId)</p>
+            </div>
+            <div class="form-group form-row">
+                @Html.LabelFor(model => model.CtaDepositoID, new { @class = "control-label col-form-label col-4" })
+                <div class="col-8">
+                    @Html.ListBoxFor(model => model.CtaDepositoID, ViewBag.CtasDeposito as SelectList, new { @class = "select-multiple form-control text-uppercase", multiple = "true" })
+                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.CtaDepositoID)</p>
+                </div>
+            </div>
+
+            <div class="form-group form-row mt-4" id="CodBco">
+                @Html.LabelFor(model => model.CodBcoComercio, new { @class = "control-label col-form-label col-sm-6 col-12" })
+                <div class="col-sm-6 col-12">
+                    @Html.TextBoxFor(model => model.CodBcoComercio, new { @class = "form-control text-right" })
+                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.CodBcoComercio)</p>
+                </div>
+            </div>*@
+        </div>
+    </div>
+    <div class="modal-footer" id="div_msg">
+        <button type="button" class="btn btn-secondary" id="btnCancel" data-dismiss="modal"><i class="fa fa-times-circle-o">&nbsp;</i>Cancelar</button>
+    </div>
+

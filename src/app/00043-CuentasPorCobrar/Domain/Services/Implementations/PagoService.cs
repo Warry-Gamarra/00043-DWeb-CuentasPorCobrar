@@ -9,7 +9,14 @@ namespace Domain.Services.Implementations
 {
     public class PagoService : IPagoService
     {
-        public bool validarCodOperacion(string C_CodOperacion, int I_EntidadFinanID, DateTime? D_FecPago)
+        public void GrabarRegistroArchivo()
+        {
+            throw new NotImplementedException();
+        }
+
+
+
+        public bool ValidarCodOperacion(string C_CodOperacion, int I_EntidadFinanID, DateTime? D_FecPago)
         {
             var spParams = new USP_S_ValidarCodOperacion()
             {
