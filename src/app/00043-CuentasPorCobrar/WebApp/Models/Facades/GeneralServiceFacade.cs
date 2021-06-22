@@ -59,5 +59,18 @@ namespace WebApp.Models.Facades
 
             return result;
         }
+
+        public IEnumerable<SelectViewModel> Listar_ReportesPregrado()
+        {
+            var lista = new List<SelectViewModel>();
+
+            lista.Add(new SelectViewModel() { Value = "1", TextDisplay = "Reporte de Facultades" });
+
+            lista.Add(new SelectViewModel() { Value = "2", TextDisplay = "Reporte de Conceptos de Pago" });
+
+            lista.Add(new SelectViewModel() { Value = "3", TextDisplay = "Reporte Conceptos por Facultad" });
+
+            return lista;
+        }
     }
 }

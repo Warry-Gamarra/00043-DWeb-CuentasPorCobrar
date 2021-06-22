@@ -12,4 +12,11 @@ namespace Domain.Helpers
 
         public const int BCP_ID = 2;
     }
+
+    public static class FormatosDateTIme
+    {
+        public const string BASIC_DATE = "dd/MM/yyyy";
+
+        public const string BASIC_TIME = "HH:mm:ss";
+    }
 }

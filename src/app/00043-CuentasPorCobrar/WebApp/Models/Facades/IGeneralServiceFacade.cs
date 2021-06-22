@@ -15,5 +15,7 @@ namespace WebApp.Models.Facades
         IEnumerable<SelectViewModel> Listar_Horas();
 
         IEnumerable<SelectViewModel> Listar_Minutos();
+
+        IEnumerable<SelectViewModel> Listar_ReportesPregrado();
     }
 }

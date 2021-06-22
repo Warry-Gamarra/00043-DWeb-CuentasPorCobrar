@@ -16,11 +16,13 @@ namespace WebApp.Controllers
     {
         IReportePregradoServiceFacade reporteServiceFacade;
         IProgramasClientFacade programasClientFacade;
+        IGeneralServiceFacade generalServiceFacade;
 
         public EstadosCuentaController()
         {
             reporteServiceFacade = new ReportePregradoServiceFacade();
             programasClientFacade = new ProgramasClientFacade();
+            generalServiceFacade = new GeneralServiceFacade();
         }
 
         // GET: EstadosCuenta
@@ -41,43 +43,27 @@ namespace WebApp.Controllers
         //    return View(reporte);
         //}
 
-        public ActionResult PagosPregrado(string facultad, string fechaDesde, string fechaHasta, int reporte = 0)
+        public ActionResult PagosPregrado(PagosPregradoViewModel model)
         {
-            var fechaInicio = DateTime.Now;
-            var fechaFin = DateTime.Now;
-
-            //var fechaInicio1 = DateTime.ParseExact(fechaDesde, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-            //var fechaFin1 = DateTime.ParseExact(fechaHasta, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-
-            PagosPregradoViewModel model;
-
-            switch (reporte)
+            switch (model.reporte)
             {
                 case 1:
-                    var reporte1 = reporteServiceFacade.ReportePagosPorFacultad(fechaInicio, fechaFin);
-
-                    model = new PagosPregradoViewModel(reporte1);
+                    model.reportePagosPorFacultadViewModel = reporteServiceFacade.ReportePagosPorFacultad(model.fechaInicio.Value, model.fechaFin.Value);
 
                     break;
 
                 case 2:
-                    var reporte2 = reporteServiceFacade.ReportePagosPorConcepto(fechaInicio, fechaFin);
-
-                    model = new PagosPregradoViewModel(reporte2);
+                    model.reportePagosPorConceptoViewModel = reporteServiceFacade.ReportePagosPorConcepto(model.fechaInicio.Value, model.fechaFin.Value);
 
                     break;
 
                 case 3:
-                    var reporte3 = reporteServiceFacade.ReporteConceptosPorUnaFacultad(facultad, fechaInicio, fechaFin);
+                    model.reporteConceptosPorUnaFacultadViewModel = reporteServiceFacade.ReporteConceptosPorUnaFacultad(model.facultad, model.fechaInicio.Value, model.fechaFin.Value);
 
-                    model = new PagosPregradoViewModel(reporte3);
-
-                    break;
-
-                default:
-                    model = null;
                     break;
             }
+
+            ViewBag.TipoReportes = generalServiceFacade.Listar_ReportesPregrado();
 
             ViewBag.Facultades = programasClientFacade.GetFacultades(TipoEstudio.Pregrado);
 

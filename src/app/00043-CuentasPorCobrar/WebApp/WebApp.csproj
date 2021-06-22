@@ -595,9 +595,9 @@
     <Content Include="Views\Devoluciones\_ResultadoBusquedaPago.cshtml" />
     <Content Include="Views\Pagos\_ResultadoConsultaPagos.cshtml" />
     <Content Include="Views\Pagos\_MsgRegistrarPagoObligacion.cshtml" />
-    <Content Include="Views\EstadosCuenta\_ResultadoConsultaPagos.cshtml" />
-    <Content Include="Views\EstadosCuenta\_ResultadoConsultaPagos3.cshtml" />
-    <Content Include="Views\EstadosCuenta\_ResultadoConsultaPagos2.cshtml" />
+    <Content Include="Views\EstadosCuenta\_ReportePagosPorFacultad.cshtml" />
+    <Content Include="Views\EstadosCuenta\_ReporteConceptosPorUnaFacultad.cshtml" />
+    <Content Include="Views\EstadosCuenta\_ReportePagosPorConcepto.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

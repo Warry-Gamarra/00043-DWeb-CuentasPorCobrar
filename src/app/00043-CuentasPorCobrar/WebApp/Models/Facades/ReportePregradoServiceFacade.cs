@@ -1,4 +1,5 @@
-﻿using Domain.Services;
+﻿using Domain.Helpers;
+using Domain.Services;
 using Domain.Services.Implementations;
 using System;
 using System.Collections.Generic;
@@ -12,8 +13,6 @@ namespace WebApp.Models.Facades
     {
         IReportePregradoService reporteService;
 
-        private string dateFormat = "dd/MM/yyyy";
-
         public ReportePregradoServiceFacade()
         {
             reporteService = new ReportePregradoService();
@@ -25,8 +24,8 @@ namespace WebApp.Models.Facades
 
             var reporte = new ReportePagosPorFacultadViewModel(pagos)
             {
-                FechaInicio = fechaInicio.ToString(dateFormat),
-                FechaFin = fechaFin.ToString(dateFormat),
+                FechaInicio = fechaInicio.ToString(FormatosDateTIme.BASIC_DATE),
+                FechaFin = fechaFin.ToString(FormatosDateTIme.BASIC_DATE),
                 Titulo = "Reporte de Pagos por Facultades"
             };
 
@@ -39,8 +38,8 @@ namespace WebApp.Models.Facades
 
             var reporte = new ReportePagosPorConceptoViewModel(pagos)
             {
-                FechaInicio = fechaInicio.ToString(dateFormat),
-                FechaFin = fechaFin.ToString(dateFormat),
+                FechaInicio = fechaInicio.ToString(FormatosDateTIme.BASIC_DATE),
+                FechaFin = fechaFin.ToString(FormatosDateTIme.BASIC_DATE),
                 Titulo = "Reporte de Pagos por Conceptos"
             };
 
@@ -54,8 +53,8 @@ namespace WebApp.Models.Facades
             var reporte = new ReporteConceptosPorUnaFacultadViewModel(pagos)
             {
                 Facultad = pagos.Count() > 0 ? pagos.FirstOrDefault().T_FacDesc : "",
-                FechaInicio = fechaInicio.ToString(dateFormat),
-                FechaFin = fechaFin.ToString(dateFormat),
+                FechaInicio = fechaInicio.ToString(FormatosDateTIme.BASIC_DATE),
+                FechaFin = fechaFin.ToString(FormatosDateTIme.BASIC_DATE),
                 Titulo = "Reporte de Pagos por Facultad"
             };
 
