@@ -135,7 +135,7 @@ namespace WebApp.Controllers
             ViewBag.Anios = new SelectList(generalServiceFacade.Listar_Anios(), "Value", "TextDisplay");
             ViewBag.Periodos = new SelectList(catalogoServiceFacade.Listar_Periodos(), "Value", "TextDisplay");
 
-            var model = new CargarArchivoViewModel() { TipoArchivo = TipoPago.Obligacion};
+            var model = new CargarArchivoViewModel() { TipoArchivo = TipoPago.Obligacion };
 
             return PartialView("_SeleccionarArchivo", model);
         }
@@ -173,7 +173,7 @@ namespace WebApp.Controllers
         [HttpGet]
         public ActionResult RegistrarPagoObligacion()
         {
-            
+
             ViewBag.Anios = new SelectList(generalServiceFacade.Listar_Anios(), "Value", "TextDisplay");
             ViewBag.Periodos = new SelectList(catalogoServiceFacade.Listar_Periodos(), "Value", "TextDisplay");
             ViewBag.Especialidades = new SelectList(new List<SelectViewModel>(), "Value", "TextDisplay");
@@ -290,5 +290,73 @@ namespace WebApp.Controllers
 
             return PartialView("_MsgRegistrarPagoObligacion", result);
         }
+
+
+        [Route("operaciones/actualizar-pagos")]
+        public ActionResult Actualizar()
+        {
+            ViewBag.Title = "Actualizar información de pagos";
+
+            var model = new List<DatosPagoViewModel>();
+
+            for (int i = 0; i < 30; i++)
+            {
+                model.Add(new DatosPagoViewModel()
+                {
+                    Concepto = "pago " + i.ToString(),
+                    FecPago = DateTime.Now,
+                    EntidadRecaudadora = "banco comercio"
+                });
+
+            }
+            return View(model);
+
+        }
+
+        [Route("operaciones/pagos/{id}/ver-detalle")]
+        public ActionResult Detalle(int id)
+        {
+            ViewBag.Title = "Detalles del pago";
+
+
+            var model = new DatosPagoViewModel()
+            {
+                Concepto = "pago " + id.ToString(),
+                FecPago = DateTime.Now,
+                EntidadRecaudadora = "banco comercio"
+            };
+
+            return PartialView("_DetallesPago", model);
+
+        }
+
+        [Route("operaciones/pagos/{id}/registrar-nro-siaf")]
+        public ActionResult RegistrarSiaf(int id)
+        {
+            ViewBag.Title = "Registrar Nro. SIAF";
+
+            var model = new DatosPagoViewModel()
+            {
+                Concepto = "pago " + id.ToString(),
+                FecPago = DateTime.Now,
+                EntidadRecaudadora = "banco comercio"
+            };
+
+            return PartialView("_RegistrarSiaf", model);
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult RegistrarSiaf(DatosPagoViewModel model)
+        {
+            ViewBag.Title = "Registrar Nro. SIAF";
+
+            var result = new Response();
+
+            return PartialView("_MsgPartialWR", result);
+
+        }
+
     }
 }

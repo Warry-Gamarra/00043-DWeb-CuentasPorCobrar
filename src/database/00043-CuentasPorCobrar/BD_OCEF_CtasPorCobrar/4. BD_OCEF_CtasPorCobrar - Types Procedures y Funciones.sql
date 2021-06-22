@@ -3838,14 +3838,13 @@ AS
 	UNION
 	SELECT DP.*, PP.I_MontoPagado, PP.N_NroSIAF, PB.I_EntidadFinanID, PB.C_CodOperacion, PB.C_Referencia, PB.D_FecPago
 		   , EF.T_EntidadDesc, (CL.C_TipoTransCod + '.' + CL.C_GenericaCod + '.' + CL.C_SubGeneCod + '.' + CL.C_EspecificaCod) AS C_CodClasificador
-		   , CP.T_ConceptoPagoDesc
+		   , TU.T_ConceptoPagoDesc
 	  FROM TR_DevolucionPago DP
 		   INNER JOIN TRI_PagoProcesadoUnfv PP ON DP.I_PagoProcesID = PP.I_PagoProcesID 
 		   INNER JOIN TR_PagoBanco PB ON PP.I_PagoBancoID = PB.I_PagoBancoID
 		   INNER JOIN TC_EntidadFinanciera EF ON PB.I_EntidadFinanID = EF.I_EntidadFinanID
-		   INNER JOIN TR_TasaUnfv TU ON TU.I_TasaUnfvID = PP.I_TasaUnfvID
-		   INNER JOIN TI_ConceptoPago CP ON CP.I_ConcPagID = TU.I_ConcPagID
-		   LEFT JOIN TC_ClasificadorEquivalencia CE ON CE.C_ClasificConceptoCod = CP.T_Clasificador
+		   INNER JOIN TI_TasaUnfv TU ON TU.I_TasaUnfvID = PP.I_TasaUnfvID
+		   LEFT JOIN TC_ClasificadorEquivalencia CE ON CE.C_ClasificConceptoCod = TU.T_Clasificador
 		   LEFT JOIN TC_ClasificadorEquivalenciaAnio CEA ON CEA.I_ClasifEquivalenciaID = ce.I_ClasifEquivalenciaID
 		   LEFT JOIN TC_ClasificadorPresupuestal CL ON CL.I_ClasificadorID = CE.I_ClasificadorID
 
@@ -3859,10 +3858,10 @@ GO
 
 CREATE VIEW [dbo].[VW_Tasas]
 AS
-	SELECT	t.I_TasaUnfvID, t.C_CodTasa, cp.T_ConceptoPagoDesc, t.I_MontoTasa, cp.T_Clasificador,
+	SELECT	t.I_TasaUnfvID, t.C_CodTasa, t.T_ConceptoPagoDesc, t.M_Monto, t.T_Clasificador,
 			t.B_Habilitado
-	  FROM dbo.TR_TasaUnfv t
-			INNER JOIN dbo.TI_ConceptoPago cp on cp.I_ConcPagID = t.I_ConcPagID and cp.B_Eliminado = 0
+	  FROM dbo.TI_TasaUnfv t
+			--INNER JOIN dbo.TI_ConceptoPago cp on cp.I_ConcPagID = t.I_ConcPagID and cp.B_Eliminado = 0
 	 WHERE t.B_Eliminado = 0
 GO
 

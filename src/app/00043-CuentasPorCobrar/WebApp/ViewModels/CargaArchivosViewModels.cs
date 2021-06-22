@@ -10,7 +10,7 @@ namespace WebApp.ViewModels
     public class CargarArchivoViewModel
     {
         public TipoPago TipoArchivo { get; set; }
-        public int EntidadFinanciera { get; set; }
+        public int EntidadRecaudadora { get; set; }
         public bool InfoInFile { get; set; }
         public int Anio { get; set; }
         public int Periodo { get; set; }

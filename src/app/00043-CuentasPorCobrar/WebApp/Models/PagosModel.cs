@@ -44,10 +44,10 @@ namespace WebApp.Models
 
             try
             {
-                fileName = GenerarNombreArchivo(model.EntidadFinanciera, file);
+                fileName = GenerarNombreArchivo(model.EntidadRecaudadora, file);
                 filePathSaved = GuardarArchivoPagoEnHost(serverPath, fileName, model.TipoArchivo, file);
 
-                List<PagoObligacionEntity> lstPagoObligaciones = LeerDetalleArchivoPagoObligaciones(filePathSaved, model.EntidadFinanciera);
+                List<PagoObligacionEntity> lstPagoObligaciones = LeerDetalleArchivoPagoObligaciones(filePathSaved, model.EntidadRecaudadora);
 
                 if (lstPagoObligaciones != null)
                 {
@@ -60,6 +60,7 @@ namespace WebApp.Models
 
                 if (response.Value)
                 {
+
                     response.Success(false);
                 }
                 else
@@ -178,6 +179,12 @@ namespace WebApp.Models
         }
 
 
+        private void GrabarHistorialCargaArchivo()
+        {
+
+        }
+
+
         public Response GrabarPagoObligacion(PagoObligacionViewModel model, int currentUserId)
         {
             var response = new Response();
@@ -193,7 +200,7 @@ namespace WebApp.Models
                     return ResponseModel.Info(response, "La obligación seleccionada ya ha sido pagada.");
                 }
 
-                if (pagoService.validarCodOperacion(model.codigoOperacion, model.idEntidadFinanciera, model.fechaPago))
+                if (pagoService.ValidarCodOperacion(model.codigoOperacion, model.idEntidadFinanciera, model.fechaPago))
                 {
                     var entity = Mapper.PagoObligacionViewModel_To_PagoObligacionEntity(model);
 

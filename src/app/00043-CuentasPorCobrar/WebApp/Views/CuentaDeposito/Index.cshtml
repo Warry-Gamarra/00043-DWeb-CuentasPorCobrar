@@ -29,7 +29,7 @@
         <div class="table-responsive" style="min-height:300px">
             @Html.Grid(Model).Columns(columns =>
                             {
-                                columns.Add(c => c.EntidadFinanciera).Titled("Entidad Financiera").Filterable(true);
+                                columns.Add(c => c.EntidadFinanciera).Titled("Entidad Recaudadora").Filterable(true);
                                 columns.Add(c => c.Descripcion).Titled("Descripción").Filterable(true);
                                 columns.Add(c => c.NumeroCuenta).Titled("Nro. Cuenta").Filterable(true);
                                 columns.Add(c => c.Habilitado).SetWidth(100).Css("text-center").Encoded(false).Sanitized(false)

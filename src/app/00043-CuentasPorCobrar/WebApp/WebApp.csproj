@@ -199,10 +199,12 @@
     <Content Include="Assets\bootstrap\js\popper.min.js" />
     <Content Include="Assets\datatables\css\dataTables.bootstrap.min.css" />
     <Content Include="Assets\datatables\css\dataTables.bootstrap4.min.css" />
+    <Content Include="Assets\datatables\css\dataTables.checkboxes.css" />
     <Content Include="Assets\datatables\css\datatables.min.css" />
     <Content Include="Assets\datatables\css\jquery.dataTables.min.css" />
     <Content Include="Assets\datatables\js\dataTables.bootstrap.js" />
     <Content Include="Assets\datatables\js\dataTables.bootstrap4.min.js" />
+    <Content Include="Assets\datatables\js\dataTables.checkboxes.min.js" />
     <Content Include="Assets\datatables\js\datatables.min.js" />
     <Content Include="Assets\datatables\js\jquery.dataTables.min.js" />
     <Content Include="Assets\fileInput\css\fileinput-rtl.css" />
@@ -598,6 +600,9 @@
     <Content Include="Views\EstadosCuenta\_ReportePagosPorFacultad.cshtml" />
     <Content Include="Views\EstadosCuenta\_ReporteConceptosPorUnaFacultad.cshtml" />
     <Content Include="Views\EstadosCuenta\_ReportePagosPorConcepto.cshtml" />
+    <Content Include="Views\Pagos\Actualizar.cshtml" />
+    <Content Include="Views\Pagos\_DetallesPago.cshtml" />
+    <Content Include="Views\Pagos\_RegistrarSiaf.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

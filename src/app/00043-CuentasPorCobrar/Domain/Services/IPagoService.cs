@@ -8,6 +8,7 @@ namespace Domain.Services
 {
     public interface IPagoService
     {
-        bool validarCodOperacion(string C_CodOperacion, int I_EntidadFinanID, DateTime? D_FecPago);
+        bool ValidarCodOperacion(string C_CodOperacion, int I_EntidadFinanID, DateTime? D_FecPago);
+        void GrabarRegistroArchivo();
     }
 }

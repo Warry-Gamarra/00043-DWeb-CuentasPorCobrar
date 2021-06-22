@@ -247,6 +247,23 @@ go
 /*	-----------------------  Obligaciones y pagos	-----------------------  */
 
 
+CREATE TABLE TC_Servicios
+( 
+	I_ServicioID         int IDENTITY ( 1,1 ) ,
+	C_CodServicio        varchar(20)  NULL ,
+	T_DescServ           char(18)  NULL ,
+	B_Habilitado         bit  NOT NULL ,
+	B_Eliminado          bit  NOT NULL ,
+	I_UsuarioCre         int  NULL ,
+	D_FecCre             datetime  NULL ,
+	I_UsuarioMod         int  NULL ,
+	D_FecMod             datetime  NULL ,
+	CONSTRAINT PK_Servicios PRIMARY KEY  CLUSTERED (I_ServicioID ASC)
+)
+go
+
+
+
 CREATE TABLE TC_EntidadFinanciera
 ( 
 	I_EntidadFinanID     int IDENTITY ( 1,1 ) ,
@@ -297,13 +314,17 @@ CREATE TABLE TC_CategoriaPago
 	I_Nivel              int  NULL ,
 	I_TipoAlumno         int  NULL ,
 	N_CodBanco			 varchar(10)  NULL ,
+	I_ServicioID         int  NULL ,
 	B_Habilitado         bit  NOT NULL ,
 	B_Eliminado          bit  NOT NULL ,
 	I_UsuarioCre         int  NULL ,
 	D_FecCre             datetime  NULL ,
 	I_UsuarioMod         int  NULL ,
 	D_FecMod             datetime  NULL ,
-	CONSTRAINT PK_CategoriaPago PRIMARY KEY  CLUSTERED (I_CatPagoID ASC)
+	CONSTRAINT PK_CategoriaPago PRIMARY KEY  CLUSTERED (I_CatPagoID ASC),
+	CONSTRAINT FK_Servicios_CategoriaPago FOREIGN KEY (I_ServicioID) REFERENCES TC_Servicios(I_ServicioID)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
 )
 go
 
@@ -442,6 +463,28 @@ go
 
 
 
+CREATE TABLE TC_CuentaDeposito
+( 
+	I_CtaDepositoID      int IDENTITY ( 1,1 ) ,
+	I_EntidadFinanID     int  NULL ,
+	T_DescCuenta         varchar(150)  NULL ,
+	C_NumeroCuenta       varchar(50)  NOT NULL ,
+	T_Observacion        varchar(500)  NULL ,
+	B_Habilitado         bit  NOT NULL ,
+	B_Eliminado          bit  NOT NULL ,
+	I_UsuarioCre         int  NULL ,
+	D_FecCre             datetime  NULL ,
+	I_UsuarioMod         int  NULL ,
+	D_FecMod             datetime  NULL ,
+	CONSTRAINT PK_CuentaDeposito PRIMARY KEY  CLUSTERED (I_CtaDepositoID ASC),
+	CONSTRAINT FK_EntiidadFinanciera_CuentaDeposito FOREIGN KEY (I_EntidadFinanID) REFERENCES TC_EntidadFinanciera(I_EntidadFinanID)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+)
+go
+
+
+
 CREATE TABLE TC_TipoDescuento
 ( 
 	I_TipoDescuentoID    int IDENTITY ( 1,1 ) ,
@@ -516,43 +559,87 @@ CREATE TABLE TI_ConceptoPago
 go
 
 
-
-CREATE TABLE TR_TasaUnfv
+CREATE TABLE TI_TasaUnfv
 ( 
-	I_TasaUnfvID         int IDENTITY ( 1,1 ) ,
+	I_TasaUnfvID         int IDENTITY ,
+	I_ConceptoID         int  NOT NULL ,
+	T_ConceptoPagoDesc   varchar(250)  NULL ,
+	B_Fraccionable       bit  NULL ,
+	B_ConceptoGeneral    bit  NULL ,
+	B_AgrupaConcepto     bit  NULL ,
+	I_AlumnosDestino     int  NULL ,
+	I_GradoDestino       int  NULL ,
+	I_TipoObligacion     int  NULL ,
+	T_Clasificador       varchar(250)  NULL ,
 	C_CodTasa            varchar(20)  NULL ,
-	I_MontoTasa          decimal(15,2)  NULL ,
-	I_NroPagos           tinyint  NULL ,
+	B_Calculado          bit  NULL ,
+	I_Calculado          int  NULL ,
+	B_AnioPeriodo        bit  NULL ,
+	I_Anio               int  NULL ,
+	I_Periodo            int  NULL ,
+	B_Especialidad       bit  NULL ,
+	C_CodRc              char(3)  NULL ,
+	B_Dependencia        bit  NULL ,
+	C_DepCod             int  NULL ,
+	B_GrupoCodRc         bit  NULL ,
+	I_GrupoCodRc         int  NULL ,
+	B_ModalidadIngreso   bit  NULL ,
+	I_ModalidadIngresoID int  NULL ,
+	B_ConceptoAgrupa     bit  NULL ,
+	I_ConceptoAgrupaID   int  NULL ,
+	B_ConceptoAfecta     bit  NULL ,
+	I_ConceptoAfectaID   int  NULL ,
+	N_NroPagos           tinyint  NULL ,
+	B_Porcentaje         bit  NULL ,
+	C_Moneda             varchar(5)  NULL ,
+	M_Monto              decimal(15,2)  NULL ,
+	M_MontoMinimo        decimal(15,2)  NULL ,
+	T_DescripcionLarga   varchar(250)  NULL ,
+	T_Documento          varchar(500)  NULL ,
+	B_Migrado            bit  NOT NULL ,
 	B_Habilitado         bit  NOT NULL ,
 	B_Eliminado          bit  NOT NULL ,
 	I_UsuarioCre         int  NULL ,
 	D_FecCre             datetime  NULL ,
-	I_ConcPagID          int  NOT NULL ,
+	I_UsuarioMod         int  NULL ,
+	D_FecMod             datetime  NULL ,
+	I_ServicioID         int  NULL ,
+	I_TasaRemplazo       int  NULL ,
+	I_CtaDepositoID      int  NULL ,
 	CONSTRAINT PK_TasaUnfv PRIMARY KEY  CLUSTERED (I_TasaUnfvID ASC),
-	CONSTRAINT FK_ConceptoPago_TasaUnfv FOREIGN KEY (I_ConcPagID) REFERENCES TI_ConceptoPago(I_ConcPagID)
+	CONSTRAINT FK_Concepto_TasaUnfv FOREIGN KEY (I_ConceptoID) REFERENCES TC_Concepto(I_ConceptoID)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION,
+	CONSTRAINT FK_Servicios_TasaUnfv FOREIGN KEY (I_ServicioID) REFERENCES TC_Servicios(I_ServicioID)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION,
+	CONSTRAINT FK_TasaUnfv_TasaUnfv FOREIGN KEY (I_TasaRemplazo) REFERENCES TI_TasaUnfv(I_TasaUnfvID)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION,
+	CONSTRAINT FK_CuentaDeposito_TasaUnfv FOREIGN KEY (I_CtaDepositoID) REFERENCES TC_CuentaDeposito(I_CtaDepositoID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 )
 go
 
 
-
 CREATE TABLE TRI_PagoProcesadoUnfv
 ( 
 	I_PagoProcesID       int IDENTITY ( 1,1 ) ,
-	I_TasaUnfvID         int  NULL ,
 	I_PagoBancoID        int  NOT NULL ,
-	I_ObligacionAluID    int  NOT NULL ,
+	I_CtaDepositoID      int  NULL ,
+	I_TasaUnfvID         int  NULL ,
+	I_ObligacionAluID    int  NULL ,
 	I_MontoPagado        decimal(15,2)  NULL ,
 	I_SaldoAPagar        decimal(15,2)  NULL ,
 	I_PagoDemas          decimal(15,2)  NULL ,
 	B_PagoDemas          bit  NULL ,
-	N_NroSIAF	         int  NULL ,
+	N_NroSIAF            int  NULL ,
+	B_Anulado            bit  NOT NULL ,
 	D_FecCre             datetime  NULL ,
 	I_UsuarioCre         int  NULL ,
 	D_FecMod             datetime  NULL ,
 	I_UsuarioMod         int  NULL ,
-	B_Anulado            bit  NOT NULL ,
 	CONSTRAINT PK_PagoProcesadoUnfv PRIMARY KEY  CLUSTERED (I_PagoProcesID ASC),
 	CONSTRAINT FK_PagoBanco_PagoProcesadoUnfv FOREIGN KEY (I_PagoBancoID) REFERENCES TR_PagoBanco(I_PagoBancoID)
 		ON DELETE NO ACTION
@@ -560,7 +647,10 @@ CREATE TABLE TRI_PagoProcesadoUnfv
 	CONSTRAINT FK_ObligacionAluCab_PagoProcesadoUnfv FOREIGN KEY (I_ObligacionAluID) REFERENCES TR_ObligacionAluCab(I_ObligacionAluID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION,
-	CONSTRAINT FK_TasaUnfv_PagoProcesadoUnfv FOREIGN KEY (I_TasaUnfvID) REFERENCES TR_TasaUnfv(I_TasaUnfvID)
+	CONSTRAINT FK_TasaUnfv_PagoProcesadoUnfv FOREIGN KEY (I_TasaUnfvID) REFERENCES TI_TasaUnfv(I_TasaUnfvID)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION,
+	CONSTRAINT FK_CuentaDeposito_PagoProcesadoUnfv FOREIGN KEY (I_CtaDepositoID) REFERENCES TC_CuentaDeposito(I_CtaDepositoID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 )
@@ -610,28 +700,6 @@ CREATE TABLE TR_DevolucionPago
 	D_FecMod             datetime  NULL ,
 	CONSTRAINT PK_DevolucionPago PRIMARY KEY  CLUSTERED (I_DevolucionPagoID ASC),
 	CONSTRAINT FK_PagoProcesadoUnfv_DevolucionPago FOREIGN KEY (I_PagoProcesID) REFERENCES TRI_PagoProcesadoUnfv(I_PagoProcesID)
-		ON DELETE NO ACTION
-		ON UPDATE NO ACTION
-)
-go
-
-
-
-CREATE TABLE TC_CuentaDeposito
-( 
-	I_CtaDepositoID      int IDENTITY ( 1,1 ) ,
-	I_EntidadFinanID     int  NULL ,
-	T_DescCuenta         varchar(150)  NULL ,
-	C_NumeroCuenta       varchar(50)  NOT NULL ,
-	T_Observacion        varchar(500)  NULL ,
-	B_Habilitado         bit  NOT NULL ,
-	B_Eliminado          bit  NOT NULL ,
-	I_UsuarioCre         int  NULL ,
-	D_FecCre             datetime  NULL ,
-	I_UsuarioMod         int  NULL ,
-	D_FecMod             datetime  NULL ,
-	CONSTRAINT PK_CuentaDeposito PRIMARY KEY  CLUSTERED (I_CtaDepositoID ASC),
-	CONSTRAINT FK_EntiidadFinanciera_CuentaDeposito FOREIGN KEY (I_EntidadFinanID) REFERENCES TC_EntidadFinanciera(I_EntidadFinanID)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 )

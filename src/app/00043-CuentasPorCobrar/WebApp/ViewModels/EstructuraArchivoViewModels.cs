@@ -33,7 +33,7 @@ namespace WebApp.ViewModels
         public int EstructArchivoID { get; set; }
 
         [Required]
-        [Display(Name = "Entidad Financiera")]
+        [Display(Name = "Entidad Recaudadora")]
         public int EntiFinanId { get; set; }
         public string EntiFinanNom { get; set; }
 

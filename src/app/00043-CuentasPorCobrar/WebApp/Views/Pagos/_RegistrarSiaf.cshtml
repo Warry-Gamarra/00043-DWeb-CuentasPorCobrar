@@ -1,0 +1,65 @@
+﻿@model WebApp.ViewModels.DatosPagoViewModel
+
+@Scripts.Render("~/bundles/jqueryval")
+
+<div class="modal-header bg-dark-gray" style="border-radius: .2rem .2rem 0px 0px">
+    <h5 class="modal-title text-center"><i class="fa bi-list-ol">&nbsp;</i> @ViewBag.Title</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+
+@using (Ajax.BeginForm("RegistrarSiaf", "Pagos", new { area = "" }, new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "div_msg", OnBegin = "Load", OnComplete = "Stop" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="modal-body">
+        <div class="container-fluid">
+            @Html.HiddenFor(model => model.PagoId)
+
+            <div class="form-group row">
+                @Html.LabelFor(model => model.Concepto, new { @class = "col-md-4 control-label" })
+                <div class="col-md-6">
+                    @Html.DisplayFor(model => model.Concepto)
+                </div>
+            </div>
+            <div class="form-group row">
+                @Html.LabelFor(model => model.LugarPago, new { @class = "col-md-4 control-label" })
+                <div class="col-md-6">
+                    @Html.DisplayFor(model => model.LugarPago)
+                </div>
+            </div>
+            <div class="form-group row">
+                @Html.LabelFor(model => model.FecPago, new { @class = "col-md-4 control-label" })
+                <div class="col-md-6">
+                    @Html.DisplayFor(model => model.FecPago)
+                </div>
+            </div>
+            <div class="form-group row">
+                @Html.LabelFor(model => model.MontoPago, new { @class = "col-md-4 control-label" })
+                <div class="col-md-6">
+                    @Html.DisplayFor(model => model.MontoPago)
+                </div>
+            </div>
+            <div class="row border-bottom"></div>
+            <div class="form-group form-row mt-4">
+                @Html.LabelFor(model => model.NroSIAF, new { @class = "control-label col-form-label col-md-4 col-12" })
+                <div class="col-sm-4 col-6">
+                    @Html.TextBoxFor(model => model.NroSIAF, new { @class = "form-control" })
+                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.NroSIAF)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer" id="div_msg">
+        <div class="col-md-12" style="display:none" id="loading">
+            <h6>Actualizando los datos...</h6>
+
+            <div class="progress">
+                <div class="indeterminate"></div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="btnsubmit"><i class="fa fa-save"></i>&nbsp;Guardar</button>
+        <button type="button" class="btn btn-secondary" id="btnCancel" data-dismiss="modal"><i class="fa fa-times-circle-o">&nbsp;</i>Cancelar</button>
+    </div>
+
+}
+
