@@ -408,5 +408,45 @@ namespace Domain.Entities
 
             return result;
         }
+
+        public static PagoPosgradoPorGradodDTO USP_S_ReportePagoObligacionesPosgrado_To_PagoPosgradoPorGradodDTO(USP_S_ReportePagoObligacionesPosgrado sp)
+        {
+            var result = new PagoPosgradoPorGradodDTO()
+            {
+                T_EscDesc = sp.T_EscDesc,
+                C_CodEsc = sp.C_CodEsc,
+                I_MontoTotal = sp.I_MontoTotal
+            };
+
+            return result;
+        }
+
+        public static PagoPosgradoPorConceptoDTO USP_S_ReportePagoObligacionesPosgrado_To_PagoPosgradoPorConceptoDTO(USP_S_ReportePagoObligacionesPosgrado sp)
+        {
+            var result = new PagoPosgradoPorConceptoDTO()
+            {
+                I_ConceptoID = sp.I_ConceptoID,
+                T_Clasificador = sp.T_Clasificador,
+                T_ConceptoPagoDesc = sp.T_ConceptoPagoDesc,
+                I_MontoTotal = sp.I_MontoTotal
+            };
+
+            return result;
+        }
+
+        public static ConceptoPosgradoPorGradoDTO USP_S_ReportePagoObligacionesPosgrado_To_ConceptoPosgradoPorGradoDTO(USP_S_ReportePagoObligacionesPosgrado sp)
+        {
+            var result = new ConceptoPosgradoPorGradoDTO()
+            {
+                T_EscDesc = sp.T_EscDesc,
+                C_CodEsc = sp.C_CodEsc,
+                I_ConceptoID = sp.I_ConceptoID,
+                T_Clasificador = sp.T_Clasificador,
+                T_ConceptoPagoDesc = sp.T_ConceptoPagoDesc,
+                I_MontoTotal = sp.I_MontoTotal
+            };
+
+            return result;
+        }
     }
 }

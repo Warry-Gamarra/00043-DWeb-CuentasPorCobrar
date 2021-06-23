@@ -72,5 +72,18 @@ namespace WebApp.Models.Facades
 
             return lista;
         }
+
+        public IEnumerable<SelectViewModel> Listar_ReportesPosgrado()
+        {
+            var lista = new List<SelectViewModel>();
+
+            lista.Add(new SelectViewModel() { Value = "1", TextDisplay = "Reporte en Posgrado" });
+
+            lista.Add(new SelectViewModel() { Value = "2", TextDisplay = "Reporte de Conceptos de Pago" });
+
+            lista.Add(new SelectViewModel() { Value = "3", TextDisplay = "Reporte Conceptos por Grado" });
+
+            return lista;
+        }
     }
 }

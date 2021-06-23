@@ -3007,11 +3007,10 @@ CREATE VIEW [dbo].[VW_MatriculaAlumno]
 AS
 SELECT 
 	m.I_MatAluID, a.C_CodAlu, a.C_RcCod, a.T_Nombre, a.T_ApePaterno, a.T_ApeMaterno, a.N_Grado, m.I_Anio, m.I_Periodo, 
-	a.C_CodFac, f.T_FacDesc, m.C_EstMat, m.C_Ciclo, m.B_Ingresante, m.I_CredDesaprob, m.B_Habilitado, cat.T_OpcionCod as C_Periodo, cat.T_OpcionDesc as T_Periodo,
+	a.C_CodFac, a.T_FacDesc, a.C_CodEsc, a.T_EscDesc, m.C_EstMat, m.C_Ciclo, m.B_Ingresante, m.I_CredDesaprob, m.B_Habilitado, cat.T_OpcionCod as C_Periodo, cat.T_OpcionDesc as T_Periodo,
 	a.T_DenomProg, A.T_ModIngDesc, CASE WHEN nv.I_AluMultaID IS NULL THEN 0 ELSE 1 END B_TieneMultaPorNoVotar
 FROM TC_MatriculaAlumno m 
 INNER JOIN BD_UNFV_Repositorio.dbo.VW_Alumnos a ON a.C_CodAlu = m.C_CodAlu AND a.C_RcCod = m.C_CodRc
-INNER JOIN BD_UNFV_Repositorio.dbo.VW_Facultad f ON f.C_CodFac = a.C_CodFac
 LEFT JOIN dbo.TC_CatalogoOpcion cat ON cat.I_ParametroID = 5 and cat.I_OpcionID = m.I_Periodo
 LEFT JOIN dbo.TC_AlumnoMultaNoVotar nv ON nv.B_Eliminado = 0 and nv.C_CodAlu = m.C_CodAlu and nv.C_CodRc = m.C_CodRc and nv.I_Periodo = m.I_Periodo and nv.I_Anio = m.I_Anio
 WHERE m.B_Eliminado = 0
@@ -3976,7 +3975,7 @@ GO
 
 CREATE PROCEDURE [dbo].[USP_S_ReportePagoObligacionesPosgrado]
 @I_TipoReporte int,
-@C_CodFac	varchar(2) = NULL,
+@C_CodEsc	varchar(2) = NULL,
 @D_FechaIni date,
 @D_FechaFin date
 AS
@@ -3987,7 +3986,7 @@ BEGIN
 
 	--@I_TipoReporte: 1: Pagos agrupados por maestría y doctorado.
 	if (@I_TipoReporte = 1) begin
-		select mat.T_FacDesc, mat.C_CodFac, SUM(det.I_Monto) AS I_MontoTotal 
+		select mat.T_EscDesc, mat.C_CodEsc,  SUM(det.I_Monto) AS I_MontoTotal 
 		from dbo.TR_PagoBanco pagban
 		inner join dbo.TRI_PagoProcesadoUnfv pagpro on pagban.I_PagoBancoID = pagpro.I_PagoBancoID
 		inner join dbo.TR_ObligacionAluCab cab on cab.I_ObligacionAluID = pagpro.I_ObligacionAluID and cab.B_Eliminado = 0
@@ -3996,8 +3995,8 @@ BEGIN
 		inner join dbo.VW_MatriculaAlumno mat on mat.I_MatAluID = cab.I_MatAluID
 		where pagban.B_Anulado = 0 and pagpro.B_Anulado = 0 and mat.N_Grado IN (@Maestria, @Doctorado)
 			and datediff(day, @D_FechaIni, pagban.D_FecPago) >= 0 and datediff(day, pagban.D_FecPago, @D_FechaFin) >= 0
-		group by mat.T_FacDesc, mat.C_CodFac
-		order by mat.T_FacDesc
+		group by mat.T_EscDesc, mat.C_CodEsc
+		order by mat.T_EscDesc DESC
 	end
 
 	--@I_TipoReporte: 2: Pagos agrupados por concepto.
@@ -4015,9 +4014,9 @@ BEGIN
 		order by conpag.T_Clasificador, conpag.T_ConceptoPagoDesc
 	end
 
-	--@I_TipoReporte: 2: Pagos agrupados por concepto según para una facultad.
+	--@I_TipoReporte: 2: Pagos agrupados por concepto según maestría o doctorado.
 	if (@I_TipoReporte = 3) begin
-		select mat.T_FacDesc, mat.C_CodFac, conpag.I_ConceptoID, conpag.T_Clasificador, conpag.T_ConceptoPagoDesc, SUM(det.I_Monto) AS I_MontoTotal 
+		select mat.T_EscDesc, mat.C_CodEsc, conpag.I_ConceptoID, conpag.T_Clasificador, conpag.T_ConceptoPagoDesc, SUM(det.I_Monto) AS I_MontoTotal 
 		from dbo.TR_PagoBanco pagban
 		inner join dbo.TRI_PagoProcesadoUnfv pagpro on pagban.I_PagoBancoID = pagpro.I_PagoBancoID
 		inner join dbo.TR_ObligacionAluCab cab on cab.I_ObligacionAluID = pagpro.I_ObligacionAluID and cab.B_Eliminado = 0
@@ -4026,14 +4025,14 @@ BEGIN
 		inner join dbo.VW_MatriculaAlumno mat on mat.I_MatAluID = cab.I_MatAluID
 		where pagban.B_Anulado = 0 and pagpro.B_Anulado = 0 and mat.N_Grado IN (@Maestria, @Doctorado)
 			and datediff(day, @D_FechaIni, pagban.D_FecPago) >= 0 and datediff(day, pagban.D_FecPago, @D_FechaFin) >= 0 
-			and mat.C_CodFac = @C_CodFac
-		group by mat.T_FacDesc, mat.C_CodFac, conpag.I_ConceptoID, conpag.T_Clasificador, conpag.T_ConceptoPagoDesc
-		order by mat.T_FacDesc, conpag.T_Clasificador, conpag.T_ConceptoPagoDesc
+			and mat.C_CodEsc = @C_CodEsc
+		group by mat.T_EscDesc, mat.C_CodEsc, conpag.I_ConceptoID, conpag.T_Clasificador, conpag.T_ConceptoPagoDesc
+		order by mat.T_EscDesc, conpag.T_Clasificador, conpag.T_ConceptoPagoDesc
 	end
 	/*
 	EXEC USP_S_ReportePagoObligacionesPosgrado 
 		@I_TipoReporte = 3,
-		@C_CodFac = 'IN',
+		@C_CodEsc = 'DR',
 		@D_FechaIni = '20210101', 
 		@D_FechaFin = '20211231'
 	*/
