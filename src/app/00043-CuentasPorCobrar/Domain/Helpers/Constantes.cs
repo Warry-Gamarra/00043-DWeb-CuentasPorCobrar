@@ -13,10 +13,14 @@ namespace Domain.Helpers
         public const int BCP_ID = 2;
     }
 
-    public static class FormatosDateTIme
+    public static class FormatosDateTime
     {
         public const string BASIC_DATE = "dd/MM/yyyy";
 
         public const string BASIC_TIME = "HH:mm:ss";
+
+        public const string BCO_COMERCIO_PAYMENT_DATE_FORMAT = "yyyyMMddHHmmss";
+
+        public const string BCP_PAYMENT_DATE_FORMAT = "yyyyMMdd";
     }
 }

@@ -96,5 +96,9 @@ namespace WebApp.Models
         }
 
         public string T_LugarPago { get; set; }
+
+        public DateTime D_FecCre { get; set; }
+
+        public string C_CodServicio { get; set; }
     }
 }

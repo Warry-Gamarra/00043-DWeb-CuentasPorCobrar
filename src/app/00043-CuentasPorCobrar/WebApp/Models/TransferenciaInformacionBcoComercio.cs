@@ -57,7 +57,7 @@ namespace WebApp.Models
             foreach (var item in cuotas_pago)
             {
                 string identificadorRegistroDetalle = "D";
-                string codigoServicio = "0001";
+                string codigoServicio = item.C_CodServicio;
                 string codigoSucursal = "000";
                 string codigoContrato = item.C_CodAlu.PadLeft(10, '0');
                 string nombres = item.T_NombresCompletos;

@@ -600,12 +600,15 @@
     <Content Include="Views\Devoluciones\_ResultadoBusquedaPago.cshtml" />
     <Content Include="Views\Pagos\_ResultadoConsultaPagos.cshtml" />
     <Content Include="Views\Pagos\_MsgRegistrarPagoObligacion.cshtml" />
-    <Content Include="Views\EstadosCuenta\_ReportePagosPorFacultad.cshtml" />
-    <Content Include="Views\EstadosCuenta\_ReporteConceptosPorUnaFacultad.cshtml" />
-    <Content Include="Views\EstadosCuenta\_ReportePagosPorConcepto.cshtml" />
+    <Content Include="Views\EstadosCuenta\_ReportePagosPregradoPorFacultad.cshtml" />
+    <Content Include="Views\EstadosCuenta\_ReportePregradoConceptosPorUnaFacultad.cshtml" />
+    <Content Include="Views\EstadosCuenta\_ReportePagosPregradoPorConcepto.cshtml" />
     <Content Include="Views\Pagos\Actualizar.cshtml" />
     <Content Include="Views\Pagos\_DetallesPago.cshtml" />
     <Content Include="Views\Pagos\_RegistrarSiaf.cshtml" />
+    <Content Include="Views\EstadosCuenta\_ReportePosgradoConceptosPorGrado.cshtml" />
+    <Content Include="Views\EstadosCuenta\_ReportePagosPosgradoPorConcepto.cshtml" />
+    <Content Include="Views\EstadosCuenta\_ReportePagosPosgradoPorGrado.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

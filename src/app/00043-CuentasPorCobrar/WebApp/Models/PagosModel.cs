@@ -4,6 +4,7 @@ using Domain.Services;
 using Domain.Services.Implementations;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -157,18 +158,27 @@ namespace WebApp.Models
                 string line = linesFile[i];
                 var pagoEntity = new PagoObligacionEntity();
 
-                pagoEntity.C_CodOperacion = line.Substring(columnas["C_CodOperacion"].Inicial - 1, columnas["C_CodOperacion"].Final - 1);
-                pagoEntity.T_NomDepositante = line.Substring(columnas["T_NomDepositante"].Inicial - 1, columnas["T_NomDepositante"].Final - 1);
-                pagoEntity.C_Referencia = line.Substring(columnas["C_Referencia"].Inicial - 1, columnas["C_Referencia"].Final - 1);
-                pagoEntity.D_FecPago = DateTime.Parse(line.Substring(columnas["D_FecPago"].Inicial - 1, columnas["D_FecPago"].Final - 1));
-                pagoEntity.I_Cantidad = int.Parse(line.Substring(columnas["I_Cantidad"].Inicial - 1, columnas["I_Cantidad"].Final - 1));
-                pagoEntity.C_Moneda = line.Substring(columnas["C_Moneda"].Inicial - 1, columnas["C_Moneda"].Final - 1);
-                pagoEntity.I_MontoPago = decimal.Parse(line.Substring(columnas["I_MontoPago"].Inicial - 1, columnas["I_MontoPago"].Final - 1));
-                pagoEntity.T_LugarPago = line.Substring(columnas["T_LugarPago"].Inicial - 1, columnas["T_LugarPago"].Final - 1);
-                pagoEntity.C_CodAlu = line.Substring(columnas["C_CodAlu"].Inicial - 1, columnas["C_CodAlu"].Final - 1);
-                pagoEntity.C_CodRc = line.Substring(columnas["C_CodRc"].Inicial - 1, columnas["C_CodRc"].Final - 1);
-                pagoEntity.I_ProcesoID = int.Parse(line.Substring(columnas["I_ProcesoID"].Inicial - 1, columnas["I_ProcesoID"].Final - 1));
-                pagoEntity.D_FecVencto = DateTime.Parse(line.Substring(columnas["D_FecVencto"].Inicial - 1, columnas["D_FecVencto"].Final - 1));
+                pagoEntity.C_CodOperacion = line.Substring(columnas["C_CodOperacion"].Inicial - 1, columnas["C_CodOperacion"].Final - columnas["C_CodOperacion"].Inicial + 1);
+                pagoEntity.T_NomDepositante = line.Substring(columnas["T_NomDepositante"].Inicial - 1, columnas["T_NomDepositante"].Final - columnas["T_NomDepositante"].Inicial + 1);
+                pagoEntity.C_Referencia = line.Substring(columnas["C_Referencia"].Inicial - 1, columnas["C_Referencia"].Final - columnas["C_Referencia"].Inicial + 1);
+
+                string sFechaPago = line.Substring(columnas["D_FecPago"].Inicial - 1, columnas["D_FecPago"].Final - columnas["D_FecPago"].Inicial + 1);
+                pagoEntity.D_FecPago = DateTime.ParseExact(sFechaPago, entFinanId == 1 ? FormatosDateTime.BCO_COMERCIO_PAYMENT_DATE_FORMAT : FormatosDateTime.BCP_PAYMENT_DATE_FORMAT, CultureInfo.InvariantCulture);
+
+                pagoEntity.I_Cantidad = entFinanId == 1 ? int.Parse(line.Substring(columnas["I_Cantidad"].Inicial - 1, columnas["I_Cantidad"].Final - columnas["I_Cantidad"].Inicial + 1)) : 1;
+                pagoEntity.C_Moneda = line.Substring(columnas["C_Moneda"].Inicial - 1, columnas["C_Moneda"].Final - columnas["C_Moneda"].Inicial + 1);
+
+                string montoPago = line.Substring(columnas["I_MontoPago"].Inicial - 1, columnas["I_MontoPago"].Final - columnas["I_MontoPago"].Inicial + 1);
+                pagoEntity.I_MontoPago = decimal.Parse(montoPago) / 100;
+
+                pagoEntity.T_LugarPago = line.Substring(columnas["T_LugarPago"].Inicial - 1, columnas["T_LugarPago"].Final - columnas["T_LugarPago"].Inicial + 1);
+                pagoEntity.C_CodAlu = line.Substring(columnas["C_CodAlu"].Inicial - 1, columnas["C_CodAlu"].Final - columnas["C_CodAlu"].Inicial + 1);
+                pagoEntity.C_CodRc = line.Substring(columnas["C_CodRc"].Inicial - 1, columnas["C_CodRc"].Final - columnas["C_CodRc"].Inicial + 1);
+                pagoEntity.I_ProcesoID = int.Parse(line.Substring(columnas["I_ProcesoID"].Inicial - 1, columnas["I_ProcesoID"].Final - columnas["I_ProcesoID"].Inicial + 1));
+
+                string sFechaVcto = line.Substring(columnas["D_FecVencto"].Inicial - 1, columnas["D_FecVencto"].Final - columnas["D_FecVencto"].Inicial + 1);
+                pagoEntity.D_FecVencto = DateTime.ParseExact(sFechaVcto, "yyyyMMdd", CultureInfo.InvariantCulture);
+                pagoEntity.I_EntidadFinanID = entFinanId;
 
                 result.Add(pagoEntity);
             }

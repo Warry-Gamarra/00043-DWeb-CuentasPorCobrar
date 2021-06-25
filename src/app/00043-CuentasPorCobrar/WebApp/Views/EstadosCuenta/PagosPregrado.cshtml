@@ -87,15 +87,15 @@
     <div class="col-12 my-4">
         @if (Model != null && Model.reportePagosPorFacultadViewModel != null)
         {
-            @Html.Partial("_ReportePagosPorFacultad", Model.reportePagosPorFacultadViewModel)
+            @Html.Partial("_ReportePagosPregradoPorFacultad", Model.reportePagosPorFacultadViewModel)
         }
         @if (Model != null && Model.reportePagosPorConceptoViewModel != null)
         {
-            @Html.Partial("_ReportePagosPorConcepto", Model.reportePagosPorConceptoViewModel)
+            @Html.Partial("_ReportePagosPregradoPorConcepto", Model.reportePagosPorConceptoViewModel)
         }
         @if (Model != null && Model.reporteConceptosPorUnaFacultadViewModel != null)
         {
-            @Html.Partial("_ReporteConceptosPorUnaFacultad", Model.reporteConceptosPorUnaFacultadViewModel)
+            @Html.Partial("_ReportePregradoConceptosPorUnaFacultad", Model.reporteConceptosPorUnaFacultadViewModel)
         }
     </div>
 </div>

@@ -85,18 +85,18 @@
         </div>
     </div>
     <div class="col-12 my-4">
-        @*@if (Model != null && Model.reportePagosPorFacultadViewModel != null)
+        @if (Model != null && Model.reportePagosPorGradodViewModel != null)
         {
-            @Html.Partial("_ReportePagosPorFacultad", Model.reportePagosPorFacultadViewModel)
+            @Html.Partial("_ReportePagosPosgradoPorGrado", Model.reportePagosPorGradodViewModel)
         }
-        @if (Model != null && Model.reportePagosPorConceptoViewModel != null)
+        @if (Model != null && Model.reportePagosPorConceptoPosgradoViewModel != null)
         {
-            @Html.Partial("_ReportePagosPorConcepto", Model.reportePagosPorConceptoViewModel)
+            @Html.Partial("_ReportePagosPosgradoPorConcepto", Model.reportePagosPorConceptoPosgradoViewModel)
         }
-        @if (Model != null && Model.reporteConceptosPorUnaFacultadViewModel != null)
+        @if (Model != null && Model.reporteConceptosPorGradoViewModel != null)
         {
-            @Html.Partial("_ReporteConceptosPorUnaFacultad", Model.reporteConceptosPorUnaFacultadViewModel)
-        }*@
+            @Html.Partial("_ReportePosgradoConceptosPorGrado", Model.reporteConceptosPorGradoViewModel)
+        }
     </div>
 </div>
 

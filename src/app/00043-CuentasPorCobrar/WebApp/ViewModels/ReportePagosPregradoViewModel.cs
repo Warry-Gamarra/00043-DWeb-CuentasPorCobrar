@@ -17,9 +17,9 @@ namespace WebApp.ViewModels
 
             var firstDay = new DateTime(today.Year, today.Month, 1);
 
-            fechaDesde = firstDay.ToString(FormatosDateTIme.BASIC_DATE);
+            fechaDesde = firstDay.ToString(FormatosDateTime.BASIC_DATE);
 
-            fechaHasta = today.ToString(FormatosDateTIme.BASIC_DATE);
+            fechaHasta = today.ToString(FormatosDateTime.BASIC_DATE);
         }
 
         [Required]
@@ -80,8 +80,8 @@ namespace WebApp.ViewModels
 
         public ReportePagosPorFacultadViewModel(IEnumerable<PagoPregradoPorFacultadDTO> listaPagos)
         {
-            FechaActual = DateTime.Now.ToString(FormatosDateTIme.BASIC_DATE);
-            HoraActual = DateTime.Now.ToString(FormatosDateTIme.BASIC_TIME);
+            FechaActual = DateTime.Now.ToString(FormatosDateTime.BASIC_DATE);
+            HoraActual = DateTime.Now.ToString(FormatosDateTime.BASIC_TIME);
             this.listaPagos = listaPagos;
         }
     }
@@ -106,8 +106,8 @@ namespace WebApp.ViewModels
 
         public ReportePagosPorConceptoViewModel(IEnumerable<PagoPregradoPorConceptoDTO> listaPagos)
         {
-            FechaActual = DateTime.Now.ToString(FormatosDateTIme.BASIC_DATE);
-            HoraActual = DateTime.Now.ToString(FormatosDateTIme.BASIC_TIME);
+            FechaActual = DateTime.Now.ToString(FormatosDateTime.BASIC_DATE);
+            HoraActual = DateTime.Now.ToString(FormatosDateTime.BASIC_TIME);
             this.listaPagos = listaPagos;
         }
     }
@@ -133,8 +133,8 @@ namespace WebApp.ViewModels
 
         public ReporteConceptosPorUnaFacultadViewModel(IEnumerable<ConceptoPregradoPorFacultadDTO> listaPagos)
         {
-            FechaActual = DateTime.Now.ToString(FormatosDateTIme.BASIC_DATE);
-            HoraActual = DateTime.Now.ToString(FormatosDateTIme.BASIC_TIME);
+            FechaActual = DateTime.Now.ToString(FormatosDateTime.BASIC_DATE);
+            HoraActual = DateTime.Now.ToString(FormatosDateTime.BASIC_TIME);
             this.listaPagos = listaPagos;
         }
     }

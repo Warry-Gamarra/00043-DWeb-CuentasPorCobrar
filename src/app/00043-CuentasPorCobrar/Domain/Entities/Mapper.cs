@@ -176,7 +176,9 @@ namespace Domain.Entities
                 B_Pagado = cuotaPago.B_Pagado,
                 C_CodOperacion = cuotaPago.C_CodOperacion,
                 D_FecPago = cuotaPago.D_FecPago,
-                T_LugarPago = cuotaPago.T_LugarPago
+                T_LugarPago = cuotaPago.T_LugarPago,
+                D_FecCre = cuotaPago.D_FecCre,
+                C_CodServicio = cuotaPago.C_CodServicio
             };
 
             return cuotaPagoDTO;
