@@ -3779,6 +3779,82 @@ END
 GO
 
 
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_GrabarNroSIAFRegistroPago')
+	DROP PROCEDURE [dbo].[USP_U_GrabarNroSIAFRegistroPago]
+GO
+
+CREATE PROCEDURE [dbo].[USP_U_GrabarNroSIAFRegistroPago]
+	 @I_PagoProcesID	int
+	,@N_NroSIAF			int
+	,@D_FecMod			datetime
+	,@CurrentUserId		int
+
+	,@B_Result bit OUTPUT
+	,@T_Message nvarchar(4000) OUTPUT	
+AS
+BEGIN
+  SET NOCOUNT ON
+  	BEGIN TRY
+		DECLARE @I_PagoBancoID  INT 
+		SET  @I_PagoBancoID = (SELECT I_PagoBancoID FROM TRI_PagoProcesadoUnfv WHERE I_PagoProcesID = @I_PagoProcesID)
+
+		UPDATE	TRI_PagoProcesadoUnfv 
+		SET		@N_NroSIAF = @N_NroSIAF,
+				D_FecMod = @D_FecMod,
+				I_UsuarioMod = @CurrentUserId
+		WHERE   I_PagoProcesID = @I_PagoProcesID
+
+		SET @B_Result = 1
+		SET @T_Message = 'Actualización de datos correcta'
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+END
+GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_AnularPagoRegistrado')
+	DROP PROCEDURE [dbo].[USP_U_AnularPagoRegistrado]
+GO
+
+CREATE PROCEDURE [dbo].[USP_U_AnularPagoRegistrado]
+	 @I_PagoProcesID	int
+	,@D_FecMod			datetime
+	,@CurrentUserId		int
+
+	,@B_Result bit OUTPUT
+	,@T_Message nvarchar(4000) OUTPUT	
+AS
+BEGIN
+  SET NOCOUNT ON
+  	BEGIN TRY
+		DECLARE @I_PagoBancoID  INT 
+		SET  @I_PagoBancoID = (SELECT I_PagoBancoID FROM TRI_PagoProcesadoUnfv WHERE I_PagoProcesID = @I_PagoProcesID)
+
+		UPDATE	TRI_PagoProcesadoUnfv 
+		SET		B_Anulado = 1,
+				D_FecMod = @D_FecMod,
+				I_UsuarioMod = @CurrentUserId
+		WHERE   I_PagoProcesID = @I_PagoProcesID
+		
+		UPDATE	TR_PagoBanco 
+		SET		B_Anulado = 1
+		WHERE   I_PagoBancoID = @I_PagoBancoID
+
+		SET @B_Result = 1
+		SET @T_Message = 'Pago anulado con éxito'
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+END
+GO
+
+
 /*---------------------------- -------------*/
 
 IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_GrabarImportacionArchivo')
@@ -3786,8 +3862,7 @@ IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCE
 GO
 
 CREATE PROCEDURE [dbo].[USP_I_GrabarImportacionArchivo]
-	 @I_ImportacionID	int
-	,@T_NomArchivo		varchar(50)
+	 @T_NomArchivo		varchar(50)
 	,@T_UrlArchivo		varchar(500)
 	,@I_CantFilas		int
 	,@D_FecCre			datetime
@@ -3864,8 +3939,6 @@ AS
 			--INNER JOIN dbo.TI_ConceptoPago cp on cp.I_ConcPagID = t.I_ConcPagID and cp.B_Eliminado = 0
 	 WHERE t.B_Eliminado = 0
 GO
-
-
 
 
 

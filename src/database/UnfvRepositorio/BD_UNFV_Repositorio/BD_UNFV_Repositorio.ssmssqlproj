@@ -27,7 +27,7 @@
           <ConnectionProtocol>NotSpecified</ConnectionProtocol>
           <ApplicationName>Microsoft SQL Server Management Studio - Query</ApplicationName>
         </ConnectionNode>
-        <ConnectionNode Name="DESKTOP-B34HJML\SQL_2016E:HUMBERTO-PC\Humberto">
+        <ConnectionNode Name="DESKTOP-B34HJML\SQL_2016E:DESKTOP-B34HJML\gamar">
           <Created>2021-02-04T18:43:19.5767066-05:00</Created>
           <Type>SQL</Type>
           <Server>DESKTOP-B34HJML\SQL_2016E</Server>
@@ -110,9 +110,9 @@
           <FullPath>3. BD_UNFV_Repositorio - Carga de datos iniciales.sql</FullPath>
         </FileNode>
         <FileNode Name="4. BD_UNFV_Repositorio - Types Procedures y Funciones.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:HUMBERTO-PC\SQLEXPRESS:False:sa</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>HUMBERTO-PC\SQLEXPRESS</AssociatedConnSrvName>
-          <AssociatedConnUserName>sa</AssociatedConnUserName>
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:DESKTOP-B34HJML\SQL_2016E:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>DESKTOP-B34HJML\SQL_2016E</AssociatedConnSrvName>
+          <AssociatedConnUserName />
           <FullPath>4. BD_UNFV_Repositorio - Types Procedures y Funciones.sql</FullPath>
         </FileNode>
         <FileNode Name="Cargar_alumnos_auxiliar.sql">
