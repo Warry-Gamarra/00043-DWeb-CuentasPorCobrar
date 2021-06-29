@@ -58,7 +58,7 @@ namespace WebApp.Controllers
 
             ViewBag.TipoEstudios = generalServiceFacade.Listar_TipoEstudios();
 
-            ViewBag.Facultades = programasClientFacade.GetFacultades(TipoEstudio.Pregrado);
+            ViewBag.Dependencias = programasClientFacade.GetFacultades(TipoEstudio.Pregrado);
 
             ViewBag.EntidadesFinancieras = new List<SelectViewModel>();
 
@@ -67,8 +67,7 @@ namespace WebApp.Controllers
                 I_Anio = DateTime.Now.Year,
                 I_Periodo = 15,
                 E_TipoEstudio = TipoEstudio.Pregrado,
-                T_Facultad = "",
-                T_FechaDesde = DateTime.Now.ToString("dd/MM/yyyy")
+                T_Dependencia = ""
             };
 
             return View(model);
@@ -82,7 +81,7 @@ namespace WebApp.Controllers
             {
                 var transferenciaInformacion = TransferenciaInformacionFactory.Get(model.I_EntidadFinanciera);
 
-                var memoryStream = transferenciaInformacion.GenerarInformacionObligaciones(model.I_Anio, model.I_Periodo, model.E_TipoEstudio, model.T_Facultad, model.D_FechaDesde, model.D_FechaHasta);
+                var memoryStream = transferenciaInformacion.GenerarInformacionObligaciones(model.I_Anio, model.I_Periodo, model.E_TipoEstudio, model.T_Dependencia);
 
                 return File(memoryStream, "text/plain", transferenciaInformacion.NombreArchivoGenerado());
             }
@@ -96,7 +95,7 @@ namespace WebApp.Controllers
 
                 ViewBag.TipoEstudios = generalServiceFacade.Listar_TipoEstudios();
 
-                ViewBag.Facultades = programasClientFacade.GetFacultades(TipoEstudio.Pregrado);
+                ViewBag.Dependencias = programasClientFacade.GetFacultades(TipoEstudio.Pregrado);
 
                 ViewBag.EntidadesFinancieras = new List<SelectViewModel>();
 

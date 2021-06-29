@@ -16,6 +16,15 @@
     <div class="modal-body">
         <div class="col-md-12">
             @Html.HiddenFor(model => model.TipoArchivo)
+            
+            <div class="form-group form-row">
+                <label class="control-label col-form-label col-md-3 col-sm-4 col-12">Entidad recaudadora</label>
+                <div class="col-md-9 col-sm-8 col-10">
+                    @Html.DropDownListFor(model => model.EntidadRecaudadora, ViewBag.EntidadesFinancieras as SelectList, "[ SELECCIONAR ]", new { @class = "form-control" })
+                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.EntidadRecaudadora)</p>
+                </div>
+            </div>
+
             <div class="form-group form-row" id="div-file">
                 <label class="control-label col-form-label col-md-3 col-sm-4 col-12">Seleccione archivo</label>
                 <div class="col-md-9 col-sm-10 col-12">
@@ -25,13 +34,7 @@
                     <div id="error-pago"></div>
                 </div>
             </div>
-            <div class="form-group form-row">
-                <label class="control-label col-form-label col-md-3 col-sm-4 col-12">Entidad recaudadora</label>
-                <div class="col-md-6 col-sm-8 col-10">
-                    @Html.DropDownListFor(model => model.EntidadRecaudadora, ViewBag.EntidadesFinancieras as SelectList, "[ SELECCIONAR ]", new { @class = "form-control" })
-                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.EntidadRecaudadora)</p>
-                </div>
-            </div>
+            
             <div class="form-row">
                 <label class="control-label col-form-label col-md-3 col-sm-4 col-12">Información adicional</label>
                 <div class="col-md-9 col-sm-10 col-12">
@@ -69,7 +72,6 @@
     </div>
 }
 
-
 <script>
     mostrarOpcionesAdicionales();
 
@@ -86,12 +88,11 @@
         showUpload: false,
         elErrorContainer: '#error-pago'
     }).on('change', function () {
-        //$('#div-nom-mat').show();
+        $('#div_msg').remove();
     }).on('filecleared', function () {
-        //$('#div-nom-mat').hide();
+        $('#div_msg').remove();
     });
 
-    @*$(".btn-file").removeClass("btn-primary").addClass("btn-" + '@Model.Color');*@
     $(".btn-file>i").removeClass("glyphicon glyphicon-folder-open").addClass("fa fa-folder-open");
     $("button.fileinput-remove>i").removeClass("glyphicon glyphicon-trash").addClass("fa fa-trash");
 
@@ -109,15 +110,12 @@
                 $('#icon-submit').removeClass('fa-cloud-upload').addClass('fa-spin fa-cog');
             },
             success: function (result) {
-               if (result.Value) {
-                   $('.modal-footer').html(
-                       '<p class="alert alert-success">' + result['Message'] + '</p><button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>')
-                } else {
-                    $('.modal-footer').html('<p class="alert alert-danger">' + result['Message'] + '</p><button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>')
-                }
+                let alert = result.Value ? 'success' : 'danger';
 
-                $('#icon-submit').addClass('fa-cloud-upload').removeClass('fa-spin fa-cog');
-
+                $('.modal-footer').html(
+                    '<div class="col-md-12" id="div_msg"><p class="alert alert-' + alert + '">' + result['Message'] + '</p></div>' +
+                    '<button type="submit" class="btn btn-info"><i id="icon-submit" class="fa fa-cloud-upload">&nbsp;</i>Cargar archivo</button>' +
+                    '<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>');
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 toastr.error(errorThrown);

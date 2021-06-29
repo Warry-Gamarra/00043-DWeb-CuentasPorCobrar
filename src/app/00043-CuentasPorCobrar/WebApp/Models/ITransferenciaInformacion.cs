@@ -8,7 +8,7 @@ namespace WebApp.Models
 {
     public interface ITransferenciaInformacion
     {
-        byte[] GenerarInformacionObligaciones(int anio, int periodo, TipoEstudio tipoEstudio, string facultad, DateTime? fechaDesde, DateTime? fechaHasta);
+        byte[] GenerarInformacionObligaciones(int anio, int periodo, TipoEstudio tipoEstudio, string dependencia);
 
         string NombreArchivoGenerado();
 

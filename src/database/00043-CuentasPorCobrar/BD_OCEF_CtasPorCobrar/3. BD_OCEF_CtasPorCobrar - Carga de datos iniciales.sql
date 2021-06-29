@@ -338,7 +338,7 @@ INSERT INTO TS_CampoTablaPago (I_CampoPagoID, T_TablaPagoNom, T_CampoPagoNom, T_
 INSERT INTO TS_CampoTablaPago (I_CampoPagoID, T_TablaPagoNom, T_CampoPagoNom, T_CampoInfoDesc, I_TipoArchivoID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) VALUES (10, 'type_dataPago', 'I_ProcesoID', 'Cuota de pago', 3, 1, 0, 1, GETDATE())
 INSERT INTO TS_CampoTablaPago (I_CampoPagoID, T_TablaPagoNom, T_CampoPagoNom, T_CampoInfoDesc, I_TipoArchivoID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) VALUES (11, 'type_dataPago', 'T_LugarPago', 'Lugar de pago', 3, 1, 0, 1, GETDATE())
 INSERT INTO TS_CampoTablaPago (I_CampoPagoID, T_TablaPagoNom, T_CampoPagoNom, T_CampoInfoDesc, I_TipoArchivoID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) VALUES (12, 'type_dataPago', 'T_NomDepositante', 'Nombre del depositante', 3, 1, 0, 1, GETDATE())
-
+INSERT INTO TS_CampoTablaPago (I_CampoPagoID, T_TablaPagoNom, T_CampoPagoNom, T_CampoInfoDesc, I_TipoArchivoID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) VALUES (13, 'type_dataPago', 'D_HoraPago', 'Hora. Pago', 3, 1, 0, 1, GETDATE())
 SET IDENTITY_INSERT TS_CampoTablaPago OFF;
 
 
@@ -717,16 +717,15 @@ insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilita
 insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('C_Referencia', 288, 297, 1, 0, @I_SecArchivoID, 3)
 insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('C_CodRc', 151, 153, 1, 0, @I_SecArchivoID, 4)
 insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('C_Moneda', 125, 126, 1, 0, @I_SecArchivoID, 5)
-insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('D_FecPago', 205, 218, 1, 0, @I_SecArchivoID, 6)
+insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('D_FecPago', 205, 212, 1, 0, @I_SecArchivoID, 6)
 insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('D_FecVencto', 117, 124, 1, 0, @I_SecArchivoID, 7)
 insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('I_Cantidad', 274, 277, 1, 0, @I_SecArchivoID, 8)
 insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('I_MontoPago', 127, 140, 1, 0, @I_SecArchivoID, 9)
 insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('I_ProcesoID', 167, 176, 1, 0, @I_SecArchivoID, 10)
 insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('T_LugarPago', 219, 225, 1, 0, @I_SecArchivoID, 11)
 insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('T_NomDepositante', 29, 68, 1, 0, @I_SecArchivoID, 12)
+insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('D_HoraPago', 213, 218, 1, 0, @I_SecArchivoID, 13)
 GO
-
-
 
 
 
@@ -749,8 +748,12 @@ insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilita
 insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('C_Moneda', 6, 6, 1, 0, @I_SecArchivoID, 5)
 insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('D_FecPago', 58, 65, 1, 0, @I_SecArchivoID, 6)
 insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('D_FecVencto', 66, 73, 1, 0, @I_SecArchivoID, 7)
+insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('I_Cantidad', 1, 0, 1, 0, @I_SecArchivoID, 8)
 insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('I_MontoPago', 74, 88, 1, 0, @I_SecArchivoID, 9)
 insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('I_ProcesoID', 31, 36, 1, 0, @I_SecArchivoID, 10)
 insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('T_LugarPago', 119, 124, 1, 0, @I_SecArchivoID, 11)
 insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('T_NomDepositante', 28, 57, 1, 0, @I_SecArchivoID, 12)
+insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('D_HoraPago', 169, 174, 1, 0, @I_SecArchivoID, 13)
 GO
+
+

@@ -48,8 +48,8 @@
                                         </div>
 
                                         <div class="form-group col-lg-3 col-md-5 col-sm-12 col-12">
-                                            <label for="cmbFacultad">Facultades/Especialidades</label>
-                                            @Html.DropDownList("cmbFacultad", new SelectList(ViewBag.Facultades, "Value", "TextDisplay", ViewBag.DefaultFacultad), "TODOS", new { @class = "form-control form-control-sm" })
+                                            <label for="cmbDependencia">Facultades/Posgrado</label>
+                                            @Html.DropDownList("cmbDependencia", new SelectList(ViewBag.Dependencias, "Value", "TextDisplay", ViewBag.DefaultDependencia), "TODOS", new { @class = "form-control form-control-sm" })
                                         </div>
 
                                         <div class="form-group col-lg-2 col-sm-3 col-12">
@@ -218,11 +218,11 @@
         $("#frmGenerarOblig").on("change", "#cmbTipoEstudio", function (e) {
             let tipoEstudio = $(this).val();
 
-            CargarFacultades(tipoEstudio);
+            CargarDependencias(tipoEstudio);
         });
 
-        function CargarFacultades(tipoEstudio) {
-            let cmbFacultad = $('#cmbFacultad');
+        function CargarDependencias(tipoEstudio) {
+            let cmbDependencia = $('#cmbDependencia');
 
             let parametros = {
                 tipoEstudio: tipoEstudio
@@ -230,21 +230,21 @@
 
             $.ajax({
                 type: 'GET',
-                url: '@Url.Action("ObtenerFacultades", "Obligaciones")',
+                url: ('@Url.Action("GetFacultades", "Service", new { httproute = "ActionApi" })'),
                 data: parametros,
                 dataType: 'json',
                 beforeSend: function () {
-                    cmbFacultad.html('');
+                    cmbDependencia.html('');
                 },
                 success: function (data) {
                     if (data && data.length > 0) {
-                        let html = (tipoEstudio === 'Pregrado') ? '<option value="">TODOS</option>' : '';
+                        let html = '<option value="">TODOS</option>';
 
                         $.each(data, function (i, item) {
                             html += '<option value="' + item.Value + '">' + item.TextDisplay + '</option>'
                         });
 
-                        cmbFacultad.html(html);
+                        cmbDependencia.html(html);
                     }
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
@@ -264,10 +264,6 @@
 
         function AbrirModalEsperaGeneracionOblig() {
             $('#modalEspera').modal('show');
-        }
-
-        function CerrarModalEsperaGeneracionOblig() {
-            $('#modalEspera').modal('hide');
         }
 
         function LimpiarMensajeGenerarOblig() {
@@ -425,9 +421,7 @@
                 url: '@Url.Action("GenerarObligacionesAlumno", "Obligaciones")',
                 data: parametros,
                 dataType: 'json',
-                beforeSend: function () {
-                    AbrirModalEsperaGeneracionOblig();
-                },
+                beforeSend: function () { },
                 success: function (data) {
                     if (data) {
                         if (data.Value) {
@@ -440,9 +434,6 @@
                 error: function (xhr, ajaxOptions, thrownError) {
                     var jsonException = JSON.parse(xhr.responseText);
                     MostrarMensajeObligacionesPorAlumno(jsonException.Message, MESSAGE_TYPE.ERROR);
-                },
-                complete: function () {
-                    CerrarModalEsperaGeneracionOblig();
                 }
             });
         }
@@ -470,7 +461,7 @@
                 $.each(detalle_pago, function (i, item) {
                     rows += '<tr>' +
                         '<td>' + item.T_ConceptoDesc + '</td>' + 
-                        '<td>' + item.T_ProcesoDesc + '</td>' +
+                        '<td>' + (item.T_ProcesoDesc == null ? item.T_CatPagoDesc : item.T_ProcesoDesc) + '</td>' +
                         '<td>' + item.T_NroOrden + '</td>' +
                         '<td>' + item.T_Monto + '</td>' +
                         '<td>' + item.T_FecVencto + '</td>' +

@@ -33,17 +33,24 @@ namespace WebApp.Models.Facades
             _conceptoPagoService = new ConceptoPagoService();
         }
 
-        public Response Generar_Obligaciones(int anio, int periodo, TipoEstudio tipoEstudio, string codFacultad, int currentUserID)
+        public Response Generar_Obligaciones(int anio, int periodo, TipoEstudio tipoEstudio, string codDependencia, int currentUserID)
         {
             IEnumerable<Proceso> procesos = _procesoService.Listar_Procesos();
+            string codFac = null, codGrado = null;
 
             switch (tipoEstudio)
             {
                 case TipoEstudio.Pregrado:
                     procesos = procesos.Where(x => x.C_Nivel == C_NivelPregrado);
+
+                    codFac = codDependencia;
+
                     break;
                 case TipoEstudio.Posgrado:
                     procesos = procesos.Where(x => x.C_Nivel == C_NivelMaestria || x.C_Nivel == C_NivelDoctorado);
+
+                    codGrado = codDependencia;
+
                     break;
                 default:
                     throw new NotImplementedException("Ha ocurrido un error al identificar si el alumno es de Pregrado o Posgrado.");
@@ -93,14 +100,20 @@ namespace WebApp.Models.Facades
                 case TipoEstudio.Pregrado:
                     matriculas = _estudianteService.GetMatriculaPregrado(anio, periodo);
 
-                    if (!String.IsNullOrEmpty(codFacultad))
+                    if (!String.IsNullOrEmpty(codFac))
                     {
-                        matriculas = matriculas.Where(x => x.C_CodFac == codFacultad);
+                        matriculas = matriculas.Where(x => x.C_CodFac == codFac);
                     }
                     break;
 
                 case TipoEstudio.Posgrado:
                     matriculas = _estudianteService.GetMatriculaPosgrado(anio, periodo);
+
+                    if (!String.IsNullOrEmpty(codGrado))
+                    {
+                        matriculas = matriculas.Where(x => x.C_CodEsc == codGrado);
+                    }
+
                     break;
             }
 
@@ -112,10 +125,10 @@ namespace WebApp.Models.Facades
             switch (tipoEstudio)
             {
                 case TipoEstudio.Pregrado:
-                    return _obligacionService.Generar_Obligaciones_Pregrado(anio, periodo, codFacultad, currentUserID);
+                    return _obligacionService.Generar_Obligaciones_Pregrado(anio, periodo, codFac, currentUserID);
 
                 case TipoEstudio.Posgrado:
-                    return _obligacionService.Generar_Obligaciones_Posgrado(anio, periodo, currentUserID);
+                    return _obligacionService.Generar_Obligaciones_Posgrado(anio, periodo, codGrado, currentUserID);
                 default:
                     throw new NotImplementedException("Ha ocurrido un error al identificar si el alumno es de Pregrado o Posgrado.");
             }
@@ -218,9 +231,9 @@ namespace WebApp.Models.Facades
             return result;
         }
 
-        public List<CuotaPagoModel> Obtener_CuotasPago_X_Proceso(int anio, int periodo, TipoEstudio tipoEstudio, string codFac, DateTime? fechaDesde, DateTime? fechaHasta)
+        public List<CuotaPagoModel> Obtener_CuotasPago_X_Proceso(int anio, int periodo, TipoEstudio tipoEstudio, string codDependencia)
         {
-            var cuotasPago = _obligacionService.Obtener_CuotasPago_X_Proceso(anio, periodo, tipoEstudio, codFac, fechaDesde, fechaHasta);
+            var cuotasPago = _obligacionService.Obtener_CuotasPago_X_Proceso(anio, periodo, tipoEstudio, codDependencia);
 
             var result = cuotasPago.Select(c => Mapper.CuotaPagoDTO_To_CuotaPagoModel(c)).ToList();
 

@@ -158,6 +158,7 @@
     <Compile Include="Services\Implementations\ProcesoService.cs" />
     <Compile Include="Services\ConceptoPagoService.cs" />
     <Compile Include="UnfvRepositorioClient\AlumnoModel.cs" />
+    <Compile Include="UnfvRepositorioClient\EscuelaModel.cs" />
     <Compile Include="UnfvRepositorioClient\IProgramasClient.cs" />
     <Compile Include="UnfvRepositorioClient\ProgramasClient.cs" />
     <Compile Include="UnfvRepositorioClient\UnfvRepositorioClientConfiguration.cs" />

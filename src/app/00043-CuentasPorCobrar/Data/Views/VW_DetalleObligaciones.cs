@@ -20,7 +20,7 @@ namespace Data.Views
 
         public string C_CodAlu { get; set; }
 
-        public string C_CodRc { get; set; }
+        public string C_RcCod { get; set; }
 
         public string C_CodFac { get; set; }
 
@@ -81,8 +81,8 @@ namespace Data.Views
             try
             {
                 string s_command = @"SELECT * FROM dbo.VW_DetalleObligaciones d
-                    WHERE d.I_Anio = @I_Anio AND d.I_Periodo = @I_Periodo AND d.C_CodAlu = @C_CodAlu AND d.C_CodRc = @C_CodRc
-                    ORDER BY d.I_Anio, d.I_Periodo, d.D_FecVencto, d.C_CodAlu, d.C_CodRc, d.I_Prioridad";
+                    WHERE d.I_Anio = @I_Anio AND d.I_Periodo = @I_Periodo AND d.C_CodAlu = @C_CodAlu AND d.C_RcCod = @C_CodRc
+                    ORDER BY d.I_Anio, d.I_Periodo, d.D_FecVencto, d.C_CodAlu, d.C_RcCod, d.I_Prioridad";
 
                 var parameters = new { I_Anio = anio, I_Periodo = periodo, C_CodAlu = codAlu, C_CodRc = codRc };
 

@@ -14,6 +14,7 @@ namespace Data.Procedures
     {
         public int I_Anio { get; set; }
         public int I_Periodo { get; set; }
+        public string C_CodEsc { get; set; }
         public string C_CodAlu { get; set; }
         public string C_CodRc { get; set; }
         public int I_UsuarioCre { get; set; }
@@ -31,6 +32,7 @@ namespace Data.Procedures
                 {
                     parameters.Add(name: "I_Anio", dbType: DbType.Int32, value: this.I_Anio);
                     parameters.Add(name: "I_Periodo", dbType: DbType.Int16, value: this.I_Periodo);
+                    parameters.Add(name: "C_CodEsc", dbType: DbType.String, value: this.C_CodEsc);
                     parameters.Add(name: "C_CodAlu", dbType: DbType.String, value: this.C_CodAlu);
                     parameters.Add(name: "C_CodRc", dbType: DbType.String, value: this.C_CodRc);
                     parameters.Add(name: "I_UsuarioCre", dbType: DbType.Int32, value: this.I_UsuarioCre);

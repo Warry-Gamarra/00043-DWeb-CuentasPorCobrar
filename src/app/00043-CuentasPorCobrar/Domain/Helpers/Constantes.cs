@@ -19,8 +19,6 @@ namespace Domain.Helpers
 
         public const string BASIC_TIME = "HH:mm:ss";
 
-        public const string BCO_COMERCIO_PAYMENT_DATE_FORMAT = "yyyyMMddHHmmss";
-
-        public const string BCP_PAYMENT_DATE_FORMAT = "yyyyMMdd";
+        public const string PAYMENT_DATETIME_FORMAT = "yyyyMMddHHmmss";
     }
 }

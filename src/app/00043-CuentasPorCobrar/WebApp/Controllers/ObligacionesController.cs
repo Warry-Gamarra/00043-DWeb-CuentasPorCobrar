@@ -46,8 +46,8 @@ namespace WebApp.Controllers
                 ViewBag.CurrentYear = DateTime.Now.Year;
                 ViewBag.DefaultPeriodo = "15";
                 ViewBag.DefaultTipoEstudio = TipoEstudio.Pregrado;
-                ViewBag.DefaultFacultad = "";
-                ViewBag.Facultades = programasClientFacade.GetFacultades(TipoEstudio.Pregrado);
+                ViewBag.DefaultDependencia = "";
+                ViewBag.Dependencias = programasClientFacade.GetFacultades(TipoEstudio.Pregrado);
             }
             else
             {
@@ -56,8 +56,8 @@ namespace WebApp.Controllers
                 ViewBag.CurrentYear = TempData["anio"];
                 ViewBag.DefaultPeriodo = TempData["periodo"];
                 ViewBag.DefaultTipoEstudio = TempData["tipoEstudio"];
-                ViewBag.DefaultFacultad = TempData["facultad"];
-                ViewBag.Facultades = programasClientFacade.GetFacultades((TipoEstudio)TempData["tipoEstudio"]);
+                ViewBag.DefaultDependencia = TempData["dependencia"];
+                ViewBag.Dependencias = programasClientFacade.GetFacultades((TipoEstudio)TempData["tipoEstudio"]);
                 ViewBag.Success = result.Value;
                 ViewBag.Message = result.Message;
             }
@@ -65,16 +65,8 @@ namespace WebApp.Controllers
             return View();
         }
 
-        [HttpGet]
-        public JsonResult ObtenerFacultades(TipoEstudio tipoEstudio)
-        {
-            var result = programasClientFacade.GetFacultades(tipoEstudio);
-
-            return Json(result, JsonRequestBehavior.AllowGet);
-        }
-
         [HttpPost]
-        public ActionResult Generar(int cmbAnioGrupal, int cmbPeriodoGrupal, TipoEstudio cmbTipoEstudio, string cmbFacultad)
+        public ActionResult Generar(int cmbAnioGrupal, int cmbPeriodoGrupal, TipoEstudio cmbTipoEstudio, string cmbDependencia)
         {
             Response result;
             int currentUserID;
@@ -83,7 +75,7 @@ namespace WebApp.Controllers
             {
                 currentUserID = WebSecurity.CurrentUserId;
 
-                result = obligacionServiceFacade.Generar_Obligaciones(cmbAnioGrupal, cmbPeriodoGrupal, cmbTipoEstudio, cmbFacultad, currentUserID);
+                result = obligacionServiceFacade.Generar_Obligaciones(cmbAnioGrupal, cmbPeriodoGrupal, cmbTipoEstudio, cmbDependencia, currentUserID);
             }
             catch (Exception ex)
             {
@@ -98,7 +90,7 @@ namespace WebApp.Controllers
             TempData["anio"] = cmbAnioGrupal;
             TempData["periodo"] = cmbPeriodoGrupal;
             TempData["tipoEstudio"] = cmbTipoEstudio;
-            TempData["facultad"] = cmbFacultad;
+            TempData["dependencia"] = cmbDependencia;
 
             return RedirectToAction("Generar", "Obligaciones");
         }

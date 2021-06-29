@@ -26,7 +26,7 @@
     <div class="mt-4">
         <div class="col-12">
             <p>
-                <a href="@Url.Action("RegistrarPagoObligacion", "Pagos", new { area = ""})" class="btn btn-primary px-5 modal-link-lg float-right"><i class="fa fa-paperclip">&nbsp;</i> Registro manual</a>
+                <a href="@Url.Action("RegistrarPagoObligacion", "Pagos", new { area = ""})" class="btn btn-primary px-5 modal-link-lg float-right"><i class="fa fa-edit">&nbsp;</i> Registro manual</a>
             </p>
             <p>
                 <a href="@Url.Action("SeleccionarArchivoObligaciones", "Pagos", new { area = ""})" class="btn btn-primary px-5 modal-link-lg float-right"><i class="fa fa-paperclip">&nbsp;</i> Adjuntar archivo</a>
@@ -42,11 +42,6 @@
                 <li class="nav-item w-50" role="presentation">
                     <a class="nav-link h5 text-center active" id="pills-files-tab" data-toggle="pill" href="#pills-files" role="tab" aria-controls="pills-files" aria-selected="true">
                         <i class="fa fa-fw fa-files-o">&nbsp;</i> Archivos de pago Cargados
-                    </a>
-                </li>
-                <li class="nav-item w-50" role="presentation">
-                    <a class="nav-link h5 text-center" id="pills-results-tab" data-toggle="pill" href="#pills-results" role="tab" aria-controls="pills-results" aria-selected="false">
-                        <i class="fa fa-fw bi-file-earmark-check">&nbsp;</i> Resultados de la carga
                     </a>
                 </li>
             </ul>
@@ -83,14 +78,7 @@
                             </table>
                         </div>
                     </div>
-                </div>
-                <div class="tab-pane fade" id="pills-results" role="tabpanel" aria-labelledby="pills-results-tab">
-                    <div class="col-12 my-4" id="resultado_carga">
-                        <p class="alert alert-info">
-                            <i class="fa bi-info-circle">&nbsp;</i> No hay información de algún archivo cargado recientemiente para mostrar
-                        </p>
-                    </div>
-                </div>
+                </div>                
             </div>
         </div>
     </div>

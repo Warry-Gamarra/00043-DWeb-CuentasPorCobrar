@@ -178,7 +178,7 @@ namespace WebApp.Controllers
         }
 
         [Route("consulta/estudiantes")]
-        public ActionResult Consulta(int? anio, int? periodo, string facultad, string codAlumno, TipoEstudio tipoEstudio = TipoEstudio.Pregrado)
+        public ActionResult Consulta(int? anio, int? periodo, string dependencia, string codAlumno, TipoEstudio tipoEstudio = TipoEstudio.Pregrado)
         {
             ViewBag.Title = "Consulta de Estudiantes";
 
@@ -186,13 +186,13 @@ namespace WebApp.Controllers
             ViewBag.Anios = generalServiceFacade.Listar_Anios();
             ViewBag.Periodos = catalogoServiceFacade.Listar_Periodos();
             ViewBag.TipoEstudios = generalServiceFacade.Listar_TipoEstudios();
-            ViewBag.Facultades = programasClientFacade.GetFacultades(tipoEstudio);
+            ViewBag.Dependencias = programasClientFacade.GetFacultades(tipoEstudio);
 
             //Valores por defecto
             ViewBag.CurrentYear = anio.HasValue ? anio.Value : DateTime.Now.Year;
             ViewBag.DefaultPeriodo = periodo.HasValue ? periodo.Value : 15;
             ViewBag.DefaultTipoEstudio = tipoEstudio;
-            ViewBag.DefaultFacultad = facultad;
+            ViewBag.DefaultDependencia = dependencia;
             ViewBag.CodigoAlumno = codAlumno;
 
             IEnumerable<MatriculaModel> consultaMatricula;
@@ -202,9 +202,13 @@ namespace WebApp.Controllers
             else
                 consultaMatricula = new List<MatriculaModel>();
 
-            if (!String.IsNullOrEmpty(facultad) && !String.IsNullOrWhiteSpace(facultad))
+            if (!String.IsNullOrEmpty(dependencia) && !String.IsNullOrWhiteSpace(dependencia))
             {
-                consultaMatricula = consultaMatricula.Where(m => m.C_CodFac.Equals(facultad));
+                if (tipoEstudio.Equals(TipoEstudio.Pregrado))
+                    consultaMatricula = consultaMatricula.Where(m => m.C_CodFac.Equals(dependencia));
+                
+                if (tipoEstudio.Equals(TipoEstudio.Posgrado))
+                    consultaMatricula = consultaMatricula.Where(m => m.C_CodEsc.Equals(dependencia));
             }
 
             if (!String.IsNullOrEmpty(codAlumno) && !String.IsNullOrWhiteSpace(codAlumno))

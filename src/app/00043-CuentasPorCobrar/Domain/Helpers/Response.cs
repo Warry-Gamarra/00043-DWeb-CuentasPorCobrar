@@ -1,4 +1,5 @@
 ﻿using Data;
+using Data.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,12 @@ namespace Domain.Helpers
             this.Value = responseData.Value;
             this.Message = responseData.Message;
             this.CurrentID = responseData.CurrentID;
+        }
+
+        public Response(GrabacionPagoObligacionesResponse responseData)
+        {
+            this.Value = responseData.Success;
+            this.Message = responseData.Message;
         }
     }
 }

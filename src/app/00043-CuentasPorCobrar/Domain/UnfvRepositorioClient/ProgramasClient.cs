@@ -49,5 +49,47 @@ namespace Domain.UnfvRepositorioClient
 
             return result;
         }
+
+        public IEnumerable<EscuelaModel> GetEscuelas(string codFac)
+        {
+            string url, jsonResponse;
+            HttpWebRequest request;
+            IEnumerable<EscuelaModel> result;
+
+            try
+            {
+                if (String.IsNullOrWhiteSpace(codFac))
+                {
+                    throw new Exception("El código de Facultad es obligatorio.");
+                }
+
+                var uri = UnfvRepositorioClientConfiguration.BaseUrl("facultades/" + codFac + "/escuelas");
+
+                url = uri.ToString();
+
+                request = (HttpWebRequest)WebRequest.Create(url);
+
+                request.Method = HttpVerb.GET.ToString();
+
+                using (var response = (HttpWebResponse)request.GetResponse())
+                using (var responseStream = response.GetResponseStream())
+                using (var reader = new StreamReader(responseStream))
+                {
+                    jsonResponse = reader.ReadToEnd();
+
+                    result = JsonConvert.DeserializeObject<List<EscuelaModel>>(jsonResponse);
+                }
+            }
+            catch (WebException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
     }
 }
