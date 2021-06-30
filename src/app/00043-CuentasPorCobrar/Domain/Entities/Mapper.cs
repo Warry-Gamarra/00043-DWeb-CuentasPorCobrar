@@ -372,6 +372,7 @@ namespace Domain.Entities
                 I_ConceptoID = sp.I_ConceptoID,
                 T_Clasificador = sp.T_Clasificador,
                 T_ConceptoPagoDesc = sp.T_ConceptoPagoDesc,
+                I_Cantidad = sp.I_Cantidad,
                 I_MontoTotal = sp.I_MontoTotal
             };
 
@@ -449,6 +450,7 @@ namespace Domain.Entities
                 I_ConceptoID = sp.I_ConceptoID,
                 T_Clasificador = sp.T_Clasificador,
                 T_ConceptoPagoDesc = sp.T_ConceptoPagoDesc,
+                I_Cantidad = sp.I_Cantidad,
                 I_MontoTotal = sp.I_MontoTotal
             };
 

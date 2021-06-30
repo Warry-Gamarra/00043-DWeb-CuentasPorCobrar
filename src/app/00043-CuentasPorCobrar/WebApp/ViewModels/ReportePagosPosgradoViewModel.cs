@@ -27,6 +27,8 @@ namespace WebApp.ViewModels
 
         public string posgrado { get; set; }
 
+        public int? idEntidadFinanciera { get; set; }
+
         [Required]
         public string fechaDesde { get; set; }
 

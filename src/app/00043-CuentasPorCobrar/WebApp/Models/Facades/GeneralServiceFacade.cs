@@ -1,4 +1,5 @@
-﻿using Domain.Services;
+﻿using Domain.Helpers;
+using Domain.Services;
 using Domain.Services.Implementations;
 using System;
 using System.Collections.Generic;
@@ -62,26 +63,23 @@ namespace WebApp.Models.Facades
 
         public IEnumerable<SelectViewModel> Listar_ReportesPregrado()
         {
-            var lista = new List<SelectViewModel>();
-
-            lista.Add(new SelectViewModel() { Value = "1", TextDisplay = "Reporte de Facultades" });
-
-            lista.Add(new SelectViewModel() { Value = "2", TextDisplay = "Reporte de Conceptos de Pago" });
-
-            lista.Add(new SelectViewModel() { Value = "3", TextDisplay = "Reporte Conceptos por Facultad" });
+            var lista = Reportes.Pregrado.Select(
+                x => new SelectViewModel() {
+                    Value = x.Key.ToString(),
+                    TextDisplay = x.Value
+                });
 
             return lista;
         }
 
         public IEnumerable<SelectViewModel> Listar_ReportesPosgrado()
         {
-            var lista = new List<SelectViewModel>();
-
-            lista.Add(new SelectViewModel() { Value = "1", TextDisplay = "Reporte en Posgrado" });
-
-            lista.Add(new SelectViewModel() { Value = "2", TextDisplay = "Reporte de Conceptos de Pago" });
-
-            lista.Add(new SelectViewModel() { Value = "3", TextDisplay = "Reporte Conceptos por Grado" });
+            var lista = Reportes.Posgrado.Select(
+                x => new SelectViewModel()
+                {
+                    Value = x.Key.ToString(),
+                    TextDisplay = x.Value
+                });
 
             return lista;
         }
