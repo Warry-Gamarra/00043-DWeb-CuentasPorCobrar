@@ -78,7 +78,6 @@
     <Compile Include="Entities\AlumnoMultaNoVotarEntity.cs" />
     <Compile Include="Entities\ArchivoIntercambio.cs" />
     <Compile Include="Entities\CampoTablaPago.cs" />
-    <Compile Include="Entities\CargaArchivo.cs" />
     <Compile Include="Entities\ClasificadorEquivalencia.cs" />
     <Compile Include="Entities\ColumnaSeccion.cs" />
     <Compile Include="Entities\DevolucionPago.cs" />
@@ -86,6 +85,7 @@
     <Compile Include="Entities\MatriculaEntity.cs" />
     <Compile Include="Entities\MultaNoVotarSinRegistrarEntity.cs" />
     <Compile Include="Entities\ObligacionAluCabEntity.cs" />
+    <Compile Include="Entities\PagoEntity.cs" />
     <Compile Include="Entities\PagoObligacionEntity.cs" />
     <Compile Include="Entities\PagoPregradoDTO.cs" />
     <Compile Include="Entities\PagoPorFacultadYFechaDTO.cs" />

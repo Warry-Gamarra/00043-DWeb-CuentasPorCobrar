@@ -60,7 +60,7 @@ namespace WebApp.Models
 
                 if (response.Value)
                 {
-
+                    GrabarHistorialCargaArchivo(lstPagoObligaciones.Count(), fileName, filePathSaved, currentUserId);
                     response.Success(false);
                 }
                 else
@@ -178,12 +178,10 @@ namespace WebApp.Models
             return result;
         }
 
-
-        private void GrabarHistorialCargaArchivo()
+        private void GrabarHistorialCargaArchivo(int cantFilas, string fileName, string urlPath, int currentUserId)
         {
-
+            pagoService.GrabarRegistroArchivo(fileName, urlPath, cantFilas, currentUserId);
         }
-
 
         public Response GrabarPagoObligacion(PagoObligacionViewModel model, int currentUserId)
         {
@@ -231,5 +229,97 @@ namespace WebApp.Models
         {
             throw new Exception();
         }
+
+
+        public List<DatosPagoViewModel> ListarPagosRegistrados(DateTime? fecIni = null, DateTime? fecFin = null, int? dependenciaId = null, int? entRecaudaId = null)
+        {
+            var result = new List<DatosPagoViewModel>();
+
+            foreach (var item in pagoService.ListarPagosRegistrados(fecIni, fecFin, dependenciaId, entRecaudaId))
+            {
+                result.Add(new DatosPagoViewModel(item));
+            }
+
+            return result;
+        }
+
+        public DatosPagoViewModel ObtenerDatosPago(int pagoProcesId)
+        {
+            return new DatosPagoViewModel(pagoService.ObtenerDatosPago(pagoProcesId));
+        }
+
+        public List<DatosPagoViewModel> BuscarPagoRegistrado(int entidadRecaudadoraId, string codOperacion)
+        {
+            var result = new List<DatosPagoViewModel>();
+
+            foreach (var item in pagoService.BuscarPagoRegistrado(entidadRecaudadoraId, codOperacion))
+            {
+                result.Add(new DatosPagoViewModel(item));
+            }
+            return result;
+        }
+
+
+        public Response GrabarNroSiafPago(DatosPagoViewModel model, int currentUserId)
+        {
+            Response result = pagoService.GrabarNroSiafPago(model.PagoId, model.NroSIAF.Value, currentUserId, DateTime.Now);
+
+            if (result.Value)
+            {
+                result.Success(false);
+            }
+            else
+            {
+                result.Error(false);
+            }
+
+            return result;
+        }
+
+        public Response GrabarNroSiafPago(int[] pagosProcesId, int nroSiaf, int currentUserId)
+        {
+            var result = new Response() { Value = true };
+            int failsResult = 0;
+            string errors = "";
+            for (int i = 0; i < pagosProcesId.Count(); i++)
+            {
+                var partialResult = pagoService.GrabarNroSiafPago(pagosProcesId[i], nroSiaf, currentUserId, DateTime.Now);
+
+                if (!partialResult.Value)
+                {
+                    var pago = ObtenerDatosPago(pagosProcesId[i]);
+                    errors += $"• No se pudo actualizar el Nro SIAF para el pago {pago.CodOperacion} proveniente de { pago.EntidadRecaudadora }.\n";
+
+                    failsResult++;
+                }
+            }
+
+            if (failsResult> 0)
+            {
+                result.Value = false;
+                result.Message = errors; 
+                result.Error(false);
+            }
+
+            return result;
+        }
+
+
+        public Response AnularRegistroPago(int pagoProcesId, int currentUserId)
+        {
+            Response result = pagoService.AnularRegistroPago(pagoProcesId, currentUserId, DateTime.Now);
+
+            if (result.Value)
+            {
+                result.Success(false);
+            }
+            else
+            {
+                result.Error(false);
+            }
+
+            return result;
+        }
+
     }
 }

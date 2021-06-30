@@ -20,41 +20,50 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body bg-light-gray">
-                        <form>
+                        @using (Ajax.BeginForm("", "Pagos", new AjaxOptions { }))
+                        {
                             <div id="datepicker" class="input-daterange form-row">
                                 <div class="form-group col-md-3 col-lg-2 col-sm-4 col-12">
-                                    <label for="inputCodAlu">Desde</label>
+                                    <label for="inputCodAlu" class="control-label">Desde</label>
                                     <div class="input-group">
-                                        @Html.TextBox("txtFecDesde", "", new { @class = "form-control", required = "required" })
+                                        @Html.TextBox("txtFecDesde", "", new { @class = "form-control form-control-sm" })
                                         <div class="input-group-append">
                                             <span class="input-group-text"><i class="fa fa-calendar-o"></i></span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group col-md-3 col-lg-2 col-sm-4 col-12">
-                                    <label for="inputCodAlu">Hasta</label>
+                                    <label for="inputCodAlu" class="control-label">Hasta</label>
                                     <div class="input-group">
-                                        @Html.TextBox("txtFecHasta", "", new { @class = "form-control", required = "required" })
+                                        @Html.TextBox("txtFecHasta", "", new { @class = "form-control form-control-sm" })
                                         <div class="input-group-append">
                                             <span class="input-group-text"><i class="fa fa-calendar-o"></i></span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group col-lg-2 col-sm-3 col-12 d-flex">
-                                    <button type="submit" class="btn btn-block btn-outline-primary align-self-end"><i class="fa fa-fw fa-search-plus">&nbsp;</i> Iniciar consulta</button>
+                                <div class="form-group col-lg-2 col-md-3 col-sm-4 col-12">
+                                    <label for="cboEntRecauda" class="control-label">Entidad Recaudadora</label>
+                                    @Html.DropDownList("cboEntRecauda", ViewBag.EntidadRecaudadora as SelectList, "[ SELECCIONAR ]", new { @class = "form-control form-control-sm" })
+                                </div>
+                                <div class="form-group col-lg-3 col-md-4 col-sm-5 col-12">
+                                    <label for="cboDependencia" class="control-label">Dependencia</label>
+                                    @Html.DropDownList("cboDependencia", ViewBag.Dependencia as SelectList, "[ SELECCIONAR ]", new { @class = "form-control form-control-sm" })
                                 </div>
                                 <div class="form-group col d-flex">
-                                    <a href="@Url.Action("RegistrarSiaf", "Pagos")" class="btn btn-outline-success align-self-end modal-link"><i class="fa fa-fw fa-filter">&nbsp;</i> Filtros</a>
+                                    <button type="submit" class="btn btn-block btn-sm btn-outline-primary align-self-end"><i class="fa fa-fw fa-search-plus">&nbsp;</i> Iniciar consulta</button>
+                                </div>
+                                <div class="form-group col d-flex">
+                                    <a href="@Url.Action("RegistrarSiaf", "Pagos")" class="btn btn-primary btn-sm align-self-end modal-link"><i class="fa fa-fw fa-pencil-square-o">&nbsp;</i> Registrar Nº SIAF</a>
                                 </div>
                             </div>
-                        </form>
+                        }
                     </div>
                 </div>
 
             </div>
         </div>
     </div>
-    <div class="col-12 my-4">
+    <div class="col-12 my-4" id="resultadoConsulta">
         @Html.Partial("_ResultadoConsultaPagos", Model)
     </div>
 </div>

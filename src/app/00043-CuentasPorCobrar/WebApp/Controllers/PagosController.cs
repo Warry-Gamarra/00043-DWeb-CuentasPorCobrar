@@ -23,6 +23,9 @@ namespace WebApp.Controllers
         private readonly SelectModel selectModels;
         private readonly PagosModel pagosModel;
         private ITasaServiceFacade tasaService;
+        private readonly EntidadRecaudadoraModel entidadRecaudadora;
+        public readonly DependenciaModel _dependenciaModel;
+
 
         public PagosController()
         {
@@ -34,6 +37,8 @@ namespace WebApp.Controllers
             selectModels = new SelectModel();
             pagosModel = new PagosModel();
             tasaService = new TasaServiceFacade();
+            entidadRecaudadora = new EntidadRecaudadoraModel();
+            _dependenciaModel = new DependenciaModel();
         }
 
         // GET: Pagos
@@ -297,37 +302,35 @@ namespace WebApp.Controllers
         {
             ViewBag.Title = "Actualizar información de pagos";
 
-            var model = new List<DatosPagoViewModel>();
+            var model = pagosModel.ListarPagosRegistrados();
+            ViewBag.EntidadRecaudadora = new SelectList(entidadRecaudadora.Find(enabled: true), "Id", "NombreEntidad");
+            ViewBag.Dependencia = new SelectList(_dependenciaModel.Find(enabled: true), dataValueField: "DependenciaID", dataTextField: "DependDesc");
 
-            for (int i = 0; i < 30; i++)
-            {
-                model.Add(new DatosPagoViewModel()
-                {
-                    Concepto = "pago " + i.ToString(),
-                    FecPago = DateTime.Now,
-                    EntidadRecaudadora = "banco comercio"
-                });
-
-            }
             return View(model);
-
         }
+
+        [HttpPost]
+        public ActionResult ObtenerPagosRegistrados(string txtFecDesde, string txtFecHasta, int cboEntRecauda, int cboDependencia)
+        {
+            ViewBag.Title = "Actualizar información de pagos";
+
+
+            var model = pagosModel.ListarPagosRegistrados();
+            ViewBag.EntidadRecaudadora = new SelectList(entidadRecaudadora.Find(enabled: true), "Id", "NombreEntidad");
+            ViewBag.Dependencia = new SelectList(_dependenciaModel.Find(enabled: true), dataValueField: "DependenciaID", dataTextField: "DependDesc");
+
+            return View(model);
+        }
+
 
         [Route("operaciones/pagos/{id}/ver-detalle")]
         public ActionResult Detalle(int id)
         {
             ViewBag.Title = "Detalles del pago";
 
-
-            var model = new DatosPagoViewModel()
-            {
-                Concepto = "pago " + id.ToString(),
-                FecPago = DateTime.Now,
-                EntidadRecaudadora = "banco comercio"
-            };
+            var model = pagosModel.ObtenerDatosPago(id);
 
             return PartialView("_DetallesPago", model);
-
         }
 
         [Route("operaciones/pagos/{id}/registrar-nro-siaf")]
@@ -335,14 +338,19 @@ namespace WebApp.Controllers
         {
             ViewBag.Title = "Registrar Nro. SIAF";
 
-            var model = new DatosPagoViewModel()
-            {
-                Concepto = "pago " + id.ToString(),
-                FecPago = DateTime.Now,
-                EntidadRecaudadora = "banco comercio"
-            };
+            var model = pagosModel.ObtenerDatosPago(id);
 
             return PartialView("_RegistrarSiaf", model);
+        }
+
+        [HttpPost]
+        public ActionResult RegistrarSiafLote(int[] pagosId, int nroSiaf)
+        {
+            ViewBag.Title = "Registrar Nro. SIAF";
+
+            var result = pagosModel.GrabarNroSiafPago(pagosId, nroSiaf, WebSecurity.CurrentUserId);
+
+            return Json(result, JsonRequestBehavior.AllowGet);
 
         }
 
@@ -354,8 +362,36 @@ namespace WebApp.Controllers
 
             var result = new Response();
 
+            if (ModelState.IsValid)
+            {
+                result = pagosModel.GrabarNroSiafPago(model, WebSecurity.CurrentUserId);
+            }
+            else
+            {
+                string details = "";
+
+                foreach (ModelState modelState in ViewData.ModelState.Values)
+                {
+                    foreach (ModelError error in modelState.Errors)
+                    {
+                        details += error.ErrorMessage + " / ";
+                    }
+                }
+
+                ResponseModel.Error(result, "Ha ocurrido un error con el envio de datos" + details);
+            }
             return PartialView("_MsgPartialWR", result);
 
+        }
+
+        [HttpPost]
+        public ActionResult AnularRegistroPago(int pagoProcesId)
+        {
+            ViewBag.Title = "Registrar Nro. SIAF";
+
+            var result = pagosModel.AnularRegistroPago(pagoProcesId, WebSecurity.CurrentUserId);
+
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
     }
