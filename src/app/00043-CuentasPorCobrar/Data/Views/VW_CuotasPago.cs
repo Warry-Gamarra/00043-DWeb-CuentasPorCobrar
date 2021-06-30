@@ -62,6 +62,10 @@ namespace Data.Views
 
         public string T_LugarPago { get; set; }
 
+        public DateTime D_FecCre { get; set; }
+
+        public string C_CodServicio { get; set; }
+
         public static IEnumerable<VW_CuotasPago> FindByAlumno(int anio, int periodo, string codAlu, string codRc)
         {
             IEnumerable<VW_CuotasPago> result;
@@ -98,12 +102,12 @@ namespace Data.Views
 
                 if (fechaDesde.HasValue)
                 {
-                    s_command += " AND DATEDIFF(DAY, c.D_FecVencto, @D_FechaDesde) <= 0";
+                    s_command += " AND DATEDIFF(DAY, c.D_FecCre, @D_FechaDesde) <= 0";
                 }
 
                 if (fechaHasta.HasValue)
                 {
-                    s_command += " AND DATEDIFF(DAY, c.D_FecVencto, @D_FechaHasta) >= 0";
+                    s_command += " AND DATEDIFF(DAY, c.D_FecCre, @D_FechaHasta) >= 0";
                 }
 
                 var parameters = new { I_Anio = anio, I_Periodo = periodo, C_CodFac = codFac, D_FechaDesde = fechaDesde, D_FechaHasta = fechaHasta };
@@ -132,12 +136,12 @@ namespace Data.Views
 
                 if (fechaDesde.HasValue)
                 {
-                    s_command += " AND DATEDIFF(DAY, c.D_FecVencto, @D_FechaDesde) <= 0";
+                    s_command += " AND DATEDIFF(DAY, c.D_FecCre, @D_FechaDesde) <= 0";
                 }
 
                 if (fechaHasta.HasValue)
                 {
-                    s_command += " AND DATEDIFF(DAY, c.D_FecVencto, @D_FechaHasta) >= 0";
+                    s_command += " AND DATEDIFF(DAY, c.D_FecCre, @D_FechaHasta) >= 0";
                 }
 
                 var parameters = new { I_Anio = anio, I_Periodo = periodo, D_FechaDesde = fechaDesde, D_FechaHasta = fechaHasta };

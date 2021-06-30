@@ -176,7 +176,9 @@ namespace Domain.Entities
                 B_Pagado = cuotaPago.B_Pagado,
                 C_CodOperacion = cuotaPago.C_CodOperacion,
                 D_FecPago = cuotaPago.D_FecPago,
-                T_LugarPago = cuotaPago.T_LugarPago
+                T_LugarPago = cuotaPago.T_LugarPago,
+                D_FecCre = cuotaPago.D_FecCre,
+                C_CodServicio = cuotaPago.C_CodServicio
             };
 
             return cuotaPagoDTO;
@@ -404,6 +406,46 @@ namespace Domain.Entities
                 D_FecCre = obligacionAluCab.D_FecCre,
                 I_UsuarioMod = obligacionAluCab.I_UsuarioMod,
                 D_FecMod = obligacionAluCab.D_FecMod
+            };
+
+            return result;
+        }
+
+        public static PagoPosgradoPorGradodDTO USP_S_ReportePagoObligacionesPosgrado_To_PagoPosgradoPorGradodDTO(USP_S_ReportePagoObligacionesPosgrado sp)
+        {
+            var result = new PagoPosgradoPorGradodDTO()
+            {
+                T_EscDesc = sp.T_EscDesc,
+                C_CodEsc = sp.C_CodEsc,
+                I_MontoTotal = sp.I_MontoTotal
+            };
+
+            return result;
+        }
+
+        public static PagoPosgradoPorConceptoDTO USP_S_ReportePagoObligacionesPosgrado_To_PagoPosgradoPorConceptoDTO(USP_S_ReportePagoObligacionesPosgrado sp)
+        {
+            var result = new PagoPosgradoPorConceptoDTO()
+            {
+                I_ConceptoID = sp.I_ConceptoID,
+                T_Clasificador = sp.T_Clasificador,
+                T_ConceptoPagoDesc = sp.T_ConceptoPagoDesc,
+                I_MontoTotal = sp.I_MontoTotal
+            };
+
+            return result;
+        }
+
+        public static ConceptoPosgradoPorGradoDTO USP_S_ReportePagoObligacionesPosgrado_To_ConceptoPosgradoPorGradoDTO(USP_S_ReportePagoObligacionesPosgrado sp)
+        {
+            var result = new ConceptoPosgradoPorGradoDTO()
+            {
+                T_EscDesc = sp.T_EscDesc,
+                C_CodEsc = sp.C_CodEsc,
+                I_ConceptoID = sp.I_ConceptoID,
+                T_Clasificador = sp.T_Clasificador,
+                T_ConceptoPagoDesc = sp.T_ConceptoPagoDesc,
+                I_MontoTotal = sp.I_MontoTotal
             };
 
             return result;

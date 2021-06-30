@@ -440,6 +440,7 @@
     <Compile Include="Models\EstructuraArchivoModel.cs" />
     <Compile Include="Models\EstudianteModel.cs" />
     <Compile Include="Models\Facades\CatalogoServiceFacade.cs" />
+    <Compile Include="Models\Facades\IReportePosgradoServiceFacade.cs" />
     <Compile Include="Models\Facades\IReportePregradoServiceFacade.cs" />
     <Compile Include="Models\Facades\ITasaServiceFacade.cs" />
     <Compile Include="Models\Facades\MatriculaServiceFacade.cs" />
@@ -452,6 +453,7 @@
     <Compile Include="Models\Facades\IObligacionServiceFacade.cs" />
     <Compile Include="Models\Facades\IProgramasClientFacade.cs" />
     <Compile Include="Models\Facades\ProgramasClientFacade.cs" />
+    <Compile Include="Models\Facades\ReportePosgradoServiceFacade.cs" />
     <Compile Include="Models\Facades\ReportePregradoServiceFacade.cs" />
     <Compile Include="Models\Facades\TasaServiceFacade.cs" />
     <Compile Include="Models\IAlumnosSinVotoSource.cs" />
@@ -494,6 +496,7 @@
     <Compile Include="ViewModels\PagoObligacionViewModel.cs" />
     <Compile Include="ViewModels\CargaArchivosViewModels.cs" />
     <Compile Include="ViewModels\ProcesoViewModel.cs" />
+    <Compile Include="ViewModels\ReportePagosPosgradoViewModel.cs" />
     <Compile Include="ViewModels\ReportePagosPregradoViewModel.cs" />
     <Compile Include="ViewModels\RolesViewModel.cs" />
     <Compile Include="ViewModels\SelectViewModel.cs" />
@@ -585,7 +588,7 @@
     <Content Include="Views\EstructuraArchivo\_RegistroColumnaSeccion.cshtml" />
     <Content Include="Views\EstructuraArchivo\ColumnasSeccionEstructuraArchivo.cshtml" />
     <Content Include="Views\Estudiantes\Consulta.cshtml" />
-    <Content Include="Views\EstadosCuenta\PagosPorFecha.cshtml" />
+    <Content Include="Views\EstadosCuenta\PagosPosgrado.cshtml" />
     <Content Include="Views\EstadosCuenta\PagosPregrado.cshtml" />
     <Content Include="Views\Pagos\_RegistrarPagoObligacion.cshtml" />
     <Content Include="Views\Pagos\_RegistrarPagoTasa.cshtml" />
@@ -597,12 +600,15 @@
     <Content Include="Views\Devoluciones\_ResultadoBusquedaPago.cshtml" />
     <Content Include="Views\Pagos\_ResultadoConsultaPagos.cshtml" />
     <Content Include="Views\Pagos\_MsgRegistrarPagoObligacion.cshtml" />
-    <Content Include="Views\EstadosCuenta\_ReportePagosPorFacultad.cshtml" />
-    <Content Include="Views\EstadosCuenta\_ReporteConceptosPorUnaFacultad.cshtml" />
-    <Content Include="Views\EstadosCuenta\_ReportePagosPorConcepto.cshtml" />
+    <Content Include="Views\EstadosCuenta\_ReportePagosPregradoPorFacultad.cshtml" />
+    <Content Include="Views\EstadosCuenta\_ReportePregradoConceptosPorUnaFacultad.cshtml" />
+    <Content Include="Views\EstadosCuenta\_ReportePagosPregradoPorConcepto.cshtml" />
     <Content Include="Views\Pagos\Actualizar.cshtml" />
     <Content Include="Views\Pagos\_DetallesPago.cshtml" />
     <Content Include="Views\Pagos\_RegistrarSiaf.cshtml" />
+    <Content Include="Views\EstadosCuenta\_ReportePosgradoConceptosPorGrado.cshtml" />
+    <Content Include="Views\EstadosCuenta\_ReportePagosPosgradoPorConcepto.cshtml" />
+    <Content Include="Views\EstadosCuenta\_ReportePagosPosgradoPorGrado.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -92,7 +92,9 @@ namespace WebApp.Models
                 B_Pagado = cuotaPagoDTO.B_Pagado,
                 C_CodOperacion = cuotaPagoDTO.C_CodOperacion,
                 D_FecPago = cuotaPagoDTO.D_FecPago,
-                T_LugarPago = cuotaPagoDTO.T_LugarPago
+                T_LugarPago = cuotaPagoDTO.T_LugarPago,
+                D_FecCre = cuotaPagoDTO.D_FecCre,
+                C_CodServicio = cuotaPagoDTO.C_CodServicio
             };
 
             return cuotaPagoModel;

@@ -24,8 +24,8 @@ namespace WebApp.Models.Facades
 
             var reporte = new ReportePagosPorFacultadViewModel(pagos)
             {
-                FechaInicio = fechaInicio.ToString(FormatosDateTIme.BASIC_DATE),
-                FechaFin = fechaFin.ToString(FormatosDateTIme.BASIC_DATE),
+                FechaInicio = fechaInicio.ToString(FormatosDateTime.BASIC_DATE),
+                FechaFin = fechaFin.ToString(FormatosDateTime.BASIC_DATE),
                 Titulo = "Reporte de Pagos por Facultades"
             };
 
@@ -38,8 +38,8 @@ namespace WebApp.Models.Facades
 
             var reporte = new ReportePagosPorConceptoViewModel(pagos)
             {
-                FechaInicio = fechaInicio.ToString(FormatosDateTIme.BASIC_DATE),
-                FechaFin = fechaFin.ToString(FormatosDateTIme.BASIC_DATE),
+                FechaInicio = fechaInicio.ToString(FormatosDateTime.BASIC_DATE),
+                FechaFin = fechaFin.ToString(FormatosDateTime.BASIC_DATE),
                 Titulo = "Reporte de Pagos por Conceptos"
             };
 
@@ -53,8 +53,8 @@ namespace WebApp.Models.Facades
             var reporte = new ReporteConceptosPorUnaFacultadViewModel(pagos)
             {
                 Facultad = pagos.Count() > 0 ? pagos.FirstOrDefault().T_FacDesc : "",
-                FechaInicio = fechaInicio.ToString(FormatosDateTIme.BASIC_DATE),
-                FechaFin = fechaFin.ToString(FormatosDateTIme.BASIC_DATE),
+                FechaInicio = fechaInicio.ToString(FormatosDateTime.BASIC_DATE),
+                FechaFin = fechaFin.ToString(FormatosDateTime.BASIC_DATE),
                 Titulo = "Reporte de Pagos por Facultad"
             };
 

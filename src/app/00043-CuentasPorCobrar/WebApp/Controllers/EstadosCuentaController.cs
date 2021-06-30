@@ -15,12 +15,14 @@ namespace WebApp.Controllers
     public class EstadosCuentaController : Controller
     {
         IReportePregradoServiceFacade reporteServiceFacade;
+        IReportePosgradoServiceFacade reportePosgradoServiceFacade;
         IProgramasClientFacade programasClientFacade;
         IGeneralServiceFacade generalServiceFacade;
 
         public EstadosCuentaController()
         {
             reporteServiceFacade = new ReportePregradoServiceFacade();
+            reportePosgradoServiceFacade = new ReportePosgradoServiceFacade();
             programasClientFacade = new ProgramasClientFacade();
             generalServiceFacade = new GeneralServiceFacade();
         }
@@ -32,16 +34,6 @@ namespace WebApp.Controllers
             ViewBag.Title = "Estados de Cuenta";
             return View();
         }
-
-        //public ActionResult PagosPorFecha()
-        //{
-        //    var fechaInicio = DateTime.Now;
-        //    var fechaFin = DateTime.Now;
-
-        //    var reporte = reporteServiceFacade.ReportePagosGeneralesPorFecha(fechaInicio, fechaFin);
-
-        //    return View(reporte);
-        //}
 
         public ActionResult PagosPregrado(PagosPregradoViewModel model)
         {
@@ -66,6 +58,33 @@ namespace WebApp.Controllers
             ViewBag.TipoReportes = generalServiceFacade.Listar_ReportesPregrado();
 
             ViewBag.Facultades = programasClientFacade.GetFacultades(TipoEstudio.Pregrado);
+
+            return View(model);
+        }
+
+        public ActionResult PagosPosgrado(PagosPosgradoViewModel model)
+        {
+            switch (model.reporte)
+            {
+                case 1:
+                    model.reportePagosPorGradodViewModel = reportePosgradoServiceFacade.ReportePagosPorGrado(model.fechaInicio.Value, model.fechaFin.Value);
+
+                    break;
+
+                case 2:
+                    model.reportePagosPorConceptoPosgradoViewModel = reportePosgradoServiceFacade.ReportePagosPorConcepto(model.fechaInicio.Value, model.fechaFin.Value);
+
+                    break;
+
+                case 3:
+                    model.reporteConceptosPorGradoViewModel = reportePosgradoServiceFacade.ReporteConceptosPorGrado(model.posgrado, model.fechaInicio.Value, model.fechaFin.Value);
+
+                    break;
+            }
+
+            ViewBag.TipoReportes = generalServiceFacade.Listar_ReportesPosgrado();
+
+            ViewBag.Facultades = programasClientFacade.GetFacultades(TipoEstudio.Posgrado);
 
             return View(model);
         }

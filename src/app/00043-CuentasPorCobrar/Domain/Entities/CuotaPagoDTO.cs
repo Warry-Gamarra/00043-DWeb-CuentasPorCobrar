@@ -57,5 +57,9 @@ namespace Domain.Entities
         public DateTime? D_FecPago { get; set; }
 
         public string T_LugarPago { get; set; }
+
+        public DateTime D_FecCre { get; set; }
+
+        public string C_CodServicio { get; set; }
     }
 }

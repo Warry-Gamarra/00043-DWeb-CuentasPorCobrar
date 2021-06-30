@@ -695,3 +695,62 @@ INSERT INTO TC_ClasificadorPresupuestal (C_TipoTransCod, C_GenericaCod, C_SubGen
 --INSERT INTO TC_ClasificadorAnio (I_ClasificadorID, N_Anio, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) 
 --						SELECT  I_ClasificadorID, '2021', 1, 0, I_UsuarioCre, D_FecCre
 --						  FROM  TC_ClasificadorPresupuestal
+
+
+
+
+---------------------Configuración para carga de pagos BANCO COMERCIO
+insert TI_TipoArchivo_EntidadFinanciera(I_EntidadFinanID, I_TipoArchivoID, T_NombreVista, B_Habilitado, B_Eliminado)
+values(1, 3, '', 1, 0)
+
+declare @I_TipArchivoEntFinanID int = IDENT_CURRENT('TI_TipoArchivo_EntidadFinanciera')
+
+insert TC_SeccionArchivo(T_SecArchivoDesc, I_TipoSeccion, I_FilaInicio, I_FilaFin, B_Habilitado, B_Eliminado, I_TipArchivoEntFinanID)
+values ('DETALLE', 2, 2, null, 1, 0, @I_TipArchivoEntFinanID)
+
+
+declare @I_SecArchivoID int = IDENT_CURRENT('TC_SeccionArchivo')
+
+
+insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('C_CodAlu', 9, 18, 1, 0, @I_SecArchivoID, 1)
+insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('C_CodOperacion', 288, 297, 1, 0, @I_SecArchivoID, 2)
+insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('C_Referencia', 288, 297, 1, 0, @I_SecArchivoID, 3)
+insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('C_CodRc', 151, 153, 1, 0, @I_SecArchivoID, 4)
+insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('C_Moneda', 125, 126, 1, 0, @I_SecArchivoID, 5)
+insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('D_FecPago', 205, 218, 1, 0, @I_SecArchivoID, 6)
+insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('D_FecVencto', 117, 124, 1, 0, @I_SecArchivoID, 7)
+insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('I_Cantidad', 274, 277, 1, 0, @I_SecArchivoID, 8)
+insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('I_MontoPago', 127, 140, 1, 0, @I_SecArchivoID, 9)
+insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('I_ProcesoID', 167, 176, 1, 0, @I_SecArchivoID, 10)
+insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('T_LugarPago', 219, 225, 1, 0, @I_SecArchivoID, 11)
+insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('T_NomDepositante', 29, 68, 1, 0, @I_SecArchivoID, 12)
+GO
+
+
+
+
+
+---------------------Configuración para carga de pagos BCP
+insert TI_TipoArchivo_EntidadFinanciera(I_EntidadFinanID, I_TipoArchivoID, T_NombreVista, B_Habilitado, B_Eliminado)
+values(2, 3, '', 1, 0)
+
+declare @I_TipArchivoEntFinanID int = IDENT_CURRENT('TI_TipoArchivo_EntidadFinanciera')
+
+insert TC_SeccionArchivo(T_SecArchivoDesc, I_TipoSeccion, I_FilaInicio, I_FilaFin, B_Habilitado, B_Eliminado, I_TipArchivoEntFinanID)
+values ('DETALLE', 2, 2, null, 1, 0, @I_TipArchivoEntFinanID)
+
+declare @I_SecArchivoID int = IDENT_CURRENT('TC_SeccionArchivo')
+
+
+insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('C_CodAlu', 18, 27, 1, 0, @I_SecArchivoID, 1)
+insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('C_CodOperacion', 125, 130, 1, 0, @I_SecArchivoID, 2)
+insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('C_Referencia', 131, 152, 1, 0, @I_SecArchivoID, 3)
+insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('C_CodRc', 28, 30, 1, 0, @I_SecArchivoID, 4)
+insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('C_Moneda', 6, 6, 1, 0, @I_SecArchivoID, 5)
+insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('D_FecPago', 58, 65, 1, 0, @I_SecArchivoID, 6)
+insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('D_FecVencto', 66, 73, 1, 0, @I_SecArchivoID, 7)
+insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('I_MontoPago', 74, 88, 1, 0, @I_SecArchivoID, 9)
+insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('I_ProcesoID', 31, 36, 1, 0, @I_SecArchivoID, 10)
+insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('T_LugarPago', 119, 124, 1, 0, @I_SecArchivoID, 11)
+insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('T_NomDepositante', 28, 57, 1, 0, @I_SecArchivoID, 12)
+GO
