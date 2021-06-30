@@ -81,7 +81,6 @@ namespace Data.Tables
             {
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    parameters.Add(name: "I_ImportacionID", dbType: DbType.Int32, value: this.I_ImportacionID);
                     parameters.Add(name: "T_NomArchivo", dbType: DbType.String, value: this.T_NomArchivo);
                     parameters.Add(name: "T_UrlArchivo", dbType: DbType.String, value: this.T_UrlArchivo);
                     parameters.Add(name: "I_CantFilas", dbType: DbType.Int32, value: this.I_CantFilas);

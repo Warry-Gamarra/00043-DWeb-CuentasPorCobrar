@@ -15,6 +15,7 @@ namespace WebApp.Controllers
         // GET: Devoluciones
         private readonly EntidadRecaudadoraModel _entidadRecaudadora;
         private readonly DevolucionPagoModel _devolucionPagoModel;
+        private readonly PagosModel _pagosModel;
         private readonly SelectModel _selectModels;
 
         public DevolucionesController()
@@ -22,6 +23,7 @@ namespace WebApp.Controllers
             _entidadRecaudadora = new EntidadRecaudadoraModel();
             _devolucionPagoModel = new DevolucionPagoModel();
             _selectModels = new SelectModel();
+            _pagosModel = new PagosModel();
         }
 
         [Route("operaciones/devolucion-pagos")]
@@ -65,16 +67,20 @@ namespace WebApp.Controllers
         [HttpGet]
         public ActionResult BuscarPagoDevolucion(int entidadId, string codreferencia)
         {
-            var model = new DatosPagoViewModel();
+            var model = _pagosModel.BuscarPagoRegistrado(entidadId, codreferencia);
 
-            if (model.PagoId == 0)
+            if (model.Count == 0)
             {
                 ViewBag.Mensaje = "No se encontró ningún pago para el codigo ingresado";
                 ViewBag.Color = "danger";
             }
             else
             {
-                ViewBag.Mensaje = "Ingrese los datos del pago de referencia para la devolución";
+                if (true)
+                {
+
+                }
+                ViewBag.Mensaje = "Se encontró más de un resultado para la búsqueda";
                 ViewBag.Color = "secondary";
             }
 

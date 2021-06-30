@@ -962,9 +962,3 @@ CREATE TABLE TR_ImportacionArchivo
 		ON UPDATE NO ACTION
 )
 GO
-
-ALTER TABLE dbo.TRI_PagoProcesadoUnfv ADD I_CtaDepositoID INT
-
-ALTER TABLE dbo.TRI_PagoProcesadoUnfv ADD CONSTRAINT FK_CuentaDeposito_PagoProcesadoUnfv 
-	FOREIGN KEY (I_CtaDepositoID) REFERENCES TC_CuentaDeposito(I_CtaDepositoID)
-GO

@@ -1,4 +1,5 @@
-﻿using Domain.Helpers;
+﻿using Domain.Entities;
+using Domain.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -7,8 +8,10 @@ using System.Web;
 
 namespace WebApp.ViewModels
 {
-    public class DatosPagoViewModel {
+    public class DatosPagoViewModel
+    {
         public int PagoId { get; set; }
+        public string CodOperacion { get; set; }
 
         [Display(Name = "Entidad recaudadora ")]
         public int EntidadRecaudadoraId { get; set; }
@@ -28,6 +31,22 @@ namespace WebApp.ViewModels
         public decimal MontoPago { get; set; }
 
         [Display(Name = "Nro SIAF")]
-        public string NroSIAF { get; set; }
+        [Required]
+        public int? NroSIAF { get; set; }
+
+        public DatosPagoViewModel() { }
+
+        public DatosPagoViewModel(PagoEntity pagoEntity)
+        {
+            this.PagoId = pagoEntity.PagoProcesId;
+            this.CodOperacion = pagoEntity.CodOperacion;
+            this.EntidadRecaudadoraId = pagoEntity.EntidadRecaudaID;
+            this.EntidadRecaudadora = pagoEntity.EntidadRecaudaDesc;
+            this.Concepto = pagoEntity.ConceptoPagoDesc;
+            this.LugarPago = pagoEntity.LugarPago;
+            this.FecPago = pagoEntity.FecPago;
+            this.MontoPago = pagoEntity.MontoPago;
+            this.NroSIAF = pagoEntity.NroSIAF;
+        }
     }
 }
