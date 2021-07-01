@@ -91,6 +91,7 @@ CREATE TABLE TI_CarreraProfesional
 	C_CodEsp             varchar(2)  NULL ,
 	C_CodEsc             varchar(2)  NOT NULL ,
 	C_CodFac             varchar(2)  NOT NULL ,
+	T_CarProfDesc        varchar(250)  NULL ,
 	C_Tipo               char(1)  NULL ,
 	I_Duracion           int  NULL ,
 	B_Anual              bit  NULL ,
