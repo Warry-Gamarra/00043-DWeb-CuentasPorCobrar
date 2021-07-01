@@ -16,10 +16,10 @@
             @Html.HiddenFor(model => model.Id)
 
             <div class="form-group row">
-                @Html.LabelFor(model => model.EntidadFinancieraId, new { @class = "col-md-4 control-label" })
+                @Html.LabelFor(model => model.EntidadRecaudadoraId, new { @class = "col-md-4 control-label" })
                 <div class="col-md-8">
-                    @Html.DropDownListFor(model => model.EntidadFinancieraId, ViewBag.EntidadFinanciera as SelectList, "[ SELECIONAR ENTIDAD ]", new { @class = "form-control" })
-                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.EntidadFinancieraId)</p>
+                    @Html.DropDownListFor(model => model.EntidadRecaudadoraId, ViewBag.EntidadRecaudadora as SelectList, "[ SELECIONAR ENTIDAD ]", new { @class = "form-control" })
+                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.EntidadRecaudadoraId)</p>
                 </div>
             </div>
             <div class="form-group row">
