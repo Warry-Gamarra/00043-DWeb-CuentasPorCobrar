@@ -34,23 +34,28 @@
                     <div class="card-body bg-light-gray">
                         <form id="frmGenerarReportePregrado" action="@Url.Action("PagosPregrado", "EstadosCuenta")" method="GET">
                             <div class="form-row">
-                                <div class="form-group col-xl-3 col-lg-8 col-md-8 col-sm-12 col-12">
+                                <div class="form-group col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                                     <label for="reporte">Reporte</label>
-                                    @Html.DropDownListFor(model => model.reporte, new SelectList(ViewBag.TipoReportes, "Value", "TextDisplay"), "SELECCIONAR", 
+                                    @Html.DropDownListFor(model => model.reporte, new SelectList(ViewBag.TipoReportes, "Value", "TextDisplay"), "SELECCIONAR",
                                         new { @class = "form-control form-control-sm", @required = "required" })
                                 </div>
-                                <div class="form-group col-xl-3 col-lg-8 col-md-8 col-sm-12 col-12">
+                                <div class="form-group col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                                     <label for="facultad">Facultad</label>
-                                    @Html.DropDownListFor(model => model.facultad, new SelectList(ViewBag.Facultades, "Value", "TextDisplay"), "TODOS", 
+                                    @Html.DropDownListFor(model => model.facultad, new SelectList(ViewBag.Facultades, "Value", "TextDisplay"), "TODOS",
                                         new { @class = "form-control form-control-sm", @disabled = "disabled" })
+                                </div>
+                                <div class="form-group col-xl-2 col-lg-6 col-md-6 col-sm-12 col-12">
+                                    <label for="idEntidadFinanciera">Entidad Financiera</label>
+                                    @Html.DropDownListFor(model => model.idEntidadFinanciera, new SelectList(ViewBag.EntidadesFinancieras, "Value", "TextDisplay"), "TODOS",
+                                        new { @class = "form-control form-control-sm" })
                                 </div>
                                 <div class="form-group col-xl-4 col-lg-12 col-md-12 col-sm-12 col-12">
                                     <div id="datepicker">
                                         <div class="input-daterange">
                                             <div class="form-group col-lg-6 col-md-6 col-sm-12 col-12" style="padding-left: 0px;">
-                                                <label for="fechaDesde">F.Vcto. Desde</label>
+                                                <label for="fechaDesde">Pagos desde</label>
                                                 <div class="input-group">
-                                                    @Html.TextBoxFor(model => model.fechaDesde, "{0:dd/MM/yyyy}", 
+                                                    @Html.TextBoxFor(model => model.fechaDesde, "{0:dd/MM/yyyy}",
                                                         new { @class = "form-control form-control-sm", @placeholder = "Fecha inicio", @readonly = "readonly" })
                                                     <div class="input-group-append">
                                                         <span class="input-group-text"><i class="fa fa-calendar-o"></i></span>
@@ -58,9 +63,9 @@
                                                 </div>
                                             </div>
                                             <div class="form-group col-lg-6 col-md-6 col-sm-12 col-12" style="padding-left: 0px;">
-                                                <label for="fechaHasta">F.Vcto. Hasta</label>
+                                                <label for="fechaHasta">Pagos hasta</label>
                                                 <div class="input-group">
-                                                    @Html.TextBoxFor(model => model.fechaHasta, "{0:dd/MM/yyyy}", 
+                                                    @Html.TextBoxFor(model => model.fechaHasta, "{0:dd/MM/yyyy}",
                                                         new { @class = "form-control form-control-sm", @placeholder = "Fecha final", @readonly = "readonly" })
                                                     <div class="input-group-append">
                                                         <span class="input-group-text"><i class="fa fa-calendar-o"></i></span>
@@ -84,7 +89,7 @@
             </div>
         </div>
     </div>
-    <div class="col-12 my-4">
+    <div class="col-xl-10 col-lg-12 mx-auto my-4">
         @if (Model != null && Model.reportePagosPorFacultadViewModel != null)
         {
             @Html.Partial("_ReportePagosPregradoPorFacultad", Model.reportePagosPorFacultadViewModel)

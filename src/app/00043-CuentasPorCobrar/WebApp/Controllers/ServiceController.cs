@@ -22,6 +22,7 @@ namespace WebApp.Controllers
         private readonly EstructuraArchivoModel estructuraArchivoModel;
         IObligacionServiceFacade _obligacionServiceFacade;
         ICuentaDeposito _cuentaDeposito;
+        IProgramasClientFacade programasClientFacade;
 
         public ServiceController()
         {
@@ -32,6 +33,7 @@ namespace WebApp.Controllers
             estructuraArchivoModel = new EstructuraArchivoModel();
             _obligacionServiceFacade = new ObligacionServiceFacade();
             _cuentaDeposito = new CuentaDeposito();
+            programasClientFacade = new ProgramasClientFacade();
         }
 
         // GET: api/service/GetPrioridad/5
@@ -141,6 +143,12 @@ namespace WebApp.Controllers
                 });
 
             return result;
+        }
+
+        // GET: api/service/GetFacultades?tipoEstudio=TipoEstudio
+        public IEnumerable<SelectViewModel> GetFacultades(TipoEstudio tipoEstudio)
+        {
+            return programasClientFacade.GetFacultades(tipoEstudio);
         }
     }
 }

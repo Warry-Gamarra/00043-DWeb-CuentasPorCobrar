@@ -1,17 +1,23 @@
 ﻿@model WebApp.ViewModels.ReporteConceptosPorUnaFacultadViewModel
 
-<p class="h3">@Model.Titulo <small>del @Model.FechaInicio al @Model.FechaFin</small></p>
-<br />
-<p class="h5 text-right">Fecha consulta: @Model.FechaActual : @Model.HoraActual</p>
-<br />
+<p class="h2 text-center">@Model.Titulo.ToUpper()</p>
+
+<p class="h4 text-center"><small>Resumen del @Model.FechaInicio al @Model.FechaFin</small></p>
+
+<p class="h5 text-right"><small>Fecha: @Model.FechaActual</small></p>
+
+<p class="h5 text-right"><small>Hora: @Model.HoraActual</small></p>
 
 <div class="table-responsive">
+
+    <p class="h5">FACULTAD: <b>@Model.Facultad.ToUpper()</b></p>
+
     <table class="table table-bordered table-hover table-sm" id="tbl_pagos">
         <thead>
             <tr class="thead-light">
-                <th class="text-center">Facultad</th>
                 <th class="text-center">Concepto</th>
                 <th class="text-center">Clasificador</th>
+                <th class="text-center">Cantidad</th>
                 <th class="text-center">Monto (S/. )</th>
             </tr>
         </thead>
@@ -19,18 +25,18 @@
             @foreach (var item in Model.listaPagos)
             {
             <tr>
-                <td>@item.T_FacDesc</td>
                 <td>@item.T_ConceptoPagoDesc</td>
                 <td class="text-center">@item.T_Clasificador</td>
+                <td class="text-center">@item.I_Cantidad</td>
                 <td class="text-right">@item.I_MontoTotal</td>
             </tr>
             }
-            <tr>
-                <th></th>
-                <th></th>
-                <th class="text-right">Total</th>
-                <th class="text-right">@Model.MontoTotal</th>
-            </tr>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th class="text-right">Total</th>
+                    <th class="text-right">@Model.MontoTotal</th>
+                </tr>
         </tbody>
     </table>
 </div>

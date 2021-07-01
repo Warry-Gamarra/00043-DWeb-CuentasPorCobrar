@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Data.Tables;
+using Data.Types;
 
 namespace Domain.Services.Implementations
 {
@@ -30,7 +31,7 @@ namespace Domain.Services.Implementations
             return new Response(result);
         }
 
-        public Response Generar_Obligaciones_Posgrado(int anio, int periodo, int currentUserID)
+        public Response Generar_Obligaciones_Posgrado(int anio, int periodo, string codGrado, int currentUserID)
         {
             ResponseData result;
 
@@ -38,6 +39,7 @@ namespace Domain.Services.Implementations
             {
                 I_Anio = anio,
                 I_Periodo = periodo,
+                C_CodEsc = codGrado,
                 I_UsuarioCre = currentUserID
             };
 
@@ -100,17 +102,17 @@ namespace Domain.Services.Implementations
             return result;
         }
         
-        public IEnumerable<CuotaPagoDTO> Obtener_CuotasPago_X_Proceso(int anio, int periodo, TipoEstudio tipoEstudio, string codFac, DateTime? fechaDesde, DateTime? fechaHasta)
+        public IEnumerable<CuotaPagoDTO> Obtener_CuotasPago_X_Proceso(int anio, int periodo, TipoEstudio tipoEstudio, string codDependencia)
         {
             IEnumerable<VW_CuotasPago> cuotaPagos;
 
             switch (tipoEstudio)
             {
                 case TipoEstudio.Pregrado:
-                    cuotaPagos = VW_CuotasPago.GetPregrado(anio, periodo, codFac, fechaDesde, fechaHasta);
+                    cuotaPagos = VW_CuotasPago.GetPregrado(anio, periodo, codDependencia);
                     break;
                 case TipoEstudio.Posgrado:
-                    cuotaPagos = VW_CuotasPago.GetPosgrado(anio, periodo, fechaDesde, fechaHasta);
+                    cuotaPagos = VW_CuotasPago.GetPosgrado(anio, periodo, codDependencia);
                     break;
                 default:
                     throw new InvalidOperationException();
@@ -123,17 +125,16 @@ namespace Domain.Services.Implementations
 
         public Response Grabar_Pago_Obligaciones(List<PagoObligacionEntity> dataPagoObligaciones, int currentUserID)
         {
-            ResponseData result;
+            GrabacionPagoObligacionesResponse result;
 
             var grabarPago = new USP_I_GrabarPagoObligaciones()
             {
-                D_FecRegistro = DateTime.Now,
                 UserID = currentUserID
             };
 
             var dataTable = Mapper.PagoObligacionEntity_To_DataTable(dataPagoObligaciones);
 
-            result = grabarPago.Execute(dataTable);
+            result = grabarPago.Execute(dataTable, currentUserID);
 
             return new Response(result);
         }

@@ -163,9 +163,12 @@ namespace WebApp.Models
                 pagoEntity.C_Referencia = line.Substring(columnas["C_Referencia"].Inicial - 1, columnas["C_Referencia"].Final - columnas["C_Referencia"].Inicial + 1);
 
                 string sFechaPago = line.Substring(columnas["D_FecPago"].Inicial - 1, columnas["D_FecPago"].Final - columnas["D_FecPago"].Inicial + 1);
-                pagoEntity.D_FecPago = DateTime.ParseExact(sFechaPago, entFinanId == 1 ? FormatosDateTime.BCO_COMERCIO_PAYMENT_DATE_FORMAT : FormatosDateTime.BCP_PAYMENT_DATE_FORMAT, CultureInfo.InvariantCulture);
+                string sHoraPago = line.Substring(columnas["D_HoraPago"].Inicial - 1, columnas["D_HoraPago"].Final - columnas["D_HoraPago"].Inicial + 1);
 
-                pagoEntity.I_Cantidad = entFinanId == 1 ? int.Parse(line.Substring(columnas["I_Cantidad"].Inicial - 1, columnas["I_Cantidad"].Final - columnas["I_Cantidad"].Inicial + 1)) : 1;
+                pagoEntity.D_FecPago = DateTime.ParseExact(sFechaPago + sHoraPago, FormatosDateTime.PAYMENT_DATETIME_FORMAT, CultureInfo.InvariantCulture);
+
+                string sCantidad = line.Substring(columnas["I_Cantidad"].Inicial - 1, columnas["I_Cantidad"].Final - columnas["I_Cantidad"].Inicial + 1);
+                pagoEntity.I_Cantidad = sCantidad.Length == 0 ? 1 : int.Parse(sCantidad);
                 pagoEntity.C_Moneda = line.Substring(columnas["C_Moneda"].Inicial - 1, columnas["C_Moneda"].Final - columnas["C_Moneda"].Inicial + 1);
 
                 string montoPago = line.Substring(columnas["I_MontoPago"].Inicial - 1, columnas["I_MontoPago"].Final - columnas["I_MontoPago"].Inicial + 1);

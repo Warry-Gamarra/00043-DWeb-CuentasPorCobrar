@@ -9,5 +9,7 @@ namespace Domain.UnfvRepositorioClient
     public interface IProgramasClient
     {
         IEnumerable<FacultadModel> GetFacultades();
+
+        IEnumerable<EscuelaModel> GetEscuelas(string codFac);
     }
 }

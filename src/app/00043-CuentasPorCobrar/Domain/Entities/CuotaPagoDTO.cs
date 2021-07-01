@@ -22,6 +22,8 @@ namespace Domain.Entities
 
         public string C_CodFac { get; set; }
 
+        public string C_CodEsc { get; set; }
+
         public string T_Nombre { get; set; }
 
         public string T_ApePaterno { get; set; }

@@ -93,6 +93,9 @@ namespace Domain.Entities
                 I_Anio = matriculaAlumno.I_Anio,
                 I_Periodo = matriculaAlumno.I_Periodo,
                 C_CodFac = matriculaAlumno.C_CodFac,
+                T_FacDesc = matriculaAlumno.T_FacDesc,
+                C_CodEsc = matriculaAlumno.C_CodEsc,
+                T_EscDesc = matriculaAlumno.T_EscDesc,
                 C_EstMat = matriculaAlumno.C_EstMat,
                 C_Ciclo = matriculaAlumno.C_Ciclo,
                 B_Ingresante = matriculaAlumno.B_Ingresante,
@@ -116,7 +119,7 @@ namespace Domain.Entities
                 I_ProcesoID = detalleObligaciones.I_ProcesoID,
                 N_CodBanco = detalleObligaciones.N_CodBanco ?? "",
                 C_CodAlu = detalleObligaciones.C_CodAlu,
-                C_CodRc = detalleObligaciones.C_CodRc,
+                C_CodRc = detalleObligaciones.C_RcCod,
                 C_CodFac = detalleObligaciones.C_CodFac,
                 T_Nombre = detalleObligaciones.T_Nombre,
                 T_ApePaterno = detalleObligaciones.T_ApePaterno,
@@ -157,8 +160,9 @@ namespace Domain.Entities
                 I_ProcesoID = cuotaPago.I_ProcesoID,
                 N_CodBanco = cuotaPago.N_CodBanco ?? "",
                 C_CodAlu = cuotaPago.C_CodAlu,
-                C_CodRc = cuotaPago.C_CodRc,
+                C_CodRc = cuotaPago.C_RcCod,
                 C_CodFac = cuotaPago.C_CodFac,
+                C_CodEsc = cuotaPago.C_CodEsc,
                 T_Nombre = cuotaPago.T_Nombre,
                 T_ApePaterno = cuotaPago.T_ApePaterno,
                 T_ApeMaterno = cuotaPago.T_ApeMaterno ?? "",
@@ -368,6 +372,7 @@ namespace Domain.Entities
                 I_ConceptoID = sp.I_ConceptoID,
                 T_Clasificador = sp.T_Clasificador,
                 T_ConceptoPagoDesc = sp.T_ConceptoPagoDesc,
+                I_Cantidad = sp.I_Cantidad,
                 I_MontoTotal = sp.I_MontoTotal
             };
 
@@ -445,6 +450,7 @@ namespace Domain.Entities
                 I_ConceptoID = sp.I_ConceptoID,
                 T_Clasificador = sp.T_Clasificador,
                 T_ConceptoPagoDesc = sp.T_ConceptoPagoDesc,
+                I_Cantidad = sp.I_Cantidad,
                 I_MontoTotal = sp.I_MontoTotal
             };
 

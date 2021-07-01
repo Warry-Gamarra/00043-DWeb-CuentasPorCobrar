@@ -18,44 +18,44 @@ namespace WebApp.Models.Facades
             reporteService = new ReportePregradoService();
         }
 
-        public ReportePagosPorFacultadViewModel ReportePagosPorFacultad(DateTime fechaInicio, DateTime fechaFin)
+        public ReportePagosPorFacultadViewModel ReportePagosPorFacultad(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc)
         {
-            var pagos = reporteService.ReportePagosPorFacultad(fechaInicio, fechaFin);
+            var pagos = reporteService.ReportePagosPorFacultad(fechaInicio, fechaFin, idEntidanFinanc);
 
             var reporte = new ReportePagosPorFacultadViewModel(pagos)
             {
                 FechaInicio = fechaInicio.ToString(FormatosDateTime.BASIC_DATE),
                 FechaFin = fechaFin.ToString(FormatosDateTime.BASIC_DATE),
-                Titulo = "Reporte de Pagos por Facultades"
+                Titulo = Reportes.Pregrado.First(x => x.Key.Equals(1)).Value
             };
 
             return reporte;
         }
 
-        public ReportePagosPorConceptoViewModel ReportePagosPorConcepto(DateTime fechaInicio, DateTime fechaFin)
+        public ReportePagosPorConceptoViewModel ReportePagosPorConcepto(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc)
         {
-            var pagos = reporteService.ReportePagosPorConcepto(fechaInicio, fechaFin);
+            var pagos = reporteService.ReportePagosPorConcepto(fechaInicio, fechaFin, idEntidanFinanc);
 
             var reporte = new ReportePagosPorConceptoViewModel(pagos)
             {
                 FechaInicio = fechaInicio.ToString(FormatosDateTime.BASIC_DATE),
                 FechaFin = fechaFin.ToString(FormatosDateTime.BASIC_DATE),
-                Titulo = "Reporte de Pagos por Conceptos"
+                Titulo = Reportes.Pregrado.First(x => x.Key.Equals(2)).Value
             };
 
             return reporte;
         }
 
-        public ReporteConceptosPorUnaFacultadViewModel ReporteConceptosPorUnaFacultad(string codFac, DateTime fechaInicio, DateTime fechaFin)
+        public ReporteConceptosPorUnaFacultadViewModel ReporteConceptosPorUnaFacultad(string codFac, DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc)
         {
-            var pagos = reporteService.ReporteConceptosPorUnaFacultad(codFac, fechaInicio, fechaFin);
+            var pagos = reporteService.ReporteConceptosPorUnaFacultad(codFac, fechaInicio, fechaFin, idEntidanFinanc);
 
             var reporte = new ReporteConceptosPorUnaFacultadViewModel(pagos)
             {
                 Facultad = pagos.Count() > 0 ? pagos.FirstOrDefault().T_FacDesc : "",
                 FechaInicio = fechaInicio.ToString(FormatosDateTime.BASIC_DATE),
                 FechaFin = fechaFin.ToString(FormatosDateTime.BASIC_DATE),
-                Titulo = "Reporte de Pagos por Facultad"
+                Titulo = Reportes.Pregrado.First(x => x.Key.Equals(3)).Value
             };
 
             return reporte;

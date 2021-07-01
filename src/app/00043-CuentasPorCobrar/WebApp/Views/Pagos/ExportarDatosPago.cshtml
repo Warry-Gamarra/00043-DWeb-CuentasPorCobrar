@@ -46,36 +46,12 @@
                                     @Html.DropDownListFor(model => model.E_TipoEstudio, new SelectList(ViewBag.TipoEstudios, "Value", "TextDisplay"), null, new { @class = "form-control form-control-sm" })
                                 </div>
                                 <div class="form-group col-xl-3 col-lg-8 col-md-8 col-sm-12 col-12">
-                                    <label for="T_Facultad">Facultades/Especialidades</label>
-                                    @Html.DropDownListFor(model => model.T_Facultad, new SelectList(ViewBag.Facultades, "Value", "TextDisplay"), "TODOS", new { @class = "form-control form-control-sm" })
+                                    <label for="T_Dependencia">Facultades/Posgrado</label>
+                                    @Html.DropDownListFor(model => model.T_Dependencia, new SelectList(ViewBag.Dependencias, "Value", "TextDisplay"), "TODOS", new { @class = "form-control form-control-sm" })
                                 </div>
                                 <div class="form-group col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12">
                                     <label for="I_EntidadFinanciera">Banco</label>
                                     @Html.DropDownListFor(model => model.I_EntidadFinanciera, new SelectList(ViewBag.EntidadesFinancieras, "Value", "TextDisplay"), null, new { @class = "form-control form-control-sm" })
-                                </div>
-                                <div class="form-group col-xl-4 col-lg-12 col-md-12 col-sm-12 col-12">
-                                    <div id="datepicker">
-                                        <div class="input-daterange">
-                                            <div class="form-group col-lg-6 col-md-6 col-sm-12 col-12" style="padding-left: 0px;">
-                                                <label for="T_FechaDesde">Obl. Generadas Desde</label>
-                                                <div class="input-group">
-                                                    @Html.TextBoxFor(model => model.T_FechaDesde, "{0:dd/MM/yyyy}", new { @class = "form-control form-control-sm", @placeholder = "Fecha inicio" })
-                                                    <div class="input-group-append">
-                                                        <span class="input-group-text"><i class="fa fa-calendar-o"></i></span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group col-lg-6 col-md-6 col-sm-12 col-12" style="padding-left: 0px;">
-                                                <label for="T_FechaHasta">Obl. Generadas Hasta</label>
-                                                <div class="input-group">
-                                                    @Html.TextBoxFor(model => model.T_FechaHasta, "{0:dd/MM/yyyy}", new { @class = "form-control form-control-sm", @placeholder = "Fecha final" })
-                                                    <div class="input-group-append">
-                                                        <span class="input-group-text"><i class="fa fa-calendar-o"></i></span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                             <div class="form-row">
@@ -101,19 +77,6 @@
 
 @section Scripts {
     <script>
-        $('#datepicker .input-daterange').datepicker({
-            todayBtn: 'linked',
-            language: 'es',
-            format: 'dd/mm/yyyy',
-            autoclose: true,
-            weekStart: 0
-        }).on('hide', function (e) {
-            e.stopPropagation();
-        });
-
-        $('#datepicker .input-daterange #T_FechaDesde').datepicker('update', "@Model.T_FechaDesde");
-        $('#datepicker .input-daterange #T_FechaHasta').datepicker('update', "@Model.T_FechaHasta");
-
         function CargarEntidadesFinanciera(anio, periodo, tipoEstudio) {
             let cmbEntidadFinanciera = $('#I_EntidadFinanciera');
 
@@ -140,8 +103,8 @@
             });
         }
 
-        function CargarFacultades(tipoEstudio) {
-            let cmbFacultad = $('#T_Facultad');
+        function CargarDependencias(tipoEstudio) {
+            let cmbDependencia = $('#T_Dependencia');
 
             let parametros = {
                 tipoEstudio: tipoEstudio
@@ -149,21 +112,21 @@
 
             $.ajax({
                 type: 'GET',
-                url: '@Url.Action("ObtenerFacultades", "Obligaciones")',
+                url: ('@Url.Action("GetFacultades", "Service", new { httproute = "ActionApi" })'),
                 data: parametros,
                 dataType: 'json',
                 beforeSend: function () {
-                    cmbFacultad.html('');
+                    cmbDependencia.html('');
                 },
                 success: function (data) {
                     if (data && data.length > 0) {
-                        let html = (tipoEstudio === 'Pregrado') ? '<option value="">TODOS</option>' : '';
+                        let html = '<option value="">TODOS</option>';
 
                         $.each(data, function (i, item) {
                             html += '<option value="' + item.Value + '">' + item.TextDisplay + '</option>'
                         });
 
-                        cmbFacultad.html(html);
+                        cmbDependencia.html(html);
                     }
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
@@ -192,7 +155,7 @@
             let periodo = $('#I_Periodo').val();
             let tipoEstudio = $(this).val();
 
-            CargarFacultades(tipoEstudio);
+            CargarDependencias(tipoEstudio);
             CargarEntidadesFinanciera(anio, periodo, tipoEstudio);
         });
 

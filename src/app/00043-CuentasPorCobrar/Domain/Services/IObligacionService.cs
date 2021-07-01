@@ -13,7 +13,7 @@ namespace Domain.Services
     {
         Response Generar_Obligaciones_Pregrado(int anio, int periodo, string codFacultad, int currentUserID);
 
-        Response Generar_Obligaciones_Posgrado(int anio, int periodo, int currentUserID);
+        Response Generar_Obligaciones_Posgrado(int anio, int periodo, string codGrado, int currentUserID);
 
         Response Generar_ObligacionesPregrado_PorAlumno(int anio, int periodo, string codAlu, string codRc, int currentUserID);
 
@@ -23,7 +23,7 @@ namespace Domain.Services
 
         IEnumerable<CuotaPagoDTO> Obtener_CuotasPago(int anio, int periodo, string codAlu, string codRc);
 
-        IEnumerable<CuotaPagoDTO> Obtener_CuotasPago_X_Proceso(int anio, int periodo, TipoEstudio tipoEstudio, string codFac, DateTime? fechaDesde, DateTime? fechaHasta);
+        IEnumerable<CuotaPagoDTO> Obtener_CuotasPago_X_Proceso(int anio, int periodo, TipoEstudio tipoEstudio, string codDependencia);
 
         Response Grabar_Pago_Obligaciones(List<PagoObligacionEntity> dataPagoObligaciones, int currentUserID);
 

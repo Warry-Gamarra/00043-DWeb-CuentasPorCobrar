@@ -94,6 +94,7 @@
     <Compile Include="Entities\TasaDTO.cs" />
     <Compile Include="Helpers\Constantes.cs" />
     <Compile Include="Helpers\MultaNoVotarResponse.cs" />
+    <Compile Include="Helpers\Reportes.cs" />
     <Compile Include="Helpers\Tipos.cs" />
     <Compile Include="Helpers\DataMatriculaResponse.cs" />
     <Compile Include="Entities\CuotaPagoDTO.cs" />
@@ -158,6 +159,7 @@
     <Compile Include="Services\Implementations\ProcesoService.cs" />
     <Compile Include="Services\ConceptoPagoService.cs" />
     <Compile Include="UnfvRepositorioClient\AlumnoModel.cs" />
+    <Compile Include="UnfvRepositorioClient\EscuelaModel.cs" />
     <Compile Include="UnfvRepositorioClient\IProgramasClient.cs" />
     <Compile Include="UnfvRepositorioClient\ProgramasClient.cs" />
     <Compile Include="UnfvRepositorioClient\UnfvRepositorioClientConfiguration.cs" />

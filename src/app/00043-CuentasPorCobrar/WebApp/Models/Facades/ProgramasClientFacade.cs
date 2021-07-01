@@ -20,6 +20,7 @@ namespace WebApp.Models.Facades
         public IEnumerable<SelectViewModel> GetFacultades(TipoEstudio tipoEstudio)
         {
             IEnumerable<FacultadModel> facultades;
+            IEnumerable<EscuelaModel> posgrado;
             IEnumerable<SelectViewModel> result;
 
             try
@@ -40,13 +41,13 @@ namespace WebApp.Models.Facades
                         break;
 
                     case TipoEstudio.Posgrado:
-                        facultades = programasClient.GetFacultades();
+                        posgrado = programasClient.GetEscuelas("EP");
 
-                        result = facultades.Where(f => f.CodFac == "EP").Select(x => new SelectViewModel()
+                        result = posgrado.Select(x => new SelectViewModel()
                         {
-                            Value = x.CodFac,
-                            TextDisplay = x.FacDesc
-                        });
+                            Value = x.CodEsc,
+                            TextDisplay = x.EscDesc
+                        }).OrderByDescending(f => f.TextDisplay);
 
                         break;
 

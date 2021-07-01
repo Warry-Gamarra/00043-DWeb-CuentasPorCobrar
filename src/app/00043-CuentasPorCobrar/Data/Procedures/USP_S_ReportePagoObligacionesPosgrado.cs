@@ -17,13 +17,14 @@ namespace Data.Procedures
         public int I_ConceptoID { get; set; }
         public string T_Clasificador { get; set; }
         public string T_ConceptoPagoDesc { get; set; }
+        public int I_Cantidad { get; set; }
         public decimal I_MontoTotal { get; set; }
 
-        private static readonly int AgrupaPorGrado = 1;
-        private static readonly int AgrupaPorConcepto = 2;
-        private static readonly int ConceptoPorGrado = 3;
+        public static readonly int AgrupaPorGrado = 1;
+        public static readonly int AgrupaPorConcepto = 2;
+        public static readonly int ConceptoPorGrado = 3;
 
-        public static IEnumerable<USP_S_ReportePagoObligacionesPosgrado> PagosPorGrado(DateTime fechaInicio, DateTime fechaFin)
+        public static IEnumerable<USP_S_ReportePagoObligacionesPosgrado> PagosPorGrado(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc)
         {
             IEnumerable<USP_S_ReportePagoObligacionesPosgrado> result;
             DynamicParameters parameters;
@@ -36,7 +37,7 @@ namespace Data.Procedures
                 parameters.Add(name: "I_TipoReporte", dbType: DbType.Int32, value: AgrupaPorGrado);
                 parameters.Add(name: "D_FechaIni", dbType: DbType.Date, value: fechaInicio);
                 parameters.Add(name: "D_FechaFin", dbType: DbType.Date, value: fechaFin);
-
+                parameters.Add(name: "I_EntidadFinanID", dbType: DbType.Int32, value: idEntidanFinanc);
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
@@ -51,7 +52,7 @@ namespace Data.Procedures
             return result;
         }
 
-        public static IEnumerable<USP_S_ReportePagoObligacionesPosgrado> PagosPorConcepto(DateTime fechaInicio, DateTime fechaFin)
+        public static IEnumerable<USP_S_ReportePagoObligacionesPosgrado> PagosPorConcepto(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc)
         {
             IEnumerable<USP_S_ReportePagoObligacionesPosgrado> result;
             DynamicParameters parameters;
@@ -64,7 +65,7 @@ namespace Data.Procedures
                 parameters.Add(name: "I_TipoReporte", dbType: DbType.Int32, value: AgrupaPorConcepto);
                 parameters.Add(name: "D_FechaIni", dbType: DbType.Date, value: fechaInicio);
                 parameters.Add(name: "D_FechaFin", dbType: DbType.Date, value: fechaFin);
-
+                parameters.Add(name: "I_EntidadFinanID", dbType: DbType.Int32, value: idEntidanFinanc);
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
@@ -79,7 +80,7 @@ namespace Data.Procedures
             return result;
         }
 
-        public static IEnumerable<USP_S_ReportePagoObligacionesPosgrado> ConceptosPorGrado(string codEsc, DateTime fechaInicio, DateTime fechaFin)
+        public static IEnumerable<USP_S_ReportePagoObligacionesPosgrado> ConceptosPorGrado(string codEsc, DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc)
         {
             IEnumerable<USP_S_ReportePagoObligacionesPosgrado> result;
             DynamicParameters parameters;
@@ -93,7 +94,7 @@ namespace Data.Procedures
                 parameters.Add(name: "C_CodEsc", dbType: DbType.String, value: codEsc);
                 parameters.Add(name: "D_FechaIni", dbType: DbType.Date, value: fechaInicio);
                 parameters.Add(name: "D_FechaFin", dbType: DbType.Date, value: fechaFin);
-
+                parameters.Add(name: "I_EntidadFinanID", dbType: DbType.Int32, value: idEntidanFinanc);
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {

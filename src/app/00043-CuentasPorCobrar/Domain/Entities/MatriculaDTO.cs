@@ -28,6 +28,12 @@ namespace Domain.Entities
 
         public string C_CodFac { get; set; }
 
+        public string T_FacDesc { get; set; }
+
+        public string C_CodEsc { get; set; }
+
+        public string T_EscDesc { get; set; }
+
         public string C_EstMat { get; set; }
 
         public string C_Ciclo { get; set; }
