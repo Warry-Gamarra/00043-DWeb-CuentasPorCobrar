@@ -171,7 +171,6 @@ CREATE TABLE TC_ProgramaUnfv
 	T_DenomProg          varchar(250)  NOT NULL ,
 	T_Resolucion         varchar(250)  NULL ,
 	T_DenomGrado         varchar(250)  NULL ,
-	T_DenomTitulo        varchar(500)  NULL ,
 	C_CodModEst          varchar(5)  NULL ,
 	B_SegundaEsp         bit  NOT NULL ,
 	B_Habilitado         bit  NOT NULL ,
@@ -186,7 +185,7 @@ CREATE TABLE TC_ProgramaUnfv
 	CONSTRAINT FK_CarreraProfesional_ProgramaPregrado FOREIGN KEY (C_RcCod) REFERENCES TI_CarreraProfesional(C_RcCod)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION,
-	CONSTRAINT TC_GradoAcademico_ProgramaUnfv FOREIGN KEY (C_CodGrado) REFERENCES TC_GradoAcademico(C_CodGrado)
+	CONSTRAINT FK_GradoAcademico_ProgramaUnfv FOREIGN KEY (C_CodGrado) REFERENCES TC_GradoAcademico(C_CodGrado)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION,
 	CONSTRAINT FK_ModalidadEstudio_ProgramaUnfv FOREIGN KEY (C_CodModEst) REFERENCES TC_ModalidadEstudio(C_CodModEst)
@@ -198,6 +197,24 @@ CREATE TABLE TC_ProgramaUnfv
 )
 go
 
+
+CREATE TABLE TC_TituloProfesional
+( 
+	I_TituloProfID       int IDENTITY ( 1,1 ) ,
+	C_CodProg            varchar(10)  NOT NULL ,
+	T_DenomTitulo        varchar(500)  NOT NULL ,
+	B_Habilitado         bit  NOT NULL ,
+	B_Eliminado          bit  NOT NULL ,
+	I_UsuarioCre         int  NULL ,
+	D_FecCre             datetime  NULL ,
+	I_UsuarioMod         int  NULL ,
+	D_FecMod             datetime  NULL ,
+	CONSTRAINT PK_TituloProfesional PRIMARY KEY  CLUSTERED (I_TituloProfID ASC),
+	CONSTRAINT FK_ProgramaUnfv_TituloProfesional FOREIGN KEY (C_CodProg) REFERENCES TC_ProgramaUnfv(C_CodProg)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+)
+go
 
 
 CREATE TABLE TC_TipoDocumentoIdentidad
