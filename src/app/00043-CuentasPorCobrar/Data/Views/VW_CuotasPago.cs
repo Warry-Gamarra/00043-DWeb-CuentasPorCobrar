@@ -68,6 +68,14 @@ namespace Data.Views
 
         public string C_CodServicio { get; set; }
 
+        public string C_NumeroCuenta { get; set; }
+
+        public string T_EntidadDesc { get; set; }
+
+        public string T_FacDesc { get; set; }
+
+        public string T_DenomProg { get; set; }
+
         public static IEnumerable<VW_CuotasPago> FindByAlumno(int anio, int periodo, string codAlu, string codRc)
         {
             IEnumerable<VW_CuotasPago> result;
@@ -98,8 +106,10 @@ namespace Data.Views
 
             try
             {
+                codFac = String.IsNullOrEmpty(codFac) ? null : codFac;
+
                 string s_command = @"SELECT * FROM dbo.VW_CuotasPago c 
-                    WHERE c.I_Anio = @I_Anio AND c.I_Periodo = @I_Periodo AND c.B_Pagado = 0 AND
+                    WHERE c.I_Anio = @I_Anio AND c.I_Periodo = @I_Periodo AND 
                         c.C_Nivel = '1' AND c.C_CodFac = ISNULL(@C_CodFac, c.C_CodFac)";
 
                 var parameters = new { I_Anio = anio, I_Periodo = periodo, C_CodFac = codFac };
@@ -123,8 +133,10 @@ namespace Data.Views
 
             try
             {
+                codPosgrado = String.IsNullOrEmpty(codPosgrado) ? null : codPosgrado;
+
                 string s_command = @"SELECT * FROM dbo.VW_CuotasPago c 
-                    WHERE c.I_Anio = @I_Anio AND c.I_Periodo = @I_Periodo AND c.B_Pagado = 0 AND c.C_Nivel IN ('2', '3')
+                    WHERE c.I_Anio = @I_Anio AND c.I_Periodo = @I_Periodo AND c.C_Nivel IN ('2', '3')
                         AND c.C_CodEsc = ISNULL(@C_CodEsc, c.C_CodEsc)";
 
                 var parameters = new { I_Anio = anio, I_Periodo = periodo, C_CodEsc = codPosgrado };

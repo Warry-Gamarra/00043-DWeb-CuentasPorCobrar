@@ -21,7 +21,8 @@ namespace WebApp.Controllers
         IObligacionServiceFacade obligacionServiceFacade;
         IAlumnosClientFacade alumnosClientFacade;
         IProgramasClientFacade programasClientFacade;
-        
+        IMatriculaServiceFacade matriculaServiceFacade;
+
         public ObligacionesController()
         {
             generalServiceFacade = new GeneralServiceFacade();
@@ -29,9 +30,10 @@ namespace WebApp.Controllers
             obligacionServiceFacade = new ObligacionServiceFacade();
             alumnosClientFacade = new AlumnosClientFacade();
             programasClientFacade = new ProgramasClientFacade();
+            matriculaServiceFacade = new MatriculaServiceFacade();
         }
 
-        public ActionResult Generar()
+        public ActionResult Generar(int? cmbAnioGrupal, int? cmbPeriodoGrupal, string cmbDependencia, TipoEstudio cmbTipoEstudio = TipoEstudio.Pregrado)
         {
             ViewBag.Title = "Generar Obligaciones";
 
@@ -40,7 +42,9 @@ namespace WebApp.Controllers
             ViewBag.Periodos = catalogoServiceFacade.Listar_Periodos();
 
             ViewBag.TipoEstudios = generalServiceFacade.Listar_TipoEstudios();
-            
+
+            IEnumerable<CuotaPagoModel> cuotas_pago;
+
             if (TempData["result"] == null)
             {
                 ViewBag.CurrentYear = DateTime.Now.Year;
@@ -48,6 +52,11 @@ namespace WebApp.Controllers
                 ViewBag.DefaultTipoEstudio = TipoEstudio.Pregrado;
                 ViewBag.DefaultDependencia = "";
                 ViewBag.Dependencias = programasClientFacade.GetFacultades(TipoEstudio.Pregrado);
+
+                if (cmbAnioGrupal.HasValue && cmbPeriodoGrupal.HasValue)
+                    cuotas_pago = obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(cmbAnioGrupal.Value, cmbPeriodoGrupal.Value, cmbTipoEstudio, cmbDependencia);
+                else
+                    cuotas_pago = new List<CuotaPagoModel>();
             }
             else
             {
@@ -60,9 +69,11 @@ namespace WebApp.Controllers
                 ViewBag.Dependencias = programasClientFacade.GetFacultades((TipoEstudio)TempData["tipoEstudio"]);
                 ViewBag.Success = result.Value;
                 ViewBag.Message = result.Message;
+
+                cuotas_pago = new List<CuotaPagoModel>();
             }
 
-            return View();
+            return View(cuotas_pago);
         }
 
         [HttpPost]

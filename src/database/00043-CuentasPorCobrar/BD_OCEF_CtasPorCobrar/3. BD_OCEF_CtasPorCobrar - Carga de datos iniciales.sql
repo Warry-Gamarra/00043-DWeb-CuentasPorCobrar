@@ -10,31 +10,43 @@ GO
 --GO
 
 
-INSERT TC_Parametro(T_ParametroDesc, B_Habilitado, B_Eliminado) VALUES('TIPO ALUMNO', 1, 0)
+SET IDENTITY_INSERT TC_Parametro on
+INSERT TC_Parametro(I_ParametroID, T_ParametroDesc, B_Habilitado, B_Eliminado) VALUES(1, 'TIPO ALUMNO', 1, 0)
+SET IDENTITY_INSERT TC_Parametro off
+
 INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(1, 'Alum. Regulares', '1', 1, 0)
 INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(1, 'Alumn. Ingresantes', '2', 1, 0)
 INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(1, 'Todos', '3', 1, 0)
+GO
 
+SET IDENTITY_INSERT TC_Parametro on
+INSERT TC_Parametro(I_ParametroID, T_ParametroDesc, B_Habilitado, B_Eliminado) VALUES(2, 'GRADO', 1, 0)
+SET IDENTITY_INSERT TC_Parametro off
 
-INSERT TC_Parametro(T_ParametroDesc, B_Habilitado, B_Eliminado) VALUES('GRADO', 1, 0)
 INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(2, 'Pre Grado', '1', 1, 0)
 INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(2, 'Post.G.(Maestría)', '2', 1, 0)
 INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(2, 'Post.G.(Doctorado)', '3', 1, 0)
 INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(2, 'Sec.Post.G', '4', 1, 0)
 INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(2, 'Todos', '5', 1, 0)
+GO
 
+SET IDENTITY_INSERT TC_Parametro on
+INSERT TC_Parametro(I_ParametroID, T_ParametroDesc, B_Habilitado, B_Eliminado) VALUES(3, 'TIPO OBLIGACIÓN', 1, 0)
+SET IDENTITY_INSERT TC_Parametro off
 
-INSERT TC_Parametro(T_ParametroDesc, B_Habilitado, B_Eliminado) VALUES('TIPO OBLIGACIÓN', 1, 0)
 INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(3, 'Matrícula', '1', 1, 0)
 INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(3, 'Otros pagos', '0', 1, 0)
+GO
 
+SET IDENTITY_INSERT TC_Parametro on
+INSERT TC_Parametro(I_ParametroID, T_ParametroDesc, B_Habilitado, B_Eliminado) VALUES(4, 'CAMPO CALCULADO', 1, 0)
+SET IDENTITY_INSERT TC_Parametro off
 
-INSERT TC_Parametro(T_ParametroDesc, B_Habilitado, B_Eliminado) VALUES('CAMPO CALCULADO', 1, 0)
 INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(4, 'Crd. Desaprobados', '1', 1, 0)
 INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(4, 'Deudas Anteriores', '2', 1, 0)
 INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(4, 'Pensión de enseñanza', '3', 1, 0)
 INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(4, 'No Voto', '4', 1, 0)
-
+GO
 
 /* -------------------------------- TC_EntidadFinanciera - TC_CuentaDeposito ------------------------------------ */
 
@@ -57,7 +69,8 @@ INSERT TC_CuentaDeposito(I_EntidadFinanID, C_NumeroCuenta, B_Habilitado, B_Elimi
 INSERT TC_CuentaDeposito(I_EntidadFinanID, C_NumeroCuenta, B_Habilitado, B_Eliminado) VALUES(1, '110-01-0451398', 1, 0)
 
 
-INSERT TC_CuentaDeposito(I_EntidadFinanID, C_NumeroCuenta, B_Habilitado, B_Eliminado) VALUES(2, '119-104146435-1-01', 1, 0)
+INSERT TC_CuentaDeposito(I_EntidadFinanID, C_NumeroCuenta, B_Habilitado, B_Eliminado) VALUES(2, '191-9398126-0-63', 1, 0)--ADMISION UNFV
+INSERT TC_CuentaDeposito(I_EntidadFinanID, C_NumeroCuenta, B_Habilitado, B_Eliminado) VALUES(2, '191-9398127-0-73', 1, 0)--MATRICULA Y PENSIONES
 GO
 
 
@@ -80,41 +93,41 @@ INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Priorida
 INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (9, N'PENSIÓN EUPG DOCTORADO INGRESANTE', '0681', 2, 1, 6, 2, 1, 0)
 INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (10, N'PENSIÓN EUPG DOCTORADO REGULAR', '0680', 2, 1, 6, 1, 1, 0)
 																																							 
-INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (11, N'DEUDA ANTERIOR EUPG MAESTRÍA', '0682', 1, 1, 5, 2, 1, 0)
-INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (12, N'DEUDA ANTERIOR EUPG DOCTORADO', '0683', 1, 1, 6, 3, 1, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (11, N'DEUDA ANTERIOR EUPG MAESTRÍA', '0682', 1, 1, 5, 2, 0, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (12, N'DEUDA ANTERIOR EUPG DOCTORADO', '0683', 1, 1, 6, 3, 0, 0)
 																																							 
-INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (13, N'OTROS PAGOS PREGRADO INGRESANTE', '0638', 2, 1, 4, 2, 1, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (13, N'OTROS PAGOS PREGRADO INGRESANTE', '0638', 2, 1, 4, 2, 0, 0)
 INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (14, N'OTROS PAGOS PREGRADO REGULAR', '0637', 2, 1, 4, 1, 1, 0)
-INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (15, N'OTROS PAGOS EUPG INGRESANTE', '0698', 2, 1, 7, 2, 1, 0)
-INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (16, N'OTROS PAGOS EUPG REGULAR', '0695', 2, 1, 7, 1, 1, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (15, N'OTROS PAGOS EUPG INGRESANTE', '0698', 2, 1, 7, 2, 0, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (16, N'OTROS PAGOS EUPG REGULAR', '0695', 2, 1, 7, 1, 0, 0)
 
-INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (17, N'MATRÍCULA EUDED INGRESANTE', '0685', 1, 1, 4, 2, 1, 0)
-INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (18, N'MATRÍCULA EUDED REGULAR', '0685', 1, 1, 4, 1, 1, 0)
-INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (19, N'PENSIÓN EUDED INGRESANTE', '0688', 2, 1, 4, 2, 1, 0)
-INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (20, N'PENSIÓN EUDED REGULAR', '0687', 2, 1, 4, 1, 1, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (17, N'MATRÍCULA EUDED INGRESANTE', '0685', 1, 1, 4, 2, 0, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (18, N'MATRÍCULA EUDED REGULAR', '0685', 1, 1, 4, 1, 0, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (19, N'PENSIÓN EUDED INGRESANTE', '0688', 2, 1, 4, 2, 0, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (20, N'PENSIÓN EUDED REGULAR', '0687', 2, 1, 4, 1, 0, 0)
 
 
-INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (21, N'MATRÍCULA EUPG MAESTRÍA SEMIPRESENCIAL INGRESANTE', '0672', 1, 1, 5, 2, 1, 0)
-INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (22, N'MATRÍCULA EUPG MAESTRÍA SEMIPRESENCIAL REGULAR', '0672', 1, 1, 5, 1, 1, 0)
-INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (23, N'MATRÍCULA EUPG DOCTORADO SEMIPRESENCIAL INGRESANTE', '0673', 1, 1, 6, 2, 1, 0)
-INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (24, N'MATRÍCULA EUPG DOCTORADO SEMIPRESENCIAL REGULAR', '0673', 1, 1, 6, 1, 1, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (21, N'MATRÍCULA EUPG MAESTRÍA SEMIPRESENCIAL INGRESANTE', '0672', 1, 1, 5, 2, 0, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (22, N'MATRÍCULA EUPG MAESTRÍA SEMIPRESENCIAL REGULAR', '0672', 1, 1, 5, 1, 0, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (23, N'MATRÍCULA EUPG DOCTORADO SEMIPRESENCIAL INGRESANTE', '0673', 1, 1, 6, 2, 0, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (24, N'MATRÍCULA EUPG DOCTORADO SEMIPRESENCIAL REGULAR', '0673', 1, 1, 6, 1, 0, 0)
 
-INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (25, N'PENSION EUPG MAESTRÍA SEMIPRESENCIAL INGRESANTE', '0677', 1, 1, 5, 2, 1, 0)
-INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (26, N'PENSION EUPG MAESTRÍA SEMIPRESENCIAL REGULAR', '0677', 1, 1, 5, 1, 1, 0)
-INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (27, N'PENSION EUPG DOCTORADO SEMIPRESENCIAL INGRESANTE', '0676', 1, 1, 6, 2, 1, 0)
-INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (28, N'PENSION EUPG DOCTORADO SEMIPRESENCIAL REGULAR', '0676', 1, 1, 6, 1, 1, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (25, N'PENSION EUPG MAESTRÍA SEMIPRESENCIAL INGRESANTE', '0677', 1, 1, 5, 2, 0, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (26, N'PENSION EUPG MAESTRÍA SEMIPRESENCIAL REGULAR', '0677', 1, 1, 5, 1, 0, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (27, N'PENSION EUPG DOCTORADO SEMIPRESENCIAL INGRESANTE', '0676', 1, 1, 6, 2, 0, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (28, N'PENSION EUPG DOCTORADO SEMIPRESENCIAL REGULAR', '0676', 1, 1, 6, 1, 0, 0)
 
-INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (29, N'PENSION EUPG MAESTRÍA PERIODO ANTERIOR', '0696', 1, 1, 5, 1, 1, 0)
-INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (30, N'PENSION EUPG DOCTORADO PERIODO ANTERIOR', '0697', 1, 1, 6, 1, 1, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (29, N'PENSION EUPG MAESTRÍA PERIODO ANTERIOR', '0696', 1, 1, 5, 1, 0, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (30, N'PENSION EUPG DOCTORADO PERIODO ANTERIOR', '0697', 1, 1, 6, 1, 0, 0)
 
-INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (31, N'PENSION PROLICED REGULAR', '0689', 1, 1, 6, 1, 1, 0)
-INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (32, N'MATRÍCULA PROLICED REGULAR', '0690', 1, 1, 6, 1, 1, 0)
-INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (33, N'MATRÍCULA PROCUNED REGULAR', '0691', 1, 1, 6, 1, 1, 0)
-INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (34, N'PENSION PROCUNED REGULAR', '0692', 1, 1, 6, 1, 1, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (31, N'PENSION PROLICED REGULAR', '0689', 1, 1, 6, 1, 0, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (32, N'MATRÍCULA PROLICED REGULAR', '0690', 1, 1, 6, 1, 0, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (33, N'MATRÍCULA PROCUNED REGULAR', '0691', 1, 1, 6, 1, 0, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (34, N'PENSION PROCUNED REGULAR', '0692', 1, 1, 6, 1, 0, 0)
 
-INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (35, N'SERVICIO DE SALUD', '0636', 2, 1, 4, 3, 1, 0)
+INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (35, N'SERVICIO DE SALUD', '0636', 2, 1, 4, 3, 0, 0)
 
-INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (36, N'OTRAS TASAS SIN OBLIGACIÓN', NULL, 2, 0, 8, 3, 1, 0)
+--INSERT INTO TC_CategoriaPago (I_CatPagoID, T_CatPagoDesc, N_CodBanco, I_Prioridad, B_Obligacion, I_Nivel, I_TipoAlumno, B_Habilitado, B_Eliminado) VALUES (36, N'OTRAS TASAS SIN OBLIGACIÓN', NULL, 2, 0, 8, 3, 1, 0)
 
 SET IDENTITY_INSERT TC_CategoriaPago off
 GO
@@ -181,34 +194,40 @@ INSERT INTO TC_DependenciaUNFV (C_DepCod, C_DepCodPl, T_DepDesc, B_Habilitado, B
 GO
 
 
-INSERT TC_Parametro(T_ParametroDesc, B_Habilitado, B_Eliminado) VALUES('PERIODOS', 1, 0)
+SET IDENTITY_INSERT TC_Parametro on
+INSERT TC_Parametro(I_ParametroID, T_ParametroDesc, B_Habilitado, B_Eliminado) VALUES(5, 'PERIODOS', 1, 0)
+SET IDENTITY_INSERT TC_Parametro off
+
 INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'ANUAL', 'A', 1, 0)
-INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'REGULARIZ. CURSADA', 'G', 1, 0)
-INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'SUBSANACION', 'S', 1, 0)
-INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'EXAMENES EXTRAORDINA', 'E', 1, 0)
+INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'REGULARIZ. CURSADA', 'G', 0, 0)
+INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'SUBSANACION', 'S', 0, 0)
+INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'EXAMENES EXTRAORDINA', 'E', 0, 0)
 INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'SEMESTRAL (1)', '1', 1, 0)
 INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'SEMESTRAL (2)', '2', 1, 0)
-INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'NIVELACION', 'N', 1, 0)
-INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'REGULARIZACION', 'R', 1, 0)
-INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'APLAZADOS', 'L', 1, 0)
-INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'VERANO O VACACIONAL', 'V', 1, 0)
-INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'CARGO', 'C', 1, 0)
-INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'CONVALIDACION', 'D', 1, 0)
-INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'APLAZADOS', 'P', 1, 0)
-INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'COMPLEMENTACION ACAD', 'M', 1, 0)
-INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'SUBSANACION (COMPLE)', 'B', 1, 0)
-INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'ADELANTO', '0', 1, 0)
-INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'RECONOCIMIENTO', 'T', 1, 0)
-INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'CONV.MOVIL.ESTUDIANT', 'K', 1, 0)
-INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'CICLO ESPECIAL', 'Z', 1, 0)
-INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'CICLO EXTRAORDINARIO', 'X', 1, 0)
-INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'ADELANTO EXTRAORDINA', 'I', 1, 0)
-INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'ESPECIAL CECCPUE', 'W', 1, 0)
-INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'EVALUACION ESPECIAL', 'U', 1, 0)
+INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'NIVELACION', 'N', 0, 0)
+INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'REGULARIZACION', 'R', 0, 0)
+INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'APLAZADOS', 'L', 0, 0)
+INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'VERANO O VACACIONAL', 'V', 0, 0)
+INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'CARGO', 'C', 0, 0)
+INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'CONVALIDACION', 'D', 0, 0)
+INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'APLAZADOS', 'P', 0, 0)
+INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'COMPLEMENTACION ACAD', 'M', 0, 0)
+INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'SUBSANACION (COMPLE)', 'B', 0, 0)
+INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'ADELANTO', '0', 0, 0)
+INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'RECONOCIMIENTO', 'T', 0, 0)
+INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'CONV.MOVIL.ESTUDIANT', 'K', 0, 0)
+INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'CICLO ESPECIAL', 'Z', 0, 0)
+INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'CICLO EXTRAORDINARIO', 'X', 0, 0)
+INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'ADELANTO EXTRAORDINA', 'I', 0, 0)
+INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'ESPECIAL CECCPUE', 'W', 0, 0)
+INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(5, 'EVALUACION ESPECIAL', 'U', 0, 0)
 GO
 
 
-INSERT TC_Parametro(T_ParametroDesc, B_Habilitado, B_Eliminado) VALUES('GRUPO COD_RC', 1, 0)
+SET IDENTITY_INSERT TC_Parametro on
+INSERT TC_Parametro(I_ParametroID, T_ParametroDesc, B_Habilitado, B_Eliminado) VALUES(6, 'GRUPO COD_RC', 1, 0)
+SET IDENTITY_INSERT TC_Parametro off
+
 INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(6, 'GRUPO 1', '1', 1, 0)
 INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(6, 'GRUPO 2', '2', 1, 0)
 INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(6, 'GRUPO 3', '3', 1, 0)
@@ -217,7 +236,10 @@ INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado,
 GO
 
 
-INSERT TC_Parametro(T_ParametroDesc, B_Habilitado, B_Eliminado) VALUES('COD INGRESO', 1, 0)
+SET IDENTITY_INSERT TC_Parametro on
+INSERT TC_Parametro(I_ParametroID, T_ParametroDesc, B_Habilitado, B_Eliminado) VALUES(7, 'COD INGRESO', 1, 0)
+SET IDENTITY_INSERT TC_Parametro off
+
 INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(7, 'ADMISION ORDINARIA', 'AD', 1, 0)
 INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(7, 'BACHILLER FAP (COMPLEMENTACION', 'BF', 1, 0)
 INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(7, 'CONV.COOP. Y COORD. TECN.ACAD.', 'CY', 1, 0)
@@ -298,7 +320,10 @@ INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado,
 GO
 
 
-INSERT TC_Parametro(T_ParametroDesc, B_Habilitado, B_Eliminado) VALUES('MOTIVO MATRICULA', 1, 0)
+SET IDENTITY_INSERT TC_Parametro on
+INSERT TC_Parametro(I_ParametroID, T_ParametroDesc, B_Habilitado, B_Eliminado) VALUES(8, 'MOTIVO MATRICULA', 1, 0)
+SET IDENTITY_INSERT TC_Parametro off
+
 INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(8, 'LICENCIA', 'L', 1, 0)
 INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(8, 'RESERVA DE MATRICULA', 'R', 1, 0)
 INSERT TC_CatalogoOpcion(I_ParametroID, T_OpcionDesc, T_OpcionCod, B_Habilitado, B_Eliminado) VALUES(8, 'ANULADO X R.RECTORAL', 'A', 1, 0)
@@ -357,18 +382,18 @@ SET IDENTITY_INSERT TS_CampoTablaPago OFF;
 */
 
 
-IF EXISTS (SELECT DISTINCT N_CTA_CTE FROM temporal_pagos..cp_des 
-			WHERE ELIMINADO = 0 AND NOT EXISTS (
-			SELECT * FROM TC_CuentaDeposito CD 
-			WHERE N_CTA_CTE COLLATE DATABASE_DEFAULT = C_NumeroCuenta COLLATE DATABASE_DEFAULT))
-BEGIN
-	INSERT TC_CuentaDeposito(I_EntidadFinanID, C_NumeroCuenta, B_Habilitado, B_Eliminado)
-	SELECT DISTINCT 1, N_CTA_CTE, 1, 0 FROM temporal_pagos..cp_des 
-			WHERE ELIMINADO = 0 AND NOT EXISTS (
-			SELECT * FROM TC_CuentaDeposito CD 
-			WHERE N_CTA_CTE COLLATE DATABASE_DEFAULT = C_NumeroCuenta COLLATE DATABASE_DEFAULT)
-END
-GO
+--IF EXISTS (SELECT DISTINCT N_CTA_CTE FROM temporal_pagos..cp_des 
+--			WHERE ELIMINADO = 0 AND NOT EXISTS (
+--			SELECT * FROM TC_CuentaDeposito CD 
+--			WHERE N_CTA_CTE COLLATE DATABASE_DEFAULT = C_NumeroCuenta COLLATE DATABASE_DEFAULT))
+--BEGIN
+--	INSERT TC_CuentaDeposito(I_EntidadFinanID, C_NumeroCuenta, B_Habilitado, B_Eliminado)
+--	SELECT DISTINCT 1, N_CTA_CTE, 1, 0 FROM temporal_pagos..cp_des 
+--			WHERE ELIMINADO = 0 AND NOT EXISTS (
+--			SELECT * FROM TC_CuentaDeposito CD 
+--			WHERE N_CTA_CTE COLLATE DATABASE_DEFAULT = C_NumeroCuenta COLLATE DATABASE_DEFAULT)
+--END
+--GO
 
 
 /* -------------------------------- TC_CuentaDeposito_CategoriaPago ------------------------------------ */
@@ -390,6 +415,11 @@ FROM TC_CategoriaPago CP
 				 WHERE CODIGO_BNC IS NULL AND ELIMINADO = 0
 ) BNC ON CP.N_CodBanco IS NULL
 GO
+
+INSERT TC_CuentaDeposito_CategoriaPago(I_CtaDepositoID, I_CatPagoID, B_Habilitado, B_Eliminado)
+SELECT c.I_CtaDepositoID, p.I_CatPagoID, 1, 0 FROM dbo.TC_CuentaDeposito c
+CROSS JOIN dbo.TC_CategoriaPago p 
+WHERE c.C_NumeroCuenta = '191-9398127-0-73' and p.B_Habilitado = 1
 
 
 /* -------------------------------- TC_Proceso - TI_CtaDepo_Proceso ------------------------------------ */

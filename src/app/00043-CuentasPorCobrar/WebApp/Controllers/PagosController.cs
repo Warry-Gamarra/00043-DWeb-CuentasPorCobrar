@@ -9,6 +9,8 @@ using WebApp.Models;
 using System.Globalization;
 using WebApp.ViewModels;
 using WebMatrix.WebData;
+using ClosedXML.Excel;
+using System.IO;
 
 namespace WebApp.Controllers
 {
@@ -67,7 +69,7 @@ namespace WebApp.Controllers
 
             ViewBag.EntidadesFinancieras = new List<SelectViewModel>();
 
-            var model = new FiltroEnvioObligacionesModel()
+            var model = new FiltroEnvioObligacionesViewModel()
             {
                 I_Anio = DateTime.Now.Year,
                 I_Periodo = 15,
@@ -80,7 +82,7 @@ namespace WebApp.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("operaciones/generar-archivos-pago")]
-        public ActionResult GenerarArchivosBancos(FiltroEnvioObligacionesModel model)
+        public ActionResult GenerarArchivosBancos(FiltroEnvioObligacionesViewModel model)
         {
             try
             {
@@ -171,7 +173,61 @@ namespace WebApp.Controllers
         {
             var result = pagosModel.CargarArchivoPagos(Server.MapPath("~/Upload/Pagos/"), file, model, WebSecurity.CurrentUserId);
 
+            Session["PAGO_OBLIG_RESULT"] = result.ListaResultados;
+
             return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public ActionResult DescargarResultadoPagoObligaciones()
+        {
+            if (Session["PAGO_OBLIG_RESULT"] == null)
+                return RedirectToAction("ImportarPagoObligaciones", "Pagos");
+
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.Worksheets.Add("PagoObligaciones");
+                var currentRow = 1;
+
+                #region Header
+                worksheet.Cell(currentRow, 1).Value = "CodOperacion";
+                worksheet.Cell(currentRow, 2).Value = "CodAlumno";
+                worksheet.Cell(currentRow, 3).Value = "NomAlumno";
+                worksheet.Cell(currentRow, 4).Value = "FechaPago";
+                worksheet.Cell(currentRow, 5).Value = "Cantidad";
+                worksheet.Cell(currentRow, 6).Value = "Moneda";
+                worksheet.Cell(currentRow, 7).Value = "MontoPago";
+                worksheet.Cell(currentRow, 8).Value = "LugarPago";
+                worksheet.Cell(currentRow, 9).Value = "Estado";
+                worksheet.Cell(currentRow, 10).Value = "Mensaje";
+
+                #endregion
+
+                #region Body
+                foreach (var item in (IEnumerable<Domain.Entities.PagoObligacionObsEntity>)Session["PAGO_OBLIG_RESULT"])
+                {
+                    currentRow++;
+                    worksheet.Cell(currentRow, 1).SetValue<string>(item.C_CodOperacion);
+                    worksheet.Cell(currentRow, 2).SetValue<string>(item.C_CodDepositante);
+                    worksheet.Cell(currentRow, 3).SetValue<string>(item.T_NomDepositante);
+                    worksheet.Cell(currentRow, 4).SetValue<string>(item.D_FecPago.ToString(FormatosDateTime.BASIC_DATETIME));
+                    worksheet.Cell(currentRow, 5).SetValue<string>(item.I_Cantidad.ToString());
+                    worksheet.Cell(currentRow, 6).SetValue<string>(item.C_Moneda);
+                    worksheet.Cell(currentRow, 7).SetValue<string>(item.I_MontoPago.ToString("N2"));
+                    worksheet.Cell(currentRow, 8).SetValue<string>(item.T_LugarPago);
+                    worksheet.Cell(currentRow, 9).SetValue<string>(item.B_Success ? "Correcto" : "Observado");
+                    worksheet.Cell(currentRow, 10).SetValue<string>(item.T_ErrorMessage);
+                }
+                #endregion
+
+                using (var stream = new MemoryStream())
+                {
+                    workbook.SaveAs(stream);
+                    var content = stream.ToArray();
+
+                    return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Resultado.xlsx");
+                }
+            }
         }
 
         [HttpGet]
@@ -197,7 +253,7 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult RegistrarPagoObligacion(PagoObligacionViewModel model)
         {
-            Response result = new Response();
+            ImportacionPagoResponse result = new ImportacionPagoResponse();
 
             if (ModelState.IsValid)
             {
@@ -209,7 +265,7 @@ namespace WebApp.Controllers
 
                     result = pagosModel.GrabarPagoObligacion(model, currentUserID);
 
-                    if (!result.Value)
+                    if (!result.Success)
                     {
                         throw new Exception(result.Message);
                     }

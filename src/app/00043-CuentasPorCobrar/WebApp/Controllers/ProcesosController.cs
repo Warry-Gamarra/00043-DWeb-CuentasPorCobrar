@@ -66,7 +66,7 @@ namespace WebApp.Controllers
         {
             ViewBag.Title = "Nueva Cuota de Pago";
 
-            ViewBag.Categorias = new SelectList(_categoriaPagoModel.Find(TipoObligacion.Matricula), "Id", "Nombre");
+            ViewBag.Categorias = new SelectList(_categoriaPagoModel.Find(TipoObligacion.Matricula).Where(x=>x.Habilitado), "Id", "Nombre");
             ViewBag.Periodos = new SelectList(_selectModel.GetPeriodosAcademicosCatalogo(), "Value", "TextDisplay", null);
             ViewBag.CtasDeposito = new SelectList(new List<SelectViewModel>());
 

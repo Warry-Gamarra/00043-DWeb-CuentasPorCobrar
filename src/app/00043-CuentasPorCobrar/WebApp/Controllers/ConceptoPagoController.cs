@@ -116,7 +116,9 @@ namespace WebApp.Controllers
                 ResponseModel.Error(result, "Ha ocurrido un error con el envio de datos.\n" + details);
             }
 
-            return PartialView("_MsgPartial", result);
+            ViewBag.ProcesoId = model.ConceptoPago.I_ProcesoID;
+
+            return PartialView("_MsgRegistrarConceptoObligacion", result);
         }
 
         private JsonResult JsonView(Response result, string viewName, object model)

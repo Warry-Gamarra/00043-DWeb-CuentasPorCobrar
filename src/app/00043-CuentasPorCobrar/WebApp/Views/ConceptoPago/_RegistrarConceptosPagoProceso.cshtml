@@ -180,7 +180,7 @@
             $(this).val(FormatearNumero($(this).val(), 0));
         })
 
-        $('#btn-return').on('click', function (event) {
+        $(document).on('click', '#btn-return', function (event) {
             event.preventDefault();
 
             let url = $(event.currentTarget).attr("href");

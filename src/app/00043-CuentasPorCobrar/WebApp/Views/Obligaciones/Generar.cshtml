@@ -1,4 +1,6 @@
-﻿<div class="container-fluid">
+﻿@model IEnumerable<WebApp.Models.CuotaPagoModel>
+
+<div class="container-fluid">
     <div class="col-12">
         <section class="content-header">
             <nav aria-label="breadcrumb">
@@ -31,7 +33,7 @@
                     <div class="tab-pane fade show active" id="grupal" role="tabpanel" aria-labelledby="grupal-tab">
                         <div class="card">
                             <div class="card-body bg-light-gray">
-                                <form id="frmGenerarOblig" action="@Url.Action("Generar", "Obligaciones")" method="POST">
+                                <form id="frmGenerarOblig" action="@Url.Action("Generar", "Obligaciones")" method="GET">
                                     <div class="form-row">
                                         <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
                                             <label for="cmbAnioGrupal">Año</label>
@@ -53,14 +55,21 @@
                                         </div>
 
                                         <div class="form-group col-lg-2 col-sm-3 col-12">
-                                            <button type="submit" class="btn btn-block btn-outline-primary mt-4">
-                                                <i class="fa fa-fw fa-engine">&nbsp;</i> Generar obligaciones
+                                            <button id="btnGenerarOblig" type="button" class="btn btn-block btn-outline-primary mt-4">
+                                                <i class="fa fa-fw fa-cogs"></i> Generar obligaciones
+                                            </button>
+                                        </div>
+
+                                        <div class="form-group col-lg-2 col-sm-3 col-12">
+                                            <button id="btnConsultaOblig" type="button" id="btnConsultarEstudiante" class="btn btn-block btn-outline-primary mt-4">
+                                                <i class="fa fa-fw fa-search-plus"></i> Iniciar consulta
                                             </button>
                                         </div>
                                     </div>
                                 </form>
                             </div>
                         </div>
+
                         <div class="card" id="generarObligMsj" style="margin-top: 5px;">
                             @if (ViewBag.Success != null)
                             {
@@ -78,6 +87,44 @@
                                     }
                                 </div>
                             }
+                        </div>
+
+                        <div class="table-responsive mt-4" style="max-height: 250px">
+                            <p class="h5">Obligaciones generadas</p>
+
+                            <table class="table table-sm table-hover">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>Año</th>
+                                        <th>Periodo</th>
+                                        <th>Codigo alumno</th>
+                                        <th>Alumno</th>
+                                        <th>Facultad</th>
+                                        <th>Especialidad</th>
+                                        <th>Cuota</th>
+                                        <th>Monto</th>
+                                        <th>Fec.Venc.</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                        @foreach (var item in Model)
+                                        {
+                                    <tr>
+                                        <td>@item.I_Anio</td>
+                                        <td>@item.T_Periodo</td>
+                                        <td>@item.C_CodAlu</td>
+                                        <td>@item.T_NombresCompletos</td>
+                                        <td>@item.T_FacDesc</td>
+                                        <td>@item.T_DenomProg</td>
+                                        <td>@item.T_ProcesoDesc</td>
+                                        <td>@item.T_MontoOblig</td>
+                                        <td>@item.T_FecVencto</td>
+                                        <td>@item.T_Pagado</td>
+                                    </tr>
+                                        }
+                                    </tbody>
+                            </table>
                         </div>
                     </div>
 
@@ -105,11 +152,9 @@
                                         <div class="form-group col-lg-2 col-md-3 col-12">
                                             <button type="button" id="btnConsultarObligacionAlumno" class="btn btn-block btn-outline-primary mt-4"><i class="fa fa-fw fa-search-plus"></i> Iniciar consulta</button>
                                         </div>
-
                                         <div class="form-group col-lg-2 col-sm-3 col-12">
                                             <button type="button" id="btnLimpiarConsultaObligaAlumno" class="btn btn-block btn-outline-danger mt-4"><i class="fa fa-fw fa-eraser"></i> Limpiar</button>
                                         </div>
-
                                     </div>
                                 </form>
                             </div>
@@ -176,6 +221,7 @@
                                         <th></th>
                                         <th>Monto</th>
                                         <th>Fec. Vencimiento</th>
+                                        <th>Banco</th>
                                         <th>Cta.Cte.</th>
                                     </tr>
                                 </thead>
@@ -256,10 +302,18 @@
             LimpiarMensajeGenerarOblig();
         });
 
-        $("#frmGenerarOblig").on("click", "button[type='submit']", function (e) {
+        $("#frmGenerarOblig").on("click", "#btnGenerarOblig", function (e) {
             $(this).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Generando obligaciones . . .');
             AbrirModalEsperaGeneracionOblig();
             LimpiarMensajeGenerarOblig();
+            $("#frmGenerarOblig").prop("method", "POST");
+            document.getElementById('frmGenerarOblig').submit()
+        });
+
+        $("#frmGenerarOblig").on("click", "#btnConsultaOblig", function (e) {
+            $(this).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Generando obligaciones . . .');
+            $("#frmGenerarOblig").prop("method", "GET");
+            document.getElementById('frmGenerarOblig').submit()
         });
 
         function AbrirModalEsperaGeneracionOblig() {
@@ -379,7 +433,7 @@
                         if (data.alumno !== null) {
                             MostrarDatosAlumno(data.alumno);
                         }
-                        
+
                         if (data.detalle_pago.length == 0) {
                             Swal.fire({
                                 title: '',
@@ -452,7 +506,7 @@
 
         function GenerarTablaDetalle(detalle_pago) {
             let tblDetalleObligaciones = $('#tblDetalleObligaciones').find('tbody');
-            
+
             tblDetalleObligaciones.html('');
 
             if (detalle_pago !== null) {
@@ -460,8 +514,8 @@
 
                 $.each(detalle_pago, function (i, item) {
                     rows += '<tr>' +
-                        '<td>' + item.T_ConceptoDesc + '</td>' + 
-                        '<td>' + (item.T_ProcesoDesc == null ? item.T_CatPagoDesc : item.T_ProcesoDesc) + '</td>' +
+                        '<td>' + item.T_ConceptoDesc + '</td>' +
+                        '<td>' + item.T_ProcesoDesc + '</td>' +
                         '<td>' + item.T_NroOrden + '</td>' +
                         '<td>' + item.T_Monto + '</td>' +
                         '<td>' + item.T_FecVencto + '</td>' +
@@ -489,7 +543,8 @@
                     '<td>' + item.T_NroOrden + '</td>' +
                     '<td>' + item.T_MontoOblig + '</td>' +
                     '<td>' + item.T_FecVencto + '</td>' +
-                    '<td></td>' +
+                    '<td>' + item.T_EntidadDesc + '</td>' +
+                    '<td>' + item.C_NumeroCuenta + '</td>' +
                     '</tr>';
             });
 

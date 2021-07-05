@@ -85,6 +85,14 @@ namespace WebApp.Models
 
         public bool B_Pagado { get; set; }
 
+        public string T_Pagado
+        {
+            get
+            {
+                return B_Pagado ? "Pagd." : "Pendt.";
+            }
+        }
+
         public string C_CodOperacion { get; set; }
 
         public DateTime? D_FecPago { get; set; }
@@ -102,5 +110,13 @@ namespace WebApp.Models
         public DateTime D_FecCre { get; set; }
 
         public string C_CodServicio { get; set; }
+
+        public string C_NumeroCuenta { get; set; }
+
+        public string T_EntidadDesc { get; set; }
+
+        public string T_FacDesc { get; set; }
+
+        public string T_DenomProg { get; set; }
     }
 }

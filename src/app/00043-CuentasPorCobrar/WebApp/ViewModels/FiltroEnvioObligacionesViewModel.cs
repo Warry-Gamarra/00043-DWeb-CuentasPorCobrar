@@ -8,7 +8,7 @@ using System.Web;
 
 namespace WebApp.ViewModels
 {
-    public class FiltroEnvioObligacionesModel
+    public class FiltroEnvioObligacionesViewModel
     {
         [Required]
         [Display(Name = "Año")]

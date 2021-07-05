@@ -38,6 +38,7 @@ namespace WebApp.Controllers
             return View();
         }
 
+        [Route("consultas/estados-de-cuenta-pregrado")]
         public ActionResult PagosPregrado(PagosPregradoViewModel model)
         {
             switch (model.reporte)
@@ -69,6 +70,7 @@ namespace WebApp.Controllers
             return View(model);
         }
 
+        [Route("consultas/estados-de-cuenta-posgrado")]
         public ActionResult PagosPosgrado(PagosPosgradoViewModel model)
         {
             switch (model.reporte)

@@ -16,6 +16,7 @@
             @Html.HiddenFor(model => model.ProcesoId)
             @Html.HiddenFor(model => model.PrioridadId)
             @Html.Hidden("CodBcoHddn")
+            @Html.HiddenFor(model => model.DescProceso)
             <div class="form-group">
                 @Html.LabelFor(model => model.CategoriaId, new { @class = "control-label" })
                 @Html.DropDownListFor(model => model.CategoriaId, ViewBag.Categorias as SelectList, "", new { @class = "select-filter form-control text-uppercase", placeholder = "[SELECCIONAR DESC. CUOTA]" })

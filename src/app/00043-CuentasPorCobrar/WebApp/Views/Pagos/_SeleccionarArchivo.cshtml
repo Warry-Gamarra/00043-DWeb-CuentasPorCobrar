@@ -110,10 +110,12 @@
                 $('#icon-submit').removeClass('fa-cloud-upload').addClass('fa-spin fa-cog');
             },
             success: function (result) {
-                let alert = result.Value ? 'success' : 'danger';
+                let alert = result.Success ? 'success' : 'danger';
 
                 $('.modal-footer').html(
-                    '<div class="col-md-12" id="div_msg"><p class="alert alert-' + alert + '">' + result['Message'] + '</p></div>' +
+                    '<div class="col-md-12" id="div_msg">' +
+                        '<p class="alert alert-' + result.Color + '">' + result.Message + '</p>' +
+                        '<p><a href="@Url.Action("DescargarResultadoPagoObligaciones", "Pagos")">Descargar resultados</a></p></div>' +
                     '<button type="submit" class="btn btn-info"><i id="icon-submit" class="fa fa-cloud-upload">&nbsp;</i>Cargar archivo</button>' +
                     '<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>');
             },

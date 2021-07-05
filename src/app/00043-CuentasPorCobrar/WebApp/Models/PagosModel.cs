@@ -29,17 +29,17 @@ namespace WebApp.Models
             pagoService = new PagoService();
         }
 
-        public Response CargarArchivoPagos(string serverPath, HttpPostedFileBase file, CargarArchivoViewModel model, int currentUserId)
+        public ImportacionPagoResponse CargarArchivoPagos(string serverPath, HttpPostedFileBase file, CargarArchivoViewModel model, int currentUserId)
         {
             if (file == null)
             {
-                return new Response()
+                return new ImportacionPagoResponse()
                 {
                     Message = "No existe archivo seleccionado."
                 };
             }
 
-            Response response;
+            ImportacionPagoResponse response;
             string fileName = "";
             string filePathSaved = "";
 
@@ -56,27 +56,28 @@ namespace WebApp.Models
                 }
                 else
                 {
-                    response = new Response() { Message = "No se encontró una estructura de columnas configuradas para el archivo" };
+                    response = new ImportacionPagoResponse() { Message = "No se encontró una estructura de columnas configuradas para el archivo" };
                 }
 
-                if (response.Value)
+                if (response.Success)
                 {
                     GrabarHistorialCargaArchivo(lstPagoObligaciones.Count(), fileName, filePathSaved, currentUserId);
-                    response.Success(false);
+                    ResponseModel.Success(response);
                 }
                 else
                 {
                     EliminarArchivoHost(serverPath, fileName);
-                    response.Error(false);
+                    ResponseModel.Error(response);
                 }
             }
             catch (Exception ex)
             {
                 EliminarArchivoHost(serverPath, fileName);
-                response = new Response()
+                response = new ImportacionPagoResponse()
                 {
                     Message = ex.Message
                 };
+                ResponseModel.Error(response);
             }
 
             return response;
@@ -196,9 +197,9 @@ namespace WebApp.Models
             pagoService.GrabarRegistroArchivo(fileName, urlPath, cantFilas, currentUserId);
         }
 
-        public Response GrabarPagoObligacion(PagoObligacionViewModel model, int currentUserId)
+        public ImportacionPagoResponse GrabarPagoObligacion(PagoObligacionViewModel model, int currentUserId)
         {
-            var response = new Response();
+            var response = new ImportacionPagoResponse();
 
             var lista = new List<PagoObligacionEntity>();
 
@@ -208,7 +209,9 @@ namespace WebApp.Models
             {
                 if (obligacionAluCab.B_Pagado.Value)
                 {
-                    return ResponseModel.Info(response, "La obligación seleccionada ya ha sido pagada.");
+                    ResponseModel.Info(response, "La obligación seleccionada ya ha sido pagada.");
+
+                    return response;
                 }
 
                 if (pagoService.ValidarCodOperacion(model.codigoOperacion, model.idEntidadFinanciera, model.fechaPago))
@@ -225,16 +228,22 @@ namespace WebApp.Models
 
                     response = _obligacionService.Grabar_Pago_Obligaciones(lista, currentUserId);
 
-                    return ResponseModel.Success(response, true);
+                    ResponseModel.Success(response, true);
+
+                    return response;
                 }
                 else
                 {
-                    return ResponseModel.Error(response, "El código de operación se encuentra repetido en el sistema.");
+                    ResponseModel.Error(response, "El código de operación se encuentra repetido en el sistema.");
+
+                    return response;
                 }
             }
             else
             {
-                return ResponseModel.Error(response, "No se encuentra información acerca de la obligación seleccionada.");
+                ResponseModel.Error(response, "No se encuentra información acerca de la obligación seleccionada.");
+
+                return response;
             }
         }
 
