@@ -787,3 +787,36 @@ insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilita
 GO
 
 
+
+SET IDENTITY_INSERT TC_Servicios ON
+GO
+INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES(1, '001', 'UNFV REGULAR', 1, 0)
+INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES(2, '002', 'UNFV EUDED', 1, 0)
+INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES(3, '003', 'UNFV POSTGRADO', 1, 0)
+INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES(4, '004', 'UNFV POSTGRADO SECC FAC', 1, 0)
+INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES(5, '010', 'UNFV REGULAR ALUMNOS TASAS', 1, 0)
+INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES(6, '011', 'UNFV EUDED ALUMNOS TASAS', 1, 0)
+INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES(7, '012', 'UNFV POSTGRADO ALUMNOS TASA', 1, 0)
+INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES(8, '013', 'UNFV PREGRADO INGRESANTES TASA', 1, 0)
+INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES(9, '014', 'UNFV SECCION POSTGRADO TASA FA', 1, 0)
+INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES(10, '015', 'UNFV INST.IDIOMA ALUMNOS TASA', 1, 0)
+INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES(11, '016', 'UNFV CEPREVI TASAS ALUMNOS', 1, 0)
+INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES(12, '017', 'UNFV CONGRESO INTERNACIONAL', 1, 0)
+INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES(13, '018', 'UNFV POSTGRADO EDUCACION', 1, 0)
+INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES(14, '020', 'UNFV PUBLICO TASAS', 1, 0)
+INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES(15, '030', 'UNFV EMPRESAS TASAS', 1, 0)
+INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES(16, '040', 'UNFV PREGRADO TASA POSTULANTE', 1, 0)
+INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES(17, '042', 'UNFV ADMISION EUDED 2015', 0, 0)
+INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES(18, '045', 'UNFV POSTGRADO POST.SECC.POST', 1, 0)
+INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES(19, '050', 'UNFV APORTE VOLUNTARIO', 1, 0)
+INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES(20, '051', 'UNFV ADMISION EUDED 2016', 0, 0)
+INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES(21, '052', 'UNFV POSTGRADO ALUMNOS 2018', 1, 0)
+GO
+SET IDENTITY_INSERT TC_Servicios OFF
+GO
+
+UPDATE dbo.TC_CategoriaPago SET I_ServicioID = 1 WHERE I_CatPagoID IN (1,2,14)
+GO
+
+UPDATE dbo.TC_CategoriaPago SET I_ServicioID = 3 WHERE I_CatPagoID IN (3,4,5,6,7,8,9,10)
+GO

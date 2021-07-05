@@ -3014,13 +3014,14 @@ SELECT
 	per.T_OpcionCod AS C_Periodo, per.T_OpcionDesc AS T_Periodo, pro.T_ProcesoDesc, cab.D_FecVencto, pro.I_Prioridad, cab.C_Moneda,
 	niv.T_OpcionCod AS C_Nivel, tipal.T_OpcionCod AS C_TipoAlumno, cab.I_MontoOblig,
 	cab.B_Pagado, pagban.C_CodOperacion, pagban.D_FecPago, pagban.T_LugarPago, cab.D_FecCre,
-	CASE WHEN niv.T_OpcionCod = '1' THEN '0001' ELSE CASE WHEN niv.T_OpcionCod IN ('2', '3') THEN '0003' ELSE '0000' END END AS C_CodServicio,
+	ISNULL(srv.C_CodServicio, '') AS C_CodServicio,
 	ISNULL(cta.C_NumeroCuenta, '') AS C_NumeroCuenta, ISNULL(ef.T_EntidadDesc, '') AS T_EntidadDesc,
 	mat.T_FacDesc, mat.T_DenomProg
 FROM dbo.VW_MatriculaAlumno mat
 INNER JOIN dbo.TR_ObligacionAluCab cab ON cab.I_MatAluID = mat.I_MatAluID AND cab.B_Eliminado = 0
 INNER JOIN dbo.TC_Proceso pro ON pro.I_ProcesoID = cab.I_ProcesoID AND pro.B_Eliminado = 0
 INNER JOIN dbo.TC_CategoriaPago cat ON cat.I_CatPagoID = pro.I_CatPagoID AND cat.B_Eliminado = 0
+LEFT JOIN dbo.TC_Servicios srv ON srv.I_ServicioID = cat.I_ServicioID AND srv.B_Eliminado = 0
 INNER JOIN dbo.TC_CatalogoOpcion per ON per.I_ParametroID = 5 AND per.I_OpcionID = mat.I_Periodo
 INNER JOIN dbo.TC_CatalogoOpcion niv ON niv.I_ParametroID = 2 AND niv.I_OpcionID = cat.I_Nivel
 INNER JOIN dbo.TC_CatalogoOpcion tipal ON tipal.I_ParametroID = 1 AND tipal.I_OpcionID = cat.I_TipoAlumno
@@ -3030,6 +3031,37 @@ LEFT JOIN dbo.TC_CuentaDeposito cta ON cta.I_CtaDepositoID = pagpro.I_CtaDeposit
 LEFT JOIN dbo.TC_EntidadFinanciera ef ON ef.I_EntidadFinanID = pagban.I_EntidadFinanID
 GO
 
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_ValidarCodOperacion')
+	DROP PROCEDURE [dbo].[USP_S_ValidarCodOperacion]
+GO
+
+CREATE PROCEDURE [dbo].[USP_S_ValidarCodOperacion]
+@C_CodOperacion VARCHAR(50),
+@I_EntidadFinanID INT,
+@D_FecPago DATETIME =  NULL,
+@B_Correct BIT OUTPUT
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	DECLARE @I_BcoComercio INT = 1,
+			@I_BcoCredito INT = 2
+
+	SET @B_Correct = 0
+
+	IF (@I_EntidadFinanID = @I_BcoComercio) BEGIN
+		SET @B_Correct = CASE WHEN EXISTS(SELECT p.I_PagoBancoID FROM dbo.TR_PagoBanco p
+			WHERE p.B_Anulado = 0 AND @I_EntidadFinanID = @I_BcoComercio AND C_CodOperacion = @C_CodOperacion) THEN 0 ELSE 1 END
+	END
+
+	IF (@I_EntidadFinanID = @I_BcoCredito) BEGIN
+		SET @B_Correct = CASE WHEN EXISTS(SELECT p.I_PagoBancoID FROM dbo.TR_PagoBanco p
+			WHERE p.B_Anulado = 0 AND @I_EntidadFinanID = @I_BcoCredito AND DATEDIFF(HOUR, p.D_FecPago, @D_FecPago) = 0 AND C_CodOperacion = @C_CodOperacion) THEN 0 ELSE 1 END
+	END
+END
+GO
 
 
 
@@ -3984,37 +4016,6 @@ GO
 
 
 
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_ValidarCodOperacion')
-	DROP PROCEDURE [dbo].[USP_S_ValidarCodOperacion]
-GO
-
-CREATE PROCEDURE [dbo].[USP_S_ValidarCodOperacion]
-@C_CodOperacion VARCHAR(50),
-@I_EntidadFinanID INT,
-@D_FecPago DATETIME =  NULL,
-@B_Correct BIT OUTPUT
-AS
-BEGIN
-	SET NOCOUNT ON;
-
-	DECLARE @I_BcoComercio INT = 1,
-			@I_BcoCredito INT = 2
-
-	SET @B_Correct = 0
-
-	IF (@I_EntidadFinanID = @I_BcoComercio) BEGIN
-		SET @B_Correct = CASE WHEN EXISTS(SELECT p.I_PagoBancoID FROM dbo.TR_PagoBanco p
-			WHERE p.B_Anulado = 0 AND @I_EntidadFinanID = @I_BcoComercio AND C_CodOperacion = @C_CodOperacion) THEN 0 ELSE 1 END
-	END
-
-	IF (@I_EntidadFinanID = @I_BcoCredito) BEGIN
-		SET @B_Correct = CASE WHEN EXISTS(SELECT p.I_PagoBancoID FROM dbo.TR_PagoBanco p
-			WHERE p.B_Anulado = 0 AND @I_EntidadFinanID = @I_BcoCredito AND DATEDIFF(HOUR, p.D_FecPago, @D_FecPago) = 0 AND C_CodOperacion = @C_CodOperacion) THEN 0 ELSE 1 END
-	END
-END
-GO
-
-
 IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_ReportePagoObligacionesPregrado')
 	DROP PROCEDURE [dbo].[USP_S_ReportePagoObligacionesPregrado]
 GO
@@ -4231,20 +4232,20 @@ BEGIN
 		set @B_Result = 0
 		set @T_Message = 'La obligación seleccionada no existe.'
 	END
+
+	--declare @B_Result bit, @T_Message nvarchar(4000)
+
+	--exec USP_U_ActualizarMontoObligaciones
+	--@I_ObligacionAluDetID = 1,
+	--@I_Monto = 10,
+	--@I_TipoDocumento = 1,
+	--@T_DescDocumento = 'r.r. xxxx-2-21 del 01/01/2025',
+	--@CurrentUserId = 1,
+	--@CurrentDate = '20210701',
+	--@B_Result = @B_Result output,
+	--@T_Message = @T_Message output
+
+	--select @B_Result as B_Result, @T_Message as T_Message
+	--go
 END
 GO
-
-declare @B_Result bit, @T_Message nvarchar(4000)
-
-exec USP_U_ActualizarMontoObligaciones
-@I_ObligacionAluDetID = 1,
-@I_Monto = 10,
-@I_TipoDocumento = 1,
-@T_DescDocumento = 'r.r. xxxx-2-21 del 01/01/2025',
-@CurrentUserId = 1,
-@CurrentDate = '20210701',
-@B_Result = @B_Result output,
-@T_Message = @T_Message output
-
-select @B_Result as B_Result, @T_Message as T_Message
-go
