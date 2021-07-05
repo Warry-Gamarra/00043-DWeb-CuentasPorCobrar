@@ -145,7 +145,9 @@ namespace Domain.Entities
                 T_Nivel = detalleObligaciones.T_Nivel,
                 I_TipoAlumno = detalleObligaciones.I_TipoAlumno,
                 C_TipoAlumno = detalleObligaciones.C_TipoAlumno,
-                T_TipoAlumno = detalleObligaciones.T_TipoAlumno
+                T_TipoAlumno = detalleObligaciones.T_TipoAlumno,
+                C_NumeroCuenta = detalleObligaciones.C_NumeroCuenta,
+                T_EntidadDesc = detalleObligaciones.T_EntidadDesc
             };
 
             return obligacionDetalleDTO;
@@ -182,7 +184,11 @@ namespace Domain.Entities
                 D_FecPago = cuotaPago.D_FecPago,
                 T_LugarPago = cuotaPago.T_LugarPago,
                 D_FecCre = cuotaPago.D_FecCre,
-                C_CodServicio = cuotaPago.C_CodServicio
+                C_CodServicio = cuotaPago.C_CodServicio,
+                C_NumeroCuenta = cuotaPago.C_NumeroCuenta,
+                T_EntidadDesc = cuotaPago.T_EntidadDesc,
+                T_FacDesc = cuotaPago.T_FacDesc,
+                T_DenomProg = cuotaPago.T_DenomProg
             };
 
             return cuotaPagoDTO;

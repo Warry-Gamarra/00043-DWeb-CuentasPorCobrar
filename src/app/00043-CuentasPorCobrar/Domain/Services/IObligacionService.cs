@@ -25,7 +25,7 @@ namespace Domain.Services
 
         IEnumerable<CuotaPagoDTO> Obtener_CuotasPago_X_Proceso(int anio, int periodo, TipoEstudio tipoEstudio, string codDependencia);
 
-        Response Grabar_Pago_Obligaciones(List<PagoObligacionEntity> dataPagoObligaciones, int currentUserID);
+        ImportacionPagoResponse Grabar_Pago_Obligaciones(List<PagoObligacionEntity> dataPagoObligaciones, int currentUserID);
 
         IEnumerable<CtaDepoProceso> Obtener_CtaDeposito_X_Periodo(int anio, int periodo);
 

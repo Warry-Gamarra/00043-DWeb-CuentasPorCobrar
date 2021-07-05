@@ -17,9 +17,9 @@ namespace Data.Procedures
         private bool B_Result { get; }
         private string T_Message { get; }
 
-        public GrabacionPagoObligacionesResponse Execute(DataTable dataTable, int UserID)
+        public IEnumerable<DataPagoObligacionesResult> Execute(DataTable dataTable, int UserID)
         {
-            GrabacionPagoObligacionesResponse response = new GrabacionPagoObligacionesResponse();
+            IEnumerable<DataPagoObligacionesResult> response;
             DynamicParameters parameters;
 
             try
@@ -32,19 +32,13 @@ namespace Data.Procedures
                     parameters.Add(name: "Tbl_Pagos", value: dataTable.AsTableValuedParameter("dbo.type_dataPago"));
                     parameters.Add(name: "D_FecRegistro", dbType: DbType.DateTime, value: DateTime.Now);
                     parameters.Add(name: "UserID", dbType: DbType.Int32, value: UserID);
-                    parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);
-                    parameters.Add(name: "T_Message", dbType: DbType.String, size: 4000, direction: ParameterDirection.Output);
 
-                    response.resultList = _dbConnection.Query<DataPagoObligacionesResult>(s_command, param: parameters, commandType: CommandType.StoredProcedure);
-
-                    response.Success = parameters.Get<bool>("B_Result");
-                    response.Message = parameters.Get<string>("T_Message");
+                    response = _dbConnection.Query<DataPagoObligacionesResult>(s_command, param: parameters, commandType: CommandType.StoredProcedure);
                 }
             }
             catch (Exception ex)
             {
-                response.Success = false;
-                response.Message = ex.Message;
+                throw ex;
             }
 
             return response;

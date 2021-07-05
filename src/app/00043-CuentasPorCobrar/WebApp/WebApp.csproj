@@ -492,7 +492,7 @@
     <Compile Include="ViewModels\CorreoAplicacionViewModel.cs" />
     <Compile Include="ViewModels\ConceptoPagoViewModel.cs" />
     <Compile Include="ViewModels\EstudiantesViewModels.cs" />
-    <Compile Include="ViewModels\FiltroEnvioObligacionesModel.cs" />
+    <Compile Include="ViewModels\FiltroEnvioObligacionesViewModel.cs" />
     <Compile Include="ViewModels\PagoObligacionViewModel.cs" />
     <Compile Include="ViewModels\CargaArchivosViewModels.cs" />
     <Compile Include="ViewModels\ProcesoViewModel.cs" />
@@ -609,6 +609,7 @@
     <Content Include="Views\EstadosCuenta\_ReportePosgradoConceptosPorGrado.cshtml" />
     <Content Include="Views\EstadosCuenta\_ReportePagosPosgradoPorConcepto.cshtml" />
     <Content Include="Views\EstadosCuenta\_ReportePagosPosgradoPorGrado.cshtml" />
+    <Content Include="Views\ConceptoPago\_MsgRegistrarConceptoObligacion.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

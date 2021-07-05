@@ -25,11 +25,5 @@ namespace Domain.Helpers
             this.Message = responseData.Message;
             this.CurrentID = responseData.CurrentID;
         }
-
-        public Response(GrabacionPagoObligacionesResponse responseData)
-        {
-            this.Value = responseData.Success;
-            this.Message = responseData.Message;
-        }
     }
 }

@@ -666,6 +666,8 @@ CREATE TABLE TR_ObligacionAluDet
 	I_Monto              decimal(15,2)  NULL ,
 	B_Pagado             bit  NOT NULL ,
 	D_FecVencto			 date NOT NULL,
+	I_TipoDocumento      int NULL,
+	T_DescDocumento		 varchar(250),
 	B_Habilitado         bit  NOT NULL ,
 	B_Eliminado          bit  NOT NULL ,
 	I_UsuarioCre         int  NULL ,

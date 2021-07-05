@@ -22,7 +22,7 @@ namespace WebApp.Models
 
         public byte[] GenerarInformacionObligaciones(int anio, int periodo, TipoEstudio tipoEstudio, string dependencia)
         {
-            var cuotas_pago = _obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(anio, periodo, tipoEstudio, dependencia);
+            var cuotas_pago = _obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(anio, periodo, tipoEstudio, dependencia).Where(x => !x.B_Pagado).ToList();
 
             var cuentas_bcp = _obligacionServiceFacade.Obtener_CtaDeposito_X_Periodo(anio, periodo, tipoEstudio).Where(x => x.I_EntidadFinanID == Constantes.BCP_ID);
 

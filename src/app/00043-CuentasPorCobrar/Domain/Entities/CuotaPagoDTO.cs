@@ -63,5 +63,13 @@ namespace Domain.Entities
         public DateTime D_FecCre { get; set; }
 
         public string C_CodServicio { get; set; }
+
+        public string C_NumeroCuenta { get; set; }
+
+        public string T_EntidadDesc { get; set; }
+
+        public string T_FacDesc { get; set; }
+
+        public string T_DenomProg { get; set; }
     }
 }

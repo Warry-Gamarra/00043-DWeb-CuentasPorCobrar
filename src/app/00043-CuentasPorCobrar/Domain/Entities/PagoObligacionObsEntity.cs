@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Data.Types
+namespace Domain.Entities
 {
-    public class DataPagoObligacionesResult
+    public class PagoObligacionObsEntity
     {
         public int id { get; set; }
         public int? I_ProcesoID { get; set; }

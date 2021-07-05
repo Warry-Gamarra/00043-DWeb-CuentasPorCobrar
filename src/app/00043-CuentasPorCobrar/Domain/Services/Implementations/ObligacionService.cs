@@ -123,20 +123,33 @@ namespace Domain.Services.Implementations
             return result;
         }
 
-        public Response Grabar_Pago_Obligaciones(List<PagoObligacionEntity> dataPagoObligaciones, int currentUserID)
+        public ImportacionPagoResponse Grabar_Pago_Obligaciones(List<PagoObligacionEntity> dataPagoObligaciones, int currentUserID)
         {
-            GrabacionPagoObligacionesResponse result;
+            ImportacionPagoResponse result;
 
             var grabarPago = new USP_I_GrabarPagoObligaciones()
             {
                 UserID = currentUserID
             };
 
-            var dataTable = Mapper.PagoObligacionEntity_To_DataTable(dataPagoObligaciones);
+            try
+            {
+                var dataTable = Mapper.PagoObligacionEntity_To_DataTable(dataPagoObligaciones);
 
-            result = grabarPago.Execute(dataTable, currentUserID);
+                var spResult = grabarPago.Execute(dataTable, currentUserID);
 
-            return new Response(result);
+                result = new ImportacionPagoResponse(spResult);
+            }
+            catch (Exception ex)
+            {
+                result = new ImportacionPagoResponse()
+                {
+                    Success = false,
+                    Message = ex.Message
+                };
+            }
+
+            return result;
         }
 
         public IEnumerable<CtaDepoProceso> Obtener_CtaDeposito_X_Periodo(int anio, int periodo)

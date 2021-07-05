@@ -86,6 +86,7 @@
     <Compile Include="Entities\MultaNoVotarSinRegistrarEntity.cs" />
     <Compile Include="Entities\ObligacionAluCabEntity.cs" />
     <Compile Include="Entities\PagoEntity.cs" />
+    <Compile Include="Entities\PagoObligacionObsEntity.cs" />
     <Compile Include="Entities\PagoObligacionEntity.cs" />
     <Compile Include="Entities\PagoPosgradoDTO.cs" />
     <Compile Include="Entities\PagoPregradoDTO.cs" />
@@ -93,6 +94,7 @@
     <Compile Include="Entities\SeccionArchivo.cs" />
     <Compile Include="Entities\TasaDTO.cs" />
     <Compile Include="Helpers\Constantes.cs" />
+    <Compile Include="Helpers\ImportacionPagoResponse.cs" />
     <Compile Include="Helpers\MultaNoVotarResponse.cs" />
     <Compile Include="Helpers\Reportes.cs" />
     <Compile Include="Helpers\Tipos.cs" />
