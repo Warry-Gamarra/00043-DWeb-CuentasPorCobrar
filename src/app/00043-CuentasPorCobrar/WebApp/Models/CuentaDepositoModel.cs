@@ -55,7 +55,7 @@ namespace WebApp.Models
                 I_CtaDepID = model.Id ?? 0,
                 T_DescCuenta = model.Descripcion.ToUpper(),
                 C_NumeroCuenta = model.NumeroCuenta.ToUpper(),
-                I_EntidadFinanId = model.EntidadFinancieraId,
+                I_EntidadFinanId = model.EntidadRecaudadoraId,
                 T_Observacion = string.IsNullOrEmpty(model.Observacion) ? model.Observacion : model.Observacion.ToUpper(),
                 Habilitado = true,
                 FechaActualiza = DateTime.Now

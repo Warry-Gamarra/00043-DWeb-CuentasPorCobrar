@@ -40,7 +40,7 @@ namespace WebApp.ViewModels
         public int? Id { get; set; }
         [Display(Name = "Entidad Recaudadora")]
         [Required]
-        public int EntidadFinancieraId { get; set; }
+        public int EntidadRecaudadoraId { get; set; }
 
         [Display(Name = "Descripción")]
         [Required]
@@ -64,7 +64,7 @@ namespace WebApp.ViewModels
             this.Id = cuentaDeposito.I_CtaDepID;
             this.Descripcion = cuentaDeposito.T_DescCuenta;
             this.NumeroCuenta = cuentaDeposito.C_NumeroCuenta;
-            this.EntidadFinancieraId = cuentaDeposito.I_EntidadFinanId;
+            this.EntidadRecaudadoraId = cuentaDeposito.I_EntidadFinanId;
             this.Observacion = cuentaDeposito.T_Observacion;
         }
 
