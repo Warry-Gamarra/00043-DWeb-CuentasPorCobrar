@@ -65,6 +65,7 @@ go
 
 CREATE TABLE TC_Especialidad
 ( 
+	I_Especialidad       int IDENTITY ,
 	C_CodEsp             varchar(2)  NOT NULL ,
 	C_CodEsc             varchar(2)  NOT NULL ,
 	C_CodFac             varchar(2)  NOT NULL ,
@@ -76,7 +77,7 @@ CREATE TABLE TC_Especialidad
 	D_FecCre             datetime  NULL ,
 	I_UsuarioMod         int  NULL ,
 	D_FecMod             datetime  NULL ,
-	CONSTRAINT PK_Especialidad PRIMARY KEY  CLUSTERED (C_CodEsp ASC,C_CodEsc ASC,C_CodFac ASC),
+	CONSTRAINT PK_Especialidad PRIMARY KEY  CLUSTERED (I_Especialidad ASC,C_CodEsp ASC,C_CodEsc ASC,C_CodFac ASC),
 	CONSTRAINT FK_Escuela_Especialidad FOREIGN KEY (C_CodEsc,C_CodFac) REFERENCES TC_Escuela(C_CodEsc,C_CodFac)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
@@ -91,6 +92,7 @@ CREATE TABLE TI_CarreraProfesional
 	C_CodEsp             varchar(2)  NULL ,
 	C_CodEsc             varchar(2)  NOT NULL ,
 	C_CodFac             varchar(2)  NOT NULL ,
+	I_Especialidad       int  NULL ,
 	T_CarProfDesc        varchar(250)  NULL ,
 	C_Tipo               char(1)  NULL ,
 	I_Duracion           int  NULL ,
@@ -105,7 +107,7 @@ CREATE TABLE TI_CarreraProfesional
 	I_UsuarioMod         int  NULL ,
 	D_FecMod             datetime  NULL ,
 	CONSTRAINT PK_CarreraProfesional PRIMARY KEY  CLUSTERED (C_RcCod ASC),
-	CONSTRAINT FK_Especialidad_CarreraProfesional FOREIGN KEY (C_CodEsp,C_CodEsc,C_CodFac) REFERENCES TC_Especialidad(C_CodEsp,C_CodEsc,C_CodFac)
+	CONSTRAINT FK_Especialidad_CarreraProfesional FOREIGN KEY (I_Especialidad,C_CodEsp,C_CodEsc,C_CodFac) REFERENCES TC_Especialidad(I_Especialidad,C_CodEsp,C_CodEsc,C_CodFac)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION,
 	CONSTRAINT FK_Escuela_CarreraProfesional FOREIGN KEY (C_CodEsc,C_CodFac) REFERENCES TC_Escuela(C_CodEsc,C_CodFac)

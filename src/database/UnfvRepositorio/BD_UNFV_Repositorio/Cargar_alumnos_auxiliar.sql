@@ -32,16 +32,40 @@ go
 
 --DBCC CHECKIDENT(TC_Persona, RESEED, 0)
 
-INSERT INTO TC_Persona (C_NumDNI, C_CodTipDoc, T_ApePaterno, T_ApeMaterno, T_Nombre, C_Sexo, B_Habilitado, B_Eliminado, COD_ALU)
-     SELECT DISTINCT C_numdni, C_codtipdoc, T_apepater, T_apemater, t_nombre, c_sexo, 1, 0, C_codalu FROM alu 
+INSERT INTO TC_Persona (C_NumDNI, C_CodTipDoc, T_ApePaterno, T_ApeMaterno, T_Nombre, C_Sexo, B_Habilitado, B_Eliminado, COD_ALU, COD_RC)
+     SELECT DISTINCT C_NumDNI, C_CodTipDoc, T_ApePaterno, T_ApeMaterno, T_Nombre, c_sexo, 1, 0, C.C_CodAlu, C.C_RcCod FROM alumnos_temporal C
+	 	 INNER JOIN (SELECT  C_RcCod, C_CodAlu, id_plan FROM doctorado
+				 UNION SELECT  C_RcCod, C_CodAlu, id_plan FROM maestria) APTOS ON C.C_codalu = APTOS.C_CodAlu AND APTOS.C_RcCod = C.C_RcCod
 go
 
 INSERT INTO TC_Alumno (C_RcCod, C_CodAlu, I_PersonaID, C_CodModIng, C_AnioIngreso, I_IdPlan, B_Habilitado, B_Eliminado) 
-	 SELECT DISTINCT CP.C_RcCod, C.C_rccod, C.C_codalu, P.I_PersonaID, C.c_codmodig, C.c_anioingr, NULL, 1, 0 FROM alu C
-	 INNER JOIN TC_Persona P ON C.C_codalu = P.COD_ALU
-	 left JOIN TI_CarreraProfesional CP ON CP.C_RcCod = C.C_rccod
+	 SELECT DISTINCT CP.C_RcCod, C.C_CodAlu, P.I_PersonaID, C.C_CodModIng, C.C_AnioIngreso, APTOS.id_plan, 1, 0 FROM alumnos_temporal C
+	 INNER JOIN TC_Persona P ON C.C_codalu = P.COD_ALU AND P.COD_RC = C.C_RcCod
+	 INNER JOIN TI_CarreraProfesional CP ON CP.C_RcCod = C.C_rccod
+	 INNER JOIN TC_ModalidadIngreso MI ON C.C_CodModIng = MI.C_CodModIng
+	 INNER JOIN (SELECT  C_RcCod, C_CodAlu, id_plan FROM doctorado
+				 UNION SELECT  C_RcCod, C_CodAlu, id_plan FROM maestria) APTOS ON C.C_codalu = APTOS.C_CodAlu AND APTOS.C_RcCod = C.C_RcCod
 	 WHERE P.B_Eliminado = 0
+
+	 --AND C_CodAlu NOT IN (
+		--'0004030902',
+		--'0008495851',
+		--'000B021024',
+		--'000B022515',
+		--'0009812424',
+		--'0008617748',
+		--'009191413M',
+		--'1999155112')
 go
+
+/*
+Se encontró en la data de alumno_temporal:
+- CODIGOS DE INGRESO QUE NO EXISTEN EN EL CATALOGO
+- CODIGOS DE CARRERAS PROFESIONALES QUE NO SE ENCUENTRAN EN EL CATALOGO
+- CODIGOS REPETIDOS CON DIFERENTE ESPECIALIDAD PARA DIFERENTES PERSONAS, 
+- CODIGOS REPETIDOS CON DIFERENTE ESPECIALIDAD PARA LA MISMA PERSONA, 
+- SOLO SE IMPORTÓ DATA DE POSTGRADO
+*/
 
 
 ALTER TABLE TC_Persona

@@ -1956,6 +1956,31 @@ WHERE EXISTS (SELECT * FROM TC_Especialidad
 					  AND B_Habilitado = 0);
 GO
 
+UPDATE CarreraProf
+   SET CarreraProf.I_Especialidad = Esp.I_Especialidad
+  FROM TI_CarreraProfesional CarreraProf
+	   INNER JOIN TC_Especialidad Esp ON CarreraProf.C_CodFac = Esp.C_CodFac 
+									 AND CarreraProf.C_CodEsc = Esp.C_CodEsc
+									 AND CarreraProf.C_CodEsp = Esp.C_CodEsp
+	 WHERE Esp.C_CodFac + '|' + Esp.C_CodEsc + '|' + Esp.C_CodEsp NOT IN ('EP|MG|EI', 'EP|MG|EP');
+
+GO
+
+DECLARE @ID INT 
+ 
+SET @ID = (SELECT I_Especialidad FROM TC_Especialidad Esp WHERE Esp.C_CodFac + '|' + Esp.C_CodEsc + '|' + Esp.C_CodEsp = 'EP|MG|EI' AND Esp.T_EspDesc = 'INGENIERIA ECONOMICA')
+UPDATE TI_CarreraProfesional SET I_Especialidad = @ID WHERE C_RcCod = 'M69'
+
+SET @ID = (SELECT I_Especialidad FROM TC_Especialidad Esp WHERE Esp.C_CodFac + '|' + Esp.C_CodEsc + '|' + Esp.C_CodEsp = 'EP|MG|EI' AND Esp.T_EspDesc = 'EDUCACION INICIAL')
+UPDATE TI_CarreraProfesional SET I_Especialidad = @ID WHERE C_RcCod = 'P38'
+
+SET @ID = (SELECT I_Especialidad FROM TC_Especialidad Esp WHERE Esp.C_CodFac + '|' + Esp.C_CodEsc + '|' + Esp.C_CodEsp = 'EP|MG|EI' AND Esp.T_EspDesc = 'EPIDEMIOLOGIA')
+UPDATE TI_CarreraProfesional SET I_Especialidad = @ID WHERE C_RcCod = 'M39'
+
+SET @ID = (SELECT I_Especialidad FROM TC_Especialidad Esp WHERE Esp.C_CodFac + '|' + Esp.C_CodEsc + '|' + Esp.C_CodEsp = 'EP|MG|EI' AND Esp.T_EspDesc = 'EDUCACION PRIMARIA')
+UPDATE TI_CarreraProfesional SET I_Especialidad = @ID WHERE C_RcCod = 'P39'
+GO
+
 ALTER TABLE TC_Facultad DROP COLUMN C_DepCod;
 GO
 

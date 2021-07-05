@@ -45,6 +45,8 @@ CREATE PROCEDURE [dbo].[USP_I_GrabarCarreraProfesional]
 	,@C_CodEsp		varchar(2)
 	,@C_CodEsc		varchar(2)
 	,@C_CodFac		varchar(2)
+	,@I_Especialidad int
+	,@T_CarProfDesc varchar(250)
 	,@C_Tipo		char(1)
 	,@I_Duracion	int
 	,@B_Anual		bit
@@ -60,8 +62,8 @@ BEGIN
 	SET NOCOUNT OFF;
 	
 	BEGIN TRY
-		INSERT INTO TI_CarreraProfesional (C_RcCod, C_CodEsp, C_CodEsc, C_CodFac, C_Tipo, I_Duracion, B_Anual, N_Grupo, N_Grado, I_IdAplica, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) 
-			VALUES (@C_RcCod, @C_CodEsp, @C_CodEsc, @C_CodFac, @C_Tipo, @I_Duracion, @B_Anual, @N_Grupo, @N_Grado, @I_IdAplica, 1, 0, @I_UsuarioCre, @D_FecCre);
+		INSERT INTO TI_CarreraProfesional (C_RcCod, C_CodEsp, C_CodEsc, C_CodFac, I_Especialidad, T_CarProfDesc, C_Tipo, I_Duracion, B_Anual, N_Grupo, N_Grado, I_IdAplica, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) 
+			VALUES (@C_RcCod, @C_CodEsp, @C_CodEsc, @C_CodFac, @I_Especialidad, @T_CarProfDesc, @C_Tipo, @I_Duracion, @B_Anual, @N_Grupo, @N_Grado, @I_IdAplica, 1, 0, @I_UsuarioCre, @D_FecCre);
 
 		SET @B_Result = 1;
 		SET @T_Message = 'Carrera Profesional registrada.'; 
@@ -137,8 +139,13 @@ BEGIN
 	SET NOCOUNT OFF;
 	
 	BEGIN TRY
-		INSERT INTO TC_ProgramaUnfv(C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, T_DenomTitulo, C_CodRegimenEst, C_CodModEst, B_SegundaEsp, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) 
-			VALUES (@C_CodProg, @C_RcCod, @T_DenomProg, @T_Resolucion, @C_CodGrado, @T_DenomGrado, @T_DenomTitulo, @C_CodRegimenEst, @C_CodModEst, @B_SegundaEsp, 1, 0, @I_UsuarioCre, @D_FecCre);
+		IF NOT EXISTS (SELECT C_CodProg FROM TC_ProgramaUnfv WHERE C_CodProg = @C_CodProg)
+		BEGIN
+			INSERT INTO TC_ProgramaUnfv(C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodRegimenEst, C_CodModEst, B_SegundaEsp, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) 
+				VALUES (@C_CodProg, @C_RcCod, @T_DenomProg, @T_Resolucion, @C_CodGrado, @T_DenomGrado, @C_CodRegimenEst, @C_CodModEst, @B_SegundaEsp, 1, 0, @I_UsuarioCre, @D_FecCre);
+		END
+
+		INSERT INTO TC_TituloProfesional (C_CodProg, T_DenomTitulo, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) VALUES (@C_CodProg, @T_DenomTitulo, 1, 0, @I_UsuarioCre, @D_FecCre);
 
 		SET @B_Result = 1;
 		SET @T_Message = 'Nuevo programa registrado.'; 
@@ -318,8 +325,10 @@ CREATE PROCEDURE [dbo].[USP_U_ActualizarProgramaUnfv]
 	,@T_DenomTitulo	varchar(500)
 	,@C_CodRegimenEst	varchar(5)
 	,@C_CodModEst	varchar(5)
+	,@I_TituloProfID int
 	,@B_SegundaEsp	bit
 	,@B_Habilitado 	bit
+	,@B_HabTitulo 	bit
 	,@B_Eliminado	bit
 	,@D_FecMod		datetime
 	,@I_UsuarioMod	int
@@ -336,7 +345,6 @@ BEGIN
 			,T_Resolucion = @T_Resolucion
 			,C_CodGrado	  = @C_CodGrado
 			,T_DenomGrado = @T_DenomGrado
-			,T_DenomTitulo   = @T_DenomTitulo
 			,C_CodRegimenEst = @C_CodRegimenEst
 			,C_CodModEst	= @C_CodModEst
 			,B_SegundaEsp	= @B_SegundaEsp
@@ -345,6 +353,15 @@ BEGIN
 			,I_UsuarioMod	= @I_UsuarioMod
 			,D_FecMod		= @D_FecMod
 		WHERE C_CodProg	= @C_CodProg
+
+
+		UPDATE TC_TituloProfesional
+		SET T_DenomTitulo = @T_DenomTitulo
+			, B_Habilitado = @B_HabTitulo
+			, B_Eliminado = @B_Eliminado
+			, I_UsuarioMod = @I_UsuarioMod
+			, D_FecMod = @D_FecMod
+		WHERE I_TituloProfID = @I_TituloProfID
 
 		SET @B_Result = 1;
 		SET @T_Message = 'Datos de programa actualizados.'; 
@@ -398,11 +415,11 @@ GO
 CREATE VIEW [dbo].[VW_CarreraProfesional]
 AS
 SELECT
-	cprof.C_RcCod, cprof.C_CodEsp, cprof.C_CodEsc, cprof.C_CodFac, esp.T_EspDesc, esc.T_EscDesc, fac.T_FacDesc,
+	cprof.C_RcCod, cprof.C_CodEsp, cprof.C_CodEsc, cprof.C_CodFac, esp.T_EspDesc, esc.T_EscDesc, fac.T_FacDesc, cprof.T_CarProfDesc,
 	cprof.C_Tipo, cprof.I_Duracion, cprof.B_Anual, cprof.N_Grupo, cprof.N_Grado, cprof.I_IdAplica, cprof.B_Habilitado, cprof.B_Eliminado 
 FROM dbo.TI_CarreraProfesional cprof
 LEFT JOIN dbo.TC_Especialidad esp ON 
-	esp.C_CodEsp = cprof.C_CodEsp AND esp.C_CodEsc = cprof.C_CodEsc AND esp.C_CodFac = cprof.C_CodFac AND esp.B_Eliminado = 0
+	esp.C_CodEsp = cprof.C_CodEsp AND esp.C_CodEsc = cprof.C_CodEsc AND esp.C_CodFac = cprof.C_CodFac AND esp.I_Especialidad = cprof.I_Especialidad AND esp.B_Eliminado = 0
 INNER JOIN dbo.TC_Escuela esc ON esc.C_CodEsc = cprof.C_CodEsc AND esc.C_CodFac = cprof.C_CodFac AND esc.B_Eliminado = 0
 INNER JOIN dbo.TC_Facultad fac ON fac.C_CodFac = cprof.C_CodFac AND fac.B_Eliminado = 0
 GO
@@ -417,9 +434,10 @@ CREATE VIEW [dbo].[VW_ProgramaUnfv]
 AS
 SELECT 
 	prog.C_CodProg, prog.C_RcCod, c.C_CodEsp, c.C_CodEsc, c.C_CodFac, c.T_EspDesc, c.T_EscDesc, c.T_FacDesc, 
-	prog.T_DenomProg, prog.T_Resolucion, prog.T_DenomGrado, prog.T_DenomTitulo, prog.C_CodRegimenEst, prog.C_CodModEst, prog.B_SegundaEsp, prog.C_CodGrado,
+	prog.T_DenomProg, prog.T_Resolucion, prog.T_DenomGrado, titl.T_DenomTitulo, prog.C_CodRegimenEst, prog.C_CodModEst, prog.B_SegundaEsp, prog.C_CodGrado,
 	c.C_Tipo, c.I_Duracion, c.B_Anual, c.N_Grupo, c.N_Grado, c.I_IdAplica, prog.B_Habilitado, prog.B_Eliminado 
 FROM dbo.TC_ProgramaUnfv prog
+INNER JOIN TC_TituloProfesional titl ON titl.C_CodProg = prog.C_CodProg
 LEFT JOIN dbo.VW_CarreraProfesional c ON c.C_RcCod = prog.C_RcCod AND c.B_Eliminado = 0
 GO
 
