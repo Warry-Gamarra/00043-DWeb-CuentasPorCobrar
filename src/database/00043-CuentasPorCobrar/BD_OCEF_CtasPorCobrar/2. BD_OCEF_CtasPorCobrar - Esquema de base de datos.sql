@@ -251,7 +251,7 @@ CREATE TABLE TC_Servicios
 ( 
 	I_ServicioID         int IDENTITY ( 1,1 ) ,
 	C_CodServicio        varchar(20)  NULL ,
-	T_DescServ           char(18)  NULL ,
+	T_DescServ           varchar(200)  NULL ,
 	B_Habilitado         bit  NOT NULL ,
 	B_Eliminado          bit  NOT NULL ,
 	I_UsuarioCre         int  NULL ,
