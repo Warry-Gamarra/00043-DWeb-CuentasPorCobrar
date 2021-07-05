@@ -4234,17 +4234,17 @@ BEGIN
 END
 GO
 
-declare @B_Result bit, @T_Message nvarchar(4000)
+--declare @B_Result bit, @T_Message nvarchar(4000)
 
-exec USP_U_ActualizarMontoObligaciones
-@I_ObligacionAluDetID = 1,
-@I_Monto = 10,
-@I_TipoDocumento = 1,
-@T_DescDocumento = 'r.r. xxxx-2-21 del 01/01/2025',
-@CurrentUserId = 1,
-@CurrentDate = '20210701',
-@B_Result = @B_Result output,
-@T_Message = @T_Message output
+--exec USP_U_ActualizarMontoObligaciones
+--@I_ObligacionAluDetID = 1,
+--@I_Monto = 10,
+--@I_TipoDocumento = 1,
+--@T_DescDocumento = 'r.r. xxxx-2-21 del 01/01/2025',
+--@CurrentUserId = 1,
+--@CurrentDate = '20210701',
+--@B_Result = @B_Result output,
+--@T_Message = @T_Message output
 
-select @B_Result as B_Result, @T_Message as T_Message
-go
+--select @B_Result as B_Result, @T_Message as T_Message
+--go
