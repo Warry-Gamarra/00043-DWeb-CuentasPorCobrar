@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<WebApp.Models.CuotaPagoModel>
+@using GridMvc.Html
 
 <div class="container-fluid">
     <div class="col-12">
@@ -89,42 +90,20 @@
                             }
                         </div>
 
-                        <div class="table-responsive mt-4" style="max-height: 250px">
+                        <div class="table-responsive mt-4">
                             <p class="h5">Obligaciones generadas</p>
-
-                            <table class="table table-sm table-hover">
-                                <thead class="thead-light">
-                                    <tr>
-                                        <th>Año</th>
-                                        <th>Periodo</th>
-                                        <th>Codigo alumno</th>
-                                        <th>Alumno</th>
-                                        <th>Facultad</th>
-                                        <th>Especialidad</th>
-                                        <th>Cuota</th>
-                                        <th>Monto</th>
-                                        <th>Fec.Venc.</th>
-                                        <th>Estado</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                        @foreach (var item in Model)
-                                        {
-                                    <tr>
-                                        <td>@item.I_Anio</td>
-                                        <td>@item.T_Periodo</td>
-                                        <td>@item.C_CodAlu</td>
-                                        <td>@item.T_NombresCompletos</td>
-                                        <td>@item.T_FacDesc</td>
-                                        <td>@item.T_DenomProg</td>
-                                        <td>@item.T_ProcesoDesc</td>
-                                        <td>@item.T_MontoOblig</td>
-                                        <td>@item.T_FecVencto</td>
-                                        <td>@item.T_Pagado</td>
-                                    </tr>
-                                        }
-                                    </tbody>
-                            </table>
+                            @Html.Grid(Model).Columns(columns => {
+                                columns.Add(c => c.I_Anio).Titled("Año").Filterable(true);
+                                columns.Add(c => c.T_Periodo).Titled("Periodo").Filterable(true);
+                                columns.Add(c => c.C_CodAlu).Titled("Código alumno").Filterable(true);
+                                columns.Add(c => c.T_NombresCompletos).Titled("Nombres y apellidos").Filterable(true);
+                                columns.Add(c => c.T_FacDesc).Titled("Facultad").Filterable(true);
+                                columns.Add(c => c.T_DenomProg).Titled("Especialidad").Filterable(true);
+                                columns.Add(c => c.T_ProcesoDesc).Titled("Cuota").Filterable(true);
+                                columns.Add(c => c.T_MontoOblig).Titled("Monto").Filterable(true).Css("text-right");
+                                columns.Add(c => c.T_FecVencto).Titled("Fec. Venc.").Filterable(true).Css("text-right");
+                                columns.Add(c => c.T_Pagado).Titled("Estado").Filterable(true).Css("text-center");
+                            }).WithPaging(12).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
                         </div>
                     </div>
 

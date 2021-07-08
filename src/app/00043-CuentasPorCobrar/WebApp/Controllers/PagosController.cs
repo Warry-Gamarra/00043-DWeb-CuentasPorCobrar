@@ -102,7 +102,7 @@ namespace WebApp.Controllers
 
                 ViewBag.TipoEstudios = generalServiceFacade.Listar_TipoEstudios();
 
-                ViewBag.Dependencias = programasClientFacade.GetFacultades(TipoEstudio.Pregrado);
+                ViewBag.Dependencias = programasClientFacade.GetFacultades(model.E_TipoEstudio);
 
                 ViewBag.EntidadesFinancieras = new List<SelectViewModel>();
 

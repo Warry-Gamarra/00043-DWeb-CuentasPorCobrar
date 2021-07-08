@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web;
 using WebApp.Models.Facades;
 
@@ -19,7 +20,7 @@ namespace WebApp.Models
             fecha_actual = DateTime.Now;
         }
 
-        public byte[] GenerarInformacionObligaciones(int anio, int periodo, TipoEstudio tipoEstudio, string dependencia)
+        public MemoryStream GenerarInformacionObligaciones(int anio, int periodo, TipoEstudio tipoEstudio, string dependencia)
         {
             var cuotas_pago = obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(anio, periodo, tipoEstudio, dependencia).Where(x => !x.B_Pagado).ToList();
 
@@ -30,7 +31,7 @@ namespace WebApp.Models
 
             var memoryStream = new MemoryStream();
 
-            var tw = new StreamWriter(memoryStream);
+            var writer = new StreamWriter(memoryStream, Encoding.UTF8);
 
             string identificadorRegistro = "T";
             int cantRegistrosSoles = cuotas_pago.Count();
@@ -50,18 +51,18 @@ namespace WebApp.Models
                 fechaVencimiento        //6
                 );
 
-            tw.WriteLine(cab);
+            writer.WriteLine(cab);
             #endregion
 
             #region Detalle
             foreach (var item in cuotas_pago)
             {
                 string identificadorRegistroDetalle = "D";
-                string codigoServicio = item.C_CodServicio;
+                string codigoServicio = "0" + item.C_CodServicio;
                 string codigoSucursal = "000";
                 string codigoContrato = item.C_CodAlu.PadLeft(10, '0');
                 string nombres = item.T_NombresCompletos;
-                string numeroRecibo = item.I_NroOrden.ToString("D5").PadRight(20, ' ');
+                string numeroRecibo = item.I_NroOrden.ToString("D6").PadRight(20, ' ');
                 string referenciaRecibo = new String(' ', 20);
                 string fechaEmision = "00000000";
                 string fechaVncto = item.D_FecVencto.ToString("yyyyMMdd");
@@ -90,15 +91,15 @@ namespace WebApp.Models
                     codigoConcepto01,               //13
                     otros                           //14
                     );
-                tw.WriteLine(det);
+                writer.WriteLine(det);
             }
             #endregion
-            
-            tw.Flush();
 
-            tw.Close();
+            writer.Flush();
             
-            return memoryStream.GetBuffer();
+            memoryStream.Seek(0, SeekOrigin.Begin);
+
+            return memoryStream;
         }
 
         public string NombreArchivoGenerado()

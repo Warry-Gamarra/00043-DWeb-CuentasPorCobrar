@@ -6,9 +6,11 @@ GO
 CREATE DATABASE [BD_UNFV_Repositorio]
  CONTAINMENT = NONE
  ON  PRIMARY 
-( NAME = N'BD_UNFV_Repositorio', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL13.SQL_2016E\MSSQL\DATA\BD_UNFV_Repositorio.mdf' , SIZE = 10240KB , FILEGROWTH = 1024KB )
+--( NAME = N'BD_UNFV_Repositorio', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL13.SQL_2016E\MSSQL\DATA\BD_UNFV_Repositorio.mdf' , SIZE = 10240KB , FILEGROWTH = 1024KB )
+( NAME = N'BD_UNFV_Repositorio', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL13.SQLEXPRESS\MSSQL\DATA\BD_UNFV_Repositorio.mdf' , SIZE = 10240KB , FILEGROWTH = 1024KB )	
  LOG ON 
-( NAME = N'BD_UNFV_Repositorio_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL13.SQL_2016E\MSSQL\DATA\BD_UNFV_Repositorio.ldf' , SIZE = 6144KB , FILEGROWTH = 10%)
+--( NAME = N'BD_UNFV_Repositorio_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL13.SQL_2016E\MSSQL\DATA\BD_UNFV_Repositorio.ldf' , SIZE = 6144KB , FILEGROWTH = 10%)
+( NAME = N'BD_UNFV_Repositorio_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL13.SQLEXPRESS\MSSQL\DATA\BD_UNFV_Repositorio.ldf' , SIZE = 6144KB , FILEGROWTH = 10%)
  COLLATE Modern_Spanish_CI_AS
 GO
 

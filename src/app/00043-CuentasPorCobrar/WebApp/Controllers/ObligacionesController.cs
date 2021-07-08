@@ -49,9 +49,9 @@ namespace WebApp.Controllers
             {
                 ViewBag.CurrentYear = DateTime.Now.Year;
                 ViewBag.DefaultPeriodo = "15";
-                ViewBag.DefaultTipoEstudio = TipoEstudio.Pregrado;
+                ViewBag.DefaultTipoEstudio = cmbTipoEstudio;
                 ViewBag.DefaultDependencia = "";
-                ViewBag.Dependencias = programasClientFacade.GetFacultades(TipoEstudio.Pregrado);
+                ViewBag.Dependencias = programasClientFacade.GetFacultades(cmbTipoEstudio);
 
                 if (cmbAnioGrupal.HasValue && cmbPeriodoGrupal.HasValue)
                     cuotas_pago = obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(cmbAnioGrupal.Value, cmbPeriodoGrupal.Value, cmbTipoEstudio, cmbDependencia);

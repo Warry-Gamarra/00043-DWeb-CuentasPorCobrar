@@ -490,7 +490,7 @@ CREATE PROCEDURE dbo.USP_S_ConceptoPago
 AS
 BEGIN
 	SET NOCOUNT ON;
-	SELECT c.I_ConcPagID, catg.T_CatPagoDesc, p.T_ProcesoDesc, ISNULL(c.T_ConceptoPagoDesc, cp.T_ConceptoDesc) as T_ConceptoDesc, c.I_Anio, 
+	SELECT c.I_ConcPagID, cp.I_ConceptoID, catg.T_CatPagoDesc, p.T_ProcesoDesc, ISNULL(c.T_ConceptoPagoDesc, cp.T_ConceptoDesc) as T_ConceptoDesc, c.I_Anio, 
 			c.I_Periodo, c.M_Monto, c.M_MontoMinimo, c.B_Habilitado 
 	FROM dbo.TI_ConceptoPago c
 		INNER JOIN dbo.TC_Concepto cp ON cp.I_ConceptoID = c.I_ConceptoID
@@ -2711,62 +2711,6 @@ BEGIN
 					B_EsPagoMatricula = 0 and B_EsPagoExtmp = 1 and C_Nivel = @N_Grado and
 					datediff(day, @D_CurrentDate, D_FecVencto) < 0
 			end
-
-			----Monto de deuda anterior
-			--if (select count(I_ProcesoID) from #tmp_conceptos_posgrado 
-			--	where I_TipoAlumno = @I_TipoAlumno and B_Calculado = 1 and I_Calculado = @I_DeudasAnteriores and C_Nivel = @N_Grado) = 1
-			--begin
-			--	set @I_MontoDeuda = isnull((select SUM(cab.I_MontoOblig) from dbo.TR_ObligacionAluCab cab
-			--		inner join (select top 1 m.I_MatAluID from dbo.TC_MatriculaAlumno m 
-			--			where m.B_Eliminado = 0 and not m.I_MatAluID = @I_MatAluID and m.C_CodAlu = @C_CodAlu and m.C_CodRc = @C_CodRc
-			--			order by m.I_Anio desc, m.C_Ciclo desc) mat on mat.I_MatAluID = cab.I_MatAluID
-			--		where cab.B_Eliminado = 0 and cab.B_Pagado = 0), 0)
-
-			--	if (@I_MontoDeuda > 0)
-			--	begin
-			--		set @N_NroPagos = isnull((select top 1 N_NroPagos from #tmp_conceptos_posgrado 
-			--			where I_TipoAlumno = @I_TipoAlumno and B_Calculado = 1 and I_Calculado = @I_DeudasAnteriores and C_Nivel = @N_Grado), 1);
-
-			--		with CTE_Recursivo as
-			--		(
-			--			select 1 as num, I_ProcesoID, I_ConcPagID, D_FecVencto, I_TipoObligacion, I_Prioridad from #tmp_conceptos_posgrado
-			--			where I_TipoAlumno = @I_TipoAlumno and B_Calculado = 1 and I_Calculado = @I_DeudasAnteriores and C_Nivel = @N_Grado
-			--			union all
-			--			select num + 1, I_ProcesoID, I_ConcPagID, D_FecVencto, I_TipoObligacion, I_Prioridad
-			--			from CTE_Recursivo
-			--			where num < @N_NroPagos
-			--		)
-			--		insert @Tmp_Procesos(I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad)
-			--		select I_ProcesoID, I_ConcPagID, dbo.FN_CalcularCuotasDeuda(@I_MontoDeuda, @N_NroPagos, num) AS M_Monto, 
-			--			DATEADD(MONTH, num-1, D_FecVencto), I_TipoObligacion, I_Prioridad
-			--		from CTE_Recursivo;
-			--	end
-			--end
-
-			------Monto de cursos desaprobados
-			--if (select count(I_ProcesoID) from #tmp_conceptos_posgrado
-			--		where I_TipoAlumno = @I_TipoAlumno and B_Calculado = 1 and I_Calculado = @I_CrdtDesaprobados and C_Nivel = @N_Grado) = 1
-			--begin
-			--	if (@I_CredDesaprob > 0)
-			--	begin
-			--		set @N_NroPagos = isnull((select top 1 N_NroPagos from #tmp_conceptos_posgrado 
-			--			where I_TipoAlumno = @I_TipoAlumno and B_Calculado = 1 and I_Calculado = @I_CrdtDesaprobados and C_Nivel = @N_Grado), 1);
-
-			--		with CTE_Recursivo as
-			--		(
-			--			select 1 as num, I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad from #tmp_conceptos_posgrado
-			--			where I_TipoAlumno = @I_TipoAlumno and B_Calculado = 1 and I_Calculado = @I_CrdtDesaprobados and C_Nivel = @N_Grado
-			--			union all
-			--			select num + 1, I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad
-			--			from CTE_Recursivo
-			--			where num < @N_NroPagos
-			--		)
-			--		insert @Tmp_Procesos(I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad)
-			--		select I_ProcesoID, I_ConcPagID, cast((M_Monto * @I_CredDesaprob) / @N_NroPagos as decimal(15,2)), 
-			--			DATEADD(MONTH, num-1, D_FecVencto), I_TipoObligacion, I_Prioridad
-			--		from CTE_Recursivo
-			--	end
-			--end
 			
 			--Monto de Pensión de enseñanza
 			if (select count(I_ProcesoID) from #tmp_conceptos_posgrado
@@ -3002,14 +2946,45 @@ GO
 
 
 
-IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_CuotasPago')
-	DROP VIEW [dbo].[VW_CuotasPago]
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_CuotasPago_Pregrado')
+	DROP VIEW [dbo].[VW_CuotasPago_Pregrado]
 GO
 
-CREATE VIEW [dbo].[VW_CuotasPago]
+CREATE VIEW [dbo].[VW_CuotasPago_Pregrado]
 AS
 SELECT 
 	ROW_NUMBER() OVER(PARTITION BY mat.I_Anio, mat.I_Periodo, mat.C_RcCod, mat.C_CodAlu ORDER BY pro.I_Prioridad, cab.D_FecVencto) AS I_NroOrden,
+	cab.I_ObligacionAluID, pro.I_ProcesoID, pro.N_CodBanco, mat.C_CodAlu, mat.C_RcCod, mat.C_CodFac, mat.C_CodEsc, mat.T_Nombre, mat.T_ApePaterno, mat.T_ApeMaterno, mat.I_Anio, mat.I_Periodo, 
+	per.T_OpcionCod AS C_Periodo, per.T_OpcionDesc AS T_Periodo, pro.T_ProcesoDesc, cab.D_FecVencto, pro.I_Prioridad, cab.C_Moneda,
+	niv.T_OpcionCod AS C_Nivel, tipal.T_OpcionCod AS C_TipoAlumno, cab.I_MontoOblig,
+	cab.B_Pagado, pagban.C_CodOperacion, pagban.D_FecPago, pagban.T_LugarPago, cab.D_FecCre,
+	ISNULL(srv.C_CodServicio, '') AS C_CodServicio,
+	ISNULL(cta.C_NumeroCuenta, '') AS C_NumeroCuenta, ISNULL(ef.T_EntidadDesc, '') AS T_EntidadDesc,
+	mat.T_FacDesc, mat.T_DenomProg
+FROM dbo.VW_MatriculaAlumno mat
+INNER JOIN dbo.TR_ObligacionAluCab cab ON cab.I_MatAluID = mat.I_MatAluID AND cab.B_Eliminado = 0
+INNER JOIN dbo.TC_Proceso pro ON pro.I_ProcesoID = cab.I_ProcesoID AND pro.B_Eliminado = 0
+INNER JOIN dbo.TC_CategoriaPago cat ON cat.I_CatPagoID = pro.I_CatPagoID AND cat.B_Eliminado = 0
+LEFT JOIN dbo.TC_Servicios srv ON srv.I_ServicioID = cat.I_ServicioID AND srv.B_Eliminado = 0
+INNER JOIN dbo.TC_CatalogoOpcion per ON per.I_ParametroID = 5 AND per.I_OpcionID = mat.I_Periodo
+INNER JOIN dbo.TC_CatalogoOpcion niv ON niv.I_ParametroID = 2 AND niv.I_OpcionID = cat.I_Nivel
+INNER JOIN dbo.TC_CatalogoOpcion tipal ON tipal.I_ParametroID = 1 AND tipal.I_OpcionID = cat.I_TipoAlumno
+LEFT JOIN dbo.TRI_PagoProcesadoUnfv pagpro ON pagpro.I_ObligacionAluID = cab.I_ObligacionAluID AND pagpro.B_Anulado = 0
+LEFT JOIN dbo.TR_PagoBanco pagban ON pagban.I_PagoBancoID = pagpro.I_PagoBancoID AND pagban.B_Anulado = 0
+LEFT JOIN dbo.TC_CuentaDeposito cta ON cta.I_CtaDepositoID = pagpro.I_CtaDepositoID
+LEFT JOIN dbo.TC_EntidadFinanciera ef ON ef.I_EntidadFinanID = pagban.I_EntidadFinanID
+GO
+
+
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_CuotasPago_Posgrado')
+	DROP VIEW [dbo].[VW_CuotasPago_Posgrado]
+GO
+
+CREATE VIEW [dbo].[VW_CuotasPago_Posgrado]
+AS
+SELECT 
+	ROW_NUMBER() OVER(PARTITION BY mat.C_CodAlu ORDER BY pro.I_Anio, pro.I_Periodo, pro.I_Prioridad, cab.D_FecVencto) AS I_NroOrden,
 	cab.I_ObligacionAluID, pro.I_ProcesoID, pro.N_CodBanco, mat.C_CodAlu, mat.C_RcCod, mat.C_CodFac, mat.C_CodEsc, mat.T_Nombre, mat.T_ApePaterno, mat.T_ApeMaterno, mat.I_Anio, mat.I_Periodo, 
 	per.T_OpcionCod AS C_Periodo, per.T_OpcionDesc AS T_Periodo, pro.T_ProcesoDesc, cab.D_FecVencto, pro.I_Prioridad, cab.C_Moneda,
 	niv.T_OpcionCod AS C_Nivel, tipal.T_OpcionCod AS C_TipoAlumno, cab.I_MontoOblig,

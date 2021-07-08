@@ -41,7 +41,7 @@ namespace WebApp.Models
         {
             get
             {
-                return (T_ApePaterno + " " + T_ApeMaterno).Trim() + " " + T_Nombre;
+                return ((T_ApePaterno + " " + T_ApeMaterno).Trim() + " " + T_Nombre).Trim();
             }
         }
 

@@ -108,9 +108,8 @@ namespace Data.Views
             {
                 codFac = String.IsNullOrEmpty(codFac) ? null : codFac;
 
-                string s_command = @"SELECT * FROM dbo.VW_CuotasPago c 
-                    WHERE c.I_Anio = @I_Anio AND c.I_Periodo = @I_Periodo AND 
-                        c.C_Nivel = '1' AND c.C_CodFac = ISNULL(@C_CodFac, c.C_CodFac)";
+                string s_command = @"SELECT * FROM dbo.VW_CuotasPago_Pregrado c 
+                    WHERE c.I_Anio = @I_Anio AND c.I_Periodo = @I_Periodo AND c.C_CodFac = ISNULL(@C_CodFac, c.C_CodFac)";
 
                 var parameters = new { I_Anio = anio, I_Periodo = periodo, C_CodFac = codFac };
 
@@ -127,7 +126,7 @@ namespace Data.Views
             return result;
         }
 
-        public static IEnumerable<VW_CuotasPago> GetPosgrado(int anio, int periodo, string codPosgrado)
+        public static IEnumerable<VW_CuotasPago> GetPosgrado(int anio, string codPosgrado)
         {
             IEnumerable<VW_CuotasPago> result;
 
@@ -135,11 +134,10 @@ namespace Data.Views
             {
                 codPosgrado = String.IsNullOrEmpty(codPosgrado) ? null : codPosgrado;
 
-                string s_command = @"SELECT * FROM dbo.VW_CuotasPago c 
-                    WHERE c.I_Anio = @I_Anio AND c.I_Periodo = @I_Periodo AND c.C_Nivel IN ('2', '3')
-                        AND c.C_CodEsc = ISNULL(@C_CodEsc, c.C_CodEsc)";
+                string s_command = @"SELECT * FROM dbo.VW_CuotasPago_Posgrado c 
+                    WHERE c.I_Anio <= @I_Anio AND c.C_CodEsc = ISNULL(@C_CodEsc, c.C_CodEsc)";
 
-                var parameters = new { I_Anio = anio, I_Periodo = periodo, C_CodEsc = codPosgrado };
+                var parameters = new { I_Anio = anio, C_CodEsc = codPosgrado };
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {

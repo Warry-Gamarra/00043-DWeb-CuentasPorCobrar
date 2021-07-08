@@ -74,6 +74,7 @@ namespace WebApp.ViewModels
         [RequiredWhenBoolenIsTrue("B_ConceptoAfecta")]
         public int? I_ConceptoAfectaID { get; set; }
         [Display(Name = "Nro de Pagos")]
+        [Required]
         public int? N_NroPagos { get; set; }
         [Display(Name = "Porcentaje")]
         public bool B_Porcentaje { get; set; }

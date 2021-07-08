@@ -19,6 +19,28 @@ namespace WebApp.ViewModels
 
         public string T_ApeMaterno { get; set; }
 
+        public string T_NombresApellidos
+        {
+            get
+            {
+                return String.Format("{0} {1} {2}",
+                    this.T_Nombre,
+                    this.T_ApePaterno,
+                    this.T_ApeMaterno);
+            }
+        }
+
+        public string T_ApellidosNombres
+        {
+            get
+            {
+                return String.Format("{0} {1}, {2}",
+                    this.T_ApePaterno,
+                    this.T_ApeMaterno,
+                    this.T_Nombre);
+            }
+        }
+
         public string N_Grado { get; set; }
 
         public int I_Anio { get; set; }

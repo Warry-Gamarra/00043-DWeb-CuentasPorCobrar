@@ -244,23 +244,25 @@ namespace WebApp.Models.Facades
         {
             IEnumerable<CtaDepoProcesoModel> result;
 
-            var ctasDeposito = _obligacionService.Obtener_CtaDeposito_X_Periodo(anio, periodo);
+            IEnumerable<CtaDepoProceso> ctasDeposito;
 
             switch (tipoEstudio)
             {
                 case TipoEstudio.Pregrado:
-                    result = ctasDeposito.Where(x => x.C_Nivel == C_NivelPregrado)
-                        .Select(x => Mapper.CtaDepoProceso_To_CtaDepoProcesoModel(x));
+                    ctasDeposito = _obligacionService.Obtener_CtaDeposito_X_Periodo(anio, periodo)
+                        .Where(x => x.C_Nivel == C_NivelPregrado);
                     break;
 
                 case TipoEstudio.Posgrado:
-                    result = ctasDeposito.Where(x => x.C_Nivel == C_NivelMaestria || x.C_Nivel == C_NivelDoctorado)
-                        .Select(x => Mapper.CtaDepoProceso_To_CtaDepoProcesoModel(x));
+                    ctasDeposito = _obligacionService.Obtener_CtaDeposito_X_Periodo(anio, periodo)
+                        .Where(x => x.C_Nivel == C_NivelMaestria || x.C_Nivel == C_NivelDoctorado);
                     break;
 
                 default:
                     throw new NotImplementedException("Ha ocurrido un error al identificar si el alumno es de Pregrado o Posgrado.");
             }
+
+            result = ctasDeposito.Select(x => Mapper.CtaDepoProceso_To_CtaDepoProcesoModel(x));
 
             return result;
         }

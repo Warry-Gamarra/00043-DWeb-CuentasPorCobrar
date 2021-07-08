@@ -1,4 +1,6 @@
 ﻿@model IEnumerable<WebApp.ViewModels.MatriculaModel>
+@using GridMvc.Html
+
 <div class="container-fluid">
     <div class="col-12">
         <section class="content-header">
@@ -13,6 +15,7 @@
         </section>
     </div>
     <br />
+
     <div class="col-12 mt-4">
         <div class="row">
             <div class="col-12">
@@ -48,40 +51,21 @@
                     </div>
                 </div>
 
-                <div class="table-responsive mt-4" style="max-height: 250px">
+                <div class="table-responsive mt-4">
                     <p class="h5">Estudiantes aptos para la generación de obligaciones</p>
-
-                    <table class="table table-sm table-hover">
-                        <thead class="thead-light">
-                            <tr>
-                                <th>Año</th>
-                                <th>Periodo</th>
-                                <th>Codigo alumno</th>
-                                <th>Nombres</th>
-                                <th>Apellidos</th>
-                                <th>Especialidad</th>
-                                <th>Tipo alumno</th>
-                                <th>Créditos desaprobados</th>
-                                <th>Multa por no votar</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model)
-                            {
-                                <tr>
-                                    <td>@item.I_Anio</td>
-                                    <td>@item.T_Periodo</td>
-                                    <td>@item.C_CodAlu</td>
-                                    <td>@item.T_Nombre</td>
-                                    <td>@item.T_ApePaterno @item.T_ApeMaterno</td>
-                                    <td>@item.T_DenomProg</td>
-                                    <td>@item.T_EsIngresante</td>
-                                    <td>@item.I_CredDesaprob</td>
-                                    <td>@item.T_TieneMultaPorNoVotar</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+                    @Html.Grid(Model).Columns(columns => {
+                        columns.Add(c => c.I_Anio).Titled("Año").Filterable(true);
+                        columns.Add(c => c.T_Periodo).Titled("Periodo").Filterable(true);
+                        columns.Add(c => c.C_CodAlu).Titled("Código alumno").Filterable(true);
+                        columns.Add(c => c.T_NombresApellidos).Titled("Nombres y apellidos").Filterable(true);
+                        columns.Add(c => c.T_DenomProg).Titled("Especialidad").Filterable(true);
+                        columns.Add(c => c.T_EsIngresante).Titled("Tipo alumno").Filterable(true);
+                        columns.Add(c => c.I_CredDesaprob).Titled("Créditos desaprobados").Filterable(true).Css("text-center");
+                        if ((Domain.Helpers.TipoEstudio)ViewBag.DefaultTipoEstudio == Domain.Helpers.TipoEstudio.Pregrado)
+                        {
+                            columns.Add(c => c.T_TieneMultaPorNoVotar).Titled("Multa por no votar").Filterable(true).Css("text-center");
+                        }
+                    }).WithPaging(12).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
                 </div>
             </div>
         </div>

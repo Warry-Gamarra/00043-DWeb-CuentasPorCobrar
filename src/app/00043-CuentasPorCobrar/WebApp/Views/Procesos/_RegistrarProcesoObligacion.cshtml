@@ -15,7 +15,7 @@
         <div class="container-fluid">
             @Html.HiddenFor(model => model.ProcesoId)
             @Html.HiddenFor(model => model.PrioridadId)
-            @Html.Hidden("CodBcoHddn")
+            @Html.Hidden("CodBcoHddn", Model.CodBcoComercio)
             @Html.HiddenFor(model => model.DescProceso)
             <div class="form-group">
                 @Html.LabelFor(model => model.CategoriaId, new { @class = "control-label" })

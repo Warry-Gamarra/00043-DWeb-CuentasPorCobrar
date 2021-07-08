@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web;
 using Domain.Helpers;
 using WebApp.Models.Facades;
@@ -20,13 +21,13 @@ namespace WebApp.Models
             fechaTransmision = DateTime.Now;
         }
 
-        public byte[] GenerarInformacionObligaciones(int anio, int periodo, TipoEstudio tipoEstudio, string dependencia)
+        public MemoryStream GenerarInformacionObligaciones(int anio, int periodo, TipoEstudio tipoEstudio, string dependencia)
         {
             var cuotas_pago = _obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(anio, periodo, tipoEstudio, dependencia).Where(x => !x.B_Pagado).ToList();
 
             var cuentas_bcp = _obligacionServiceFacade.Obtener_CtaDeposito_X_Periodo(anio, periodo, tipoEstudio).Where(x => x.I_EntidadFinanID == Constantes.BCP_ID);
 
-            var cuenta_cabecera_split = cuentas_bcp.First().C_NumeroCuenta.Split('-');
+            var cuentas_bcp_split = cuentas_bcp.First().C_NumeroCuenta.Split('-');
 
             if (cuotas_pago.Count == 0)
             {
@@ -35,12 +36,12 @@ namespace WebApp.Models
 
             var memoryStream = new MemoryStream();
 
-            var tw = new StreamWriter(memoryStream);
+            var writer = new StreamWriter(memoryStream, Encoding.UTF8);
 
             string tipoRegistro = "CC";
-            string codigoSucursal = cuenta_cabecera_split[0].Substring(0, 3);
-            string codigoMoneda = cuenta_cabecera_split[2].Substring(0, 1);
-            string numeroCuentaEmpresa = cuenta_cabecera_split[1].Substring(0, 7);
+            string codigoSucursal = cuentas_bcp_split[0].Substring(0, 3);
+            string codigoMoneda = cuentas_bcp_split[2].Substring(0, 1);
+            string numeroCuentaEmpresa = cuentas_bcp_split[1].Substring(0, 7);
             string tipoValidacion = "C";
             string nombreEmpresa = "UNIVERSIDAD NACIONAL FEDERICO VILLARREAL";
             int cantidadRegistros = cuotas_pago.Count;
@@ -64,19 +65,14 @@ namespace WebApp.Models
                 fillerCabecera          //11
                 );
 
-            tw.WriteLine(cab);
+            writer.WriteLine(cab);
 
             tipoRegistro = "DD";
 
             foreach (var item in cuotas_pago)
             {
-                var cuenta_detalle_split = cuentas_bcp.First(x => x.I_ProcesoID == item.I_ProcesoID).C_NumeroCuenta.Split('-');
-                codigoSucursal = cuenta_detalle_split[0].Substring(0, 3);
-                codigoMoneda = cuenta_detalle_split[2].Substring(0, 1);
-                numeroCuentaEmpresa = cuenta_detalle_split[1].Substring(0, 7);
-
                 string codigoDepositante = item.C_CodAlu.PadLeft(14, '0');
-                string nombreDepositante = (item.T_Nombre.Trim() + " " + (item.T_ApePaterno.Trim() + " " + item.T_ApeMaterno).Trim());
+                string nombreDepositante = item.T_NombresCompletos;
                 nombreDepositante = nombreDepositante.Substring(0, (nombreDepositante.Length < 40 ? nombreDepositante.Length : 40));
                 int montoCupon = (int)(item.I_MontoOblig * 100);
                 string informacionRetorno = item.C_CodRc + item.I_ProcesoID.ToString("D6") + montoCupon.ToString("D15");
@@ -106,14 +102,14 @@ namespace WebApp.Models
                     fillerDetalle               //15
                     );
 
-                tw.WriteLine(det);
+                writer.WriteLine(det);
             }
 
-            tw.Flush();
+            writer.Flush();
 
-            tw.Close();
+            memoryStream.Seek(0, SeekOrigin.Begin);
 
-            return memoryStream.GetBuffer();
+            return memoryStream;
         }
 
         public string NombreArchivoGenerado()

@@ -305,6 +305,13 @@ namespace Domain.Services
             switch (saveOption)
             {
                 case SaveOption.Insert:
+
+                    if (USP_S_ConceptoPago.Execute(conceptoPago.I_ProcesoID)
+                        .FirstOrDefault(x => x.I_ConceptoID == conceptoPago.I_ConceptoID) != null)
+                    {
+                        return new Response() { Value = false, Message = "El concepto de pago ya se encuentra registrado" };
+                    }
+
                     var grabarConceptoPago = new USP_I_GrabarConceptoPago()
                     {
                         I_ProcesoID = conceptoPago.I_ProcesoID,

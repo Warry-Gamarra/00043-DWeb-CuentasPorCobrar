@@ -112,7 +112,7 @@ namespace Domain.Services.Implementations
                     cuotaPagos = VW_CuotasPago.GetPregrado(anio, periodo, codDependencia);
                     break;
                 case TipoEstudio.Posgrado:
-                    cuotaPagos = VW_CuotasPago.GetPosgrado(anio, periodo, codDependencia);
+                    cuotaPagos = VW_CuotasPago.GetPosgrado(anio, codDependencia);
                     break;
                 default:
                     throw new InvalidOperationException();
