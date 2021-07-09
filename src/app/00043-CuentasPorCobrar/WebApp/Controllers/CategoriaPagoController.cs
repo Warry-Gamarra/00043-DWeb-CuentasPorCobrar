@@ -48,7 +48,7 @@ namespace WebApp.Controllers
 
             return PartialView("_RegistrarCategoria", new CategoriaPagoRegistroViewModel()
             {
-                CtasBcoComercio = _cuentasDeposito.Find().Where(x => x.EntidadFinancieraId == Constantes.BANCO_COMERCIO_ID).Select(x => x.Id.Value).ToArray()
+                CtasBcoComercio = _cuentasDeposito.Find().Where(x => x.EntidadFinancieraId == Bancos.BANCO_COMERCIO_ID).Select(x => x.Id.Value).ToArray()
             });
         }
 

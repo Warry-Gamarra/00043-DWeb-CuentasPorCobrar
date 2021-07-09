@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Helpers
 {
-    public static class Constantes
+    public static class Bancos
     {
         public const int BANCO_COMERCIO_ID = 1;
 
@@ -22,5 +22,10 @@ namespace Domain.Helpers
         public const string BASIC_DATETIME = "dd/MM/yyyy HH:mm:ss";
 
         public const string PAYMENT_DATETIME_FORMAT = "yyyyMMddHHmmss";
+    }
+
+    public static class ConstantesBCP
+    {
+        public const string CodExtorno = "E";
     }
 }

@@ -300,7 +300,7 @@ namespace WebApp.Models
         public RegistroProcesoViewModel Obtener_Proceso(int I_ProcesoID)
         {
             var proceso = _procesoService.Obtener_Proceso(I_ProcesoID);
-            var ctasBcoComercio = _cuentaDeposito.Find().Where(x => x.I_EntidadFinanId == Constantes.BANCO_COMERCIO_ID);
+            var ctasBcoComercio = _cuentaDeposito.Find().Where(x => x.I_EntidadFinanId == Bancos.BANCO_COMERCIO_ID);
 
             var cuentasProceso = _procesoService.Obtener_CtasDepo_X_Proceso(I_ProcesoID);
 
@@ -318,7 +318,7 @@ namespace WebApp.Models
                 CtaDepositoID = cuentasProceso.Select(x => x.I_CtaDepositoID).ToArray()
             };
 
-            if (cuentasProceso.Where(x => x.I_EntidadFinanID == Constantes.BANCO_COMERCIO_ID).Count() > 0)
+            if (cuentasProceso.Where(x => x.I_EntidadFinanID == Bancos.BANCO_COMERCIO_ID).Count() > 0)
                 model.MostrarCodBanco = true;
 
             return model;

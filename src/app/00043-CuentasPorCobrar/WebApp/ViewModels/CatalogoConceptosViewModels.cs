@@ -93,6 +93,9 @@ namespace WebApp.ViewModels
         public string T_DescripcionLarga { get; set; }
         public string T_Documento { get; set; }
 
+        [Display(Name = "Mora")]
+        public bool B_Mora { get; set; }
+
         public CatalogoConceptosRegistroViewModel() { }
 
         public CatalogoConceptosRegistroViewModel(ConceptoEntity concepto)
@@ -114,6 +117,7 @@ namespace WebApp.ViewModels
             this.B_AgrupaConcepto = concepto.B_AgrupaConcepto ?? false;
             this.TipoObligacion = concepto.I_TipoObligacion;
             this.B_GrupoCodRc = concepto.B_GrupoCodRc ?? false;
+            //this.B_Especialidad = concepto.B_GrupoCodRc ?? false;
             this.B_ModalidadIngreso = concepto.B_ModalidadIngreso ?? false;
             this.I_ModalidadIngresoID = concepto.I_ModalidadIngresoID;
             this.I_ConceptoAgrupaID = concepto.I_ConceptoAgrupaID;
@@ -122,6 +126,7 @@ namespace WebApp.ViewModels
             this.C_Moneda = concepto.C_Moneda;
             this.T_DescripcionLarga = concepto.T_DescripcionLarga;
             this.T_Documento = concepto.T_Documento;
+            this.B_Mora = concepto.B_Mora ?? false;
         }
     }
 

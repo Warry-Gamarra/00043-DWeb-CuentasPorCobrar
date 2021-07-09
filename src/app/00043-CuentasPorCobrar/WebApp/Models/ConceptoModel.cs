@@ -46,6 +46,7 @@ namespace WebApp.Models
                 I_MontoMinimo = model.MontoMinimo,
                 B_Calculado = model.Calculado,
                 I_Calculado = model.TipoCalculo,
+                B_Mora = model.B_Mora
             };
 
             Response result = conceptoPagoService.Save(concepto, currentUserId, (model.Id.HasValue ? SaveOption.Update : SaveOption.Insert));

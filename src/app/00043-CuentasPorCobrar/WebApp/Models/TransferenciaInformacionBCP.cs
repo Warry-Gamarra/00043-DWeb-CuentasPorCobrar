@@ -25,7 +25,7 @@ namespace WebApp.Models
         {
             var cuotas_pago = _obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(anio, periodo, tipoEstudio, dependencia).Where(x => !x.B_Pagado).ToList();
 
-            var cuentas_bcp = _obligacionServiceFacade.Obtener_CtaDeposito_X_Periodo(anio, periodo, tipoEstudio).Where(x => x.I_EntidadFinanID == Constantes.BCP_ID);
+            var cuentas_bcp = _obligacionServiceFacade.Obtener_CtaDeposito_X_Periodo(anio, periodo, tipoEstudio).Where(x => x.I_EntidadFinanID == Bancos.BCP_ID);
 
             var cuentas_bcp_split = cuentas_bcp.First().C_NumeroCuenta.Split('-');
 

@@ -20,6 +20,7 @@ namespace Data.Types
         public string C_Moneda { get; set; }
         public decimal? I_MontoOblig { get; set; }
         public decimal I_MontoPago { get; set; }
+        public decimal I_InteresMora { get; set; }
         public string T_LugarPago { get; set; }
         public int I_EntidadFinanID { get; set; }
         public int? I_CtaDepositoID { get; set; }

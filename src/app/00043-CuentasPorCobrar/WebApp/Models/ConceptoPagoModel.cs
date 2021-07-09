@@ -125,7 +125,8 @@ namespace WebApp.Models
                 B_Habilitado = model.B_Habilitado.HasValue ? model.B_Habilitado.GetValueOrDefault() : true,
                 I_UsuarioCre = currentUserId,
                 I_UsuarioMod = currentUserId,
-                C_Moneda = model.C_Moneda
+                C_Moneda = model.C_Moneda,
+                B_Mora = model.B_Mora
             };
 
             var result = conceptoPagoService.Grabar_ConceptoPago(conceptoPagoEntity, saveOption);
@@ -195,7 +196,8 @@ namespace WebApp.Models
                 M_MontoMinimo = conceptoPago.M_MontoMinimo,
                 T_DescripcionLarga = conceptoPago.T_DescripcionLarga,
                 T_Documento = conceptoPago.T_Documento,
-                B_Habilitado = conceptoPago.B_Habilitado
+                B_Habilitado = conceptoPago.B_Habilitado,
+                B_Mora = conceptoPago.B_Mora.GetValueOrDefault()
             };
 
             return model;

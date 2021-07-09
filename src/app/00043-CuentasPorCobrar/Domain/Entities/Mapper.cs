@@ -243,6 +243,7 @@ namespace Domain.Entities
             dataTable.Columns.Add("I_Cantidad");
             dataTable.Columns.Add("C_Moneda");
             dataTable.Columns.Add("I_MontoPago");
+            dataTable.Columns.Add("I_InteresMora");
             dataTable.Columns.Add("T_LugarPago");
             dataTable.Columns.Add("C_CodAlu");
             dataTable.Columns.Add("C_CodRc");
@@ -259,6 +260,7 @@ namespace Domain.Entities
                 x.I_Cantidad,
                 x.C_Moneda,
                 x.I_MontoPago,
+                x.I_InteresMora,
                 x.T_LugarPago,
                 x.C_CodAlu,
                 x.C_CodRc,

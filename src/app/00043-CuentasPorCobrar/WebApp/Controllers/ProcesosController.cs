@@ -73,7 +73,7 @@ namespace WebApp.Controllers
             return PartialView("_RegistrarProcesoObligacion", new RegistroProcesoViewModel()
             {
                 Anio = anio,
-                CtasBcoComercio = _cuentasDeposito.Find().Where(x => x.EntidadFinancieraId == Constantes.BANCO_COMERCIO_ID).Select(x => x.Id.Value).ToArray()
+                CtasBcoComercio = _cuentasDeposito.Find().Where(x => x.EntidadFinancieraId == Bancos.BANCO_COMERCIO_ID).Select(x => x.Id.Value).ToArray()
             });
         }
 
@@ -123,7 +123,7 @@ namespace WebApp.Controllers
 
             return PartialView("_RegistrarProcesoTasa", new RegistroProcesoViewModel()
             {
-                CtasBcoComercio = _cuentasDeposito.Find().Where(x => x.EntidadFinancieraId == Constantes.BANCO_COMERCIO_ID).Select(x => x.Id.Value).ToArray()
+                CtasBcoComercio = _cuentasDeposito.Find().Where(x => x.EntidadFinancieraId == Bancos.BANCO_COMERCIO_ID).Select(x => x.Id.Value).ToArray()
             });
         }
 

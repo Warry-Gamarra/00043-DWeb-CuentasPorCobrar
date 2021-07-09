@@ -79,6 +79,7 @@
             @Html.HiddenFor(model => model.ConceptoPago.I_ConceptoAgrupaID)
             @Html.HiddenFor(model => model.ConceptoPago.C_Moneda)
             @Html.HiddenFor(model => model.ConceptoPago.B_Porcentaje)
+            @Html.HiddenFor(model => model.ConceptoPago.B_Mora)
 
             @Html.LabelFor(model => model.ConceptoPago.I_ConceptoID, new { @class = "control-label col-12" })
             <div class="col-10">
@@ -259,6 +260,7 @@
                     $('#ConceptoPago_C_Moneda').val(data['C_Moneda']);
                     $('#ConceptoPago_T_DescripcionLarga').val(data['T_DescripcionLarga']);
                     $('#ConceptoPago_T_Documento').val(data['T_Documento']);
+                    $('#ConceptoPago_B_Mora').val(data['B_Mora']);
 
                     $('#search-container').hide();
                     $('#concepto-form').show();

@@ -120,7 +120,7 @@ namespace WebApp.Controllers
                     workbook.SaveAs(stream);
                     var content = stream.ToArray();
 
-                    return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Resultado.xlsx");
+                    return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Resultado del registro de alumnos.xlsx");
                 }
             }
         }
@@ -172,7 +172,7 @@ namespace WebApp.Controllers
                     workbook.SaveAs(stream);
                     var content = stream.ToArray();
 
-                    return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Resultado del Registro de Multas.xlsx");
+                    return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Resultado del registro de multas.xlsx");
                 }
             }
         }

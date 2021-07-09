@@ -47,6 +47,7 @@ namespace Data.Tables
         public decimal? M_MontoMinimo { get; set; }
         public string T_DescripcionLarga { get; set; }
         public string T_Documento { get; set; }
+        public bool? B_Mora { get; set; }
         public bool? B_Habilitado { get; set; }
         public bool? B_Eliminado { get; set; }
         public int? I_UsuarioCre { get; set; }

@@ -64,6 +64,8 @@ namespace Data.Tables
 
         public string T_Documento { get; set; }
 
+        public bool? B_Mora { get; set; }
+
         public bool B_Habilitado { get; set; }
 
         public bool B_Eliminado { get; set; }
@@ -161,6 +163,7 @@ namespace Data.Tables
                     parameters.Add(name: "I_Calculado", dbType: DbType.Int32, value: this.I_Calculado);
                     parameters.Add(name: "D_FecCre", dbType: DbType.DateTime, value: this.D_FecCre);
                     parameters.Add(name: "CurrentUserId", dbType: DbType.Int32, value: currentUserId);
+                    parameters.Add(name: "B_Mora", dbType: DbType.Boolean, value: this.B_Mora);
 
                     parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);
                     parameters.Add(name: "T_Message", dbType: DbType.String, size: 4000, direction: ParameterDirection.Output);
@@ -201,6 +204,7 @@ namespace Data.Tables
                     parameters.Add(name: "I_Calculado", dbType: DbType.Int32, value: this.I_Calculado);
                     parameters.Add(name: "D_FecMod", dbType: DbType.DateTime, value: this.D_FecMod);
                     parameters.Add(name: "CurrentUserId", dbType: DbType.Int32, value: currentUserId);
+                    parameters.Add(name: "B_Mora", dbType: DbType.Boolean, value: this.B_Mora);
 
                     parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);
                     parameters.Add(name: "T_Message", dbType: DbType.String, size: 4000, direction: ParameterDirection.Output);

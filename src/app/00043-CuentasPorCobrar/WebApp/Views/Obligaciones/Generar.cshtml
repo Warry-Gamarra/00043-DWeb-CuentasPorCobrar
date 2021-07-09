@@ -290,7 +290,9 @@
         });
 
         $("#frmGenerarOblig").on("click", "#btnConsultaOblig", function (e) {
-            $(this).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Generando obligaciones . . .');
+            $(this).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Realizando consulta . . .');
+            AbrirModalEsperaGeneracionOblig();
+            LimpiarMensajeGenerarOblig();
             $("#frmGenerarOblig").prop("method", "GET");
             document.getElementById('frmGenerarOblig').submit()
         });

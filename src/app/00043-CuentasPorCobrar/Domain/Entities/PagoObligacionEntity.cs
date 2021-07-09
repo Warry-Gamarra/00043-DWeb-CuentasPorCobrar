@@ -22,5 +22,7 @@ namespace Domain.Entities
         public DateTime D_FecVencto { get; set; }
         public int I_EntidadFinanID { get; set; }
         public int? I_CtaDepositoID { get; set; }
+        public decimal I_InteresMora { get; set; }
+        public string C_Extorno { get; set; }
     }
 }

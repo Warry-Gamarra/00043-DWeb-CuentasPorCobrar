@@ -35,6 +35,7 @@ namespace Domain.Helpers
                 C_Moneda = x.C_Moneda,
                 I_MontoOblig = x.I_MontoOblig,
                 I_MontoPago = x.I_MontoPago,
+                I_InteresMora = x.I_InteresMora,
                 T_LugarPago = x.T_LugarPago,
                 I_EntidadFinanID = x.I_EntidadFinanID,
                 I_CtaDepositoID = x.I_CtaDepositoID,

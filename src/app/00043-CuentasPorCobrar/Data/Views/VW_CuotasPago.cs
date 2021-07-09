@@ -82,7 +82,7 @@ namespace Data.Views
 
             try
             {
-                string s_command = @"SELECT * FROM dbo.VW_CuotasPago c
+                string s_command = @"SELECT * FROM dbo.VW_CuotasPago_X_Ciclo c
                     WHERE c.I_Anio = @I_Anio AND c.I_Periodo = @I_Periodo AND c.C_CodAlu = @C_CodAlu AND c.C_RcCod = @C_CodRc";
 
                 var parameters = new { I_Anio = anio, I_Periodo = periodo, C_CodAlu = codAlu, C_CodRc = codRc };
@@ -108,8 +108,9 @@ namespace Data.Views
             {
                 codFac = String.IsNullOrEmpty(codFac) ? null : codFac;
 
-                string s_command = @"SELECT * FROM dbo.VW_CuotasPago_Pregrado c 
-                    WHERE c.I_Anio = @I_Anio AND c.I_Periodo = @I_Periodo AND c.C_CodFac = ISNULL(@C_CodFac, c.C_CodFac)";
+                string s_command = @"SELECT * FROM dbo.VW_CuotasPago_X_Ciclo c 
+                    WHERE c.I_Anio = @I_Anio AND c.I_Periodo = @I_Periodo AND c.C_Nivel = '1' AND
+                        c.C_CodFac = ISNULL(@C_CodFac, c.C_CodFac)";
 
                 var parameters = new { I_Anio = anio, I_Periodo = periodo, C_CodFac = codFac };
 
@@ -134,8 +135,9 @@ namespace Data.Views
             {
                 codPosgrado = String.IsNullOrEmpty(codPosgrado) ? null : codPosgrado;
 
-                string s_command = @"SELECT * FROM dbo.VW_CuotasPago_Posgrado c 
-                    WHERE c.I_Anio <= @I_Anio AND c.C_CodEsc = ISNULL(@C_CodEsc, c.C_CodEsc)";
+                string s_command = @"SELECT * FROM dbo.VW_CuotasPago_General c 
+                    WHERE c.I_Anio <= @I_Anio AND c.C_Nivel IN ('2', '3') AND
+                        c.C_CodEsc = ISNULL(@C_CodEsc, c.C_CodEsc)";
 
                 var parameters = new { I_Anio = anio, C_CodEsc = codPosgrado };
 

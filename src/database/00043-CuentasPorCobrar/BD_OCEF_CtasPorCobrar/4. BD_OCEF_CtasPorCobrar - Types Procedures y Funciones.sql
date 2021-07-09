@@ -544,7 +544,8 @@ CREATE PROCEDURE dbo.USP_I_GrabarConceptoPago
 @T_DescripcionLarga varchar(250) = null,
 @T_Documento varchar(250) = null,
 @I_UsuarioCre int,
-@C_Moneda char(18) = null,
+@C_Moneda varchar(5) = null,
+@B_Mora bit = null,
 @I_ConcPagID int OUTPUT,
 @B_Result bit OUTPUT,
 @T_Message nvarchar(4000) OUTPUT
@@ -556,13 +557,13 @@ BEGIN
 			I_AlumnosDestino, I_GradoDestino, I_TipoObligacion, T_Clasificador, C_CodTasa, B_Calculado, I_Calculado, 
 			B_AnioPeriodo, I_Anio, I_Periodo, B_Especialidad, C_CodRc, B_Dependencia, C_DepCod, B_GrupoCodRc, I_GrupoCodRc, 
 			B_ModalidadIngreso, I_ModalidadIngresoID, B_ConceptoAgrupa, I_ConceptoAgrupaID, B_ConceptoAfecta, I_ConceptoAfectaID, 
-			N_NroPagos, B_Porcentaje, M_Monto, M_MontoMinimo, T_DescripcionLarga, T_Documento, B_Migrado, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
+			N_NroPagos, B_Porcentaje, M_Monto, M_MontoMinimo, T_DescripcionLarga, T_Documento, B_Migrado, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, B_Mora)
 		
 		VALUES(@I_ProcesoID, @I_ConceptoID, @T_ConceptoPagoDesc, @B_Fraccionable, @B_ConceptoGeneral, @B_AgrupaConcepto, 
 			@I_AlumnosDestino, @I_GradoDestino, @I_TipoObligacion, @T_Clasificador, @C_CodTasa, @B_Calculado, @I_Calculado, 
 			@B_AnioPeriodo, @I_Anio, @I_Periodo, @B_Especialidad, @C_CodRc, @B_Dependencia, @C_DepCod, @B_GrupoCodRc, @I_GrupoCodRc,
 			@B_ModalidadIngreso, @I_ModalidadIngresoID, @B_ConceptoAgrupa, @I_ConceptoAgrupaID, @B_ConceptoAfecta, @I_ConceptoAfectaID, 
-			@N_NroPagos, @B_Porcentaje, @M_Monto, @M_MontoMinimo, @T_DescripcionLarga, @T_Documento, 0, 1, 0, @I_UsuarioCre, getdate())
+			@N_NroPagos, @B_Porcentaje, @M_Monto, @M_MontoMinimo, @T_DescripcionLarga, @T_Documento, 0, 1, 0, @I_UsuarioCre, getdate(), @B_Mora)
 		
 		SET @I_ConcPagID = SCOPE_IDENTITY()
 		SET @B_Result = 1
@@ -620,7 +621,8 @@ CREATE PROCEDURE dbo.USP_U_ActualizarConceptoPago
 @T_Documento varchar(250) = null,
 @B_Habilitado bit,
 @I_UsuarioMod int,
-@C_Moneda char(18) = null,
+@C_Moneda varchar(5) = null,
+@B_Mora bit = null,
 @B_Result bit OUTPUT,
 @T_Message nvarchar(4000) OUTPUT
 AS
@@ -664,7 +666,8 @@ BEGIN
 			T_Documento = @T_Documento,
 			B_Habilitado = @B_Habilitado,
 			I_UsuarioMod = @I_UsuarioMod,
-			D_FecMod = getdate()
+			D_FecMod = getdate(),
+			B_Mora = @B_Mora
 		WHERE I_ConcPagID = @I_ConcPagID
 		
 		SET @B_Result = 1
@@ -1380,7 +1383,7 @@ CREATE PROCEDURE [dbo].[USP_I_GrabarConcepto]
 	,@I_Calculado		int
 	,@D_FecCre			datetime
 	,@CurrentUserId		int
-
+	,@B_Mora			bit = null
 	,@B_Result bit OUTPUT
 	,@T_Message nvarchar(4000) OUTPUT	
 AS
@@ -1388,9 +1391,9 @@ BEGIN
   SET NOCOUNT ON
   	BEGIN TRY
 		INSERT INTO TC_Concepto(T_ConceptoDesc, T_Clasificador, I_Monto, I_MontoMinimo, B_EsPagoMatricula, B_EsPagoExtmp, B_ConceptoAgrupa, 
-								B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
+								B_Calculado, I_Calculado, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, B_Mora)
 						VALUES (@T_ConceptoDesc, @T_Clasificador, @I_Monto, @I_MontoMinimo, @B_EsPagoMatricula, @B_EsPagoExtmp, @B_ConceptoAgrupa,
-								@B_Calculado, @I_Calculado, 1, 0, @CurrentUserId, @D_FecCre)
+								@B_Calculado, @I_Calculado, 1, 0, @CurrentUserId, @D_FecCre, @B_Mora)
 
 		SET @B_Result = 1
 		SET @T_Message = 'Nuevo registro agregado.'
@@ -1419,8 +1422,9 @@ CREATE PROCEDURE [dbo].[USP_U_ActualizarConcepto]
 	,@B_ConceptoAgrupa	bit
 	,@B_Calculado		bit
 	,@I_Calculado		int
-	,@D_FecMod		datetime
-	,@CurrentUserId	int
+	,@D_FecMod			datetime
+	,@CurrentUserId		int
+	,@B_Mora			bit = null
 
 	,@B_Result	bit OUTPUT
 	,@T_Message nvarchar(4000) OUTPUT	
@@ -1440,6 +1444,7 @@ BEGIN
 			, B_ConceptoAgrupa = @B_ConceptoAgrupa
 			, D_FecMod = @D_FecMod
 			, I_UsuarioMod = @CurrentUserId
+			, B_Mora = @B_Mora
 		WHERE I_ConceptoID = @I_ConceptoID
 			
 		SET @B_Result = 1
@@ -2142,7 +2147,7 @@ BEGIN
 	left join dbo.TC_CatalogoOpcion moding on moding.I_ParametroID = 7 and moding.I_OpcionID = conpag.I_ModalidadIngresoID
 	left join dbo.TC_CatalogoOpcion gr on gr.I_ParametroID = 6 and gr.I_OpcionID = conpag.I_GrupoCodRc
 	where p.B_Habilitado = 1 and p.B_Eliminado = 0 and
-		conpag.B_Habilitado = 1 and conpag.B_Eliminado = 0 and
+		conpag.B_Habilitado = 1 and conpag.B_Eliminado = 0 and ISNULL(conpag.B_Mora, 0) = 0 and
 		cp.B_Obligacion = 1 and p.I_Anio = @I_Anio and p.I_Periodo = @I_Periodo and cp.I_Nivel = (select I_OpcionID from dbo.TC_CatalogoOpcion where I_ParametroID = 2 and T_OpcionCod = @N_GradoBachiller)
 		--cp.B_Obligacion = 1 and p.I_Anio = 2021 and p.I_Periodo = 15 and cp.I_Nivel = (select I_OpcionID from dbo.TC_CatalogoOpcion where I_ParametroID = 2 and T_OpcionCod = N_GradoBachiller)
 
@@ -2576,7 +2581,7 @@ BEGIN
 	left join dbo.TC_CatalogoOpcion gr on gr.I_ParametroID = 6 and gr.I_OpcionID = conpag.I_GrupoCodRc
 	left join dbo.TC_CatalogoOpcion niv on niv.I_ParametroID = 2 and niv.I_OpcionID = cp.I_Nivel
 	where p.B_Habilitado = 1 and p.B_Eliminado = 0 and
-		conpag.B_Habilitado = 1 and conpag.B_Eliminado = 0 and
+		conpag.B_Habilitado = 1 and conpag.B_Eliminado = 0  and ISNULL(conpag.B_Mora, 0) = 0 and
 		cp.B_Obligacion = 1 and p.I_Anio = @I_Anio and p.I_Periodo = @I_Periodo and cp.I_Nivel in (select I_OpcionID from dbo.TC_CatalogoOpcion where I_ParametroID = 2 and T_OpcionCod IN (@N_GradoMaestria, @N_Doctorado))
 		--cp.B_Obligacion = 1 and p.I_Anio = 2021 and p.I_Periodo = 19 and cp.I_Nivel in (select I_OpcionID from dbo.TC_CatalogoOpcion where I_ParametroID = 2 and T_OpcionCod IN ('2', '3'))
 
@@ -2946,11 +2951,11 @@ GO
 
 
 
-IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_CuotasPago_Pregrado')
-	DROP VIEW [dbo].[VW_CuotasPago_Pregrado]
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_CuotasPago_X_Ciclo')
+	DROP VIEW [dbo].[VW_CuotasPago_X_Ciclo]
 GO
 
-CREATE VIEW [dbo].[VW_CuotasPago_Pregrado]
+CREATE VIEW [dbo].[VW_CuotasPago_X_Ciclo]
 AS
 SELECT 
 	ROW_NUMBER() OVER(PARTITION BY mat.I_Anio, mat.I_Periodo, mat.C_RcCod, mat.C_CodAlu ORDER BY pro.I_Prioridad, cab.D_FecVencto) AS I_NroOrden,
@@ -2977,14 +2982,14 @@ GO
 
 
 
-IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_CuotasPago_Posgrado')
-	DROP VIEW [dbo].[VW_CuotasPago_Posgrado]
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_CuotasPago_General')
+	DROP VIEW [dbo].[VW_CuotasPago_General]
 GO
 
-CREATE VIEW [dbo].[VW_CuotasPago_Posgrado]
+CREATE VIEW [dbo].[VW_CuotasPago_General]
 AS
 SELECT 
-	ROW_NUMBER() OVER(PARTITION BY mat.C_CodAlu ORDER BY pro.I_Anio, pro.I_Periodo, pro.I_Prioridad, cab.D_FecVencto) AS I_NroOrden,
+	ROW_NUMBER() OVER(PARTITION BY mat.C_CodAlu ORDER BY mat.C_CodAlu, pro.I_Anio, pro.I_Periodo, pro.I_Prioridad, cab.D_FecVencto) AS I_NroOrden,
 	cab.I_ObligacionAluID, pro.I_ProcesoID, pro.N_CodBanco, mat.C_CodAlu, mat.C_RcCod, mat.C_CodFac, mat.C_CodEsc, mat.T_Nombre, mat.T_ApePaterno, mat.T_ApeMaterno, mat.I_Anio, mat.I_Periodo, 
 	per.T_OpcionCod AS C_Periodo, per.T_OpcionDesc AS T_Periodo, pro.T_ProcesoDesc, cab.D_FecVencto, pro.I_Prioridad, cab.C_Moneda,
 	niv.T_OpcionCod AS C_Nivel, tipal.T_OpcionCod AS C_TipoAlumno, cab.I_MontoOblig,
@@ -3057,6 +3062,7 @@ CREATE TYPE [dbo].[type_dataPago] AS TABLE(
 	I_Cantidad			int,
 	C_Moneda			varchar(3),
 	I_MontoPago			decimal(15,2),
+	I_InteresMora			decimal(15,2),
 	T_LugarPago			varchar(250),
 	--Identificar obligaciones
 	C_CodAlu			varchar(20),
@@ -3093,10 +3099,12 @@ BEGIN
 		T_NomDepositante	varchar(200),
 		C_Referencia		varchar(50),
 		D_FecPago			datetime,
+		D_FecVencto			datetime,
 		I_Cantidad			int,
 		C_Moneda			varchar(3),
 		I_MontoOblig		decimal(15,2) NULL,
 		I_MontoPago			decimal(15,2),
+		I_InteresMora		decimal(15,2),
 		T_LugarPago			varchar(250),
 		I_EntidadFinanID	int,
 		I_CtaDepositoID		int,
@@ -3114,15 +3122,16 @@ BEGIN
 		WHERE m.B_Eliminado = 0
 	)
 	INSERT @Tmp_PagoObligacion(I_ProcesoID, I_ObligacionAluID, C_CodOperacion, C_CodDepositante, T_NomDepositante, 
-		C_Referencia, D_FecPago, I_Cantidad, C_Moneda, I_MontoOblig, I_MontoPago, T_LugarPago, I_EntidadFinanID, I_CtaDepositoID, B_Pagado)
+		C_Referencia, D_FecPago, D_FecVencto, I_Cantidad, C_Moneda, I_MontoOblig, I_MontoPago, I_InteresMora, T_LugarPago, I_EntidadFinanID, I_CtaDepositoID, B_Pagado)
 	SELECT m.I_ProcesoID, m.I_ObligacionAluID, p.C_CodOperacion, p.C_CodAlu, p.T_NomDepositante,
-		p.C_Referencia, p.D_FecPago, p.I_Cantidad, p.C_Moneda, m.I_MontoOblig, p.I_MontoPago, p.T_LugarPago, p.I_EntidadFinanID, I_CtaDepositoID, m.B_Pagado
+		p.C_Referencia, p.D_FecPago, p.D_FecVencto, p.I_Cantidad, p.C_Moneda, m.I_MontoOblig, p.I_MontoPago, p.I_InteresMora, p.T_LugarPago, p.I_EntidadFinanID, I_CtaDepositoID, m.B_Pagado
 	FROM @Tbl_Pagos p
 	LEFT JOIN Matriculados m ON m.C_CodAlu = p.C_CodAlu AND m.C_CodRc = p.C_CodRc AND 
 		m.I_ProcesoID = p.I_ProcesoID AND DATEDIFF(DAY, m.D_FecVencto, p.D_FecVencto) = 0
 
 	DECLARE @I_FilaActual		int = 1,
 			@I_CantRegistros	int = (select count(id) from @Tmp_PagoObligacion),
+			@I_ConcPagID		int,
 			-----------------------------------------------------------
 			@I_PagoBancoID		int,
 			@I_ProcesoID		int,
@@ -3132,10 +3141,12 @@ BEGIN
 			@T_NomDepositante	varchar(200),
 			@C_Referencia		varchar(50),
 			@D_FecPago			datetime,
+			@D_FecVencto		datetime,
 			@I_Cantidad			int,
 			@C_Moneda			varchar(3),
 			@I_MontoOblig		decimal(15,2),
 			@I_MontoPago		decimal(15,2),
+			@I_InteresMora		decimal(15,2),
 			@T_LugarPago		varchar(250),
 			@I_EntidadFinanID	int,
 			@I_CtaDepositoID	int,
@@ -3154,10 +3165,12 @@ BEGIN
 				@T_NomDepositante = T_NomDepositante, 
 				@C_Referencia = C_Referencia, 
 				@D_FecPago = D_FecPago, 
+				@D_FecVencto = D_FecVencto,
 				@I_Cantidad = I_Cantidad,
 				@C_Moneda = C_Moneda, 
 				@I_MontoOblig = I_MontoOblig,
 				@I_MontoPago = I_MontoPago, 
+				@I_InteresMora = I_InteresMora,
 				@T_LugarPago= T_LugarPago,
 				@I_EntidadFinanID = I_EntidadFinanID,
 				@I_CtaDepositoID = I_CtaDepositoID,
@@ -3179,7 +3192,6 @@ BEGIN
 			UPDATE @Tmp_PagoObligacion SET B_Success = 0, T_ErrorMessage = 'El monto pagado no coincide con el monto de la obligación generada.' WHERE id = @I_FilaActual
 		END
 
-		--Validando duplicidad de Código de Operación
 		IF  (@B_ExisteError = 0) BEGIN
 			EXEC USP_S_ValidarCodOperacion @C_CodOperacion, @I_EntidadFinanID, @D_FecPago, @B_CodOpeCorrecto OUTPUT
 
@@ -3188,6 +3200,14 @@ BEGIN
 				
 				UPDATE @Tmp_PagoObligacion SET B_Success = 0, T_ErrorMessage = 'El código de operación "' + @C_CodOperacion + '" se encuentra duplicado en el sistema.' WHERE id = @I_FilaActual
 			END
+		END
+
+		IF (@B_ExisteError = 0) AND (@I_InteresMora > 0) AND 
+			NOT EXISTS(SELECT c.I_ConcPagID FROM dbo.TI_ConceptoPago c WHERE c.B_Eliminado = 0 AND c.I_ProcesoID = @I_ProcesoID AND ISNULL(c.B_Mora, 0) = 1) BEGIN
+
+			SET @B_ExisteError = 1
+				
+			UPDATE @Tmp_PagoObligacion SET B_Success = 0, T_ErrorMessage = 'No existe un concepto para guardar el Interés moratorio.' WHERE id = @I_FilaActual
 		END
 
 		IF (@B_ExisteError = 0) BEGIN
@@ -3217,6 +3237,13 @@ BEGIN
 			
 				UPDATE dbo.TR_ObligacionAluDet SET B_Pagado = 1, I_UsuarioMod = @UserID, D_FecMod = @D_FecRegistro
 				WHERE I_ObligacionAluID = @I_ObligacionAluID
+
+				IF (@I_InteresMora > 0) BEGIN
+					SET @I_ConcPagID = (SELECT c.I_ConcPagID FROM dbo.TI_ConceptoPago c WHERE c.B_Eliminado = 0 AND c.I_ProcesoID = @I_ProcesoID AND ISNULL(c.B_Mora, 0) = 1)
+
+					INSERT dbo.TR_ObligacionAluDet(I_ObligacionAluID, I_ConcPagID, I_Monto, B_Pagado, D_FecVencto, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecMod)
+					VALUES (@I_ObligacionAluID, @I_ConcPagID, @I_InteresMora, 1, @D_FecVencto, 1, 0, @UserID, @D_FecRegistro)
+				END
 
 				UPDATE @Tmp_PagoObligacion SET B_Success = 1, T_ErrorMessage = 'Registro correcto.' WHERE id = @I_FilaActual
 

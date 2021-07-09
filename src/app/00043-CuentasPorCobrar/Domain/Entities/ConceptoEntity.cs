@@ -60,6 +60,8 @@ namespace Domain.Entities
 
         public string T_Documento { get; set; }
 
+        public bool? B_Mora { get; set; }
+
         public bool B_Habilitado { get; set; }
 
         public bool B_Eliminado { get; set; }

@@ -134,9 +134,32 @@ namespace Domain.Services.Implementations
 
             try
             {
-                var dataTable = Mapper.PagoObligacionEntity_To_DataTable(dataPagoObligaciones);
+                var dataTable = Mapper.PagoObligacionEntity_To_DataTable(
+                    dataPagoObligaciones.Where(x => !x.I_EntidadFinanID.Equals(Bancos.BCP_ID) || !x.C_Extorno.Equals(ConstantesBCP.CodExtorno)).ToList());
 
-                var spResult = grabarPago.Execute(dataTable, currentUserID);
+                var spResult = grabarPago.Execute(dataTable, currentUserID).ToList();
+
+                var BCPExtornados = dataPagoObligaciones
+                    .Where(x => x.I_EntidadFinanID.Equals(Bancos.BCP_ID) && x.C_Extorno.Equals(ConstantesBCP.CodExtorno))
+                    .Select(x => new DataPagoObligacionesResult() {
+                        I_ProcesoID = x.I_ProcesoID,
+                        C_CodOperacion = x.C_CodOperacion,
+                        C_CodDepositante = x.C_CodAlu,
+                        T_NomDepositante = x.T_NomDepositante,
+                        C_Referencia = x.C_Referencia,
+                        D_FecPago = x.D_FecPago,
+                        I_Cantidad = x.I_Cantidad,
+                        C_Moneda = x.C_Moneda,
+                        I_MontoPago = x.I_MontoPago,
+                        I_InteresMora = x.I_InteresMora,
+                        T_LugarPago = x.T_LugarPago,
+                        I_EntidadFinanID = x.I_EntidadFinanID,
+                        I_CtaDepositoID = x.I_CtaDepositoID,
+                        B_Success = false,
+                        T_ErrorMessage = "Pago Extornado"
+                    });
+
+                spResult.AddRange(BCPExtornados);
 
                 result = new ImportacionPagoResponse(spResult);
             }

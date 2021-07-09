@@ -50,6 +50,7 @@ namespace Data.Procedures
         public bool B_Habilitado { get; set; }
         public int I_UsuarioMod { get; set; }
         public string C_Moneda { get; set; }
+        public bool B_Mora { get; set; }
 
         public ResponseData Execute()
         {
@@ -100,6 +101,7 @@ namespace Data.Procedures
                     parameters.Add(name: "B_Habilitado", dbType: DbType.Boolean, value: this.B_Habilitado);
                     parameters.Add(name: "I_UsuarioMod", dbType: DbType.Int32, value: this.I_UsuarioMod);
                     parameters.Add(name: "C_Moneda", dbType: DbType.String, value: this.C_Moneda);
+                    parameters.Add(name: "B_Mora", dbType: DbType.Boolean, value: this.B_Mora);
 
                     parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);
                     parameters.Add(name: "T_Message", dbType: DbType.String, size: 4000, direction: ParameterDirection.Output);

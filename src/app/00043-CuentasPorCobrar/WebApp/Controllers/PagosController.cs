@@ -197,14 +197,17 @@ namespace WebApp.Controllers
                 worksheet.Cell(currentRow, 5).Value = "Cantidad";
                 worksheet.Cell(currentRow, 6).Value = "Moneda";
                 worksheet.Cell(currentRow, 7).Value = "MontoPago";
-                worksheet.Cell(currentRow, 8).Value = "LugarPago";
-                worksheet.Cell(currentRow, 9).Value = "Estado";
-                worksheet.Cell(currentRow, 10).Value = "Mensaje";
+                worksheet.Cell(currentRow, 8).Value = "InteresMoratorio";
+                worksheet.Cell(currentRow, 9).Value = "LugarPago";
+                worksheet.Cell(currentRow, 10).Value = "Estado";
+                worksheet.Cell(currentRow, 11).Value = "Mensaje";
 
                 #endregion
 
                 #region Body
-                foreach (var item in (IEnumerable<Domain.Entities.PagoObligacionObsEntity>)Session["PAGO_OBLIG_RESULT"])
+                var resultados = (IEnumerable<Domain.Entities.PagoObligacionObsEntity>)Session["PAGO_OBLIG_RESULT"];
+
+                foreach (var item in resultados.OrderBy(x => x.D_FecPago))
                 {
                     currentRow++;
                     worksheet.Cell(currentRow, 1).SetValue<string>(item.C_CodOperacion);
@@ -214,9 +217,10 @@ namespace WebApp.Controllers
                     worksheet.Cell(currentRow, 5).SetValue<string>(item.I_Cantidad.ToString());
                     worksheet.Cell(currentRow, 6).SetValue<string>(item.C_Moneda);
                     worksheet.Cell(currentRow, 7).SetValue<string>(item.I_MontoPago.ToString("N2"));
-                    worksheet.Cell(currentRow, 8).SetValue<string>(item.T_LugarPago);
-                    worksheet.Cell(currentRow, 9).SetValue<string>(item.B_Success ? "Correcto" : "Observado");
-                    worksheet.Cell(currentRow, 10).SetValue<string>(item.T_ErrorMessage);
+                    worksheet.Cell(currentRow, 8).SetValue<string>(item.I_InteresMora.ToString("N2"));
+                    worksheet.Cell(currentRow, 9).SetValue<string>(item.T_LugarPago);
+                    worksheet.Cell(currentRow, 10).SetValue<string>(item.B_Success ? "Correcto" : "Observado");
+                    worksheet.Cell(currentRow, 11).SetValue<string>(item.T_ErrorMessage);
                 }
                 #endregion
 
@@ -225,7 +229,7 @@ namespace WebApp.Controllers
                     workbook.SaveAs(stream);
                     var content = stream.ToArray();
 
-                    return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Resultado.xlsx");
+                    return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Resultado del registro de pagos.xlsx");
                 }
             }
         }

@@ -91,5 +91,7 @@ namespace WebApp.ViewModels
 
         public string T_ClasifCorto { get; set; }
         public string C_Moneda { get; set; }
+
+        public bool B_Mora { get; set; }
     }
 }

@@ -11,16 +11,16 @@ namespace WebApp.Models
         public static ITransferenciaInformacion Get(int entidadFinanciera)
         {
             ITransferenciaInformacion transferenciaInformacion;
-            if (Constantes.BCP_ID == 1)
+            if (Bancos.BCP_ID == 1)
             {
 
             }
             switch (entidadFinanciera)
             {
-                case Constantes.BANCO_COMERCIO_ID:
+                case Bancos.BANCO_COMERCIO_ID:
                     transferenciaInformacion = new TransferenciaInformacionBcoComercio();
                     break;
-                case Constantes.BCP_ID:
+                case Bancos.BCP_ID:
                     transferenciaInformacion = new TransferenciaInformacionBCP();
                     break;
                 default:

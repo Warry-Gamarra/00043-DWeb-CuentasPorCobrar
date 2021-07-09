@@ -49,14 +49,14 @@ namespace WebApp.Models
         public CategoriaPagoRegistroViewModel Find(int categoriaPagoID)
         {
             CategoriaPago categoriaPago = _categoriaPago.Find(categoriaPagoID);
-            var ctasBcoComercio = _cuentaDeposito.Find().Where(x => x.I_EntidadFinanId == Constantes.BANCO_COMERCIO_ID);
+            var ctasBcoComercio = _cuentaDeposito.Find().Where(x => x.I_EntidadFinanId == Bancos.BANCO_COMERCIO_ID);
 
             var result = new CategoriaPagoRegistroViewModel(categoriaPago)
             {
                 CtasBcoComercio = ctasBcoComercio.Select(x => x.I_CtaDepID).ToArray()
             };
 
-            if (categoriaPago.CuentasDepositoEntidad.Where(x => x.EntidadFinanId == Constantes.BANCO_COMERCIO_ID).Count() > 0)
+            if (categoriaPago.CuentasDepositoEntidad.Where(x => x.EntidadFinanId == Bancos.BANCO_COMERCIO_ID).Count() > 0)
                 result.MostrarCodBanco = true;
 
             return result;

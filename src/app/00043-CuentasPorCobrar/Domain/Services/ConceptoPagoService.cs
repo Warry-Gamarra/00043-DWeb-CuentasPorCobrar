@@ -53,6 +53,7 @@ namespace Domain.Services
             _concepto.I_Calculado = concepto.I_Calculado;
             _concepto.I_Monto = concepto.I_Monto;
             _concepto.I_MontoMinimo = concepto.I_MontoMinimo;
+            _concepto.B_Mora = concepto.B_Mora;
 
             switch (saveOption)
             {
@@ -104,7 +105,8 @@ namespace Domain.Services
                 I_MontoMinimo = concepto.I_MontoMinimo,
                 T_DescripcionLarga = concepto.T_DescripcionLarga,
                 T_Documento = concepto.T_Documento,
-                B_Habilitado = concepto.B_Habilitado
+                B_Habilitado = concepto.B_Habilitado,
+                B_Mora = concepto.B_Mora
             };
 
             return result;
@@ -206,7 +208,8 @@ namespace Domain.Services
                     I_UsuarioCre = x.I_UsuarioCre,
                     D_FecCre = x.D_FecCre,
                     I_UsuarioMod = x.I_UsuarioMod,
-                    D_FecMod = x.D_FecMod
+                    D_FecMod = x.D_FecMod,
+                    B_Mora = x.B_Mora
                 }).ToList();
 
                 return result;
@@ -236,7 +239,8 @@ namespace Domain.Services
                     I_UsuarioCre = x.I_UsuarioCre,
                     D_FecCre = x.D_FecCre,
                     I_UsuarioMod = x.I_UsuarioMod,
-                    D_FecMod = x.D_FecMod
+                    D_FecMod = x.D_FecMod,
+                    B_Mora = x.B_Mora
                 }).ToList();
 
                 return result;
@@ -266,6 +270,7 @@ namespace Domain.Services
                     D_FecMod = x.D_FecMod,
                     I_Monto = x.I_Monto,
                     I_MontoMinimo = x.I_MontoMinimo,
+                    B_Mora = x.B_Mora
                 }).ToList();
 
                 return result;
@@ -349,7 +354,8 @@ namespace Domain.Services
                         T_DescripcionLarga = conceptoPago.T_DescripcionLarga,
                         T_Documento = conceptoPago.T_Documento,
                         I_UsuarioCre = conceptoPago.I_UsuarioCre.GetValueOrDefault(),
-                        C_Moneda = conceptoPago.C_Moneda
+                        C_Moneda = conceptoPago.C_Moneda,
+                        B_Mora = conceptoPago.B_Mora.GetValueOrDefault()
                     };
 
                     result = grabarConceptoPago.Execute();
@@ -396,7 +402,8 @@ namespace Domain.Services
                         T_Documento = conceptoPago.T_Documento,
                         B_Habilitado = conceptoPago.B_Habilitado,
                         I_UsuarioMod = conceptoPago.I_UsuarioMod.GetValueOrDefault(),
-                        C_Moneda = conceptoPago.C_Moneda
+                        C_Moneda = conceptoPago.C_Moneda,
+                        B_Mora = conceptoPago.B_Mora.GetValueOrDefault()
                     };
 
                     result = actualizarConceptoPago.Execute();
@@ -465,7 +472,8 @@ namespace Domain.Services
                         T_Documento = conceptoPago.T_Documento,
                         B_Habilitado = conceptoPago.B_Habilitado.HasValue ? conceptoPago.B_Habilitado.Value : false,
                         I_UsuarioCre = conceptoPago.I_UsuarioCre,
-                        I_UsuarioMod = conceptoPago.I_UsuarioMod
+                        I_UsuarioMod = conceptoPago.I_UsuarioMod,
+                        B_Mora = conceptoPago.B_Mora
                     };
                 }
             }
