@@ -38,7 +38,7 @@ WHILE @@FETCH_STATUS = 0
 BEGIN
 	SET @B_Result = 1;
 	SET @T_Observacion = ''
-	SET @I_CuotaPago = (SELECT CUOTA_PAGO FROM TR_MG_CpDes  WHERE I_RowID = @I_RowID)
+	SET @I_CuotaPago = (SELECT CUOTA_PAGO FROM TR_MG_CpDes WHERE I_RowID = @I_RowID)
 	SET @Count_cuota = (SELECT COUNT(CUOTA_PAGO) FROM cp_des WHERE CUOTA_PAGO = @I_CuotaPago);
 	SET @Count_categoria = (SELECT COUNT(CUOTA_PAGO) FROM cp_des cd INNER JOIN @categoria_pago cp ON cp.N_CodBanco = cd.CODIGO_BNC WHERE CUOTA_PAGO = @I_CuotaPago);
 
@@ -71,6 +71,7 @@ BEGIN
 	BEGIN
 		BEGIN TRANSACTION
 		BEGIN TRY
+
 			PRINT 'Insertando registro en TC_Proceso...'
 			INSERT INTO BD_OCEF_CtasPorCobrar.dbo.TC_Proceso (I_ProcesoID, I_CatPagoID, T_ProcesoDesc, I_Anio, I_Periodo, N_CodBanco, D_FecVencto, I_Prioridad, B_Mora, B_Migrado, B_Habilitado, B_Eliminado)
 				SELECT @I_CuotaPago, cp.I_CatPagoID, cd.DESCRIPCIO, ca.anio_cuota, per.I_Periodo, cd.CODIGO_BNC, cd.FCH_VENC, cd.PRIORIDAD, CASE cd.C_MORA WHEN 'VERDADERO' THEN 1 WHEN 'FALSO' THEN 0 ELSE NULL END, 1, 1, cd.ELIMINADO
