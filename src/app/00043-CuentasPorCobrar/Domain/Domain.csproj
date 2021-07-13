@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entities\AlumnoMultaNoVotarEntity.cs" />
+    <Compile Include="Entities\ArchivoImportadoDTO.cs" />
     <Compile Include="Entities\ArchivoIntercambio.cs" />
     <Compile Include="Entities\CampoTablaPago.cs" />
     <Compile Include="Entities\ClasificadorEquivalencia.cs" />

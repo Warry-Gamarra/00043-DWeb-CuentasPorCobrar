@@ -313,5 +313,19 @@ namespace WebApp.Models
 
             return result;
         }
+
+        public static ArchivoImportadoViewModel ArchivoImportadoDTO_To_ArchivoImportadoViewModel(ArchivoImportadoDTO dto)
+        {
+            var result = new ArchivoImportadoViewModel()
+            {
+                TipoArchivo = TipoArchivoEntFinan.Recaudacion_Obligaciones,
+                EntidadRecaudadora = dto.T_EntidadDesc,
+                FileName = dto.T_NomArchivo,
+                UrlFile = dto.T_UrlArchivo,
+                FecCarga = dto.D_FecCre.Value
+            };
+
+            return result;
+        }
     }
 }

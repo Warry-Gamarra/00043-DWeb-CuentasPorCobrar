@@ -3941,6 +3941,8 @@ CREATE PROCEDURE [dbo].[USP_I_GrabarImportacionArchivo]
 	 @T_NomArchivo		varchar(50)
 	,@T_UrlArchivo		varchar(500)
 	,@I_CantFilas		int
+	,@I_EntidadID		int
+	,@I_TipoArchivo		int
 	,@D_FecCre			datetime
 	,@CurrentUserId		int
 
@@ -3950,8 +3952,8 @@ AS
 BEGIN
   SET NOCOUNT ON
   	BEGIN TRY
-		INSERT INTO TR_ImportacionArchivo (T_NomArchivo, T_UrlArchivo, I_CantFilas, B_Eliminado, I_UsuarioCre, D_FecCre, I_UsuarioMod, D_FecMod) 
-			VALUES (@T_NomArchivo, @T_UrlArchivo, @I_CantFilas, 0, @CurrentUserId, @D_FecCre, NULL, NULL)
+		INSERT INTO TR_ImportacionArchivo (T_NomArchivo, T_UrlArchivo, I_CantFilas, I_EntidadID, I_TipoArchivo, B_Eliminado, I_UsuarioCre, D_FecCre) 
+			VALUES (@T_NomArchivo, @T_UrlArchivo, @I_CantFilas, @I_EntidadID,  @I_TipoArchivo, 0, @CurrentUserId, @D_FecCre)
 			
 		SET @B_Result = 1
 		SET @T_Message = 'Actualización de datos correcta'
@@ -4251,3 +4253,40 @@ BEGIN
 	--go
 END
 GO
+
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_ListarPeriodosOCRACC')
+	DROP PROCEDURE [dbo].[USP_S_ListarPeriodosOCRACC]
+GO
+
+CREATE PROCEDURE [dbo].[USP_S_ListarPeriodosOCRACC]
+AS
+BEGIN
+	SELECT p.I_OpcionID, p.T_OpcionCod, p.T_OpcionDesc, p.B_Habilitado FROM dbo.TC_CatalogoOpcion p 
+	WHERE p.I_ParametroID = 5 AND p.B_Habilitado = 1 AND p.B_Eliminado = 0
+	ORDER BY p.T_OpcionDesc
+END
+GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_ListarCuotasPagos_X_Periodo')
+	DROP PROCEDURE [dbo].[USP_S_ListarCuotasPagos_X_Periodo]
+GO
+
+CREATE PROCEDURE [dbo].[USP_S_ListarCuotasPagos_X_Periodo]
+@C_CodAlu VARCHAR(10),
+@I_Anio INT,
+@I_PeriodoID INT
+AS
+BEGIN
+	SET NOCOUNT ON
+	SELECT 
+		vw.C_CodAlu, vw.T_ApePaterno, vw.T_ApeMaterno, vw.T_Nombre, vw.C_RcCod, vw.T_DenomProg, 
+		vw.T_ProcesoDesc, vw.I_Anio, vw.T_Periodo, vw.D_FecVencto, vw.B_Pagado, 
+		vw.I_MontoOblig, vw.D_FecPago, vw.C_CodOperacion, vw.C_NumeroCuenta, vw.T_EntidadDesc 
+	FROM dbo.VW_CuotasPago_General vw
+	WHERE vw.C_CodAlu = @C_CodAlu AND vw.I_Anio = @I_Anio AND vw.I_Periodo = @I_PeriodoID AND vw.I_Prioridad = 1
+END
+GO
+
