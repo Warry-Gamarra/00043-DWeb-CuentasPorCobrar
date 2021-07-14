@@ -67,6 +67,21 @@ Se encontró en la data de alumno_temporal:
 - SOLO SE IMPORTÓ DATA DE POSTGRADO
 */
 
+/*IMPORTACION PREGRADO */
+
+INSERT INTO TC_Persona (C_NumDNI, C_CodTipDoc, T_ApePaterno, T_ApeMaterno, T_Nombre, C_Sexo, B_Habilitado, B_Eliminado, COD_ALU, COD_RC)
+     SELECT DISTINCT C_NUMDNI, C_CODTIPDO, T_APEPATER, T_APEMATER, T_NOMBRE, C_SEXO, 1, 0, C_CODALU, C.C_RcCod FROM alumnos2 C
+	 	 INNER JOIN pregrado APTOS ON C.C_CODALU = APTOS.COD_ALU AND APTOS.COD_RC = C.C_RcCod
+go
+
+INSERT INTO TC_Alumno (C_RcCod, C_CodAlu, I_PersonaID, C_CodModIng, C_AnioIngreso, I_IdPlan, B_Habilitado, B_Eliminado) 
+	 SELECT DISTINCT CP.C_RcCod, APTOS.COD_ALU, P.I_PersonaID, APTOS.COD_ING, APTOS.ANO_ING, APTOS.ID_PLAN, 1, 0 FROM pregrado APTOS
+	 INNER JOIN TC_Persona P ON APTOS.COD_ALU = P.COD_ALU AND P.COD_RC = APTOS.COD_RC
+	 INNER JOIN TI_CarreraProfesional CP ON CP.C_RcCod = APTOS.COD_RC
+	 INNER JOIN TC_ModalidadIngreso MI ON APTOS.COD_ING = MI.C_CodModIng
+	 WHERE P.B_Eliminado = 0
+
+
 
 ALTER TABLE TC_Persona
 	DROP COLUMN COD_ALU

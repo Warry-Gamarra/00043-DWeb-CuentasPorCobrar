@@ -243,38 +243,33 @@ BEGIN
 		--INSERT INTO @categoria_pago (I_CatPagoID, N_CodBanco)
 		--	SELECT I_CatPagoID, N_CodBanco FROM BD_OCEF_CtasPorCobrar.dbo.TC_CategoriaPago
 
-		-- 4. COPIAR ID EQUIVALENTES PARA LOS CODIGOS DE PERIODO ACADEMICO EN EL TEMPORAL DE PAGOS 
+		-- 2. COPIAR ID EQUIVALENTES PARA LOS CODIGOS DE TIPO DE ALUMNO EN EL TEMPORAL DE PAGOS 
 		INSERT INTO @tipo_alumno (I_TipAluID, C_CodTipAlu, T_Descripcion)
 			SELECT I_OpcionID, T_OpcionCod, T_OpcionDesc FROM BD_OCEF_CtasPorCobrar.dbo.TC_CatalogoOpcion WHERE I_ParametroID = 1
 
-		-- 4. COPIAR ID EQUIVALENTES PARA LOS CODIGOS DE PERIODO ACADEMICO EN EL TEMPORAL DE PAGOS 
+		-- 3. COPIAR ID EQUIVALENTES PARA LOS CODIGOS DE TIPO DE GRADO EN EL TEMPORAL DE PAGOS 
 		INSERT INTO @tipo_grado (I_TipGradoID, C_CodTipGrado, T_Descripcion)
 			SELECT I_OpcionID, T_OpcionCod, T_OpcionDesc FROM BD_OCEF_CtasPorCobrar.dbo.TC_CatalogoOpcion WHERE I_ParametroID = 2
 
-		-- 4. COPIAR ID EQUIVALENTES PARA LOS CODIGOS DE PERIODO ACADEMICO EN EL TEMPORAL DE PAGOS 
+		-- 4. COPIAR ID EQUIVALENTES PARA LOS CODIGOS DE TIPO DE OBLIGACION EN EL TEMPORAL DE PAGOS 
 		INSERT INTO @tipo_obligacion (I_TipOblID, C_CodTipObl, T_Descripcion)
 			SELECT I_OpcionID, T_OpcionCod, T_OpcionDesc FROM BD_OCEF_CtasPorCobrar.dbo.TC_CatalogoOpcion WHERE I_ParametroID = 3
 
-		-- 4. COPIAR ID EQUIVALENTES PARA LOS CODIGOS DE TIPO DE CAMPO CALCULADO EN EL TEMPORAL DE PAGOS 
+		-- 5. COPIAR ID EQUIVALENTES PARA LOS CODIGOS DE TIPO DE CAMPO CALCULADO EN EL TEMPORAL DE PAGOS 
 		INSERT INTO @tipo_calculado (I_TipCalcID, C_CodCalc, T_Descripcion)
 			SELECT I_OpcionID, T_OpcionCod, T_OpcionDesc FROM BD_OCEF_CtasPorCobrar.dbo.TC_CatalogoOpcion WHERE I_ParametroID = 4
 
-		-- 4. COPIAR ID EQUIVALENTES PARA LOS CODIGOS DE PERIODO ACADEMICO EN EL TEMPORAL DE PAGOS 
+		-- 6. COPIAR ID EQUIVALENTES PARA LOS CODIGOS DE PERIODO ACADEMICO EN EL TEMPORAL DE PAGOS 
 		INSERT INTO @tipo_periodo (I_TipPerID, C_CodTipPer, T_Descripcion)
 			SELECT I_OpcionID, T_OpcionCod, T_OpcionDesc FROM BD_OCEF_CtasPorCobrar.dbo.TC_CatalogoOpcion WHERE I_ParametroID = 5
 
-		-- 4. COPIAR ID EQUIVALENTES PARA LOS CODIGOS DE PERIODO ACADEMICO EN EL TEMPORAL DE PAGOS 
+		-- 7. COPIAR ID EQUIVALENTES PARA LOS CODIGOS DE GRUPO RC EN EL TEMPORAL DE PAGOS 
 		INSERT INTO @grupo_rc (I_TipGrpRc, C_CodGrpRc, T_Descripcion)
 			SELECT I_OpcionID, T_OpcionCod, T_OpcionDesc FROM BD_OCEF_CtasPorCobrar.dbo.TC_CatalogoOpcion WHERE I_ParametroID = 6
 
-		-- 4. COPIAR ID EQUIVALENTES PARA LOS CODIGOS DE PERIODO ACADEMICO EN EL TEMPORAL DE PAGOS 
+		-- 8. COPIAR ID EQUIVALENTES PARA LOS CODIGOS DE INGRESOES EN EL TEMPORAL DE PAGOS 
 		INSERT INTO @codigo_ing (I_CodIngID, C_CodIng, T_Descripcion)
 			SELECT I_OpcionID, T_OpcionCod, T_OpcionDesc FROM BD_OCEF_CtasPorCobrar.dbo.TC_CatalogoOpcion WHERE I_ParametroID = 7
-
-		---- 4. COPIAR ID EQUIVALENTES PARA LOS CODIGOS DE PERIODO ACADEMICO EN EL TEMPORAL DE PAGOS 
-		--INSERT INTO @unfv_dep (I_DepID, C_CodDep, T_Descripcion)
-		--	SELECT I_OpcionID, T_OpcionCod, T_OpcionDesc FROM BD_OCEF_CtasPorCobrar.dbo.TC_CatalogoOpcion WHERE I_ParametroID = 5
-
 
 		DECLARE CUR_CP_PRI CURSOR
 		FOR
@@ -288,8 +283,7 @@ BEGIN
 			SET @B_Result = 1;
 			SET @T_Observacion = '';
 			SET @I_ConceptoPagoID = (SELECT ID_CP FROM TR_MG_CpPri  WHERE I_RowID = @I_RowID);
-			SET @Count_ConcPago = (SELECT COUNT(CUOTA_PAGO) FROM cp_pri WHERE ID_CP = @I_ConceptoPagoID);
-			--SET @Count_cuota = (SELECT COUNT(CUOTA_PAGO) FROM cp_pri cd INNER JOIN @categoria_pago cp ON cp.N_CodBanco = cd.CODIGO_BNC WHERE CUOTA_PAGO = @I_CuotaPago);
+			SET @Count_ConcPago = (SELECT COUNT(ID_CP) FROM cp_pri WHERE ID_CP = @I_ConceptoPagoID);
 
 			PRINT 'Validando ID del concepto de pago: ' + CAST(@I_ConceptoPagoID AS varchar(10))
 			IF (@Count_ConcPago > 1)
@@ -313,23 +307,11 @@ BEGIN
 			BEGIN
 				BEGIN TRANSACTION
 				BEGIN TRY
-					PRINT 'Insertando registro en TC_Proceso...'
-					INSERT INTO BD_OCEF_CtasPorCobrar.dbo.TC_Proceso (I_ProcesoID, I_CatPagoID, T_ProcesoDesc, I_Anio, I_Periodo, N_CodBanco, D_FecVencto, I_Prioridad, B_Mora, B_Migrado, B_Habilitado, B_Eliminado)
-						SELECT @I_CuotaPago, cp.I_CatPagoID, cd.DESCRIPCIO, ca.anio_cuota, per.I_Periodo, cd.CODIGO_BNC, cd.FCH_VENC, cd.PRIORIDAD, CASE cd.C_MORA WHEN 'VERDADERO' THEN 1 WHEN 'FALSO' THEN 0 ELSE NULL END, 1, 1, cd.ELIMINADO
-						  FROM TR_MG_CpDes cd 
-							   INNER JOIN @cuota_anio ca ON cd.CUOTA_PAGO = ca.cuota_pago
-							   INNER JOIN @categoria_pago cp ON cp.N_CodBanco = cd.CODIGO_BNC
-							   LEFT JOIN (SELECT DISTINCT cuota_pago, ano, p FROM cp_pri) pri ON pri.cuota_pago = cd.cuota_pago
-							   INNER JOIN @periodo per ON per.C_CodPeriodo COLLATE DATABASE_DEFAULT = pri.p COLLATE DATABASE_DEFAULT
-						WHERE cd.CUOTA_PAGO = @I_CuotaPago;
+					PRINT 'Insertando registro en TC_Concepto...'
 
-					PRINT 'Insertando registro en TI_CtaDepo_Proceso...'
-					INSERT INTO BD_OCEF_CtasPorCobrar.dbo.TI_CtaDepo_Proceso (I_CtaDepositoID, I_ProcesoID, B_Habilitado, B_Eliminado)
-							SELECT CD.I_CtaDepositoID, P.I_ProcesoID, 1 AS B_Habilitado, 0 AS B_Eliminado
-							  FROM BD_OCEF_CtasPorCobrar.dbo.TC_Proceso P
-								   INNER JOIN cp_des TP_CD ON TP_CD.CUOTA_PAGO = P.I_ProcesoID
-								   INNER JOIN BD_OCEF_CtasPorCobrar.dbo.TC_CuentaDeposito CD ON CD.C_NumeroCuenta COLLATE DATABASE_DEFAULT = TP_CD.N_CTA_CTE COLLATE DATABASE_DEFAULT
-							WHERE TP_CD.CUOTA_PAGO = @I_CuotaPago;
+
+					PRINT 'Insertando registro en TI_ConceptoPago...'
+
 
 					SET @B_Migrado = 1;
 					COMMIT TRANSACTION;
@@ -360,22 +342,25 @@ BEGIN
 		DBCC CHECKIDENT([BD_OCEF_CtasPorCobrar.dbo.TC_Proceso], RESEED, 0)
 
 
-		INSERT BD_OCEF_CtasPorCobrar.dbo.TC_CuentaDeposito_CategoriaPago(I_CtaDepositoID, I_CatPagoID, B_Habilitado, B_Eliminado)
-		SELECT BNC.I_CtaDepositoID, CP.I_CatPagoID, 1 AS B_Habilitado, 0 as B_Eliminado--, C_NumeroCuenta, CODIGO_BNC    
-		FROM BD_OCEF_CtasPorCobrar.dbo.TC_CategoriaPago CP 
-			 INNER JOIN (SELECT DISTINCT I_CtaDepositoID, C_NumeroCuenta, TP_CP.CODIGO_BNC COLLATE DATABASE_DEFAULT AS CODIGO_BNC
-						 FROM BD_OCEF_CtasPorCobrar.dbo.TC_CuentaDeposito CD  
-				 			 INNER JOIN TR_MG_CpDes TP_CP ON CD.C_NumeroCuenta COLLATE DATABASE_DEFAULT = TP_CP.N_CTA_CTE COLLATE DATABASE_DEFAULT
-						 WHERE ELIMINADO = 0
-		) BNC ON CP.N_CodBanco = BNC.CODIGO_BNC
-		UNION
-		SELECT BNC.I_CtaDepositoID, CP.I_CatPagoID, 1 AS B_Habilitado, 0 as B_Eliminado--, C_NumeroCuenta, CODIGO_BNC    
-		FROM BD_OCEF_CtasPorCobrar.dbo.TC_CategoriaPago CP 
-			 INNER JOIN (SELECT DISTINCT I_CtaDepositoID, C_NumeroCuenta, TP_CP.CODIGO_BNC COLLATE DATABASE_DEFAULT AS CODIGO_BNC
-						 FROM BD_OCEF_CtasPorCobrar.dbo.TC_CuentaDeposito CD  
- 				 				INNER JOIN TR_MG_CpDes TP_CP ON CD.C_NumeroCuenta COLLATE DATABASE_DEFAULT = TP_CP.N_CTA_CTE COLLATE DATABASE_DEFAULT
-						 WHERE CODIGO_BNC IS NULL AND ELIMINADO = 0
-		) BNC ON CP.N_CodBanco IS NULL
+
 	END
 END
 GO
+
+
+--select 
+--		p.ID_CP, p.DESCRIPCIO,
+--		o.*, 
+--		d.* 
+--from ec_det d
+--left join ec_obl o ON o.COD_ALU = d.COD_ALU 
+--			and o.COD_RC = d.COD_RC 
+--			and o.CUOTA_PAGO = d.CUOTA_PAGO
+--			and o.ANO = d.ANO 
+--			and o.P = d.P
+--			and o.FCH_VENC = CAST(d.FCH_VENC as datetime)
+--left join cp_pri p ON p.ID_CP = d.CONCEPTO
+--where d.ANO = '2020' and d.TIPO_OBLIG = 'T' and d.COD_ALU = '2019316456'
+--and d.ELIMINADO = 'F' AND d.P = '1'
+
+--select * from cp_des WHERE CUOTA_PAGO = 488
