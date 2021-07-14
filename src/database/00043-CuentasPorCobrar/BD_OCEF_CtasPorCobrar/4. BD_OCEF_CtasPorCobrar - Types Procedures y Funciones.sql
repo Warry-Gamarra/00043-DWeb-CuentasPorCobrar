@@ -4019,6 +4019,24 @@ AS
 GO
 
 
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_Clasificadores')
+	DROP VIEW [dbo].[VW_Clasificadores]
+GO
+
+
+CREATE VIEW [dbo].[VW_Clasificadores]
+AS
+SELECT 
+	eq.C_ClasificConceptoCod, eqa.N_Anio, pre.C_TipoTransCod, pre.C_GenericaCod, pre.C_SubGeneCod, pre.C_EspecificaCod, 
+	pre.C_TipoTransCod + '.' + pre.C_GenericaCod + ISNULL('.' + pre.C_SubGeneCod, '') + ISNULL('.' + pre.C_EspecificaCod, '') AS C_CodClasificador,
+	pre.T_ClasificadorDesc, pre.T_ClasificadorDetalle, eqa.B_Habilitado 
+FROM dbo.TC_ClasificadorEquivalencia eq
+INNER JOIN dbo.TC_ClasificadorPresupuestal pre ON pre.I_ClasificadorID = eq.I_ClasificadorID
+INNER JOIN dbo.TC_ClasificadorEquivalenciaAnio eqa ON eqa.I_ClasifEquivalenciaID = eq.I_ClasifEquivalenciaID
+WHERE eq.B_Eliminado = 0 AND pre.B_Eliminado = 0 AND eqa.B_Eliminado = 0
+GO
+
+
 
 IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_ReportePagoObligacionesPregrado')
 	DROP PROCEDURE [dbo].[USP_S_ReportePagoObligacionesPregrado]
@@ -4053,23 +4071,24 @@ BEGIN
 
 	--@I_TipoReporte: 2: Pagos agrupados por concepto.
 	if (@I_TipoReporte = 2) begin
-		select conpag.I_ConceptoID, conpag.T_Clasificador, conpag.T_ConceptoPagoDesc, SUM(det.I_Monto) AS I_MontoTotal 
+		select conpag.I_ConceptoID, cl.C_CodClasificador, conpag.T_ConceptoPagoDesc, SUM(det.I_Monto) AS I_MontoTotal 
 		from dbo.TR_PagoBanco pagban
 		inner join dbo.TRI_PagoProcesadoUnfv pagpro on pagban.I_PagoBancoID = pagpro.I_PagoBancoID
 		inner join dbo.TR_ObligacionAluCab cab on cab.I_ObligacionAluID = pagpro.I_ObligacionAluID and cab.B_Eliminado = 0
 		inner join dbo.TR_ObligacionAluDet det on det.I_ObligacionAluID = cab.I_ObligacionAluID and det.B_Eliminado = 0
 		inner join dbo.TI_ConceptoPago conpag on conpag.I_ConcPagID = det.I_ConcPagID
 		inner join dbo.VW_MatriculaAlumno mat on mat.I_MatAluID = cab.I_MatAluID
+		left join dbo.VW_Clasificadores cl on cl.C_ClasificConceptoCod = conpag.T_Clasificador
 		where pagban.B_Anulado = 0 and pagpro.B_Anulado = 0 and mat.N_Grado = @Pregrado
 			and datediff(day, @D_FechaIni, pagban.D_FecPago) >= 0 and datediff(day, pagban.D_FecPago, @D_FechaFin) >= 0
 			and pagban.I_EntidadFinanID = ISNULL(@I_EntidadFinanID, pagban.I_EntidadFinanID)
-		group by conpag.I_ConceptoID, conpag.T_Clasificador, conpag.T_ConceptoPagoDesc
-		order by conpag.T_Clasificador, conpag.T_ConceptoPagoDesc
+		group by conpag.I_ConceptoID, cl.C_CodClasificador, conpag.T_ConceptoPagoDesc
+		order by cl.C_CodClasificador, conpag.T_ConceptoPagoDesc
 	end
 
 	--@I_TipoReporte: 2: Pagos agrupados por concepto según para una facultad.
 	if (@I_TipoReporte = 3) begin
-		select mat.T_FacDesc, mat.C_CodFac, conpag.I_ConceptoID, conpag.T_Clasificador, conpag.T_ConceptoPagoDesc, 
+		select mat.T_FacDesc, mat.C_CodFac, conpag.I_ConceptoID, cl.C_CodClasificador, conpag.T_ConceptoPagoDesc, 
 			COUNT(pagban.I_PagoBancoID) AS I_Cantidad,
 			SUM(det.I_Monto) AS I_MontoTotal 
 		from dbo.TR_PagoBanco pagban
@@ -4078,17 +4097,18 @@ BEGIN
 		inner join dbo.TR_ObligacionAluDet det on det.I_ObligacionAluID = cab.I_ObligacionAluID and det.B_Eliminado = 0
 		inner join dbo.TI_ConceptoPago conpag on conpag.I_ConcPagID = det.I_ConcPagID
 		inner join dbo.VW_MatriculaAlumno mat on mat.I_MatAluID = cab.I_MatAluID
+		left join dbo.VW_Clasificadores cl on cl.C_ClasificConceptoCod = conpag.T_Clasificador
 		where pagban.B_Anulado = 0 and pagpro.B_Anulado = 0 and mat.N_Grado = @Pregrado
 			and datediff(day, @D_FechaIni, pagban.D_FecPago) >= 0 and datediff(day, pagban.D_FecPago, @D_FechaFin) >= 0 
 			and mat.C_CodFac = @C_CodFac
 			and pagban.I_EntidadFinanID = ISNULL(@I_EntidadFinanID, pagban.I_EntidadFinanID)
-		group by mat.T_FacDesc, mat.C_CodFac, conpag.I_ConceptoID, conpag.T_Clasificador, conpag.T_ConceptoPagoDesc
-		order by mat.T_FacDesc, conpag.T_Clasificador, conpag.T_ConceptoPagoDesc
+		group by mat.T_FacDesc, mat.C_CodFac, conpag.I_ConceptoID, cl.C_CodClasificador, conpag.T_ConceptoPagoDesc
+		order by mat.T_FacDesc, cl.C_CodClasificador, conpag.T_ConceptoPagoDesc
 	end
 	/*
 	EXEC USP_S_ReportePagoObligacionesPregrado 
-		@I_TipoReporte = 3,
-		@C_CodFac = 'IN',
+		@I_TipoReporte = 1,
+		@C_CodFac = NULL,
 		@D_FechaIni = '20210101', 
 		@D_FechaFin = '20211231',
 		@I_EntidadFinanID = NULL
@@ -4132,23 +4152,24 @@ BEGIN
 
 	--@I_TipoReporte: 2: Pagos agrupados por concepto.
 	if (@I_TipoReporte = 2) begin
-		select conpag.I_ConceptoID, conpag.T_Clasificador, conpag.T_ConceptoPagoDesc, SUM(det.I_Monto) AS I_MontoTotal 
+		select conpag.I_ConceptoID, cl.C_CodClasificador, conpag.T_ConceptoPagoDesc, SUM(det.I_Monto) AS I_MontoTotal 
 		from dbo.TR_PagoBanco pagban
 		inner join dbo.TRI_PagoProcesadoUnfv pagpro on pagban.I_PagoBancoID = pagpro.I_PagoBancoID
 		inner join dbo.TR_ObligacionAluCab cab on cab.I_ObligacionAluID = pagpro.I_ObligacionAluID and cab.B_Eliminado = 0
 		inner join dbo.TR_ObligacionAluDet det on det.I_ObligacionAluID = cab.I_ObligacionAluID and det.B_Eliminado = 0
 		inner join dbo.TI_ConceptoPago conpag on conpag.I_ConcPagID = det.I_ConcPagID
 		inner join dbo.VW_MatriculaAlumno mat on mat.I_MatAluID = cab.I_MatAluID
+		left join dbo.VW_Clasificadores cl on cl.C_ClasificConceptoCod = conpag.T_Clasificador
 		where pagban.B_Anulado = 0 and pagpro.B_Anulado = 0 and mat.N_Grado IN (@Maestria, @Doctorado)
 			and datediff(day, @D_FechaIni, pagban.D_FecPago) >= 0 and datediff(day, pagban.D_FecPago, @D_FechaFin) >= 0
 			and pagban.I_EntidadFinanID = ISNULL(@I_EntidadFinanID, pagban.I_EntidadFinanID)
-		group by conpag.I_ConceptoID, conpag.T_Clasificador, conpag.T_ConceptoPagoDesc
-		order by conpag.T_Clasificador, conpag.T_ConceptoPagoDesc
+		group by conpag.I_ConceptoID, cl.C_CodClasificador, conpag.T_ConceptoPagoDesc
+		order by cl.C_CodClasificador, conpag.T_ConceptoPagoDesc
 	end
 
 	--@I_TipoReporte: 2: Pagos agrupados por concepto según maestría o doctorado.
 	if (@I_TipoReporte = 3) begin
-		select mat.T_EscDesc, mat.C_CodEsc, conpag.I_ConceptoID, conpag.T_Clasificador, conpag.T_ConceptoPagoDesc, 
+		select mat.T_EscDesc, mat.C_CodEsc, conpag.I_ConceptoID, cl.C_CodClasificador, conpag.T_ConceptoPagoDesc, 
 			COUNT(pagban.I_PagoBancoID) AS I_Cantidad,
 			SUM(det.I_Monto) AS I_MontoTotal 
 		from dbo.TR_PagoBanco pagban
@@ -4157,12 +4178,13 @@ BEGIN
 		inner join dbo.TR_ObligacionAluDet det on det.I_ObligacionAluID = cab.I_ObligacionAluID and det.B_Eliminado = 0
 		inner join dbo.TI_ConceptoPago conpag on conpag.I_ConcPagID = det.I_ConcPagID
 		inner join dbo.VW_MatriculaAlumno mat on mat.I_MatAluID = cab.I_MatAluID
+		left join dbo.VW_Clasificadores cl on cl.C_ClasificConceptoCod = conpag.T_Clasificador
 		where pagban.B_Anulado = 0 and pagpro.B_Anulado = 0 and mat.N_Grado IN (@Maestria, @Doctorado)
 			and datediff(day, @D_FechaIni, pagban.D_FecPago) >= 0 and datediff(day, pagban.D_FecPago, @D_FechaFin) >= 0 
 			and mat.C_CodEsc = @C_CodEsc
 			and pagban.I_EntidadFinanID = ISNULL(@I_EntidadFinanID, pagban.I_EntidadFinanID)
-		group by mat.T_EscDesc, mat.C_CodEsc, conpag.I_ConceptoID, conpag.T_Clasificador, conpag.T_ConceptoPagoDesc
-		order by mat.T_EscDesc, conpag.T_Clasificador, conpag.T_ConceptoPagoDesc
+		group by mat.T_EscDesc, mat.C_CodEsc, conpag.I_ConceptoID, cl.C_CodClasificador, conpag.T_ConceptoPagoDesc
+		order by mat.T_EscDesc, cl.C_CodClasificador, conpag.T_ConceptoPagoDesc
 	end
 	/*
 	EXEC USP_S_ReportePagoObligacionesPosgrado 
@@ -4170,7 +4192,7 @@ BEGIN
 		@C_CodEsc = 'MG',
 		@D_FechaIni = '20210101', 
 		@D_FechaFin = '20211231',
-		@I_EntidadFinanID = null
+		@I_EntidadFinanID = NULL
 	*/
 END
 GO
@@ -4289,4 +4311,3 @@ BEGIN
 	WHERE vw.C_CodAlu = @C_CodAlu AND vw.I_Anio = @I_Anio AND vw.I_Periodo = @I_PeriodoID AND vw.I_Prioridad = 1
 END
 GO
-

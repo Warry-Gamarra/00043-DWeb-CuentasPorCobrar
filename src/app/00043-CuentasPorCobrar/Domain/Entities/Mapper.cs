@@ -363,7 +363,7 @@ namespace Domain.Entities
             var result = new PagoPregradoPorConceptoDTO()
             {
                 I_ConceptoID = sp.I_ConceptoID,
-                T_Clasificador = sp.T_Clasificador,
+                C_CodClasificador = sp.C_CodClasificador,
                 T_ConceptoPagoDesc = sp.T_ConceptoPagoDesc,
                 I_MontoTotal = sp.I_MontoTotal
             };
@@ -378,7 +378,7 @@ namespace Domain.Entities
                 T_FacDesc = sp.T_FacDesc,
                 C_CodFac = sp.C_CodFac,
                 I_ConceptoID = sp.I_ConceptoID,
-                T_Clasificador = sp.T_Clasificador,
+                C_CodClasificador = sp.C_CodClasificador,
                 T_ConceptoPagoDesc = sp.T_ConceptoPagoDesc,
                 I_Cantidad = sp.I_Cantidad,
                 I_MontoTotal = sp.I_MontoTotal
@@ -441,7 +441,7 @@ namespace Domain.Entities
             var result = new PagoPosgradoPorConceptoDTO()
             {
                 I_ConceptoID = sp.I_ConceptoID,
-                T_Clasificador = sp.T_Clasificador,
+                C_CodClasificador = sp.C_CodClasificador,
                 T_ConceptoPagoDesc = sp.T_ConceptoPagoDesc,
                 I_MontoTotal = sp.I_MontoTotal
             };
@@ -456,7 +456,7 @@ namespace Domain.Entities
                 T_EscDesc = sp.T_EscDesc,
                 C_CodEsc = sp.C_CodEsc,
                 I_ConceptoID = sp.I_ConceptoID,
-                T_Clasificador = sp.T_Clasificador,
+                C_CodClasificador = sp.C_CodClasificador,
                 T_ConceptoPagoDesc = sp.T_ConceptoPagoDesc,
                 I_Cantidad = sp.I_Cantidad,
                 I_MontoTotal = sp.I_MontoTotal
