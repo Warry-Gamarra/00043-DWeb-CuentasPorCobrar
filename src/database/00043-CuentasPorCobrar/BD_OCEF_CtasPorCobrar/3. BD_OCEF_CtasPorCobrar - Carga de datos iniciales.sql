@@ -731,12 +731,12 @@ GO
 --GO
 
 
-INSERT INTO TC_ClasificadorPresupuestal (C_TipoTransCod, C_GenericaCod, C_SubGeneCod, C_EspecificaCod, T_ClasificadorDesc, T_ClasificadorDetalle, B_Eliminado, I_UsuarioCre, D_FecCre)
-								SELECT SUBSTRING(CLASIFICADOR, 1, 1), SUBSTRING(CLASIFICADOR, 3, 1)
-									  , CASE CHARINDEX('.', CLASIFICADOR, 5) WHEN 0 THEN IIF(LEN(SUBSTRING(CLASIFICADOR, 5, 4)) = 0, NULL, REPLACE(SUBSTRING(CLASIFICADOR, 5, 4), ' ','')) ELSE REPLACE(SUBSTRING(CLASIFICADOR, 5, (CHARINDEX('.', CLASIFICADOR, 5) - 5)), ' ','') END
-									  , CASE CHARINDEX('.', CLASIFICADOR, 5) WHEN 0 THEN NULL ELSE REPLACE(SUBSTRING(CLASIFICADOR, CHARINDEX('.', CLASIFICADOR, 5) + 1, 4), ' ','') END
-									  , DESCRIPCION, DESCRIPCION_DETALLADA, 0, 1, GETDATE()
-								  FROM temporal_pagos..Clasificadores
+--INSERT INTO TC_ClasificadorPresupuestal (C_TipoTransCod, C_GenericaCod, C_SubGeneCod, C_EspecificaCod, T_ClasificadorDesc, T_ClasificadorDetalle, B_Eliminado, I_UsuarioCre, D_FecCre)
+--								SELECT SUBSTRING(CLASIFICADOR, 1, 1), SUBSTRING(CLASIFICADOR, 3, 1)
+--									  , CASE CHARINDEX('.', CLASIFICADOR, 5) WHEN 0 THEN IIF(LEN(SUBSTRING(CLASIFICADOR, 5, 4)) = 0, NULL, REPLACE(SUBSTRING(CLASIFICADOR, 5, 4), ' ','')) ELSE REPLACE(SUBSTRING(CLASIFICADOR, 5, (CHARINDEX('.', CLASIFICADOR, 5) - 5)), ' ','') END
+--									  , CASE CHARINDEX('.', CLASIFICADOR, 5) WHEN 0 THEN NULL ELSE REPLACE(SUBSTRING(CLASIFICADOR, CHARINDEX('.', CLASIFICADOR, 5) + 1, 4), ' ','') END
+--									  , DESCRIPCION, DESCRIPCION_DETALLADA, 0, 1, GETDATE()
+--								  FROM temporal_pagos..Clasificadores
 
 --INSERT INTO TC_ClasificadorAnio (I_ClasificadorID, N_Anio, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) 
 --						SELECT  I_ClasificadorID, '2021', 1, 0, I_UsuarioCre, D_FecCre
@@ -746,91 +746,91 @@ INSERT INTO TC_ClasificadorPresupuestal (C_TipoTransCod, C_GenericaCod, C_SubGen
 
 
 ---------------------Configuración para carga de pagos BANCO COMERCIO
-insert TI_TipoArchivo_EntidadFinanciera(I_EntidadFinanID, I_TipoArchivoID, T_NombreVista, B_Habilitado, B_Eliminado)
-values(1, 3, '', 1, 0)
+INSERT TI_TipoArchivo_EntidadFinanciera(I_EntidadFinanID, I_TipoArchivoID, T_NombreVista, B_Habilitado, B_Eliminado)
+VALUES (1, 3, '', 1, 0)
 
-declare @I_TipArchivoEntFinanID int = IDENT_CURRENT('TI_TipoArchivo_EntidadFinanciera')
+DECLARE @I_TipArchivoEntFinanID int = IDENT_CURRENT('TI_TipoArchivo_EntidadFinanciera')
 
-insert TC_SeccionArchivo(T_SecArchivoDesc, I_TipoSeccion, I_FilaInicio, I_FilaFin, B_Habilitado, B_Eliminado, I_TipArchivoEntFinanID)
-values ('DETALLE', 2, 2, null, 1, 0, @I_TipArchivoEntFinanID)
-
-
-declare @I_SecArchivoID int = IDENT_CURRENT('TC_SeccionArchivo')
+INSERT TC_SeccionArchivo(T_SecArchivoDesc, I_TipoSeccion, I_FilaInicio, I_FilaFin, B_Habilitado, B_Eliminado, I_TipArchivoEntFinanID)
+VALUES ('DETALLE', 2, 2, null, 1, 0, @I_TipArchivoEntFinanID)
 
 
-insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('C_CodAlu', 9, 18, 1, 0, @I_SecArchivoID, 1)
-insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('C_CodOperacion', 288, 297, 1, 0, @I_SecArchivoID, 2)
-insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('C_Referencia', 288, 297, 1, 0, @I_SecArchivoID, 3)
-insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('C_CodRc', 151, 153, 1, 0, @I_SecArchivoID, 4)
-insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('C_Moneda', 125, 126, 1, 0, @I_SecArchivoID, 5)
-insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('D_FecPago', 205, 212, 1, 0, @I_SecArchivoID, 6)
-insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('D_FecVencto', 117, 124, 1, 0, @I_SecArchivoID, 7)
-insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('I_Cantidad', 274, 277, 1, 0, @I_SecArchivoID, 8)
-insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('I_MontoPago', 127, 140, 1, 0, @I_SecArchivoID, 9)
-insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('I_ProcesoID', 167, 176, 1, 0, @I_SecArchivoID, 10)
-insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('T_LugarPago', 219, 225, 1, 0, @I_SecArchivoID, 11)
-insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('T_NomDepositante', 29, 68, 1, 0, @I_SecArchivoID, 12)
-insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('D_HoraPago', 213, 218, 1, 0, @I_SecArchivoID, 13)
-insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('I_InteresMora', 191, 204, 1, 0, @I_SecArchivoID, 14)
-insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('C_Extorno', 1, 0, 1, 0, @I_SecArchivoID, 15)
+DECLARE @I_SecArchivoID int = IDENT_CURRENT('TC_SeccionArchivo')
+
+
+INSERT TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) VALUES ('C_CodAlu', 9, 18, 1, 0, @I_SecArchivoID, 1)
+INSERT TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) VALUES ('C_CodOperacion', 288, 297, 1, 0, @I_SecArchivoID, 2)
+INSERT TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) VALUES ('C_Referencia', 288, 297, 1, 0, @I_SecArchivoID, 3)
+INSERT TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) VALUES ('C_CodRc', 151, 153, 1, 0, @I_SecArchivoID, 4)
+INSERT TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) VALUES ('C_Moneda', 125, 126, 1, 0, @I_SecArchivoID, 5)
+INSERT TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) VALUES ('D_FecPago', 205, 212, 1, 0, @I_SecArchivoID, 6)
+INSERT TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) VALUES ('D_FecVencto', 117, 124, 1, 0, @I_SecArchivoID, 7)
+INSERT TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) VALUES ('I_Cantidad', 274, 277, 1, 0, @I_SecArchivoID, 8)
+INSERT TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) VALUES ('I_MontoPago', 127, 140, 1, 0, @I_SecArchivoID, 9)
+INSERT TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) VALUES ('I_ProcesoID', 167, 176, 1, 0, @I_SecArchivoID, 10)
+INSERT TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) VALUES ('T_LugarPago', 219, 225, 1, 0, @I_SecArchivoID, 11)
+INSERT TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) VALUES ('T_NomDepositante', 29, 68, 1, 0, @I_SecArchivoID, 12)
+INSERT TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) VALUES ('D_HoraPago', 213, 218, 1, 0, @I_SecArchivoID, 13)
+INSERT TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) VALUES ('I_InteresMora', 191, 204, 1, 0, @I_SecArchivoID, 14)
+INSERT TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) VALUES ('C_Extorno', 1, 0, 1, 0, @I_SecArchivoID, 15)
 GO
 
 
 
 ---------------------Configuración para carga de pagos BCP
-insert TI_TipoArchivo_EntidadFinanciera(I_EntidadFinanID, I_TipoArchivoID, T_NombreVista, B_Habilitado, B_Eliminado)
-values(2, 3, '', 1, 0)
+INSERT TI_TipoArchivo_EntidadFinanciera(I_EntidadFinanID, I_TipoArchivoID, T_NombreVista, B_Habilitado, B_Eliminado)
+VALUES (2, 3, '', 1, 0)
 
-declare @I_TipArchivoEntFinanID int = IDENT_CURRENT('TI_TipoArchivo_EntidadFinanciera')
+DECLARE @I_TipArchivoEntFinanID int = IDENT_CURRENT('TI_TipoArchivo_EntidadFinanciera')
 
-insert TC_SeccionArchivo(T_SecArchivoDesc, I_TipoSeccion, I_FilaInicio, I_FilaFin, B_Habilitado, B_Eliminado, I_TipArchivoEntFinanID)
-values ('DETALLE', 2, 2, null, 1, 0, @I_TipArchivoEntFinanID)
+INSERT TC_SeccionArchivo(T_SecArchivoDesc, I_TipoSeccion, I_FilaInicio, I_FilaFin, B_Habilitado, B_Eliminado, I_TipArchivoEntFinanID)
+VALUES ('DETALLE', 2, 2, null, 1, 0, @I_TipArchivoEntFinanID)
 
-declare @I_SecArchivoID int = IDENT_CURRENT('TC_SeccionArchivo')
+DECLARE @I_SecArchivoID int = IDENT_CURRENT('TC_SeccionArchivo')
 
 
-insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('C_CodAlu', 18, 27, 1, 0, @I_SecArchivoID, 1)
-insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('C_CodOperacion', 125, 130, 1, 0, @I_SecArchivoID, 2)
-insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('C_Referencia', 131, 152, 1, 0, @I_SecArchivoID, 3)
-insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('C_CodRc', 28, 30, 1, 0, @I_SecArchivoID, 4)
-insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('C_Moneda', 6, 6, 1, 0, @I_SecArchivoID, 5)
-insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('D_FecPago', 58, 65, 1, 0, @I_SecArchivoID, 6)
-insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('D_FecVencto', 66, 73, 1, 0, @I_SecArchivoID, 7)
-insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('I_Cantidad', 1, 0, 1, 0, @I_SecArchivoID, 8)
-insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('I_MontoPago', 104, 118, 1, 0, @I_SecArchivoID, 9)
-insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('I_ProcesoID', 31, 36, 1, 0, @I_SecArchivoID, 10)
-insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('T_LugarPago', 119, 124, 1, 0, @I_SecArchivoID, 11)
-insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('T_NomDepositante', 28, 57, 1, 0, @I_SecArchivoID, 12)
-insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('D_HoraPago', 169, 174, 1, 0, @I_SecArchivoID, 13)
-insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('I_InteresMora', 89, 103, 1, 0, @I_SecArchivoID, 14)
-insert TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) values ('C_Extorno', 197, 197, 1, 0, @I_SecArchivoID, 15)
+INSERT TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) VALUES ('C_CodAlu', 18, 27, 1, 0, @I_SecArchivoID, 1)
+INSERT TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) VALUES ('C_CodOperacion', 125, 130, 1, 0, @I_SecArchivoID, 2)
+INSERT TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) VALUES ('C_Referencia', 131, 152, 1, 0, @I_SecArchivoID, 3)
+INSERT TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) VALUES ('C_CodRc', 28, 30, 1, 0, @I_SecArchivoID, 4)
+INSERT TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) VALUES ('C_Moneda', 6, 6, 1, 0, @I_SecArchivoID, 5)
+INSERT TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) VALUES ('D_FecPago', 58, 65, 1, 0, @I_SecArchivoID, 6)
+INSERT TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) VALUES ('D_FecVencto', 66, 73, 1, 0, @I_SecArchivoID, 7)
+INSERT TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) VALUES ('I_Cantidad', 1, 0, 1, 0, @I_SecArchivoID, 8)
+INSERT TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) VALUES ('I_MontoPago', 104, 118, 1, 0, @I_SecArchivoID, 9)
+INSERT TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) VALUES ('I_ProcesoID', 31, 36, 1, 0, @I_SecArchivoID, 10)
+INSERT TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) VALUES ('T_LugarPago', 119, 124, 1, 0, @I_SecArchivoID, 11)
+INSERT TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) VALUES ('T_NomDepositante', 28, 57, 1, 0, @I_SecArchivoID, 12)
+INSERT TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) VALUES ('D_HoraPago', 169, 174, 1, 0, @I_SecArchivoID, 13)
+INSERT TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) VALUES ('I_InteresMora', 89, 103, 1, 0, @I_SecArchivoID, 14)
+INSERT TC_ColumnaSeccion(T_ColSecDesc, I_ColumnaInicio, I_ColumnaFin, B_Habilitado, B_Eliminado, I_SecArchivoID, I_CampoPagoID) VALUES ('C_Extorno', 197, 197, 1, 0, @I_SecArchivoID, 15)
 GO
 
 
 
 SET IDENTITY_INSERT TC_Servicios ON
 GO
-INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES(1, '001', 'UNFV REGULAR', 1, 0)
-INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES(2, '002', 'UNFV EUDED', 1, 0)
-INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES(3, '003', 'UNFV POSTGRADO', 1, 0)
-INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES(4, '004', 'UNFV POSTGRADO SECC FAC', 1, 0)
-INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES(5, '010', 'UNFV REGULAR ALUMNOS TASAS', 1, 0)
-INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES(6, '011', 'UNFV EUDED ALUMNOS TASAS', 1, 0)
-INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES(7, '012', 'UNFV POSTGRADO ALUMNOS TASA', 1, 0)
-INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES(8, '013', 'UNFV PREGRADO INGRESANTES TASA', 1, 0)
-INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES(9, '014', 'UNFV SECCION POSTGRADO TASA FA', 1, 0)
-INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES(10, '015', 'UNFV INST.IDIOMA ALUMNOS TASA', 1, 0)
-INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES(11, '016', 'UNFV CEPREVI TASAS ALUMNOS', 1, 0)
-INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES(12, '017', 'UNFV CONGRESO INTERNACIONAL', 1, 0)
-INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES(13, '018', 'UNFV POSTGRADO EDUCACION', 1, 0)
-INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES(14, '020', 'UNFV PUBLICO TASAS', 1, 0)
-INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES(15, '030', 'UNFV EMPRESAS TASAS', 1, 0)
-INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES(16, '040', 'UNFV PREGRADO TASA POSTULANTE', 1, 0)
-INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES(17, '042', 'UNFV ADMISION EUDED 2015', 0, 0)
-INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES(18, '045', 'UNFV POSTGRADO POST.SECC.POST', 1, 0)
-INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES(19, '050', 'UNFV APORTE VOLUNTARIO', 1, 0)
-INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES(20, '051', 'UNFV ADMISION EUDED 2016', 0, 0)
-INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES(21, '052', 'UNFV POSTGRADO ALUMNOS 2018', 1, 0)
+INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES (1, '001', 'UNFV REGULAR', 1, 0)
+INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES (2, '002', 'UNFV EUDED', 1, 0)
+INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES (3, '003', 'UNFV POSTGRADO', 1, 0)
+INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES (4, '004', 'UNFV POSTGRADO SECC FAC', 1, 0)
+INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES (5, '010', 'UNFV REGULAR ALUMNOS TASAS', 1, 0)
+INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES (6, '011', 'UNFV EUDED ALUMNOS TASAS', 1, 0)
+INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES (7, '012', 'UNFV POSTGRADO ALUMNOS TASA', 1, 0)
+INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES (8, '013', 'UNFV PREGRADO INGRESANTES TASA', 1, 0)
+INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES (9, '014', 'UNFV SECCION POSTGRADO TASA FA', 1, 0)
+INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES (10, '015', 'UNFV INST.IDIOMA ALUMNOS TASA', 1, 0)
+INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES (11, '016', 'UNFV CEPREVI TASAS ALUMNOS', 1, 0)
+INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES (12, '017', 'UNFV CONGRESO INTERNACIONAL', 1, 0)
+INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES (13, '018', 'UNFV POSTGRADO EDUCACION', 1, 0)
+INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES (14, '020', 'UNFV PUBLICO TASAS', 1, 0)
+INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES (15, '030', 'UNFV EMPRESAS TASAS', 1, 0)
+INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES (16, '040', 'UNFV PREGRADO TASA POSTULANTE', 1, 0)
+INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES (17, '042', 'UNFV ADMISION EUDED 2015', 0, 0)
+INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES (18, '045', 'UNFV POSTGRADO POST.SECC.POST', 1, 0)
+INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES (19, '050', 'UNFV APORTE VOLUNTARIO', 1, 0)
+INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES (20, '051', 'UNFV ADMISION EUDED 2016', 0, 0)
+INSERT TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado) VALUES (21, '052', 'UNFV POSTGRADO ALUMNOS 2018', 1, 0)
 GO
 SET IDENTITY_INSERT TC_Servicios OFF
 GO
