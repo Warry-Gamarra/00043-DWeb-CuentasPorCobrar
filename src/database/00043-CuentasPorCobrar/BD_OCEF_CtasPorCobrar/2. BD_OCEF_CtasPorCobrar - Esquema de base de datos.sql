@@ -374,6 +374,7 @@ CREATE TABLE TC_MatriculaAlumno
 	D_FecCre             datetime  NULL ,
 	I_UsuarioMod         int  NULL ,
 	D_FecMod             datetime  NULL ,
+	B_Migrado			 bit NOT NULL DEFAULT(0),
 	CONSTRAINT PK_MatriculaAlumno PRIMARY KEY  CLUSTERED (I_MatAluID ASC)
 )
 go
@@ -541,6 +542,8 @@ CREATE TABLE TI_ConceptoPago
 	T_DescripcionLarga   varchar(250)  NULL ,
 	T_Documento          varchar(500)  NULL ,
 	B_Mora		         bit,
+	B_EsPagoMatricula	 bit,
+	B_EsPagoExtmp	 bit,
 	B_Migrado            bit  NOT NULL ,
 	B_Habilitado         bit  NOT NULL ,
 	B_Eliminado          bit  NOT NULL ,

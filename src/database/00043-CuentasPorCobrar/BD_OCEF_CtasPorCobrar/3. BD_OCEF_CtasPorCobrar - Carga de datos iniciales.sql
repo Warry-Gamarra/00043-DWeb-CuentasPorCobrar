@@ -1830,3 +1830,83 @@ GO
 SET IDENTITY_INSERT [dbo].[TC_ClasificadorPresupuestal] OFF
 GO
 
+
+
+--Clasificadores EUPG: BIBLIOTECA
+declare @I_ClasifEquivalenciaID int
+insert dbo.TC_ClasificadorEquivalencia(C_ClasificConceptoCod, I_ClasificadorID, B_Eliminado) values('1230010100', 301, 0)
+
+set @I_ClasifEquivalenciaID = IDENT_CURRENT('TC_ClasificadorEquivalencia')
+
+insert dbo.TC_ClasificadorEquivalenciaAnio(N_Anio, I_ClasifEquivalenciaID, B_Habilitado, B_Eliminado) values('2021', @I_ClasifEquivalenciaID, 1, 0)
+go
+
+
+--Clasificadores EUPG: CARNET UNIVERSITARIO EUPG
+declare @I_ClasifEquivalenciaID int
+insert dbo.TC_ClasificadorEquivalencia(C_ClasificConceptoCod, I_ClasificadorID, B_Eliminado) values('1230010300', 301, 0)
+
+set @I_ClasifEquivalenciaID = IDENT_CURRENT('TC_ClasificadorEquivalencia')
+
+insert dbo.TC_ClasificadorEquivalenciaAnio(N_Anio, I_ClasifEquivalenciaID, B_Habilitado, B_Eliminado) values('2021', @I_ClasifEquivalenciaID, 1, 0)
+go
+
+
+--Clasificadores EUPG: PENSIÓN MAESTRIA REGULAR EUPG
+declare @I_ClasifEquivalenciaID int
+insert dbo.TC_ClasificadorEquivalencia(C_ClasificConceptoCod, I_ClasificadorID, B_Eliminado) values('1230080110', 306, 0)
+
+set @I_ClasifEquivalenciaID = IDENT_CURRENT('TC_ClasificadorEquivalencia')
+
+insert dbo.TC_ClasificadorEquivalenciaAnio(N_Anio, I_ClasifEquivalenciaID, B_Habilitado, B_Eliminado) values('2021', @I_ClasifEquivalenciaID, 1, 0)
+go
+
+
+--Clasificadores EUPG: PENSIÓN DOCTORADO REGULAR EUPG
+declare @I_ClasifEquivalenciaID int
+insert dbo.TC_ClasificadorEquivalencia(C_ClasificConceptoCod, I_ClasificadorID, B_Eliminado) values('1230080200', 306, 0)
+
+set @I_ClasifEquivalenciaID = IDENT_CURRENT('TC_ClasificadorEquivalencia')
+
+insert dbo.TC_ClasificadorEquivalenciaAnio(N_Anio, I_ClasifEquivalenciaID, B_Habilitado, B_Eliminado) values('2021', @I_ClasifEquivalenciaID, 1, 0)
+go
+
+
+--Clasificadores EUPG: MATRÍCULA MAESTRÍA - EUPG
+declare @I_ClasifEquivalenciaID int
+insert dbo.TC_ClasificadorEquivalencia(C_ClasificConceptoCod, I_ClasificadorID, B_Eliminado) values('1230091500', 307, 0)
+
+set @I_ClasifEquivalenciaID = IDENT_CURRENT('TC_ClasificadorEquivalencia')
+
+insert dbo.TC_ClasificadorEquivalenciaAnio(N_Anio, I_ClasifEquivalenciaID, B_Habilitado, B_Eliminado) values('2021', @I_ClasifEquivalenciaID, 1, 0)
+go
+
+
+--Clasificadores EUPG: MATRÍCULA DOCTORADO - EUPG
+declare @I_ClasifEquivalenciaID int
+insert dbo.TC_ClasificadorEquivalencia(C_ClasificConceptoCod, I_ClasificadorID, B_Eliminado) values('1230091600', 307, 0)
+
+set @I_ClasifEquivalenciaID = IDENT_CURRENT('TC_ClasificadorEquivalencia')
+
+insert dbo.TC_ClasificadorEquivalenciaAnio(N_Anio, I_ClasifEquivalenciaID, B_Habilitado, B_Eliminado) values('2021', @I_ClasifEquivalenciaID, 1, 0)
+go
+
+
+--Clasificadores EUPG: MORA X PENSIONES - PERIODO ACTUAL
+declare @I_ClasifEquivalenciaID int
+insert dbo.TC_ClasificadorEquivalencia(C_ClasificConceptoCod, I_ClasificadorID, B_Eliminado) values('1230991000', 310, 0)
+
+set @I_ClasifEquivalenciaID = IDENT_CURRENT('TC_ClasificadorEquivalencia')
+
+insert dbo.TC_ClasificadorEquivalenciaAnio(N_Anio, I_ClasifEquivalenciaID, B_Habilitado, B_Eliminado) values('2021', @I_ClasifEquivalenciaID, 1, 0)
+go
+
+
+--Clasificadores PREGRADO: MATRICULA
+declare @I_ClasifEquivalenciaID int
+insert dbo.TC_ClasificadorEquivalencia(C_ClasificConceptoCod, I_ClasificadorID, B_Eliminado) values('1230090200', 307, 0)
+
+set @I_ClasifEquivalenciaID = IDENT_CURRENT('TC_ClasificadorEquivalencia')
+
+insert dbo.TC_ClasificadorEquivalenciaAnio(N_Anio, I_ClasifEquivalenciaID, B_Habilitado, B_Eliminado) values('2021', @I_ClasifEquivalenciaID, 1, 0)
+go
