@@ -100,7 +100,7 @@ namespace Data.Views
             return result;
         }
 
-        public static IEnumerable<VW_CuotasPago> GetPregrado(int anio, int periodo, string codFac)
+        public static IEnumerable<VW_CuotasPago> GetPregrado(int anio, int? periodo, string codFac)
         {
             IEnumerable<VW_CuotasPago> result;
 
@@ -109,7 +109,7 @@ namespace Data.Views
                 codFac = String.IsNullOrEmpty(codFac) ? null : codFac;
 
                 string s_command = @"SELECT * FROM dbo.VW_CuotasPago_X_Ciclo c 
-                    WHERE c.I_Anio = @I_Anio AND c.I_Periodo = @I_Periodo AND c.C_Nivel = '1' AND
+                    WHERE c.I_Anio = @I_Anio AND c.I_Periodo = ISNULL(@I_Periodo, c.I_Periodo) AND c.C_Nivel = '1' AND
                         c.C_CodFac = ISNULL(@C_CodFac, c.C_CodFac)";
 
                 var parameters = new { I_Anio = anio, I_Periodo = periodo, C_CodFac = codFac };

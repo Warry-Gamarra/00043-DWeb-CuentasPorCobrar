@@ -50,13 +50,13 @@ namespace Data.Views
             return result;
         }
 
-        public static IEnumerable<VW_CtaDepositoProceso> GetCtaDepositoByAnioPeriodo(int anio, int periodo)
+        public static IEnumerable<VW_CtaDepositoProceso> GetCtaDepositoByAnioPeriodo(int anio, int? periodo)
         {
             IEnumerable<VW_CtaDepositoProceso> result;
 
             try
             {
-                string s_command = @"SELECT cta.* FROM dbo.VW_CtaDepositoProceso cta WHERE cta.I_Anio = @I_Anio AND cta.I_Periodo = @I_Periodo";
+                string s_command = @"SELECT cta.* FROM dbo.VW_CtaDepositoProceso cta WHERE cta.I_Anio = @I_Anio AND cta.I_Periodo = ISNULL(@I_Periodo, cta.I_Periodo)";
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {

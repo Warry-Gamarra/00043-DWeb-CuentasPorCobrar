@@ -23,11 +23,11 @@ namespace Domain.Services
 
         IEnumerable<CuotaPagoDTO> Obtener_CuotasPago(int anio, int periodo, string codAlu, string codRc);
 
-        IEnumerable<CuotaPagoDTO> Obtener_CuotasPago_X_Proceso(int anio, int periodo, TipoEstudio tipoEstudio, string codDependencia);
+        IEnumerable<CuotaPagoDTO> Obtener_CuotasPago_X_Proceso(int anio, int? periodo, TipoEstudio tipoEstudio, string codDependencia);
 
         ImportacionPagoResponse Grabar_Pago_Obligaciones(List<PagoObligacionEntity> dataPagoObligaciones, int currentUserID);
 
-        IEnumerable<CtaDepoProceso> Obtener_CtaDeposito_X_Periodo(int anio, int periodo);
+        IEnumerable<CtaDepoProceso> Obtener_CtaDeposito_X_Periodo(int anio, int? periodo);
 
         ObligacionAluCabEntity Obtener_ObligacionAluCab(int obligacionCabID);
     }

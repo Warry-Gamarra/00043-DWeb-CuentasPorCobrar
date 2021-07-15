@@ -20,7 +20,7 @@ namespace WebApp.Models
             fecha_actual = DateTime.Now;
         }
 
-        public MemoryStream GenerarInformacionObligaciones(int anio, int periodo, TipoEstudio tipoEstudio, string dependencia)
+        public MemoryStream GenerarInformacionObligaciones(int anio, int? periodo, TipoEstudio tipoEstudio, string dependencia)
         {
             var cuotas_pago = obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(anio, periodo, tipoEstudio, dependencia).Where(x => !x.B_Pagado).ToList();
 

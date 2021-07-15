@@ -21,18 +21,23 @@ namespace WebApp.Models
             fechaTransmision = DateTime.Now;
         }
 
-        public MemoryStream GenerarInformacionObligaciones(int anio, int periodo, TipoEstudio tipoEstudio, string dependencia)
+        public MemoryStream GenerarInformacionObligaciones(int anio, int? periodo, TipoEstudio tipoEstudio, string dependencia)
         {
             var cuotas_pago = _obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(anio, periodo, tipoEstudio, dependencia).Where(x => !x.B_Pagado).ToList();
-
-            var cuentas_bcp = _obligacionServiceFacade.Obtener_CtaDeposito_X_Periodo(anio, periodo, tipoEstudio).Where(x => x.I_EntidadFinanID == Bancos.BCP_ID);
-
-            var cuentas_bcp_split = cuentas_bcp.First().C_NumeroCuenta.Split('-');
 
             if (cuotas_pago.Count == 0)
             {
                 throw new Exception("No hay registros.");
             }
+
+            var cuentas_bcp = _obligacionServiceFacade.Obtener_CtaDeposito_X_Periodo(anio, periodo, tipoEstudio).Where(x => x.I_EntidadFinanID == Bancos.BCP_ID);
+
+            if (cuentas_bcp.GroupBy(x => x.C_NumeroCuenta).Count() > 1)
+            {
+                throw new Exception("No se puede generar la cabecera porque existe más de una cuenta asignada.");
+            }
+
+            var cuentas_bcp_split = cuentas_bcp.First().C_NumeroCuenta.Split('-');
 
             var memoryStream = new MemoryStream();
 

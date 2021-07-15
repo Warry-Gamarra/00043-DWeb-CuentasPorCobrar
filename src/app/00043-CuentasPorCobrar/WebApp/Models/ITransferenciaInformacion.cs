@@ -9,7 +9,7 @@ namespace WebApp.Models
 {
     public interface ITransferenciaInformacion
     {
-        MemoryStream GenerarInformacionObligaciones(int anio, int periodo, TipoEstudio tipoEstudio, string dependencia);
+        MemoryStream GenerarInformacionObligaciones(int anio, int? periodo, TipoEstudio tipoEstudio, string dependencia);
 
         string NombreArchivoGenerado();
 

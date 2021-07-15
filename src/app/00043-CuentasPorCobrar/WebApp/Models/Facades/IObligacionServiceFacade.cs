@@ -16,8 +16,8 @@ namespace WebApp.Models.Facades
 
         List<CuotaPagoModel> Obtener_CuotaPago(int anio, int periodo, string codAlu, string codRc);
 
-        List<CuotaPagoModel> Obtener_CuotasPago_X_Proceso(int anio, int periodo, TipoEstudio tipoEstudio, string codDependencia);
+        List<CuotaPagoModel> Obtener_CuotasPago_X_Proceso(int anio, int? periodo, TipoEstudio tipoEstudio, string codDependencia);
 
-        IEnumerable<CtaDepoProcesoModel> Obtener_CtaDeposito_X_Periodo(int anio, int periodo, TipoEstudio tipoEstudio);
+        IEnumerable<CtaDepoProcesoModel> Obtener_CtaDeposito_X_Periodo(int anio, int? periodo, TipoEstudio tipoEstudio);
     }
 }

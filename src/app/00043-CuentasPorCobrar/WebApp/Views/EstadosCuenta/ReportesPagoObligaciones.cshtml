@@ -37,22 +37,22 @@
                                 <div class="form-group col-xl-2 col-lg-6 col-md-6 col-sm-12 col-12">
                                     <label for="tipoEstudio">Tipo de Estudio</label>
                                     @Html.DropDownListFor(model => model.tipoEstudio, new SelectList(ViewBag.TipoEstudios, "Value", "TextDisplay"),
-                                        new { @class = "form-control form-control-sm" })
+                                        new { @class = "form-control form-control-sm text-uppercase" })
                                 </div>
                                 <div class="form-group col-xl-2 col-lg-6 col-md-6 col-sm-12 col-12">
                                     <label for="reporte">Reporte</label>
                                     @Html.DropDownListFor(model => model.reporte, new SelectList(ViewBag.TipoReportes, "Value", "TextDisplay"), "SELECCIONAR",
-                                        new { @class = "form-control form-control-sm", @required = "required" })
+                                        new { @class = "form-control form-control-sm text-uppercase", @required = "required" })
                                 </div>
                                 <div class="form-group col-xl-2 col-lg-6 col-md-6 col-sm-12 col-12">
                                     <label for="dependencia">Facultad / Posgrado</label>
                                     @Html.DropDownListFor(model => model.dependencia, new SelectList(ViewBag.Dependencias, "Value", "TextDisplay"), "TODOS",
-                                        new { @class = "form-control form-control-sm", @disabled = "disabled" })
+                                        new { @class = "form-control form-control-sm text-uppercase", @disabled = "disabled" })
                                 </div>
                                 <div class="form-group col-xl-2 col-lg-6 col-md-6 col-sm-12 col-12">
                                     <label for="idEntidadFinanciera">Entidad Financiera</label>
                                     @Html.DropDownListFor(model => model.idEntidadFinanciera, new SelectList(ViewBag.EntidadesFinancieras, "Value", "TextDisplay"), "TODOS",
-                                        new { @class = "form-control form-control-sm" })
+                                        new { @class = "form-control form-control-sm text-uppercase" })
                                 </div>
                                 <div class="form-group col-xl-4 col-lg-12 col-md-12 col-sm-12 col-12">
                                     <div id="datepicker">

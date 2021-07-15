@@ -91,7 +91,7 @@ namespace WebApp.Controllers
         }
 
         // GET: api/service/GetCtasDepositoPorPeriodo?anio=2021&periodo=15
-        public IEnumerable<SelectViewModel> GetCtasDepositoPorPeriodo(int anio, int periodo, TipoEstudio tipoEstudio)
+        public IEnumerable<SelectViewModel> GetCtasDepositoPorPeriodo(int anio, int? periodo, TipoEstudio tipoEstudio)
         {
             var ctasDeposito = _obligacionServiceFacade.Obtener_CtaDeposito_X_Periodo(anio, periodo, tipoEstudio);
 

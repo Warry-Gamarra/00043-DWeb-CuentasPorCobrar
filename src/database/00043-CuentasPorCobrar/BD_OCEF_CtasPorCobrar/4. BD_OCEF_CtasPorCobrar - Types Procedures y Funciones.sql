@@ -4327,7 +4327,7 @@ BEGIN
 
 	IF (@B_EsPregrado = 1) BEGIN
 		SELECT 
-			C_CodClasificador, 
+			ISNULL(C_CodClasificador, '') AS C_CodClasificador, 
 			T_ClasificadorDesc, 
 			ISNULL([1], 0) AS Enero,
 			ISNULL([2], 0) AS Febrero,
@@ -4362,7 +4362,7 @@ BEGIN
 	END 
 	ELSE BEGIN
 		SELECT 
-			C_CodClasificador, 
+			ISNULL(C_CodClasificador, '') AS C_CodClasificador, 
 			T_ClasificadorDesc, 
 			ISNULL([1], 0) AS Enero,
 			ISNULL([2], 0) AS Febrero,
@@ -4396,7 +4396,7 @@ BEGIN
 		ORDER BY T_ClasificadorDesc
 	END
 
-	--EXEC USP_S_ResumenAnualPagoDeObligaciones_X_Clasificadores @I_Anio = 2021, @B_EsPregrado = 0
+	--EXEC USP_S_ResumenAnualPagoDeObligaciones_X_Clasificadores @I_Anio = 2021, @B_EsPregrado = 1
 END
 GO
 
