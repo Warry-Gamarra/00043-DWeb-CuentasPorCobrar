@@ -129,7 +129,41 @@ namespace WebApp.Controllers
 
             ViewBag.SelectedTipoEstudio = tipoEstudio;
 
-            ViewBag.Title = "Resumen de Ingresos";
+            ViewBag.Title = "Resumen de Ingresos por Clasificadores (Obligaciones)";
+
+            return View(model);
+        }
+
+        [Route("consultas/resumen-anual-obligaciones-por-dependencias")]
+        public ActionResult ResumenAnualObligacionesPorDependencias(int anio = 0, TipoEstudio tipoEstudio = TipoEstudio.Pregrado)
+        {
+            anio = anio == 0 ? DateTime.Now.Year : anio;
+
+            ReporteResumenAnualPagoObligaciones_X_Dependencias model;
+
+            switch (tipoEstudio)
+            {
+                case TipoEstudio.Pregrado:
+                    model = reportePregradoServiceFacade.ResumenAnualPagoOblig_X_Dependencias(anio);
+                    break;
+
+                case TipoEstudio.Posgrado:
+                    model = reportePosgradoServiceFacade.ResumenAnualPagoOblig_X_Dependencias(anio);
+                    break;
+                default:
+                    model = new ReporteResumenAnualPagoObligaciones_X_Dependencias();
+                    break;
+            }
+
+            ViewBag.Anios = generalServiceFacade.Listar_Anios();
+
+            ViewBag.SelectedAnio = anio;
+
+            ViewBag.TipoEstudios = generalServiceFacade.Listar_TipoEstudios();
+
+            ViewBag.SelectedTipoEstudio = tipoEstudio;
+
+            ViewBag.Title = "Resumen de Ingresos por Dependencias (Obligaciones)";
 
             return View(model);
         }

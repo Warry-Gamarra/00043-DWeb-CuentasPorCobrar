@@ -65,10 +65,16 @@ namespace WebApp.Models.Facades
         {
             var lista = reporteService.ResumenAnualPagoOblig_X_Clasificadores(anio);
 
-            var resumen_x_clasificadores = lista.Select(
-                x => Mapper.ResumenAnualPagoDeObligaciones_X_ClasificadorDTO_To_ResumenAnualPagoOblig_X_Clasificador(x));
+            var result = new ReporteResumenAnualPagoObligaciones_X_Clasificadores(anio, TipoEstudio.Pregrado, lista);
 
-            var result = new ReporteResumenAnualPagoObligaciones_X_Clasificadores(anio, TipoEstudio.Pregrado, resumen_x_clasificadores);
+            return result;
+        }
+
+        public ReporteResumenAnualPagoObligaciones_X_Dependencias ResumenAnualPagoOblig_X_Dependencias(int anio)
+        {
+            var lista = reporteService.ResumenAnualPagoOblig_X_Dependencia(anio);
+
+            var result = new ReporteResumenAnualPagoObligaciones_X_Dependencias(anio, TipoEstudio.Pregrado, lista);
 
             return result;
         }

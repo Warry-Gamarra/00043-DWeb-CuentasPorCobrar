@@ -1,4 +1,4 @@
-﻿@model WebApp.ViewModels.ReporteResumenAnualPagoObligaciones_X_Clasificadores
+﻿@model WebApp.ViewModels.ReporteResumenAnualPagoObligaciones_X_Dependencias
 
 <div class="container-fluid">
     <div class="col-12">
@@ -42,8 +42,7 @@
             <table class="table table-bordered table-hover table-sm">
                 <thead>
                     <tr>
-                        <th class="text-center" style="width: 7%">Clasificador</th>
-                        <th class="text-center" style="width: 18%">Descripción</th>
+                        <th class="text-center" style="width: 18%">Dependencia</th>
                         <th class="text-center">Enero</th>
                         <th class="text-center">Febrero</th>
                         <th class="text-center">Marzo</th>
@@ -60,14 +59,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model.resumen_x_clasificadores)
+                    @foreach (var item in Model.resumen_x_dependencias)
                     {
                         <tr>
                             <td>
-                                @Html.DisplayFor(modelItem => item.C_CodClasificador)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.T_ClasificadorDesc)
+                                @Html.DisplayFor(modelItem => item.T_Dependencia)
                             </td>
                             <td class="text-right">
                                 @Html.DisplayFor(modelItem => item.Enero)
@@ -106,12 +102,11 @@
                                 @Html.DisplayFor(modelItem => item.Diciembre)
                             </td>
                             <th class="text-right">
-                                @Model.TotalClasificador(item.C_CodClasificador)
+                                @Model.TotalClasificador(item.C_CodDependencia)
                             </th>
                         </tr>
                     }
                         <tr>
-                            <th></th>
                             <th>Total (S/.)</th>
                             <th class="text-right">@Model.TotalEnero</th>
                             <th class="text-right">@Model.TotalFebrero</th>
@@ -139,11 +134,11 @@
     <script>
         $(document).ready(function () {
             $('#anio').on('change', function () {
-                location.href = '@Url.Action("ResumenAnualObligacionesPorClasificadores", "EstadosCuenta")' + '?anio=' + $(this).val() + '&tipoEstudio=' + $('#tipoEstudio').val();
+                location.href = '@Url.Action("ResumenAnualObligacionesPorDependencias", "EstadosCuenta")' + '?anio=' + $(this).val() + '&tipoEstudio=' + $('#tipoEstudio').val();
             });
 
             $('#tipoEstudio').on('change', function () {
-                location.href = '@Url.Action("ResumenAnualObligacionesPorClasificadores", "EstadosCuenta")' + '?anio=' + $('#anio').val() + '&tipoEstudio=' + $(this).val();
+                location.href = '@Url.Action("ResumenAnualObligacionesPorDependencias", "EstadosCuenta")' + '?anio=' + $('#anio').val() + '&tipoEstudio=' + $(this).val();
             });
         })
     </script>

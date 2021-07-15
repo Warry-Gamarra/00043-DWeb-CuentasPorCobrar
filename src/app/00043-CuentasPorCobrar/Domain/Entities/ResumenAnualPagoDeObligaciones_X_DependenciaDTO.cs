@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace WebApp.ViewModels
+namespace Domain.Entities
 {
-    public class ResumenAnualPagoOblig_X_Clasificador
+    public class ResumenAnualPagoDeObligaciones_X_DependenciaDTO
     {
-        public string C_CodClasificador { get; set; }
-        public string T_ClasificadorDesc { get; set; }
+        public string C_CodDependencia { get; set; }
+        public string T_Dependencia { get; set; }
         public decimal Enero { get; set; }
         public decimal Febrero { get; set; }
         public decimal Marzo { get; set; }

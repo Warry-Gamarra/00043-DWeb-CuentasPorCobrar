@@ -460,8 +460,8 @@
     <Compile Include="Models\IMatriculaSource.cs" />
     <Compile Include="Models\MatriculaDbfSource.cs" />
     <Compile Include="Models\MatriculaExcelSource.cs" />
+    <Compile Include="ViewModels\ReporteResumenAnualPagoObligaciones_X_Dependencias.cs" />
     <Compile Include="ViewModels\ReporteResumenAnualPagoObligaciones_X_Clasificadores.cs" />
-    <Compile Include="ViewModels\ResumenAnualPagoOblig_X_Clasificador.cs" />
     <Compile Include="ViewModels\ReportePagosObligacionesViewModel.cs" />
     <Compile Include="ViewModels\PagosViewModels.cs" />
     <Compile Include="ViewModels\DevolucionesViewModel.cs" />
@@ -613,6 +613,7 @@
     <Content Include="Views\EstadosCuenta\_ReportePagosPosgradoPorGrado.cshtml" />
     <Content Include="Views\ConceptoPago\_MsgRegistrarConceptoObligacion.cshtml" />
     <Content Include="Views\EstadosCuenta\ResumenAnualObligacionesPorClasificadores.cshtml" />
+    <Content Include="Views\EstadosCuenta\ResumenAnualObligacionesPorDependencias.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

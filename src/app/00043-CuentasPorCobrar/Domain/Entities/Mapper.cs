@@ -507,5 +507,28 @@ namespace Domain.Entities
 
             return result;
         }
+
+        public static ResumenAnualPagoDeObligaciones_X_DependenciaDTO USP_S_ResumenAnualPagoDeObligaciones_X_Dependencia_To_ResumenAnualPagoDeObligaciones_X_DependenciaDTO(USP_S_ResumenAnualPagoDeObligaciones_X_Dependencia sp)
+        {
+            var result = new ResumenAnualPagoDeObligaciones_X_DependenciaDTO()
+            {
+                C_CodDependencia = sp.C_CodDependencia,
+                T_Dependencia = sp.T_Dependencia,
+                Enero = sp.Enero,
+                Febrero = sp.Febrero,
+                Marzo = sp.Marzo,
+                Abril = sp.Abril,
+                Mayo = sp.Mayo,
+                Junio = sp.Junio,
+                Julio = sp.Julio,
+                Agosto = sp.Agosto,
+                Setiembre = sp.Setiembre,
+                Octubre = sp.Octubre,
+                Noviembre = sp.Noviembre,
+                Diciembre = sp.Diciembre
+            };
+
+            return result;
+        }
     }
 }

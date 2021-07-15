@@ -7,32 +7,32 @@ using System.Web;
 
 namespace WebApp.ViewModels
 {
-    public class ReporteResumenAnualPagoObligaciones_X_Clasificadores
+    public class ReporteResumenAnualPagoObligaciones_X_Dependencias
     {
-        public ReporteResumenAnualPagoObligaciones_X_Clasificadores(int anio, TipoEstudio tipoEstudio,
-            IEnumerable<ResumenAnualPagoDeObligaciones_X_ClasificadorDTO> resumen_x_clasificadores)
+        public ReporteResumenAnualPagoObligaciones_X_Dependencias(int anio, TipoEstudio tipoEstudio,
+            IEnumerable<ResumenAnualPagoDeObligaciones_X_DependenciaDTO> resumen_x_dependencias)
         {
             this.anio = anio;
             this.tipoEstudio = tipoEstudio;
-            this.resumen_x_clasificadores = resumen_x_clasificadores;
+            this.resumen_x_dependencias = resumen_x_dependencias;
         }
 
-        public ReporteResumenAnualPagoObligaciones_X_Clasificadores()
+        public ReporteResumenAnualPagoObligaciones_X_Dependencias()
         {
-            resumen_x_clasificadores = new List<ResumenAnualPagoDeObligaciones_X_ClasificadorDTO>();
+            resumen_x_dependencias = new List<ResumenAnualPagoDeObligaciones_X_DependenciaDTO>();
         }
 
         public TipoEstudio tipoEstudio { get; set; }
 
         public int anio { get; set; }
 
-        public IEnumerable<ResumenAnualPagoDeObligaciones_X_ClasificadorDTO> resumen_x_clasificadores { get; }
+        public IEnumerable<ResumenAnualPagoDeObligaciones_X_DependenciaDTO> resumen_x_dependencias { get; }
 
         public decimal TotalEnero
         {
             get
             {
-                return resumen_x_clasificadores.Sum(x => x.Enero);
+                return resumen_x_dependencias.Sum(x => x.Enero);
             }
         }
 
@@ -40,7 +40,7 @@ namespace WebApp.ViewModels
         {
             get
             {
-                return resumen_x_clasificadores.Sum(x => x.Febrero);
+                return resumen_x_dependencias.Sum(x => x.Febrero);
             }
         }
 
@@ -48,7 +48,7 @@ namespace WebApp.ViewModels
         {
             get
             {
-                return resumen_x_clasificadores.Sum(x => x.Marzo);
+                return resumen_x_dependencias.Sum(x => x.Marzo);
             }
         }
 
@@ -56,7 +56,7 @@ namespace WebApp.ViewModels
         {
             get
             {
-                return resumen_x_clasificadores.Sum(x => x.Abril);
+                return resumen_x_dependencias.Sum(x => x.Abril);
             }
         }
 
@@ -64,7 +64,7 @@ namespace WebApp.ViewModels
         {
             get
             {
-                return resumen_x_clasificadores.Sum(x => x.Mayo);
+                return resumen_x_dependencias.Sum(x => x.Mayo);
             }
         }
 
@@ -72,7 +72,7 @@ namespace WebApp.ViewModels
         {
             get
             {
-                return resumen_x_clasificadores.Sum(x => x.Junio);
+                return resumen_x_dependencias.Sum(x => x.Junio);
             }
         }
 
@@ -80,7 +80,7 @@ namespace WebApp.ViewModels
         {
             get
             {
-                return resumen_x_clasificadores.Sum(x => x.Julio);
+                return resumen_x_dependencias.Sum(x => x.Julio);
             }
         }
 
@@ -88,7 +88,7 @@ namespace WebApp.ViewModels
         {
             get
             {
-                return resumen_x_clasificadores.Sum(x => x.Agosto);
+                return resumen_x_dependencias.Sum(x => x.Agosto);
             }
         }
 
@@ -96,7 +96,7 @@ namespace WebApp.ViewModels
         {
             get
             {
-                return resumen_x_clasificadores.Sum(x => x.Setiembre);
+                return resumen_x_dependencias.Sum(x => x.Setiembre);
             }
         }
 
@@ -104,7 +104,7 @@ namespace WebApp.ViewModels
         {
             get
             {
-                return resumen_x_clasificadores.Sum(x => x.Octubre);
+                return resumen_x_dependencias.Sum(x => x.Octubre);
             }
         }
 
@@ -112,7 +112,7 @@ namespace WebApp.ViewModels
         {
             get
             {
-                return resumen_x_clasificadores.Sum(x => x.Noviembre);
+                return resumen_x_dependencias.Sum(x => x.Noviembre);
             }
         }
 
@@ -120,7 +120,7 @@ namespace WebApp.ViewModels
         {
             get
             {
-                return resumen_x_clasificadores.Sum(x => x.Diciembre);
+                return resumen_x_dependencias.Sum(x => x.Diciembre);
             }
         }
 
@@ -128,7 +128,7 @@ namespace WebApp.ViewModels
         {
             get
             {
-                return resumen_x_clasificadores.Sum(x => 
+                return resumen_x_dependencias.Sum(x => 
                     x.Enero + x.Febrero + x.Marzo +
                     x.Abril + x.Mayo + x.Junio +
                     x.Julio + x.Agosto + x.Setiembre +
@@ -137,10 +137,10 @@ namespace WebApp.ViewModels
             }
         }
 
-        public decimal TotalClasificador(string codClasificador)
+        public decimal TotalClasificador(string codDependencia)
         {
-            return resumen_x_clasificadores
-                .Where(x => x.C_CodClasificador.Equals(codClasificador))
+            return resumen_x_dependencias
+                .Where(x => x.C_CodDependencia.Equals(codDependencia))
                 .Sum(x =>
                     x.Enero + x.Febrero + x.Marzo +
                     x.Abril + x.Mayo + x.Junio +

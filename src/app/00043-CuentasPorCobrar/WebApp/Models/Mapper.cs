@@ -319,28 +319,5 @@ namespace WebApp.Models
 
             return result;
         }
-
-        public static ResumenAnualPagoOblig_X_Clasificador ResumenAnualPagoDeObligaciones_X_ClasificadorDTO_To_ResumenAnualPagoOblig_X_Clasificador(ResumenAnualPagoDeObligaciones_X_ClasificadorDTO dto)
-        {
-            var result = new ResumenAnualPagoOblig_X_Clasificador()
-            {
-                C_CodClasificador = dto.C_CodClasificador,
-                T_ClasificadorDesc = dto.T_ClasificadorDesc,
-                Enero = dto.Enero,
-                Febrero = dto.Febrero,
-                Marzo = dto.Marzo,
-                Abril = dto.Abril,
-                Mayo = dto.Mayo,
-                Junio = dto.Junio,
-                Julio = dto.Julio,
-                Agosto = dto.Agosto,
-                Setiembre = dto.Setiembre,
-                Octubre = dto.Octubre,
-                Noviembre = dto.Noviembre,
-                Diciembre = dto.Diciembre
-            };
-
-            return result;
-        }
     }
 }
