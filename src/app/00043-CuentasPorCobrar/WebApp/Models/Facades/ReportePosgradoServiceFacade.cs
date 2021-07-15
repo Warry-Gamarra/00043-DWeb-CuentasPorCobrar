@@ -60,5 +60,23 @@ namespace WebApp.Models.Facades
 
             return reporte;
         }
+
+        public ReporteResumenAnualPagoObligaciones_X_Clasificadores ResumenAnualPagoOblig_X_Clasificadores(int anio)
+        {
+            var lista = reporteService.ResumenAnualPagoOblig_X_Clasificadores(anio);
+
+            var result = new ReporteResumenAnualPagoObligaciones_X_Clasificadores(anio, TipoEstudio.Posgrado, lista);
+
+            return result;
+        }
+
+        public ReporteResumenAnualPagoObligaciones_X_Dependencias ResumenAnualPagoOblig_X_Dependencias(int anio)
+        {
+            var lista = reporteService.ResumenAnualPagoOblig_X_Dependencia(anio);
+
+            var result = new ReporteResumenAnualPagoObligaciones_X_Dependencias(anio, TipoEstudio.Posgrado, lista);
+
+            return result;
+        }
     }
 }

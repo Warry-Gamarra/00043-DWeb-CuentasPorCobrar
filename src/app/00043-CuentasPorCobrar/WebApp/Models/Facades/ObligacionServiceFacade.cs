@@ -155,7 +155,7 @@ namespace WebApp.Models.Facades
 
             if (matricula == null)
             {
-                throw new Exception("El alumno no es encuentra matriculado en el período actual.");
+                throw new Exception("El alumno no sE encuentra asignado en el período actual.");
             }
 
             string tipoAlumno = matricula.B_Ingresante.Value ? C_TipoAlumnoIngresante : C_TipoAlumnoRegular;
@@ -231,7 +231,7 @@ namespace WebApp.Models.Facades
             return result;
         }
 
-        public List<CuotaPagoModel> Obtener_CuotasPago_X_Proceso(int anio, int periodo, TipoEstudio tipoEstudio, string codDependencia)
+        public List<CuotaPagoModel> Obtener_CuotasPago_X_Proceso(int anio, int? periodo, TipoEstudio tipoEstudio, string codDependencia)
         {
             var cuotasPago = _obligacionService.Obtener_CuotasPago_X_Proceso(anio, periodo, tipoEstudio, codDependencia);
 
@@ -240,7 +240,7 @@ namespace WebApp.Models.Facades
             return result;
         }
 
-        public IEnumerable<CtaDepoProcesoModel> Obtener_CtaDeposito_X_Periodo(int anio, int periodo, TipoEstudio tipoEstudio)
+        public IEnumerable<CtaDepoProcesoModel> Obtener_CtaDeposito_X_Periodo(int anio, int? periodo, TipoEstudio tipoEstudio)
         {
             IEnumerable<CtaDepoProcesoModel> result;
 

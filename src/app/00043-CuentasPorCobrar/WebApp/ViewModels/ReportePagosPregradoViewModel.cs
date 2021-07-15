@@ -9,61 +9,6 @@ using System.Web;
 
 namespace WebApp.ViewModels
 {
-    public class PagosPregradoViewModel
-    {
-        public PagosPregradoViewModel()
-        {
-            var today = DateTime.Today;
-
-            var firstDay = new DateTime(today.Year, today.Month, 1);
-
-            fechaDesde = firstDay.ToString(FormatosDateTime.BASIC_DATE);
-
-            fechaHasta = today.ToString(FormatosDateTime.BASIC_DATE);
-        }
-
-        [Required]
-        public int reporte { get; set; }
-
-        public string facultad { get; set; }
-
-        public int? idEntidadFinanciera { get; set; }
-
-        [Required]
-        public string fechaDesde { get; set; }
-
-        public DateTime? fechaInicio {
-            get
-            {
-                if (String.IsNullOrWhiteSpace(fechaDesde))
-                    return null;
-
-                return DateTime.Parse(fechaDesde, CultureInfo.CreateSpecificCulture("en-GB"));
-            }
-        }
-
-        [Required]
-        public string fechaHasta { get; set; }
-
-        public DateTime? fechaFin {
-            get
-            {
-                if (String.IsNullOrWhiteSpace(fechaHasta))
-                    return null;
-
-                return DateTime.Parse(fechaHasta, CultureInfo.CreateSpecificCulture("en-GB"));
-            }
-        }
-
-        public ReportePagosPorFacultadViewModel reportePagosPorFacultadViewModel { get; set; }
-
-        public ReportePagosPorConceptoViewModel reportePagosPorConceptoViewModel { get; set; }
-
-        public ReporteConceptosPorUnaFacultadViewModel reporteConceptosPorUnaFacultadViewModel { get; set; }
-    }
-
-
-
     public class ReportePagosPorFacultadViewModel
     {
         public string Titulo { get; set; }

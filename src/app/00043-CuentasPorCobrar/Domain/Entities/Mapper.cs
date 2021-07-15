@@ -43,7 +43,6 @@ namespace Domain.Entities
             dataTable.Columns.Add("C_Ciclo");
             dataTable.Columns.Add("B_Ingresante");
             dataTable.Columns.Add("I_CredDesaprob");
-            dataTable.Columns.Add("B_ActObl");
 
             dataMatriculas.ForEach(x => dataTable.Rows.Add(
                 x.C_CodRC,
@@ -53,8 +52,7 @@ namespace Domain.Entities
                 x.C_EstMat,
                 x.C_Ciclo,
                 x.B_Ingresante,
-                x.I_CredDesaprob,
-                x.B_ActObl
+                x.I_CredDesaprob
             ));
 
             return dataTable;
@@ -482,6 +480,52 @@ namespace Domain.Entities
                 D_FecMod = archivoImpportado.D_FecMod,
                 UserName = archivoImpportado.UserName,
                 T_EntidadDesc = archivoImpportado.T_EntidadDesc
+            };
+
+            return result;
+        }
+
+        public static ResumenAnualPagoDeObligaciones_X_ClasificadorDTO USP_S_ResumenAnualPagoDeObligaciones_X_Clasificadores_To_ResumenAnualPagoDeObligaciones_X_ClasificadorDTO(USP_S_ResumenAnualPagoDeObligaciones_X_Clasificadores sp)
+        {
+            var result = new ResumenAnualPagoDeObligaciones_X_ClasificadorDTO()
+            {
+                C_CodClasificador = sp.C_CodClasificador,
+                T_ClasificadorDesc = sp.T_ClasificadorDesc,
+                Enero = sp.Enero,
+                Febrero = sp.Febrero,
+                Marzo = sp.Marzo,
+                Abril = sp.Abril,
+                Mayo = sp.Mayo,
+                Junio = sp.Junio,
+                Julio = sp.Julio,
+                Agosto = sp.Agosto,
+                Setiembre = sp.Setiembre,
+                Octubre = sp.Octubre,
+                Noviembre = sp.Noviembre,
+                Diciembre = sp.Diciembre
+            };
+
+            return result;
+        }
+
+        public static ResumenAnualPagoDeObligaciones_X_DependenciaDTO USP_S_ResumenAnualPagoDeObligaciones_X_Dependencia_To_ResumenAnualPagoDeObligaciones_X_DependenciaDTO(USP_S_ResumenAnualPagoDeObligaciones_X_Dependencia sp)
+        {
+            var result = new ResumenAnualPagoDeObligaciones_X_DependenciaDTO()
+            {
+                C_CodDependencia = sp.C_CodDependencia,
+                T_Dependencia = sp.T_Dependencia,
+                Enero = sp.Enero,
+                Febrero = sp.Febrero,
+                Marzo = sp.Marzo,
+                Abril = sp.Abril,
+                Mayo = sp.Mayo,
+                Junio = sp.Junio,
+                Julio = sp.Julio,
+                Agosto = sp.Agosto,
+                Setiembre = sp.Setiembre,
+                Octubre = sp.Octubre,
+                Noviembre = sp.Noviembre,
+                Diciembre = sp.Diciembre
             };
 
             return result;

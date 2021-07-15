@@ -33,25 +33,25 @@
                         <form id="frmExportarPago" action="@Url.Action("GenerarArchivosBancos", "Pagos")" method="POST">
                             @Html.AntiForgeryToken()
                             <div class="form-row">
+                                <div class="form-group col-xl-1 col-lg-4 col-md-4 col-sm-4 col-12">
+                                    <label for="E_TipoEstudio">Tipo de estudio</label>
+                                    @Html.DropDownListFor(model => model.E_TipoEstudio, new SelectList(ViewBag.TipoEstudios, "Value", "TextDisplay"), null, new { @class = "form-control form-control-sm text-uppercase" })
+                                </div>
                                 <div class="form-group col-xl-1 col-lg-4 col-md-4 col-sm-4 col-6">
                                     <label for="I_Anio">Año</label>
                                     @Html.DropDownListFor(model => model.I_Anio, new SelectList(ViewBag.Anios, "Value", "TextDisplay"), new { @class = "form-control form-control-sm" })
                                 </div>
                                 <div class="form-group col-xl-1 col-lg-4 col-md-4 col-sm-4 col-6">
                                     <label for="I_Periodo">Periodo</label>
-                                    @Html.DropDownListFor(model => model.I_Periodo, new SelectList(ViewBag.Periodos, "Value", "TextDisplay"), null, new { @class = "form-control form-control-sm" })
-                                </div>
-                                <div class="form-group col-xl-1 col-lg-4 col-md-4 col-sm-4 col-12">
-                                    <label for="E_TipoEstudio">Tipo de estudio</label>
-                                    @Html.DropDownListFor(model => model.E_TipoEstudio, new SelectList(ViewBag.TipoEstudios, "Value", "TextDisplay"), null, new { @class = "form-control form-control-sm" })
+                                    @Html.DropDownListFor(model => model.I_Periodo, new SelectList(ViewBag.Periodos, "Value", "TextDisplay"), "[ TODOS ]", new { @class = "form-control form-control-sm text-uppercase" })
                                 </div>
                                 <div class="form-group col-xl-3 col-lg-8 col-md-8 col-sm-12 col-12">
                                     <label for="T_Dependencia">Facultades/Posgrado</label>
-                                    @Html.DropDownListFor(model => model.T_Dependencia, new SelectList(ViewBag.Dependencias, "Value", "TextDisplay"), "TODOS", new { @class = "form-control form-control-sm" })
+                                    @Html.DropDownListFor(model => model.T_Dependencia, new SelectList(ViewBag.Dependencias, "Value", "TextDisplay"), "TODOS", new { @class = "form-control form-control-sm text-uppercase" })
                                 </div>
                                 <div class="form-group col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12">
                                     <label for="I_EntidadFinanciera">Banco</label>
-                                    @Html.DropDownListFor(model => model.I_EntidadFinanciera, new SelectList(ViewBag.EntidadesFinancieras, "Value", "TextDisplay"), null, new { @class = "form-control form-control-sm" })
+                                    @Html.DropDownListFor(model => model.I_EntidadFinanciera, new SelectList(ViewBag.EntidadesFinancieras, "Value", "TextDisplay"), null, new { @class = "form-control form-control-sm text-uppercase" })
                                 </div>
                             </div>
                             <div class="form-row">

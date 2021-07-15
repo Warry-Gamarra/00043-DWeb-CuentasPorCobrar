@@ -194,14 +194,6 @@ namespace WebApp.Models
                 dataMatriculaType.I_CredDesaprob = 0;
             }
 
-            if (reader.FieldCount > 8)
-            {
-                if (reader.GetValue(9) != null)
-                {
-                    dataMatriculaType.B_ActObl = reader.GetValue(9).ToString().Equals("T", StringComparison.OrdinalIgnoreCase);
-                }
-            }
-
             return dataMatriculaType;
         }
 

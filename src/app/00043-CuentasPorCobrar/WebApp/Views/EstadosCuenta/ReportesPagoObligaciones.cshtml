@@ -1,4 +1,4 @@
-﻿@model WebApp.ViewModels.PagosPregradoViewModel
+﻿@model WebApp.ViewModels.ReportePagosObligacionesViewModel
 @Scripts.Render("~/bundles/jqueryval")
 
 <style>
@@ -32,22 +32,27 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body bg-light-gray">
-                        <form id="frmGenerarReportePregrado" action="@Url.Action("PagosPregrado", "EstadosCuenta")" method="GET">
+                        <form id="frmGenerarReporteObl" action="@Url.Action("ReportesPagoObligaciones", "EstadosCuenta")" method="GET">
                             <div class="form-row">
-                                <div class="form-group col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
+                                <div class="form-group col-xl-2 col-lg-6 col-md-6 col-sm-12 col-12">
+                                    <label for="tipoEstudio">Tipo de Estudio</label>
+                                    @Html.DropDownListFor(model => model.tipoEstudio, new SelectList(ViewBag.TipoEstudios, "Value", "TextDisplay"),
+                                        new { @class = "form-control form-control-sm text-uppercase" })
+                                </div>
+                                <div class="form-group col-xl-2 col-lg-6 col-md-6 col-sm-12 col-12">
                                     <label for="reporte">Reporte</label>
                                     @Html.DropDownListFor(model => model.reporte, new SelectList(ViewBag.TipoReportes, "Value", "TextDisplay"), "SELECCIONAR",
-                                        new { @class = "form-control form-control-sm", @required = "required" })
+                                        new { @class = "form-control form-control-sm text-uppercase", @required = "required" })
                                 </div>
-                                <div class="form-group col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
-                                    <label for="facultad">Facultad</label>
-                                    @Html.DropDownListFor(model => model.facultad, new SelectList(ViewBag.Facultades, "Value", "TextDisplay"), "TODOS",
-                                        new { @class = "form-control form-control-sm", @disabled = "disabled" })
+                                <div class="form-group col-xl-2 col-lg-6 col-md-6 col-sm-12 col-12">
+                                    <label for="dependencia">Facultad / Posgrado</label>
+                                    @Html.DropDownListFor(model => model.dependencia, new SelectList(ViewBag.Dependencias, "Value", "TextDisplay"), "TODOS",
+                                        new { @class = "form-control form-control-sm text-uppercase", @disabled = "disabled" })
                                 </div>
                                 <div class="form-group col-xl-2 col-lg-6 col-md-6 col-sm-12 col-12">
                                     <label for="idEntidadFinanciera">Entidad Financiera</label>
                                     @Html.DropDownListFor(model => model.idEntidadFinanciera, new SelectList(ViewBag.EntidadesFinancieras, "Value", "TextDisplay"), "TODOS",
-                                        new { @class = "form-control form-control-sm" })
+                                        new { @class = "form-control form-control-sm text-uppercase" })
                                 </div>
                                 <div class="form-group col-xl-4 col-lg-12 col-md-12 col-sm-12 col-12">
                                     <div id="datepicker">
@@ -94,13 +99,30 @@
         {
             @Html.Partial("_ReportePagosPregradoPorFacultad", Model.reportePagosPorFacultadViewModel)
         }
+
         @if (Model != null && Model.reportePagosPorConceptoViewModel != null)
         {
             @Html.Partial("_ReportePagosPregradoPorConcepto", Model.reportePagosPorConceptoViewModel)
         }
+
         @if (Model != null && Model.reporteConceptosPorUnaFacultadViewModel != null)
         {
             @Html.Partial("_ReportePregradoConceptosPorUnaFacultad", Model.reporteConceptosPorUnaFacultadViewModel)
+        }
+
+        @if (Model != null && Model.reportePagosPorGradodViewModel != null)
+        {
+            @Html.Partial("_ReportePagosPosgradoPorGrado", Model.reportePagosPorGradodViewModel)
+        }
+
+        @if (Model != null && Model.reportePagosPorConceptoPosgradoViewModel != null)
+        {
+            @Html.Partial("_ReportePagosPosgradoPorConcepto", Model.reportePagosPorConceptoPosgradoViewModel)
+        }
+
+        @if (Model != null && Model.reporteConceptosPorGradoViewModel != null)
+        {
+            @Html.Partial("_ReportePosgradoConceptosPorGrado", Model.reporteConceptosPorGradoViewModel)
         }
     </div>
 </div>
@@ -120,45 +142,118 @@
         $('#datepicker .input-daterange #fechaDesde').datepicker('update', "@Model.fechaDesde");
         $('#datepicker .input-daterange #fechaHasta').datepicker('update', "@Model.fechaHasta");
 
-        if ($('#frmGenerarReportePregrado #reporte').val() === '3') {
-            $('#frmGenerarReportePregrado #facultad').prop('disabled', false);
+        if ($('#frmGenerarReporteObl #reporte').val() === '3') {
+            $('#frmGenerarReporteObl #dependencia').prop('disabled', false);
         }
 
-        $(document).on('change', '#frmGenerarReportePregrado #reporte', function () {
-            let cmbFacultad = $('#frmGenerarReportePregrado #facultad');
+        $(document).on('change', '#frmGenerarReporteObl #reporte', function () {
+            let cmbDependencia = $('#frmGenerarReporteObl #dependencia');
             
             if (this.value === '3') {
-                cmbFacultad.prop('disabled', false);
+                cmbDependencia.prop('disabled', false);
             } else {
-                cmbFacultad.val('');
-                cmbFacultad.prop('disabled', true);
+                cmbDependencia.val('');
+                cmbDependencia.prop('disabled', true);
             }
         });
 
-        $(document).on('click', '#frmGenerarReportePregrado button[type=submit]', function () {
-            let cmbReporte = $('#frmGenerarReportePregrado #reporte');
-            let cmbFacultad = $('#frmGenerarReportePregrado #facultad');
-
+        $(document).on('click', '#frmGenerarReporteObl button[type=submit]', function () {
+            let cmbReporte = $('#frmGenerarReporteObl #reporte');
+            let cmbDependencia = $('#frmGenerarReporteObl #dependencia');
+            
             if (cmbReporte.val() === '') {
-                Swal.fire({
-                    title: '',
-                    text: "Debe seleccionar un Tipo de Reporte.",
-                    icon: "error",
-                    timer: 6000
-                });
+                MostrarMensaje("Debe seleccionar un Tipo de Reporte.");
                 return false;
             }
 
-            if (cmbReporte.val() === '3' && cmbFacultad.val() === '') {
-                Swal.fire({
-                    title: '',
-                    text: "Debe seleccionar una facultad.",
-                    icon: "error",
-                    timer: 6000
-                });
+            if (cmbReporte.val() === '3' && cmbDependencia.val() === '') {
+                if ($("#frmGenerarReporteObl #tipoEstudio").val() === "Pregrado") {
+                    MostrarMensaje("Debe seleccionar una facultad.");
+                } else {
+                    MostrarMensaje("Debe seleccionar un grado.");
+                }
+                
                 return false;
             }
         });
+
+        function MostrarMensaje(text) {
+            Swal.fire({
+                title: '',
+                text: text,
+                icon: "error",
+                timer: 6000
+            });
+        }
+
+        $(document).on("change", "#frmGenerarReporteObl #tipoEstudio", function (e) {
+            CargarReportes($(this).val());
+            CargarDependencias($(this).val());
+            $('#frmGenerarReporteObl #dependencia').prop('disabled', true);
+        });
+
+        function CargarDependencias(tipoEstudio) {
+            let cmbDependencia = $('#frmGenerarReporteObl #dependencia');
+
+            let parametros = {
+                tipoEstudio: tipoEstudio
+            };
+
+            $.ajax({
+                type: 'GET',
+                url: ('@Url.Action("GetFacultades", "Service", new { httproute = "ActionApi" })'),
+                data: parametros,
+                dataType: 'json',
+                beforeSend: function () {
+                    cmbDependencia.html('');
+                },
+                success: function (data) {
+                    if (data && data.length > 0) {
+                        let html = '<option value="">TODOS</option>';
+
+                        $.each(data, function (i, item) {
+                            html += '<option value="' + item.Value + '">' + item.TextDisplay + '</option>'
+                        });
+
+                        cmbDependencia.html(html);
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                }
+            });
+        }
+
+        function CargarReportes(tipoEstudio) {
+            let cmbDependencia = $('#frmGenerarReporteObl #reporte');
+
+            let parametros = {
+                tipoEstudio: tipoEstudio
+            };
+
+            $.ajax({
+                type: 'GET',
+                url: ('@Url.Action("GetReportesPagoObligaciones", "Service", new { httproute = "ActionApi" })'),
+                data: parametros,
+                dataType: 'json',
+                beforeSend: function () {
+                    cmbDependencia.html('');
+                },
+                success: function (data) {
+                    console.log(data);
+                    if (data && data.length > 0) {
+                        let html = '<option value="">SELECCIONAR</option>';
+
+                        $.each(data, function (i, item) {
+                            html += '<option value="' + item.Value + '">' + item.TextDisplay + '</option>'
+                        });
+
+                        cmbDependencia.html(html);
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                }
+            });
+        }
 
     </script>
 }

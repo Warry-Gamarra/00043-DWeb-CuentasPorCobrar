@@ -102,7 +102,7 @@ namespace Domain.Services.Implementations
             return result;
         }
         
-        public IEnumerable<CuotaPagoDTO> Obtener_CuotasPago_X_Proceso(int anio, int periodo, TipoEstudio tipoEstudio, string codDependencia)
+        public IEnumerable<CuotaPagoDTO> Obtener_CuotasPago_X_Proceso(int anio, int? periodo, TipoEstudio tipoEstudio, string codDependencia)
         {
             IEnumerable<VW_CuotasPago> cuotaPagos;
 
@@ -173,7 +173,7 @@ namespace Domain.Services.Implementations
             return result;
         }
 
-        public IEnumerable<CtaDepoProceso> Obtener_CtaDeposito_X_Periodo(int anio, int periodo)
+        public IEnumerable<CtaDepoProceso> Obtener_CtaDeposito_X_Periodo(int anio, int? periodo)
         {
             var ctasDeposito = VW_CtaDepositoProceso.GetCtaDepositoByAnioPeriodo(anio, periodo);
 

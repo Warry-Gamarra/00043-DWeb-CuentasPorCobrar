@@ -16,7 +16,7 @@ namespace WebApp.ViewModels
 
         [Required]
         [Display(Name = "Periodo")]
-        public int I_Periodo { get; set; }
+        public int? I_Periodo { get; set; }
 
         [Required]
         [Display(Name = "Tipo de estudio")]

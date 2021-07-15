@@ -21,18 +21,23 @@ namespace WebApp.Models
             fechaTransmision = DateTime.Now;
         }
 
-        public MemoryStream GenerarInformacionObligaciones(int anio, int periodo, TipoEstudio tipoEstudio, string dependencia)
+        public MemoryStream GenerarInformacionObligaciones(int anio, int? periodo, TipoEstudio tipoEstudio, string dependencia)
         {
             var cuotas_pago = _obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(anio, periodo, tipoEstudio, dependencia).Where(x => !x.B_Pagado).ToList();
-
-            var cuentas_bcp = _obligacionServiceFacade.Obtener_CtaDeposito_X_Periodo(anio, periodo, tipoEstudio).Where(x => x.I_EntidadFinanID == Bancos.BCP_ID);
-
-            var cuentas_bcp_split = cuentas_bcp.First().C_NumeroCuenta.Split('-');
 
             if (cuotas_pago.Count == 0)
             {
                 throw new Exception("No hay registros.");
             }
+
+            var cuentas_bcp = _obligacionServiceFacade.Obtener_CtaDeposito_X_Periodo(anio, periodo, tipoEstudio).Where(x => x.I_EntidadFinanID == Bancos.BCP_ID);
+
+            if (cuentas_bcp.GroupBy(x => x.C_NumeroCuenta).Count() > 1)
+            {
+                throw new Exception("No se puede generar la cabecera porque existe más de una cuenta asignada.");
+            }
+
+            var cuentas_bcp_split = cuentas_bcp.First().C_NumeroCuenta.Split('-');
 
             var memoryStream = new MemoryStream();
 
@@ -73,7 +78,7 @@ namespace WebApp.Models
             {
                 string codigoDepositante = item.C_CodAlu.PadLeft(14, '0');
                 string nombreDepositante = item.T_NombresCompletos;
-                nombreDepositante = nombreDepositante.Substring(0, (nombreDepositante.Length < 40 ? nombreDepositante.Length : 40));
+                nombreDepositante = StringExtensions.SinCaracteresEspecialies(nombreDepositante.Substring(0, (nombreDepositante.Length < 40 ? nombreDepositante.Length : 40)));
                 int montoCupon = (int)(item.I_MontoOblig * 100);
                 string informacionRetorno = item.C_CodRc + item.I_ProcesoID.ToString("D6") + montoCupon.ToString("D15");
                 int montoMora = 0;
