@@ -381,6 +381,7 @@ IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCE
 GO
 
 CREATE PROCEDURE USP_IU_MigrarDataPagosObligaciones
+	@C_Anio		  nvarchar(4),
 	@B_Resultado  bit output,
 	@T_Message	  nvarchar(4000) OUTPUT	
 AS
@@ -414,17 +415,20 @@ BEGIN
 	BEGIN
 
 		DECLARE @I_obl_RowID int, @I_pri_RowID int, @I_det_RowID int 
-		DECLARE @I_ObligacionAluID int 
-		DECLARE @cuenta_deposito as TABLE (I_CtaDepositoID int, C_NumeroCuenta varchar(50))
+		DECLARE @I_ObligacionAluID int, @I_PagoBancoID int 
+		DECLARE @cuenta_deposito as TABLE (I_CtaDepositoID int, I_ProcesoID int)
+		DECLARE @periodos as TABLE (I_PeriodoID int, C_CodPeriodo varchar(10))
+		DECLARE @proceso as TABLE (I_ProcesoID int, I_Anio int, I_Periodo int, D_FecVencto datetime, C_CodPer varchar(3))
+		DECLARE @matricula_alumno as TABLE (I_MatAluID int, C_CodRc varchar(10), C_CodAlu varchar(20), I_Anio int, I_Periodo int, C_CodPer varchar(3))
 		DECLARE @B_obl_Result bit, @B_det_Result bit
 		DECLARE @B_obl_Migrado bit, @T_obl_Observacion varchar(500), @B_det_Migrado bit, @T_det_Observacion varchar(500)
-		DECLARE @COD_ALU varchar(20), @COD_RC varchar(5), 
-				@CUOTA_PAGO varchar(10), @ANO as varchar(4), 
+		DECLARE @COD_ALU varchar(20), @COD_RC varchar(5), @I_CUOTA_PAGO as int, 
+				@CUOTA_PAGO varchar(10), @ANO as varchar(4), @CONCEPTO as varchar(10),
 				@P varchar(3), @TIPO_OBLIG varchar(3), @FCH_VENC varchar(20)
 
-		-- 1. COPIAR DATA EC_OBL A TABLA DE MIGRACION 
+		PRINT 'COPIANDO DATA EC_OBL A TABLA DE MIGRACION' 
 		MERGE INTO TR_MG_EcObl as TRG
-		USING ec_obl AS SRC 
+		USING (SELECT * FROM ec_obl WHERE ANO = @C_Anio OR @C_Anio IS NULL) AS SRC 
 		ON TRG.COD_ALU = SRC.COD_ALU AND
 		   TRG.COD_RC = SRC.COD_RC AND
 		   TRG.CUOTA_PAGO = SRC.CUOTA_PAGO AND
@@ -439,9 +443,9 @@ BEGIN
 			VALUES (COD_ALU, COD_RC, CUOTA_PAGO, ANO, P, TIPO_OBLIG, FCH_VENC, MONTO, PAGADO);
 
 
-		-- 2. COPIAR DATA EC_DET A TABLA DE MIGRACION 
+		PRINT 'COPIANDO DATA EC_DET A TABLA DE MIGRACION' 
 		MERGE INTO TR_MG_EcDet as TRG
-		USING ec_det AS SRC 
+		USING (SELECT * FROM ec_det WHERE ANO = @C_Anio OR @C_Anio IS NULL) AS SRC 
 		ON TRG.COD_ALU = SRC.COD_ALU AND
 		   TRG.COD_RC = SRC.COD_RC AND
 		   TRG.CUOTA_PAGO = SRC.CUOTA_PAGO AND
@@ -456,10 +460,34 @@ BEGIN
 			INSERT (COD_ALU, COD_RC, CUOTA_PAGO, ANO, P, TIPO_OBLIG, CONCEPTO, FCH_VENC, NRO_RECIBO, FCH_PAGO, ID_LUG_PAG, CANTIDAD, MONTO, PAGADO, CONCEPTO_F, FCH_ELIMIN, NRO_EC, FCH_EC, ELIMINADO, PAG_DEMAS, COD_CAJERO, TIPO_PAGO, NO_BANCO, COD_DEP) 
 			VALUES (COD_ALU, COD_RC, CUOTA_PAGO, ANO, P, TIPO_OBLIG, CONCEPTO, FCH_VENC, NRO_RECIBO, FCH_PAGO, ID_LUG_PAG, CANTIDAD, MONTO, PAGADO, CONCEPTO_F, FCH_ELIMIN, NRO_EC, FCH_EC, ELIMINADO, PAG_DEMAS, COD_CAJERO, TIPO_PAGO, NO_BANCO, COD_DEP);
 
-		-- 3. COPIAR DATA TC_CuentaDeposito A TABLA DE TEMPORAL 
-		INSERT INTO @cuenta_deposito (I_CtaDepositoID, C_NumeroCuenta) SELECT I_CtaDepositoID, C_NumeroCuenta FROM BD_OCEF_CtasPorCobrar.dbo.TC_CuentaDeposito;
+		PRINT 'COPIANDO DATA TC_CuentaDeposito A TABLA DE TEMPORAL' 
+		INSERT INTO @cuenta_deposito (I_CtaDepositoID, I_ProcesoID) SELECT I_CtaDepositoID, I_ProcesoID FROM BD_OCEF_CtasPorCobrar.dbo.TI_CtaDepo_Proceso;
 
+		PRINT 'COPIANDO DATA TC_CatalogoOpcion A TABLA DE TEMPORAL' 
+		INSERT INTO @periodos (I_PeriodoID, C_CodPeriodo) SELECT I_OpcionID, T_OpcionCod FROM BD_OCEF_CtasPorCobrar.dbo.TC_CatalogoOpcion WHERE I_ParametroID = 5;
 
+		PRINT 'COPIANDO DATA TC_MatriculaAlumno A TABLA DE TEMPORAL' 
+		MERGE INTO BD_OCEF_CtasPorCobrar.dbo.TC_MatriculaAlumno as TRG
+		USING (SELECT DISTINCT COD_ALU, COD_RC, ANO, P.I_PeriodoID FROM ec_obl obl INNER JOIN @periodos P ON obl.P = P.C_CodPeriodo WHERE ISNUMERIC(ANO) = 1) AS SRC 
+		ON TRG.C_CodAlu = SRC.COD_ALU AND
+		   TRG.C_CodRc = SRC.COD_RC AND
+		   TRG.I_Anio = CAST(SRC.ANO as int) AND
+		   TRG.I_Periodo = SRC.I_PeriodoID 
+		WHEN NOT MATCHED BY TARGET THEN
+			INSERT (C_CodRc, C_CodAlu, I_Anio, I_Periodo, C_EstMat, B_Ingresante, B_Migrado, B_Habilitado, B_Eliminado)
+			VALUES (SRC.COD_RC, SRC.COD_ALU, CAST(SRC.ANO as int), SRC.I_PeriodoID, 'S', 0, 1, 1, 0);
+
+		PRINT 'COPIANDO DATA TC_MatriculaAlumno A TABLA DE TEMPORAL' 
+		INSERT INTO @matricula_alumno (I_MatAluID, C_CodRc, C_CodAlu, I_Anio, I_Periodo, C_CodPer)
+		  SELECT I_MatAluID, C_CodRc, C_CodAlu, I_Anio, I_Periodo, C.C_CodPeriodo  
+			FROM BD_OCEF_CtasPorCobrar.dbo.TC_MatriculaAlumno M 
+				 INNER JOIN @periodos C ON M.I_Periodo = C.I_PeriodoID
+
+		PRINT 'COPIANDO DATA TC_Proceso A TABLA DE TEMPORAL' 
+		INSERT INTO @proceso (I_ProcesoID, I_Anio, I_Periodo, D_FecVencto, C_CodPer)
+		SELECT I_ProcesoID, I_Anio, I_Periodo, D_FecVencto, c.C_CodPeriodo FROM BD_OCEF_CtasPorCobrar.dbo.TC_Proceso P
+				 INNER JOIN @periodos C ON P.I_Periodo = C.I_PeriodoID
+		 
 		DECLARE CUR_EC_OBL CURSOR
 		FOR
 			SELECT EO.I_RowID FROM TR_MG_EcObl EO 
@@ -468,7 +496,7 @@ BEGIN
 
 		WHILE @@FETCH_STATUS = 0
 		BEGIN
-			SET @B_Result = 1;
+			SET @B_obl_Result = 1;
 			SET @T_obl_Observacion = ''
 
 			SELECT @COD_ALU = COD_ALU, @COD_RC = COD_RC, @CUOTA_PAGO = CUOTA_PAGO, 
@@ -480,157 +508,157 @@ BEGIN
 			IF((SELECT COUNT(*) FROM TR_MG_EcObl WHERE @COD_ALU = COD_ALU AND @COD_RC = COD_RC AND @CUOTA_PAGO = CUOTA_PAGO AND
 				   @ANO = ANO AND @P = P AND @TIPO_OBLIG = TIPO_OBLIG AND @FCH_VENC = CONVERT(varchar, FCH_VENC, 112)) > 1)
 			BEGIN
-				SET @B_Result = 0;
+				SET @B_obl_Result = 0;
 				SET @T_obl_Observacion = 'La combinacion (COD_ALU/COD_RC/CUOTA_PAGO/ANO/P/TIPO_OBLIG/FCH_VENC) se encuentra repetida.'
+			END
+
+			IF NOT EXISTS (SELECT O.* FROM @proceso P 
+								INNER JOIN TR_MG_EcObl O ON P.I_ProcesoID = O.CUOTA_PAGO AND CAST(P.I_Anio as varchar(4)) = O.ANO AND P.C_CodPer = O.P
+								WHERE O.I_RowID = @I_obl_RowID)	
+			BEGIN
+				SET @B_obl_Result = 0;
+				SET @T_obl_Observacion = 'La cuota de pago no se encuentra en la data migrada.'
+			END
+
+			IF ((SELECT ISNUMERIC(ANO) FROM TR_MG_EcObl WHERE I_RowID = @I_obl_RowID) = 0)	
+			BEGIN
+				SET @B_obl_Result = 0;
+				SET @T_obl_Observacion = 'El AÑO no es un número.'
+			END
+
+			IF(@B_obl_Result = 0)
+			BEGIN
+				SET @B_obl_Migrado = 0
+				PRINT @T_obl_Observacion;
 			END
 			ELSE
 			BEGIN
-				DECLARE CUR_EC_DET CURSOR
-				FOR
-					SELECT ED.I_RowID FROM TR_MG_EcDet ED 
-					LEFT JOIN TR_MG_EcObl EO ON ED.COD_ALU = EO.COD_ALU AND ED.COD_RC = EO.COD_RC 
-								AND ED.CUOTA_PAGO = EO.CUOTA_PAGO AND ED.ANO = EO.ANO AND ED.P = EO.P 
-								AND ED.FCH_VENC = EO.FCH_VENC
-					WHERE ED.TIPO_OBLIG = 'T' AND EO.I_RowID = @I_obl_RowID 
+				BEGIN TRANSACTION TRAN_OBL
+				BEGIN TRY
+					PRINT 'Insertando data a TR_ObligacionAluCab...' 
+					INSERT INTO BD_OCEF_CtasPorCobrar.dbo.TR_ObligacionAluCab (I_ProcesoID, I_MatAluID, C_Moneda, I_MontoOblig, D_FecVencto, B_Pagado, B_Habilitado, B_Eliminado)
+						SELECT O.CUOTA_PAGO, M.I_MatAluID, 'PEN', O.MONTO, O.FCH_VENC, O.PAGADO, 1, 0
+						  FROM TR_MG_EcObl O INNER JOIN TR_MG_CpDes D ON D.CUOTA_PAGO = O.CUOTA_PAGO AND D.ELIMINADO = 0 AND D.B_Migrado = 1
+							   INNER JOIN @matricula_alumno M ON O.COD_ALU = M.C_CodAlu AND O.ANO = CAST(M.I_Anio as varchar(4)) AND O.COD_RC = M.C_CodRc AND O.P = M.C_CodPer
+						 WHERE O.I_RowID = @I_obl_RowID;
 
-				OPEN CUR_EC_DET
-				FETCH NEXT FROM CUR_EC_DET INTO @I_det_RowID
+					SET @I_ObligacionAluID = SCOPE_IDENTITY();
 
-				WHILE @@FETCH_STATUS = 0
-				BEGIN
-					SET @B_Result = 1;
-					SET @T_Observacion = ''
+					DECLARE CUR_EC_DET CURSOR
+					FOR
+						SELECT ED.I_RowID FROM TR_MG_EcDet ED 
+						LEFT JOIN TR_MG_EcObl EO ON ED.COD_ALU = EO.COD_ALU AND ED.COD_RC = EO.COD_RC 
+									AND ED.CUOTA_PAGO = EO.CUOTA_PAGO AND ED.ANO = EO.ANO AND ED.P = EO.P 
+									AND CONCAT(SUBSTRING(ED.FCH_VENC,7,4),SUBSTRING(ED.FCH_VENC,1,2),SUBSTRING(ED.FCH_VENC,4,2)) = CONVERT(varchar, EO.FCH_VENC, 112)
+						WHERE ED.TIPO_OBLIG = 'T' AND EO.I_RowID = @I_obl_RowID 
 
-					PRINT 'Validando combinacion: ' + CAST(@I_CuotaPago AS varchar(10))
-					IF (@Count_cuota > 1)
-					BEGIN 
-						SET @B_Result = 0;
-						SET @T_Observacion = ' El número de cuota de pago se encuentra repetida.';
-					END
-
-					IF (@Count_categoria > 1)
-					BEGIN 
-						SET @B_Result = 0;
-						SET @T_Observacion += ' La cuota de pago está asociada a más de una categoría en la nueva base de datos.';
-					END
-
-					IF NOT EXISTS (SELECT * FROM @cuota_anio WHERE cuota_pago = @I_CuotaPago )
-					BEGIN 
-						SET @B_Result = 0;
-						SET @T_Observacion += ' La cuota de pago NO tiene un año asignado.';
-					END
-
-					IF (@B_Result = 0)
-					BEGIN
-						SET @B_Migrado = 0;
-						PRINT @T_Observacion;
-					END
-					ELSE
-					BEGIN
-						BEGIN TRANSACTION
-						BEGIN TRY
-							PRINT 'Insertando registro en TC_Proceso...'
-							INSERT INTO BD_OCEF_CtasPorCobrar.dbo.TC_Proceso (I_ProcesoID, I_CatPagoID, T_ProcesoDesc, I_Anio, I_Periodo, N_CodBanco, D_FecVencto, I_Prioridad, B_Mora, B_Migrado, B_Habilitado, B_Eliminado)
-								SELECT @I_CuotaPago, cp.I_CatPagoID, cd.DESCRIPCIO, ca.anio_cuota, per.I_Periodo, cd.CODIGO_BNC, cd.FCH_VENC, cd.PRIORIDAD, CASE cd.C_MORA WHEN 'VERDADERO' THEN 1 WHEN 'FALSO' THEN 0 ELSE NULL END, 1, 1, cd.ELIMINADO
-								  FROM TR_MG_CpDes cd 
-									   INNER JOIN @cuota_anio ca ON cd.CUOTA_PAGO = ca.cuota_pago
-									   INNER JOIN @categoria_pago cp ON cp.N_CodBanco = cd.CODIGO_BNC
-									   LEFT JOIN (SELECT DISTINCT cuota_pago, ano, p FROM cp_pri) pri ON pri.cuota_pago = cd.cuota_pago
-									   INNER JOIN @periodo per ON per.C_CodPeriodo COLLATE DATABASE_DEFAULT = pri.p COLLATE DATABASE_DEFAULT
-								WHERE cd.CUOTA_PAGO = @I_CuotaPago;
-
-							PRINT 'Insertando registro en TI_CtaDepo_Proceso...'
-							INSERT INTO BD_OCEF_CtasPorCobrar.dbo.TI_CtaDepo_Proceso (I_CtaDepositoID, I_ProcesoID, B_Habilitado, B_Eliminado)
-									SELECT CD.I_CtaDepositoID, P.I_ProcesoID, 1 AS B_Habilitado, 0 AS B_Eliminado
-									FROM BD_OCEF_CtasPorCobrar.dbo.TC_Proceso P
-										INNER JOIN cp_des TP_CD ON TP_CD.CUOTA_PAGO = P.I_ProcesoID
-										INNER JOIN BD_OCEF_CtasPorCobrar.dbo.TC_CuentaDeposito CD ON CD.C_NumeroCuenta COLLATE DATABASE_DEFAULT = TP_CD.N_CTA_CTE COLLATE DATABASE_DEFAULT
-									WHERE TP_CD.CUOTA_PAGO = @I_CuotaPago;
-
-							SET @B_Migrado = 1;
-							COMMIT TRANSACTION;
-						END TRY
-						BEGIN CATCH
-							SET @B_Migrado = 0;
-							SET @T_Observacion = ERROR_MESSAGE();
-							PRINT @T_Observacion
-							ROLLBACK TRANSACTION;
-						END CATCH
-					END
-	
-					UPDATE TR_MG_CpDes
-					SET  B_Migrado = @B_Migrado,
-							T_Observacion = @T_Observacion
-					WHERE I_RowID = @I_RowID;
-
+					OPEN CUR_EC_DET
 					FETCH NEXT FROM CUR_EC_DET INTO @I_det_RowID
-				END
-				CLOSE CUR_EC_DET;
-				DEALLOCATE CUR_EC_DET;
 
-				FETCH NEXT FROM CUR_EC_OBL INTO @I_obl_RowID
-			END
+					WHILE @@FETCH_STATUS = 0
+					BEGIN
+						SET @B_det_Result = 1;
+						SET @T_det_Observacion = ''
+
+						--SELECT @COD_ALU = COD_ALU, @COD_RC = COD_RC, @CUOTA_PAGO = CUOTA_PAGO, @ANO = ANO, @P = P,@CONCEPTO = CONCEPTO, 
+						--	   @TIPO_OBLIG = TIPO_OBLIG, @FCH_VENC = CONCAT(SUBSTRING(FCH_VENC,7,4),SUBSTRING(FCH_VENC,1,2),SUBSTRING(FCH_VENC,4,2))
+						--  FROM TR_MG_EcDet WHERE I_RowID = @I_det_RowID
+
+						--PRINT 'Validando combinacion (COD_ALU/COD_RC/CUOTA_PAGO/ANO/P/TIPO_OBLIG/CONCEPTO/FCH_VENC) :' + CONCAT(@COD_ALU, '/', @COD_RC, '/', @CUOTA_PAGO, '/', @ANO, '/', @P, '/', @TIPO_OBLIG, '/', @CONCEPTO, '/', @FCH_VENC)
+						--IF (@Count_cuota > 1)
+						--BEGIN 
+						--	SET @B_Result = 0;
+						--	SET @T_Observacion = ' El número de cuota de pago se encuentra repetida.';
+						--END
+
+						--IF (@Count_categoria > 1)
+						--BEGIN 
+						--	SET @B_Result = 0;
+						--	SET @T_Observacion += ' La cuota de pago está asociada a más de una categoría en la nueva base de datos.';
+						--END
+
+						--IF NOT EXISTS (SELECT * FROM @cuota_anio WHERE cuota_pago = @I_CuotaPago )
+						--BEGIN 
+						--	SET @B_Result = 0;
+						--	SET @T_Observacion += ' La cuota de pago NO tiene un año asignado.';
+						--END
+
+						IF (@B_det_Result = 0)
+						BEGIN
+							SET @B_det_Migrado = 0;
+							PRINT @T_det_Observacion;
+						END
+						ELSE
+						BEGIN
+							BEGIN TRANSACTION TRAN_DET
+							BEGIN TRY
+								PRINT 'Insertando registro en TR_ObligacionAluDet...'
+								INSERT INTO BD_OCEF_CtasPorCobrar.dbo.TR_ObligacionAluDet (I_ObligacionAluID, I_ConcPagID, I_Monto, B_Pagado, D_FecVencto, I_TipoDocumento, T_DescDocumento, B_Habilitado, B_Eliminado)
+									SELECT  @I_ObligacionAluID, CONCEPTO, CAST(REPLACE(MONTO, ',','.') AS decimal(10,2)), CASE PAGADO WHEN 'T' THEN 1 ELSE 0 END as B_Pagado, 
+											CAST(CONCAT(SUBSTRING(FCH_VENC,7,4),SUBSTRING(FCH_VENC,1,2),SUBSTRING(FCH_VENC,4,2)) as datetime) as D_FecVencto, NULL, NULL, 1, CASE ED.ELIMINADO WHEN 'T' THEN 1 ELSE 0 END
+									  FROM TR_MG_EcDet ED 
+									 WHERE I_RowID = @I_det_RowID AND CONCEPTO <> 0;
+
+								PRINT 'Insertando registro en TR_PagoBanco...'
+								INSERT INTO BD_OCEF_CtasPorCobrar.dbo.TR_PagoBanco (I_EntidadFinanID, C_CodOperacion, C_CodDepositante, T_NomDepositante, C_Referencia, D_FecPago, I_Cantidad, C_Moneda, I_MontoPago, T_LugarPago, B_Anulado)
+									SELECT  1 AS I_EntidadFinanID, NRO_RECIBO, COD_ALU, CONCAT(MA.T_Nombre, ' ', MA.T_ApePaterno, ' ', MA.T_ApeMaterno), NRO_RECIBO, CAST(CONCAT(SUBSTRING(FCH_PAGO,7,4),SUBSTRING(FCH_PAGO,1,2),SUBSTRING(FCH_PAGO,4,2)) as datetime) as D_FecPago,
+											CAST(REPLACE(CANTIDAD, ',','.') AS int), 'PEN', CAST(REPLACE(MONTO, ',','.') AS decimal(10,2)) AS I_MontoPago, CONCAT(ED.ID_LUG_PAG, ' ', ED.COD_CAJERO) AS T_LugarPago, 0
+									  FROM TR_MG_EcDet ED 
+										   LEFT JOIN BD_OCEF_CtasPorCobrar.dbo.VW_MatriculaAlumno MA ON MA.C_CodAlu = ED.COD_ALU
+									 WHERE CONCEPTO = 0 AND I_RowID = @I_det_RowID;
+
+								SET @I_PagoBancoID = SCOPE_IDENTITY();
+
+								PRINT 'Insertando registro en TRI_PagoProcesadoUnfv...'
+								INSERT INTO BD_OCEF_CtasPorCobrar.dbo.TRI_PagoProcesadoUnfv (I_PagoBancoID, I_CtaDepositoID, I_TasaUnfvID, I_ObligacionAluID, I_MontoPagado, I_SaldoAPagar, I_PagoDemas, B_PagoDemas, N_NroSIAF, B_Anulado)
+										SELECT	@I_PagoBancoID, CTA.I_CtaDepositoID, NULL, @I_ObligacionAluID, ED.MONTO, 0, 0, CASE PAG_DEMAS WHEN 'T' THEN 1 ELSE 0 END, NULL, 0
+										  FROM	TR_MG_EcDet ED
+												INNER JOIN @cuenta_deposito CTA ON ED.CUOTA_PAGO = CAST(CTA.I_ProcesoID AS varchar(10))
+									 WHERE CONCEPTO = 0 AND I_RowID = @I_det_RowID;
+
+								SET @B_det_Migrado = 1;
+								COMMIT TRANSACTION TRAN_DET;
+							END TRY
+							BEGIN CATCH
+								SET @B_det_Migrado = 0;
+								SET @T_det_Observacion = ERROR_MESSAGE();
+								PRINT @T_det_Observacion
+								ROLLBACK TRANSACTION TRAN_DET;
+							END CATCH
+						END
+	
+						UPDATE	TR_MG_EcDet
+						  SET	B_Migrado = @B_det_Migrado,
+								T_Observacion = @T_det_Observacion
+						 WHERE	I_RowID = @I_det_RowID;
+
+						FETCH NEXT FROM CUR_EC_DET INTO @I_det_RowID
+					END
+					CLOSE CUR_EC_DET;
+					DEALLOCATE CUR_EC_DET;
+
+					SET @B_obl_Migrado = 1;
+					COMMIT TRANSACTION TRAN_OBL;					
+				END TRY
+				BEGIN CATCH
+					SET @B_obl_Migrado = 0;
+					SET @T_obl_Observacion = ERROR_MESSAGE();
+					PRINT @T_obl_Observacion
+					ROLLBACK TRANSACTION TRAN_OBL;
+				END CATCH		
+			END		
+
+			UPDATE TR_MG_EcObl 
+			SET B_Migrado = @B_obl_Migrado,
+				T_Observacion = @T_obl_Observacion
+			WHERE I_RowID = @I_obl_RowID
 			
-			if
-			UPDATE TR_MG_EcObl SET B_Migrado = @B_Migrado 
+			FETCH NEXT FROM CUR_EC_OBL INTO @I_obl_RowID
 		END
 		CLOSE CUR_EC_OBL;
 		DEALLOCATE CUR_EC_OBL;
-
-		SET IDENTITY_INSERT BD_OCEF_CtasPorCobrar.dbo.TC_Proceso OFF
-
-		DECLARE @I_ProcesoID	int
-		SET @I_ProcesoID = (SELECT MAX(CAST(CUOTA_PAGO as int)) FROM TR_MG_CpDes) + 1 
-
-		DBCC CHECKIDENT([BD_OCEF_CtasPorCobrar.dbo.TC_Proceso], RESEED, @I_ProcesoID)
-
-
-		INSERT BD_OCEF_CtasPorCobrar.dbo.TC_CuentaDeposito_CategoriaPago(I_CtaDepositoID, I_CatPagoID, B_Habilitado, B_Eliminado)
-		SELECT BNC.I_CtaDepositoID, CP.I_CatPagoID, 1 AS B_Habilitado, 0 as B_Eliminado--, C_NumeroCuenta, CODIGO_BNC    
-		FROM BD_OCEF_CtasPorCobrar.dbo.TC_CategoriaPago CP 
-			 INNER JOIN (SELECT DISTINCT I_CtaDepositoID, C_NumeroCuenta, TP_CP.CODIGO_BNC COLLATE DATABASE_DEFAULT AS CODIGO_BNC
-						 FROM BD_OCEF_CtasPorCobrar.dbo.TC_CuentaDeposito CD  
-				 			 INNER JOIN TR_MG_CpDes TP_CP ON CD.C_NumeroCuenta COLLATE DATABASE_DEFAULT = TP_CP.N_CTA_CTE COLLATE DATABASE_DEFAULT
-						 WHERE ELIMINADO = 0
-		) BNC ON CP.N_CodBanco = BNC.CODIGO_BNC
-		UNION
-		SELECT BNC.I_CtaDepositoID, CP.I_CatPagoID, 1 AS B_Habilitado, 0 as B_Eliminado--, C_NumeroCuenta, CODIGO_BNC    
-		FROM BD_OCEF_CtasPorCobrar.dbo.TC_CategoriaPago CP 
-			 INNER JOIN (SELECT DISTINCT I_CtaDepositoID, C_NumeroCuenta, TP_CP.CODIGO_BNC COLLATE DATABASE_DEFAULT AS CODIGO_BNC
-						 FROM BD_OCEF_CtasPorCobrar.dbo.TC_CuentaDeposito CD  
- 				 				INNER JOIN TR_MG_CpDes TP_CP ON CD.C_NumeroCuenta COLLATE DATABASE_DEFAULT = TP_CP.N_CTA_CTE COLLATE DATABASE_DEFAULT
-						 WHERE CODIGO_BNC IS NULL AND ELIMINADO = 0
-		) BNC ON CP.N_CodBanco IS NULL
 	END
 END
 GO
-
-
-
---select 
---		p.ID_CP, p.DESCRIPCIO,
---		o.*, 
---		d.* 
---from ec_det d
---left join ec_obl o ON o.COD_ALU = d.COD_ALU 
---			and o.COD_RC = d.COD_RC 
---			and o.CUOTA_PAGO = d.CUOTA_PAGO
---			and o.ANO = d.ANO 
---			and o.P = d.P
---			and o.FCH_VENC = CAST(d.FCH_VENC as datetime)
---left join cp_pri p ON p.ID_CP = d.CONCEPTO
---where d.ANO = '2020' and d.TIPO_OBLIG = 'T' and d.COD_ALU = '2019316456'
---and d.ELIMINADO = 'F' AND d.P = '1'
-
---select * from cp_des WHERE CUOTA_PAGO = 488
-
-
---DECLARE	@B_Resultado  bit,@T_Message	  nvarchar(4000)	
---EXEC USP_IU_MigrarDataCuotaDePago @B_Resultado OUTPUT, @T_Message OUTPUT
---GO
-
---DECLARE	@B_Resultado  bit,@T_Message	  nvarchar(4000)	
---EXEC USP_IU_MigrarDataConceptosPagoObligacion @B_Resultado OUTPUT, @T_Message OUTPUT
-
 
 
