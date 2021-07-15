@@ -62,6 +62,7 @@ namespace WebApp.Models
                 string codigoSucursal = "000";
                 string codigoContrato = item.C_CodAlu.PadLeft(10, '0');
                 string nombres = item.T_NombresCompletos;
+                nombres = StringExtensions.SinCaracteresEspecialies(nombres.Substring(0, (nombres.Length < 40 ? nombres.Length : 40)));
                 string numeroRecibo = item.I_NroOrden.ToString("D6").PadRight(20, ' ');
                 string referenciaRecibo = new String(' ', 20);
                 string fechaEmision = "00000000";

@@ -100,6 +100,7 @@
     <Compile Include="Helpers\ImportacionPagoResponse.cs" />
     <Compile Include="Helpers\MultaNoVotarResponse.cs" />
     <Compile Include="Helpers\Reportes.cs" />
+    <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="Helpers\Tipos.cs" />
     <Compile Include="Helpers\DataMatriculaResponse.cs" />
     <Compile Include="Entities\CuotaPagoDTO.cs" />

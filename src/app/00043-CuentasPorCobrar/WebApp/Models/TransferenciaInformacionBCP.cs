@@ -73,7 +73,7 @@ namespace WebApp.Models
             {
                 string codigoDepositante = item.C_CodAlu.PadLeft(14, '0');
                 string nombreDepositante = item.T_NombresCompletos;
-                nombreDepositante = nombreDepositante.Substring(0, (nombreDepositante.Length < 40 ? nombreDepositante.Length : 40));
+                nombreDepositante = StringExtensions.SinCaracteresEspecialies(nombreDepositante.Substring(0, (nombreDepositante.Length < 40 ? nombreDepositante.Length : 40)));
                 int montoCupon = (int)(item.I_MontoOblig * 100);
                 string informacionRetorno = item.C_CodRc + item.I_ProcesoID.ToString("D6") + montoCupon.ToString("D15");
                 int montoMora = 0;
