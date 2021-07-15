@@ -82,6 +82,7 @@
     <Compile Include="Entities\ClasificadorEquivalencia.cs" />
     <Compile Include="Entities\ColumnaSeccion.cs" />
     <Compile Include="Entities\DevolucionPago.cs" />
+    <Compile Include="Entities\ResumenAnualPagoDeObligaciones_X_ClasificadorDTO.cs" />
     <Compile Include="Entities\MatriculaDTO.cs" />
     <Compile Include="Entities\MatriculaEntity.cs" />
     <Compile Include="Entities\MultaNoVotarSinRegistrarEntity.cs" />

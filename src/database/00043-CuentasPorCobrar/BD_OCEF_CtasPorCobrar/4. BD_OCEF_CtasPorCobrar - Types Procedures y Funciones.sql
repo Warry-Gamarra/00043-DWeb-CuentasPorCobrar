@@ -1738,8 +1738,7 @@ CREATE TYPE [dbo].[type_dataMatricula] AS TABLE(
 	C_EstMat		varchar(2)  NULL,
 	C_Ciclo			varchar(2)  NULL,
 	B_Ingresante	bit			NULL,
-	I_CredDesaprob  tinyint		NULL,
-	B_ActObl		bit			NULL
+	I_CredDesaprob  tinyint		NULL
 )
 GO
 
@@ -1773,8 +1772,7 @@ BEGIN
 				C_EstMat		VARCHAR(2),
 				C_Ciclo			VARCHAR(2),
 				B_Ingresante	BIT,
-				I_CredDesaprob	TINYINT,
-				B_ActObl		BIT
+				I_CredDesaprob	TINYINT
 			)
 
 			CREATE TABLE #Tmp_AlumnosSinOglibaciones
@@ -1787,24 +1785,23 @@ BEGIN
 				C_EstMat		VARCHAR(2),
 				C_Ciclo			VARCHAR(2),
 				B_Ingresante	BIT,
-				I_CredDesaprob	TINYINT,
-				B_ActObl		BIT
+				I_CredDesaprob	TINYINT
 			)
 
 			IF (@B_AlumnosPregrado = 1) BEGIN
-				INSERT #Tmp_Matricula(C_CodRC, C_CodAlu, I_Anio, C_Periodo, I_Periodo, C_EstMat, C_Ciclo, B_Ingresante, I_CredDesaprob, B_ActObl)
-				SELECT m.C_CodRC, m.C_CodAlu, m.I_Anio, m.C_Periodo, c.I_OpcionID AS I_Periodo, m.C_EstMat, m.C_Ciclo, m.B_Ingresante, m.I_CredDesaprob, m.B_ActObl
+				INSERT #Tmp_Matricula(C_CodRC, C_CodAlu, I_Anio, C_Periodo, I_Periodo, C_EstMat, C_Ciclo, B_Ingresante, I_CredDesaprob)
+				SELECT m.C_CodRC, m.C_CodAlu, m.I_Anio, m.C_Periodo, c.I_OpcionID AS I_Periodo, m.C_EstMat, m.C_Ciclo, m.B_Ingresante, m.I_CredDesaprob
 				FROM @Tbl_Matricula AS m
 				INNER JOIN dbo.TC_CatalogoOpcion c ON c.I_ParametroID = 5 AND c.T_OpcionCod = m.C_Periodo
-				INNER JOIN BD_UNFV_Repositorio.dbo.VW_Alumnos a ON a.C_CodAlu = m.C_CodAlu and a.C_RcCod = a.C_RcCod
+				INNER JOIN BD_UNFV_Repositorio.dbo.VW_Alumnos a ON a.C_CodAlu = m.C_CodAlu and a.C_RcCod = m.C_CodRC
 				WHERE c.B_Eliminado = 0 AND a.N_Grado = '1';
 			END 
 			ELSE BEGIN
-				INSERT #Tmp_Matricula(C_CodRC, C_CodAlu, I_Anio, C_Periodo, I_Periodo, C_EstMat, C_Ciclo, B_Ingresante, I_CredDesaprob, B_ActObl)
-				SELECT m.C_CodRC, m.C_CodAlu, m.I_Anio, m.C_Periodo, c.I_OpcionID AS I_Periodo, m.C_EstMat, m.C_Ciclo, m.B_Ingresante, m.I_CredDesaprob, m.B_ActObl
+				INSERT #Tmp_Matricula(C_CodRC, C_CodAlu, I_Anio, C_Periodo, I_Periodo, C_EstMat, C_Ciclo, B_Ingresante, I_CredDesaprob)
+				SELECT m.C_CodRC, m.C_CodAlu, m.I_Anio, m.C_Periodo, c.I_OpcionID AS I_Periodo, m.C_EstMat, m.C_Ciclo, m.B_Ingresante, m.I_CredDesaprob
 				FROM @Tbl_Matricula AS m
 				INNER JOIN dbo.TC_CatalogoOpcion c ON c.I_ParametroID = 5 AND c.T_OpcionCod = m.C_Periodo
-				INNER JOIN BD_UNFV_Repositorio.dbo.VW_Alumnos a ON a.C_CodAlu = m.C_CodAlu and a.C_RcCod = a.C_RcCod
+				INNER JOIN BD_UNFV_Repositorio.dbo.VW_Alumnos a ON a.C_CodAlu = m.C_CodAlu and a.C_RcCod = m.C_CodRC
 				WHERE c.B_Eliminado = 0 AND a.N_Grado IN ('2', '3');
 			END;
 
@@ -1861,6 +1858,7 @@ BEGIN
 				INNER JOIN dbo.TR_ObligacionAluCab obl ON obl.I_MatAluID = m.I_MatAluID AND obl.B_Eliminado = 0 AND obl.B_Pagado = 1
 				WHERE m.B_Eliminado = 0 AND tmp.C_CodRc = m.C_CodRc AND tmp.C_CodAlu = m.C_CodAlu AND tmp.I_Anio = m.I_Anio AND tmp.I_Periodo = m.I_Periodo
 			)
+
 
 			--Insert para alumnos nuevos
 			MERGE INTO TC_MatriculaAlumno AS trg USING #Tmp_Matricula AS src
@@ -3967,6 +3965,25 @@ GO
 
 
 
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_Clasificadores')
+	DROP VIEW [dbo].[VW_Clasificadores]
+GO
+
+
+CREATE VIEW [dbo].[VW_Clasificadores]
+AS
+SELECT 
+	eq.C_ClasificConceptoCod, eqa.N_Anio, pre.C_TipoTransCod, pre.C_GenericaCod, pre.C_SubGeneCod, pre.C_EspecificaCod, 
+	pre.C_TipoTransCod + '.' + pre.C_GenericaCod + ISNULL('.' + pre.C_SubGeneCod, '') + ISNULL('.' + pre.C_EspecificaCod, '') AS C_CodClasificador,
+	pre.T_ClasificadorDesc, pre.T_ClasificadorDetalle, eqa.B_Habilitado 
+FROM dbo.TC_ClasificadorEquivalencia eq
+INNER JOIN dbo.TC_ClasificadorPresupuestal pre ON pre.I_ClasificadorID = eq.I_ClasificadorID
+INNER JOIN dbo.TC_ClasificadorEquivalenciaAnio eqa ON eqa.I_ClasifEquivalenciaID = eq.I_ClasifEquivalenciaID
+WHERE eq.B_Eliminado = 0 AND pre.B_Eliminado = 0 AND eqa.B_Eliminado = 0
+GO
+
+
+
 /*---------------------------- -------------*/
 IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_DevolucionPago')
 	DROP VIEW [dbo].[VW_DevolucionPago]
@@ -3985,9 +4002,7 @@ AS
 		   INNER JOIN TR_ObligacionAluCab OC ON OC.I_ObligacionAluID = PP.I_ObligacionAluID
 		   INNER JOIN TR_ObligacionAluDet OD ON OD.I_ObligacionAluID = OC.I_ObligacionAluID 
 		   INNER JOIN TI_ConceptoPago CP ON CP.I_ConcPagID = OD.I_ConcPagID
-		   LEFT JOIN TC_ClasificadorEquivalencia CE ON CE.C_ClasificConceptoCod = CP.T_Clasificador
-		   LEFT JOIN TC_ClasificadorEquivalenciaAnio CEA ON CEA.I_ClasifEquivalenciaID = ce.I_ClasifEquivalenciaID
-		   LEFT JOIN TC_ClasificadorPresupuestal CL ON CL.I_ClasificadorID = CE.I_ClasificadorID
+		   LEFT JOIN VW_Clasificadores cl ON cl.C_ClasificConceptoCod = CP.T_Clasificador
 	UNION
 	SELECT DP.*, PP.I_MontoPagado, PP.N_NroSIAF, PB.I_EntidadFinanID, PB.C_CodOperacion, PB.C_Referencia, PB.D_FecPago
 		   , EF.T_EntidadDesc, (CL.C_TipoTransCod + '.' + CL.C_GenericaCod + '.' + CL.C_SubGeneCod + '.' + CL.C_EspecificaCod) AS C_CodClasificador
@@ -3997,10 +4012,7 @@ AS
 		   INNER JOIN TR_PagoBanco PB ON PP.I_PagoBancoID = PB.I_PagoBancoID
 		   INNER JOIN TC_EntidadFinanciera EF ON PB.I_EntidadFinanID = EF.I_EntidadFinanID
 		   INNER JOIN TI_TasaUnfv TU ON TU.I_TasaUnfvID = PP.I_TasaUnfvID
-		   LEFT JOIN TC_ClasificadorEquivalencia CE ON CE.C_ClasificConceptoCod = TU.T_Clasificador
-		   LEFT JOIN TC_ClasificadorEquivalenciaAnio CEA ON CEA.I_ClasifEquivalenciaID = ce.I_ClasifEquivalenciaID
-		   LEFT JOIN TC_ClasificadorPresupuestal CL ON CL.I_ClasificadorID = CE.I_ClasificadorID
-
+		   LEFT JOIN VW_Clasificadores cl ON cl.C_ClasificConceptoCod = TU.T_Clasificador
 )
 GO
 
@@ -4016,24 +4028,6 @@ AS
 	  FROM dbo.TI_TasaUnfv t
 			--INNER JOIN dbo.TI_ConceptoPago cp on cp.I_ConcPagID = t.I_ConcPagID and cp.B_Eliminado = 0
 	 WHERE t.B_Eliminado = 0
-GO
-
-
-IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_Clasificadores')
-	DROP VIEW [dbo].[VW_Clasificadores]
-GO
-
-
-CREATE VIEW [dbo].[VW_Clasificadores]
-AS
-SELECT 
-	eq.C_ClasificConceptoCod, eqa.N_Anio, pre.C_TipoTransCod, pre.C_GenericaCod, pre.C_SubGeneCod, pre.C_EspecificaCod, 
-	pre.C_TipoTransCod + '.' + pre.C_GenericaCod + ISNULL('.' + pre.C_SubGeneCod, '') + ISNULL('.' + pre.C_EspecificaCod, '') AS C_CodClasificador,
-	pre.T_ClasificadorDesc, pre.T_ClasificadorDetalle, eqa.B_Habilitado 
-FROM dbo.TC_ClasificadorEquivalencia eq
-INNER JOIN dbo.TC_ClasificadorPresupuestal pre ON pre.I_ClasificadorID = eq.I_ClasificadorID
-INNER JOIN dbo.TC_ClasificadorEquivalenciaAnio eqa ON eqa.I_ClasifEquivalenciaID = eq.I_ClasifEquivalenciaID
-WHERE eq.B_Eliminado = 0 AND pre.B_Eliminado = 0 AND eqa.B_Eliminado = 0
 GO
 
 
@@ -4309,5 +4303,191 @@ BEGIN
 		vw.I_MontoOblig, vw.D_FecPago, vw.C_CodOperacion, vw.C_NumeroCuenta, vw.T_EntidadDesc 
 	FROM dbo.VW_CuotasPago_General vw
 	WHERE vw.C_CodAlu = @C_CodAlu AND vw.I_Anio = @I_Anio AND vw.I_Periodo = @I_PeriodoID AND vw.I_Prioridad = 1
+END
+GO
+
+
+
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_ResumenAnualPagoDeObligaciones_X_Clasificadores')
+	DROP PROCEDURE [dbo].[USP_S_ResumenAnualPagoDeObligaciones_X_Clasificadores]
+GO
+
+CREATE PROCEDURE [dbo].[USP_S_ResumenAnualPagoDeObligaciones_X_Clasificadores]
+@I_Anio INT,
+@B_EsPregrado BIT
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	DECLARE @Pregrado char(1) = '1',
+			@Maestria char(1) = '2',
+			@Doctorado char(1) = '3'
+
+	IF (@B_EsPregrado = 1) BEGIN
+		SELECT 
+			C_CodClasificador, 
+			T_ClasificadorDesc, 
+			ISNULL([1], 0) AS Enero,
+			ISNULL([2], 0) AS Febrero,
+			ISNULL([3], 0) AS Marzo,
+			ISNULL([4], 0) AS Abril,
+			ISNULL([5], 0) AS Mayo,
+			ISNULL([6], 0) AS Junio,
+			ISNULL([7], 0) AS Julio,
+			ISNULL([8], 0) AS Agosto,
+			ISNULL([9], 0) AS Setiembre,
+			ISNULL([10], 0) AS Octubre,
+			ISNULL([11], 0) AS Noviembre,
+			ISNULL([12], 0) AS Diciembre
+		FROM
+		(
+			SELECT cl.C_CodClasificador, cl.T_ClasificadorDesc, MONTH(pagban.D_FecPago) AS I_Month, SUM(det.I_Monto) AS I_MontoTotal 
+			FROM dbo.TR_PagoBanco pagban
+			INNER JOIN dbo.TRI_PagoProcesadoUnfv pagpro ON pagban.I_PagoBancoID = pagpro.I_PagoBancoID
+			INNER JOIN dbo.TR_ObligacionAluCab cab ON cab.I_ObligacionAluID = pagpro.I_ObligacionAluID and cab.B_Eliminado = 0
+			INNER JOIN dbo.TR_ObligacionAluDet det ON det.I_ObligacionAluID = cab.I_ObligacionAluID and det.B_Eliminado = 0
+			INNER JOIN dbo.TI_ConceptoPago conpag ON conpag.I_ConcPagID = det.I_ConcPagID
+			INNER JOIN dbo.VW_MatriculaAlumno mat ON mat.I_MatAluID = cab.I_MatAluID
+			LEFT JOIN dbo.VW_Clasificadores cl ON cl.C_ClasificConceptoCod = conpag.T_Clasificador
+			WHERE pagban.B_Anulado = 0 AND pagpro.B_Anulado = 0 AND YEAR(pagban.D_FecPago) = @I_Anio AND mat.N_Grado = @Pregrado
+			GROUP BY cl.C_CodClasificador, cl.T_ClasificadorDesc, MONTH(pagban.D_FecPago)
+		) p
+		PIVOT
+		(
+			SUM(p.I_MontoTotal) FOR p.I_Month IN ([1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12])
+		) AS pvt
+		ORDER BY T_ClasificadorDesc
+	END 
+	ELSE BEGIN
+		SELECT 
+			C_CodClasificador, 
+			T_ClasificadorDesc, 
+			ISNULL([1], 0) AS Enero,
+			ISNULL([2], 0) AS Febrero,
+			ISNULL([3], 0) AS Marzo,
+			ISNULL([4], 0) AS Abril,
+			ISNULL([5], 0) AS Mayo,
+			ISNULL([6], 0) AS Junio,
+			ISNULL([7], 0) AS Julio,
+			ISNULL([8], 0) AS Agosto,
+			ISNULL([9], 0) AS Setiembre,
+			ISNULL([10], 0) AS Octubre,
+			ISNULL([11], 0) AS Noviembre,
+			ISNULL([12], 0) AS Diciembre
+		FROM
+		(
+			SELECT cl.C_CodClasificador, cl.T_ClasificadorDesc, MONTH(pagban.D_FecPago) AS I_Month, SUM(det.I_Monto) AS I_MontoTotal 
+			FROM dbo.TR_PagoBanco pagban
+			INNER JOIN dbo.TRI_PagoProcesadoUnfv pagpro ON pagban.I_PagoBancoID = pagpro.I_PagoBancoID
+			INNER JOIN dbo.TR_ObligacionAluCab cab ON cab.I_ObligacionAluID = pagpro.I_ObligacionAluID and cab.B_Eliminado = 0
+			INNER JOIN dbo.TR_ObligacionAluDet det ON det.I_ObligacionAluID = cab.I_ObligacionAluID and det.B_Eliminado = 0
+			INNER JOIN dbo.TI_ConceptoPago conpag ON conpag.I_ConcPagID = det.I_ConcPagID
+			INNER JOIN dbo.VW_MatriculaAlumno mat ON mat.I_MatAluID = cab.I_MatAluID
+			LEFT JOIN dbo.VW_Clasificadores cl ON cl.C_ClasificConceptoCod = conpag.T_Clasificador
+			WHERE pagban.B_Anulado = 0 AND pagpro.B_Anulado = 0 AND YEAR(pagban.D_FecPago) = @I_Anio AND mat.N_Grado IN (@Maestria, @Doctorado)
+			GROUP BY cl.C_CodClasificador, cl.T_ClasificadorDesc, MONTH(pagban.D_FecPago)
+		) p
+		PIVOT
+		(
+			SUM(p.I_MontoTotal) FOR p.I_Month IN ([1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12])
+		) AS pvt
+		ORDER BY T_ClasificadorDesc
+	END
+
+	--EXEC USP_S_ResumenAnualPagoDeObligaciones_X_Clasificadores @I_Anio = 2021, @B_EsPregrado = 0
+END
+GO
+
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_ResumenAnualPagoDeObligaciones_X_Dependencia')
+	DROP PROCEDURE [dbo].[USP_S_ResumenAnualPagoDeObligaciones_X_Dependencia]
+GO
+
+CREATE PROCEDURE [dbo].[USP_S_ResumenAnualPagoDeObligaciones_X_Dependencia]
+@I_Anio INT,
+@B_EsPregrado BIT
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	DECLARE @Pregrado char(1) = '1',
+			@Maestria char(1) = '2',
+			@Doctorado char(1) = '3'
+
+	IF (@B_EsPregrado = 1) BEGIN
+		SELECT 
+			C_CodFac AS C_CodDependencia, 
+			T_FacDesc AS T_Dependencia,  
+			ISNULL([1], 0) AS Enero,
+			ISNULL([2], 0) AS Febrero,
+			ISNULL([3], 0) AS Marzo,
+			ISNULL([4], 0) AS Abril,
+			ISNULL([5], 0) AS Mayo,
+			ISNULL([6], 0) AS Junio,
+			ISNULL([7], 0) AS Julio,
+			ISNULL([8], 0) AS Agosto,
+			ISNULL([9], 0) AS Setiembre,
+			ISNULL([10], 0) AS Octubre,
+			ISNULL([11], 0) AS Noviembre,
+			ISNULL([12], 0) AS Diciembre
+		FROM
+		(
+			SELECT mat.C_CodFac, mat.T_FacDesc, MONTH(pagban.D_FecPago) AS I_Month, SUM(det.I_Monto) AS I_MontoTotal 
+			FROM dbo.TR_PagoBanco pagban
+			INNER JOIN dbo.TRI_PagoProcesadoUnfv pagpro ON pagban.I_PagoBancoID = pagpro.I_PagoBancoID
+			INNER JOIN dbo.TR_ObligacionAluCab cab ON cab.I_ObligacionAluID = pagpro.I_ObligacionAluID and cab.B_Eliminado = 0
+			INNER JOIN dbo.TR_ObligacionAluDet det ON det.I_ObligacionAluID = cab.I_ObligacionAluID and det.B_Eliminado = 0
+			INNER JOIN dbo.TI_ConceptoPago conpag ON conpag.I_ConcPagID = det.I_ConcPagID
+			INNER JOIN dbo.VW_MatriculaAlumno mat ON mat.I_MatAluID = cab.I_MatAluID
+			LEFT JOIN dbo.VW_Clasificadores cl ON cl.C_ClasificConceptoCod = conpag.T_Clasificador
+			WHERE pagban.B_Anulado = 0 AND pagpro.B_Anulado = 0 AND YEAR(pagban.D_FecPago) = @I_Anio AND mat.N_Grado = @Pregrado
+			GROUP BY mat.C_CodFac, mat.T_FacDesc, MONTH(pagban.D_FecPago)
+		) p
+		PIVOT
+		(
+			SUM(p.I_MontoTotal) FOR p.I_Month IN ([1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12])
+		) AS pvt
+		ORDER BY 2 DESC
+	END 
+	ELSE BEGIN
+		SELECT 
+			C_CodEsc AS C_CodDependencia, 
+			T_EscDesc AS T_Dependencia,  
+			ISNULL([1], 0) AS Enero,
+			ISNULL([2], 0) AS Febrero,
+			ISNULL([3], 0) AS Marzo,
+			ISNULL([4], 0) AS Abril,
+			ISNULL([5], 0) AS Mayo,
+			ISNULL([6], 0) AS Junio,
+			ISNULL([7], 0) AS Julio,
+			ISNULL([8], 0) AS Agosto,
+			ISNULL([9], 0) AS Setiembre,
+			ISNULL([10], 0) AS Octubre,
+			ISNULL([11], 0) AS Noviembre,
+			ISNULL([12], 0) AS Diciembre
+		FROM
+		(
+			SELECT mat.C_CodEsc, mat.T_EscDesc, MONTH(pagban.D_FecPago) AS I_Month, SUM(det.I_Monto) AS I_MontoTotal 
+			FROM dbo.TR_PagoBanco pagban
+			INNER JOIN dbo.TRI_PagoProcesadoUnfv pagpro ON pagban.I_PagoBancoID = pagpro.I_PagoBancoID
+			INNER JOIN dbo.TR_ObligacionAluCab cab ON cab.I_ObligacionAluID = pagpro.I_ObligacionAluID and cab.B_Eliminado = 0
+			INNER JOIN dbo.TR_ObligacionAluDet det ON det.I_ObligacionAluID = cab.I_ObligacionAluID and det.B_Eliminado = 0
+			INNER JOIN dbo.TI_ConceptoPago conpag ON conpag.I_ConcPagID = det.I_ConcPagID
+			INNER JOIN dbo.VW_MatriculaAlumno mat ON mat.I_MatAluID = cab.I_MatAluID
+			LEFT JOIN dbo.VW_Clasificadores cl ON cl.C_ClasificConceptoCod = conpag.T_Clasificador
+			WHERE pagban.B_Anulado = 0 AND pagpro.B_Anulado = 0 AND YEAR(pagban.D_FecPago) = @I_Anio AND mat.N_Grado IN (@Maestria, @Doctorado)
+			GROUP BY mat.C_CodEsc, mat.T_EscDesc, MONTH(pagban.D_FecPago)
+		) p
+		PIVOT
+		(
+			SUM(p.I_MontoTotal) FOR p.I_Month IN ([1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12])
+		) AS pvt
+		ORDER BY 2 DESC
+	END
+
+	--EXEC USP_S_ResumenAnualPagoDeObligaciones_X_Dependencia @I_Anio = 2021, @B_EsPregrado = 0
 END
 GO

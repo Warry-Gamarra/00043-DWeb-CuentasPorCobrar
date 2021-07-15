@@ -80,21 +80,21 @@
           <FullPath>4. BD_OCEF_CtasPorCobrar - Types Procedures y Funciones.sql</FullPath>
         </FileNode>
         <FileNode Name="5. BD_OCEF_CtasPorCobrar - Migracion de Temporal - De pagos.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:14-CEUC-DESA-05\SQL_2016E:True</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>14-CEUC-DESA-05\SQL_2016E</AssociatedConnSrvName>
-          <AssociatedConnUserName />
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:HUMBERTO-PC\SQLEXPRESS:False:sa</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>HUMBERTO-PC\SQLEXPRESS</AssociatedConnSrvName>
+          <AssociatedConnUserName>sa</AssociatedConnUserName>
           <FullPath>5. BD_OCEF_CtasPorCobrar - Migracion de Temporal - De pagos.sql</FullPath>
         </FileNode>
         <FileNode Name="SQLQuery1.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:14-CEUC-DESA-05\SQL_2016E:True</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>14-CEUC-DESA-05\SQL_2016E</AssociatedConnSrvName>
-          <AssociatedConnUserName />
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:HUMBERTO-PC\SQLEXPRESS:False:sa</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>HUMBERTO-PC\SQLEXPRESS</AssociatedConnSrvName>
+          <AssociatedConnUserName>sa</AssociatedConnUserName>
           <FullPath>SQLQuery1.sql</FullPath>
         </FileNode>
         <FileNode Name="SQLQuery2.sql">
-          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:14-CEUC-DESA-05\SQL_2016E:True</AssociatedConnectionMoniker>
-          <AssociatedConnSrvName>14-CEUC-DESA-05\SQL_2016E</AssociatedConnSrvName>
-          <AssociatedConnUserName />
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:HUMBERTO-PC\SQLEXPRESS:False:sa</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>HUMBERTO-PC\SQLEXPRESS</AssociatedConnSrvName>
+          <AssociatedConnUserName>sa</AssociatedConnUserName>
           <FullPath>SQLQuery2.sql</FullPath>
         </FileNode>
       </Items>

@@ -1,0 +1,150 @@
+﻿@model WebApp.ViewModels.ReporteResumenAnualPagoObligaciones_X_Clasificadores
+
+<div class="container-fluid">
+    <div class="col-12">
+        <section class="content-header">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb float-right small d-none d-sm-inline-flex">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")"><i class="fa fa-home">&nbsp;</i>Inicio</a></li>
+                    <li class="breadcrumb-item"><span><i class="fa fa-search">&nbsp;</i>Consulta </span></li>
+                    <li class="breadcrumb-item active"><span><i class="fa bi-stack">&nbsp;</i>@ViewBag.Title </span></li>
+                </ol>
+            </nav>
+            <h1 class="">@ViewBag.Title <small></small></h1>
+        </section>
+    </div>
+
+    <div class="col-12">
+        <div class="row mt-5 d-flex justify-content-end">
+            <div class="col-xl-3 col-lg-4 col-md-12">
+                <div class="form-group row">
+                    <label for="tipoEstudio" class="col-6 col-form-label text-right">Tipo estudio</label>
+                    <div class="col-6">
+                        @Html.DropDownList("tipoEstudio", new SelectList(ViewBag.TipoEstudios, "Value", "TextDisplay", ViewBag.SelectedTipoEstudio), new { Class = "form-control text-center" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-12">
+                <div class="form-group row">
+                    <label for="anio" class="col-6 col-form-label text-right">Año</label>
+                    <div class="col-6">
+                        @Html.DropDownList("anio", new SelectList(ViewBag.Anios, "Value", "TextDisplay", ViewBag.SelectedAnio), new { Class = "form-control text-center" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <p class="h2 text-center mt-5 mb-5 text-uppercase">
+            RESUMEN DE INGRESOS DE @Model.tipoEstudio<br />AL AÑO @Model.anio
+        </p>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover table-sm">
+                <thead>
+                    <tr>
+                        <th class="text-center" style="width: 7%">Clasificador</th>
+                        <th class="text-center" style="width: 18%">Descripción</th>
+                        <th class="text-center">Enero</th>
+                        <th class="text-center">Febrero</th>
+                        <th class="text-center">Marzo</th>
+                        <th class="text-center">Abril</th>
+                        <th class="text-center">Mayo</th>
+                        <th class="text-center">Junio</th>
+                        <th class="text-center">Julio</th>
+                        <th class="text-center">Agosto</th>
+                        <th class="text-center">Setiembre</th>
+                        <th class="text-center">Octubre</th>
+                        <th class="text-center">Noviembre</th>
+                        <th class="text-center">Diciembre</th>
+                        <th class="text-center">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.resumen_x_clasificadores)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.C_CodClasificador)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.T_ClasificadorDesc)
+                            </td>
+                            <td class="text-right">
+                                @Html.DisplayFor(modelItem => item.Enero)
+                            </td>
+                            <td class="text-right">
+                                @Html.DisplayFor(modelItem => item.Febrero)
+                            </td>
+                            <td class="text-right">
+                                @Html.DisplayFor(modelItem => item.Marzo)
+                            </td>
+                            <td class="text-right">
+                                @Html.DisplayFor(modelItem => item.Abril)
+                            </td>
+                            <td class="text-right">
+                                @Html.DisplayFor(modelItem => item.Mayo)
+                            </td>
+                            <td class="text-right">
+                                @Html.DisplayFor(modelItem => item.Junio)
+                            </td>
+                            <td class="text-right">
+                                @Html.DisplayFor(modelItem => item.Julio)
+                            </td>
+                            <td class="text-right">
+                                @Html.DisplayFor(modelItem => item.Agosto)
+                            </td>
+                            <td class="text-right">
+                                @Html.DisplayFor(modelItem => item.Setiembre)
+                            </td>
+                            <td class="text-right">
+                                @Html.DisplayFor(modelItem => item.Octubre)
+                            </td>
+                            <td class="text-right">
+                                @Html.DisplayFor(modelItem => item.Noviembre)
+                            </td>
+                            <td class="text-right">
+                                @Html.DisplayFor(modelItem => item.Diciembre)
+                            </td>
+                            <th class="text-right">
+                                @Model.TotalClasificador(item.C_CodClasificador)
+                            </th>
+                        </tr>
+                    }
+                        <tr>
+                            <th></th>
+                            <th>Total</th>
+                            <th class="text-right">@Model.TotalEnero</th>
+                            <th class="text-right">@Model.TotalFebrero</th>
+                            <th class="text-right">@Model.TotalMarzo</th>
+                            <th class="text-right">@Model.TotalAbril</th>
+                            <th class="text-right">@Model.TotalMayo</th>
+                            <th class="text-right">@Model.TotalJunio</th>
+                            <th class="text-right">@Model.TotalJulio</th>
+                            <th class="text-right">@Model.TotalAgosto</th>
+                            <th class="text-right">@Model.TotalSetiembre</th>
+                            <th class="text-right">@Model.TotalOctubre</th>
+                            <th class="text-right">@Model.TotalNoviembre</th>
+                            <th class="text-right">@Model.TotalDiciembre</th>
+                            <th class="text-right">@Model.TotalGeneral</th>
+                        </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#anio').on('change', function () {
+                location.href = '@Url.Action("ResumenAnualObligacionesPorClasificadores", "EstadosCuenta")' + '?anio=' + $(this).val() + '&tipoEstudio=' + $('#tipoEstudio').val();
+            });
+
+            $('#tipoEstudio').on('change', function () {
+                location.href = '@Url.Action("ResumenAnualObligacionesPorClasificadores", "EstadosCuenta")' + '?anio=' + $('#anio').val() + '&tipoEstudio=' + $(this).val();
+            });
+        })
+    </script>
+}

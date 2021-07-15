@@ -60,5 +60,17 @@ namespace WebApp.Models.Facades
 
             return reporte;
         }
+
+        public ReporteResumenAnualPagoObligaciones_X_Clasificadores ResumenAnualPagoOblig_X_Clasificadores(int anio)
+        {
+            var lista = reporteService.ResumenAnualPagoOblig_X_Clasificadores(anio);
+
+            var resumen_x_clasificadores = lista.Select(
+                x => Mapper.ResumenAnualPagoDeObligaciones_X_ClasificadorDTO_To_ResumenAnualPagoOblig_X_Clasificador(x));
+
+            var result = new ReporteResumenAnualPagoObligaciones_X_Clasificadores(anio, TipoEstudio.Pregrado, resumen_x_clasificadores);
+
+            return result;
+        }
     }
 }

@@ -55,5 +55,15 @@ namespace Domain.Services.Implementations
 
             return result;
         }
+
+        public IEnumerable<ResumenAnualPagoDeObligaciones_X_ClasificadorDTO> ResumenAnualPagoOblig_X_Clasificadores(int anio)
+        {
+            var lista = USP_S_ResumenAnualPagoDeObligaciones_X_Clasificadores.Execute(anio, false);
+
+            var result = lista.Select(
+                x => Mapper.USP_S_ResumenAnualPagoDeObligaciones_X_Clasificadores_To_ResumenAnualPagoDeObligaciones_X_ClasificadorDTO(x));
+
+            return result;
+        }
     }
 }

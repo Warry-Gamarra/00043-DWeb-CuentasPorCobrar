@@ -356,6 +356,9 @@
                 dataType: 'json',
                 beforeSend: function () {
                     llenarComboEspecialidades(null);
+                    QuitarDatosAlumno();
+                    GenerarTablaDetalle(null);
+                    GenerarTablaCuotas(null);
                 },
                 success: function (data) {
                     llenarComboEspecialidades(data);
@@ -537,7 +540,7 @@
             llenarComboEspecialidades(null);
             QuitarDatosAlumno();
             GenerarTablaDetalle(null);
-            GenerarTablaCuotas(null)
+            GenerarTablaCuotas(null);
         });
     </script>
 }

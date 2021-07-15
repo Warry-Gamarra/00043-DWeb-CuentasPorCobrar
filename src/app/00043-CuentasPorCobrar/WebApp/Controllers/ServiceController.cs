@@ -23,6 +23,7 @@ namespace WebApp.Controllers
         IObligacionServiceFacade _obligacionServiceFacade;
         ICuentaDeposito _cuentaDeposito;
         IProgramasClientFacade programasClientFacade;
+        IGeneralServiceFacade generalServiceFacade;
 
         public ServiceController()
         {
@@ -34,6 +35,7 @@ namespace WebApp.Controllers
             _obligacionServiceFacade = new ObligacionServiceFacade();
             _cuentaDeposito = new CuentaDeposito();
             programasClientFacade = new ProgramasClientFacade();
+            generalServiceFacade = new GeneralServiceFacade();
         }
 
         // GET: api/service/GetPrioridad/5
@@ -149,6 +151,19 @@ namespace WebApp.Controllers
         public IEnumerable<SelectViewModel> GetFacultades(TipoEstudio tipoEstudio)
         {
             return programasClientFacade.GetFacultades(tipoEstudio);
+        }
+
+        public IEnumerable<SelectViewModel> GetReportesPagoObligaciones(TipoEstudio tipoEstudio)
+        {
+            switch (tipoEstudio)
+            {
+                case TipoEstudio.Pregrado:
+                    return generalServiceFacade.Listar_ReportesPregrado();
+                case TipoEstudio.Posgrado:
+                    return generalServiceFacade.Listar_ReportesPosgrado();
+                default:
+                    return new List<SelectViewModel>();
+            }
         }
     }
 }

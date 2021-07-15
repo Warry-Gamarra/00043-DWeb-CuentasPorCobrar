@@ -15,7 +15,7 @@ namespace WebApp.Controllers
     //[Route("consultas/estados-de-cuenta/{action}")]
     public class EstadosCuentaController : Controller
     {
-        IReportePregradoServiceFacade reporteServiceFacade;
+        IReportePregradoServiceFacade reportePregradoServiceFacade;
         IReportePosgradoServiceFacade reportePosgradoServiceFacade;
         IProgramasClientFacade programasClientFacade;
         IGeneralServiceFacade generalServiceFacade;
@@ -23,7 +23,7 @@ namespace WebApp.Controllers
 
         public EstadosCuentaController()
         {
-            reporteServiceFacade = new ReportePregradoServiceFacade();
+            reportePregradoServiceFacade = new ReportePregradoServiceFacade();
             reportePosgradoServiceFacade = new ReportePosgradoServiceFacade();
             programasClientFacade = new ProgramasClientFacade();
             generalServiceFacade = new GeneralServiceFacade();
@@ -38,66 +38,98 @@ namespace WebApp.Controllers
             return View();
         }
 
-        [Route("consultas/estados-de-cuenta-pregrado")]
-        public ActionResult PagosPregrado(PagosPregradoViewModel model)
+        [Route("consultas/reporte-pago-de-obligaciones")]
+        public ActionResult ReportesPagoObligaciones(ReportePagosObligacionesViewModel model)
         {
-            switch (model.reporte)
-            {
-                case 1:
-                    model.reportePagosPorFacultadViewModel = reporteServiceFacade.ReportePagosPorFacultad(model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera);
+            ViewBag.TipoEstudios = generalServiceFacade.Listar_TipoEstudios();
 
-                    break;
-
-                case 2:
-                    model.reportePagosPorConceptoViewModel = reporteServiceFacade.ReportePagosPorConcepto(model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera);
-
-                    break;
-
-                case 3:
-                    model.reporteConceptosPorUnaFacultadViewModel = reporteServiceFacade.ReporteConceptosPorUnaFacultad(model.facultad, model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera);
-
-                    break;
-            }
-
-            ViewBag.TipoReportes = generalServiceFacade.Listar_ReportesPregrado();
-
-            ViewBag.Facultades = programasClientFacade.GetFacultades(TipoEstudio.Pregrado);
+            ViewBag.Dependencias = programasClientFacade.GetFacultades(model.tipoEstudio);
 
             ViewBag.EntidadesFinancieras = selectModels.GetEntidadesFinancieras();
 
-            ViewBag.Title = "Reportes de Pago de Obligaciones de Pregrado";
+            if (model.tipoEstudio == TipoEstudio.Pregrado)
+            {
+                switch (model.reporte)
+                {
+                    case 1:
+                        model.reportePagosPorFacultadViewModel = reportePregradoServiceFacade.ReportePagosPorFacultad(model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera);
+
+                        break;
+
+                    case 2:
+                        model.reportePagosPorConceptoViewModel = reportePregradoServiceFacade.ReportePagosPorConcepto(model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera);
+
+                        break;
+
+                    case 3:
+                        model.reporteConceptosPorUnaFacultadViewModel = reportePregradoServiceFacade.ReporteConceptosPorUnaFacultad(model.dependencia, model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera);
+
+                        break;
+                }
+
+                ViewBag.Title = "Reportes de Pago de Obligaciones de Pregrado";
+
+                ViewBag.TipoReportes = generalServiceFacade.Listar_ReportesPregrado();
+            }
+
+            if (model.tipoEstudio == TipoEstudio.Posgrado)
+            {
+                switch (model.reporte)
+                {
+                    case 1:
+                        model.reportePagosPorGradodViewModel = reportePosgradoServiceFacade.ReportePagosPorGrado(model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera);
+
+                        break;
+
+                    case 2:
+                        model.reportePagosPorConceptoPosgradoViewModel = reportePosgradoServiceFacade.ReportePagosPorConcepto(model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera);
+
+                        break;
+
+                    case 3:
+                        model.reporteConceptosPorGradoViewModel = reportePosgradoServiceFacade.ReporteConceptosPorGrado(model.dependencia, model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera);
+
+                        break;
+                }
+
+                ViewBag.Title = "Reportes de Pago de Obligaciones de Posgrado";
+
+                ViewBag.TipoReportes = generalServiceFacade.Listar_ReportesPosgrado();
+            }
 
             return View(model);
         }
 
-        [Route("consultas/estados-de-cuenta-posgrado")]
-        public ActionResult PagosPosgrado(PagosPosgradoViewModel model)
+        [Route("consultas/resumen-anual-obligaciones-por-clasificadores")]
+        public ActionResult ResumenAnualObligacionesPorClasificadores(int anio = 0, TipoEstudio tipoEstudio = TipoEstudio.Pregrado)
         {
-            switch (model.reporte)
+            anio = anio == 0 ? DateTime.Now.Year : anio;
+
+            ReporteResumenAnualPagoObligaciones_X_Clasificadores model;
+
+            switch (tipoEstudio)
             {
-                case 1:
-                    model.reportePagosPorGradodViewModel = reportePosgradoServiceFacade.ReportePagosPorGrado(model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera);
-
+                case TipoEstudio.Pregrado:
+                    model = reportePregradoServiceFacade.ResumenAnualPagoOblig_X_Clasificadores(anio);
                     break;
 
-                case 2:
-                    model.reportePagosPorConceptoPosgradoViewModel = reportePosgradoServiceFacade.ReportePagosPorConcepto(model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera);
-
+                case TipoEstudio.Posgrado:
+                    model = reportePosgradoServiceFacade.ResumenAnualPagoOblig_X_Clasificadores(anio);
                     break;
-
-                case 3:
-                    model.reporteConceptosPorGradoViewModel = reportePosgradoServiceFacade.ReporteConceptosPorGrado(model.posgrado, model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera);
-
+                default:
+                    model = new ReporteResumenAnualPagoObligaciones_X_Clasificadores();
                     break;
             }
 
-            ViewBag.TipoReportes = generalServiceFacade.Listar_ReportesPosgrado();
+            ViewBag.Anios = generalServiceFacade.Listar_Anios();
 
-            ViewBag.Facultades = programasClientFacade.GetFacultades(TipoEstudio.Posgrado);
+            ViewBag.SelectedAnio = anio;
 
-            ViewBag.EntidadesFinancieras = selectModels.GetEntidadesFinancieras();
+            ViewBag.TipoEstudios = generalServiceFacade.Listar_TipoEstudios();
 
-            ViewBag.Title = "Reportes de Pago de Obligaciones de Posgrado";
+            ViewBag.SelectedTipoEstudio = tipoEstudio;
+
+            ViewBag.Title = "Resumen de Ingresos";
 
             return View(model);
         }

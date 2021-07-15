@@ -194,14 +194,6 @@ namespace WebApp.Models
                 dataMatriculaType.I_CredDesaprob = 0;
             }
 
-            if (reader.FieldCount > 8)
-            {
-                if (reader.GetValue(9) != null)
-                {
-                    dataMatriculaType.B_ActObl = reader.GetValue(9).ToString().Equals("T", StringComparison.OrdinalIgnoreCase);
-                }
-            }
-
             return dataMatriculaType;
         }
 
@@ -323,6 +315,29 @@ namespace WebApp.Models
                 FileName = dto.T_NomArchivo,
                 UrlFile = dto.T_UrlArchivo,
                 FecCarga = dto.D_FecCre.Value
+            };
+
+            return result;
+        }
+
+        public static ResumenAnualPagoOblig_X_Clasificador ResumenAnualPagoDeObligaciones_X_ClasificadorDTO_To_ResumenAnualPagoOblig_X_Clasificador(ResumenAnualPagoDeObligaciones_X_ClasificadorDTO dto)
+        {
+            var result = new ResumenAnualPagoOblig_X_Clasificador()
+            {
+                C_CodClasificador = dto.C_CodClasificador,
+                T_ClasificadorDesc = dto.T_ClasificadorDesc,
+                Enero = dto.Enero,
+                Febrero = dto.Febrero,
+                Marzo = dto.Marzo,
+                Abril = dto.Abril,
+                Mayo = dto.Mayo,
+                Junio = dto.Junio,
+                Julio = dto.Julio,
+                Agosto = dto.Agosto,
+                Setiembre = dto.Setiembre,
+                Octubre = dto.Octubre,
+                Noviembre = dto.Noviembre,
+                Diciembre = dto.Diciembre
             };
 
             return result;
