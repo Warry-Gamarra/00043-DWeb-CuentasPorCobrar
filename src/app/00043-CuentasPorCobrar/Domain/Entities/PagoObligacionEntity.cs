@@ -24,5 +24,7 @@ namespace Domain.Entities
         public int? I_CtaDepositoID { get; set; }
         public decimal I_InteresMora { get; set; }
         public string C_Extorno { get; set; }
+        public bool B_Correcto { get; set; }
+        public string T_ErrorMessage { get; set; }
     }
 }

@@ -129,7 +129,9 @@ namespace WebApp.Controllers
         public ActionResult ImportarPagoObligaciones()
         {
             ViewBag.Title = "Cargar pagos de obligaciones";
-            var model = new List<ArchivoImportadoViewModel>();
+
+            var model = pagosModel.ListarArchivosCargados();
+
             return View(model);
         }
 

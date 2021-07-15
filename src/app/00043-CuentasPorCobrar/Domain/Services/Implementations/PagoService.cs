@@ -43,11 +43,13 @@ namespace Domain.Services.Implementations
             return new Response(_pagoProcesadoUnfv.SaveNroSIAF());
         }
 
-        public void GrabarRegistroArchivo(string fileName, string urlFile, int rowsCount, int currentUserId)
+        public void GrabarRegistroArchivo(string fileName, string urlFile, int rowsCount, int entidadFinanID, int tipoArchivoID, int currentUserId)
         {
             _importacionArchivo.T_NomArchivo = fileName;
             _importacionArchivo.T_UrlArchivo = urlFile;
             _importacionArchivo.I_CantFilas = rowsCount;
+            _importacionArchivo.I_EntidadID = entidadFinanID;
+            _importacionArchivo.I_TipoArchivo = tipoArchivoID;
             _importacionArchivo.D_FecCre = DateTime.Now;
 
             _importacionArchivo.Insert(currentUserId);
@@ -97,6 +99,37 @@ namespace Domain.Services.Implementations
         public PagoEntity ObtenerDatosPago(int pagoProcesId)
         {
             return new PagoEntity(VW_Pagos.Find(pagoProcesId));
+        }
+
+        public IEnumerable<ArchivoImportadoDTO> ListarArchivosImportados(TipoArchivoEntFinan tipoArchivo)
+        {
+            var lista = _importacionArchivo.Find();
+
+            int tipoArchivoID;
+
+            switch (tipoArchivo)
+            {
+                case TipoArchivoEntFinan.Datos_Alumno:
+                    tipoArchivoID = 1;
+                    break;
+                case TipoArchivoEntFinan.Deuda_Obligaciones:
+                    tipoArchivoID = 2;
+                    break;
+                case TipoArchivoEntFinan.Recaudacion_Obligaciones:
+                    tipoArchivoID = 3;
+                    break;
+                case TipoArchivoEntFinan.Recaudacion_Tasas:
+                    tipoArchivoID = 4;
+                    break;
+                default:
+                    tipoArchivoID = 0;
+                    break;
+            }
+
+            var result = lista.Where(x=> x.I_TipoArchivo.Equals(tipoArchivoID))
+                .Select(x => Mapper.TR_ImportacionArchivo_To_ArchivoImportadoDTO(x));
+
+            return result;
         }
     }
 }

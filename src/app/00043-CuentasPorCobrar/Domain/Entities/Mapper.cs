@@ -363,7 +363,7 @@ namespace Domain.Entities
             var result = new PagoPregradoPorConceptoDTO()
             {
                 I_ConceptoID = sp.I_ConceptoID,
-                T_Clasificador = sp.T_Clasificador,
+                C_CodClasificador = sp.C_CodClasificador,
                 T_ConceptoPagoDesc = sp.T_ConceptoPagoDesc,
                 I_MontoTotal = sp.I_MontoTotal
             };
@@ -378,7 +378,7 @@ namespace Domain.Entities
                 T_FacDesc = sp.T_FacDesc,
                 C_CodFac = sp.C_CodFac,
                 I_ConceptoID = sp.I_ConceptoID,
-                T_Clasificador = sp.T_Clasificador,
+                C_CodClasificador = sp.C_CodClasificador,
                 T_ConceptoPagoDesc = sp.T_ConceptoPagoDesc,
                 I_Cantidad = sp.I_Cantidad,
                 I_MontoTotal = sp.I_MontoTotal
@@ -441,7 +441,7 @@ namespace Domain.Entities
             var result = new PagoPosgradoPorConceptoDTO()
             {
                 I_ConceptoID = sp.I_ConceptoID,
-                T_Clasificador = sp.T_Clasificador,
+                C_CodClasificador = sp.C_CodClasificador,
                 T_ConceptoPagoDesc = sp.T_ConceptoPagoDesc,
                 I_MontoTotal = sp.I_MontoTotal
             };
@@ -456,10 +456,32 @@ namespace Domain.Entities
                 T_EscDesc = sp.T_EscDesc,
                 C_CodEsc = sp.C_CodEsc,
                 I_ConceptoID = sp.I_ConceptoID,
-                T_Clasificador = sp.T_Clasificador,
+                C_CodClasificador = sp.C_CodClasificador,
                 T_ConceptoPagoDesc = sp.T_ConceptoPagoDesc,
                 I_Cantidad = sp.I_Cantidad,
                 I_MontoTotal = sp.I_MontoTotal
+            };
+
+            return result;
+        }
+
+        public static ArchivoImportadoDTO TR_ImportacionArchivo_To_ArchivoImportadoDTO(TR_ImportacionArchivo archivoImpportado)
+        {
+            var result = new ArchivoImportadoDTO()
+            {
+                I_ImportacionID = archivoImpportado.I_ImportacionID,
+                T_NomArchivo = archivoImpportado.T_NomArchivo,
+                T_UrlArchivo = archivoImpportado.T_UrlArchivo,
+                I_CantFilas = archivoImpportado.I_CantFilas,
+                I_EntidadID = archivoImpportado.I_EntidadID,
+                I_TipoArchivo = archivoImpportado.I_TipoArchivo,
+                B_Eliminado = archivoImpportado.B_Eliminado,
+                I_UsuarioCre = archivoImpportado.I_UsuarioCre,
+                D_FecCre = archivoImpportado.D_FecCre,
+                I_UsuarioMod = archivoImpportado.I_UsuarioMod,
+                D_FecMod = archivoImpportado.D_FecMod,
+                UserName = archivoImpportado.UserName,
+                T_EntidadDesc = archivoImpportado.T_EntidadDesc
             };
 
             return result;

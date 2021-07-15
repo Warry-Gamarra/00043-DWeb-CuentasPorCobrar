@@ -19,7 +19,7 @@ namespace WebApp.ViewModels
 
     public class ArchivoImportadoViewModel
     {
-        public TipoPago TipoArchivo { get; set; }
+        public TipoArchivoEntFinan TipoArchivo { get; set; }
         public string EntidadRecaudadora { get; set; }
         public string FileName { get; set; }
         public string UrlFile { get; set; }

@@ -56,8 +56,8 @@
                                         <th>Entidad recaudadora</th>
                                         <th>Tipo archivo</th>
                                         <th class="text-center">Fecha carga</th>
-                                        <th class="text-center">Tamaño</th>
-                                        <th></th>
+                                        @*<th class="text-center">Tamaño</th>
+                                        <th></th>*@
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -68,10 +68,10 @@
                                             <td>@item.EntidadRecaudadora</td>
                                             <td>@item.TipoArchivo</td>
                                             <td>@item.FecCarga</td>
-                                            <td>@item.FileSize</td>
+                                            @*<td>@item.FileSize</td>
                                             <td>
                                                 <a href="@item.UrlFile"><i class="fa fa-download">&nbsp;</i>Descargar</a>
-                                            </td>
+                                            </td>*@
                                         </tr>
                                     }
                                 </tbody>

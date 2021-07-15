@@ -16,13 +16,15 @@ namespace Data.Tables
         public string T_NomArchivo { get; set; }
         public string T_UrlArchivo { get; set; }
         public int I_CantFilas { get; set; }
+        public int I_EntidadID { get; set; }
+        public int I_TipoArchivo { get; set; }
         public bool B_Eliminado { get; set; }
         public int? I_UsuarioCre { get; set; }
         public DateTime? D_FecCre { get; set; }
         public int? I_UsuarioMod { get; set; }
         public DateTime? D_FecMod { get; set; }
         public string UserName { get; set; }
-
+        public string T_EntidadDesc { get; set; }
 
         public List<TR_ImportacionArchivo> Find()
         {
@@ -30,9 +32,12 @@ namespace Data.Tables
 
             try
             {
-                string s_command = @"SELECT	I_ImportacionID, T_NomArchivo, T_UrlArchivo, I_CantFilas, B_Eliminado, I_UsuarioCre, D_FecCre, I_UsuarioMod, D_FecMod, UserName
-                                       FROM	TR_ImportacionArchivo I
-		                                    INNER JOIN TC_Usuarios U ON I.I_UsuarioCre = U.UserId;";
+                string s_command = @"SELECT	i.I_ImportacionID, i.T_NomArchivo, i.T_UrlArchivo, i.I_CantFilas, i.I_EntidadID, i.I_TipoArchivo, 
+                    i.I_UsuarioCre, i.D_FecCre, i.I_UsuarioMod, i.D_FecMod, u.UserName, e.T_EntidadDesc
+                    FROM	dbo.TR_ImportacionArchivo i
+                    LEFT JOIN dbo.TC_Usuario U ON I.I_UsuarioCre = U.UserId
+                    INNER JOIN dbo.TC_EntidadFinanciera e ON e.I_EntidadFinanID = i.I_EntidadID
+                    WHERE i.B_Eliminado = 0";
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
@@ -53,7 +58,8 @@ namespace Data.Tables
 
             try
             {
-                string s_command = @"SELECT	I_ImportacionID, T_NomArchivo, T_UrlArchivo, I_CantFilas, B_Eliminado, I_UsuarioCre, D_FecCre, I_UsuarioMod, D_FecMod, UserName
+                string s_command = @"SELECT	I_ImportacionID, T_NomArchivo, T_UrlArchivo, I_CantFilas, I_EntidadID, I_TipoArchivo, B_Eliminado, 
+                                        I_UsuarioCre, D_FecCre, I_UsuarioMod, D_FecMod, UserName
                                        FROM	TR_ImportacionArchivo I
 		                                    INNER JOIN TC_Usuarios U ON I.I_UsuarioCre = U.UserId
                                       WHERE I_ImportacionID = @I_ImportacionID;";
@@ -84,6 +90,8 @@ namespace Data.Tables
                     parameters.Add(name: "T_NomArchivo", dbType: DbType.String, value: this.T_NomArchivo);
                     parameters.Add(name: "T_UrlArchivo", dbType: DbType.String, value: this.T_UrlArchivo);
                     parameters.Add(name: "I_CantFilas", dbType: DbType.Int32, value: this.I_CantFilas);
+                    parameters.Add(name: "I_EntidadID", dbType: DbType.Int32, value: this.I_EntidadID);
+                    parameters.Add(name: "I_TipoArchivo", dbType: DbType.Int32, value: this.I_TipoArchivo);
                     parameters.Add(name: "D_FecCre", dbType: DbType.DateTime, value: this.D_FecCre);
                     parameters.Add(name: "CurrentUserId", dbType: DbType.Int32, value: currentUserId);
 

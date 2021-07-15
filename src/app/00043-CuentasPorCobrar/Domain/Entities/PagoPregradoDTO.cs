@@ -16,7 +16,7 @@ namespace Domain.Entities
     public class PagoPregradoPorConceptoDTO
     {
         public int I_ConceptoID { get; set; }
-        public string T_Clasificador { get; set; }
+        public string C_CodClasificador { get; set; }
         public string T_ConceptoPagoDesc { get; set; }
         public decimal I_MontoTotal { get; set; }
     }
@@ -26,7 +26,7 @@ namespace Domain.Entities
         public string T_FacDesc { get; set; }
         public string C_CodFac { get; set; }
         public int I_ConceptoID { get; set; }
-        public string T_Clasificador { get; set; }
+        public string C_CodClasificador { get; set; }
         public string T_ConceptoPagoDesc { get; set; }
         public int I_Cantidad { get; set; }
         public decimal I_MontoTotal { get; set; }
