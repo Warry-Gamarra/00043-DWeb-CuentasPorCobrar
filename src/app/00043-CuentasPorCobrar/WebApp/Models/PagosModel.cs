@@ -300,6 +300,8 @@ namespace WebApp.Models
 
                     entity.D_FecVencto = obligacionAluCab.D_FecVencto.Value;
 
+                    entity.B_Correcto = true;
+
                     lista.Add(entity);
 
                     response = _obligacionService.Grabar_Pago_Obligaciones(lista, currentUserId);

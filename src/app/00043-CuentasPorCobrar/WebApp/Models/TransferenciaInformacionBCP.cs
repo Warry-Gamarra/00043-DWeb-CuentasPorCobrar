@@ -82,7 +82,7 @@ namespace WebApp.Models
                 int montoCupon = (int)(item.I_MontoOblig * 100);
                 string informacionRetorno = item.C_CodRc + item.I_ProcesoID.ToString("D6") + montoCupon.ToString("D15");
                 int montoMora = 0;
-                int montoMinimo = 0;
+                int montoMinimo = montoCupon;
                 string tipoRegistroActualizacion = "A";//M, E
                 string nroDocumentoPago = "";
                 string nroDocumentoIdentidad = "";

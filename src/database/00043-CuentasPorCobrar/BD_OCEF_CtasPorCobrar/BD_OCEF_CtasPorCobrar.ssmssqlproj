@@ -85,6 +85,12 @@
           <AssociatedConnUserName>sa</AssociatedConnUserName>
           <FullPath>5. BD_OCEF_CtasPorCobrar - Migracion de Temporal - De pagos.sql</FullPath>
         </FileNode>
+        <FileNode Name="6. BD_OCEF_CtasPorCobrar - Modificaciones de Procedimientos y Funciones.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:HUMBERTO-PC\SQLEXPRESS:False:sa</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>HUMBERTO-PC\SQLEXPRESS</AssociatedConnSrvName>
+          <AssociatedConnUserName>sa</AssociatedConnUserName>
+          <FullPath>6. BD_OCEF_CtasPorCobrar - Modificaciones de Procedimientos y Funciones.sql</FullPath>
+        </FileNode>
         <FileNode Name="SQLQuery1.sql">
           <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:HUMBERTO-PC\SQLEXPRESS:False:sa</AssociatedConnectionMoniker>
           <AssociatedConnSrvName>HUMBERTO-PC\SQLEXPRESS</AssociatedConnSrvName>
