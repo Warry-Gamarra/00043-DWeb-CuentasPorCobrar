@@ -22,7 +22,7 @@ CREATE TABLE TR_MG_EcPri (
 	D_FecMigrado	datetime  NULL,
 	B_Removido		bit  NOT NULL DEFAULT 0,
 	D_FecRemovido	datetime  NULL,
-	T_Observacion	nvarchar(1000) NULL
+	T_Observacion	nvarchar(4000) NULL
 )
 GO
 
@@ -47,7 +47,7 @@ CREATE TABLE dbo.TR_MG_EcObl (
 	D_FecMigrado	datetime  NULL,
 	B_Removido		bit  NOT NULL DEFAULT 0,
 	D_FecRemovido	datetime  NULL,
-	T_Observacion	nvarchar(1000) NULL
+	T_Observacion	nvarchar(4000) NULL
 )
 GO
 
@@ -87,7 +87,7 @@ CREATE TABLE TR_MG_EcDet (
 	D_FecMigrado	datetime  NULL,
 	B_Removido		bit  NOT NULL DEFAULT 0,
 	D_FecRemovido	datetime  NULL,
-	T_Observacion	nvarchar(1000) NULL
+	T_Observacion	nvarchar(4000) NULL
 ) 
 GO
 
@@ -114,7 +114,7 @@ CREATE TABLE TR_MG_CpDes(
 	D_FecMigrado	datetime  NULL,
 	B_Removido		bit  NOT NULL DEFAULT 0,
 	D_FecRemovido	datetime  NULL,
-	T_Observacion	nvarchar(1000) NULL
+	T_Observacion	nvarchar(4000) NULL
 )
 GO
 
@@ -158,7 +158,7 @@ CREATE TABLE TR_MG_CpPri (
 	D_FecMigrado	datetime  NULL,
 	B_Removido		bit  NOT NULL DEFAULT 0,
 	D_FecRemovido	datetime  NULL,
-	T_Observacion	nvarchar(1000) NULL
+	T_Observacion	nvarchar(4000) NULL
 )
 GO
 
