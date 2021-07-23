@@ -1,6 +1,8 @@
 USE BD_OCEF_CtasPorCobrar
 GO
 
+alter table dbo.TR_PagoBanco add T_Observacion varchar(250)
+GO
 
 
 IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'USP_IU_GenerarObligacionesPregrado_X_Ciclo' AND ROUTINE_TYPE = 'PROCEDURE')
@@ -424,7 +426,7 @@ BEGIN
 declare @B_Result bit,
 		@T_Message nvarchar(4000)
 
-exec USP_IU_GenerarObligacionesPregrado_X_Ciclo @I_Anio = 2021, @I_Periodo = 19, 
+exec USP_IU_GenerarObligacionesPregrado_X_Ciclo @I_Anio = 2021, @I_Periodo = 15, 
 @C_CodFac = null, @C_CodAlu = null, @C_CodRc = null, @I_UsuarioCre = 1,
 @B_Result = @B_Result OUTPUT,
 @T_Message = @T_Message OUTPUT
@@ -433,8 +435,8 @@ go
 */
 END
 GO
-
-
+select * from dbo.TR_ObligacionAluCab --4134
+select * from dbo.TR_ObligacionAluDet --43240
 
 IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'USP_IU_GenerarObligacionesPosgrado_X_Ciclo' AND ROUTINE_TYPE = 'PROCEDURE')
 	DROP PROCEDURE [dbo].[USP_IU_GenerarObligacionesPosgrado_X_Ciclo]
@@ -792,8 +794,11 @@ IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCE
 	DROP PROCEDURE [dbo].[USP_S_ValidarCodOperacion]
 GO
 
+
+
 CREATE PROCEDURE [dbo].[USP_S_ValidarCodOperacion]
 @C_CodOperacion VARCHAR(50),
+--@I_ProcesoID INT,
 @I_EntidadFinanID INT,
 @D_FecPago DATETIME =  NULL,
 @B_Correct BIT OUTPUT
@@ -808,16 +813,23 @@ BEGIN
 
 	IF (@I_EntidadFinanID = @I_BcoComercio) BEGIN
 		SET @B_Correct = CASE WHEN EXISTS(SELECT p.I_PagoBancoID FROM dbo.TR_PagoBanco p
-			WHERE p.B_Anulado = 0 AND @I_EntidadFinanID = @I_BcoComercio AND C_CodOperacion = @C_CodOperacion) THEN 0 ELSE 1 END
+			--INNER JOIN dbo.TRI_PagoProcesadoUnfv pr ON pr.I_PagoBancoID = p.I_PagoBancoID AND pr.B_Anulado = 0
+			--INNER JOIN dbo.TR_ObligacionAluCab c ON c.I_ObligacionAluID = pr.I_ObligacionAluID AND c.B_Habilitado = 1 AND c.B_Eliminado = 0
+			WHERE p.B_Anulado = 0 AND p.I_EntidadFinanID = @I_BcoComercio AND --c.I_MatAluID = @I_MatAluID AND 
+				C_CodOperacion = @C_CodOperacion) THEN 0 ELSE 1 END
 	END
 
 	IF (@I_EntidadFinanID = @I_BcoCredito) BEGIN
 		SET @B_Correct = CASE WHEN EXISTS(SELECT p.I_PagoBancoID FROM dbo.TR_PagoBanco p
-			WHERE p.B_Anulado = 0 AND @I_EntidadFinanID = @I_BcoCredito AND DATEDIFF(HOUR, p.D_FecPago, @D_FecPago) = 0 AND C_CodOperacion = @C_CodOperacion) THEN 0 ELSE 1 END
+			--INNER JOIN dbo.TRI_PagoProcesadoUnfv pr ON pr.I_PagoBancoID = p.I_PagoBancoID AND pr.B_Anulado = 0
+			--INNER JOIN dbo.TR_ObligacionAluCab c ON c.I_ObligacionAluID = pr.I_ObligacionAluID AND c.B_Habilitado = 1 AND c.B_Eliminado = 0
+			WHERE p.B_Anulado = 0 AND p.I_EntidadFinanID = @I_BcoCredito AND --c.I_MatAluID = @I_MatAluID AND
+				DATEDIFF(HOUR, p.D_FecPago, @D_FecPago) = 0 AND C_CodOperacion = @C_CodOperacion) THEN 0 ELSE 1 END
 		--SET @B_Correct = 1
 	END
 END
 GO
+
 
 
 IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.DOMAINS WHERE DOMAIN_NAME = 'type_dataPago') BEGIN
@@ -837,7 +849,7 @@ CREATE TYPE [dbo].[type_dataPago] AS TABLE(
 	I_Cantidad			int,
 	C_Moneda			varchar(3),
 	I_MontoPago			decimal(15,2),
-	I_InteresMora			decimal(15,2),
+	I_InteresMora		decimal(15,2),
 	T_LugarPago			varchar(250),
 	--Identificar obligaciones
 	C_CodAlu			varchar(20),
@@ -907,6 +919,12 @@ BEGIN
 	DECLARE @I_FilaActual		int = 1,
 			@I_CantRegistros	int = (select count(id) from @Tmp_PagoObligacion),
 			@I_ConcPagID		int,
+			@I_SaldoPagado		decimal(15,2),
+			@I_SaldoPendiente	decimal(15,2),
+			@I_SaldoAPagar		decimal(15,2),
+			@I_PagoDemas		decimal(15,2),
+			@B_PagoDemas		bit,
+			@B_Pagado			bit,
 			-----------------------------------------------------------
 			@I_PagoBancoID		int,
 			@I_ProcesoID		int,
@@ -962,10 +980,10 @@ BEGIN
 			UPDATE @Tmp_PagoObligacion SET B_Success = 0, T_ErrorMessage = 'Esta obligación ya ha sido pagada con anterioridad.' WHERE id = @I_FilaActual
 		END
 
-		IF (@B_ExisteError = 0) AND NOT (@I_MontoOblig = @I_MontoPago) BEGIN
-			SET @B_ExisteError = 1
-			UPDATE @Tmp_PagoObligacion SET B_Success = 0, T_ErrorMessage = 'El monto pagado no coincide con el monto de la obligación generada.' WHERE id = @I_FilaActual
-		END
+		--IF (@B_ExisteError = 0) AND NOT (@I_MontoOblig = @I_MontoPago) BEGIN
+		--	SET @B_ExisteError = 1
+		--	UPDATE @Tmp_PagoObligacion SET B_Success = 0, T_ErrorMessage = 'El monto pagado no coincide con el monto de la obligación generada.' WHERE id = @I_FilaActual
+		--END
 
 		IF  (@B_ExisteError = 0) BEGIN
 			EXEC USP_S_ValidarCodOperacion @C_CodOperacion, @I_EntidadFinanID, @D_FecPago, @B_CodOpeCorrecto OUTPUT
@@ -998,20 +1016,43 @@ BEGIN
 				INSERT dbo.TR_PagoBanco(C_CodOperacion, C_CodDepositante, T_NomDepositante, C_Referencia, D_FecPago, I_Cantidad, 
 					C_Moneda, I_MontoPago, T_LugarPago, B_Anulado, I_UsuarioCre, D_FecCre, I_EntidadFinanID)
 				VALUES(@C_CodOperacion, @C_CodDepositante, @T_NomDepositante, @C_Referencia, @D_FecPago, @I_Cantidad, 
-					@C_Moneda, @I_MontoPago, @T_LugarPago, 0, @UserID, @D_FecRegistro, @I_EntidadFinanID)
+					@C_Moneda, (@I_MontoPago + @I_InteresMora), @T_LugarPago, 0, @UserID, @D_FecRegistro, @I_EntidadFinanID)
 
 				SET @I_PagoBancoID = SCOPE_IDENTITY()
 
+				SET @I_SaldoPagado = ISNULL((SELECT SUM(pr.I_MontoPagado) FROM dbo.TRI_PagoProcesadoUnfv pr
+					WHERE pr.B_Anulado = 0 AND pr.I_ObligacionAluID = @I_ObligacionAluID), 0)
+	
+				SET @I_SaldoPendiente = @I_MontoOblig - @I_SaldoPagado
+
+				--Pago incompleto
+				SET @I_SaldoAPagar = @I_SaldoPendiente - @I_MontoPago
+
+				SET @I_SaldoAPagar = CASE WHEN @I_SaldoAPagar > 0 THEN @I_SaldoAPagar ELSE 0 END
+
+				SET @B_Pagado = CASE WHEN @I_SaldoAPagar = 0 THEN 1 ELSE 0 END
+
+				--Pago excedente
+				SET @I_PagoDemas = @I_MontoPago - @I_SaldoPendiente
+					
+				SET @I_PagoDemas = CASE WHEN @I_PagoDemas > 0 THEN @I_PagoDemas ELSE 0 END
+
+				SET @B_PagoDemas = CASE WHEN @I_PagoDemas > 0 THEN 1 ELSE 0 END
+
 				INSERT dbo.TRI_PagoProcesadoUnfv(I_PagoBancoID, I_ObligacionAluID, I_MontoPagado, I_SaldoAPagar, I_PagoDemas,
 					B_PagoDemas, D_FecCre, I_UsuarioCre, B_Anulado, I_CtaDepositoID)
-				VALUES(@I_PagoBancoID, @I_ObligacionAluID, @I_MontoPago, 0, 0, 
-					0, @D_FecRegistro, @UserID, 0, @I_CtaDepositoID)
+				VALUES(@I_PagoBancoID, @I_ObligacionAluID, @I_MontoPago, @I_SaldoAPagar, @I_PagoDemas, 
+					@B_PagoDemas, @D_FecRegistro, @UserID, 0, @I_CtaDepositoID)
 
-				UPDATE dbo.TR_ObligacionAluCab SET B_Pagado = 1, I_UsuarioMod = @UserID, D_FecMod = @D_FecRegistro
-				WHERE I_ObligacionAluID = @I_ObligacionAluID
+
+				IF (@B_Pagado = 1)
+				BEGIN
+					UPDATE dbo.TR_ObligacionAluCab SET B_Pagado = @B_Pagado, I_UsuarioMod = @UserID, D_FecMod = @D_FecRegistro
+					WHERE I_ObligacionAluID = @I_ObligacionAluID
 			
-				UPDATE dbo.TR_ObligacionAluDet SET B_Pagado = 1, I_UsuarioMod = @UserID, D_FecMod = @D_FecRegistro
-				WHERE I_ObligacionAluID = @I_ObligacionAluID
+					UPDATE dbo.TR_ObligacionAluDet SET B_Pagado = @B_Pagado, I_UsuarioMod = @UserID, D_FecMod = @D_FecRegistro
+					WHERE I_ObligacionAluID = @I_ObligacionAluID
+				END
 
 				IF (@I_InteresMora > 0) BEGIN
 					SET @I_ConcPagID = (SELECT c.I_ConcPagID FROM dbo.TI_ConceptoPago c WHERE c.B_Eliminado = 0 AND c.I_ProcesoID = @I_ProcesoID AND ISNULL(c.B_Mora, 0) = 1)
@@ -1038,4 +1079,145 @@ BEGIN
 END
 GO
 
+
+
+
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_DetalleObligaciones')
+	DROP VIEW [dbo].[VW_DetalleObligaciones]
+GO
+
+
+CREATE VIEW [dbo].[VW_DetalleObligaciones]
+AS
+SELECT 
+	cab.I_ObligacionAluID, pro.I_ProcesoID, pro.N_CodBanco, mat.C_CodAlu, mat.C_RcCod, mat.C_CodFac, mat.T_Nombre, mat.T_ApePaterno, mat.T_ApeMaterno, mat.I_Anio, mat.I_Periodo, 
+	per.T_OpcionCod AS C_Periodo, per.T_OpcionDesc AS T_Periodo, 
+	pro.T_ProcesoDesc, ISNULL(cp.T_ConceptoPagoDesc, con.T_ConceptoDesc) AS T_ConceptoDesc, cat.T_CatPagoDesc, det.I_Monto, det.B_Pagado, cab.D_FecVencto, pro.I_Prioridad,
+	cab.C_Moneda, cp.I_TipoObligacion, cat.I_Nivel, niv.T_OpcionCod AS C_Nivel, niv.T_OpcionDesc AS T_Nivel, cat.I_TipoAlumno, tipal.T_OpcionCod AS C_TipoAlumno, tipal.T_OpcionDesc AS T_TipoAlumno
+FROM dbo.VW_MatriculaAlumno mat
+INNER JOIN dbo.TR_ObligacionAluCab cab ON cab.I_MatAluID = mat.I_MatAluID AND cab.B_Eliminado = 0 
+INNER JOIN dbo.TR_ObligacionAluDet det ON det.I_ObligacionAluID = cab.I_ObligacionAluID AND det.B_Eliminado = 0
+INNER JOIN dbo.TI_ConceptoPago cp ON cp.I_ConcPagID = det.I_ConcPagID AND det.B_Eliminado = 0
+INNER JOIN dbo.TC_Concepto con ON con.I_ConceptoID = cp.I_ConceptoID AND con.B_Eliminado = 0
+INNER JOIN dbo.TC_Proceso pro ON pro.I_ProcesoID = cp.I_ProcesoID AND pro.B_Eliminado = 0
+INNER JOIN dbo.TC_CategoriaPago cat ON cat.I_CatPagoID = pro.I_CatPagoID AND cat.B_Eliminado = 0
+INNER JOIN dbo.TC_CatalogoOpcion per ON per.I_ParametroID = 5 AND per.I_OpcionID = mat.I_Periodo
+INNER JOIN dbo.TC_CatalogoOpcion niv ON niv.I_ParametroID = 2 AND niv.I_OpcionID = cat.I_Nivel
+INNER JOIN dbo.TC_CatalogoOpcion tipal ON tipal.I_ParametroID = 1 AND tipal.I_OpcionID = cat.I_TipoAlumno
+GO
+
+
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_CuotasPago_X_Ciclo')
+	DROP VIEW [dbo].[VW_CuotasPago_X_Ciclo]
+GO
+
+CREATE VIEW [dbo].[VW_CuotasPago_X_Ciclo]
+AS
+SELECT 
+	ROW_NUMBER() OVER(PARTITION BY mat.I_Anio, mat.I_Periodo, mat.C_RcCod, mat.C_CodAlu ORDER BY pro.I_Prioridad, cab.D_FecVencto) AS I_NroOrden,
+	cab.I_ObligacionAluID, pro.I_ProcesoID, pro.N_CodBanco, mat.C_CodAlu, mat.C_RcCod, mat.C_CodFac, mat.C_CodEsc, mat.T_Nombre, mat.T_ApePaterno, mat.T_ApeMaterno, mat.I_Anio, mat.I_Periodo, 
+	per.T_OpcionCod AS C_Periodo, per.T_OpcionDesc AS T_Periodo, pro.T_ProcesoDesc, cab.D_FecVencto, pro.I_Prioridad, cab.C_Moneda,
+	niv.T_OpcionCod AS C_Nivel, tipal.T_OpcionCod AS C_TipoAlumno, cab.I_MontoOblig,
+	cab.B_Pagado, cab.D_FecCre,	ISNULL(srv.C_CodServicio, '') AS C_CodServicio, mat.T_FacDesc, mat.T_DenomProg,
+	ISNULL((SELECT SUM(pagpro.I_MontoPagado) FROM dbo.TRI_PagoProcesadoUnfv pagpro where pagpro.I_ObligacionAluID = cab.I_ObligacionAluID AND pagpro.B_Anulado = 0), 0) AS I_MontoPagadoActual
+	--pagban.C_CodOperacion, pagban.D_FecPago, pagban.T_LugarPago,
+	--ISNULL(cta.C_NumeroCuenta, '') AS C_NumeroCuenta, ISNULL(ef.T_EntidadDesc, '') AS T_EntidadDesc,
+FROM dbo.VW_MatriculaAlumno mat
+INNER JOIN dbo.TR_ObligacionAluCab cab ON cab.I_MatAluID = mat.I_MatAluID AND cab.B_Eliminado = 0
+INNER JOIN dbo.TC_Proceso pro ON pro.I_ProcesoID = cab.I_ProcesoID AND pro.B_Eliminado = 0
+INNER JOIN dbo.TC_CategoriaPago cat ON cat.I_CatPagoID = pro.I_CatPagoID AND cat.B_Eliminado = 0
+LEFT JOIN dbo.TC_Servicios srv ON srv.I_ServicioID = cat.I_ServicioID AND srv.B_Eliminado = 0
+INNER JOIN dbo.TC_CatalogoOpcion per ON per.I_ParametroID = 5 AND per.I_OpcionID = mat.I_Periodo
+INNER JOIN dbo.TC_CatalogoOpcion niv ON niv.I_ParametroID = 2 AND niv.I_OpcionID = cat.I_Nivel
+INNER JOIN dbo.TC_CatalogoOpcion tipal ON tipal.I_ParametroID = 1 AND tipal.I_OpcionID = cat.I_TipoAlumno
+--LEFT JOIN dbo.TRI_PagoProcesadoUnfv pagpro ON pagpro.I_ObligacionAluID = cab.I_ObligacionAluID AND pagpro.B_Anulado = 0
+--LEFT JOIN dbo.TR_PagoBanco pagban ON pagban.I_PagoBancoID = pagpro.I_PagoBancoID AND pagban.B_Anulado = 0
+--LEFT JOIN dbo.TC_CuentaDeposito cta ON cta.I_CtaDepositoID = pagpro.I_CtaDepositoID
+--LEFT JOIN dbo.TC_EntidadFinanciera ef ON ef.I_EntidadFinanID = pagban.I_EntidadFinanID
+GO
+
+
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_CuotasPago_General')
+	DROP VIEW [dbo].[VW_CuotasPago_General]
+GO
+
+CREATE VIEW [dbo].[VW_CuotasPago_General]
+AS
+SELECT 
+	ROW_NUMBER() OVER(PARTITION BY mat.C_CodAlu ORDER BY mat.C_CodAlu, pro.I_Anio, pro.I_Periodo, pro.I_Prioridad, cab.D_FecVencto) AS I_NroOrden,
+	cab.I_ObligacionAluID, pro.I_ProcesoID, pro.N_CodBanco, mat.C_CodAlu, mat.C_RcCod, mat.C_CodFac, mat.C_CodEsc, mat.T_Nombre, mat.T_ApePaterno, mat.T_ApeMaterno, mat.I_Anio, mat.I_Periodo, 
+	per.T_OpcionCod AS C_Periodo, per.T_OpcionDesc AS T_Periodo, pro.T_ProcesoDesc, cab.D_FecVencto, pro.I_Prioridad, cab.C_Moneda,
+	niv.T_OpcionCod AS C_Nivel, tipal.T_OpcionCod AS C_TipoAlumno, cab.I_MontoOblig,
+	cab.B_Pagado, cab.D_FecCre, ISNULL(srv.C_CodServicio, '') AS C_CodServicio, mat.T_FacDesc, mat.T_DenomProg,
+	ISNULL((SELECT SUM(pagpro.I_MontoPagado) FROM dbo.TRI_PagoProcesadoUnfv pagpro where pagpro.I_ObligacionAluID = cab.I_ObligacionAluID AND pagpro.B_Anulado = 0), 0) AS I_MontoPagadoActual
+	--pagban.C_CodOperacion, pagban.D_FecPago, pagban.T_LugarPago
+	--ISNULL(cta.C_NumeroCuenta, '') AS C_NumeroCuenta, ISNULL(ef.T_EntidadDesc, '') AS T_EntidadDesc,
+FROM dbo.VW_MatriculaAlumno mat
+INNER JOIN dbo.TR_ObligacionAluCab cab ON cab.I_MatAluID = mat.I_MatAluID AND cab.B_Eliminado = 0
+INNER JOIN dbo.TC_Proceso pro ON pro.I_ProcesoID = cab.I_ProcesoID AND pro.B_Eliminado = 0
+INNER JOIN dbo.TC_CategoriaPago cat ON cat.I_CatPagoID = pro.I_CatPagoID AND cat.B_Eliminado = 0
+LEFT JOIN dbo.TC_Servicios srv ON srv.I_ServicioID = cat.I_ServicioID AND srv.B_Eliminado = 0
+INNER JOIN dbo.TC_CatalogoOpcion per ON per.I_ParametroID = 5 AND per.I_OpcionID = mat.I_Periodo
+INNER JOIN dbo.TC_CatalogoOpcion niv ON niv.I_ParametroID = 2 AND niv.I_OpcionID = cat.I_Nivel
+INNER JOIN dbo.TC_CatalogoOpcion tipal ON tipal.I_ParametroID = 1 AND tipal.I_OpcionID = cat.I_TipoAlumno
+--LEFT JOIN dbo.TRI_PagoProcesadoUnfv pagpro ON pagpro.I_ObligacionAluID = cab.I_ObligacionAluID AND pagpro.B_Anulado = 0
+--LEFT JOIN dbo.TR_PagoBanco pagban ON pagban.I_PagoBancoID = pagpro.I_PagoBancoID AND pagban.B_Anulado = 0
+--LEFT JOIN dbo.TC_CuentaDeposito cta ON cta.I_CtaDepositoID = pagpro.I_CtaDepositoID
+--LEFT JOIN dbo.TC_EntidadFinanciera ef ON ef.I_EntidadFinanID = pagban.I_EntidadFinanID
+GO
+
+
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_ListarCuotasPagos_X_Periodo')
+	DROP PROCEDURE [dbo].[USP_S_ListarCuotasPagos_X_Periodo]
+GO
+
+CREATE PROCEDURE [dbo].[USP_S_ListarCuotasPagos_X_Periodo]
+@C_CodAlu VARCHAR(10),
+@I_Anio INT,
+@I_PeriodoID INT
+AS
+BEGIN
+	SET NOCOUNT ON
+	SELECT 
+		vw.C_CodAlu, vw.T_ApePaterno, vw.T_ApeMaterno, vw.T_Nombre, vw.C_RcCod, vw.T_DenomProg, 
+		vw.T_ProcesoDesc, vw.I_Anio, vw.T_Periodo, vw.D_FecVencto, vw.B_Pagado, 
+		vw.I_MontoOblig, 
+		null AS D_FecPago, 
+		'' as C_CodOperacion, 
+		'' as C_NumeroCuenta, 
+		'' as T_EntidadDesc 
+		--vw.D_FecPago, vw.C_CodOperacion, vw.C_NumeroCuenta, vw.T_EntidadDesc 
+	FROM dbo.VW_CuotasPago_General vw
+	WHERE vw.C_CodAlu = @C_CodAlu AND vw.I_Anio = @I_Anio AND vw.I_Periodo = @I_PeriodoID AND vw.I_Prioridad = 1
+END
+GO
+
+
+
+
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_MatriculaAlumno')
+	DROP VIEW [dbo].[VW_MatriculaAlumno]
+GO
+
+CREATE VIEW [dbo].[VW_MatriculaAlumno]
+AS
+SELECT 
+	m.I_MatAluID, a.C_CodAlu, a.C_RcCod, a.T_Nombre, a.T_ApePaterno, ISNULL(a.T_ApeMaterno, '') AS T_ApeMaterno, a.N_Grado, m.I_Anio, m.I_Periodo, 
+	a.C_CodFac, a.T_FacDesc, a.C_CodEsc, a.T_EscDesc, m.C_EstMat, m.C_Ciclo, m.B_Ingresante, m.I_CredDesaprob, m.B_Habilitado, cat.T_OpcionCod as C_Periodo, cat.T_OpcionDesc as T_Periodo,
+	a.T_DenomProg, a.C_CodModIng, A.T_ModIngDesc, CASE WHEN nv.I_AluMultaID IS NULL THEN 0 ELSE 1 END B_TieneMultaPorNoVotar
+FROM TC_MatriculaAlumno m 
+INNER JOIN BD_UNFV_Repositorio.dbo.VW_Alumnos a ON a.C_CodAlu = m.C_CodAlu AND a.C_RcCod = m.C_CodRc
+LEFT JOIN dbo.TC_CatalogoOpcion cat ON cat.I_ParametroID = 5 and cat.I_OpcionID = m.I_Periodo
+LEFT JOIN dbo.TC_AlumnoMultaNoVotar nv ON nv.B_Eliminado = 0 and nv.C_CodAlu = m.C_CodAlu and nv.C_CodRc = m.C_CodRc and nv.I_Periodo = m.I_Periodo and nv.I_Anio = m.I_Anio
+WHERE m.B_Eliminado = 0
+GO
+
+
+select * from dbo.TRI_PagoProcesadoUnfv where I_MontoPagado = 40
 

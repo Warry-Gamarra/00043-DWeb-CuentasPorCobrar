@@ -81,20 +81,6 @@ namespace WebApp.Models
 
         public byte? I_Prioridad { get; set; }
 
-        public string C_CodOperacion { get; set; }
-
-        public DateTime? D_FecPago { get; set; }
-        
-        public string T_FecPago
-        {
-            get
-            {
-                return D_FecPago.HasValue ? D_FecPago.Value.ToString("dd/MM/yyyy HH:mm") : "";
-            }
-        }
-
-        public string T_LugarPago { get; set; }
-
         public string C_Moneda { get; set; }
 
         public int? I_TipoObligacion { get; set; }
@@ -121,9 +107,5 @@ namespace WebApp.Models
         public string C_TipoAlumno { get; set; }
 
         public string T_TipoAlumno { get; set; }
-
-        public string C_NumeroCuenta { get; set; }
-
-        public string T_EntidadDesc { get; set; }
     }
 }

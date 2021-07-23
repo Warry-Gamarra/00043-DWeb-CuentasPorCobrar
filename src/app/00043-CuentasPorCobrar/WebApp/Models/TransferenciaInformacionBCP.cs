@@ -25,6 +25,8 @@ namespace WebApp.Models
         {
             var cuotas_pago = _obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(anio, periodo, tipoEstudio, dependencia).Where(x => !x.B_Pagado).ToList();
 
+            //cuotas_pago = cuotas_pago.Where(x => !(x.I_MontoOblig.Value == 125)).ToList();//EXCLUIR A LOS INGRESANTES POR CEPREVI(PROVISIONAL)
+
             if (cuotas_pago.Count == 0)
             {
                 throw new Exception("No hay registros.");
@@ -50,7 +52,7 @@ namespace WebApp.Models
             string tipoValidacion = "C";
             string nombreEmpresa = "UNIVERSIDAD NACIONAL FEDERICO VILLARREAL";
             int cantidadRegistros = cuotas_pago.Count;
-            int montoTotal = (int)(cuotas_pago.Sum(c => c.I_MontoOblig) * 100);
+            int montoTotal = (int)(cuotas_pago.Sum(c => c.I_MontoOblig - c.I_MontoPagadoActual) * 100);
             string tipoArchivoActualizacion = "R";
             string codigoServicio = "000000";
             string fillerCabecera = "";
@@ -79,9 +81,10 @@ namespace WebApp.Models
                 string codigoDepositante = item.C_CodAlu.PadLeft(14, '0');
                 string nombreDepositante = item.T_NombresCompletos;
                 nombreDepositante = StringExtensions.SinCaracteresEspecialies(nombreDepositante.Substring(0, (nombreDepositante.Length < 40 ? nombreDepositante.Length : 40)));
-                int montoCupon = (int)(item.I_MontoOblig * 100);
+                int montoCupon = (int)((item.I_MontoOblig - item.I_MontoPagadoActual) * 100);
                 string informacionRetorno = item.C_CodRc + item.I_ProcesoID.ToString("D6") + montoCupon.ToString("D15");
                 int montoMora = 0;
+                ///int montoMinimo = (item.C_CodRc == "064") ? 4000 : montoCupon;//MONTO DE 40 PARA LOS DE CONTABILIDAD (PROVISIONAL)
                 int montoMinimo = montoCupon;
                 string tipoRegistroActualizacion = "A";//M, E
                 string nroDocumentoPago = "";

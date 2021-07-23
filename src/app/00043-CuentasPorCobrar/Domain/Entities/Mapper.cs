@@ -133,9 +133,6 @@ namespace Domain.Entities
                 B_Pagado = detalleObligaciones.B_Pagado,
                 D_FecVencto = detalleObligaciones.D_FecVencto,
                 I_Prioridad = detalleObligaciones.I_Prioridad,
-                C_CodOperacion = detalleObligaciones.C_CodOperacion ?? "",
-                D_FecPago = detalleObligaciones.D_FecPago,
-                T_LugarPago = detalleObligaciones.T_LugarPago ?? "",
                 C_Moneda = detalleObligaciones.C_Moneda,
                 I_TipoObligacion = detalleObligaciones.I_TipoObligacion,
                 I_Nivel = detalleObligaciones.I_Nivel,
@@ -143,9 +140,7 @@ namespace Domain.Entities
                 T_Nivel = detalleObligaciones.T_Nivel,
                 I_TipoAlumno = detalleObligaciones.I_TipoAlumno,
                 C_TipoAlumno = detalleObligaciones.C_TipoAlumno,
-                T_TipoAlumno = detalleObligaciones.T_TipoAlumno,
-                C_NumeroCuenta = detalleObligaciones.C_NumeroCuenta,
-                T_EntidadDesc = detalleObligaciones.T_EntidadDesc
+                T_TipoAlumno = detalleObligaciones.T_TipoAlumno
             };
 
             return obligacionDetalleDTO;
@@ -177,14 +172,10 @@ namespace Domain.Entities
                 C_Nivel = cuotaPago.C_Nivel,
                 C_TipoAlumno = cuotaPago.C_TipoAlumno,
                 I_MontoOblig = cuotaPago.I_MontoOblig,
+                I_MontoPagadoActual = cuotaPago.I_MontoPagadoActual,
                 B_Pagado = cuotaPago.B_Pagado,
-                C_CodOperacion = cuotaPago.C_CodOperacion,
-                D_FecPago = cuotaPago.D_FecPago,
-                T_LugarPago = cuotaPago.T_LugarPago,
                 D_FecCre = cuotaPago.D_FecCre,
                 C_CodServicio = cuotaPago.C_CodServicio,
-                C_NumeroCuenta = cuotaPago.C_NumeroCuenta,
-                T_EntidadDesc = cuotaPago.T_EntidadDesc,
                 T_FacDesc = cuotaPago.T_FacDesc,
                 T_DenomProg = cuotaPago.T_DenomProg
             };
