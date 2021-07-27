@@ -124,3 +124,42 @@ DBCC CHECKIDENT([BD_OCEF_CtasPorCobrar.dbo.TC_Proceso], RESEED, 0)
 
 
 
+
+
+
+
+--declare @B_Resultado  bit,
+--		@T_Message	  nvarchar(4000)
+--exec USP_IU_CopiarTablaCuotaDePago @B_Resultado output, @T_Message output
+--select @B_Resultado as resultado, @T_Message as mensaje
+--GO
+
+--declare @B_Resultado  bit,
+--		@T_Message	  nvarchar(4000)
+--exec USP_U_MarcarRepetidosCuotaDePago @B_Resultado output, @T_Message output
+--select @B_Resultado as resultado, @T_Message as mensaje
+--GO
+
+--declare @B_Resultado  bit,
+--		@T_Message	  nvarchar(4000)
+--exec USP_U_AsignarAnioPeriodoCuotaPago @B_Resultado output, @T_Message output
+--select @B_Resultado as resultado, @T_Message as mensaje
+--GO
+
+--declare @B_Resultado  bit,
+--		@T_Message	  nvarchar(4000)
+--exec USP_U_AsignarCategoriaCuotaPago @B_Resultado output, @T_Message output
+--select @B_Resultado as resultado, @T_Message as mensaje
+--GO
+
+--declare @B_Resultado  bit, @I_AnioIni int, @I_AnioFin int, @T_Message	  nvarchar(4000)
+--exec USP_IU_MigrarDataCuotaDePagoCtasPorCobrar @I_AnioIni = null, @I_AnioFin = null, @B_Resultado = @B_Resultado output, @T_Message = @T_Message output
+--select @B_Resultado as resultado, @T_Message as mensaje
+
+
+
+declare @B_Resultado  bit,
+		@T_Message	  nvarchar(4000)
+exec USP_IU_CopiarTablaConceptoDePago @B_Resultado output, @T_Message output
+select @B_Resultado as resultado, @T_Message as mensaje
+GO

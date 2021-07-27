@@ -128,7 +128,7 @@ BEGIN
 		SET @I_CpDes = (SELECT COUNT(*) FROM cp_des)
 		SET @I_Insertados = (SELECT COUNT(*) FROM @Tbl_output WHERE accion = 'INSERT')
 		SET @I_Actualizados = (SELECT COUNT(*) FROM @Tbl_output WHERE accion = 'UPDATE' AND B_Removido = 0)
-		SET @I_Actualizados = (SELECT COUNT(*) FROM @Tbl_output WHERE accion = 'UPDATE' AND B_Removido = 1)
+		SET @I_Removidos = (SELECT COUNT(*) FROM @Tbl_output WHERE accion = 'UPDATE' AND B_Removido = 1)
 
 		SELECT @I_CpDes AS tot_cuotaPago, @I_Insertados AS cant_inserted, @I_Actualizados as cant_updated, @I_Removidos as cant_removed, @D_FecProceso as fec_proceso
 		
@@ -442,7 +442,7 @@ BEGIN
 
 		SELECT @I_Proc_Inserted AS proc_count_insert, @I_Proc_Updated AS proc_count_update, 
 				@I_Ctas_Inserted AS ctas_count_insert, @I_Ctas_Updated AS ctas_count_update,
-				@I_CtaCat_Inserted AS ctas_count_insert, @I_CtaCat_Updated AS ctas_count_update
+				@I_CtaCat_Inserted AS ctas_cat_count_insert, @I_CtaCat_Updated AS ctas_cat_count_update
 
 		COMMIT TRANSACTION;
 
@@ -456,3 +456,152 @@ BEGIN
 	END CATCH
 END
 GO
+
+
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_IU_CopiarTablaConceptoDePago')
+	DROP PROCEDURE [dbo].[USP_IU_CopiarTablaConceptoDePago]
+GO
+
+CREATE PROCEDURE USP_IU_CopiarTablaConceptoDePago	
+	@B_Resultado  bit output,
+	@T_Message	  nvarchar(4000) OUTPUT	
+AS
+--declare @B_Resultado  bit,
+--		@T_Message	  nvarchar(4000)
+--exec USP_IU_CopiarTablaConceptoDePago @B_Resultado output, @T_Message output
+--select @B_Resultado as resultado, @T_Message as mensaje
+BEGIN
+	DECLARE @I_CpPri int = 0
+	DECLARE @I_Removidos int = 0
+	DECLARE @I_Actualizados int = 0
+	DECLARE @I_Insertados int = 0
+	DECLARE @D_FecProceso datetime = GETDATE() 
+
+	DECLARE @Tbl_output AS TABLE 
+	(
+		accion		varchar(20), 
+		ID_CP		float,
+		ELIMINADO	bit,
+		B_Removido	bit,
+		INS_CUOTA_PAGO	float,			INS_OBLIG_MORA	nvarchar(255),	
+		INS_ANO			nvarchar(255), 	INS_P			nvarchar(255),
+		INS_COD_RC		nvarchar(255),	INS_COD_ING		nvarchar(255),
+		INS_TIPO_OBLIG	bit,			INS_CLASIFICAD	nvarchar(255),
+		INS_CLASIFIC_5	nvarchar(255),	INS_ID_CP_AGRP	float,
+		INS_AGRUPA		bit,			INS_NRO_PAGOS	float,
+		INS_ID_CP_AFEC	float,			INS_PORCENTAJE	bit,
+		INS_MONTO		float,			INS_DESCRIPCIO	nvarchar(255),
+		INS_CALCULAR	nvarchar(255),	INS_GRADO		float,
+		INS_TIP_ALUMNO	float,			INS_GRUPO_RC	nvarchar(255),
+		INS_FRACCIONAB	bit,			INS_CONCEPTO_G	bit,
+		INS_DOCUMENTO	nvarchar(255),	INS_MONTO_MIN	nvarchar(255),
+		INS_DESCRIP_L	nvarchar(255),	INS_COD_DEP_PL	nvarchar(255),
+		
+		DEL_CUOTA_PAGO	float, 			DEL_ANO			nvarchar(255),		
+		DEL_P			nvarchar(255),	DEL_COD_RC		nvarchar(255),
+		DEL_COD_ING		nvarchar(255), 	DEL_TIPO_OBLIG	bit,		
+		DEL_CLASIFICAD	nvarchar(255),	DEL_CLASIFIC_5	nvarchar(255),		
+		DEL_ID_CP_AGRP	float,			DEL_AGRUPA		bit,		
+		DEL_NRO_PAGOS	float,			DEL_ID_CP_AFEC	float,
+		DEL_PORCENTAJE	bit,			DEL_MONTO		float,
+		DEL_DESCRIPCIO	nvarchar(255),	DEL_CALCULAR	nvarchar(255),
+		DEL_GRADO		float,			DEL_TIP_ALUMNO	float,
+		DEL_GRUPO_RC	nvarchar(255),	DEL_FRACCIONAB	bit,
+		DEL_CONCEPTO_G	bit,			DEL_DOCUMENTO	nvarchar(255),
+		DEL_MONTO_MIN	nvarchar(255),	DEL_DESCRIP_L	nvarchar(255),
+		DEL_COD_DEP_PL	nvarchar(255),	DEL_OBLIG_MORA	nvarchar(255)
+	)
+
+	BEGIN TRY 
+		
+		MERGE TR_MG_CpPri AS TRG
+		USING cp_pri AS SRC
+		ON	TRG.ID_CP = SRC.ID_CP 
+			AND TRG.ELIMINADO = SRC.ELIMINADO
+		WHEN MATCHED THEN
+			UPDATE SET	TRG.CUOTA_PAGO = SRC.CUOTA_PAGO, TRG.ANO = SRC.ANO, TRG.P = SRC.P,
+						TRG.COD_RC = SRC.COD_RC, TRG.COD_ING = SRC.COD_ING, TRG.TIPO_OBLIG = SRC.TIPO_OBLIG,
+						TRG.CLASIFICAD = SRC.CLASIFICAD, TRG.CLASIFIC_5 = SRC.CLASIFIC_5, 
+						TRG.AGRUPA = SRC.AGRUPA, TRG.NRO_PAGOS = SRC.NRO_PAGOS, TRG.ID_CP_AFEC = SRC.ID_CP_AFEC,
+						TRG.PORCENTAJE = SRC.PORCENTAJE, TRG.MONTO = SRC.MONTO, TRG.ID_CP_AGRP = SRC.ID_CP_AGRP,
+						TRG.DESCRIPCIO = SRC.DESCRIPCIO, TRG.CALCULAR = SRC.CALCULAR, TRG.GRADO = SRC.GRADO,
+						TRG.TIP_ALUMNO = SRC.TIP_ALUMNO, TRG.GRUPO_RC = SRC.GRUPO_RC, TRG.FRACCIONAB = SRC.FRACCIONAB,
+						TRG.CONCEPTO_G = SRC.CONCEPTO_G, TRG.DOCUMENTO = SRC.DOCUMENTO, TRG.MONTO_MIN = SRC.MONTO_MIN,
+						TRG.DESCRIP_L = SRC.DESCRIP_L, TRG.COD_DEP_PL = SRC.COD_DEP_PL, TRG.OBLIG_MORA = SRC.OBLIG_MORA
+		WHEN NOT MATCHED BY TARGET THEN
+			INSERT (ID_CP, CUOTA_PAGO, ANO, P, COD_RC, COD_ING, TIPO_OBLIG, CLASIFICAD, CLASIFIC_5, ID_CP_AGRP, AGRUPA, NRO_PAGOS, ID_CP_AFEC, PORCENTAJE, MONTO, 
+					ELIMINADO, DESCRIPCIO, CALCULAR, GRADO, TIP_ALUMNO, GRUPO_RC, FRACCIONAB, CONCEPTO_G, DOCUMENTO, MONTO_MIN, DESCRIP_L, COD_DEP_PL, OBLIG_MORA,
+					D_FecCarga)
+			VALUES (ID_CP, CUOTA_PAGO, ANO, P, COD_RC, COD_ING, TIPO_OBLIG, CLASIFICAD, CLASIFIC_5, ID_CP_AGRP, AGRUPA, NRO_PAGOS, ID_CP_AFEC, PORCENTAJE, MONTO, 
+					ELIMINADO, DESCRIPCIO, CALCULAR, GRADO, TIP_ALUMNO, GRUPO_RC, FRACCIONAB, CONCEPTO_G, DOCUMENTO, MONTO_MIN, DESCRIP_L, COD_DEP_PL, OBLIG_MORA,
+					@D_FecProceso)
+		WHEN NOT MATCHED BY SOURCE THEN
+			UPDATE SET TRG.B_Removido = 1, 
+					   TRG.D_FecRemovido = @D_FecProceso
+		OUTPUT	$ACTION, inserted.ID_CP, inserted.CUOTA_PAGO, inserted.ANO, inserted.P, inserted.COD_RC, inserted.COD_ING, inserted.TIPO_OBLIG, inserted.CLASIFICAD, 
+				inserted.CLASIFIC_5, inserted.ID_CP_AGRP, inserted.AGRUPA, inserted.NRO_PAGOS, inserted.ID_CP_AFEC, inserted.PORCENTAJE, inserted.MONTO, 
+				inserted.DESCRIPCIO, inserted.CALCULAR, inserted.GRADO, inserted.TIP_ALUMNO, inserted.GRUPO_RC, inserted.FRACCIONAB, inserted.CONCEPTO_G, 
+				inserted.DOCUMENTO, inserted.MONTO_MIN, inserted.DESCRIP_L, inserted.COD_DEP_PL, inserted.OBLIG_MORA, 
+				deleted.CUOTA_PAGO, deleted.ANO, deleted.P, deleted.COD_RC, deleted.COD_ING, deleted.TIPO_OBLIG, deleted.CLASIFICAD, deleted.CLASIFIC_5, 
+				deleted.ID_CP_AGRP, deleted.AGRUPA, deleted.NRO_PAGOS, deleted.ID_CP_AFEC, deleted.PORCENTAJE, deleted.MONTO, deleted.DESCRIPCIO, deleted.CALCULAR, 
+				deleted.GRADO, deleted.TIP_ALUMNO, deleted.GRUPO_RC, deleted.FRACCIONAB, deleted.CONCEPTO_G, deleted.DOCUMENTO, deleted.MONTO_MIN, deleted.DESCRIP_L, 
+				deleted.COD_DEP_PL, deleted.OBLIG_MORA,	deleted.B_Removido INTO @Tbl_output;
+		
+		UPDATE	TR_MG_CpDes 
+				SET	B_Actualizado = 0, B_Migrable = 1, D_FecMigrado = 0, B_Migrado = 0, T_Observacion = NULL,
+					I_Anio = NULL, I_CatPagoID = NULL, I_Periodo = NULL
+
+		UPDATE	t_CpPri
+		SET		t_CpPri.B_Actualizado = 1,
+				t_CpPri.D_FecActualiza = @D_FecProceso
+		FROM TR_MG_CpPri AS t_CpPri
+		INNER JOIN 	@Tbl_output as t_out ON t_out.ID_CP = t_CpPri.ID_CP AND t_out.ELIMINADO = t_CpPri.ELIMINADO 
+					AND t_out.accion = 'UPDATE' AND t_out.B_Removido = 0
+		WHERE 
+				t_out.INS_CUOTA_PAGO <> t_out.DEL_CUOTA_PAGO OR
+				t_out.INS_ANO		 <> t_out.DEL_ANO		 OR
+				t_out.INS_P			 <> t_out.DEL_P			 OR
+				t_out.INS_COD_RC	 <> t_out.DEL_COD_RC	 OR
+				t_out.INS_COD_ING	 <> t_out.DEL_COD_ING	 OR
+				t_out.INS_TIPO_OBLIG <> t_out.DEL_TIPO_OBLIG OR
+				t_out.INS_CLASIFICAD <> t_out.DEL_CLASIFICAD OR
+				t_out.INS_CLASIFIC_5 <> t_out.DEL_CLASIFIC_5 OR
+				t_out.INS_ID_CP_AGRP <> t_out.DEL_ID_CP_AGRP OR
+				t_out.INS_AGRUPA	 <> t_out.DEL_AGRUPA	 OR
+				t_out.INS_NRO_PAGOS	 <> t_out.DEL_NRO_PAGOS	 OR
+				t_out.INS_ID_CP_AFEC <> t_out.DEL_ID_CP_AFEC OR
+				t_out.INS_PORCENTAJE <> t_out.DEL_PORCENTAJE OR
+				t_out.INS_MONTO		 <> t_out.DEL_MONTO		 OR
+				t_out.INS_DESCRIPCIO <> t_out.DEL_DESCRIPCIO OR
+				t_out.INS_CALCULAR	 <> t_out.DEL_CALCULAR	 OR
+				t_out.INS_GRADO		 <> t_out.DEL_GRADO		 OR
+				t_out.INS_TIP_ALUMNO <> t_out.DEL_TIP_ALUMNO OR
+				t_out.INS_GRUPO_RC	 <> t_out.DEL_GRUPO_RC	 OR
+				t_out.INS_FRACCIONAB <> t_out.DEL_FRACCIONAB OR
+				t_out.INS_CONCEPTO_G <> t_out.DEL_CONCEPTO_G OR
+				t_out.INS_DOCUMENTO  <> t_out.DEL_DOCUMENTO  OR
+				t_out.INS_MONTO_MIN  <> t_out.DEL_MONTO_MIN  OR
+				t_out.INS_DESCRIP_L  <> t_out.DEL_DESCRIP_L  OR
+				t_out.INS_COD_DEP_PL <> t_out.DEL_COD_DEP_PL OR
+				t_out.INS_OBLIG_MORA <> t_out.DEL_OBLIG_MORA
+
+
+		SET @I_CpPri = (SELECT COUNT(*) FROM cp_des)
+		SET @I_Insertados = (SELECT COUNT(*) FROM @Tbl_output WHERE accion = 'INSERT')
+		SET @I_Actualizados = (SELECT COUNT(*) FROM @Tbl_output WHERE accion = 'UPDATE' AND B_Removido = 0)
+		SET @I_Removidos = (SELECT COUNT(*) FROM @Tbl_output WHERE accion = 'UPDATE' AND B_Removido = 1)
+
+		SELECT @I_CpPri AS tot_concetoPago, @I_Insertados AS cant_inserted, @I_Actualizados as cant_updated, @I_Removidos as cant_removed, @D_FecProceso as fec_proceso
+		
+		SET @B_Resultado = 1
+		SET @T_Message = 'Ok'
+	END TRY
+	BEGIN CATCH
+		SET @B_Resultado = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+END
+GO
+
