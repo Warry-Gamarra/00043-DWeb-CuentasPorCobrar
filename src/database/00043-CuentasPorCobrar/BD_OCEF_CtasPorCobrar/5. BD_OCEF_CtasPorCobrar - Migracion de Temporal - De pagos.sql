@@ -103,7 +103,7 @@ BEGIN
 
 		SELECT @I_Proc_Inserted AS proc_count_insert, @I_Proc_Updated AS proc_count_update, 
 				@I_Ctas_Inserted AS ctas_count_insert, @I_Ctas_Updated AS ctas_count_update,
-				@I_CtaCat_Inserted AS ctas_count_insert, @I_CtaCat_Updated AS ctas_count_update
+				@I_CtaCat_Inserted AS ctas_cat_count_insert, @I_CtaCat_Updated AS ctas_cat_count_update
 
 		COMMIT TRANSACTION;
 
