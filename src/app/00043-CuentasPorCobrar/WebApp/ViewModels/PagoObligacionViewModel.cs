@@ -54,6 +54,8 @@ namespace WebApp.ViewModels
 
         public TipoPago tipoPago { get { return TipoPago.Obligacion; } }
 
+        public string observacion { get; set; }
+
         public PagoObligacionViewModel()
         {
             anio = DateTime.Now.Year;

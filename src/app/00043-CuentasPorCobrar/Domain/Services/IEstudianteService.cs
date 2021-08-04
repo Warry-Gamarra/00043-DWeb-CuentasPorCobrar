@@ -20,5 +20,7 @@ namespace Domain.Services
         MultaNoVotarResponse GrabarAlumnosConMultaPorVoto(List<AlumnoMultaNoVotarEntity> alumnoMultaNoVotarEntity, int currentUserId);
 
         MatriculaDTO GetMatricula(int anio, int periodo, string codAlu, string codRc);
+
+        string GetNombresCompletos(string codAlu);
     }
 }

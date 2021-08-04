@@ -16,6 +16,7 @@ namespace Domain.Entities
         public string T_NomDepositante { get; set; }
         public string C_Referencia { get; set; }
         public DateTime D_FecPago { get; set; }
+        public DateTime D_FecVencto { get; set; }
         public int I_Cantidad { get; set; }
         public string C_Moneda { get; set; }
         public decimal? I_MontoOblig { get; set; }
@@ -27,5 +28,6 @@ namespace Domain.Entities
         public bool? B_Pagado { get; set; }
         public bool B_Success { get; set; }
         public string T_ErrorMessage { get; set; }
+        public string T_InformacionAdicional { get; set; }
     }
 }

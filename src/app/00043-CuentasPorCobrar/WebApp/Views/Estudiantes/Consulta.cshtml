@@ -1,4 +1,4 @@
-﻿@model IEnumerable<WebApp.ViewModels.MatriculaModel>
+﻿@model IEnumerable<WebApp.ViewModels.EstadoObligacionViewModel>
 @using GridMvc.Html
 
 <div class="container-fluid">
@@ -61,10 +61,10 @@
                         columns.Add(c => c.T_DenomProg).Titled("Especialidad").Filterable(true);
                         columns.Add(c => c.T_EsIngresante).Titled("Tipo alumno").Filterable(true);
                         columns.Add(c => c.I_CredDesaprob).Titled("Créditos desaprobados").Filterable(true).Css("text-center");
-                        if ((Domain.Helpers.TipoEstudio)ViewBag.DefaultTipoEstudio == Domain.Helpers.TipoEstudio.Pregrado)
-                        {
-                            columns.Add(c => c.T_TieneMultaPorNoVotar).Titled("Multa por no votar").Filterable(true).Css("text-center");
-                        }
+                        //if ((Domain.Helpers.TipoEstudio)ViewBag.DefaultTipoEstudio == Domain.Helpers.TipoEstudio.Pregrado)
+                        //{
+                        //    columns.Add(c => c.T_TieneMultaPorNoVotar).Titled("Multa por no votar").Filterable(true).Css("text-center");
+                        //}
                     }).WithPaging(12).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
                 </div>
             </div>

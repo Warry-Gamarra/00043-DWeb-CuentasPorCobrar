@@ -239,5 +239,10 @@ namespace Domain.Services.Implementations
 
             return result;
         }
+
+        public string GetNombresCompletos(string codAlu)
+        {
+            return VW_MatriculaAlumno.GetNombresCompletos(codAlu);
+        }
     }
 }

@@ -24,6 +24,11 @@ namespace Domain.Helpers
         public const string PAYMENT_DATETIME_FORMAT = "yyyyMMddHHmmss";
     }
 
+    public static class FormatosDecimal
+    {
+        public const string BASIC_DECIMAL = "#,0.00";
+    }
+
     public static class ConstantesBCP
     {
         public const string CodExtorno = "E";

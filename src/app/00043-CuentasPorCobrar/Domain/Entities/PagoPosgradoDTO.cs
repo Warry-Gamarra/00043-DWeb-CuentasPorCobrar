@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,13 @@ namespace Domain.Entities
         public string T_EscDesc { get; set; }
         public string C_CodEsc { get; set; }
         public decimal I_MontoTotal { get; set; }
+        public string T_MontoTotal
+        {
+            get
+            {
+                return I_MontoTotal.ToString(FormatosDecimal.BASIC_DECIMAL);
+            }
+        }   
     }
 
     public class PagoPosgradoPorConceptoDTO
@@ -19,6 +27,13 @@ namespace Domain.Entities
         public string C_CodClasificador { get; set; }
         public string T_ConceptoPagoDesc { get; set; }
         public decimal I_MontoTotal { get; set; }
+        public string T_MontoTotal
+        {
+            get
+            {
+                return I_MontoTotal.ToString(FormatosDecimal.BASIC_DECIMAL);
+            }
+        }
     }
 
     public class ConceptoPosgradoPorGradoDTO
@@ -30,5 +45,12 @@ namespace Domain.Entities
         public string T_ConceptoPagoDesc { get; set; }
         public int I_Cantidad { get; set; }
         public decimal I_MontoTotal { get; set; }
+        public string T_MontoTotal
+        {
+            get
+            {
+                return I_MontoTotal.ToString(FormatosDecimal.BASIC_DECIMAL);
+            }
+        }
     }
 }

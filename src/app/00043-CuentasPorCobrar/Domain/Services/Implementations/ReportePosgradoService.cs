@@ -75,5 +75,25 @@ namespace Domain.Services.Implementations
 
             return result;
         }
+
+        public IEnumerable<EstadoObligacionDTO> EstadoObligacionAlumnos(int anio, int? periodo, string codRc, bool? esIngresante, bool? estaPagado, bool? obligacionGenerada)
+        {
+            var pr = new USP_S_ListadoEstadoObligaciones_Parameters()
+            {
+                I_Anio = anio,
+                I_Periodo = periodo,
+                C_RcCod = codRc,
+                B_EsPregrado = false,
+                B_Ingresante = esIngresante,
+                B_Pagado = estaPagado,
+                B_ObligacionGenerada = obligacionGenerada
+            };
+
+            var lista = USP_S_ListadoEstadoObligaciones.Execute(pr);
+
+            var result = lista.Select(x => Mapper.USP_S_ListadoEstadoObligaciones_To_EstadoObligacionDTO(x));
+
+            return result;
+        }
     }
 }

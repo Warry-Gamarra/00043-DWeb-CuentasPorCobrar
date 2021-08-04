@@ -123,7 +123,7 @@ namespace Domain.Services.Implementations
             return result;
         }
 
-        public ImportacionPagoResponse Grabar_Pago_Obligaciones(List<PagoObligacionEntity> dataPagoObligaciones, int currentUserID)
+        public ImportacionPagoResponse Grabar_Pago_Obligaciones(List<PagoObligacionEntity> dataPagoObligaciones, string observacion, int currentUserID)
         {
             ImportacionPagoResponse result;
 
@@ -136,7 +136,7 @@ namespace Domain.Services.Implementations
             {
                 var dataTable = Mapper.PagoObligacionEntity_To_DataTable(dataPagoObligaciones.Where(x => x.B_Correcto).ToList());
 
-                var spResult = grabarPago.Execute(dataTable, currentUserID).ToList();
+                var spResult = grabarPago.Execute(dataTable, observacion, currentUserID).ToList();
 
                 var pagosObservados = dataPagoObligaciones.Where(x => !x.B_Correcto)
                     .Select(x => new DataPagoObligacionesResult() {
@@ -154,7 +154,9 @@ namespace Domain.Services.Implementations
                         I_EntidadFinanID = x.I_EntidadFinanID,
                         I_CtaDepositoID = x.I_CtaDepositoID,
                         B_Success = false,
-                        T_ErrorMessage = x.T_ErrorMessage
+                        T_ErrorMessage = x.T_ErrorMessage,
+                        T_InformacionAdicional = x.T_InformacionAdicional,
+                        D_FecVencto = x.D_FecVencto
                     });
 
                 spResult.AddRange(pagosObservados);

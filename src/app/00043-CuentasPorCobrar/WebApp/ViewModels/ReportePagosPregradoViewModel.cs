@@ -23,6 +23,13 @@ namespace WebApp.ViewModels
                 return listaPagos.Sum(p => p.I_MontoTotal);
             }
         }
+        public string T_MontoTotal
+        {
+            get
+            {
+                return MontoTotal.ToString(FormatosDecimal.BASIC_DECIMAL);
+            }
+        }
         public IEnumerable<PagoPregradoPorFacultadDTO> listaPagos { get; }
 
         public ReportePagosPorFacultadViewModel(IEnumerable<PagoPregradoPorFacultadDTO> listaPagos)
@@ -47,6 +54,13 @@ namespace WebApp.ViewModels
             get
             {
                 return listaPagos.Sum(p => p.I_MontoTotal);
+            }
+        }
+        public string T_MontoTotal
+        {
+            get
+            {
+                return MontoTotal.ToString(FormatosDecimal.BASIC_DECIMAL);
             }
         }
         public IEnumerable<PagoPregradoPorConceptoDTO> listaPagos { get; }
@@ -74,6 +88,13 @@ namespace WebApp.ViewModels
             get
             {
                 return listaPagos.Sum(p => p.I_MontoTotal);
+            }
+        }
+        public string T_MontoTotal
+        {
+            get
+            {
+                return MontoTotal.ToString(FormatosDecimal.BASIC_DECIMAL);
             }
         }
         public IEnumerable<ConceptoPregradoPorFacultadDTO> listaPagos { get; }

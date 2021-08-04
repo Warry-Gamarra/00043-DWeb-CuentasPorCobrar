@@ -25,7 +25,7 @@ namespace WebApp.Models
         {
             var cuotas_pago = _obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(anio, periodo, tipoEstudio, dependencia).Where(x => !x.B_Pagado).ToList();
 
-            //cuotas_pago = cuotas_pago.Where(x => !(x.I_MontoOblig.Value == 125)).ToList();//EXCLUIR A LOS INGRESANTES POR CEPREVI(PROVISIONAL)
+            cuotas_pago = cuotas_pago.Where(x => !(x.I_MontoOblig.Value == 125)).ToList();//EXCLUIR A LOS INGRESANTES POR CEPREVI(PROVISIONAL)
 
             if (cuotas_pago.Count == 0)
             {
@@ -84,8 +84,8 @@ namespace WebApp.Models
                 int montoCupon = (int)((item.I_MontoOblig - item.I_MontoPagadoActual) * 100);
                 string informacionRetorno = item.C_CodRc + item.I_ProcesoID.ToString("D6") + montoCupon.ToString("D15");
                 int montoMora = 0;
-                ///int montoMinimo = (item.C_CodRc == "064") ? 4000 : montoCupon;//MONTO DE 40 PARA LOS DE CONTABILIDAD (PROVISIONAL)
-                int montoMinimo = montoCupon;
+                int montoMinimo = (item.C_CodRc == "064") ? 4000 : montoCupon;//MONTO DE 40 PARA LOS DE CONTABILIDAD (PROVISIONAL)
+                //int montoMinimo = montoCupon;
                 string tipoRegistroActualizacion = "A";//M, E
                 string nroDocumentoPago = "";
                 string nroDocumentoIdentidad = "";

@@ -19,6 +19,7 @@ namespace WebApp.Models
         private IProcesoService procesoService;
         private IObligacionService obligacionService;
         private IPagoService pagoService;
+        private IEstudianteService _estudianteService;
 
         public PagosModel()
         {
@@ -27,6 +28,7 @@ namespace WebApp.Models
             procesoService = new ProcesoService();
             obligacionService = new ObligacionService();
             pagoService = new PagoService();
+            _estudianteService = new EstudianteService();
         }
 
         public ImportacionPagoResponse CargarArchivoPagos(string serverPath, HttpPostedFileBase file, CargarArchivoViewModel model, int currentUserId)
@@ -52,7 +54,7 @@ namespace WebApp.Models
 
                 if (lstPagoObligaciones != null)
                 {
-                    response = _obligacionService.Grabar_Pago_Obligaciones(lstPagoObligaciones, currentUserId);
+                    response = _obligacionService.Grabar_Pago_Obligaciones(lstPagoObligaciones, model.Observacion, currentUserId);
                 }
                 else
                 {
@@ -228,6 +230,11 @@ namespace WebApp.Models
 
                 pagoEntity.C_CodAlu = line.Substring(columnas["C_CodAlu"].Inicial - 1, columnas["C_CodAlu"].Final - columnas["C_CodAlu"].Inicial + 1).Trim();
 
+                if (pagoEntity.T_NomDepositante.Length == 0 && pagoEntity.C_CodAlu.Length > 0)
+                {
+                    pagoEntity.T_NomDepositante = _estudianteService.GetNombresCompletos(pagoEntity.C_CodAlu);
+                }
+
                 pagoEntity.C_CodRc = line.Substring(columnas["C_CodRc"].Inicial - 1, columnas["C_CodRc"].Final - columnas["C_CodRc"].Inicial + 1).Trim();
 
                 try
@@ -262,6 +269,8 @@ namespace WebApp.Models
                     pagoEntity.T_ErrorMessage = "Pago extornado";
                 }
 
+                pagoEntity.T_InformacionAdicional = line.Substring(columnas["T_InformacionAdicional"].Inicial - 1, columnas["T_InformacionAdicional"].Final - columnas["T_InformacionAdicional"].Inicial + 1);
+
                 result.Add(pagoEntity);
             }
 
@@ -290,7 +299,7 @@ namespace WebApp.Models
                     return response;
                 }
 
-                if (pagoService.ValidarCodOperacion(model.codigoOperacion, model.idEntidadFinanciera, model.fechaPago))
+                if (pagoService.ValidarCodOperacion(model.codigoOperacion, model.codigoAlumno, model.idEntidadFinanciera, model.fechaPago))
                 {
                     var entity = Mapper.PagoObligacionViewModel_To_PagoObligacionEntity(model);
 
@@ -304,7 +313,7 @@ namespace WebApp.Models
 
                     lista.Add(entity);
 
-                    response = _obligacionService.Grabar_Pago_Obligaciones(lista, currentUserId);
+                    response = _obligacionService.Grabar_Pago_Obligaciones(lista, model.observacion, currentUserId);
 
                     ResponseModel.Success(response, true);
 

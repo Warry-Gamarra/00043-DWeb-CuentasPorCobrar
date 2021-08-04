@@ -102,6 +102,7 @@ namespace Domain.Entities
                 C_Periodo = matriculaAlumno.C_Periodo,
                 T_Periodo = matriculaAlumno.T_Periodo,
                 T_DenomProg = matriculaAlumno.T_DenomProg,
+                C_CodModIng = matriculaAlumno.C_CodModIng,
                 T_ModIngDesc = matriculaAlumno.T_ModIngDesc,
                 B_TieneMultaPorNoVotar = matriculaAlumno.B_TieneMultaPorNoVotar
             };
@@ -240,6 +241,7 @@ namespace Domain.Entities
             dataTable.Columns.Add("D_FecVencto").DataType = typeof(DateTime);
             dataTable.Columns.Add("I_EntidadFinanID");
             dataTable.Columns.Add("I_CtaDepositoID").AllowDBNull = true;
+            dataTable.Columns.Add("T_InformacionAdicional").AllowDBNull = true;
 
             dataPagoObligaciones.ForEach(x => dataTable.Rows.Add(
                 x.C_CodOperacion,
@@ -256,7 +258,8 @@ namespace Domain.Entities
                 x.I_ProcesoID,
                 x.D_FecVencto,
                 x.I_EntidadFinanID,
-                x.I_CtaDepositoID
+                x.I_CtaDepositoID,
+                x.T_InformacionAdicional
             ));
 
             return dataTable;
@@ -517,6 +520,35 @@ namespace Domain.Entities
                 Octubre = sp.Octubre,
                 Noviembre = sp.Noviembre,
                 Diciembre = sp.Diciembre
+            };
+
+            return result;
+        }
+
+        public static EstadoObligacionDTO USP_S_ListadoEstadoObligaciones_To_EstadoObligacionDTO(USP_S_ListadoEstadoObligaciones sp)
+        {
+            var result = new EstadoObligacionDTO()
+            {
+                I_MatAluID = sp.I_MatAluID,
+                I_ObligacionAluID = sp.I_ObligacionAluID,
+                C_CodAlu = sp.C_CodAlu,
+                C_RcCod = sp.C_RcCod,
+                T_Nombre = sp.T_Nombre,
+                T_ApePaterno = sp.T_ApePaterno,
+                T_ApeMaterno = sp.T_ApeMaterno,
+                N_Grado = sp.N_Grado,
+                T_FacDesc = sp.T_FacDesc,
+                T_EscDesc = sp.T_EscDesc,
+                T_DenomProg = sp.T_DenomProg,
+                B_Ingresante = sp.B_Ingresante,
+                I_CredDesaprob = sp.I_CredDesaprob,
+                I_Anio = sp.I_Anio,
+                T_Periodo = sp.T_Periodo,
+                T_ProcesoDesc = sp.T_ProcesoDesc,
+                I_MontoOblig = sp.I_MontoOblig,
+                D_FecVencto = sp.D_FecVencto,
+                B_Pagado = sp.B_Pagado,
+                I_MontoPagadoActual = sp.I_MontoPagadoActual
             };
 
             return result;

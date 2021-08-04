@@ -78,5 +78,14 @@ namespace WebApp.Models.Facades
 
             return result;
         }
+
+        public IEnumerable<EstadoObligacionViewModel> EstadoObligacionAlumnos(int anio, int? periodo, string codRc, bool? esIngresante, bool? estaPagado, bool? obligacionGenerada)
+        {
+            var lista = reporteService.EstadoObligacionAlumnos(anio, periodo, codRc, esIngresante, estaPagado, obligacionGenerada);
+
+            var result = lista.Select(x => Mapper.EstadoObligacionDTO_To_EstadoObligacionViewModel(x));
+
+            return result;
+        }
     }
 }

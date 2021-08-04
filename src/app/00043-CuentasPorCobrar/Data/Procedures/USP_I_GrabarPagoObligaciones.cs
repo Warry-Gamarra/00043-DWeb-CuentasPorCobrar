@@ -17,7 +17,7 @@ namespace Data.Procedures
         private bool B_Result { get; }
         private string T_Message { get; }
 
-        public IEnumerable<DataPagoObligacionesResult> Execute(DataTable dataTable, int UserID)
+        public IEnumerable<DataPagoObligacionesResult> Execute(DataTable dataTable, string observacion, int UserID)
         {
             IEnumerable<DataPagoObligacionesResult> response;
             DynamicParameters parameters;
@@ -30,6 +30,7 @@ namespace Data.Procedures
                 {
                     parameters = new DynamicParameters();
                     parameters.Add(name: "Tbl_Pagos", value: dataTable.AsTableValuedParameter("dbo.type_dataPago"));
+                    parameters.Add(name: "Observacion", dbType: DbType.String, value: observacion);
                     parameters.Add(name: "D_FecRegistro", dbType: DbType.DateTime, value: DateTime.Now);
                     parameters.Add(name: "UserID", dbType: DbType.Int32, value: UserID);
 
