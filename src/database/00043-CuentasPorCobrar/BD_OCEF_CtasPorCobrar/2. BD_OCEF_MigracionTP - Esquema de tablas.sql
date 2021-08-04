@@ -13,8 +13,16 @@ CREATE TABLE TR_MG_EcPri (
 	ANO				nvarchar(255)  NULL,
 	P				nvarchar(255)  NULL,
 	ELIMINADO		bit  NULL,
+	D_FecCarga		datetime  NULL,
+	B_Actualizado	bit  NOT NULL DEFAULT 0,
+	D_FecActualiza	datetime  NULL,
+	B_Migrable		bit  NOT NULL DEFAULT 0,
+	D_FecEvalua		datetime  NULL,
 	B_Migrado		bit  NOT NULL DEFAULT 0,
-	T_Observacion	nvarchar(1000) NULL
+	D_FecMigrado	datetime  NULL,
+	B_Removido		bit  NOT NULL DEFAULT 0,
+	D_FecRemovido	datetime  NULL,
+	T_Observacion	nvarchar(4000) NULL
 )
 GO
 
@@ -30,8 +38,16 @@ CREATE TABLE dbo.TR_MG_EcObl (
 	FCH_VENC		datetime  NULL,
 	MONTO			float  NULL,
 	PAGADO			bit  NULL,
+	D_FecCarga		datetime  NULL,
+	B_Actualizado	bit  NOT NULL DEFAULT 0,
+	D_FecActualiza	datetime  NULL,
+	B_Migrable		bit  NOT NULL DEFAULT 0,
+	D_FecEvalua		datetime  NULL,
 	B_Migrado		bit  NOT NULL DEFAULT 0,
-	T_Observacion	nvarchar(1000) NULL
+	D_FecMigrado	datetime  NULL,
+	B_Removido		bit  NOT NULL DEFAULT 0,
+	D_FecRemovido	datetime  NULL,
+	T_Observacion	nvarchar(4000) NULL
 )
 GO
 
@@ -62,8 +78,16 @@ CREATE TABLE TR_MG_EcDet (
 	TIPO_PAGO		nvarchar(50)  NULL,
 	NO_BANCO		nvarchar(50)  NULL,
 	COD_DEP			nvarchar(50)  NULL,
+	D_FecCarga		datetime  NULL,
+	B_Actualizado	bit  NOT NULL DEFAULT 0,
+	D_FecActualiza	datetime  NULL,
+	B_Migrable		bit  NOT NULL DEFAULT 0,
+	D_FecEvalua		datetime  NULL,
 	B_Migrado		bit  NOT NULL DEFAULT 0,
-	T_Observacion	nvarchar(1000) NULL
+	D_FecMigrado	datetime  NULL,
+	B_Removido		bit  NOT NULL DEFAULT 0,
+	D_FecRemovido	datetime  NULL,
+	T_Observacion	nvarchar(4000) NULL
 ) 
 GO
 
@@ -78,8 +102,19 @@ CREATE TABLE TR_MG_CpDes(
 	FCH_VENC		datetime  NULL,
 	PRIORIDAD		nvarchar(255)  NULL,
 	C_MORA			nvarchar(255)  NULL,
+	I_CatPagoID		int  NULL, 
+	I_Anio			smallint  NULL,
+	I_Periodo		int	 NULL,
+	D_FecCarga		datetime  NULL,
+	B_Actualizado	bit  NOT NULL DEFAULT 0,
+	D_FecActualiza	datetime  NULL,
+	B_Migrable		bit  NOT NULL DEFAULT 0,
+	D_FecEvalua		datetime  NULL,
 	B_Migrado		bit  NOT NULL DEFAULT 0,
-	T_Observacion	nvarchar(1000) NULL
+	D_FecMigrado	datetime  NULL,
+	B_Removido		bit  NOT NULL DEFAULT 0,
+	D_FecRemovido	datetime  NULL,
+	T_Observacion	nvarchar(4000) NULL
 )
 GO
 
@@ -114,8 +149,24 @@ CREATE TABLE TR_MG_CpPri (
 	DESCRIP_L		nvarchar(255)  NULL,
 	COD_DEP_PL		nvarchar(255)  NULL,
 	OBLIG_MORA		nvarchar(255)  NULL,
+	I_TipAluID		int  NULL,
+	I_TipGradoID	int  NULL,
+	I_TipOblID		int  NULL,
+	I_TipCalcID		int  NULL,
+	I_TipPerID		int  NULL,
+	I_DepID			int  NULL,
+	I_TipGrpRc		int	 NULL,
+	I_CodIngID		int  NULL,
+	D_FecCarga		datetime  NULL,
+	B_Actualizado	bit  NOT NULL DEFAULT 0,
+	D_FecActualiza	datetime  NULL,
+	B_Migrable		bit  NOT NULL DEFAULT 0,
+	D_FecEvalua		datetime  NULL,
 	B_Migrado		bit  NOT NULL DEFAULT 0,
-	T_Observacion	nvarchar(1000) NULL
+	D_FecMigrado	datetime  NULL,
+	B_Removido		bit  NOT NULL DEFAULT 0,
+	D_FecRemovido	datetime  NULL,
+	T_Observacion	nvarchar(4000) NULL
 )
 GO
 

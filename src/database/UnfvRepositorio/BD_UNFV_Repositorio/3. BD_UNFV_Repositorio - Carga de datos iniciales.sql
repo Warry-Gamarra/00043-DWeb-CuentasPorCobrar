@@ -326,6 +326,11 @@ INSERT INTO TC_Escuela (C_CodFac, C_CodEsc, T_EscDesc, B_Habilitado, B_Eliminado
 INSERT INTO TC_Escuela (C_CodFac, C_CodEsc, T_EscDesc, B_Habilitado, B_Eliminado) VALUES ('TM', 'RH', 'TERAPIAS DE REHABILITACION', 1,0)
 INSERT INTO TC_Escuela (C_CodFac, C_CodEsc, T_EscDesc, B_Habilitado, B_Eliminado) VALUES ('TM', 'RI', 'RADIO IMAGEN', 1,0)
 INSERT INTO TC_Escuela (C_CodFac, C_CodEsc, T_EscDesc, B_Habilitado, B_Eliminado) VALUES ('TM', 'SE', 'SEGUNDA ESPECIALIDAD', 1,0)
+
+
+/*Se encuentran en el nuevo TAB_RC 22/07*/
+INSERT INTO TC_Escuela (C_CodFac, C_CodEsc, T_EscDesc, B_Habilitado, B_Eliminado) VALUES ('CN', 'MG', 'MAESTRIA', 1, 0)
+INSERT INTO TC_Escuela (C_CodFac, C_CodEsc, T_EscDesc, B_Habilitado, B_Eliminado) VALUES ('AD', 'MG', 'MAESTRIA', 1, 0)
 GO
 
 
@@ -796,6 +801,35 @@ INSERT INTO TC_Especialidad (C_CodFac, C_CodEsc, C_CodEsp, T_EspDesc, B_Habilita
 INSERT INTO TC_Especialidad (C_CodFac, C_CodEsc, C_CodEsp, T_EspDesc, B_Habilitado, B_Eliminado) VALUES ('TM', 'SE', 'RM', 'RESONANCIA MAGNETICA', 1, 0)
 INSERT INTO TC_Especialidad (C_CodFac, C_CodEsc, C_CodEsp, T_EspDesc, B_Habilitado, B_Eliminado) VALUES ('TM', 'SE', 'TC', 'TOMOGRAFIA COMPUTADA', 1, 0)
 INSERT INTO TC_Especialidad (C_CodFac, C_CodEsc, C_CodEsp, T_EspDesc, B_Habilitado, B_Eliminado) VALUES ('TM', 'SE', 'TM', 'TERAPIA MANUAL ORTOPEDICA', 1, 0)
+
+
+/*Se encuentran en el nuevo TAB_RC 22/07*/
+
+INSERT INTO TC_Especialidad (C_CodFac, C_CodEsc, C_CodEsp, T_EspDesc, B_Habilitado, B_Eliminado) VALUES ('CC', 'MG', 'AI', 'AUDITORIA INTEGRAL', 1, 0)
+INSERT INTO TC_Especialidad (C_CodFac, C_CodEsc, C_CodEsp, T_EspDesc, B_Habilitado, B_Eliminado) VALUES ('AU', 'MG', 'AU', 'ARQUITECTURA Y/O URBANISMO', 1, 0)
+INSERT INTO TC_Especialidad (C_CodFac, C_CodEsc, C_CodEsp, T_EspDesc, B_Habilitado, B_Eliminado) VALUES ('ED', 'ES', 'FC', 'ENSEÑANZA DEL FRANCÉS', 1, 0)
+INSERT INTO TC_Especialidad (C_CodFac, C_CodEsc, C_CodEsp, T_EspDesc, B_Habilitado, B_Eliminado) VALUES ('ED', 'ES', 'IG', 'ENSEÑANZA DEL INGLÉS', 1, 0)
+INSERT INTO TC_Especialidad (C_CodFac, C_CodEsc, C_CodEsp, T_EspDesc, B_Habilitado, B_Eliminado) VALUES ('ED', 'MG', 'AE', 'ADMINISTRACIÓN EDUCATIVA', 1, 0)
+INSERT INTO TC_Especialidad (C_CodFac, C_CodEsc, C_CodEsp, T_EspDesc, B_Habilitado, B_Eliminado) VALUES ('ED', 'MG', 'AU', 'ADMINISTRACION UNIVERSITARIA', 1, 0)
+INSERT INTO TC_Especialidad (C_CodFac, C_CodEsc, C_CodEsp, T_EspDesc, B_Habilitado, B_Eliminado) VALUES ('ED', 'MG', 'AN', 'ANDRAGOGIA', 1, 0)
+INSERT INTO TC_Especialidad (C_CodFac, C_CodEsc, C_CodEsp, T_EspDesc, B_Habilitado, B_Eliminado) VALUES ('CC', 'MG', 'AO', 'AUDITORIA OPERATIVA', 1, 0)
+INSERT INTO TC_Especialidad (C_CodFac, C_CodEsc, C_CodEsp, T_EspDesc, B_Habilitado, B_Eliminado) VALUES ('CN', 'MG', 'BA', 'BIOLOGIA APLICADA', 1, 0)
+INSERT INTO TC_Especialidad (C_CodFac, C_CodEsc, C_CodEsp, T_EspDesc, B_Habilitado, B_Eliminado) VALUES ('DP', 'MG', 'CP', 'CIENCIA POLITICA', 1, 0)
+INSERT INTO TC_Especialidad (C_CodFac, C_CodEsc, C_CodEsp, T_EspDesc, B_Habilitado, B_Eliminado) VALUES ('AD', 'MG', 'CP', 'DESARROLLO ECONOMICO SOCIAL', 1, 0)
+
+INSERT INTO TC_Especialidad (C_CodFac, C_CodEsc, C_CodEsp, T_EspDesc, B_Habilitado, B_Eliminado) VALUES ('AD', 'SE', 'AB', 'ADMINISTRACIÓN PÚBLICA', 1, 0)
+INSERT INTO TC_Especialidad (C_CodFac, C_CodEsc, C_CodEsp, T_EspDesc, B_Habilitado, B_Eliminado) VALUES ('ED', 'SE', 'EF', 'EDUCACIÓN FÍSICA', 1, 0)
+INSERT INTO TC_Especialidad (C_CodFac, C_CodEsc, C_CodEsp, T_EspDesc, B_Habilitado, B_Eliminado) VALUES ('MH', 'SE', 'CR', 'CIRUGÍA PLÁSTICA Y RECONSTRUCTIVA', 1, 0)
+INSERT INTO TC_Especialidad (C_CodFac, C_CodEsc, C_CodEsp, T_EspDesc, B_Habilitado, B_Eliminado) VALUES ('MH', 'SE', 'EY', 'ENFERMERÍA EN GASTROENTEROLOGÍA Y ENDOSCOPÍA GASTROINTESTINAL', 1, 0)
+INSERT INTO TC_Especialidad (C_CodFac, C_CodEsc, C_CodEsp, T_EspDesc, B_Habilitado, B_Eliminado) VALUES ('MH', 'SE', 'HT', 'HEMATOLOGÍA', 1, 0)
+INSERT INTO TC_Especialidad (C_CodFac, C_CodEsc, C_CodEsp, T_EspDesc, B_Habilitado, B_Eliminado) VALUES ('MH', 'SE', 'MO', 'MEDICINA ONCOLÓGICA', 1, 0)
+INSERT INTO TC_Especialidad (C_CodFac, C_CodEsc, C_CodEsp, T_EspDesc, B_Habilitado, B_Eliminado) VALUES ('MH', 'SE', 'OY', 'ORTOPEDIA Y TRAUMATOLOGÍA', 1, 0)
+INSERT INTO TC_Especialidad (C_CodFac, C_CodEsc, C_CodEsp, T_EspDesc, B_Habilitado, B_Eliminado) VALUES ('MH', 'SE', 'GN', 'ADMINISTRACIÓN Y GESTIÓN EMPRESARIAL EN NUTRICIÓN', 1, 0)
+INSERT INTO TC_Especialidad (C_CodFac, C_CodEsc, C_CodEsp, T_EspDesc, B_Habilitado, B_Eliminado) VALUES ('MH', 'SE', 'NN', 'NUTRICIÓN', 1, 0)
+INSERT INTO TC_Especialidad (C_CodFac, C_CodEsc, C_CodEsp, T_EspDesc, B_Habilitado, B_Eliminado) VALUES ('MH', 'SE', 'NL', 'NUTRICIÓN CLÍNICA', 1, 0)
+INSERT INTO TC_Especialidad (C_CodFac, C_CodEsc, C_CodEsp, T_EspDesc, B_Habilitado, B_Eliminado) VALUES ('MH', 'SE', 'NA', 'NUTRICIÓN COMUNITARIA', 1, 0)
+INSERT INTO TC_Especialidad (C_CodFac, C_CodEsc, C_CodEsp, T_EspDesc, B_Habilitado, B_Eliminado) VALUES ('PS', 'SE', 'TX', 'TERAPIA SEXUAL', 1, 0)
+
 GO
 
 
@@ -1334,11 +1368,41 @@ INSERT INTO TI_CarreraProfesional (C_RcCod, C_CodFac, C_CodEsc, C_CodEsp, T_CarP
 INSERT INTO TI_CarreraProfesional (C_RcCod, C_CodFac, C_CodEsc, C_CodEsp, T_CarProfDesc, C_Tipo, I_Duracion, B_Anual, N_Grupo, N_Grado, I_IdAplica, B_Habilitado, B_Eliminado) VALUES ('X29', 'AD', 'SE', 'AP', 'SEG.ESP.-ADMINISTRACIÓN PÚBLICA', '', 0, 0, NULL, '4', 0, 1, 0)
 INSERT INTO TI_CarreraProfesional (C_RcCod, C_CodFac, C_CodEsc, C_CodEsp, T_CarProfDesc, C_Tipo, I_Duracion, B_Anual, N_Grupo, N_Grado, I_IdAplica, B_Habilitado, B_Eliminado) VALUES ('X30', 'MH', 'SE', 'MC', 'SEG ESP.- MED. DE ENFERMED. INFEC Y TROP', 'S', 2, 0, NULL, '4', 0, 1, 0)
 INSERT INTO TI_CarreraProfesional (C_RcCod, C_CodFac, C_CodEsc, C_CodEsp, T_CarProfDesc, C_Tipo, I_Duracion, B_Anual, N_Grupo, N_Grado, I_IdAplica, B_Habilitado, B_Eliminado) VALUES ('153', 'MH', 'SE', 'CN', 'SEG ESP.- CIRUGIA ONCOLOGICA', 'S', 2, 0, NULL, '4', 0, 1, 0)
+
+/*No se encuentran en el nuevo TAB_RC 22/07*/
 INSERT INTO TI_CarreraProfesional (C_RcCod, C_CodFac, C_CodEsc, C_CodEsp, T_CarProfDesc, C_Tipo, I_Duracion, B_Anual, N_Grupo, N_Grado, I_IdAplica, B_Habilitado, B_Eliminado) VALUES ('154', 'MH', 'SE', 'MS', 'SEG ESP.- MED.FISICA Y DE REHABILITACION', 'S', 2, 0, NULL, '4', 0, 1, 0)
 INSERT INTO TI_CarreraProfesional (C_RcCod, C_CodFac, C_CodEsc, C_CodEsp, T_CarProfDesc, C_Tipo, I_Duracion, B_Anual, N_Grupo, N_Grado, I_IdAplica, B_Habilitado, B_Eliminado) VALUES ('155', 'MH', 'SE', 'MA', 'SEG ESP.- MEDICINA ONCOLOGICA', 'S', 2, 0, NULL, '4', 0, 1, 0)
 INSERT INTO TI_CarreraProfesional (C_RcCod, C_CodFac, C_CodEsc, C_CodEsp, T_CarProfDesc, C_Tipo, I_Duracion, B_Anual, N_Grupo, N_Grado, I_IdAplica, B_Habilitado, B_Eliminado) VALUES ('156', 'MH', 'SE', 'OR', 'SEG ESP.- ORTOPEDIA Y TRAUMATOLOGIA', 'S', 2, 0, NULL, '4', 0, 1, 0)
 INSERT INTO TI_CarreraProfesional (C_RcCod, C_CodFac, C_CodEsc, C_CodEsp, T_CarProfDesc, C_Tipo, I_Duracion, B_Anual, N_Grupo, N_Grado, I_IdAplica, B_Habilitado, B_Eliminado) VALUES ('157', 'MH', 'SE', 'HM', 'SEG ESP.- HEMATOLOGIA', 'S', 2, 0, NULL, '4', 0, 1, 0)
 GO
+
+/*Carreras nuevas en el TAB_RC 22/07*/
+INSERT INTO TI_CarreraProfesional (C_RcCod, C_CodFac, C_CodEsc, C_CodEsp, T_CarProfDesc, C_Tipo, I_Duracion, B_Anual, N_Grupo, N_Grado, I_IdAplica, B_Habilitado, B_Eliminado) VALUES ('C28', 'AD', 'SE', 'AB', 'ADMINISTRACIÓN PÚBLICA', 'S', 0, 0, NULL, '4',0, 1, 0)
+INSERT INTO TI_CarreraProfesional (C_RcCod, C_CodFac, C_CodEsc, C_CodEsp, T_CarProfDesc, C_Tipo, I_Duracion, B_Anual, N_Grupo, N_Grado, I_IdAplica, B_Habilitado, B_Eliminado) VALUES ('C29', 'ED', 'SE', 'EF', 'EDUCACIÓN FÍSICA', 'S', 0, 0, NULL, '4',0, 1, 0)
+INSERT INTO TI_CarreraProfesional (C_RcCod, C_CodFac, C_CodEsc, C_CodEsp, T_CarProfDesc, C_Tipo, I_Duracion, B_Anual, N_Grupo, N_Grado, I_IdAplica, B_Habilitado, B_Eliminado) VALUES ('C31', 'MH', 'SE', 'CN', 'CIRUGÍA ONCOLÓGICA', 'A', 0, 0, NULL, '4',0, 1, 0)
+INSERT INTO TI_CarreraProfesional (C_RcCod, C_CodFac, C_CodEsc, C_CodEsp, T_CarProfDesc, C_Tipo, I_Duracion, B_Anual, N_Grupo, N_Grado, I_IdAplica, B_Habilitado, B_Eliminado) VALUES ('C32', 'MH', 'SE', 'CR', 'CIRUGÍA PLÁSTICA Y RECONSTRUCTIVA', 'A', 0, 0, NULL, '4',0, 1, 0)
+INSERT INTO TI_CarreraProfesional (C_RcCod, C_CodFac, C_CodEsc, C_CodEsp, T_CarProfDesc, C_Tipo, I_Duracion, B_Anual, N_Grupo, N_Grado, I_IdAplica, B_Habilitado, B_Eliminado) VALUES ('C33', 'MH', 'SE', 'EY', 'ENFERMERÍA EN GASTROENTEROLOGÍA Y ENDOSC', 'S', 0, 0, NULL, '4',0, 1, 0)
+INSERT INTO TI_CarreraProfesional (C_RcCod, C_CodFac, C_CodEsc, C_CodEsp, T_CarProfDesc, C_Tipo, I_Duracion, B_Anual, N_Grupo, N_Grado, I_IdAplica, B_Habilitado, B_Eliminado) VALUES ('C34', 'MH', 'SE', 'HT', 'HEMATOLOGÍA', 'A', 0, 0, NULL, '4',0, 1, 0)
+INSERT INTO TI_CarreraProfesional (C_RcCod, C_CodFac, C_CodEsc, C_CodEsp, T_CarProfDesc, C_Tipo, I_Duracion, B_Anual, N_Grupo, N_Grado, I_IdAplica, B_Habilitado, B_Eliminado) VALUES ('C35', 'MH', 'SE', 'MO', 'MEDICINA ONCOLÓGICA', 'A', 0, 0, NULL, '4',0, 1, 0)
+INSERT INTO TI_CarreraProfesional (C_RcCod, C_CodFac, C_CodEsc, C_CodEsp, T_CarProfDesc, C_Tipo, I_Duracion, B_Anual, N_Grupo, N_Grado, I_IdAplica, B_Habilitado, B_Eliminado) VALUES ('C36', 'MH', 'SE', 'OY', 'ORTOPEDIA Y TRAUMATOLOGÍA', 'A', 0, 0, NULL, '4',0, 1, 0)
+INSERT INTO TI_CarreraProfesional (C_RcCod, C_CodFac, C_CodEsc, C_CodEsp, T_CarProfDesc, C_Tipo, I_Duracion, B_Anual, N_Grupo, N_Grado, I_IdAplica, B_Habilitado, B_Eliminado) VALUES ('C37', 'MH', 'SE', 'GN', 'ADMIN. Y GEST. EMPRESARIAL EN NUTRICIÓN', 'S', 0, 0, NULL, '4',0, 1, 0)
+INSERT INTO TI_CarreraProfesional (C_RcCod, C_CodFac, C_CodEsc, C_CodEsp, T_CarProfDesc, C_Tipo, I_Duracion, B_Anual, N_Grupo, N_Grado, I_IdAplica, B_Habilitado, B_Eliminado) VALUES ('C38', 'MH', 'SE', 'NN', 'NUTRICIÓN', 'S', 0, 0, NULL, '4',0, 1, 0)
+INSERT INTO TI_CarreraProfesional (C_RcCod, C_CodFac, C_CodEsc, C_CodEsp, T_CarProfDesc, C_Tipo, I_Duracion, B_Anual, N_Grupo, N_Grado, I_IdAplica, B_Habilitado, B_Eliminado) VALUES ('C39', 'MH', 'SE', 'NL', 'NUTRICIÓN CLÍNICA', 'S', 0, 0, NULL, '4',0, 1, 0)
+INSERT INTO TI_CarreraProfesional (C_RcCod, C_CodFac, C_CodEsc, C_CodEsp, T_CarProfDesc, C_Tipo, I_Duracion, B_Anual, N_Grupo, N_Grado, I_IdAplica, B_Habilitado, B_Eliminado) VALUES ('C40', 'MH', 'SE', 'NA', 'NUTRICIÓN COMUNITARIA', 'S', 0, 0, NULL, '4',0, 1, 0)
+INSERT INTO TI_CarreraProfesional (C_RcCod, C_CodFac, C_CodEsc, C_CodEsp, T_CarProfDesc, C_Tipo, I_Duracion, B_Anual, N_Grupo, N_Grado, I_IdAplica, B_Habilitado, B_Eliminado) VALUES ('C41', 'PS', 'SE', 'TX', 'TERAPIA SEXUAL', 'S', 0, 0, NULL, '4',0, 1, 0)
+INSERT INTO TI_CarreraProfesional (C_RcCod, C_CodFac, C_CodEsc, C_CodEsp, T_CarProfDesc, C_Tipo, I_Duracion, B_Anual, N_Grupo, N_Grado, I_IdAplica, B_Habilitado, B_Eliminado) VALUES ('G18', 'CC', 'MG', 'AI', 'MAESTRÍA EN AUDITORÍA INTEGRAL', 'M', 0, 0, NULL, '',0, 1, 0)
+INSERT INTO TI_CarreraProfesional (C_RcCod, C_CodFac, C_CodEsc, C_CodEsp, T_CarProfDesc, C_Tipo, I_Duracion, B_Anual, N_Grupo, N_Grado, I_IdAplica, B_Habilitado, B_Eliminado) VALUES ('G20', 'AU', 'MG', 'AU', 'ARQUITECTURA Y/O URBANISMO', 'M', 0, 0, NULL, '',0, 1, 0)
+INSERT INTO TI_CarreraProfesional (C_RcCod, C_CodFac, C_CodEsc, C_CodEsp, T_CarProfDesc, C_Tipo, I_Duracion, B_Anual, N_Grupo, N_Grado, I_IdAplica, B_Habilitado, B_Eliminado) VALUES ('E07', 'ED', 'ES', 'FC', 'ENSEÑANZA DEL FRANCÉS', 'L', 0, 0, NULL, '',0, 1, 0)
+INSERT INTO TI_CarreraProfesional (C_RcCod, C_CodFac, C_CodEsc, C_CodEsp, T_CarProfDesc, C_Tipo, I_Duracion, B_Anual, N_Grupo, N_Grado, I_IdAplica, B_Habilitado, B_Eliminado) VALUES ('E08', 'ED', 'ES', 'IG', 'ENSEÑANZA DEL INGLÉS', 'L', 0, 0, NULL, '',0, 1, 0)
+INSERT INTO TI_CarreraProfesional (C_RcCod, C_CodFac, C_CodEsc, C_CodEsp, T_CarProfDesc, C_Tipo, I_Duracion, B_Anual, N_Grupo, N_Grado, I_IdAplica, B_Habilitado, B_Eliminado) VALUES ('G21', 'ED', 'MG', 'AE', 'ADMINISTRACIÓN EDUCATIVA', 'M', 0, 0, NULL, '',0, 1, 0)
+INSERT INTO TI_CarreraProfesional (C_RcCod, C_CodFac, C_CodEsc, C_CodEsp, T_CarProfDesc, C_Tipo, I_Duracion, B_Anual, N_Grupo, N_Grado, I_IdAplica, B_Habilitado, B_Eliminado) VALUES ('G22', 'ED', 'MG', 'AU', 'ADMINISTRACION UNIVERSITARIA', 'M', 0, 0, NULL, '',0, 1, 0)
+INSERT INTO TI_CarreraProfesional (C_RcCod, C_CodFac, C_CodEsc, C_CodEsp, T_CarProfDesc, C_Tipo, I_Duracion, B_Anual, N_Grupo, N_Grado, I_IdAplica, B_Habilitado, B_Eliminado) VALUES ('G23', 'ED', 'MG', 'AN', 'ANDRAGOGIA', 'M', 0, 0, NULL, '',0, 1, 0)
+INSERT INTO TI_CarreraProfesional (C_RcCod, C_CodFac, C_CodEsc, C_CodEsp, T_CarProfDesc, C_Tipo, I_Duracion, B_Anual, N_Grupo, N_Grado, I_IdAplica, B_Habilitado, B_Eliminado) VALUES ('G24', 'CC', 'MG', 'AO', 'AUDITORIA OPERATIVA', 'M', 0, 0, NULL, '',0, 1, 0)
+INSERT INTO TI_CarreraProfesional (C_RcCod, C_CodFac, C_CodEsc, C_CodEsp, T_CarProfDesc, C_Tipo, I_Duracion, B_Anual, N_Grupo, N_Grado, I_IdAplica, B_Habilitado, B_Eliminado) VALUES ('G25', 'CN', 'MG', 'BA', 'BIOLOGIA APLICADA', '', 0, 0, NULL, '',0, 1, 0)
+INSERT INTO TI_CarreraProfesional (C_RcCod, C_CodFac, C_CodEsc, C_CodEsp, T_CarProfDesc, C_Tipo, I_Duracion, B_Anual, N_Grupo, N_Grado, I_IdAplica, B_Habilitado, B_Eliminado) VALUES ('G26', 'DP', 'MG', 'CP', 'CIENCIA POLITICA', 'M', 0, 0, NULL, '',0, 1, 0)
+INSERT INTO TI_CarreraProfesional (C_RcCod, C_CodFac, C_CodEsc, C_CodEsp, T_CarProfDesc, C_Tipo, I_Duracion, B_Anual, N_Grupo, N_Grado, I_IdAplica, B_Habilitado, B_Eliminado) VALUES ('G27', 'AD', 'MG', 'CP', 'DESARROLLO ECONOMICO SOCIAL', 'M', 0, 0, NULL, '',0, 1, 0)
+GO
+
 
 
 /*------------------------ Programas pregrado -----------------------------*/
@@ -1485,8 +1549,12 @@ INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_Co
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado,  C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('P140','063','EDUCACIÓN SECUNDARIA ESPECIALIDAD: INGLÉS Y FRANCÉS',NULL,'1','EN EDUCACIÓN', '1','S',0,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado,  C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('P141','150','EDUCACIÓN SECUNDARIA ESPECIALIDAD: FRANCÉS',NULL,'1','EN EDUCACIÓN', '1','S',0,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado,  C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('P142','E02','EDUCACIÓN ESPECIALIDAD: FRANCÉS',NULL,'1','EN EDUCACIÓN', '2','A',0,1,0)
---INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado,  C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('P144','E08','ENSEÑANZA DEL INGLÉS',NULL,'1','EN EDUCACIÓN', '2','A',0,1,0)
---INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado,  C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('P143','E07','ENSEÑANZA DEL FRANCÉS',NULL,'1','EN EDUCACIÓN', '2','A',0,1,0)
+
+/**/
+INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado,  C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('P144','E08','ENSEÑANZA DEL INGLÉS',NULL,'1','EN EDUCACIÓN', '2','A',0,1,0)
+INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado,  C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('P143','E07','ENSEÑANZA DEL FRANCÉS',NULL,'1','EN EDUCACIÓN', '2','A',0,1,0)
+/**/
+
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado,  C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('P145','153','EDUCACIÓN SECUNDARIA ESPECIALIDAD: TÉCNICA COMERCIAL',NULL,'1','EN EDUCACIÓN', '1','S',0,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado,  C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('P146','052','EDUCACIÓN SECUNDARIA ESPECIALIDAD: BIOLOGÍA Y QUÍMICA',NULL,'1','EN EDUCACIÓN', '1','S',0,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado,  C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('P147','056','EDUCACIÓN SECUNDARIA ESPECIALIDAD: HISTORIA Y GEOGRAFIA',NULL,'1','EN EDUCACIÓN', '1','S',0,1,0)
@@ -1604,9 +1672,13 @@ INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_Co
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado,  C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('P259','P65','MAESTRÍA EN INGENIERÍA EN VULNERABILIDAD DEL AMBIENTE URBANO',NULL,'2',' EN INGENIERÍA EN VULNERABILIDAD DEL AMBIENTE URBANO', '1','S',0,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado,  C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('P260','P66','MAESTRÍA EN INGENIERÍA GEOGRÁFICA',NULL,'2',' EN INGENIERÍA GEOGRÁFICA', '1','S',0,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado,  C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('P261','P69','MAESTRÍA EN INGENIERÍA INDUSTRIAL CON MENCIÓN EN GESTIÓN DE LA PRODUCCIÓN',NULL,'2',' EN INGENIERÍA INDUSTRIAL CON MENCIÓN EN GESTIÓN DE LA PRODUCCIÓN', '1','S',0,1,0)
---INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado,  C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('P71','G18','MAESTRÍA EN AUDITORÍA INTEGRAL',NULL,'2','EN AUDITORÍA INTEGRAL', '1','S',0,1,0)
---INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado,  C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('P76','G19','MAESTRÍA EN DERECHO CON MENCIÓN EN ADUANAS',NULL,'2','EN DERECHO CON MENCIÓN EN ADUANAS', '1','S',0,1,0)
---INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado,  C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('P165','G20','MAESTRÍA EN ARQUITECTURA Y/O URBANISMO',NULL,'2','EN ARQUITECTURA Y/O URBANISMO', '1','S',0,1,0)
+
+/**/
+INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado,  C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('P71','M59','MAESTRÍA EN AUDITORÍA INTEGRAL',NULL,'2','EN AUDITORÍA INTEGRAL', '1','S',0,1,0)
+INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado,  C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('P76','P53','MAESTRÍA EN DERECHO CON MENCIÓN EN ADUANAS',NULL,'2','EN DERECHO CON MENCIÓN EN ADUANAS', '1','S',0,1,0)
+INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado,  C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('P165','M01','MAESTRÍA EN ARQUITECTURA Y/O URBANISMO',NULL,'2','EN ARQUITECTURA Y/O URBANISMO', '1','S',0,1,0)
+/**/
+
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado,  C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('P265',NULL,'MAESTRÍA EN INVESTIGACIÓN Y DESARROLLO UNIVERSITARIO',NULL,'2',' EN INVESTIGACIÓN Y DESARROLLO UNIVERSITARIO', '1','S',0,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado,  C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('P266','M71','MAESTRÍA EN INVESTIGACIÓN Y ENSEÑANZA DEL ESPAÑOL',NULL,'2',' EN INVESTIGACIÓN Y ENSEÑANZA DEL ESPAÑOL', '1','S',0,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado,  C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('P267','P04','MAESTRÍA EN LABORATORIO CLÍNICO',NULL,'2',' EN LABORATORIO CLÍNICO', '1','S',0,1,0)
@@ -1615,7 +1687,11 @@ INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_Co
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado,  C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('P270','P06','MAESTRÍA EN MEDICINA COMUNITARIA Y FAMILIAR',NULL,'2',' EN MEDICINA COMUNITARIA Y FAMILIAR', '1','S',0,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado,  C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('P271','P45','MAESTRÍA EN NEGOCIOS INTERNACIONALES',NULL,'2',' EN NEGOCIOS INTERNACIONALES', '1','S',0,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado,  C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('P272','M66','MAESTRÍA EN NEUROCIENCIAS',NULL,'2',' EN NEUROCIENCIAS', '1','S',0,1,0)
---INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado,  C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('P162','G21','MAESTRÍA EN ADMINISTRACIÓN EDUCATIVA',NULL,'2','EN ADMINISTRACIÓN EDUCATIVA', '1','S',0,1,0)
+
+/**/
+INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado,  C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('P162','M51','MAESTRÍA EN ADMINISTRACIÓN EDUCATIVA',NULL,'2','EN ADMINISTRACIÓN EDUCATIVA', '1','S',0,1,0)
+/**/
+
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado,  C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('P274','P29','MAESTRÍA EN PLANIFICACIÓN ECONÓMICA REGIONAL',NULL,'2',' EN PLANIFICACIÓN ECONÓMICA REGIONAL', '1','S',0,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado,  C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('P275',NULL,'MAESTRÍA EN PLANIFICACIÓN EDUCATIVA',NULL,'2',' EN PLANIFICACIÓN EDUCATIVA', '1','S',0,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado,  C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('P276','P11','MAESTRÍA EN POLIDISCIPLINARIA EN ARQUITECTURA Y URBANISMO',NULL,'2',' EN POLIDISCIPLINARIA EN ARQUITECTURA Y URBANISMO', '1','S',0,1,0)
@@ -1647,7 +1723,11 @@ INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_Co
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado,  C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('P302','P13','DOCTORADO EN MEDICINA',NULL,'3','EN MEDICINA', '1','S',0,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado,  C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('P303',NULL,'DOCTORADO EN INGENIERÍA CON MENCIÓN EN INGENIERÍA DE LA CONSTRUCCIÓN',NULL,'3','EN INGENIERÍA CON MENCIÓN EN INGENIERÍA DE LA CONSTRUCCIÓN', '1','S',0,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado,  C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('P304','D16','DOCTORADO EN INGENIERÍA CON MENCIÓN EN INGENIERÍA DE SISTEMAS',NULL,'3','EN INGENIERÍA CON MENCIÓN EN INGENIERÍA DE SISTEMAS', '1','S',0,1,0)
---INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado,  C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('P219','G27','MAESTRÍA EN DESARROLLO ECONÓMICO SOCIAL',NULL,'2','EN DESARROLLO ECONÓMICO SOCIAL', '1','S',0,1,0)
+
+/**/
+INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado,  C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('P219','G27','MAESTRÍA EN DESARROLLO ECONÓMICO SOCIAL',NULL,'2','EN DESARROLLO ECONÓMICO SOCIAL', '1','S',0,1,0)
+/**/
+
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado,  C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('P306',NULL,'DOCTORADO EN CIENCIAS ADMINISTRATIVAS',NULL,'3','EN CIENCIAS ADMINISTRATIVAS', '1','S',0,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado,  C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('P307','D23','DOCTORADO EN ENSAYO LATINOAMERICANO',NULL,'3','EN ENSAYO LATINOAMERICANO', '1','S',0,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado,  C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('P308','D27','DOCTORADO EN INGENIERÍA GEOGRÁFICA',NULL,'3','EN INGENIERÍA GEOGRÁFICA', '1','S',0,1,0)
@@ -1679,7 +1759,11 @@ INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_Co
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG19','C19','TRIBUTACIÓN','RR. N.° 8364-2015-UNFV', NULL, NULL, NULL,'S',1,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG20','X02','CONSERVACIÓN Y RESTAURACIÓN DE MONUMENTOS HISTÓRICOS Y ARTÍSTICOS','R.R.N°6463-2019-CU-UNFV', NULL, NULL, NULL,'S',1,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG21','C27','ACUICULTURA Y GERENCIAMIENTO','R.R.N°6084-2019-CU-UNFV', NULL, NULL, NULL,'S',1,1,0)
---INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG22','C28','ADMINISTRACIÓN PÚBLICA','RCR. N.° 6399-2014-CU-UNFV', NULL, NULL, NULL,'S',1,1,0)
+
+/**/
+INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG22','C28','ADMINISTRACIÓN PÚBLICA','RCR. N.° 6399-2014-CU-UNFV', NULL, NULL, NULL,'S',1,1,0)
+/**/
+
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG23','S35','ORDENACIÓN DEL TERRITORIO Y MEDIO AMBIENTE','R.R.N°6463-2019-CU-UNFV', NULL, NULL, NULL,'S',1,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG24','C02','ESTADÍSTICA E INVESTIGACIÓN CIENTÍFICA','R.N°0904-2014-ANR', NULL, NULL, NULL,'S',1,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG25','P97','NEUROPSICOLOGÍA','RR. N° 0189-2012-ANR', NULL, NULL, NULL,'S',1,1,0)
@@ -1699,9 +1783,17 @@ INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_Co
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG39','S05','CIRUGÍA DE CABEZA Y CUELLO','R.R.N°5897-2019-CU-UNFV', NULL, NULL, NULL,'A',1,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG40','S10','CIRUGÍA DE TÓRAX Y CARDIOVASCULAR','R.R.N°5897-2019-CU-UNFV', NULL, NULL, NULL,'A',1,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG41','S06','CIRUGÍA GENERAL','R.R.N°5897-2019-CU-UNFV', NULL, NULL, NULL,'A',1,1,0)
---INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG42','C31','CIRUGÍA ONCOLÓGICA','R.R.N°6024-2019-CU-UNFV', NULL, NULL, NULL,'A',1,1,0)
+
+/**/
+INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG42','C31','CIRUGÍA ONCOLÓGICA','R.R.N°6024-2019-CU-UNFV', NULL, NULL, NULL,'A',1,1,0)
+/**/
+
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG43','S09','CIRUGÍA PEDIÁTRICA','R.R.N°5897-2019-CU-UNFV', NULL, NULL, NULL,'A',1,1,0)
---INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG44','C32','CIRUGÍA PLÁSTICA Y RECONSTRUCTIVA','R.R.N°6024-2019-CU-UNFV', NULL, NULL, NULL,'A',1,1,0)
+
+/**/
+INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG44','C32','CIRUGÍA PLÁSTICA Y RECONSTRUCTIVA','R.R.N°6024-2019-CU-UNFV', NULL, NULL, NULL,'A',1,1,0)
+/**/
+
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG45','S11','DERMATOLOGÍA','R.R.N°5897-2019-CU-UNFV', NULL, NULL, NULL,'A',1,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG46','S12','ENDOCRINOLOGÍA','R.R.N°5897-2019-CU-UNFV', NULL, NULL, NULL,'A',1,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG47','S41','ENDOCRINOLOGÍA PEDIÁTRICA','R.R.N°6463-2019-CU-UNFV', NULL, NULL, NULL,'A',1,1,0)
@@ -1710,7 +1802,11 @@ INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_Co
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG50','S48','ENFERMERÍA EN CENTRO QUIRÚRGICO','R.R.N°6463-2019-CU-UNFV', NULL, NULL, NULL,'S',1,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG51','S49','ENFERMERÍA EN CUIDADOS INTENSIVOS','R.R.N°6463-2019-CU-UNFV', NULL, NULL, NULL,'S',1,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG52','S51','ENFERMERÍA EN EMERGENCIAS Y DESASTRES','R.R.N°6463-2019-CU-UNFV', NULL, NULL, NULL,'S',1,1,0)
---INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG53','C33','ENFERMERÍA EN GASTROENTEROLOGÍA Y ENDOSCOPÍA GASTROINTESTINAL','R.R.N°6463-2019-CU-UNFV', NULL, NULL, NULL,'S',1,1,0)
+
+/**/
+INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG53','C33','ENFERMERÍA EN GASTROENTEROLOGÍA Y ENDOSCOPÍA GASTROINTESTINAL','R.R.N°6463-2019-CU-UNFV', NULL, NULL, NULL,'S',1,1,0)
+/**/
+
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG54','S52','ENFERMERÍA EN GERIATRÍA Y GERONTOLOGÍA','R.R.N°6463-2019-CU-UNFV', NULL, NULL, NULL,'S',1,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG55','P76','ENFERMERÍA EN NEFROLOGÍA','R.R.N°6463-2019-CU-UNFV', NULL, NULL, NULL,'S',1,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG56','S53','ENFERMERÍA EN NEONATOLOGÍA','R.R.N°6463-2019-CU-UNFV', NULL, NULL, NULL,'S',1,1,0)
@@ -1722,7 +1818,11 @@ INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_Co
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG62','S37','GASTROENTEROLOGÍA PEDIÁTRICA','R.R.N°6463-2019-CU-UNFV', NULL, NULL, NULL,'A',1,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG63','S14','GERIATRÍA','R.R.N°5897-2019-CU-UNFV', NULL, NULL, NULL,'A',1,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG64','S15','GINECOLOGÍA Y OBSTETRICIA','R.R.N°5897-2019-CU-UNFV', NULL, NULL, NULL,'A',1,1,0)
---INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG65','C34','HEMATOLOGÍA','R.R.N°6024-2019-CU-UNFV', NULL, NULL, NULL,'A',1,1,0)
+
+/**/
+INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG65','C34','HEMATOLOGÍA','R.R.N°6024-2019-CU-UNFV', NULL, NULL, NULL,'A',1,1,0)
+/**/
+
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG66','S43','MEDICINA DE EMERGENCIAS Y DESASTRES','R.R.N°6463-2019-CU-UNFV', NULL, NULL, NULL,'A',1,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG67','S44','MEDICINA FAMILIAR Y COMUNITARIA','R.R.N°6463-2019-CU-UNFV', NULL, NULL, NULL,'A',1,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG68','S17','MEDICINA FÍSICA Y  DE REHABILITACIÓN','R.R.N°6024-2019-CU-UNFV', NULL, NULL, NULL,'A',1,1,0)
@@ -1738,7 +1838,11 @@ INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_Co
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG78','S23','NEUROLOGÍA','R.R.N°5897-2019-CU-UNFV', NULL, NULL, NULL,'A',1,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG79','C26','NEUROLOGÍA PEDIÁTRICA','R.R.N°6463-2019-CU-UNFV', NULL, NULL, NULL,'A',1,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG80','S26','OFTALMOLOGÍA','R.R.N°5897-2019-CU-UNFV', NULL, NULL, NULL,'A',1,1,0)
---INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG81','C35','MEDICINA ONCOLÓGICA','R.R.N°6024-2019-CU-UNFV', NULL, NULL, NULL,'A',1,1,0)
+
+/**/
+INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG81','C35','MEDICINA ONCOLÓGICA','R.R.N°6024-2019-CU-UNFV', NULL, NULL, NULL,'A',1,1,0)
+/**/
+
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG82','S28','OTORRINOLARINGOLOGÍA','R.R.N°5897-2019-CU-UNFV', NULL, NULL, NULL,'A',1,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG83','S29','PATOLOGÍA CLÍNICA','R.R.N°5897-2019-CU-UNFV', NULL, NULL, NULL,'A',1,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG84','S30','PEDIATRÍA','R.R.N°5897-2019-CU-UNFV', NULL, NULL, NULL,'A',1,1,0)
@@ -1746,7 +1850,11 @@ INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_Co
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG86','S98','PSIQUIATRÍA DEL NIÑO Y DEL ADOLESCENTE','R.R.N°6463-2019-CU-UNFV', NULL, NULL, NULL,'A',1,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG87','S32','RADIOLOGÍA','R.R.N°6463-2019-CU-UNFV', NULL, NULL, NULL,'A',1,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG88','S42','REUMATOLOGÍA','R.R.N°6463-2019-CU-UNFV', NULL, NULL, NULL,'A',1,1,0)
---INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG89','C36','ORTOPEDIA Y TRAUMATOLOGÍA','R.R.N°6024-2019-CU-UNFV', NULL, NULL, NULL,'A',1,1,0)
+
+/**/
+INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG89','C36','ORTOPEDIA Y TRAUMATOLOGÍA','R.R.N°6024-2019-CU-UNFV', NULL, NULL, NULL,'A',1,1,0)
+/**/
+
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG90','S34','UROLOGÍA','R.R.N°5897-2019-CU-UNFV', NULL, NULL, NULL,'A',1,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG91','P75','BIOQUÍMICA CLÍNICA','R.R.N°6463-2019-CU-UNFV', NULL, NULL, NULL,'S',1,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG92','C18','CITOLOGÍA','R.R.N°6463-2019-CU-UNFV', NULL, NULL, NULL,'S',1,1,0)
@@ -1765,7 +1873,11 @@ INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_Co
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG105','P90','ATENCIÓN TEMPRANA','R.R.N°6463-2019-CU-UNFV', NULL, NULL, NULL,'S',1,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG106','C06','DIAGNÓSTICO Y TRATAMIENTO DE PROBLEMAS DE APRENDIZAJE','R.R.N°6463-2019-CU-UNFV', NULL, NULL, NULL,'S',1,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG107','C14','DIDÁCTICA DE LAS CIENCIAS SOCIALES','R.R.N°6463-2019-CU-UNFV', NULL, NULL, NULL,'S',1,1,0)
---INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG108','C29','EDUCACIÓN FÍSICA','R.R N° 8796-2015-CU-UNFV', NULL, NULL, NULL,'S',1,1,0)
+
+/**/
+INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG108','C29','EDUCACIÓN FÍSICA','R.R N° 8796-2015-CU-UNFV', NULL, NULL, NULL,'S',1,1,0)
+/**/
+
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG109','P89','EDUCACIÓN INCLUSIVA','R.R.N°6463-2019-CU-UNFV', NULL, NULL, NULL,'S',1,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG110','P93','EDUCACIÓN INICIAL','R.R.N°6463-2019-CU-UNFV', NULL, NULL, NULL,'S',1,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG111','P96','EDUCACIÓN PARA EL TRABAJO Y DESARROLLO TECNOLÓGICO','R.R.N°6463-2019-CU-UNFV', NULL, NULL, NULL,'S',1,1,0)
@@ -1783,14 +1895,22 @@ INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_Co
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG123','S92','PSICOTERAPIA HUMANISTA','R.0224-2014-ANR', NULL, NULL, NULL,'S',1,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG124','S71','RETARDO EN EL DESARROLLO','R.R.N°6463-2019-CU-UNFV', NULL, NULL, NULL,'S',1,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG125','C08','SALUD SEXUAL Y GENERO','R.N°0904-2014-ANR', NULL, NULL, NULL,'S',1,1,0)
---INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG126','C41','TERAPIA SEXUAL','R.R.N°6463-2019-CU-UNFV', NULL, NULL, NULL,'S',1,1,0)
+
+/**/
+INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG126','C41','TERAPIA SEXUAL','R.R.N°6463-2019-CU-UNFV', NULL, NULL, NULL,'S',1,1,0)
+/**/
+
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG127','S59','CARIELOGÍA Y ENDODONCIA','R.R. 5833-2019-CU-UNFV', NULL, NULL, NULL,'S',1,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG128','S45','CIRUGÍA BUCAL MAXILO FACIAL','R.R. 5833-2019-CU-UNFV', NULL, NULL, NULL,'S',1,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG129','S69','ESTOMATOLOGÍA DE PACIENTES ESPECIALES','R.R. 5833-2019-CU-UNFV', NULL, NULL, NULL,'S',1,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG130','S61','MEDICINA Y PATOLOGÍA ESTOMATOLÓGICA','R.R. 5833-2019-CU-UNFV', NULL, NULL, NULL,'S',1,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG131','S64','PERIODONCIA','R.R. 5833-2019-CU-UNFV', NULL, NULL, NULL,'S',1,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG132','S65','RADIOLOGÍA BUCAL MAXILO FACIAL','R.R. 5833-2019-CU-UNFV', NULL, NULL, NULL,'S',1,1,0)
---INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG133','C37','ADMINISTRACIÓN Y GESTIÓN EMPRESARIAL EN NUTRICIÓN','R.0224-2014-ANR', NULL, NULL, NULL,'S',1,1,0)
+
+/**/
+INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG133','C37','ADMINISTRACIÓN Y GESTIÓN EMPRESARIAL EN NUTRICIÓN','R.0224-2014-ANR', NULL, NULL, NULL,'S',1,1,0)
+/**/
+
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG134','S55','ENFERMERÍA EN SALUD DE LA MUJER','R.R.N°6463-2019-CU-UNFV', NULL, NULL, NULL,'S',1,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG135','S18','MEDICINA GENERAL INTEGRAL','R.R.N°5897-2019-CU-UNFV', NULL, NULL, NULL,'A',1,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG136','C11','MEDICINA GENERAL Y ONCOLÓGICA','R.R.N°6463-2019-CU-UNFV', NULL, NULL, NULL,'A',1,1,0)
@@ -1798,9 +1918,13 @@ INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_Co
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG138','C10','ONCOLOGÍA PEDIÁTRICA','R.R.N°6463-2019-CU-UNFV', NULL, NULL, NULL,'A',1,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG139','S40','RADIOTERAPIA','R.R.N°6463-2019-CU-UNFV', NULL, NULL, NULL,'A',1,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG140','C09','UROLOGÍA GENERAL Y ONCOLÓGICA','R.R.N°6463-2019-CU-UNFV', NULL, NULL, NULL,'A',1,1,0)
---INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG141','C38','NUTRICIÓN','R.0224-2014-ANR', NULL, NULL, NULL,'S',1,1,0)
---INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG142','C39','NUTRICIÓN CLÍNICA','R.0224-2014-ANR', NULL, NULL, NULL,'S',1,1,0)
---INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG143','C40','NUTRICIÓN COMUNITARIA','R.0224-2014-ANR', NULL, NULL, NULL,'S',1,1,0)
+
+/**/
+INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG141','C38','NUTRICIÓN','R.0224-2014-ANR', NULL, NULL, NULL,'S',1,1,0)
+INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG142','C39','NUTRICIÓN CLÍNICA','R.0224-2014-ANR', NULL, NULL, NULL,'S',1,1,0)
+INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG143','C40','NUTRICIÓN COMUNITARIA','R.0224-2014-ANR', NULL, NULL, NULL,'S',1,1,0)
+/**/
+
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG144','S89','ALERGIA E INMUNOLOGIA','R.R. N° 1482-2005-UNFV', NULL, NULL, NULL,'A',1,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG145','S08','CIRUGIA GENERAL Y ONCOLOGICA','R C.R. N°1252-93-UNFV', NULL, NULL, NULL,'A',1,1,0)
 INSERT INTO TC_ProgramaUnfv (C_CodProg, C_RcCod, T_DenomProg, T_Resolucion, C_CodGrado, T_DenomGrado, C_CodModEst, C_CodRegimenEst, B_SegundaEsp, B_Habilitado, B_Eliminado) VALUES ('SEG146','S07','CIRUGIA PLASTICA','R.R. N°4043-88-UNFV', NULL, NULL, NULL,'A',1,1,0)
