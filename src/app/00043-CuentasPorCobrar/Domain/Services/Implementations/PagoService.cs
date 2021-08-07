@@ -56,11 +56,12 @@ namespace Domain.Services.Implementations
         }
 
 
-        public bool ValidarCodOperacion(string C_CodOperacion, int I_EntidadFinanID, DateTime? D_FecPago)
+        public bool ValidarCodOperacion(string C_CodOperacion, string C_CodDepositante, int I_EntidadFinanID, DateTime? D_FecPago)
         {
             var spParams = new USP_S_ValidarCodOperacion()
             {
                 C_CodOperacion = C_CodOperacion,
+                C_CodDepositante = C_CodDepositante,
                 I_EntidadFinanID = I_EntidadFinanID,
                 D_FecPago = D_FecPago
             };

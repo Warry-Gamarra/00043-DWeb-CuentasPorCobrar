@@ -54,6 +54,8 @@ namespace Data.Views
 
         public string T_DenomProg { get; set; }
 
+        public string C_CodModIng { get; set; }
+
         public string T_ModIngDesc { get; set; }
 
         public bool B_TieneMultaPorNoVotar { get; set; }
@@ -116,6 +118,29 @@ namespace Data.Views
             catch (Exception ex)
             {
                 throw ex;
+            }
+
+            return result;
+        }
+
+        public static string GetNombresCompletos(string codAlu)
+        {
+            string result;
+            VW_MatriculaAlumno view;
+            try
+            {
+                string s_command = @"SELECT TOP 1 m.* FROM dbo.VW_MatriculaAlumno m WHERE m.C_CodAlu = @C_CodAlu";
+
+                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
+                {
+                    view = _dbConnection.QueryFirstOrDefault<VW_MatriculaAlumno>(s_command, new { C_CodAlu = codAlu }, commandType: CommandType.Text);
+                }
+
+                result = String.Format("{0} {1}, {2}", view.T_ApePaterno ?? "", view.T_ApeMaterno ?? "", view.T_Nombre ?? "").Trim();
+            }
+            catch (Exception ex)
+            {
+                return "";
             }
 
             return result;

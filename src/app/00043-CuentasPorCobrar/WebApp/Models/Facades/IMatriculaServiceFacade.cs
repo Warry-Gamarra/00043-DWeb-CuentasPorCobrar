@@ -9,8 +9,8 @@ namespace WebApp.Models.Facades
 {
     public interface IMatriculaServiceFacade
     {
-        MatriculaModel GetMatricula(int anio, int periodo, string codAlu, string codRc);
-
         IEnumerable<MatriculaModel> GetMatriculas(int anio, int periodo, TipoEstudio tipoEstudio);
+
+        string GetNombresCompletos(string codAlu);
     }
 }

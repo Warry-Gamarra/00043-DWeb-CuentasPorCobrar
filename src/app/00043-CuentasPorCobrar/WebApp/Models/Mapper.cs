@@ -48,9 +48,6 @@ namespace WebApp.Models
                 B_Pagado = obligacionDetalleDTO.B_Pagado,
                 D_FecVencto = obligacionDetalleDTO.D_FecVencto,
                 I_Prioridad = obligacionDetalleDTO.I_Prioridad,
-                C_CodOperacion = obligacionDetalleDTO.C_CodOperacion,
-                D_FecPago = obligacionDetalleDTO.D_FecPago,
-                T_LugarPago = obligacionDetalleDTO.T_LugarPago,
                 C_Moneda = obligacionDetalleDTO.C_Moneda,
                 I_TipoObligacion = obligacionDetalleDTO.I_TipoObligacion,
                 I_Nivel = obligacionDetalleDTO.I_Nivel,
@@ -58,9 +55,7 @@ namespace WebApp.Models
                 T_Nivel = obligacionDetalleDTO.T_Nivel,
                 I_TipoAlumno = obligacionDetalleDTO.I_TipoAlumno,
                 C_TipoAlumno = obligacionDetalleDTO.C_TipoAlumno,
-                T_TipoAlumno = obligacionDetalleDTO.T_TipoAlumno,
-                C_NumeroCuenta = obligacionDetalleDTO.C_NumeroCuenta,
-                T_EntidadDesc = obligacionDetalleDTO.T_EntidadDesc
+                T_TipoAlumno = obligacionDetalleDTO.T_TipoAlumno
             };
 
             return obligacionDetalleModel;
@@ -92,14 +87,10 @@ namespace WebApp.Models
                 C_Nivel = cuotaPagoDTO.C_Nivel,
                 C_TipoAlumno = cuotaPagoDTO.C_TipoAlumno,
                 I_MontoOblig = cuotaPagoDTO.I_MontoOblig,
+                I_MontoPagadoActual = cuotaPagoDTO.I_MontoPagadoActual,
                 B_Pagado = cuotaPagoDTO.B_Pagado,
-                C_CodOperacion = cuotaPagoDTO.C_CodOperacion,
-                D_FecPago = cuotaPagoDTO.D_FecPago,
-                T_LugarPago = cuotaPagoDTO.T_LugarPago,
                 D_FecCre = cuotaPagoDTO.D_FecCre,
                 C_CodServicio = cuotaPagoDTO.C_CodServicio,
-                C_NumeroCuenta = cuotaPagoDTO.C_NumeroCuenta,
-                T_EntidadDesc = cuotaPagoDTO.T_EntidadDesc,
                 T_FacDesc = cuotaPagoDTO.T_FacDesc,
                 T_DenomProg = cuotaPagoDTO.T_DenomProg
             };
@@ -279,6 +270,7 @@ namespace WebApp.Models
                 C_Periodo = matriculaDTO.C_Periodo,
                 T_Periodo = matriculaDTO.T_Periodo,
                 T_DenomProg = matriculaDTO.T_DenomProg,
+                C_CodModIng = matriculaDTO.C_CodModIng,
                 T_ModIngDesc = matriculaDTO.T_ModIngDesc,
                 B_TieneMultaPorNoVotar = matriculaDTO.B_TieneMultaPorNoVotar
             };
@@ -315,6 +307,35 @@ namespace WebApp.Models
                 FileName = dto.T_NomArchivo,
                 UrlFile = dto.T_UrlArchivo,
                 FecCarga = dto.D_FecCre.Value
+            };
+
+            return result;
+        }
+
+        public static EstadoObligacionViewModel EstadoObligacionDTO_To_EstadoObligacionViewModel(EstadoObligacionDTO dto)
+        {
+            var result = new EstadoObligacionViewModel()
+            {
+                I_MatAluID = dto.I_MatAluID,
+                I_ObligacionAluID = dto.I_ObligacionAluID,
+                C_CodAlu = dto.C_CodAlu,
+                C_RcCod = dto.C_RcCod,
+                T_Nombre = dto.T_Nombre,
+                T_ApePaterno = dto.T_ApePaterno,
+                T_ApeMaterno = dto.T_ApeMaterno,
+                N_Grado = dto.N_Grado,
+                T_FacDesc = dto.T_FacDesc,
+                T_EscDesc = dto.T_EscDesc,
+                T_DenomProg = dto.T_DenomProg,
+                B_Ingresante = dto.B_Ingresante,
+                I_CredDesaprob = dto.I_CredDesaprob,
+                I_Anio = dto.I_Anio,
+                T_Periodo = dto.T_Periodo,
+                T_ProcesoDesc = dto.T_ProcesoDesc,
+                I_MontoOblig = dto.I_MontoOblig,
+                D_FecVencto = dto.D_FecVencto,
+                B_Pagado = dto.B_Pagado,
+                I_MontoPagadoActual = dto.I_MontoPagadoActual
             };
 
             return result;

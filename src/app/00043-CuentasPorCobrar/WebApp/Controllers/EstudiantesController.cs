@@ -23,6 +23,9 @@ namespace WebApp.Controllers
         IProgramasClientFacade programasClientFacade;
         IMatriculaServiceFacade matriculaServiceFacade;
 
+        IReportePregradoServiceFacade reportePregradoServiceFacade;
+        IReportePosgradoServiceFacade reportePosgradoServiceFacade;
+
         public EstudiantesController()
         {
             _seleccionarArchivoModel = new EstudianteModel();
@@ -30,6 +33,9 @@ namespace WebApp.Controllers
             catalogoServiceFacade = new CatalogoServiceFacade();
             programasClientFacade = new ProgramasClientFacade();
             matriculaServiceFacade = new MatriculaServiceFacade();
+
+            reportePregradoServiceFacade = new ReportePregradoServiceFacade();
+            reportePosgradoServiceFacade = new ReportePosgradoServiceFacade();
         }
 
         [Route("operaciones/cargar-estudiantes")]
@@ -195,28 +201,34 @@ namespace WebApp.Controllers
             ViewBag.DefaultDependencia = dependencia;
             ViewBag.CodigoAlumno = codAlumno;
 
-            IEnumerable<MatriculaModel> consultaMatricula;
+            IEnumerable<EstadoObligacionViewModel> consultaObligaciones;
 
-            if (anio.HasValue && periodo.HasValue)
-                consultaMatricula = matriculaServiceFacade.GetMatriculas(anio.Value, periodo.Value, tipoEstudio);
-            else
-                consultaMatricula = new List<MatriculaModel>();
-
-            if (!String.IsNullOrEmpty(dependencia) && !String.IsNullOrWhiteSpace(dependencia))
+            if (anio.HasValue)
             {
-                if (tipoEstudio.Equals(TipoEstudio.Pregrado))
-                    consultaMatricula = consultaMatricula.Where(m => m.C_CodFac.Equals(dependencia));
-                
-                if (tipoEstudio.Equals(TipoEstudio.Posgrado))
-                    consultaMatricula = consultaMatricula.Where(m => m.C_CodEsc.Equals(dependencia));
+                switch (tipoEstudio)
+                {
+                    case TipoEstudio.Pregrado:
+                        consultaObligaciones = reportePregradoServiceFacade.EstadoObligacionAlumnos(anio.Value, periodo, null, null, null, null);
+                        break;
+                    case TipoEstudio.Posgrado:
+                        consultaObligaciones = reportePosgradoServiceFacade.EstadoObligacionAlumnos(anio.Value, periodo, null, null, null, null);
+                        break;
+                    default:
+                        consultaObligaciones = new List<EstadoObligacionViewModel>();
+                        break;
+                }
+            }
+            else
+            {
+                consultaObligaciones = new List<EstadoObligacionViewModel>();
             }
 
             if (!String.IsNullOrEmpty(codAlumno) && !String.IsNullOrWhiteSpace(codAlumno))
             {
-                consultaMatricula = consultaMatricula.Where(m => m.C_CodAlu.Equals(codAlumno));
+                consultaObligaciones = consultaObligaciones.Where(m => m.C_CodAlu.Equals(codAlumno));
             }
 
-            return View("Consulta", consultaMatricula);
+            return View("Consulta", consultaObligaciones);
         }
     }
 }

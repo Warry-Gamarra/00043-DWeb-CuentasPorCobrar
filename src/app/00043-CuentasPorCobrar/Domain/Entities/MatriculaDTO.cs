@@ -50,6 +50,8 @@ namespace Domain.Entities
 
         public string T_DenomProg { get; set; }
 
+        public string C_CodModIng { get; set; }
+
         public string T_ModIngDesc { get; set; }
 
         public bool B_TieneMultaPorNoVotar { get; set; }

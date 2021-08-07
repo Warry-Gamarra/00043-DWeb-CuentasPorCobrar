@@ -19,15 +19,6 @@ namespace WebApp.Models.Facades
             _estudianteService = new EstudianteService();
         }
 
-        public MatriculaModel GetMatricula(int anio, int periodo, string codAlu, string codRc)
-        {
-            var matricula = _estudianteService.GetMatricula(anio, periodo, codAlu, codRc);
-
-            var result = Mapper.MatriculaDTO_To_MatriculaModel(matricula);
-
-            return result;
-        }
-
         public IEnumerable<MatriculaModel> GetMatriculas(int anio, int periodo, TipoEstudio tipoEstudio)
         {
             IEnumerable<MatriculaDTO> matriculas;
@@ -49,6 +40,11 @@ namespace WebApp.Models.Facades
             var result = matriculas.Select(m => Mapper.MatriculaDTO_To_MatriculaModel(m));
 
             return result;
+        }
+
+        public string GetNombresCompletos(string codAlu)
+        {
+            return _estudianteService.GetNombresCompletos(codAlu);
         }
     }
 }

@@ -27,7 +27,7 @@ namespace WebApp.Controllers
         private ITasaServiceFacade tasaService;
         private readonly EntidadRecaudadoraModel entidadRecaudadora;
         public readonly DependenciaModel _dependenciaModel;
-
+        private readonly IMatriculaServiceFacade matriculaServiceFacade;
 
         public PagosController()
         {
@@ -41,6 +41,7 @@ namespace WebApp.Controllers
             tasaService = new TasaServiceFacade();
             entidadRecaudadora = new EntidadRecaudadoraModel();
             _dependenciaModel = new DependenciaModel();
+            matriculaServiceFacade = new MatriculaServiceFacade();
         }
 
         // GET: Pagos
@@ -195,14 +196,16 @@ namespace WebApp.Controllers
                 worksheet.Cell(currentRow, 1).Value = "CodOperacion";
                 worksheet.Cell(currentRow, 2).Value = "CodAlumno";
                 worksheet.Cell(currentRow, 3).Value = "NomAlumno";
-                worksheet.Cell(currentRow, 4).Value = "FechaPago";
-                worksheet.Cell(currentRow, 5).Value = "Cantidad";
-                worksheet.Cell(currentRow, 6).Value = "Moneda";
-                worksheet.Cell(currentRow, 7).Value = "MontoPago";
-                worksheet.Cell(currentRow, 8).Value = "InteresMoratorio";
-                worksheet.Cell(currentRow, 9).Value = "LugarPago";
-                worksheet.Cell(currentRow, 10).Value = "Estado";
-                worksheet.Cell(currentRow, 11).Value = "Mensaje";
+                worksheet.Cell(currentRow, 4).Value = "FechaVcto";
+                worksheet.Cell(currentRow, 5).Value = "FechaPago";
+                worksheet.Cell(currentRow, 6).Value = "Cantidad";
+                worksheet.Cell(currentRow, 7).Value = "Moneda";
+                worksheet.Cell(currentRow, 8).Value = "MontoPago";
+                worksheet.Cell(currentRow, 9).Value = "InteresMoratorio";
+                worksheet.Cell(currentRow, 10).Value = "LugarPago";
+                worksheet.Cell(currentRow, 11).Value = "InforUnfv";
+                worksheet.Cell(currentRow, 12).Value = "Estado";
+                worksheet.Cell(currentRow, 13).Value = "Mensaje";
 
                 #endregion
 
@@ -215,14 +218,16 @@ namespace WebApp.Controllers
                     worksheet.Cell(currentRow, 1).SetValue<string>(item.C_CodOperacion);
                     worksheet.Cell(currentRow, 2).SetValue<string>(item.C_CodDepositante);
                     worksheet.Cell(currentRow, 3).SetValue<string>(item.T_NomDepositante);
-                    worksheet.Cell(currentRow, 4).SetValue<string>(item.D_FecPago.ToString(FormatosDateTime.BASIC_DATETIME));
-                    worksheet.Cell(currentRow, 5).SetValue<string>(item.I_Cantidad.ToString());
-                    worksheet.Cell(currentRow, 6).SetValue<string>(item.C_Moneda);
-                    worksheet.Cell(currentRow, 7).SetValue<string>(item.I_MontoPago.ToString("N2"));
-                    worksheet.Cell(currentRow, 8).SetValue<string>(item.I_InteresMora.ToString("N2"));
-                    worksheet.Cell(currentRow, 9).SetValue<string>(item.T_LugarPago);
-                    worksheet.Cell(currentRow, 10).SetValue<string>(item.B_Success ? "Correcto" : "Observado");
-                    worksheet.Cell(currentRow, 11).SetValue<string>(item.T_ErrorMessage);
+                    worksheet.Cell(currentRow, 4).SetValue<string>(item.D_FecVencto.ToString(FormatosDateTime.BASIC_DATE));
+                    worksheet.Cell(currentRow, 5).SetValue<string>(item.D_FecPago.ToString(FormatosDateTime.BASIC_DATETIME));
+                    worksheet.Cell(currentRow, 6).SetValue<string>(item.I_Cantidad.ToString());
+                    worksheet.Cell(currentRow, 7).SetValue<string>(item.C_Moneda);
+                    worksheet.Cell(currentRow, 8).SetValue<string>(item.I_MontoPago.ToString("N2"));
+                    worksheet.Cell(currentRow, 9).SetValue<string>(item.I_InteresMora.ToString("N2"));
+                    worksheet.Cell(currentRow, 10).SetValue<string>(item.T_LugarPago);
+                    worksheet.Cell(currentRow, 11).SetValue<string>(item.T_InformacionAdicional);
+                    worksheet.Cell(currentRow, 12).SetValue<string>(item.B_Success ? "Correcto" : "Observado");
+                    worksheet.Cell(currentRow, 13).SetValue<string>(item.T_ErrorMessage);
                 }
                 #endregion
 

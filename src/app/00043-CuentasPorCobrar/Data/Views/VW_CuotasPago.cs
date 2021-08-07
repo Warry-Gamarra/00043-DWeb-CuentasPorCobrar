@@ -55,22 +55,14 @@ namespace Data.Views
         public string C_TipoAlumno { get; set; }
 
         public decimal? I_MontoOblig { get; set; }
+        
+        public decimal I_MontoPagadoActual { get; set; }
 
         public bool B_Pagado { get; set; }
-
-        public string C_CodOperacion { get; set; }
-
-        public  DateTime? D_FecPago { get; set; }
-
-        public string T_LugarPago { get; set; }
 
         public DateTime D_FecCre { get; set; }
 
         public string C_CodServicio { get; set; }
-
-        public string C_NumeroCuenta { get; set; }
-
-        public string T_EntidadDesc { get; set; }
 
         public string T_FacDesc { get; set; }
 

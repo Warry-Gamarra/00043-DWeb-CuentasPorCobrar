@@ -72,6 +72,7 @@
     <Compile Include="Procedures\USP_IU_GenerarObligacionesPregrado_X_Ciclo.cs" />
     <Compile Include="Procedures\USP_I_GrabarAlumnoMultaNoVotar.cs" />
     <Compile Include="Procedures\USP_I_GrabarPagoObligaciones.cs" />
+    <Compile Include="Procedures\USP_S_ListadoEstadoObligaciones.cs" />
     <Compile Include="Procedures\USP_S_ResumenAnualPagoDeObligaciones_X_Clasificadores.cs" />
     <Compile Include="Procedures\USP_S_ReportePagoObligacionesPosgrado.cs" />
     <Compile Include="Procedures\USP_S_ReportePagoObligacionesPregrado.cs" />

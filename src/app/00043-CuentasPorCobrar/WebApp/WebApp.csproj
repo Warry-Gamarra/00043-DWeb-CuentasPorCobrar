@@ -54,7 +54,7 @@
     </Reference>
     <Reference Include="CL_CustomMail, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\CL_CustomMail\CL_CustomMail.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\Downloads\CL_CustomMail.dll</HintPath>
     </Reference>
     <Reference Include="DocumentFormat.OpenXml, Version=2.7.2.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
       <HintPath>..\packages\DocumentFormat.OpenXml.2.7.2\lib\net40\DocumentFormat.OpenXml.dll</HintPath>
@@ -460,6 +460,7 @@
     <Compile Include="Models\IMatriculaSource.cs" />
     <Compile Include="Models\MatriculaDbfSource.cs" />
     <Compile Include="Models\MatriculaExcelSource.cs" />
+    <Compile Include="ViewModels\EstadoObligacionViewModel.cs" />
     <Compile Include="ViewModels\ReporteResumenAnualPagoObligaciones_X_Dependencias.cs" />
     <Compile Include="ViewModels\ReporteResumenAnualPagoObligaciones_X_Clasificadores.cs" />
     <Compile Include="ViewModels\ReportePagosObligacionesViewModel.cs" />
@@ -614,6 +615,7 @@
     <Content Include="Views\ConceptoPago\_MsgRegistrarConceptoObligacion.cshtml" />
     <Content Include="Views\EstadosCuenta\ResumenAnualObligacionesPorClasificadores.cshtml" />
     <Content Include="Views\EstadosCuenta\ResumenAnualObligacionesPorDependencias.cshtml" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -26,5 +26,6 @@ namespace Domain.Entities
         public string C_Extorno { get; set; }
         public bool B_Correcto { get; set; }
         public string T_ErrorMessage { get; set; }
+        public string T_InformacionAdicional { get; set; }
     }
 }

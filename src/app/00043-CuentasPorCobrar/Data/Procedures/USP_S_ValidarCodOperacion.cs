@@ -13,6 +13,7 @@ namespace Data.Procedures
     public class USP_S_ValidarCodOperacion
     {
         public string C_CodOperacion { get; set; }
+        public string C_CodDepositante { get; set; }
         public int I_EntidadFinanID { get; set; }
         public DateTime? D_FecPago { get; set; }
         
@@ -27,6 +28,7 @@ namespace Data.Procedures
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
                     parameters.Add(name: "C_CodOperacion", dbType: DbType.String, value: spParam.C_CodOperacion);
+                    parameters.Add(name: "C_CodDepositante", dbType: DbType.String, value: spParam.C_CodDepositante);
                     parameters.Add(name: "I_EntidadFinanID", dbType: DbType.Int16, value: spParam.I_EntidadFinanID);
                     parameters.Add(name: "D_FecPago", dbType: DbType.DateTime, value: spParam.D_FecPago);
                     parameters.Add(name: "B_Correct", dbType: DbType.Boolean, direction: ParameterDirection.Output);

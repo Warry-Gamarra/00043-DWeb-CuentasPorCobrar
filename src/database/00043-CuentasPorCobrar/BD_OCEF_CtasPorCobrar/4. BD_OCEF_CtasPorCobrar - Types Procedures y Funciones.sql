@@ -4211,42 +4211,53 @@ AS
 BEGIN
 	SET NOCOUNT ON;
 	DECLARE @I_ObligacionAluID INT,
-			@I_MontoOblig DECIMAL(15, 2)
+			@I_MontoOblig DECIMAL(15, 2),
+			@B_Pagado BIT
 	
 	SET @I_ObligacionAluID = (SELECT I_ObligacionAluID FROM TR_ObligacionAluDet 
 		WHERE I_ObligacionAluDetID = @I_ObligacionAluDetID AND B_Habilitado = 1 AND B_Eliminado = 0)
 	
 	IF (@I_ObligacionAluID is not null)  BEGIN
+		
+		SET @B_Pagado = (SELECT B_Pagado FROM TR_ObligacionAluDet 
+			WHERE I_ObligacionAluDetID = @I_ObligacionAluDetID AND B_Habilitado = 1 AND B_Eliminado = 0)
 
-		BEGIN TRAN
-		BEGIN TRY
-			UPDATE TR_ObligacionAluDet SET
-				I_Monto = @I_Monto,
-				I_TipoDocumento = @I_TipoDocumento,
-				T_DescDocumento = @T_DescDocumento,
-				I_UsuarioMod = @CurrentUserId,
-				D_FecMod = @CurrentDate
-			WHERE I_ObligacionAluDetID = @I_ObligacionAluDetID
+		IF (@B_Pagado = 0) BEGIN
 
-			SET @I_MontoOblig = (SELECT SUM(d.I_Monto) from TR_ObligacionAluDet d
-				WHERE d.I_ObligacionAluID = @I_ObligacionAluID and d.B_Habilitado = 1 and d.B_Eliminado = 0)
+			BEGIN TRAN
+			BEGIN TRY
+				UPDATE TR_ObligacionAluDet SET
+					I_Monto = @I_Monto,
+					I_TipoDocumento = @I_TipoDocumento,
+					T_DescDocumento = @T_DescDocumento,
+					I_UsuarioMod = @CurrentUserId,
+					D_FecMod = @CurrentDate
+				WHERE I_ObligacionAluDetID = @I_ObligacionAluDetID
+
+				SET @I_MontoOblig = (SELECT SUM(d.I_Monto) from TR_ObligacionAluDet d
+					WHERE d.I_ObligacionAluID = @I_ObligacionAluID and d.B_Habilitado = 1 and d.B_Eliminado = 0)
 			
-			UPDATE TR_ObligacionAluCab SET 
-				I_MontoOblig = @I_MontoOblig,
-				I_UsuarioMod = @CurrentUserId,
-				D_FecMod = @CurrentDate
-			WHERE I_ObligacionAluID = @I_ObligacionAluID
+				UPDATE TR_ObligacionAluCab SET 
+					I_MontoOblig = @I_MontoOblig,
+					I_UsuarioMod = @CurrentUserId,
+					D_FecMod = @CurrentDate
+				WHERE I_ObligacionAluID = @I_ObligacionAluID
 			
-			COMMIT TRAN
-			set @B_Result = 1
-			set @T_Message = 'Actualización correcta.'
-		END TRY
-		BEGIN CATCH
-			ROLLBACK TRAN
+				COMMIT TRAN
+				set @B_Result = 1
+				set @T_Message = 'Actualización correcta.'
+			END TRY
+			BEGIN CATCH
+				ROLLBACK TRAN
+				set @B_Result = 0
+				set @T_Message = ERROR_MESSAGE()
+			END CATCH
+
+		END
+		ELSE BEGIN
 			set @B_Result = 0
-			set @T_Message = ERROR_MESSAGE()
-		END CATCH
-
+			set @T_Message = 'La obligación ya ha sido pagada.'
+		END
 	END
 	ELSE BEGIN
 		set @B_Result = 0

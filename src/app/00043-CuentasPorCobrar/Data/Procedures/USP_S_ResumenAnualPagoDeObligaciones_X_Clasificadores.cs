@@ -53,7 +53,7 @@ namespace Data.Procedures
                 throw ex;
             }
 
-            return result;
+            return result.OrderBy(x => x.T_ClasificadorDesc);
         }
     }
 }

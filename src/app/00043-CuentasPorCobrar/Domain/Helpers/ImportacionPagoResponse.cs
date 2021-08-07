@@ -41,7 +41,9 @@ namespace Domain.Helpers
                 I_CtaDepositoID = x.I_CtaDepositoID,
                 B_Pagado = x.B_Pagado,
                 B_Success = x.B_Success,
-                T_ErrorMessage = x.T_ErrorMessage
+                T_ErrorMessage = x.T_ErrorMessage,
+                T_InformacionAdicional = x.T_InformacionAdicional,
+                D_FecVencto = x.D_FecVencto
             });
 
             var errors = ListaResultados.Where(x => !x.B_Success).Count();

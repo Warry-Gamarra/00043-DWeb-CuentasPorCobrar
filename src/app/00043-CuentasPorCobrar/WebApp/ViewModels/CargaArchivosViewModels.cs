@@ -14,6 +14,7 @@ namespace WebApp.ViewModels
         public bool InfoInFile { get; set; }
         public int Anio { get; set; }
         public int Periodo { get; set; }
+        public string Observacion { get; set; }
     }
 
 

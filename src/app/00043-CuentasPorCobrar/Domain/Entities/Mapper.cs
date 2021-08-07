@@ -102,6 +102,7 @@ namespace Domain.Entities
                 C_Periodo = matriculaAlumno.C_Periodo,
                 T_Periodo = matriculaAlumno.T_Periodo,
                 T_DenomProg = matriculaAlumno.T_DenomProg,
+                C_CodModIng = matriculaAlumno.C_CodModIng,
                 T_ModIngDesc = matriculaAlumno.T_ModIngDesc,
                 B_TieneMultaPorNoVotar = matriculaAlumno.B_TieneMultaPorNoVotar
             };
@@ -133,9 +134,6 @@ namespace Domain.Entities
                 B_Pagado = detalleObligaciones.B_Pagado,
                 D_FecVencto = detalleObligaciones.D_FecVencto,
                 I_Prioridad = detalleObligaciones.I_Prioridad,
-                C_CodOperacion = detalleObligaciones.C_CodOperacion ?? "",
-                D_FecPago = detalleObligaciones.D_FecPago,
-                T_LugarPago = detalleObligaciones.T_LugarPago ?? "",
                 C_Moneda = detalleObligaciones.C_Moneda,
                 I_TipoObligacion = detalleObligaciones.I_TipoObligacion,
                 I_Nivel = detalleObligaciones.I_Nivel,
@@ -143,9 +141,7 @@ namespace Domain.Entities
                 T_Nivel = detalleObligaciones.T_Nivel,
                 I_TipoAlumno = detalleObligaciones.I_TipoAlumno,
                 C_TipoAlumno = detalleObligaciones.C_TipoAlumno,
-                T_TipoAlumno = detalleObligaciones.T_TipoAlumno,
-                C_NumeroCuenta = detalleObligaciones.C_NumeroCuenta,
-                T_EntidadDesc = detalleObligaciones.T_EntidadDesc
+                T_TipoAlumno = detalleObligaciones.T_TipoAlumno
             };
 
             return obligacionDetalleDTO;
@@ -177,14 +173,10 @@ namespace Domain.Entities
                 C_Nivel = cuotaPago.C_Nivel,
                 C_TipoAlumno = cuotaPago.C_TipoAlumno,
                 I_MontoOblig = cuotaPago.I_MontoOblig,
+                I_MontoPagadoActual = cuotaPago.I_MontoPagadoActual,
                 B_Pagado = cuotaPago.B_Pagado,
-                C_CodOperacion = cuotaPago.C_CodOperacion,
-                D_FecPago = cuotaPago.D_FecPago,
-                T_LugarPago = cuotaPago.T_LugarPago,
                 D_FecCre = cuotaPago.D_FecCre,
                 C_CodServicio = cuotaPago.C_CodServicio,
-                C_NumeroCuenta = cuotaPago.C_NumeroCuenta,
-                T_EntidadDesc = cuotaPago.T_EntidadDesc,
                 T_FacDesc = cuotaPago.T_FacDesc,
                 T_DenomProg = cuotaPago.T_DenomProg
             };
@@ -249,6 +241,7 @@ namespace Domain.Entities
             dataTable.Columns.Add("D_FecVencto").DataType = typeof(DateTime);
             dataTable.Columns.Add("I_EntidadFinanID");
             dataTable.Columns.Add("I_CtaDepositoID").AllowDBNull = true;
+            dataTable.Columns.Add("T_InformacionAdicional").AllowDBNull = true;
 
             dataPagoObligaciones.ForEach(x => dataTable.Rows.Add(
                 x.C_CodOperacion,
@@ -265,7 +258,8 @@ namespace Domain.Entities
                 x.I_ProcesoID,
                 x.D_FecVencto,
                 x.I_EntidadFinanID,
-                x.I_CtaDepositoID
+                x.I_CtaDepositoID,
+                x.T_InformacionAdicional
             ));
 
             return dataTable;
@@ -526,6 +520,35 @@ namespace Domain.Entities
                 Octubre = sp.Octubre,
                 Noviembre = sp.Noviembre,
                 Diciembre = sp.Diciembre
+            };
+
+            return result;
+        }
+
+        public static EstadoObligacionDTO USP_S_ListadoEstadoObligaciones_To_EstadoObligacionDTO(USP_S_ListadoEstadoObligaciones sp)
+        {
+            var result = new EstadoObligacionDTO()
+            {
+                I_MatAluID = sp.I_MatAluID,
+                I_ObligacionAluID = sp.I_ObligacionAluID,
+                C_CodAlu = sp.C_CodAlu,
+                C_RcCod = sp.C_RcCod,
+                T_Nombre = sp.T_Nombre,
+                T_ApePaterno = sp.T_ApePaterno,
+                T_ApeMaterno = sp.T_ApeMaterno,
+                N_Grado = sp.N_Grado,
+                T_FacDesc = sp.T_FacDesc,
+                T_EscDesc = sp.T_EscDesc,
+                T_DenomProg = sp.T_DenomProg,
+                B_Ingresante = sp.B_Ingresante,
+                I_CredDesaprob = sp.I_CredDesaprob,
+                I_Anio = sp.I_Anio,
+                T_Periodo = sp.T_Periodo,
+                T_ProcesoDesc = sp.T_ProcesoDesc,
+                I_MontoOblig = sp.I_MontoOblig,
+                D_FecVencto = sp.D_FecVencto,
+                B_Pagado = sp.B_Pagado,
+                I_MontoPagadoActual = sp.I_MontoPagadoActual
             };
 
             return result;
