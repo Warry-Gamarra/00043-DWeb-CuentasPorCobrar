@@ -52,7 +52,7 @@
                 </div>
 
                 <div class="table-responsive mt-4">
-                    <p class="h5">Estudiantes aptos para la generación de obligaciones</p>
+                    <p class="h5">Relación de estudiantes registrados en el sistema</p>
                     @Html.Grid(Model).Columns(columns => {
                         columns.Add(c => c.I_Anio).Titled("Año").Filterable(true);
                         columns.Add(c => c.T_Periodo).Titled("Periodo").Filterable(true);
@@ -60,11 +60,10 @@
                         columns.Add(c => c.T_NombresApellidos).Titled("Nombres y apellidos").Filterable(true);
                         columns.Add(c => c.T_DenomProg).Titled("Especialidad").Filterable(true);
                         columns.Add(c => c.T_EsIngresante).Titled("Tipo alumno").Filterable(true);
-                        columns.Add(c => c.I_CredDesaprob).Titled("Créditos desaprobados").Filterable(true).Css("text-center");
-                        //if ((Domain.Helpers.TipoEstudio)ViewBag.DefaultTipoEstudio == Domain.Helpers.TipoEstudio.Pregrado)
-                        //{
-                        //    columns.Add(c => c.T_TieneMultaPorNoVotar).Titled("Multa por no votar").Filterable(true).Css("text-center");
-                        //}
+                        columns.Add(c => c.T_ProcesoDesc).Titled("Cuota").Filterable(true).Css("text-center");
+                        columns.Add(c => c.I_MontoOblig).Titled("Monto Obl.").Filterable(true).Css("text-center");
+                        columns.Add(c => c.D_FecVencto).Titled("Fec.Vcto.").Filterable(true).Css("text-center");
+                        columns.Add(c => c.T_Pagado).Titled("Estado").Filterable(true).Css("text-center");
                     }).WithPaging(12).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
                 </div>
             </div>
