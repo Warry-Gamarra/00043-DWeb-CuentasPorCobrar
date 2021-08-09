@@ -43,7 +43,8 @@ namespace Domain.Helpers
                 B_Success = x.B_Success,
                 T_ErrorMessage = x.T_ErrorMessage,
                 T_InformacionAdicional = x.T_InformacionAdicional,
-                D_FecVencto = x.D_FecVencto
+                D_FecVencto = x.D_FecVencto,
+                T_ProcesoDesc = x.T_ProcesoDesc
             });
 
             var errors = ListaResultados.Where(x => !x.B_Success).Count();

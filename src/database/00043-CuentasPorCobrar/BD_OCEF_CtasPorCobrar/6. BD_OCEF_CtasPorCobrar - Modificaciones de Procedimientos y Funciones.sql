@@ -883,7 +883,8 @@ CREATE TYPE [dbo].[type_dataPago] AS TABLE(
 	D_FecVencto			datetime,
 	I_EntidadFinanID	int,
 	I_CtaDepositoID		int,
-	T_InformacionAdicional varchar(250)
+	T_InformacionAdicional varchar(250),
+	T_ProcesoDesc varchar(250)
 )
 GO
 
@@ -925,7 +926,8 @@ BEGIN
 		B_Pagado			bit NULL,
 		B_Success			bit,
 		T_ErrorMessage		varchar(250),
-		T_InformacionAdicional		varchar(250)
+		T_InformacionAdicional		varchar(250),
+		T_ProcesoDesc		varchar(250)
 	);
 
 	WITH Matriculados(I_ObligacionAluID, C_CodAlu, C_CodRc, I_ProcesoID, D_FecVencto, B_Pagado, I_MontoOblig)
@@ -938,10 +940,10 @@ BEGIN
 	)
 	INSERT @Tmp_PagoObligacion(I_ProcesoID, I_ObligacionAluID, C_CodOperacion, C_CodDepositante, T_NomDepositante, 
 		C_Referencia, D_FecPago, D_FecVencto, I_Cantidad, C_Moneda, I_MontoOblig, I_MontoPago, I_InteresMora, T_LugarPago, I_EntidadFinanID, I_CtaDepositoID, B_Pagado,
-		T_InformacionAdicional)
+		T_InformacionAdicional, T_ProcesoDesc)
 	SELECT m.I_ProcesoID, m.I_ObligacionAluID, p.C_CodOperacion, p.C_CodAlu, p.T_NomDepositante,
 		p.C_Referencia, p.D_FecPago, p.D_FecVencto, p.I_Cantidad, p.C_Moneda, m.I_MontoOblig, p.I_MontoPago, p.I_InteresMora, p.T_LugarPago, p.I_EntidadFinanID, I_CtaDepositoID, m.B_Pagado,
-		p.T_InformacionAdicional
+		p.T_InformacionAdicional, p.T_ProcesoDesc
 	FROM @Tbl_Pagos p
 	LEFT JOIN Matriculados m ON m.C_CodAlu = p.C_CodAlu AND m.C_CodRc = p.C_CodRc AND 
 		m.I_ProcesoID = p.I_ProcesoID AND DATEDIFF(DAY, m.D_FecVencto, p.D_FecVencto) = 0
