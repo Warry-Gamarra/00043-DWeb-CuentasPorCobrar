@@ -303,7 +303,7 @@ namespace WebApp.Models
                     return response;
                 }
 
-                if (pagoService.ValidarCodOperacion(model.codigoOperacion, model.codigoAlumno, model.idEntidadFinanciera, model.fechaPago))
+                if (pagoService.ValidarCodOperacion(model.codigoOperacion, model.codigoAlumno, model.idEntidadFinanciera, model.fechaPagoObl))
                 {
                     var entity = Mapper.PagoObligacionViewModel_To_PagoObligacionEntity(model);
 

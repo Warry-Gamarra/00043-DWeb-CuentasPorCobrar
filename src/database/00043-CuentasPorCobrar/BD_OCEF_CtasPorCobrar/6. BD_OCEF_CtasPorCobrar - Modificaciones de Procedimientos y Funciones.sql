@@ -2,32 +2,32 @@ USE BD_OCEF_CtasPorCobrar
 GO
 
 
-CREATE NONCLUSTERED INDEX IDX_Persona ON BD_UNFV_Repositorio.dbo.TC_Persona(B_Eliminado) 
-INCLUDE(I_PersonaID, T_ApePaterno, T_ApeMaterno, T_Nombre)
-GO
+--CREATE NONCLUSTERED INDEX IDX_Persona ON BD_UNFV_Repositorio.dbo.TC_Persona(B_Eliminado) 
+--INCLUDE(I_PersonaID, T_ApePaterno, T_ApeMaterno, T_Nombre)
+--GO
 
-CREATE NONCLUSTERED INDEX IDX_Alumno ON BD_UNFV_Repositorio.dbo.TC_Alumno(C_RcCod, C_CodAlu, B_Eliminado)
-GO
+--CREATE NONCLUSTERED INDEX IDX_Alumno ON BD_UNFV_Repositorio.dbo.TC_Alumno(C_RcCod, C_CodAlu, B_Eliminado)
+--GO
 
-CREATE	NONCLUSTERED INDEX IDX_MatriculaAlumno ON TC_MatriculaAlumno(I_Anio, I_Periodo, B_Habilitado, B_Eliminado) 
-INCLUDE(I_MatAluID, C_CodAlu, C_CodRc, B_Ingresante, I_CredDesaprob)
-GO
+--CREATE	NONCLUSTERED INDEX IDX_MatriculaAlumno ON TC_MatriculaAlumno(I_Anio, I_Periodo, B_Habilitado, B_Eliminado) 
+--INCLUDE(I_MatAluID, C_CodAlu, C_CodRc, B_Ingresante, I_CredDesaprob)
+--GO
 
-CREATE NONCLUSTERED INDEX IDX_ObligacionCab ON TR_ObligacionAluCab(I_MatAluID, B_Habilitado, B_Eliminado) 
-INCLUDE(I_ObligacionAluID, I_MontoOblig, D_FecVencto, B_Pagado)
-GO
+--CREATE NONCLUSTERED INDEX IDX_ObligacionCab ON TR_ObligacionAluCab(I_MatAluID, B_Habilitado, B_Eliminado) 
+--INCLUDE(I_ObligacionAluID, I_MontoOblig, D_FecVencto, B_Pagado)
+--GO
 
-CREATE INDEX IDX_ObligacionDet ON TR_ObligacionAluDet(I_ObligacionAluID, B_Habilitado, B_Eliminado)
-INCLUDE (I_ConcPagID, I_Monto, B_Pagado, D_FecVencto)
-GO
+--CREATE INDEX IDX_ObligacionDet ON TR_ObligacionAluDet(I_ObligacionAluID, B_Habilitado, B_Eliminado)
+--INCLUDE (I_ConcPagID, I_Monto, B_Pagado, D_FecVencto)
+--GO
 
-CREATE NONCLUSTERED INDEX IDX_PagoBanco ON TR_PagoBanco(I_PagoBancoID, D_FecPago, B_Anulado)
-INCLUDE(C_CodOperacion)
-GO
+--CREATE NONCLUSTERED INDEX IDX_PagoBanco ON TR_PagoBanco(I_PagoBancoID, D_FecPago, B_Anulado)
+--INCLUDE(C_CodOperacion)
+--GO
 
-CREATE NONCLUSTERED INDEX IDX_PagoProcesadoUnfv ON TRI_PagoProcesadoUnfv(I_ObligacionAluID, B_Anulado) 
-INCLUDE(I_MontoPagado)
-GO
+--CREATE NONCLUSTERED INDEX IDX_PagoProcesadoUnfv ON TRI_PagoProcesadoUnfv(I_ObligacionAluID, B_Anulado) 
+--INCLUDE(I_MontoPagado)
+--GO
 
 
 
@@ -1287,6 +1287,8 @@ BEGIN
 	SET @ParmDefinition = N'@Pregrado CHAR(1), @Maestria CHAR(1), @Doctorado CHAR(1), @I_Anio INT, @I_Periodo INT = NULL, 
 		@C_RcCod VARCHAR(3) = NULL , @B_Ingresante BIT = NULL, @B_Pagado BIT = NULL, @F_FecIni DATE = NULL, @F_FecFin DATE = NULL';  
 	
+	PRINT @SQLString
+
 	EXECUTE sp_executesql @SQLString, @ParmDefinition, 
 		@Pregrado = @Pregrado,
 		@Maestria = @Maestria,
@@ -1302,14 +1304,14 @@ BEGIN
 EXEC USP_S_ListadoEstadoObligaciones
 @B_EsPregrado = 0,
 @I_Anio = 2021,
-@I_Periodo = NULL,
+@I_Periodo = 19,
 @C_RcCod = NULL,
-@B_Ingresante = 1,
+@B_Ingresante = NULL,
 @B_ObligacionGenerada = 1,
-@B_Pagado = 0,
+@B_Pagado = NULL,
 @F_FecIni = NULL,
 @F_FecFin = NULL,
-@B_MontoPagadoDiff = NULL
+@B_MontoPagadoDiff = 1
 GO
 */
 END

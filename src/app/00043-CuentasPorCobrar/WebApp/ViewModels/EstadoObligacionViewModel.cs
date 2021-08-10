@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -77,7 +78,7 @@ namespace WebApp.ViewModels
         {
             get
             {
-                return D_FecVencto.HasValue ? D_FecVencto.Value.ToShortDateString() : "-";
+                return D_FecVencto.HasValue ? D_FecVencto.Value.ToString(FormatosDateTime.BASIC_DATE) : "-";
             }
         }
 

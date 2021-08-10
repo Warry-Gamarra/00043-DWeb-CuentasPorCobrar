@@ -274,8 +274,6 @@ namespace WebApp.Controllers
                 {
                     int currentUserID = WebSecurity.CurrentUserId;
 
-                    model.fechaPago = model.fechaPago.Value.AddHours(model.horas).AddMinutes(model.minutos);
-
                     result = pagosModel.GrabarPagoObligacion(model, currentUserID);
 
                     if (!result.Success)

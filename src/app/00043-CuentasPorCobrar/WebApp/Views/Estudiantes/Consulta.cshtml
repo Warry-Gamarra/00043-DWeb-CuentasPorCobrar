@@ -62,7 +62,7 @@
                         columns.Add(c => c.T_EsIngresante).Titled("Tipo alumno").Filterable(true);
                         columns.Add(c => c.T_ProcesoDesc).Titled("Cuota").Filterable(true).Css("text-center");
                         columns.Add(c => c.I_MontoOblig).Titled("Monto Obl.").Filterable(true).Css("text-center");
-                        columns.Add(c => c.D_FecVencto).Titled("Fec.Vcto.").Filterable(true).Css("text-center");
+                        columns.Add(c => c.T_FecVencto).Titled("Fec.Vcto.").Filterable(true).Css("text-center");
                         columns.Add(c => c.T_Pagado).Titled("Estado").Filterable(true).Css("text-center");
                     }).WithPaging(12).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
                 </div>

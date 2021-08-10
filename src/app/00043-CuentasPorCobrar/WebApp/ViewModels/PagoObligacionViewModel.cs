@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 
@@ -39,7 +40,15 @@ namespace WebApp.ViewModels
         public int idCtaDeposito { get; set; }
 
         [Required(ErrorMessage = "Este campo es obligatorio.")]
-        public DateTime? fechaPago { get; set; }
+        public string fechaPago { get; set; }
+
+        public DateTime fechaPagoObl
+        {
+            get
+            {
+                return DateTime.ParseExact(fechaPago, FormatosDateTime.BASIC_DATE, CultureInfo.InvariantCulture).AddHours(horas).AddMinutes(minutos);
+            }
+        }
 
         public int horas { get; set; }
 

@@ -285,7 +285,7 @@ namespace WebApp.Models
                 C_CodOperacion = model.codigoOperacion,
                 T_NomDepositante = model.nombreAlumno,
                 C_Referencia = model.codigoReferencia,
-                D_FecPago = model.fechaPago.Value,
+                D_FecPago = model.fechaPagoObl,
                 I_Cantidad = model.cantidad,
                 T_LugarPago = model.lugarPago,
                 C_CodAlu = model.codigoAlumno,
