@@ -1,4 +1,5 @@
-﻿using Domain.Helpers;
+﻿using Domain.Entities;
+using Domain.Helpers;
 using Domain.Services;
 using Domain.Services.Implementations;
 using System;
@@ -12,10 +13,12 @@ namespace WebApp.Models.Facades
     public class ReportePregradoServiceFacade : IReportePregradoServiceFacade
     {
         IReportePregradoService reporteService;
+        IEntidadRecaudadora entidadRecaudadoraService;
 
         public ReportePregradoServiceFacade()
         {
             reporteService = new ReportePregradoService();
+            entidadRecaudadoraService = new EntidadRecaudadora();
         }
 
         public ReportePagosPorFacultadViewModel ReportePagosPorFacultad(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc)
@@ -61,20 +64,24 @@ namespace WebApp.Models.Facades
             return reporte;
         }
 
-        public ReporteResumenAnualPagoObligaciones_X_Clasificadores ResumenAnualPagoOblig_X_Clasificadores(int anio)
+        public ReporteResumenAnualPagoObligaciones_X_Clasificadores ResumenAnualPagoOblig_X_Clasificadores(int anio, int? entidadFinanID, int? ctaDepositoID)
         {
-            var lista = reporteService.ResumenAnualPagoOblig_X_Clasificadores(anio);
+            var lista = reporteService.ResumenAnualPagoOblig_X_Clasificadores(anio, entidadFinanID, ctaDepositoID);
 
-            var result = new ReporteResumenAnualPagoObligaciones_X_Clasificadores(anio, TipoEstudio.Pregrado, lista);
+            string nombreEntidadFinanc = entidadFinanID.HasValue ? entidadRecaudadoraService.Find(entidadFinanID.Value).Nombre : null;
+
+            var result = new ReporteResumenAnualPagoObligaciones_X_Clasificadores(anio, TipoEstudio.Pregrado, nombreEntidadFinanc, null, lista);
 
             return result;
         }
 
-        public ReporteResumenAnualPagoObligaciones_X_Dependencias ResumenAnualPagoOblig_X_Dependencias(int anio)
+        public ReporteResumenAnualPagoObligaciones_X_Dependencias ResumenAnualPagoOblig_X_Dependencias(int anio, int? entidadFinanID, int? ctaDepositoID)
         {
-            var lista = reporteService.ResumenAnualPagoOblig_X_Dependencia(anio);
+            var lista = reporteService.ResumenAnualPagoOblig_X_Dependencia(anio, entidadFinanID, ctaDepositoID);
 
-            var result = new ReporteResumenAnualPagoObligaciones_X_Dependencias(anio, TipoEstudio.Pregrado, lista);
+            string nombreEntidadFinanc = entidadFinanID.HasValue ? entidadRecaudadoraService.Find(entidadFinanID.Value).Nombre : null;
+
+            var result = new ReporteResumenAnualPagoObligaciones_X_Dependencias(anio, TipoEstudio.Pregrado, nombreEntidadFinanc, null, lista);
 
             return result;
         }

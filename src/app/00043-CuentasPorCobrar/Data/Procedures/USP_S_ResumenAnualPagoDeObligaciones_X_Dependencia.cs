@@ -27,7 +27,7 @@ namespace Data.Procedures
         public decimal Noviembre { get; set; }
         public decimal Diciembre { get; set; }
 
-        public static IEnumerable<USP_S_ResumenAnualPagoDeObligaciones_X_Dependencia> Execute(int anio, bool esPregrado)
+        public static IEnumerable<USP_S_ResumenAnualPagoDeObligaciones_X_Dependencia> Execute(int anio, bool esPregrado, int? entidadFinanID, int? ctaDepositoID)
         {
             IEnumerable<USP_S_ResumenAnualPagoDeObligaciones_X_Dependencia> result;
             DynamicParameters parameters;
@@ -43,7 +43,11 @@ namespace Data.Procedures
                 {
                     parameters.Add(name: "I_Anio", dbType: DbType.Int32, value: anio);
 
-                    parameters.Add(name: "B_EsPregrado", dbType: DbType.Int32, value: esPregrado);
+                    parameters.Add(name: "B_EsPregrado", dbType: DbType.Boolean, value: esPregrado);
+
+                    parameters.Add(name: "I_EntidadFinanID", dbType: DbType.Int32, value: entidadFinanID);
+
+                    parameters.Add(name: "I_CtaDepositoID", dbType: DbType.Int32, value: ctaDepositoID);
 
                     result = _dbConnection.Query<USP_S_ResumenAnualPagoDeObligaciones_X_Dependencia>(s_command, parameters, commandType: CommandType.StoredProcedure);
                 }
@@ -53,7 +57,7 @@ namespace Data.Procedures
                 throw ex;
             }
 
-            return result.OrderBy(x => x.T_Dependencia);
+            return result;
         }
     }
 }

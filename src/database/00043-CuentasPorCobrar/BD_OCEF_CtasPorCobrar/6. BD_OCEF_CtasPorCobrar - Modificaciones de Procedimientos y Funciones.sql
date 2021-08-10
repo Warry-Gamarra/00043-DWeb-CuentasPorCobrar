@@ -1252,8 +1252,8 @@ BEGIN
 			@Maestria char(1) = '2',
 			@Doctorado char(1) = '3'
 
-	DECLARE @SQLString NVARCHAR(4000)
-	DECLARE @ParmDefinition NVARCHAR(500)
+	DECLARE @SQLString NVARCHAR(4000),
+			@ParmDefinition NVARCHAR(500)
   
 	SET @SQLString = N'SELECT mat.I_MatAluID, cab.I_ObligacionAluID, mat.C_CodAlu, mat.C_RcCod, mat.T_Nombre, mat.T_ApePaterno, mat.T_ApeMaterno, 
 			mat.N_Grado, mat.T_FacDesc, mat.T_EscDesc, mat.T_DenomProg, mat.B_Ingresante, mat.I_CredDesaprob,
@@ -1302,16 +1302,16 @@ BEGIN
 		@F_FecFin = @F_FecFin
 /*
 EXEC USP_S_ListadoEstadoObligaciones
-@B_EsPregrado = 0,
+@B_EsPregrado = 1,
 @I_Anio = 2021,
-@I_Periodo = 19,
+@I_Periodo = NULL,
 @C_RcCod = NULL,
 @B_Ingresante = NULL,
-@B_ObligacionGenerada = 1,
+@B_ObligacionGenerada = NULL,
 @B_Pagado = NULL,
 @F_FecIni = NULL,
 @F_FecFin = NULL,
-@B_MontoPagadoDiff = 1
+@B_MontoPagadoDiff = NULL
 GO
 */
 END
@@ -1373,5 +1373,168 @@ BEGIN
 	INNER JOIN dbo.TC_CuentaDeposito cta ON cta.I_CtaDepositoID = pagpro.I_CtaDepositoID
 	INNER JOIN dbo.TC_EntidadFinanciera ef ON ef.I_EntidadFinanID = pagban.I_EntidadFinanID
 	WHERE vw.C_CodAlu = @C_CodAlu AND vw.I_Anio = @I_Anio AND vw.I_Periodo = @I_PeriodoID AND vw.I_Prioridad = 1
+END
+GO
+
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_ResumenAnualPagoDeObligaciones_X_Clasificadores')
+	DROP PROCEDURE [dbo].[USP_S_ResumenAnualPagoDeObligaciones_X_Clasificadores]
+GO
+
+CREATE PROCEDURE [dbo].[USP_S_ResumenAnualPagoDeObligaciones_X_Clasificadores]
+@I_Anio INT,
+@B_EsPregrado BIT,
+@I_EntidadFinanID INT = NULL,
+@I_CtaDepositoID INT = NULL
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	DECLARE @Pregrado char(1) = '1',
+			@Maestria char(1) = '2',
+			@Doctorado char(1) = '3'
+
+	DECLARE @SQLString NVARCHAR(4000),
+			@ParmDefinition NVARCHAR(500)
+
+	SET @SQLString = N'SELECT 
+			ISNULL(C_CodClasificador, '''') AS C_CodClasificador, 
+			T_ClasificadorDesc, 
+			ISNULL([1], 0) AS Enero,
+			ISNULL([2], 0) AS Febrero,
+			ISNULL([3], 0) AS Marzo,
+			ISNULL([4], 0) AS Abril,
+			ISNULL([5], 0) AS Mayo,
+			ISNULL([6], 0) AS Junio,
+			ISNULL([7], 0) AS Julio,
+			ISNULL([8], 0) AS Agosto,
+			ISNULL([9], 0) AS Setiembre,
+			ISNULL([10], 0) AS Octubre,
+			ISNULL([11], 0) AS Noviembre,
+			ISNULL([12], 0) AS Diciembre
+		FROM
+		(
+			SELECT cl.C_CodClasificador, cl.T_ClasificadorDesc, MONTH(pagban.D_FecPago) AS I_Month, SUM(pagpro.I_MontoPagado) AS I_MontoTotal 
+			FROM dbo.TR_PagoBanco pagban
+			INNER JOIN dbo.TRI_PagoProcesadoUnfv pagpro ON pagban.I_PagoBancoID = pagpro.I_PagoBancoID AND pagpro.B_Anulado = 0 
+			INNER JOIN dbo.TR_ObligacionAluCab cab ON cab.I_ObligacionAluID = pagpro.I_ObligacionAluID AND cab.B_Habilitado = 1 AND cab.B_Eliminado = 0
+			INNER JOIN dbo.TR_ObligacionAluDet det ON det.I_ObligacionAluID = cab.I_ObligacionAluID AND det.B_Habilitado = 1 AND det.B_Eliminado = 0
+			INNER JOIN dbo.TI_ConceptoPago conpag ON conpag.I_ConcPagID = det.I_ConcPagID
+			INNER JOIN dbo.VW_MatriculaAlumno mat ON mat.I_MatAluID = cab.I_MatAluID
+			LEFT JOIN dbo.VW_Clasificadores cl ON cl.C_ClasificConceptoCod = conpag.T_Clasificador
+			WHERE mat.B_Habilitado = 1 AND pagban.B_Anulado = 0 AND YEAR(pagban.D_FecPago) = @I_Anio AND ' +
+				CASE WHEN @B_EsPregrado = 1 THEN 'mat.N_Grado = @Pregrado' ELSE 'mat.N_Grado IN (@Maestria, @Doctorado)' END + '
+				' + CASE WHEN @I_EntidadFinanID IS NULL THEN '' ELSE 'AND pagban.I_EntidadFinanID = @I_EntidadFinanID' END + '
+				' + CASE WHEN @I_CtaDepositoID IS NULL THEN '' ELSE 'AND pagpro.I_CtaDepositoID = @I_CtaDepositoID' END + '
+			GROUP BY cl.C_CodClasificador, cl.T_ClasificadorDesc, MONTH(pagban.D_FecPago)
+		) p
+		PIVOT
+		(
+			SUM(p.I_MontoTotal) FOR p.I_Month IN ([1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12])
+		) AS pvt
+		ORDER BY T_ClasificadorDesc'
+
+	SET @ParmDefinition = N'@Pregrado CHAR(1), @Maestria CHAR(1), @Doctorado CHAR(1), @I_Anio INT, @I_EntidadFinanID INT, @I_CtaDepositoID INT'
+
+	EXECUTE sp_executesql @SQLString, @ParmDefinition,
+		@Pregrado = @Pregrado,
+		@Maestria= @Maestria,
+		@Doctorado = @Doctorado,
+		@I_Anio = @I_Anio,
+		@I_EntidadFinanID = @I_EntidadFinanID,
+		@I_CtaDepositoID = @I_CtaDepositoID
+	
+/*
+EXEC USP_S_ResumenAnualPagoDeObligaciones_X_Clasificadores 
+	@I_Anio = 2021, 
+	@B_EsPregrado = 1, 
+	@I_EntidadFinanID = 1,
+	@I_CtaDepositoID = NULL
+GO
+*/
+END
+GO
+
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_ResumenAnualPagoDeObligaciones_X_Dependencia')
+	DROP PROCEDURE [dbo].[USP_S_ResumenAnualPagoDeObligaciones_X_Dependencia]
+GO
+
+CREATE PROCEDURE [dbo].[USP_S_ResumenAnualPagoDeObligaciones_X_Dependencia]
+@I_Anio INT,
+@B_EsPregrado BIT,
+@I_EntidadFinanID INT = NULL,
+@I_CtaDepositoID INT = NULL
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	DECLARE @Pregrado CHAR(1) = '1',
+			@Maestria CHAR(1) = '2',
+			@Doctorado CHAR(1) = '3',
+			@C_CodDependencia NVARCHAR(20) = CASE WHEN @B_EsPregrado = 1 THEN 'C_CodFac' ELSE 'C_CodEsc' END,
+			@T_Dependencia NVARCHAR(20) = CASE WHEN @B_EsPregrado = 1 THEN 'T_FacDesc' ELSE 'T_EscDesc' END
+
+	DECLARE @SQLString NVARCHAR(4000),
+			@ParmDefinition NVARCHAR(500)
+
+	SET @SQLString = N'
+		SELECT 
+			' + @C_CodDependencia  + ' AS C_CodDependencia, 
+			' + @T_Dependencia + ' AS T_Dependencia,  
+			ISNULL([1], 0) AS Enero,
+			ISNULL([2], 0) AS Febrero,
+			ISNULL([3], 0) AS Marzo,
+			ISNULL([4], 0) AS Abril,
+			ISNULL([5], 0) AS Mayo,
+			ISNULL([6], 0) AS Junio,
+			ISNULL([7], 0) AS Julio,
+			ISNULL([8], 0) AS Agosto,
+			ISNULL([9], 0) AS Setiembre,
+			ISNULL([10], 0) AS Octubre,
+			ISNULL([11], 0) AS Noviembre,
+			ISNULL([12], 0) AS Diciembre
+		FROM
+		(
+			SELECT mat.' + @C_CodDependencia + ', mat.' + @T_Dependencia + ', MONTH(pagban.D_FecPago) AS I_Month, SUM(pagpro.I_MontoPagado) AS I_MontoTotal 
+			FROM dbo.TR_PagoBanco pagban
+			INNER JOIN dbo.TRI_PagoProcesadoUnfv pagpro ON pagban.I_PagoBancoID = pagpro.I_PagoBancoID AND pagpro.B_Anulado = 0 
+			INNER JOIN dbo.TR_ObligacionAluCab cab ON cab.I_ObligacionAluID = pagpro.I_ObligacionAluID AND cab.B_Habilitado = 1 AND cab.B_Eliminado = 0
+			INNER JOIN dbo.TR_ObligacionAluDet det ON det.I_ObligacionAluID = cab.I_ObligacionAluID AND det.B_Habilitado = 1 AND det.B_Eliminado = 0
+			INNER JOIN dbo.TI_ConceptoPago conpag ON conpag.I_ConcPagID = det.I_ConcPagID
+			INNER JOIN dbo.VW_MatriculaAlumno mat ON mat.I_MatAluID = cab.I_MatAluID
+			LEFT JOIN dbo.VW_Clasificadores cl ON cl.C_ClasificConceptoCod = conpag.T_Clasificador
+			WHERE mat.B_Habilitado = 1 AND pagban.B_Anulado = 0 AND YEAR(pagban.D_FecPago) = @I_Anio AND ' + 
+				CASE WHEN @B_EsPregrado = 1 THEN 'mat.N_Grado = @Pregrado' ELSE 'mat.N_Grado IN (@Maestria, @Doctorado)' END + '
+				' + CASE WHEN @I_EntidadFinanID IS NULL THEN '' ELSE 'AND pagban.I_EntidadFinanID = @I_EntidadFinanID' END + '
+				' + CASE WHEN @I_CtaDepositoID IS NULL THEN '' ELSE 'AND pagpro.I_CtaDepositoID = @I_CtaDepositoID' END + '
+			GROUP BY mat.' + @C_CodDependencia + ', mat.' + @T_Dependencia + ', MONTH(pagban.D_FecPago)
+		) p
+		PIVOT
+		(
+			SUM(p.I_MontoTotal) FOR p.I_Month IN ([1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12])
+		) AS pvt
+		ORDER BY 2 DESC'
+	
+	SET @ParmDefinition = N'@Pregrado CHAR(1), @Maestria CHAR(1), @Doctorado CHAR(1), @I_Anio INT, @I_EntidadFinanID INT, @I_CtaDepositoID INT'
+
+	EXECUTE sp_executesql @SQLString, @ParmDefinition,
+		@Pregrado = @Pregrado,
+		@Maestria= @Maestria,
+		@Doctorado = @Doctorado,
+		@I_Anio = @I_Anio,
+		@I_EntidadFinanID = @I_EntidadFinanID,
+		@I_CtaDepositoID = @I_CtaDepositoID
+
+/*
+EXEC USP_S_ResumenAnualPagoDeObligaciones_X_Dependencia 
+	@I_Anio = 2021, 
+	@B_EsPregrado = 0, 
+	@I_EntidadFinanID = 1,
+	@I_CtaDepositoID = NULL
+GO
+*/
 END
 GO
