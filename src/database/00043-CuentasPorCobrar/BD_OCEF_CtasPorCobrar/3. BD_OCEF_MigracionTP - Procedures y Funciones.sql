@@ -589,7 +589,7 @@ BEGIN
 				t_out.INS_OBLIG_MORA <> t_out.DEL_OBLIG_MORA
 
 
-		SET @I_CpPri = (SELECT COUNT(*) FROM cp_des)
+		SET @I_CpPri = (SELECT COUNT(*) FROM cp_pri)
 		SET @I_Insertados = (SELECT COUNT(*) FROM @Tbl_output WHERE accion = 'INSERT')
 		SET @I_Actualizados = (SELECT COUNT(*) FROM @Tbl_output WHERE accion = 'UPDATE' AND B_Removido = 0)
 		SET @I_Removidos = (SELECT COUNT(*) FROM @Tbl_output WHERE accion = 'UPDATE' AND B_Removido = 1)
@@ -650,17 +650,17 @@ END
 GO
 
 
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_MarcarConceptosPagoSinAnioAsignado')
-	DROP PROCEDURE [dbo].[USP_U_MarcarConceptosPagoSinAnioAsignado]
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_MarcarConceptosPagoObligSinAnioAsignado')
+	DROP PROCEDURE [dbo].[USP_U_MarcarConceptosPagoObligSinAnioAsignado]
 GO
 
-CREATE PROCEDURE USP_U_MarcarConceptosPagoSinAnioAsignado	
+CREATE PROCEDURE USP_U_MarcarConceptosPagoObligSinAnioAsignado	
 	@B_Resultado  bit output,
 	@T_Message	  nvarchar(4000) OUTPUT	
 AS
 --declare @B_Resultado  bit,
 --		@T_Message	  nvarchar(4000)
---exec USP_U_MarcarConceptosPagoRepetidos @B_Resultado output, @T_Message output
+--exec USP_U_MarcarConceptosPagoObligSinAnioAsignado @B_Resultado output, @T_Message output
 --select @B_Resultado as resultado, @T_Message as mensaje
 BEGIN
 	DECLARE @D_FecProceso datetime = GETDATE() 
@@ -670,9 +670,15 @@ BEGIN
 		SET		B_Migrable = 0,
 				D_FecEvalua = @D_FecProceso,
 				T_Observacion = ISNULL(T_Observacion, '') + '011 - 0 AÑOS: ('+ CONVERT(varchar, @D_FecProceso, 112) + '). Concepto de pago de obligacion sin año asignado.|'
-		WHERE	ANO IS NULL AND TIPO_OBLIG = 1
+		WHERE	(ANO IS NULL OR ANO = 0) AND TIPO_OBLIG = 1
 
-		SELECT * FROM TR_MG_CpPri WHERE B_Migrable = 0 AND T_Observacion LIKE '%011%'
+		UPDATE	TR_MG_CpPri
+		SET		B_Migrable = 0,
+				D_FecEvalua = @D_FecProceso,
+				T_Observacion = ISNULL(T_Observacion, '') + '012 - NO COINCIDE AÑO : ('+ CONVERT(varchar, @D_FecProceso, 112) + '). Año del concepto de pago de obligacion no coincide con el año de la cuota de pagos.|'
+		WHERE	NOT EXISTS (SELECT * FROM TR_MG_CpDes WHERE I_Anio = TR_MG_CpPri.ANO)
+
+		SELECT * FROM TR_MG_CpPri WHERE B_Migrable = 0 AND T_Observacion LIKE '%011%' OR T_Observacion LIKE '%012%'
 
 		SET @B_Resultado = 1
 		SET @T_Message = 'Ok'
@@ -684,6 +690,168 @@ BEGIN
 END
 GO
 
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_MarcarConceptosPagoObligSinPeriodoAsignado')
+	DROP PROCEDURE [dbo].[USP_U_MarcarConceptosPagoObligSinPeriodoAsignado]
+GO
+
+CREATE PROCEDURE USP_U_MarcarConceptosPagoObligSinPeriodoAsignado	
+	@B_Resultado  bit output,
+	@T_Message	  nvarchar(4000) OUTPUT	
+AS
+--declare @B_Resultado  bit,
+--		@T_Message	  nvarchar(4000)
+--exec USP_U_MarcarConceptosPagoObligSinPeriodoAsignado @B_Resultado output, @T_Message output
+--select @B_Resultado as resultado, @T_Message as mensaje
+BEGIN
+	DECLARE @D_FecProceso datetime = GETDATE() 
+	
+	BEGIN TRY 
+		UPDATE	TR_MG_CpPri
+		SET		B_Migrable = 0,
+				D_FecEvalua = @D_FecProceso,
+				T_Observacion = ISNULL(T_Observacion, '') + '013 - 0 Periodo: ('+ CONVERT(varchar, @D_FecProceso, 112) + '). Concepto de pago de obligacion sin año asignado.|'
+		WHERE	(ANO IS NULL OR ANO = 0) AND TIPO_OBLIG = 1
+
+		UPDATE	TR_MG_CpPri
+		SET		B_Migrable = 0,
+				D_FecEvalua = @D_FecProceso,
+				T_Observacion = ISNULL(T_Observacion, '') + '012 - NO COINCIDE AÑO : ('+ CONVERT(varchar, @D_FecProceso, 112) + '). Año del concepto de pago de obligacion no coincide con el año de la cuota de pagos.|'
+		WHERE	NOT EXISTS (SELECT * FROM TR_MG_CpDes WHERE I_Anio = TR_MG_CpPri.ANO)
+
+		SELECT * FROM TR_MG_CpPri WHERE B_Migrable = 0 AND T_Observacion LIKE '%011%' OR T_Observacion LIKE '%012%'
+
+		SET @B_Resultado = 1
+		SET @T_Message = 'Ok'
+	END TRY
+	BEGIN CATCH
+		SET @B_Resultado = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+END
+GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_MarcarConceptosPagoObligSinCuotaPago')
+	DROP PROCEDURE [dbo].[USP_U_MarcarConceptosPagoObligSinCuotaPago]
+GO
+
+CREATE PROCEDURE USP_U_MarcarConceptosPagoObligSinCuotaPago	
+	@B_Resultado  bit output,
+	@T_Message	  nvarchar(4000) OUTPUT	
+AS
+--declare @B_Resultado  bit,
+--		@T_Message	  nvarchar(4000)
+--exec USP_U_MarcarConceptosPagoObligSinCuotaPago @B_Resultado output, @T_Message output
+--select @B_Resultado as resultado, @T_Message as mensaje
+BEGIN
+	DECLARE @D_FecProceso datetime = GETDATE() 
+	
+	BEGIN TRY 
+		UPDATE	TR_MG_CpPri
+		SET		B_Migrable = 0,
+				D_FecEvalua = @D_FecProceso,
+				T_Observacion = ISNULL(T_Observacion, '') + '013 - SIN CUOTA PAGO: ('+ CONVERT(varchar, @D_FecProceso, 112) + '). Concepto de pago de obligacion sin cuota de pago.|'
+		WHERE	NOT EXISTS (SELECT * FROM TR_MG_CpDes WHERE CUOTA_PAGO = TR_MG_CpPri.CUOTA_PAGO)
+
+		UPDATE	TR_MG_CpPri
+		SET		B_Migrable = 0,
+				D_FecEvalua = @D_FecProceso,
+				T_Observacion = ISNULL(T_Observacion, '') + '014 - CUOTA PAGO SM: ('+ CONVERT(varchar, @D_FecProceso, 112) + '). La cuota de pago asociada no fue migrada.|'
+		WHERE	EXISTS (SELECT * FROM TR_MG_CpDes WHERE CUOTA_PAGO = TR_MG_CpPri.CUOTA_PAGO AND B_Migrable = 0)
+
+		SELECT * FROM TR_MG_CpPri WHERE B_Migrable = 0 AND (T_Observacion LIKE '%013%' OR  T_Observacion LIKE '%014%')
+
+		SET @B_Resultado = 1
+		SET @T_Message = 'Ok'
+	END TRY
+	BEGIN CATCH
+		SET @B_Resultado = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+END
+GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_AsignarIdEquivalenciasConceptoPago')
+	DROP PROCEDURE [dbo].[USP_U_AsignarIdEquivalenciasConceptoPago]
+GO
+
+CREATE PROCEDURE [dbo].[USP_U_AsignarIdEquivalenciasConceptoPago]
+	@B_Resultado  bit output,
+	@T_Message	  nvarchar(4000) OUTPUT	
+AS
+--declare @B_Resultado  bit,
+--		@T_Message	  nvarchar(4000)
+--exec USP_U_AsignarIdEquivalenciasConceptoPago @B_Resultado output, @T_Message output
+--select @B_Resultado as resultado, @T_Message as mensaje
+BEGIN
+	DECLARE @D_FecProceso datetime = GETDATE() 
+	
+	BEGIN TRY 
+		DECLARE @tipo_alumno AS TABLE (I_TipAluID int, C_CodTipAlu varchar(5), T_Descripcion varchar(50))
+		DECLARE @tipo_grado	 AS TABLE (I_TipGradoID int, C_CodTipGrado varchar(5), T_Descripcion varchar(50))
+		DECLARE @tipo_obligacion AS TABLE (I_TipOblID int, C_CodTipObl varchar(5), T_Descripcion varchar(50))
+		DECLARE @tipo_calculado AS TABLE (I_TipCalcID int, C_CodCalc varchar(5), T_Descripcion varchar(50))
+		DECLARE @tipo_periodo	AS TABLE (I_TipPerID int, C_CodTipPer varchar(5), T_Descripcion varchar(50))
+		DECLARE @grupo_rc	AS TABLE (I_TipGrpRc int, C_CodGrpRc varchar(5), T_Descripcion varchar(50))
+		DECLARE @codigo_ing AS TABLE (I_CodIngID int, C_CodIng varchar(5), T_Descripcion varchar(50))
+		DECLARE @unfv_dep	AS TABLE (I_DepID int, C_CodDep varchar(50), C_DepCodPl varchar(50))
+
+		INSERT INTO @tipo_alumno (I_TipAluID, C_CodTipAlu, T_Descripcion)
+			SELECT I_OpcionID, T_OpcionCod, T_OpcionDesc FROM BD_OCEF_CtasPorCobrar.dbo.TC_CatalogoOpcion WHERE I_ParametroID = 1
+
+		INSERT INTO @tipo_grado (I_TipGradoID, C_CodTipGrado, T_Descripcion)
+			SELECT I_OpcionID, T_OpcionCod, T_OpcionDesc FROM BD_OCEF_CtasPorCobrar.dbo.TC_CatalogoOpcion WHERE I_ParametroID = 2
+
+		INSERT INTO @tipo_obligacion (I_TipOblID, C_CodTipObl, T_Descripcion)
+			SELECT I_OpcionID, T_OpcionCod, T_OpcionDesc FROM BD_OCEF_CtasPorCobrar.dbo.TC_CatalogoOpcion WHERE I_ParametroID = 3
+
+		INSERT INTO @tipo_calculado (I_TipCalcID, C_CodCalc, T_Descripcion)
+			SELECT I_OpcionID, T_OpcionCod, T_OpcionDesc FROM BD_OCEF_CtasPorCobrar.dbo.TC_CatalogoOpcion WHERE I_ParametroID = 4
+
+		INSERT INTO @tipo_periodo (I_TipPerID, C_CodTipPer, T_Descripcion)
+			SELECT I_OpcionID, T_OpcionCod, T_OpcionDesc FROM BD_OCEF_CtasPorCobrar.dbo.TC_CatalogoOpcion WHERE I_ParametroID = 5
+
+		INSERT INTO @grupo_rc (I_TipGrpRc, C_CodGrpRc, T_Descripcion)
+			SELECT I_OpcionID, T_OpcionCod, T_OpcionDesc FROM BD_OCEF_CtasPorCobrar.dbo.TC_CatalogoOpcion WHERE I_ParametroID = 6
+
+		INSERT INTO @codigo_ing (I_CodIngID, C_CodIng, T_Descripcion)
+			SELECT I_OpcionID, T_OpcionCod, T_OpcionDesc FROM BD_OCEF_CtasPorCobrar.dbo.TC_CatalogoOpcion WHERE I_ParametroID = 7
+
+		INSERT INTO @unfv_dep (I_DepID, C_CodDep, C_DepCodPl)
+			SELECT I_DependenciaID, C_DepCod, C_DepCodPl FROM BD_OCEF_CtasPorCobrar.dbo.TC_DependenciaUNFV
+
+		UPDATE	tb_pri  
+		SET		tb_pri.I_TipAluID	= t_alu.I_TipAluID,
+				tb_pri.I_TipGradoID = t_grd.I_TipGradoID,
+				tb_pri.I_TipOblID	= t_obl.I_TipOblID,
+				tb_pri.I_TipCalcID	= t_clc.I_TipCalcID,
+				tb_pri.I_TipPerID	= t_per.I_TipPerID,
+				tb_pri.I_DepID		= dep.I_DepID,
+				tb_pri.I_TipGrpRc	= t_grc.I_TipGrpRc,
+				tb_pri.I_CodIngID	= c_ing.I_CodIngID
+		FROM	TR_MG_CpPri tb_pri
+				LEFT JOIN @tipo_alumno t_alu ON tb_pri.TIP_ALUMNO = CAST(t_alu.C_CodTipAlu AS float)
+				LEFT JOIN @tipo_grado t_grd ON tb_pri.GRADO = CAST(t_grd.C_CodTipGrado AS float)
+				LEFT JOIN @tipo_obligacion t_obl ON tb_pri.TIPO_OBLIG = CAST(t_obl.C_CodTipObl AS bit)
+				LEFT JOIN @tipo_calculado t_clc ON tb_pri.CALCULAR = t_clc.C_CodCalc
+				LEFT JOIN @tipo_periodo t_per ON tb_pri.P = t_per.C_CodTipPer
+				LEFT JOIN @grupo_rc t_grc ON tb_pri.GRUPO_RC = t_grc.C_CodGrpRc
+				LEFT JOIN @codigo_ing c_ing ON tb_pri.COD_ING = c_ing.C_CodIng
+				LEFT JOIN @unfv_dep dep ON tb_pri.COD_DEP_PL = dep.C_DepCodPl AND LEN(dep.C_DepCodPl) > 0
+		
+		SELECT * FROM TR_MG_CpPri
+
+		SET @B_Resultado = 1
+		SET @T_Message = 'Ok'
+	END TRY
+	BEGIN CATCH
+		SET @B_Resultado = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+END
+GO
 
 
 IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_IU_GrabarTablaCatalogoConceptos')
@@ -714,10 +882,121 @@ GO
 
 
 
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_IU_MigrarDataConceptoPagoCtasPorCobrar')
+	DROP PROCEDURE [dbo].[USP_IU_MigrarDataConceptoPagoCtasPorCobrar]
+GO
 
+CREATE PROCEDURE USP_IU_MigrarDataConceptoPagoCtasPorCobrar	
+	@I_AnioIni	  int = NULL,
+	@I_AnioFin	  int = NULL,
+	@B_Resultado  bit output,
+	@T_Message	  nvarchar(4000) OUTPUT	
+AS
+--declare @B_Resultado  bit, @I_AnioIni int, @I_AnioFin int, @T_Message	  nvarchar(4000)
+--exec USP_IU_MigrarDataConceptoPagoCtasPorCobrar @I_AnioIni = null, @I_AnioFin = null, @B_Resultado = @B_Resultado output, @T_Message = @T_Message output
+--select @B_Resultado as resultado, @T_Message as mensaje
+BEGIN
+	DECLARE @D_FecProceso datetime = GETDATE() 
+	DECLARE @I_ConceptoPago_Inserted int = 0
+	DECLARE @I_ConceptoPago_Updated int = 0
+	DECLARE @Tbl_outputConceptosPago AS TABLE (T_Action varchar(20), I_RowID int)
 
+	BEGIN TRANSACTION;
+	BEGIN TRY 
+		SET @I_AnioIni = (SELECT ISNULL(@I_AnioIni, 0))
+		SET @I_AnioFin = (SELECT ISNULL(@I_AnioFin, 3000))
+	
+		SET IDENTITY_INSERT BD_OCEF_CtasPorCobrar.dbo.TI_ConceptoPago ON;
 
+		MERGE INTO  BD_OCEF_CtasPorCobrar.dbo.TI_ConceptoPago AS TRG
+		USING (SELECT * FROM TR_MG_CpPri WHERE B_Migrable = 1 AND ANO BETWEEN @I_AnioIni AND @I_AnioFin) AS SRC
+		ON TRG.I_ConcPagID = SRC.ID_CP
+		WHEN NOT MATCHED BY TARGET THEN 
+			INSERT (I_ConcPagID, I_ProcesoID, I_ConceptoID, T_ConceptoPagoDesc, B_Fraccionable, B_ConceptoGeneral, B_AgrupaConcepto, I_AlumnosDestino, 
+					I_GradoDestino, I_TipoObligacion, T_Clasificador, C_CodTasa, B_Calculado, I_Calculado, B_AnioPeriodo, I_Anio, I_Periodo, B_Especialidad, 
+					C_CodRc, B_Dependencia, C_DepCod, B_GrupoCodRc, I_GrupoCodRc, B_ModalidadIngreso, I_ModalidadIngresoID, B_ConceptoAgrupa, I_ConceptoAgrupaID, 
+					B_ConceptoAfecta, I_ConceptoAfectaID, N_NroPagos, B_Porcentaje, C_Moneda, M_Monto, M_MontoMinimo, T_DescripcionLarga, T_Documento, B_Mora, 
+					B_Migrado, B_Habilitado, B_Eliminado, I_TipoDescuentoID, B_EsPagoMatricula, B_EsPagoExtmp)
+			VALUES (SRC.ID_CP, SRC.CUOTA_PAGO, 0, SRC.DESCRIPCIO, SRC.FRACCIONAB, SRC.CONCEPTO_G, SRC.AGRUPA, SRC.I_TipAluID, SRC.I_TipGradoID, SRC.I_TipOblID, 
+					SRC.CLASIFICAD, SRC.CLASIFIC_5, CASE WHEN SRC.I_TipCalcID IS NULL THEN 0 ELSE 1 END, SRC.I_TipCalcID, CASE CAST(SRC.ANO AS int) WHEN 0 THEN 0 ELSE 1 END, SRC.ANO, SRC.I_TipPerID, 
+					CASE LEN(LTRIM(RTRIM(SRC.COD_RC))) WHEN 0 THEN 0 ELSE 1 END, CASE LEN(LTRIM(RTRIM(SRC.COD_RC))) WHEN 0 THEN NULL ELSE SRC.COD_RC END, 
+					CASE LEN(LTRIM(RTRIM(SRC.COD_DEP_PL))) WHEN 0 THEN 0 ELSE 1 END, SRC.I_DepID, CASE WHEN SRC.I_TipGrpRc IS NULL THEN 0 ELSE 1 END, SRC.I_TipGrpRc, 
+					CASE WHEN SRC.I_CodIngID IS NULL THEN 0 ELSE 1 END, SRC.I_CodIngID, CASE SRC.ID_CP_AGRP WHEN 0 THEN 0 ELSE 1 END, 
+					CASE SRC.ID_CP_AGRP WHEN 0 THEN NULL ELSE SRC.ID_CP_AGRP END, CASE SRC.ID_CP_AFEC WHEN 0 THEN 0 ELSE 1 END,
+					CASE SRC.ID_CP_AFEC WHEN 0 THEN NULL ELSE SRC.ID_CP_AFEC END, SRC.NRO_PAGOS, SRC.PORCENTAJE, 'PEN', SRC.MONTO, 
+					CAST(REPLACE(SRC.MONTO_MIN, ',', '.') as float), SRC.DESCRIP_L, SRC.DOCUMENTO, 
+					CASE SRC.OBLIG_MORA WHEN 'VERDADERO' THEN 1 WHEN 'FALSO' THEN 0 WHEN 'True' THEN 1 WHEN 'False' THEN 0 ELSE NULL END,
+					1, 1, SRC.ELIMINADO, NULL, NULL, NULL)
+		WHEN MATCHED AND TRG.B_Migrado = 1 AND TRG.I_UsuarioMod IS NULL THEN 
+			 UPDATE SET T_ConceptoPagoDesc = SRC.DESCRIPCIO, 
+					 B_Fraccionable = SRC.FRACCIONAB, 
+					 B_ConceptoGeneral = SRC.CONCEPTO_G,
+					 B_AgrupaConcepto = SRC.AGRUPA, 
+					 I_AlumnosDestino = SRC.I_TipAluID, 
+					 I_GradoDestino = SRC.I_TipOblID, 
+					 T_Clasificador = SRC.CLASIFICAD, 
+					 C_CodTasa = SRC.CLASIFIC_5, 
+					 B_Calculado = SRC.CALCULAR, 
+					 I_Calculado = SRC.I_TipCalcID, 
+					 B_AnioPeriodo = (CASE CAST(SRC.ANO AS int) WHEN 0 THEN 0 ELSE 1 END), 
+					 I_Anio = SRC.ANO, 
+					 I_Periodo = SRC.I_TipPerID, 
+					 B_Especialidad = (CASE LEN(LTRIM(RTRIM(SRC.COD_RC))) WHEN 0 THEN 0 ELSE 1 END), 
+					 C_CodRc = (CASE LEN(LTRIM(RTRIM(SRC.COD_RC))) WHEN 0 THEN NULL ELSE SRC.COD_RC END), 
+					 B_Dependencia = (CASE LEN(LTRIM(RTRIM(SRC.I_DepID))) WHEN 0 THEN 0 ELSE 1 END), 
+					 C_DepCod = I_DepID, 
+					 B_GrupoCodRc = (CASE WHEN SRC.I_TipGrpRc IS NULL THEN 0 ELSE 1 END), 
+					 I_GrupoCodRc = SRC.I_TipGrpRc, 
+					 B_ModalidadIngreso = (CASE WHEN SRC.I_CodIngID IS NULL THEN 0 ELSE 1 END), 
+					 I_ModalidadIngresoID = SRC.I_CodIngID, 
+					 B_ConceptoAgrupa = (CASE SRC.ID_CP_AGRP WHEN 0 THEN 0 ELSE 1 END), 
+					 I_ConceptoAgrupaID = SRC.ID_CP_AGRP,
+					 B_ConceptoAfecta = (CASE SRC.ID_CP_AFEC WHEN 0 THEN 0 ELSE 1 END), 
+					 I_ConceptoAfectaID = (CASE SRC.ID_CP_AFEC WHEN 0 THEN NULL ELSE SRC.ID_CP_AFEC END), 
+					 B_Porcentaje = SRC.PORCENTAJE, 
+					 M_Monto = SRC.MONTO,
+					 M_MontoMinimo = CAST(REPLACE(SRC.MONTO_MIN, ',', '.') as float), 
+					 T_DescripcionLarga = SRC.DESCRIP_L, 
+					 T_Documento = SRC.DOCUMENTO,
+					 B_Mora = (CASE SRC.OBLIG_MORA WHEN 'VERDADERO' THEN 1 WHEN 'FALSO' THEN 0 WHEN 'True' THEN 1 WHEN 'False' THEN 0 ELSE NULL END), 
+					 I_TipoDescuentoID = NULL, 
+					 --B_EsPagoMatricula = NULL, 
+					 --B_EsPagoExtmp = NULL, 
+					 D_FecMod = @D_FecProceso
+		WHEN NOT MATCHED BY SOURCE AND TRG.B_Migrado = 1 AND TRG.I_UsuarioMod IS NULL THEN
+			DELETE  		 
+		OUTPUT $action, SRC.I_RowID INTO @Tbl_outputConceptosPago;
 
+		SET IDENTITY_INSERT BD_OCEF_CtasPorCobrar.dbo.TI_ConceptoPago OFF;
+
+		UPDATE	TR_MG_CpPri 
+		SET		B_Migrado = 1, 
+				D_FecMigrado = @D_FecProceso
+		WHERE	I_RowID IN (SELECT I_RowID FROM @Tbl_outputConceptosPago)
+
+		UPDATE	TR_MG_CpDes 
+		SET		T_Observacion = '000 - EXTERNO: ('+ CONVERT(varchar, @D_FecProceso, 112) + '). El concepto de pago ha sido ingresado o modificado desde una fuente externa.|',
+				B_Migrado = 0 
+		WHERE	I_RowID IN (SELECT CD.I_RowID FROM TR_MG_CpDes CD LEFT JOIN @Tbl_outputConceptosPago O ON CD.I_RowID = o.I_RowID 
+							WHERE CD.B_Migrable = 1 AND O.I_RowID IS NULL)
+
+		SET @I_ConceptoPago_Inserted = (SELECT COUNT(*) FROM @Tbl_outputConceptosPago WHERE T_Action = 'INSERT')
+		SET @I_ConceptoPago_Updated = (SELECT COUNT(*) FROM @Tbl_outputConceptosPago WHERE T_Action = 'UPDATE')
+
+		SELECT @I_ConceptoPago_Inserted AS concepto_count_insert, @I_ConceptoPago_Updated AS concepto_count_update 
+
+		COMMIT TRANSACTION;
+
+		SET @B_Resultado = 1
+		SET @T_Message = 'Ok'
+	END TRY
+	BEGIN CATCH
+		SET @B_Resultado = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+		ROLLBACK TRANSACTION;
+	END CATCH
+END
+GO
 
 
 
