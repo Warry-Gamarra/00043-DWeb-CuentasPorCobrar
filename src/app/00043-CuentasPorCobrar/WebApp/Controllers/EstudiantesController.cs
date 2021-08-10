@@ -13,7 +13,7 @@ using WebMatrix.WebData;
 
 namespace WebApp.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Administrador, Consulta")]
     public class EstudiantesController : Controller
     {
         private readonly EstudianteModel _seleccionarArchivoModel;
@@ -38,6 +38,7 @@ namespace WebApp.Controllers
             reportePosgradoServiceFacade = new ReportePosgradoServiceFacade();
         }
 
+        [Authorize(Roles = "Administrador")]
         [Route("operaciones/cargar-estudiantes")]
         public ActionResult Index()
         {
@@ -46,6 +47,7 @@ namespace WebApp.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Administrador")]
         [Route("operaciones/cargar-aptos-pregrado")]
         public ActionResult CargarArchivoMatriculaPregrado()
         {
@@ -53,6 +55,7 @@ namespace WebApp.Controllers
             return PartialView("_SeleccionarArchivo", model);
         }
 
+        [Authorize(Roles = "Administrador")]
         [Route("operaciones/cargar-aptos-posgrado")]
         public ActionResult CargarArchivoMatriculaPosgrado()
         {
@@ -61,6 +64,7 @@ namespace WebApp.Controllers
         }
 
 
+        [Authorize(Roles = "Administrador")]
         [Route("operaciones/cargar-multas-pregrado")]
         public ActionResult CargarArchivoMultaPregrado()
         {
@@ -68,6 +72,7 @@ namespace WebApp.Controllers
             return PartialView("_SeleccionarArchivo", model);
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpPost]
         public ActionResult CargarArchivoMatricula(HttpPostedFileBase file, TipoAlumno tipoAlumno)
         {
@@ -79,7 +84,8 @@ namespace WebApp.Controllers
 
             return Json(response, JsonRequestBehavior.AllowGet);
         }
-       
+
+        [Authorize(Roles = "Administrador")]
         public ActionResult DescargarRegistrosObservados()
         {
             if (Session["MATRICULA_RESPONSE"] == null)
@@ -131,6 +137,7 @@ namespace WebApp.Controllers
             }
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpPost]
         public ActionResult CargarArchivoMulta(HttpPostedFileBase file, TipoAlumno tipoAlumno)
         {
@@ -143,6 +150,7 @@ namespace WebApp.Controllers
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize(Roles = "Administrador")]
         public ActionResult DescargarMultasSinRegistrar()
         {
             if (Session["MULTAS_SIN_REGISTRAR_RESPONSE"] == null)
