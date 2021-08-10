@@ -1302,13 +1302,13 @@ BEGIN
 		@F_FecFin = @F_FecFin
 /*
 EXEC USP_S_ListadoEstadoObligaciones
-@B_EsPregrado = 1,
+@B_EsPregrado = 0,
 @I_Anio = 2021,
-@I_Periodo = NULL,
+@I_Periodo = 19,
 @C_RcCod = NULL,
 @B_Ingresante = NULL,
-@B_ObligacionGenerada = NULL,
-@B_Pagado = NULL,
+@B_ObligacionGenerada = 1,
+@B_Pagado = 1,
 @F_FecIni = NULL,
 @F_FecFin = NULL,
 @B_MontoPagadoDiff = NULL
@@ -1516,7 +1516,7 @@ BEGIN
 		(
 			SUM(p.I_MontoTotal) FOR p.I_Month IN ([1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12])
 		) AS pvt
-		ORDER BY 2 DESC'
+		ORDER BY 2'
 	
 	SET @ParmDefinition = N'@Pregrado CHAR(1), @Maestria CHAR(1), @Doctorado CHAR(1), @I_Anio INT, @I_EntidadFinanID INT, @I_CtaDepositoID INT'
 
@@ -1531,9 +1531,9 @@ BEGIN
 /*
 EXEC USP_S_ResumenAnualPagoDeObligaciones_X_Dependencia 
 	@I_Anio = 2021, 
-	@B_EsPregrado = 0, 
-	@I_EntidadFinanID = 1,
-	@I_CtaDepositoID = NULL
+	@B_EsPregrado = 1, 
+	@I_EntidadFinanID = 2,
+	@I_CtaDepositoID = 9
 GO
 */
 END

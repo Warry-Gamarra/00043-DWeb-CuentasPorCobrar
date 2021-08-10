@@ -46,7 +46,11 @@ namespace WebApp.ViewModels
 
         public string N_Grado { get; set; }
 
+        public string C_CodFac { get; set; }
+
         public string T_FacDesc { get; set; }
+
+        public string C_CodEsc { get; set; }
 
         public string T_EscDesc { get; set; }
 
