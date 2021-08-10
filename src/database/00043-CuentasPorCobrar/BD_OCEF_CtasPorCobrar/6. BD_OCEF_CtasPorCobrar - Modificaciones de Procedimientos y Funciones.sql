@@ -1256,7 +1256,7 @@ BEGIN
 			@ParmDefinition NVARCHAR(500)
   
 	SET @SQLString = N'SELECT mat.I_MatAluID, cab.I_ObligacionAluID, mat.C_CodAlu, mat.C_RcCod, mat.T_Nombre, mat.T_ApePaterno, mat.T_ApeMaterno, 
-			mat.N_Grado, mat.T_FacDesc, mat.T_EscDesc, mat.T_DenomProg, mat.B_Ingresante, mat.I_CredDesaprob,
+			mat.N_Grado, mat.C_CodFac, mat.T_FacDesc, mat.C_CodEsc, mat.T_EscDesc, mat.T_DenomProg, mat.B_Ingresante, mat.I_CredDesaprob,
 			mat.I_Anio, 
 			mat.T_Periodo,
 			ISNULL(pro.T_ProcesoDesc, '''') AS T_ProcesoDesc,
@@ -1279,7 +1279,7 @@ BEGIN
 			' + CASE WHEN @F_FecIni IS NULL THEN '' ELSE 'and DATEDIFF(DAY, @F_FecIni, pagban.D_FecPago) >= 0' END + '
 			' + CASE WHEN @F_FecFin IS NULL	THEN '' ELSE 'and DATEDIFF(DAY, pagban.D_FecPago, @F_FecFin) >= 0' END + '
 		GROUP BY mat.I_MatAluID, cab.I_ObligacionAluID, mat.C_CodAlu, mat.C_RcCod, mat.T_Nombre, mat.T_ApePaterno, mat.T_ApeMaterno, 
-			mat.N_Grado, mat.T_FacDesc, mat.T_EscDesc, mat.T_DenomProg, mat.B_Ingresante, mat.I_CredDesaprob,
+			mat.N_Grado, mat.C_CodFac, mat.T_FacDesc, mat.C_CodEsc, mat.T_EscDesc, mat.T_DenomProg, mat.B_Ingresante, mat.I_CredDesaprob,
 			mat.I_Anio, mat.T_Periodo, pro.T_ProcesoDesc, cab.I_MontoOblig, cab.D_FecVencto, cab.B_Pagado
 		' + CASE WHEN @B_MontoPagadoDiff IS NULL OR @B_MontoPagadoDiff = 0 THEN '' ELSE 'HAVING NOT cab.I_MontoOblig = SUM(pagpro.I_MontoPagado)' END + '
 		ORDER BY mat.T_FacDesc, mat.T_DenomProg, mat.T_ApePaterno, mat.T_ApeMaterno';
@@ -1302,16 +1302,16 @@ BEGIN
 		@F_FecFin = @F_FecFin
 /*
 EXEC USP_S_ListadoEstadoObligaciones
-@B_EsPregrado = 0,
+@B_EsPregrado = 1,
 @I_Anio = 2021,
-@I_Periodo = 19,
+@I_Periodo = NULL,
 @C_RcCod = NULL,
 @B_Ingresante = NULL,
 @B_ObligacionGenerada = 1,
-@B_Pagado = 1,
+@B_Pagado = 0,
 @F_FecIni = NULL,
 @F_FecFin = NULL,
-@B_MontoPagadoDiff = NULL
+@B_MontoPagadoDiff = 1
 GO
 */
 END
