@@ -53,7 +53,7 @@ namespace Domain.Entities
             {
                 result.Add(new Dependencia(item));
             }
-            return result;
+            return result.OrderBy(x => x.Descripcion).ToList();
         }
 
         public Dependencia Find(int dependenciaId)

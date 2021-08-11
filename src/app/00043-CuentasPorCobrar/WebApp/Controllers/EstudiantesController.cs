@@ -209,9 +209,21 @@ namespace WebApp.Controllers
                 {
                     case TipoEstudio.Pregrado:
                         consultaObligaciones = reportePregradoServiceFacade.EstadoObligacionAlumnos(anio.Value, periodo, null, null, null, null);
+
+                        if (!String.IsNullOrEmpty(dependencia))
+                        {
+                            consultaObligaciones = consultaObligaciones.Where(x => x.C_CodFac.Equals(dependencia));
+                        }
+
                         break;
                     case TipoEstudio.Posgrado:
                         consultaObligaciones = reportePosgradoServiceFacade.EstadoObligacionAlumnos(anio.Value, periodo, null, null, null, null);
+
+                        if (!String.IsNullOrEmpty(dependencia))
+                        {
+                            consultaObligaciones = consultaObligaciones.Where(x => x.C_CodEsc.Equals(dependencia));
+                        }
+
                         break;
                     default:
                         consultaObligaciones = new List<EstadoObligacionViewModel>();

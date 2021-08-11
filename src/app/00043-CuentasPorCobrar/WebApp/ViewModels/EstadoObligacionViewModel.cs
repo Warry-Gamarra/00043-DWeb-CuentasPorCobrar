@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -45,7 +46,11 @@ namespace WebApp.ViewModels
 
         public string N_Grado { get; set; }
 
+        public string C_CodFac { get; set; }
+
         public string T_FacDesc { get; set; }
+
+        public string C_CodEsc { get; set; }
 
         public string T_EscDesc { get; set; }
 
@@ -73,7 +78,23 @@ namespace WebApp.ViewModels
 
         public DateTime? D_FecVencto { get; set; }
 
+        public string T_FecVencto
+        {
+            get
+            {
+                return D_FecVencto.HasValue ? D_FecVencto.Value.ToString(FormatosDateTime.BASIC_DATE) : "-";
+            }
+        }
+
         public bool? B_Pagado { get; set; }
+
+        public string T_Pagado
+        {
+            get
+            {
+                return B_Pagado.HasValue ? (B_Pagado.Value ? "Pagd." : "Pendt.") : "-";
+            }
+        }
 
         public decimal? I_MontoPagadoActual { get; set; }
     }

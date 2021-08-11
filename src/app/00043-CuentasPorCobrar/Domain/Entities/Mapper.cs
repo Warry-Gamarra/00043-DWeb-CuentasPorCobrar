@@ -242,6 +242,7 @@ namespace Domain.Entities
             dataTable.Columns.Add("I_EntidadFinanID");
             dataTable.Columns.Add("I_CtaDepositoID").AllowDBNull = true;
             dataTable.Columns.Add("T_InformacionAdicional").AllowDBNull = true;
+            dataTable.Columns.Add("T_ProcesoDesc").AllowDBNull = true;
 
             dataPagoObligaciones.ForEach(x => dataTable.Rows.Add(
                 x.C_CodOperacion,
@@ -259,7 +260,8 @@ namespace Domain.Entities
                 x.D_FecVencto,
                 x.I_EntidadFinanID,
                 x.I_CtaDepositoID,
-                x.T_InformacionAdicional
+                x.T_InformacionAdicional,
+                x.T_ProcesoDesc
             ));
 
             return dataTable;
@@ -537,7 +539,9 @@ namespace Domain.Entities
                 T_ApePaterno = sp.T_ApePaterno,
                 T_ApeMaterno = sp.T_ApeMaterno,
                 N_Grado = sp.N_Grado,
+                C_CodFac = sp.C_CodFac,
                 T_FacDesc = sp.T_FacDesc,
+                C_CodEsc = sp.C_CodEsc,
                 T_EscDesc = sp.T_EscDesc,
                 T_DenomProg = sp.T_DenomProg,
                 B_Ingresante = sp.B_Ingresante,

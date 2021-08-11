@@ -9,11 +9,13 @@ namespace WebApp.ViewModels
 {
     public class ReporteResumenAnualPagoObligaciones_X_Dependencias
     {
-        public ReporteResumenAnualPagoObligaciones_X_Dependencias(int anio, TipoEstudio tipoEstudio,
+        public ReporteResumenAnualPagoObligaciones_X_Dependencias(int anio, TipoEstudio tipoEstudio, string nombreEntidadFinanc, string numCuenta,
             IEnumerable<ResumenAnualPagoDeObligaciones_X_DependenciaDTO> resumen_x_dependencias)
         {
             this.anio = anio;
             this.tipoEstudio = tipoEstudio;
+            this.nombreEntidadFinanc = nombreEntidadFinanc;
+            this.numCuenta = numCuenta;
             this.resumen_x_dependencias = resumen_x_dependencias;
         }
 
@@ -25,6 +27,11 @@ namespace WebApp.ViewModels
         public TipoEstudio tipoEstudio { get; set; }
 
         public int anio { get; set; }
+
+        public string nombreEntidadFinanc { get; set; }
+
+        public string numCuenta { get; set; }
+
 
         public IEnumerable<ResumenAnualPagoDeObligaciones_X_DependenciaDTO> resumen_x_dependencias { get; }
 

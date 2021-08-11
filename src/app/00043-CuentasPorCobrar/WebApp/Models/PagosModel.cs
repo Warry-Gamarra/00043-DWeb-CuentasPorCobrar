@@ -158,6 +158,8 @@ namespace WebApp.Models
 
             detalle.FilPosicionFin = detalle.FilPosicionFin == 0 ? linesFile.Count() : detalle.FilPosicionFin;
 
+            var listaProcesos = procesoService.Listar_Procesos();
+
             for (int i = detalle.FilPosicionIni - 1; i < detalle.FilPosicionFin; i++)
             {
                 string line = linesFile[i];
@@ -240,6 +242,8 @@ namespace WebApp.Models
                 try
                 {
                     pagoEntity.I_ProcesoID = int.Parse(line.Substring(columnas["I_ProcesoID"].Inicial - 1, columnas["I_ProcesoID"].Final - columnas["I_ProcesoID"].Inicial + 1));
+
+                    pagoEntity.T_ProcesoDesc = listaProcesos.FirstOrDefault(x => x.I_ProcesoID == pagoEntity.I_ProcesoID).T_ProcesoDesc;
                 }
                 catch (Exception ex)
                 {
@@ -299,7 +303,7 @@ namespace WebApp.Models
                     return response;
                 }
 
-                if (pagoService.ValidarCodOperacion(model.codigoOperacion, model.codigoAlumno, model.idEntidadFinanciera, model.fechaPago))
+                if (pagoService.ValidarCodOperacion(model.codigoOperacion, model.codigoAlumno, model.idEntidadFinanciera, model.fechaPagoObl))
                 {
                     var entity = Mapper.PagoObligacionViewModel_To_PagoObligacionEntity(model);
 

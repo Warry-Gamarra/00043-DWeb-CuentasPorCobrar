@@ -28,7 +28,11 @@ namespace Data.Procedures
 
         public string N_Grado { get; set; }
 
+        public string C_CodFac { get; set; }
+
         public string T_FacDesc { get; set; }
+
+        public string C_CodEsc { get; set; }
 
         public string T_EscDesc { get; set; }
 
@@ -66,19 +70,16 @@ namespace Data.Procedures
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    parameters.Add(name: "I_Anio", dbType: DbType.Int32, value: pr.I_Anio);
-
-                    parameters.Add(name: "I_Periodo", dbType: DbType.Int32, value: pr.I_Periodo);
-
                     parameters.Add(name: "B_EsPregrado", dbType: DbType.Boolean, value: pr.B_EsPregrado);
-
+                    parameters.Add(name: "I_Anio", dbType: DbType.Int32, value: pr.I_Anio);
+                    parameters.Add(name: "I_Periodo", dbType: DbType.Int32, value: pr.I_Periodo);
                     parameters.Add(name: "C_RcCod", dbType: DbType.String, value: pr.C_RcCod);
-
                     parameters.Add(name: "B_Ingresante", dbType: DbType.Boolean, value: pr.B_Ingresante);
-
-                    parameters.Add(name: "B_Pagado", dbType: DbType.Boolean, value: pr.B_Pagado);
-
                     parameters.Add(name: "B_ObligacionGenerada", dbType: DbType.Boolean, value: pr.B_ObligacionGenerada);
+                    parameters.Add(name: "B_Pagado", dbType: DbType.Boolean, value: pr.B_Pagado);
+                    parameters.Add(name: "F_FecIni", dbType: DbType.Date, value: pr.F_FecIni);
+                    parameters.Add(name: "F_FecFin", dbType: DbType.Date, value: pr.F_FecFin);
+                    parameters.Add(name: "B_MontoPagadoDiff", dbType: DbType.Boolean, value: pr.B_MontoPagadoDiff);
 
                     result = _dbConnection.Query<USP_S_ListadoEstadoObligaciones>(s_command, parameters, commandType: CommandType.StoredProcedure);
                 }
@@ -94,12 +95,15 @@ namespace Data.Procedures
 
     public class USP_S_ListadoEstadoObligaciones_Parameters
     {
+        public bool B_EsPregrado { get; set; }
         public int I_Anio { get; set; }
         public int? I_Periodo { get; set; }
-        public bool B_EsPregrado { get; set; }
         public string C_RcCod { get; set; }
         public bool? B_Ingresante { get; set; }
-        public bool? B_Pagado { get; set; }
         public bool? B_ObligacionGenerada { get; set; }
+        public bool? B_Pagado { get; set; }
+        public DateTime? F_FecIni { get; set; }
+        public DateTime? F_FecFin { get; set; }
+        public bool? B_MontoPagadoDiff { get; set; }
     }
 }

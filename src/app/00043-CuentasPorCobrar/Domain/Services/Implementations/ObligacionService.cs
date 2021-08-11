@@ -156,7 +156,8 @@ namespace Domain.Services.Implementations
                         B_Success = false,
                         T_ErrorMessage = x.T_ErrorMessage,
                         T_InformacionAdicional = x.T_InformacionAdicional,
-                        D_FecVencto = x.D_FecVencto
+                        D_FecVencto = x.D_FecVencto,
+                        T_ProcesoDesc = x.T_ProcesoDesc
                     });
 
                 spResult.AddRange(pagosObservados);

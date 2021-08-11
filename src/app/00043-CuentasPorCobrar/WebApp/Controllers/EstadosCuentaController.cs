@@ -101,7 +101,7 @@ namespace WebApp.Controllers
         }
 
         [Route("consultas/resumen-anual-obligaciones-por-clasificadores")]
-        public ActionResult ResumenAnualObligacionesPorClasificadores(int anio = 0, TipoEstudio tipoEstudio = TipoEstudio.Pregrado)
+        public ActionResult ResumenAnualObligacionesPorClasificadores(int anio = 0, TipoEstudio tipoEstudio = TipoEstudio.Pregrado, int? entidadFinanID = null, int? ctaDepositoID = null)
         {
             anio = anio == 0 ? DateTime.Now.Year : anio;
 
@@ -110,24 +110,24 @@ namespace WebApp.Controllers
             switch (tipoEstudio)
             {
                 case TipoEstudio.Pregrado:
-                    model = reportePregradoServiceFacade.ResumenAnualPagoOblig_X_Clasificadores(anio);
+                    model = reportePregradoServiceFacade.ResumenAnualPagoOblig_X_Clasificadores(anio, entidadFinanID, ctaDepositoID);
                     break;
 
                 case TipoEstudio.Posgrado:
-                    model = reportePosgradoServiceFacade.ResumenAnualPagoOblig_X_Clasificadores(anio);
+                    model = reportePosgradoServiceFacade.ResumenAnualPagoOblig_X_Clasificadores(anio, entidadFinanID, ctaDepositoID);
                     break;
                 default:
                     model = new ReporteResumenAnualPagoObligaciones_X_Clasificadores();
                     break;
             }
 
-            ViewBag.Anios = generalServiceFacade.Listar_Anios();
+            ViewBag.Anios = new SelectList(generalServiceFacade.Listar_Anios(), "Value", "TextDisplay", anio);
 
-            ViewBag.SelectedAnio = anio;
+            ViewBag.TipoEstudios = new SelectList(generalServiceFacade.Listar_TipoEstudios(), "Value", "TextDisplay", tipoEstudio);
 
-            ViewBag.TipoEstudios = generalServiceFacade.Listar_TipoEstudios();
+            ViewBag.EntidadesFinancieras = new SelectList(selectModels.GetEntidadesFinancieras(), "Value", "TextDisplay", entidadFinanID);
 
-            ViewBag.SelectedTipoEstudio = tipoEstudio;
+            ViewBag.CtaDeposito = new SelectList(new List<SelectViewModel>(), "Value", "TextDisplay", ctaDepositoID);
 
             ViewBag.Title = "Resumen de Ingresos por Clasificadores (Obligaciones)";
 
@@ -135,7 +135,7 @@ namespace WebApp.Controllers
         }
 
         [Route("consultas/resumen-anual-obligaciones-por-dependencias")]
-        public ActionResult ResumenAnualObligacionesPorDependencias(int anio = 0, TipoEstudio tipoEstudio = TipoEstudio.Pregrado)
+        public ActionResult ResumenAnualObligacionesPorDependencias(int anio = 0, TipoEstudio tipoEstudio = TipoEstudio.Pregrado, int? entidadFinanID = null, int? ctaDepositoID = null)
         {
             anio = anio == 0 ? DateTime.Now.Year : anio;
 
@@ -144,24 +144,24 @@ namespace WebApp.Controllers
             switch (tipoEstudio)
             {
                 case TipoEstudio.Pregrado:
-                    model = reportePregradoServiceFacade.ResumenAnualPagoOblig_X_Dependencias(anio);
+                    model = reportePregradoServiceFacade.ResumenAnualPagoOblig_X_Dependencias(anio, entidadFinanID, ctaDepositoID);
                     break;
 
                 case TipoEstudio.Posgrado:
-                    model = reportePosgradoServiceFacade.ResumenAnualPagoOblig_X_Dependencias(anio);
+                    model = reportePosgradoServiceFacade.ResumenAnualPagoOblig_X_Dependencias(anio, entidadFinanID, ctaDepositoID);
                     break;
                 default:
                     model = new ReporteResumenAnualPagoObligaciones_X_Dependencias();
                     break;
             }
 
-            ViewBag.Anios = generalServiceFacade.Listar_Anios();
+            ViewBag.Anios = new SelectList(generalServiceFacade.Listar_Anios(), "Value", "TextDisplay", anio);
 
-            ViewBag.SelectedAnio = anio;
+            ViewBag.TipoEstudios = new SelectList(generalServiceFacade.Listar_TipoEstudios(), "Value", "TextDisplay", tipoEstudio);
 
-            ViewBag.TipoEstudios = generalServiceFacade.Listar_TipoEstudios();
+            ViewBag.EntidadesFinancieras = new SelectList(selectModels.GetEntidadesFinancieras(), "Value", "TextDisplay", entidadFinanID);
 
-            ViewBag.SelectedTipoEstudio = tipoEstudio;
+            ViewBag.CtaDeposito = new SelectList(new List<SelectViewModel>(), "Value", "TextDisplay", ctaDepositoID);
 
             ViewBag.Title = "Resumen de Ingresos por Dependencias (Obligaciones)";
 

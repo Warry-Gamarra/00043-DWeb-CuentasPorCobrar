@@ -56,9 +56,9 @@ namespace Domain.Services.Implementations
             return result;
         }
 
-        public IEnumerable<ResumenAnualPagoDeObligaciones_X_ClasificadorDTO> ResumenAnualPagoOblig_X_Clasificadores(int anio)
+        public IEnumerable<ResumenAnualPagoDeObligaciones_X_ClasificadorDTO> ResumenAnualPagoOblig_X_Clasificadores(int anio, int? entidadFinanID, int? ctaDepositoID)
         {
-            var lista = USP_S_ResumenAnualPagoDeObligaciones_X_Clasificadores.Execute(anio, false);
+            var lista = USP_S_ResumenAnualPagoDeObligaciones_X_Clasificadores.Execute(anio, false, entidadFinanID, ctaDepositoID);
 
             var result = lista.Select(
                 x => Mapper.USP_S_ResumenAnualPagoDeObligaciones_X_Clasificadores_To_ResumenAnualPagoDeObligaciones_X_ClasificadorDTO(x));
@@ -66,9 +66,9 @@ namespace Domain.Services.Implementations
             return result;
         }
 
-        public IEnumerable<ResumenAnualPagoDeObligaciones_X_DependenciaDTO> ResumenAnualPagoOblig_X_Dependencia(int anio)
+        public IEnumerable<ResumenAnualPagoDeObligaciones_X_DependenciaDTO> ResumenAnualPagoOblig_X_Dependencia(int anio, int? entidadFinanID, int? ctaDepositoID)
         {
-            var lista = USP_S_ResumenAnualPagoDeObligaciones_X_Dependencia.Execute(anio, false);
+            var lista = USP_S_ResumenAnualPagoDeObligaciones_X_Dependencia.Execute(anio, false, entidadFinanID, ctaDepositoID);
 
             var result = lista.Select(
                 x => Mapper.USP_S_ResumenAnualPagoDeObligaciones_X_Dependencia_To_ResumenAnualPagoDeObligaciones_X_DependenciaDTO(x));

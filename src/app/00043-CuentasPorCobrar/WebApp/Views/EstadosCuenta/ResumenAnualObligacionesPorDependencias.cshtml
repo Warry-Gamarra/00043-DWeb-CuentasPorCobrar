@@ -18,27 +18,39 @@
         <div class="row mt-5 d-flex justify-content-end">
             <div class="col-xl-3 col-lg-4 col-md-12">
                 <div class="form-group row">
-                    <label for="tipoEstudio" class="col-6 col-form-label text-right">Tipo estudio</label>
+                    <label for="anio" class="col-6 col-form-label text-right">Año</label>
                     <div class="col-6">
-                        @Html.DropDownList("tipoEstudio", new SelectList(ViewBag.TipoEstudios, "Value", "TextDisplay", ViewBag.SelectedTipoEstudio), new { Class = "form-control text-center" })
+                        @Html.DropDownList("anio", ViewBag.Anios as SelectList, new { Class = "form-control text-center" })
                     </div>
                 </div>
             </div>
             <div class="col-xl-3 col-lg-4 col-md-12">
                 <div class="form-group row">
-                    <label for="anio" class="col-6 col-form-label text-right">Año</label>
+                    <label for="tipoEstudio" class="col-6 col-form-label text-right">Tipo estudio</label>
                     <div class="col-6">
-                        @Html.DropDownList("anio", new SelectList(ViewBag.Anios, "Value", "TextDisplay", ViewBag.SelectedAnio), new { Class = "form-control text-center" })
+                        @Html.DropDownList("tipoEstudio", ViewBag.TipoEstudios as SelectList, new { Class = "form-control text-center" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-12">
+                <div class="form-group row">
+                    <label for="entidadFinanID" class="col-6 col-form-label text-right">Banco</label>
+                    <div class="col-6">
+                        @Html.DropDownList("entidadFinanID", ViewBag.EntidadesFinancieras as SelectList, "  TODOS", new { Class = "form-control text-center" })
                     </div>
                 </div>
             </div>
         </div>
 
-        <p class="h2 text-center mt-5 mb-5 text-uppercase">
+        <p class="h3 text-center mt-5 mb-5 text-uppercase">
             RESUMEN DE INGRESOS DE @Model.tipoEstudio<br />AL AÑO @Model.anio
         </p>
 
         <div class="table-responsive">
+            @if (!String.IsNullOrEmpty(Model.nombreEntidadFinanc))
+            {
+                <p>Entidad Financiera: <b>@Model.nombreEntidadFinanc</b></p>
+            }
             <table class="table table-bordered table-hover table-sm">
                 <thead>
                     <tr>
@@ -106,22 +118,22 @@
                             </th>
                         </tr>
                     }
-                        <tr>
-                            <th>Total (S/.)</th>
-                            <th class="text-right">@Model.T_TotalEnero</th>
-                            <th class="text-right">@Model.T_TotalFebrero</th>
-                            <th class="text-right">@Model.T_TotalMarzo</th>
-                            <th class="text-right">@Model.T_TotalAbril</th>
-                            <th class="text-right">@Model.T_TotalMayo</th>
-                            <th class="text-right">@Model.T_TotalJunio</th>
-                            <th class="text-right">@Model.T_TotalJulio</th>
-                            <th class="text-right">@Model.T_TotalAgosto</th>
-                            <th class="text-right">@Model.T_TotalSetiembre</th>
-                            <th class="text-right">@Model.T_TotalOctubre</th>
-                            <th class="text-right">@Model.T_TotalNoviembre</th>
-                            <th class="text-right">@Model.T_TotalDiciembre</th>
-                            <th class="text-right">@Model.T_TotalGeneral</th>
-                        </tr>
+                    <tr>
+                        <th>Total (S/.)</th>
+                        <th class="text-right">@Model.T_TotalEnero</th>
+                        <th class="text-right">@Model.T_TotalFebrero</th>
+                        <th class="text-right">@Model.T_TotalMarzo</th>
+                        <th class="text-right">@Model.T_TotalAbril</th>
+                        <th class="text-right">@Model.T_TotalMayo</th>
+                        <th class="text-right">@Model.T_TotalJunio</th>
+                        <th class="text-right">@Model.T_TotalJulio</th>
+                        <th class="text-right">@Model.T_TotalAgosto</th>
+                        <th class="text-right">@Model.T_TotalSetiembre</th>
+                        <th class="text-right">@Model.T_TotalOctubre</th>
+                        <th class="text-right">@Model.T_TotalNoviembre</th>
+                        <th class="text-right">@Model.T_TotalDiciembre</th>
+                        <th class="text-right">@Model.T_TotalGeneral</th>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -134,12 +146,21 @@
     <script>
         $(document).ready(function () {
             $('#anio').on('change', function () {
-                location.href = '@Url.Action("ResumenAnualObligacionesPorDependencias", "EstadosCuenta")' + '?anio=' + $(this).val() + '&tipoEstudio=' + $('#tipoEstudio').val();
+                location.href = '@Url.Action("ResumenAnualObligacionesPorDependencias", "EstadosCuenta")' + buildFilters($(this).val(), $('#tipoEstudio').val(), $('#entidadFinanID').val());
             });
 
             $('#tipoEstudio').on('change', function () {
-                location.href = '@Url.Action("ResumenAnualObligacionesPorDependencias", "EstadosCuenta")' + '?anio=' + $('#anio').val() + '&tipoEstudio=' + $(this).val();
+                location.href = '@Url.Action("ResumenAnualObligacionesPorDependencias", "EstadosCuenta")' + buildFilters($('#anio').val(), $(this).val(), $('#entidadFinanID').val());
             });
-        })
+
+            $('#entidadFinanID').on('change', function () {
+                location.href = '@Url.Action("ResumenAnualObligacionesPorDependencias", "EstadosCuenta")' + buildFilters($('#anio').val(), $('#tipoEstudio').val(), $(this).val());
+            });
+        });
+
+        function buildFilters(anio, tipoEstudio, entidadFinanID) {
+            let filters = '?anio=' + anio + '?&entidadFinanID=' + entidadFinanID + '&tipoEstudio=' + tipoEstudio;
+            return filters;
+        }
     </script>
 }

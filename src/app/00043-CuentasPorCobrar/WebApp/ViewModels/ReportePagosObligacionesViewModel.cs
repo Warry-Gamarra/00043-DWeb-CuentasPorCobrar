@@ -42,7 +42,7 @@ namespace WebApp.ViewModels
                 if (String.IsNullOrWhiteSpace(fechaDesde))
                     return null;
 
-                return DateTime.Parse(fechaDesde, CultureInfo.CreateSpecificCulture("en-GB"));
+                return DateTime.ParseExact(fechaDesde, FormatosDateTime.BASIC_DATE, CultureInfo.InvariantCulture);
             }
         }
 
@@ -56,7 +56,7 @@ namespace WebApp.ViewModels
                 if (String.IsNullOrWhiteSpace(fechaHasta))
                     return null;
 
-                return DateTime.Parse(fechaHasta, CultureInfo.CreateSpecificCulture("en-GB"));
+                return DateTime.ParseExact(fechaHasta, FormatosDateTime.BASIC_DATE, CultureInfo.InvariantCulture);
             }
         }
 
