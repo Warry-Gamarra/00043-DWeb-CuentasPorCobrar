@@ -963,9 +963,10 @@ BEGIN
 					 --B_EsPagoMatricula = NULL, 
 					 --B_EsPagoExtmp = NULL, 
 					 D_FecMod = @D_FecProceso
-		WHEN NOT MATCHED BY SOURCE AND TRG.B_Migrado = 1 AND TRG.I_UsuarioMod IS NULL THEN
+		WHEN NOT MATCHED BY SOURCE AND TRG.B_Migrado = 1 AND TRG.I_UsuarioMod IS NULL AND (TRG.B_EsPagoMatricula IS NULL OR TRG.B_EsPagoExtmp IS NULL)  THEN
 			DELETE  		 
 		OUTPUT $action, SRC.I_RowID INTO @Tbl_outputConceptosPago;
+
 
 		SET IDENTITY_INSERT BD_OCEF_CtasPorCobrar.dbo.TI_ConceptoPago OFF;
 
@@ -1004,127 +1005,85 @@ IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCE
 	DROP PROCEDURE [dbo].[USP_IU_CopiarTablaObligacionesPago]
 GO
 
---CREATE PROCEDURE USP_IU_CopiarTablaObligacionesPago	
---	@B_Resultado  bit output,
---	@T_Message	  nvarchar(4000) OUTPUT	
---AS
-----declare @B_Resultado  bit,
-----		@T_Message	  nvarchar(4000)
-----exec USP_IU_CopiarTablaObligacionesPago @B_Resultado output, @T_Message output
-----select @B_Resultado as resultado, @T_Message as mensaje
---BEGIN
---	DECLARE @I_EcObl int = 0
---	DECLARE @I_Removidos int = 0
---	DECLARE @I_Actualizados int = 0
---	DECLARE @I_Insertados int = 0
---	DECLARE @D_FecProceso datetime = GETDATE() 
+CREATE PROCEDURE USP_IU_CopiarTablaObligacionesPago	
+	@B_Resultado  bit output,
+	@T_Message	  nvarchar(4000) OUTPUT	
+AS
+--declare @B_Resultado  bit,
+--		@T_Message	  nvarchar(4000)
+--exec USP_IU_CopiarTablaObligacionesPago @B_Resultado output, @T_Message output
+--select @B_Resultado as resultado, @T_Message as mensaje
+BEGIN
+	DECLARE @I_EcObl int = 0
+	DECLARE @I_Removidos int = 0
+	DECLARE @I_Actualizados int = 0
+	DECLARE @I_Insertados int = 0
+	DECLARE @D_FecProceso datetime = GETDATE() 
 
---	--DECLARE @Tbl_output AS TABLE 
---	--(
---	--	accion  varchar(20),
---	--	I_RowID		int, 
---	--	ANO			nvarchar(255),
---	--	P			nvarchar(255),
---	--	COD_ALU		nvarchar(255),
---	--	COD_RC		nvarchar(255),
---	--	CUOTA_PAGO	float,
---	--	FCH_VENC	datetime,
---	--	TIPO_OBLIG	bit,
---	--	INS_MONTO		float,
---	--	INS_PAGADO		bit,
---	--	DEL_MONTO		float,
---	--	DEL_PAGADO		bit,
---	--	B_Removido	bit
---	--)
+	BEGIN TRANSACTION
+	BEGIN TRY 
 
---	BEGIN TRY 
+		UPDATE	TR_MG_EcObl
+		SET		B_Actualizado = 0, 
+				B_Migrable	  = 1, 
+				D_FecMigrado  = NULL, 
+				B_Migrado	  = 0, 
+				T_Observacion = NULL		
+
+		UPDATE	TR_MG_EcObl
+		SET		TR_MG_EcObl.B_Removido		= 1, 
+				TR_MG_EcObl.D_FecRemovido	= @D_FecProceso,
+				TR_MG_EcObl.B_Migrable		= 0, 
+				TR_MG_EcObl.T_Observacion	= NULL
+		WHERE	NOT EXISTS (SELECT * FROM ec_obl SRC  
+							WHERE TR_MG_EcObl.ANO = SRC.ANO AND TR_MG_EcObl.P = SRC.P AND TR_MG_EcObl.COD_ALU = SRC.COD_ALU 
+							AND TR_MG_EcObl.COD_RC = SRC.COD_RC AND TR_MG_EcObl.CUOTA_PAGO = SRC.CUOTA_PAGO 
+							AND ISNULL(TR_MG_EcObl.FCH_VENC, '19000101') = ISNULL(SRC.FCH_VENC, '19000101')
+							AND ISNULL(TR_MG_EcObl.TIPO_OBLIG, 0) = ISNULL(SRC.TIPO_OBLIG, 0))
+
+		SET @I_Removidos = @@ROWCOUNT
+
+
+		UPDATE	TRG
+		SET		TRG.PAGADO	= SRC.PAGADO,
+				TRG.MONTO	= SRC.MONTO,
+				TRG.B_Actualizado = 1, 
+				TRG.D_FecActualiza = @D_FecProceso
+		FROM	TR_MG_EcObl TRG
+				INNER JOIN ec_obl SRC ON TRG.ANO = SRC.ANO AND TRG.P = SRC.P AND TRG.COD_ALU = SRC.COD_ALU AND TRG.COD_RC = SRC.COD_RC 
+								AND TRG.CUOTA_PAGO = SRC.CUOTA_PAGO AND ISNULL(TRG.TIPO_OBLIG, 0) = ISNULL(SRC.TIPO_OBLIG, 0)
+								AND ISNULL(TRG.FCH_VENC, '19000101') = ISNULL(SRC.FCH_VENC, '19000101')
+		WHERE	TRG.MONTO <> SRC.MONTO OR TRG.PAGADO <> SRC.PAGADO		
+
+		SET @I_Actualizados = @@ROWCOUNT
+
+
+		INSERT TR_MG_EcObl(ANO, P, COD_ALU, COD_RC, CUOTA_PAGO, TIPO_OBLIG, FCH_VENC, MONTO, PAGADO, D_FecCarga, B_Migrable, B_Migrado, T_Observacion)
+		SELECT	ANO, P, COD_ALU, COD_RC, CUOTA_PAGO, TIPO_OBLIG, FCH_VENC, MONTO, PAGADO, @D_FecProceso, 1, 0, NULL
+		FROM	ec_obl SRC
+		WHERE	NOT EXISTS (SELECT * FROM TR_MG_EcObl TRG 
+							WHERE TRG.ANO = SRC.ANO AND TRG.P = SRC.P AND TRG.COD_ALU = SRC.COD_ALU AND TRG.COD_RC = SRC.COD_RC 
+							AND TRG.CUOTA_PAGO = SRC.CUOTA_PAGO AND ISNULL(TRG.FCH_VENC, '19000101') = ISNULL(SRC.FCH_VENC, '19000101')
+							AND ISNULL(TRG.TIPO_OBLIG, 0) = ISNULL(SRC.TIPO_OBLIG, 0))
 		
---		INSERT TR_MG_EcObl(ANO, P, COD_ALU, COD_RC, CUOTA_PAGO, TIPO_OBLIG, FCH_VENC, MONTO, PAGADO, D_FecCarga, B_Migrable, B_Migrado, T_Observacion)
---		SELECT	ANO, P, COD_ALU, COD_RC, CUOTA_PAGO, TIPO_OBLIG, FCH_VENC, MONTO, PAGADO, @D_FecProceso, 1, 0, NULL
---		FROM	ec_obl SRC
---		WHERE	NOT EXISTS (SELECT * FROM TR_MG_EcObl TRG 
---							WHERE TRG.ANO = SRC.ANO AND TRG.P = SRC.P AND TRG.COD_ALU = SRC.COD_ALU AND TRG.COD_RC = SRC.COD_RC 
---							AND TRG.CUOTA_PAGO = SRC.CUOTA_PAGO AND ISNULL(TRG.FCH_VENC, '19000101') = ISNULL(SRC.FCH_VENC, '19000101')
---							AND ISNULL(TRG.TIPO_OBLIG, 1) = ISNULL(SRC.TIPO_OBLIG, 1))
-							
---		--MERGE TR_MG_EcObl AS TRG
---		--USING ec_obl AS SRC
---		--ON	TRG.ANO = SRC.ANO AND TRG.P = SRC.P
---		--	AND TRG.COD_ALU	= SRC.COD_ALU AND TRG.COD_RC = SRC.COD_RC
---		--	AND TRG.CUOTA_PAGO = SRC.CUOTA_PAGO AND TRG.FCH_VENC = SRC.FCH_VENC
---		--	AND TRG.TIPO_OBLIG = SRC.TIPO_OBLIG
---		--WHEN MATCHED THEN
---		--	UPDATE SET	TRG.PAGADO	= SRC.PAGADO,
---		--				TRG.MONTO	= SRC.MONTO,
---		--				TRG.B_Actualizado = 0, 
---		--				TRG.B_Migrable	  = 1, 
---		--				TRG.D_FecMigrado  = NULL, 
---		--				TRG.B_Migrado	  = 0, 
---		--				TRG.T_Observacion = NULL
---		--WHEN NOT MATCHED BY TARGET THEN
---		--	INSERT (ANO, P, COD_ALU, COD_RC, CUOTA_PAGO, TIPO_OBLIG, FCH_VENC, MONTO, PAGADO, D_FecCarga, B_Migrable, B_Migrado, T_Observacion)
---		--	VALUES (ANO, P, COD_ALU, COD_RC, CUOTA_PAGO, TIPO_OBLIG, FCH_VENC, MONTO, PAGADO, @D_FecProceso, 1, 0, NULL)
---		--WHEN NOT MATCHED BY SOURCE THEN
---		--	UPDATE SET	TRG.B_Removido		= 1, 
---		--				TRG.D_FecRemovido	= @D_FecProceso,
---		--				TRG.B_Migrable		= 0, 
---		--				TRG.D_FecMigrado	= 0, 
---		--				TRG.B_Migrado		= 0, 
---		--				TRG.T_Observacion	= NULL
---		--OUTPUT	$ACTION, inserted.I_RowID, inserted.ANO, inserted.P, inserted.COD_ALU, inserted.COD_RC, inserted.CUOTA_PAGO, inserted.FCH_VENC, inserted.TIPO_OBLIG, 
---		--		inserted.MONTO, inserted.PAGADO, deleted.MONTO, deleted.PAGADO, deleted.B_Removido INTO @Tbl_output;
+		SET @I_Insertados = @@ROWCOUNT
+
+
+		SET @I_EcObl = (SELECT COUNT(*) FROM ec_obl)
+
+		SELECT @I_EcObl AS tot_obligaciones, @I_Insertados AS cant_inserted, @I_Actualizados as cant_updated, @I_Removidos as cant_removed, @D_FecProceso as fec_proceso
 		
---		--UPDATE	t_EcObl
---		--SET		t_EcObl.B_Actualizado = 1,
---		--		t_EcObl.D_FecActualiza = @D_FecProceso
---		--FROM	TR_MG_EcObl AS t_EcObl
---		--		INNER JOIN 	@Tbl_output as t_out ON t_out.ANO = t_EcObl.ANO 
---		--		AND t_out.P = t_EcObl.P AND t_out.COD_ALU = t_EcObl.COD_ALU
---		--		AND t_out.COD_RC = t_EcObl.COD_RC AND t_out.CUOTA_PAGO = t_EcObl.CUOTA_PAGO
---		--		AND t_out.FCH_VENC = t_EcObl.FCH_VENC AND t_out.TIPO_OBLIG = t_EcObl.TIPO_OBLIG
---		--		AND t_out.accion = 'UPDATE' AND t_out.B_Removido = 0
---		--WHERE 
---		--		t_out.INS_MONTO <> t_out.DEL_MONTO OR
---		--		t_out.INS_PAGADO <> t_out.DEL_PAGADO
-
---		UPDATE	TR_MG_EcObl
---		SET		B_Actualizado  = 0,
---				D_FecActualiza = NULL,
---				B_Migrable	  = 1, 
---				D_FecMigrado  = NULL, 
---				B_Migrado	  = 0, 
---				T_Observacion = NULL
-
---		UPDATE	TR_MG_EcObl
---		SET		MONTO = SRC.MONTO,
---				PAGADO = SRC.PAGADO,
---				B_Actualizado = 1,
---				D_FecActualiza = @D_FecProceso
---		FROM	ec_obl SRC
---		WHERE	EXISTS (SELECT * FROM TR_MG_EcObl TRG 
---						WHERE TRG.ANO = SRC.ANO AND TRG.P = SRC.P AND TRG.COD_ALU = SRC.COD_ALU AND TRG.COD_RC = SRC.COD_RC 
---						AND TRG.CUOTA_PAGO = SRC.CUOTA_PAGO AND ISNULL(TRG.FCH_VENC, '19000101') = ISNULL(SRC.FCH_VENC, '19000101')
---						AND ISNULL(TRG.TIPO_OBLIG, 1) = ISNULL(SRC.TIPO_OBLIG, 1)
---						AND (TRG.MONTO <> SRC.MONTO OR TRG.PAGADO <> SRC.PAGADO))
-
-
-
---		SET @I_EcObl = (SELECT COUNT(*) FROM ec_obl)
---		SET @I_Insertados = (SELECT COUNT(*) FROM @Tbl_output WHERE accion = 'INSERT')
---		SET @I_Actualizados = (SELECT COUNT(*) FROM @Tbl_output WHERE accion = 'UPDATE' AND B_Removido = 0)
---		SET @I_Actualizados = (SELECT COUNT(*) FROM @Tbl_output WHERE accion = 'UPDATE' AND B_Removido = 1)
-
---		SELECT @I_EcObl AS tot_obligaciones, @I_Insertados AS cant_inserted, @I_Actualizados as cant_updated, @I_Removidos as cant_removed, @D_FecProceso as fec_proceso
-		
---		SET @B_Resultado = 1
---		SET @T_Message = 'Ok'
---	END TRY
---	BEGIN CATCH
---		SET @B_Resultado = 0
---		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
---	END CATCH
---END
---GO
+		COMMIT TRANSACTION
+		SET @B_Resultado = 1
+		SET @T_Message = 'Ok'
+	END TRY
+	BEGIN CATCH
+		ROLLBACK TRANSACTION
+		SET @B_Resultado = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+END
+GO
 
 
 
