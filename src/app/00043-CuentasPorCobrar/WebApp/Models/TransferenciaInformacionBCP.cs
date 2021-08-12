@@ -25,7 +25,10 @@ namespace WebApp.Models
         {
             var cuotas_pago = _obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(anio, periodo, tipoEstudio, dependencia).Where(x => !x.B_Pagado).ToList();
 
-            cuotas_pago = cuotas_pago.Where(x => !(x.I_MontoOblig.Value == 125)).ToList();//EXCLUIR A LOS INGRESANTES POR CEPREVI(PROVISIONAL)
+            if (tipoEstudio == TipoEstudio.Pregrado)
+            {
+                cuotas_pago = cuotas_pago.Where(x => !(x.I_MontoOblig.Value == 125)).ToList();//EXCLUIR A LOS INGRESANTES POR CEPREVI(PROVISIONAL)
+            }
 
             if (cuotas_pago.Count == 0)
             {

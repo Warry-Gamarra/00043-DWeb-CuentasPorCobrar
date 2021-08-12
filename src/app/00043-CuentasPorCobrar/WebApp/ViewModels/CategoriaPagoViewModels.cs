@@ -18,6 +18,7 @@ namespace WebApp.ViewModels
         public string TipoAlumno { get; set; }
         public string EsObligacion { get; set; }
         public bool Habilitado { get; set; }
+        public string CodBcoComercio { get; set; }
 
         public CategoriaPagoViewModel()
         {
@@ -33,6 +34,7 @@ namespace WebApp.ViewModels
             this.TipoAlumno = categoriaPago.TipoAlumnoDesc;
             this.EsObligacion = categoriaPago.EsObligacion ? "Obligación" : "Tasas";
             this.Habilitado = categoriaPago.Habilitado;
+            this.CodBcoComercio = categoriaPago.CodBcoComercio;
         }
     }
 

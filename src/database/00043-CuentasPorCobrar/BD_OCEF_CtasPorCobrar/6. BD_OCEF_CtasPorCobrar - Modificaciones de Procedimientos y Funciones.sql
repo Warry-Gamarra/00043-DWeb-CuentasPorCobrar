@@ -1330,7 +1330,7 @@ CREATE PROCEDURE [dbo].[USP_S_ListarCuotasPagos_X_Periodo]
 @I_PeriodoID INT
 AS
 /*
-exec USP_S_ListarCuotasPagos_X_Periodo '2019310028',2021, 19
+exec USP_S_ListarCuotasPagos_X_Periodo '2018039291',2021, 19
 go
 */
 BEGIN
@@ -1362,7 +1362,7 @@ CREATE PROCEDURE [dbo].[USP_S_ListarIngresos_X_CuotasPagos]
 @I_PeriodoID INT
 AS
 /*
-exec USP_S_ListarIngresos_X_CuotasPagos '2021006524',2021, 19
+exec USP_S_ListarIngresos_X_CuotasPagos '2018039291',2021, 19
 go
 */
 BEGIN

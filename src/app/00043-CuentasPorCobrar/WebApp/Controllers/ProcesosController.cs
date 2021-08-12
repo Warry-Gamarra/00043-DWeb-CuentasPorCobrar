@@ -92,9 +92,16 @@ namespace WebApp.Controllers
                 ctasCategoria.AddRange(item);
             }
 
-            ViewBag.Categorias = new SelectList(_categoriaPagoModel.Find().Where(x => x.Id == model.CategoriaId.Value), "Id", "Nombre");
+            var listaCategoriaPago = _categoriaPagoModel.Find();
+
+            ViewBag.Categorias = new SelectList(listaCategoriaPago.Where(x => x.Id == model.CategoriaId.Value), "Id", "Nombre");
             ViewBag.Periodos = new SelectList(_selectModel.GetPeriodosAcademicosCatalogo().Where(x => x.Value == model.PerAcadId.ToString()), "Value", "TextDisplay", model.PerAcadId);
             ViewBag.CtasDeposito = new SelectList(ctasCategoria, "Value", "TextDisplay", "NameGroup", model.CtaDepositoID, null);
+
+            if (!model.MostrarCodBanco && String.IsNullOrEmpty(model.CodBcoComercio))
+            {
+                ViewBag.CodBcoComercio = listaCategoriaPago.First(x => x.Id == model.CategoriaId.Value).CodBcoComercio;
+            }
 
             return PartialView("_RegistrarProcesoObligacion", model);
         }
