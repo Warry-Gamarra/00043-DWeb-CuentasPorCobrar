@@ -212,3 +212,16 @@ exec USP_IU_CopiarTablaObligacionesPago @B_Resultado output, @T_Message output
 select @B_Resultado as resultado, @T_Message as mensaje
 
 
+declare @B_Resultado  bit,
+		@T_Message	  nvarchar(4000)
+exec USP_IU_CopiarTablaDetalleObligacionesPago @B_Resultado output, @T_Message output
+select @B_Resultado as resultado, @T_Message as mensaje
+
+
+
+declare @B_Resultado  bit,
+		@T_Message	  nvarchar(4000)
+exec USP_IU_CopiarTablaAlumno @B_Resultado output, @T_Message output
+select @B_Resultado as resultado, @T_Message as mensaje
+
+
