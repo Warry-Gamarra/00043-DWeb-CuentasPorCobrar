@@ -100,15 +100,16 @@ BEGIN
 		WHEN MATCHED THEN
 			UPDATE SET	TRG.C_NumDNI = SRC.C_NUMDNI,
 						TRG.C_CodTipDoc = SRC.C_CODTIPDO,
-						TRG.T_ApePaterno = SRC.T_APEPATER,
-						TRG.T_ApeMaterno = SRC.T_APEMATER,
-						TRG.T_Nombre = SRC.T_NOMBRE,
+						TRG.T_ApePaterno = REPLACE(SRC.T_APEPATER, '-', ' '),
+						TRG.T_ApeMaterno = REPLACE(SRC.T_APEMATER, '-', ' '),
+						TRG.T_Nombre = REPLACE(SRC.T_NOMBRE, '-', ' '),
 						TRG.C_Sexo = SRC.C_SEXO,
 						TRG.D_FecNac = CONVERT(DATE, SRC.D_FECNAC, 103),
 						TRG.C_AnioIngreso = SRC.C_ANIOINGR
 		WHEN NOT MATCHED BY TARGET THEN
 			INSERT (C_RcCod, C_CodAlu, C_NumDNI, C_CodTipDoc, T_ApePaterno, T_ApeMaterno, T_Nombre, C_Sexo, D_FecNac, C_CodModIng, C_AnioIngreso, D_FecCarga, B_Actualizado)
-			VALUES (SRC.C_RCCOD, SRC.C_CODALU, SRC.C_NUMDNI, SRC.C_CODTIPDO, SRC.T_APEPATER, SRC.T_APEMATER, SRC.T_NOMBRE, SRC.C_SEXO, CONVERT(DATE, SRC.D_FECNAC, 103), SRC.C_CODMODIN, SRC.C_ANIOINGR, @D_FecProceso, 1)
+			VALUES (SRC.C_RCCOD, SRC.C_CODALU, SRC.C_NUMDNI, SRC.C_CODTIPDO, REPLACE(SRC.T_APEPATER, '-', ' '), REPLACE(SRC.T_APEMATER, '-', ' '), REPLACE(SRC.T_NOMBRE, '-', ' '), 
+					SRC.C_SEXO, CONVERT(DATE, SRC.D_FECNAC, 103), SRC.C_CODMODIN, SRC.C_ANIOINGR, @D_FecProceso, 1)
 		WHEN NOT MATCHED BY SOURCE THEN
 			UPDATE SET TRG.B_Removido = 1, 
 					   TRG.D_FecRemovido = @D_FecProceso
@@ -155,17 +156,142 @@ END
 GO
 
 
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_IU_CopiarTablaCuotaDePago')
-	DROP PROCEDURE [dbo].[USP_IU_CopiarTablaCuotaDePago]
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ValidarCaracteresEspeciales')
+	DROP PROCEDURE [dbo].[USP_U_ValidarCaracteresEspeciales]
 GO
 
-CREATE PROCEDURE USP_IU_CopiarTablaCuotaDePago	
+CREATE PROCEDURE USP_U_ValidarCaracteresEspeciales	
 	@B_Resultado  bit output,
 	@T_Message	  nvarchar(4000) OUTPUT	
 AS
 --declare @B_Resultado  bit,
 --		@T_Message	  nvarchar(4000)
---exec USP_IU_CopiarTablaCuotaDePago @B_Resultado output, @T_Message output
+--exec USP_U_ValidarCaracteresEspeciales @B_Resultado output, @T_Message output
+--select @B_Resultado as resultado, @T_Message as mensaje
+BEGIN
+	DECLARE @I_Actualizados int = 0
+	DECLARE @D_FecProceso datetime = GETDATE() 
+
+	BEGIN TRY 
+		UPDATE	TR_MG_Alumnos
+		SET		B_Migrable = 0,
+				D_FecEvalua = @D_FecProceso,
+				T_Observacion = ISNULL(T_Observacion, '') + '020 - CARACTERES: ('+ CONVERT(varchar, @D_FecProceso, 112) + ').  El nombre de alumno tiene caracteres extraños.|'
+		WHERE	
+				PATINDEX('%[^a-zA-Z0-9.'' ]%', REPLACE(T_Nombre, '-', ' ')) <> 0 
+				OR PATINDEX('%[^a-zA-Z0-9.'' ]%', REPLACE(T_ApePaterno, '-', ' ')) <> 0 
+				OR PATINDEX('%[^a-zA-Z0-9.'' ]%', REPLACE(T_ApeMaterno, '-', ' ')) <> 0
+
+		SET @I_Actualizados = (SELECT COUNT(*) FROM TR_MG_Alumnos WHERE T_Observacion LIKE '%020%')
+
+		SELECT @I_Actualizados as cant_updated, @D_FecProceso as fec_proceso
+		
+		
+		SET @B_Resultado = 1
+		SET @T_Message = 'Ok'
+	END TRY
+	BEGIN CATCH
+		SET @B_Resultado = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+END
+GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ValidarCodigosAlumnoRepetidos')
+	DROP PROCEDURE [dbo].[USP_U_ValidarCodigosAlumnoRepetidos]
+GO
+
+CREATE PROCEDURE USP_U_ValidarCodigosAlumnoRepetidos	
+	@B_Resultado  bit output,
+	@T_Message	  nvarchar(4000) OUTPUT	
+AS
+--declare @B_Resultado  bit,
+--		@T_Message	  nvarchar(4000)
+--exec USP_U_ValidarCodigosAlumnoRepetidos @B_Resultado output, @T_Message output
+--select @B_Resultado as resultado, @T_Message as mensaje
+BEGIN
+	DECLARE @I_Actualizados int = 0
+	DECLARE @D_FecProceso datetime = GETDATE() 
+
+	BEGIN TRY 
+		UPDATE	TR_MG_Alumnos
+		SET		B_Migrable = 0,
+				D_FecEvalua = @D_FecProceso,
+				T_Observacion = ISNULL(T_Observacion, '') + '021 - REPETIDOS: ('+ CONVERT(varchar, @D_FecProceso, 112) + ').  La combinación código de carrera + código de alumno se encuentran repetidos.|'
+		WHERE	EXISTS (SELECT C_CodAlu, C_RcCod, COUNT(*) FROM TR_MG_Alumnos A 
+						WHERE A.C_CodAlu = TR_MG_Alumnos.C_CodAlu AND A.C_RcCod = TR_MG_Alumnos.C_RcCod
+						GROUP BY C_CodAlu, C_RcCod HAVING COUNT(*) > 1)
+				
+
+		SET @I_Actualizados = (SELECT COUNT(*) FROM TR_MG_Alumnos WHERE T_Observacion LIKE '%021%')
+
+		SELECT @I_Actualizados as cant_updated, @D_FecProceso as fec_proceso
+		
+		SET @B_Resultado = 1
+		SET @T_Message = 'Ok'
+	END TRY
+	BEGIN CATCH
+		SET @B_Resultado = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+END
+GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_IU_ValidarCodigosAlumnoRepetidos')
+	DROP PROCEDURE [dbo].[USP_U_ValidarCodigosAlumnoRepetidos]
+GO
+
+CREATE PROCEDURE USP_U_ValidarCodigosAlumnoRepetidos	
+	@B_Resultado  bit output,
+	@T_Message	  nvarchar(4000) OUTPUT	
+AS
+--declare @B_Resultado  bit,
+--		@T_Message	  nvarchar(4000)
+--exec USP_U_ValidarCodigosAlumnoRepetidos @B_Resultado output, @T_Message output
+--select @B_Resultado as resultado, @T_Message as mensaje
+BEGIN
+	DECLARE @I_Actualizados int = 0
+	DECLARE @D_FecProceso datetime = GETDATE() 
+
+	BEGIN TRY 
+		UPDATE	TR_MG_Alumnos
+		SET		B_Migrable = 0,
+				D_FecEvalua = @D_FecProceso,
+				T_Observacion = ISNULL(T_Observacion, '') + '021 - REPETIDOS: ('+ CONVERT(varchar, @D_FecProceso, 112) + ').  La combinación código de carrera + código de alumno se encuentran repetidos.|'
+		WHERE	EXISTS (SELECT C_CodAlu, C_RcCod, COUNT(*) FROM TR_MG_Alumnos A 
+						WHERE A.C_CodAlu = TR_MG_Alumnos.C_CodAlu AND A.C_RcCod = TR_MG_Alumnos.C_RcCod
+						GROUP BY C_CodAlu, C_RcCod HAVING COUNT(*) > 1)
+				
+
+		SET @I_Actualizados = (SELECT COUNT(*) FROM TR_MG_Alumnos WHERE T_Observacion LIKE '%021%')
+
+		SELECT @I_Actualizados as cant_updated, @D_FecProceso as fec_proceso
+		
+		SET @B_Resultado = 1
+		SET @T_Message = 'Ok'
+	END TRY
+	BEGIN CATCH
+		SET @B_Resultado = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+END
+GO
+
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_IU_MigrarDataAlumnosUnfvRepositorio')
+	DROP PROCEDURE [dbo].[USP_IU_MigrarDataAlumnosUnfvRepositorio]
+GO
+
+CREATE PROCEDURE USP_IU_MigrarDataAlumnosUnfvRepositorio	
+	@B_Resultado  bit output,
+	@T_Message	  nvarchar(4000) OUTPUT	
+AS
+--declare @B_Resultado  bit,
+--		@T_Message	  nvarchar(4000)
+--exec USP_IU_MigrarDataAlumnosUnfvRepositorio @B_Resultado output, @T_Message output
 --select @B_Resultado as resultado, @T_Message as mensaje
 BEGIN
 	DECLARE @I_CpDes int = 0

@@ -120,7 +120,22 @@ DBCC CHECKIDENT([BD_OCEF_CtasPorCobrar.dbo.TC_Proceso], RESEED, 0)
 
 
 
+--SELECT	C_RCCOD, C_CODALU , REPLACE(T_APEPATER, '-', ' ') AS T_APEPATER, 
+--		REPLACE(T_APEMATER, '-', ' ') AS T_APEMATER, REPLACE(T_NOMBRE, '-', ' ') AS T_NOMBRE,
+--		C_NUMDNI, C_CODTIPDO, C_CODMODIN, C_ANIOINGR, CONVERT(DATE, D_FECNAC, 103) AS D_FECNAC, C_SEXO
+--FROM	alumnos 
+--WHERE 
+--		PATINDEX('%[^a-zA-Z0-9.'' ]%', REPLACE(T_NOMBRE, '-', ' ')) <> 0 
+--		OR PATINDEX('%[^a-zA-Z0-9.'' ]%', REPLACE(T_APEPATER, '-', ' ')) <> 0 
+--		OR PATINDEX('%[^a-zA-Z0-9.'' ]%', REPLACE(T_APEMATER, '-', ' ')) <> 0 
 
+
+--select	*
+--FROM	TR_MG_Alumnos
+--WHERE 
+--		PATINDEX('%[^a-zA-Z0-9.'' ]%',T_NOMBRE) <> 0 
+--		OR PATINDEX('%[^a-zA-Z0-9.'' ]%',T_ApePaterno) <> 0 
+--		OR PATINDEX('%[^a-zA-Z0-9.'' ]%', T_ApeMaterno) <> 0 
 
 
 
@@ -221,6 +236,18 @@ select @B_Resultado as resultado, @T_Message as mensaje
 declare @B_Resultado  bit,
 		@T_Message	  nvarchar(4000)
 exec USP_IU_CopiarTablaAlumno @B_Resultado output, @T_Message output
+select @B_Resultado as resultado, @T_Message as mensaje
+
+
+declare @B_Resultado  bit,
+		@T_Message	  nvarchar(4000)
+exec USP_U_ValidarCaracteresEspeciales @B_Resultado output, @T_Message output
+select @B_Resultado as resultado, @T_Message as mensaje
+
+
+declare @B_Resultado  bit,
+		@T_Message	  nvarchar(4000)
+exec USP_U_ValidarCodigosAlumnoRepetidos @B_Resultado output, @T_Message output
 select @B_Resultado as resultado, @T_Message as mensaje
 
 
