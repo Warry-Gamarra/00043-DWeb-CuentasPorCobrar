@@ -63,7 +63,7 @@ namespace WebApp.Models
 
                 if (response.Success)
                 {
-                    GrabarHistorialCargaArchivo(lstPagoObligaciones.Count(), fileName, filePathSaved, currentUserId, 
+                    GrabarHistorialCargaArchivo(lstPagoObligaciones.Count(), fileName, filePathSaved, currentUserId,
                         model.EntidadRecaudadora, (int)TipoArchivoEntFinan.Recaudacion_Obligaciones);
                     ResponseModel.Success(response);
                 }
@@ -201,7 +201,7 @@ namespace WebApp.Models
                     pagoEntity.B_Correcto = false;
                     pagoEntity.T_ErrorMessage = ex.Message;
                 }
-                
+
                 pagoEntity.C_Moneda = line.Substring(columnas["C_Moneda"].Inicial - 1, columnas["C_Moneda"].Final - columnas["C_Moneda"].Inicial + 1).Trim();
 
                 string sInteresMora = line.Substring(columnas["I_InteresMora"].Inicial - 1, columnas["I_MontoPago"].Final - columnas["I_MontoPago"].Inicial + 1);
@@ -262,11 +262,11 @@ namespace WebApp.Models
                     pagoEntity.B_Correcto = false;
                     pagoEntity.T_ErrorMessage = ex.Message;
                 }
-                                
+
                 pagoEntity.I_EntidadFinanID = entFinanId;
 
                 pagoEntity.C_Extorno = line.Substring(columnas["C_Extorno"].Inicial - 1, columnas["C_Extorno"].Final - columnas["C_Extorno"].Inicial + 1).Trim();
-                
+
                 if (pagoEntity.B_Correcto && pagoEntity.I_EntidadFinanID.Equals(Bancos.BCP_ID) && pagoEntity.C_Extorno.Equals(ConstantesBCP.CodExtorno))
                 {
                     pagoEntity.B_Correcto = false;
@@ -407,10 +407,10 @@ namespace WebApp.Models
                 }
             }
 
-            if (failsResult> 0)
+            if (failsResult > 0)
             {
                 result.Value = false;
-                result.Message = errors; 
+                result.Message = errors;
                 result.Error(false);
             }
 
@@ -441,6 +441,53 @@ namespace WebApp.Models
             var result = lista.Select(x => Mapper.ArchivoImportadoDTO_To_ArchivoImportadoViewModel(x));
 
             return result;
+        }
+
+
+        public ImportacionPagoResponse CargarArchivoBCP(string serverPath, HttpPostedFileBase file, CargarArchivoViewModel model, int currentUserId)
+        {
+            if (file == null)
+            {
+                return new ImportacionPagoResponse()
+                {
+                    Message = "No existe archivo seleccionado."
+                };
+            }
+
+            var transferenciaInformacion = TransferenciaInformacionFactory.Get(int.Parse(System.Configuration.ConfigurationManager.AppSettings["EntFinancBcoComercioID"].ToString()));
+            ImportacionPagoResponse response;
+            string fileName = "";
+            string filePathSaved = "";
+
+            try
+            {
+                fileName = GenerarNombreArchivo(model.EntidadRecaudadora, file);
+                filePathSaved = GuardarArchivoPagoEnHost(serverPath, fileName, model.TipoArchivo, file);
+
+                List<PagoObligacionEntity> lstPagoObligaciones = LeerDetalleArchivoPagoObligaciones(filePathSaved, model.EntidadRecaudadora);
+
+                if (lstPagoObligaciones != null)
+                {
+                    response = _obligacionService.Grabar_Pago_Obligaciones(lstPagoObligaciones, model.Observacion, currentUserId);
+                }
+                else
+                {
+                    response = new ImportacionPagoResponse() { Message = "No se encontró una estructura de columnas configuradas para el archivo" };
+                }
+
+                EliminarArchivoHost(serverPath, fileName);
+            }
+            catch (Exception ex)
+            {
+                EliminarArchivoHost(serverPath, fileName);
+                response = new ImportacionPagoResponse()
+                {
+                    Message = ex.Message
+                };
+                ResponseModel.Error(response);
+            }
+
+            return response;
         }
     }
 }

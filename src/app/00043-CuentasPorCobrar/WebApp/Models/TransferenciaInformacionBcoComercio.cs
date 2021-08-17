@@ -112,5 +112,18 @@ namespace WebApp.Models
         {
             throw new NotImplementedException();
         }
+
+        public MemoryStream GenerarArchivoPagoObligacionesDesdeRecaudacionBCP()
+        {
+            var memoryStream = new MemoryStream();
+
+            var writer = new StreamWriter(memoryStream, Encoding.Default);
+
+            writer.Flush();
+
+            memoryStream.Seek(0, SeekOrigin.Begin);
+
+            return memoryStream;
+        }
     }
 }

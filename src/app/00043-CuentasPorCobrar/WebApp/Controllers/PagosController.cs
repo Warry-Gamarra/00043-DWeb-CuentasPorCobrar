@@ -460,5 +460,27 @@ namespace WebApp.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
+
+        [Route("operaciones/pagos/transformar-bcp-a-bco-comercio")]
+        public ActionResult TransformarBcpBcoComercio()
+        {
+            ViewBag.Title = "Transformar archivo BCP a Banco Comercio";
+
+            ViewBag.Anios = new SelectList(generalServiceFacade.Listar_Anios(), "Value", "TextDisplay");
+            ViewBag.Periodos = new SelectList(catalogoServiceFacade.Listar_Periodos(), "Value", "TextDisplay");
+            var model = new CargarArchivoViewModel();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult TransformarBcpBcoComercio(HttpPostedFileBase file, CargarArchivoViewModel model)
+        {
+            var result = pagosModel.CargarArchivoPagos(Server.MapPath("~/Upload/Pagos/"), file, model, WebSecurity.CurrentUserId);
+
+            Session["PAGO_OBLIG_RESULT"] = result.ListaResultados;
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
     }
 }
