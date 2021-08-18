@@ -444,7 +444,7 @@ namespace WebApp.Models
         }
 
 
-        public ImportacionPagoResponse CargarArchivoBCP(string serverPath, HttpPostedFileBase file, CargarArchivoViewModel model, int currentUserId)
+        public ImportacionPagoResponse CargarArchivoBCP_a_BcoComercio(string serverPath, HttpPostedFileBase file, CargarArchivoViewModel model, int currentUserId)
         {
             if (file == null)
             {
@@ -454,7 +454,7 @@ namespace WebApp.Models
                 };
             }
 
-            var transferenciaInformacion = TransferenciaInformacionFactory.Get(int.Parse(System.Configuration.ConfigurationManager.AppSettings["EntFinancBcoComercioID"].ToString()));
+            var transferenciaInformacion = new TransferenciaInformacionBcoComercio();
             ImportacionPagoResponse response;
             string fileName = "";
             string filePathSaved = "";
@@ -468,7 +468,12 @@ namespace WebApp.Models
 
                 if (lstPagoObligaciones != null)
                 {
-                    response = _obligacionService.Grabar_Pago_Obligaciones(lstPagoObligaciones, model.Observacion, currentUserId);
+                    response = new ImportacionPagoResponse()
+                    {
+                        Success = true,
+                        Message = "Archivo de pago para el Banco de Comercio generado.",
+                        File = transferenciaInformacion.GenerarArchivoPagoObligacionesDesdeRecaudacionBCP()
+                    };
                 }
                 else
                 {

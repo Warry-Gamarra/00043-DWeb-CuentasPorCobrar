@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using WebApp.Models.Facades;
+using WebApp.ViewModels;
 
 namespace WebApp.Models
 {
@@ -13,11 +14,13 @@ namespace WebApp.Models
     {
         IObligacionServiceFacade obligacionServiceFacade;
         private DateTime fecha_actual;
+        private readonly EstructuraArchivoModel estructuraArchivoModel;
 
         public TransferenciaInformacionBcoComercio()
         {
             obligacionServiceFacade = new ObligacionServiceFacade();
             fecha_actual = DateTime.Now;
+            estructuraArchivoModel = new EstructuraArchivoModel();
         }
 
         public MemoryStream GenerarInformacionObligaciones(int anio, int? periodo, TipoEstudio tipoEstudio, string dependencia)
@@ -116,8 +119,26 @@ namespace WebApp.Models
         public MemoryStream GenerarArchivoPagoObligacionesDesdeRecaudacionBCP()
         {
             var memoryStream = new MemoryStream();
-
             var writer = new StreamWriter(memoryStream, Encoding.Default);
+            List<SeccionArchivoViewModel> estructuraArchivo = estructuraArchivoModel.ObtenerEstructuraArchivo(Bancos.BANCO_COMERCIO_ID, TipoArchivoEntFinan.Recaudacion_Obligaciones);
+
+            if (estructuraArchivo.Count == 0)
+            {
+                return null;
+            }
+
+            var cabecera = estructuraArchivo.Find(x => x.TipoSeccion == TipoSeccionArchivo.Cabecera_Resumen);
+            var detalle = estructuraArchivo.Find(x => x.TipoSeccion == TipoSeccionArchivo.Detalle_Recaudacion);
+
+            if (detalle == null || cabecera == null)
+            {
+                return null;
+            }
+
+            var columnasCabecera = cabecera.ColumnasSeccion.ToDictionary(x => x.CampoTablaNom, x => new Posicion { Inicial = x.ColPosicionIni, Final = x.ColPosicionFin });
+            var columnasDetalle = detalle.ColumnasSeccion.ToDictionary(x => x.CampoTablaNom, x => new Posicion { Inicial = x.ColPosicionIni, Final = x.ColPosicionFin });
+
+
 
             writer.Flush();
 
