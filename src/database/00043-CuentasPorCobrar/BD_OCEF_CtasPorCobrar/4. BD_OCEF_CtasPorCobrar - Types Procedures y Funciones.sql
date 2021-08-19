@@ -4502,3 +4502,34 @@ BEGIN
 	--EXEC USP_S_ResumenAnualPagoDeObligaciones_X_Dependencia @I_Anio = 2021, @B_EsPregrado = 0
 END
 GO
+
+
+
+
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.DOMAINS WHERE DOMAIN_NAME = 'type_dataCabeceraArchivo') BEGIN
+	DROP TYPE [dbo].[type_dataCabeceraArchivo]
+END
+GO
+
+CREATE TYPE [dbo].[type_dataCabeceraArchivo] AS TABLE(
+	C_CodTipoRegistro	varchar(50),
+	T_CodCuenta			varchar(50),
+	N_NroCuenta			varchar(50),
+	D_FecProceso		datetime,
+	D_HoraProceso		time,
+	D_FecVencimiento	datetime,
+	C_Moneda			varchar(3),
+	I_NroRegistros1		int,
+	I_NroRegistros2		int,
+	I_TotalMonto1		decimal(15,2),
+	I_TotalMonto2		decimal(15,2),
+	T_InfoAdicional		varchar(250),
+	C_CodServicio		varchar(10),
+	C_CodBanco			varchar(10),
+	C_CodBcoUsuario		varchar(10),
+	I_CodBanco			int
+)
+GO
+

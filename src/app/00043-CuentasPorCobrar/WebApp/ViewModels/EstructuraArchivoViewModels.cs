@@ -97,6 +97,7 @@ namespace WebApp.ViewModels
         public string CampoTablaNom { get; set; }
         public string TablaCampoNom { get; set; }
 
+
         [Display(Name = "Longitud:")]
         public int Longitud
         {

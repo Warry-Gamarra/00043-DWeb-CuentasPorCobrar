@@ -1910,3 +1910,191 @@ set @I_ClasifEquivalenciaID = IDENT_CURRENT('TC_ClasificadorEquivalencia')
 
 insert dbo.TC_ClasificadorEquivalenciaAnio(N_Anio, I_ClasifEquivalenciaID, B_Habilitado, B_Eliminado) values('2021', @I_ClasifEquivalenciaID, 1, 0)
 go
+
+
+
+
+--SET IDENTITY_INSERT [dbo].[TS_CampoTablaPago] ON 
+--GO
+--INSERT [dbo].[TS_CampoTablaPago] ([I_CampoPagoID], [T_TablaPagoNom], [T_CampoPagoNom], [T_CampoInfoDesc], [I_TipoArchivoID], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [I_UsuarioMod], [D_FecCre], [D_FecMod]) VALUES (1, N'type_dataPago', N'C_CodAlu', N'Código de depositante', 3, 1, 0, 1, NULL, CAST(N'2021-07-15T15:36:29.307' AS DateTime), NULL)
+--GO
+--INSERT [dbo].[TS_CampoTablaPago] ([I_CampoPagoID], [T_TablaPagoNom], [T_CampoPagoNom], [T_CampoInfoDesc], [I_TipoArchivoID], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [I_UsuarioMod], [D_FecCre], [D_FecMod]) VALUES (2, N'type_dataPago', N'C_CodOperacion', N'Código de operación', 3, 1, 0, 1, NULL, CAST(N'2021-07-15T15:36:29.307' AS DateTime), NULL)
+--GO
+--INSERT [dbo].[TS_CampoTablaPago] ([I_CampoPagoID], [T_TablaPagoNom], [T_CampoPagoNom], [T_CampoInfoDesc], [I_TipoArchivoID], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [I_UsuarioMod], [D_FecCre], [D_FecMod]) VALUES (3, N'type_dataPago', N'C_Referencia', N'Código de referencia', 3, 1, 0, 1, NULL, CAST(N'2021-07-15T15:36:29.307' AS DateTime), NULL)
+--GO
+--INSERT [dbo].[TS_CampoTablaPago] ([I_CampoPagoID], [T_TablaPagoNom], [T_CampoPagoNom], [T_CampoInfoDesc], [I_TipoArchivoID], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [I_UsuarioMod], [D_FecCre], [D_FecMod]) VALUES (4, N'type_dataPago', N'C_CodRc', N'Código de carrera', 3, 1, 0, 1, NULL, CAST(N'2021-07-15T15:36:29.307' AS DateTime), NULL)
+--GO
+--INSERT [dbo].[TS_CampoTablaPago] ([I_CampoPagoID], [T_TablaPagoNom], [T_CampoPagoNom], [T_CampoInfoDesc], [I_TipoArchivoID], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [I_UsuarioMod], [D_FecCre], [D_FecMod]) VALUES (5, N'type_dataPago', N'C_Moneda', N'Moneda', 3, 1, 0, 1, NULL, CAST(N'2021-07-15T15:36:29.307' AS DateTime), NULL)
+--GO
+--INSERT [dbo].[TS_CampoTablaPago] ([I_CampoPagoID], [T_TablaPagoNom], [T_CampoPagoNom], [T_CampoInfoDesc], [I_TipoArchivoID], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [I_UsuarioMod], [D_FecCre], [D_FecMod]) VALUES (6, N'type_dataPago', N'D_FecPago', N'Fec. Pago', 3, 1, 0, 1, NULL, CAST(N'2021-07-15T15:36:29.307' AS DateTime), NULL)
+--GO
+--INSERT [dbo].[TS_CampoTablaPago] ([I_CampoPagoID], [T_TablaPagoNom], [T_CampoPagoNom], [T_CampoInfoDesc], [I_TipoArchivoID], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [I_UsuarioMod], [D_FecCre], [D_FecMod]) VALUES (7, N'type_dataPago', N'D_FecVencto', N'Fec. vencimiento', 3, 1, 0, 1, NULL, CAST(N'2021-07-15T15:36:29.307' AS DateTime), NULL)
+--GO
+--INSERT [dbo].[TS_CampoTablaPago] ([I_CampoPagoID], [T_TablaPagoNom], [T_CampoPagoNom], [T_CampoInfoDesc], [I_TipoArchivoID], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [I_UsuarioMod], [D_FecCre], [D_FecMod]) VALUES (8, N'type_dataPago', N'I_Cantidad', N'Cantidad', 3, 1, 0, 1, NULL, CAST(N'2021-07-15T15:36:29.307' AS DateTime), NULL)
+--GO
+--INSERT [dbo].[TS_CampoTablaPago] ([I_CampoPagoID], [T_TablaPagoNom], [T_CampoPagoNom], [T_CampoInfoDesc], [I_TipoArchivoID], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [I_UsuarioMod], [D_FecCre], [D_FecMod]) VALUES (9, N'type_dataPago', N'I_MontoPago', N'Monto de pago', 3, 1, 0, 1, NULL, CAST(N'2021-07-15T15:36:29.307' AS DateTime), NULL)
+--GO
+--INSERT [dbo].[TS_CampoTablaPago] ([I_CampoPagoID], [T_TablaPagoNom], [T_CampoPagoNom], [T_CampoInfoDesc], [I_TipoArchivoID], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [I_UsuarioMod], [D_FecCre], [D_FecMod]) VALUES (10, N'type_dataPago', N'I_ProcesoID', N'Cuota de pago', 3, 1, 0, 1, NULL, CAST(N'2021-07-15T15:36:29.307' AS DateTime), NULL)
+--GO
+--INSERT [dbo].[TS_CampoTablaPago] ([I_CampoPagoID], [T_TablaPagoNom], [T_CampoPagoNom], [T_CampoInfoDesc], [I_TipoArchivoID], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [I_UsuarioMod], [D_FecCre], [D_FecMod]) VALUES (11, N'type_dataPago', N'T_LugarPago', N'Lugar de pago', 3, 1, 0, 1, NULL, CAST(N'2021-07-15T15:36:29.307' AS DateTime), NULL)
+--GO
+--INSERT [dbo].[TS_CampoTablaPago] ([I_CampoPagoID], [T_TablaPagoNom], [T_CampoPagoNom], [T_CampoInfoDesc], [I_TipoArchivoID], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [I_UsuarioMod], [D_FecCre], [D_FecMod]) VALUES (12, N'type_dataPago', N'T_NomDepositante', N'Nombre del depositante', 3, 1, 0, 1, NULL, CAST(N'2021-07-15T15:36:29.307' AS DateTime), NULL)
+--GO
+--INSERT [dbo].[TS_CampoTablaPago] ([I_CampoPagoID], [T_TablaPagoNom], [T_CampoPagoNom], [T_CampoInfoDesc], [I_TipoArchivoID], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [I_UsuarioMod], [D_FecCre], [D_FecMod]) VALUES (13, N'type_dataPago', N'D_HoraPago', N'Hora. Pago', 3, 1, 0, 1, NULL, CAST(N'2021-07-15T15:36:29.307' AS DateTime), NULL)
+--GO
+--INSERT [dbo].[TS_CampoTablaPago] ([I_CampoPagoID], [T_TablaPagoNom], [T_CampoPagoNom], [T_CampoInfoDesc], [I_TipoArchivoID], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [I_UsuarioMod], [D_FecCre], [D_FecMod]) VALUES (14, N'type_dataPago', N'I_InteresMora', N'Interés moratorio', 3, 1, 0, 1, NULL, CAST(N'2021-07-15T15:36:29.310' AS DateTime), NULL)
+--GO
+--INSERT [dbo].[TS_CampoTablaPago] ([I_CampoPagoID], [T_TablaPagoNom], [T_CampoPagoNom], [T_CampoInfoDesc], [I_TipoArchivoID], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [I_UsuarioMod], [D_FecCre], [D_FecMod]) VALUES (15, N'type_dataPago', N'C_Extorno', N'Extorno', 3, 1, 0, 1, NULL, CAST(N'2021-07-15T15:36:29.310' AS DateTime), NULL)
+--GO
+--INSERT [dbo].[TS_CampoTablaPago] ([I_CampoPagoID], [T_TablaPagoNom], [T_CampoPagoNom], [T_CampoInfoDesc], [I_TipoArchivoID], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [I_UsuarioMod], [D_FecCre], [D_FecMod]) VALUES (16, N'type_dataPago', N'T_InformacionAdicional', N'Información requerida para identificar lod pagos', 3, 1, 0, 1, NULL, CAST(N'2021-07-15T15:36:29.310' AS DateTime), NULL)
+--GO
+--INSERT [dbo].[TS_CampoTablaPago] ([I_CampoPagoID], [T_TablaPagoNom], [T_CampoPagoNom], [T_CampoInfoDesc], [I_TipoArchivoID], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [I_UsuarioMod], [D_FecCre], [D_FecMod]) VALUES (17, N'type_dataCabeceraArchivo', N'C_CodTipoRegistro', N'Tipo o identificador de registro ', 3, 1, 0, 1, NULL, CAST(N'2021-08-19T14:19:33.390' AS DateTime), NULL)
+--GO
+--INSERT [dbo].[TS_CampoTablaPago] ([I_CampoPagoID], [T_TablaPagoNom], [T_CampoPagoNom], [T_CampoInfoDesc], [I_TipoArchivoID], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [I_UsuarioMod], [D_FecCre], [D_FecMod]) VALUES (18, N'type_dataCabeceraArchivo', N'T_CodCuenta', N'Código de Cuenta', 3, 1, 0, 1, NULL, CAST(N'2021-08-19T14:20:21.233' AS DateTime), NULL)
+--GO
+--INSERT [dbo].[TS_CampoTablaPago] ([I_CampoPagoID], [T_TablaPagoNom], [T_CampoPagoNom], [T_CampoInfoDesc], [I_TipoArchivoID], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [I_UsuarioMod], [D_FecCre], [D_FecMod]) VALUES (19, N'type_dataCabeceraArchivo', N'C_Moneda', N'Moneda', 3, 1, 0, 1, 0, CAST(N'2021-08-19T14:20:53.543' AS DateTime), CAST(N'2021-08-19T14:37:41.860' AS DateTime))
+--GO
+--INSERT [dbo].[TS_CampoTablaPago] ([I_CampoPagoID], [T_TablaPagoNom], [T_CampoPagoNom], [T_CampoInfoDesc], [I_TipoArchivoID], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [I_UsuarioMod], [D_FecCre], [D_FecMod]) VALUES (20, N'type_dataCabeceraArchivo', N'I_NroRegistros2', N'Cantidad registros dólares', 3, 1, 0, 1, 0, CAST(N'2021-08-19T14:21:29.187' AS DateTime), CAST(N'2021-08-19T14:43:05.367' AS DateTime))
+--GO
+--INSERT [dbo].[TS_CampoTablaPago] ([I_CampoPagoID], [T_TablaPagoNom], [T_CampoPagoNom], [T_CampoInfoDesc], [I_TipoArchivoID], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [I_UsuarioMod], [D_FecCre], [D_FecMod]) VALUES (21, N'type_dataCabeceraArchivo', N'N_NroCuenta', N'Número de cuenta', 3, 1, 0, 1, NULL, CAST(N'2021-08-19T14:21:59.577' AS DateTime), NULL)
+--GO
+--INSERT [dbo].[TS_CampoTablaPago] ([I_CampoPagoID], [T_TablaPagoNom], [T_CampoPagoNom], [T_CampoInfoDesc], [I_TipoArchivoID], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [I_UsuarioMod], [D_FecCre], [D_FecMod]) VALUES (22, N'type_dataCabeceraArchivo', N'D_FecProceso', N'Fecha de proceso', 3, 1, 0, 1, NULL, CAST(N'2021-08-19T14:22:54.360' AS DateTime), NULL)
+--GO
+--INSERT [dbo].[TS_CampoTablaPago] ([I_CampoPagoID], [T_TablaPagoNom], [T_CampoPagoNom], [T_CampoInfoDesc], [I_TipoArchivoID], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [I_UsuarioMod], [D_FecCre], [D_FecMod]) VALUES (23, N'type_dataCabeceraArchivo', N'I_NroRegistros1', N'Cantidad registros soles', 3, 1, 0, 1, 0, CAST(N'2021-08-19T14:23:44.377' AS DateTime), CAST(N'2021-08-19T17:31:37.600' AS DateTime))
+--GO
+--INSERT [dbo].[TS_CampoTablaPago] ([I_CampoPagoID], [T_TablaPagoNom], [T_CampoPagoNom], [T_CampoInfoDesc], [I_TipoArchivoID], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [I_UsuarioMod], [D_FecCre], [D_FecMod]) VALUES (24, N'type_dataCabeceraArchivo', N'I_TotalMonto1', N'Monto total soles', 3, 1, 0, 1, NULL, CAST(N'2021-08-19T14:24:22.853' AS DateTime), NULL)
+--GO
+--INSERT [dbo].[TS_CampoTablaPago] ([I_CampoPagoID], [T_TablaPagoNom], [T_CampoPagoNom], [T_CampoInfoDesc], [I_TipoArchivoID], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [I_UsuarioMod], [D_FecCre], [D_FecMod]) VALUES (25, N'type_dataCabeceraArchivo', N'I_TotalMonto2', N'Monto total dólares', 3, 1, 0, 1, NULL, CAST(N'2021-08-19T14:24:41.647' AS DateTime), NULL)
+--GO
+--INSERT [dbo].[TS_CampoTablaPago] ([I_CampoPagoID], [T_TablaPagoNom], [T_CampoPagoNom], [T_CampoInfoDesc], [I_TipoArchivoID], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [I_UsuarioMod], [D_FecCre], [D_FecMod]) VALUES (26, N'type_dataCabeceraArchivo', N'C_CodBanco', N'Código Interno banco', 3, 1, 0, 1, 0, CAST(N'2021-08-19T14:25:10.163' AS DateTime), CAST(N'2021-08-19T14:25:53.103' AS DateTime))
+--GO
+--INSERT [dbo].[TS_CampoTablaPago] ([I_CampoPagoID], [T_TablaPagoNom], [T_CampoPagoNom], [T_CampoInfoDesc], [I_TipoArchivoID], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [I_UsuarioMod], [D_FecCre], [D_FecMod]) VALUES (27, N'type_dataCabeceraArchivo', N'C_CodBcoUsuario', N'Usuario cuenta banco', 3, 1, 0, 1, NULL, CAST(N'2021-08-19T14:25:38.460' AS DateTime), NULL)
+--GO
+--INSERT [dbo].[TS_CampoTablaPago] ([I_CampoPagoID], [T_TablaPagoNom], [T_CampoPagoNom], [T_CampoInfoDesc], [I_TipoArchivoID], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [I_UsuarioMod], [D_FecCre], [D_FecMod]) VALUES (28, N'type_dataCabeceraArchivo', N'D_HoraProceso', N'Hora de corte ', 3, 1, 0, 1, NULL, CAST(N'2021-08-19T14:26:40.707' AS DateTime), NULL)
+--GO
+--INSERT [dbo].[TS_CampoTablaPago] ([I_CampoPagoID], [T_TablaPagoNom], [T_CampoPagoNom], [T_CampoInfoDesc], [I_TipoArchivoID], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [I_UsuarioMod], [D_FecCre], [D_FecMod]) VALUES (29, N'type_dataCabeceraArchivo', N'C_CodServicio', N'Codigo servicio', 3, 1, 0, 1, NULL, CAST(N'2021-08-19T14:27:06.870' AS DateTime), NULL)
+--GO
+--INSERT [dbo].[TS_CampoTablaPago] ([I_CampoPagoID], [T_TablaPagoNom], [T_CampoPagoNom], [T_CampoInfoDesc], [I_TipoArchivoID], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [I_UsuarioMod], [D_FecCre], [D_FecMod]) VALUES (30, N'type_dataCabeceraArchivo', N'T_InfoAdicional', N'Información adicional', 3, 1, 0, 1, NULL, CAST(N'2021-08-19T14:27:33.427' AS DateTime), NULL)
+--GO
+--INSERT [dbo].[TS_CampoTablaPago] ([I_CampoPagoID], [T_TablaPagoNom], [T_CampoPagoNom], [T_CampoInfoDesc], [I_TipoArchivoID], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [I_UsuarioMod], [D_FecCre], [D_FecMod]) VALUES (31, N'type_dataCabeceraArchivo', N'D_FecVencimiento', N'Fecha de vencimiento', 3, 1, 0, 1, NULL, CAST(N'2021-08-19T14:33:44.770' AS DateTime), NULL)
+--GO
+--SET IDENTITY_INSERT [dbo].[TS_CampoTablaPago] OFF
+--GO
+--SET IDENTITY_INSERT [dbo].[TC_SeccionArchivo] ON 
+--GO
+--INSERT [dbo].[TC_SeccionArchivo] ([I_SecArchivoID], [T_SecArchivoDesc], [I_TipoSeccion], [I_FilaInicio], [I_FilaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_TipArchivoEntFinanID]) VALUES (1, N'DETALLE', 2, 2, NULL, 1, 0, NULL, NULL, NULL, NULL, 1)
+--GO
+--INSERT [dbo].[TC_SeccionArchivo] ([I_SecArchivoID], [T_SecArchivoDesc], [I_TipoSeccion], [I_FilaInicio], [I_FilaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_TipArchivoEntFinanID]) VALUES (2, N'DETALLE', 2, 2, NULL, 1, 0, NULL, NULL, NULL, NULL, 2)
+--GO
+--INSERT [dbo].[TC_SeccionArchivo] ([I_SecArchivoID], [T_SecArchivoDesc], [I_TipoSeccion], [I_FilaInicio], [I_FilaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_TipArchivoEntFinanID]) VALUES (3, N'REGISTRO DE CONTROL', 1, 1, 1, 1, 0, 1, CAST(N'2021-08-19T14:28:21.903' AS DateTime), NULL, NULL, 1)
+--GO
+--INSERT [dbo].[TC_SeccionArchivo] ([I_SecArchivoID], [T_SecArchivoDesc], [I_TipoSeccion], [I_FilaInicio], [I_FilaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_TipArchivoEntFinanID]) VALUES (4, N'REGISTRO DE CABECERA', 1, 1, 1, 1, 0, 1, CAST(N'2021-08-19T14:34:53.443' AS DateTime), NULL, NULL, 2)
+--GO
+--SET IDENTITY_INSERT [dbo].[TC_SeccionArchivo] OFF
+--GO
+--SET IDENTITY_INSERT [dbo].[TC_ColumnaSeccion] ON 
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (1, N'C_CodAlu', 9, 18, 1, 0, NULL, NULL, NULL, NULL, 1, 1)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (2, N'C_CodOperacion', 288, 297, 1, 0, NULL, NULL, NULL, NULL, 1, 2)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (3, N'C_Referencia', 288, 297, 1, 0, NULL, NULL, NULL, NULL, 1, 3)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (4, N'C_CodRc', 151, 153, 1, 0, NULL, NULL, NULL, NULL, 1, 4)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (5, N'C_Moneda', 125, 126, 1, 0, NULL, NULL, NULL, NULL, 1, 5)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (6, N'D_FecPago', 205, 212, 1, 0, NULL, NULL, NULL, NULL, 1, 6)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (7, N'D_FecVencto', 117, 124, 1, 0, NULL, NULL, NULL, NULL, 1, 7)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (8, N'I_Cantidad', 274, 277, 1, 0, NULL, NULL, NULL, NULL, 1, 8)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (9, N'I_MontoPago', 127, 140, 1, 0, NULL, NULL, NULL, NULL, 1, 9)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (10, N'I_ProcesoID', 167, 176, 1, 0, NULL, NULL, NULL, NULL, 1, 10)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (11, N'T_LugarPago', 219, 225, 1, 0, NULL, NULL, NULL, NULL, 1, 11)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (12, N'T_NomDepositante', 29, 68, 1, 0, NULL, NULL, NULL, NULL, 1, 12)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (13, N'D_HoraPago', 213, 218, 1, 0, NULL, NULL, NULL, NULL, 1, 13)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (14, N'I_InteresMora', 191, 204, 1, 0, NULL, NULL, NULL, NULL, 1, 14)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (15, N'C_Extorno', 1, 0, 1, 0, NULL, NULL, NULL, NULL, 1, 15)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (16, N'C_CodAlu', 18, 27, 1, 0, NULL, NULL, NULL, NULL, 2, 1)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (17, N'C_CodOperacion', 125, 130, 1, 0, NULL, NULL, NULL, NULL, 2, 2)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (18, N'C_Referencia', 131, 152, 1, 0, NULL, NULL, NULL, NULL, 2, 3)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (19, N'C_CodRc', 28, 30, 1, 0, NULL, NULL, NULL, NULL, 2, 4)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (20, N'C_Moneda', 6, 6, 1, 0, NULL, NULL, NULL, NULL, 2, 5)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (21, N'D_FecPago', 58, 65, 1, 0, NULL, NULL, NULL, NULL, 2, 6)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (22, N'D_FecVencto', 66, 73, 1, 0, NULL, NULL, NULL, NULL, 2, 7)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (23, N'I_Cantidad', 1, 0, 1, 0, NULL, NULL, NULL, NULL, 2, 8)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (24, N'I_MontoPago', 104, 118, 1, 0, NULL, NULL, NULL, NULL, 2, 9)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (25, N'I_ProcesoID', 31, 36, 1, 0, NULL, NULL, NULL, NULL, 2, 10)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (26, N'T_LugarPago', 119, 124, 1, 0, NULL, NULL, NULL, NULL, 2, 11)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (27, N'T_NomDepositante', 1, 0, 1, 0, NULL, NULL, NULL, NULL, 2, 12)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (28, N'D_HoraPago', 169, 174, 1, 0, NULL, NULL, NULL, NULL, 2, 13)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (29, N'I_InteresMora', 89, 103, 1, 0, NULL, NULL, NULL, NULL, 2, 14)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (30, N'C_Extorno', 197, 197, 1, 0, NULL, NULL, NULL, NULL, 2, 15)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (31, N'T_InformacionAdicional', 141, 190, 1, 0, NULL, NULL, NULL, NULL, 1, 16)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (32, N'T_InformacionAdicional', 28, 57, 1, 0, NULL, NULL, NULL, NULL, 2, 16)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (33, N'C_CodTipoRegistro', 1, 1, 1, 0, 1, CAST(N'2021-08-19T14:28:54.687' AS DateTime), NULL, NULL, 3, 17)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (34, N'Nro. Registros Soles', 2, 7, 1, 0, 1, CAST(N'2021-08-19T14:29:46.327' AS DateTime), 0, CAST(N'2021-08-19T17:32:04.117' AS DateTime), 3, 23)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (35, N'Total Soles', 8, 21, 1, 0, 1, CAST(N'2021-08-19T14:31:00.767' AS DateTime), NULL, NULL, 3, 24)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (36, N'Nro. Registros Dolares', 22, 27, 1, 0, 1, CAST(N'2021-08-19T14:31:39.027' AS DateTime), 0, CAST(N'2021-08-19T14:44:06.950' AS DateTime), 3, 20)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (37, N'Total Dólares', 28, 41, 1, 0, 1, CAST(N'2021-08-19T14:32:03.343' AS DateTime), NULL, NULL, 3, 25)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (38, N'Fecha de Envío (AAAAMMDD)', 42, 49, 1, 0, 1, CAST(N'2021-08-19T14:32:51.967' AS DateTime), NULL, NULL, 3, 22)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (39, N'Fecha de Vencimiento (AAAAMMDD)', 50, 57, 1, 0, 1, CAST(N'2021-08-19T14:34:27.470' AS DateTime), NULL, NULL, 3, 31)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (40, N'Tipo de registro', 1, 2, 1, 0, 1, CAST(N'2021-08-19T14:35:17.240' AS DateTime), NULL, NULL, 4, 17)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (41, N'Código de Cuenta', 3, 5, 1, 0, 1, CAST(N'2021-08-19T14:35:45.993' AS DateTime), NULL, NULL, 4, 18)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (42, N'Moneda de la cuenta', 6, 6, 1, 0, 1, CAST(N'2021-08-19T14:43:35.760' AS DateTime), NULL, NULL, 4, 19)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (43, N'Número de cuenta ', 7, 13, 1, 0, 1, CAST(N'2021-08-19T14:44:48.320' AS DateTime), NULL, NULL, 4, 21)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (44, N'Fecha de proceso (AAAAMMDD) ', 15, 22, 1, 0, 1, CAST(N'2021-08-19T14:45:32.410' AS DateTime), NULL, NULL, 4, 22)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (45, N'Cantidad total de registros', 23, 31, 1, 0, 1, CAST(N'2021-08-19T14:46:17.160' AS DateTime), 0, CAST(N'2021-08-19T17:32:21.713' AS DateTime), 4, 23)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (46, N'Monto total', 32, 46, 1, 0, 1, CAST(N'2021-08-19T14:47:07.183' AS DateTime), NULL, NULL, 4, 24)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (47, N'Código Interno BCP (código interno de la cuenta re', 47, 50, 1, 0, 1, CAST(N'2021-08-19T14:47:52.700' AS DateTime), NULL, NULL, 4, 26)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (48, N'Casilla (usuario Teletransfer de la cuenta recauda', 51, 56, 1, 0, 1, CAST(N'2021-08-19T14:49:13.737' AS DateTime), NULL, NULL, 4, 27)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (49, N'Hora de corte', 57, 62, 1, 0, 1, CAST(N'2021-08-19T14:49:40.770' AS DateTime), 0, CAST(N'2021-08-19T14:49:58.453' AS DateTime), 4, 28)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (50, N'Código Servicio ', 63, 68, 1, 0, 1, CAST(N'2021-08-19T14:50:21.020' AS DateTime), NULL, NULL, 4, 29)
+--GO
+--INSERT [dbo].[TC_ColumnaSeccion] ([I_ColSecID], [T_ColSecDesc], [I_ColumnaInicio], [I_ColumnaFin], [B_Habilitado], [B_Eliminado], [I_UsuarioCre], [D_FecCre], [I_UsuarioMod], [D_FecMod], [I_SecArchivoID], [I_CampoPagoID]) VALUES (51, N'Filler (libre)', 69, 250, 1, 0, 1, CAST(N'2021-08-19T14:50:42.830' AS DateTime), NULL, NULL, 4, 30)
+--GO
+--SET IDENTITY_INSERT [dbo].[TC_ColumnaSeccion] OFF
+--GO

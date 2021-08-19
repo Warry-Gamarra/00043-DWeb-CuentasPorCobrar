@@ -468,17 +468,21 @@ namespace WebApp.Controllers
 
             ViewBag.Anios = new SelectList(generalServiceFacade.Listar_Anios(), "Value", "TextDisplay");
             ViewBag.Periodos = new SelectList(catalogoServiceFacade.Listar_Periodos(), "Value", "TextDisplay");
-            var model = new CargarArchivoViewModel();
+            var model = new CargarArchivoViewModel() { EntidadRecaudadora = Bancos.BCP_ID, TipoArchivo = TipoPago.Obligacion };
 
             return View(model);
         }
 
         [HttpPost]
-        public ActionResult TransformarBcpBcoComercio(HttpPostedFileBase file, CargarArchivoViewModel model)
+        public ActionResult CargarArchivoBcpBcoComercio(HttpPostedFileBase file, CargarArchivoViewModel model)
         {
-            var result = pagosModel.CargarArchivoPagos(Server.MapPath("~/Upload/Pagos/"), file, model, WebSecurity.CurrentUserId);
+            if (model.EntidadRecaudadora == 0)
+            {
+                model.EntidadRecaudadora = Bancos.BCP_ID;
+            }
 
-            Session["PAGO_OBLIG_RESULT"] = result.ListaResultados;
+            var result = pagosModel.ConvertirArchivoBCP_a_BcoComercio(Server.MapPath("~/Upload/Pagos/"), file, model, WebSecurity.CurrentUserId);
+
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }

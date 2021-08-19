@@ -1,4 +1,5 @@
-﻿using Domain.Helpers;
+﻿using Domain.Entities;
+using Domain.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -116,7 +117,7 @@ namespace WebApp.Models
             throw new NotImplementedException();
         }
 
-        public MemoryStream GenerarArchivoPagoObligacionesDesdeRecaudacionBCP()
+        public MemoryStream GenerarArchivoPagoObligacionesDesdeRecaudacionBCP(List<CabeceraArchivo> filasCabecera, List<PagoObligacionEntity> filasDetalle)
         {
             var memoryStream = new MemoryStream();
             var writer = new StreamWriter(memoryStream, Encoding.Default);
@@ -137,6 +138,12 @@ namespace WebApp.Models
 
             var columnasCabecera = cabecera.ColumnasSeccion.ToDictionary(x => x.CampoTablaNom, x => new Posicion { Inicial = x.ColPosicionIni, Final = x.ColPosicionFin });
             var columnasDetalle = detalle.ColumnasSeccion.ToDictionary(x => x.CampoTablaNom, x => new Posicion { Inicial = x.ColPosicionIni, Final = x.ColPosicionFin });
+
+            #region Cabecera
+
+
+
+            #endregion
 
 
 

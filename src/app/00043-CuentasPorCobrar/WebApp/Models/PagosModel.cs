@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 using WebApp.ViewModels;
 
@@ -126,6 +127,7 @@ namespace WebApp.Models
         {
             File.Delete(serverPath + fileName);
         }
+
 
         private List<PagoObligacionEntity> LeerDetalleArchivoPagoObligaciones(string filePath, int entFinanId)
         {
@@ -444,7 +446,55 @@ namespace WebApp.Models
         }
 
 
-        public ImportacionPagoResponse CargarArchivoBCP_a_BcoComercio(string serverPath, HttpPostedFileBase file, CargarArchivoViewModel model, int currentUserId)
+        private List<CabeceraArchivo> LeerCabeceraArchivoPagoObligaciones(string filePath, int entFinanId)
+        {
+            var result = new List<CabeceraArchivo>();
+
+            string fileLine;
+            List<string> linesFile = new List<string>();
+            List<SeccionArchivoViewModel> estructuraArchivo = _estructuraArchivoModel.ObtenerEstructuraArchivo(entFinanId, TipoArchivoEntFinan.Recaudacion_Obligaciones);
+
+            if (estructuraArchivo.Count == 0)
+            {
+                return null;
+            }
+
+            var cabecera = estructuraArchivo.Find(x => x.TipoSeccion == TipoSeccionArchivo.Cabecera_Resumen);
+            if (cabecera == null)
+            {
+                return null;
+            }
+
+            var columnas = cabecera.ColumnasSeccion.ToDictionary(x => x.CampoTablaNom, x => new Posicion { Inicial = x.ColPosicionIni, Final = x.ColPosicionFin });
+
+            using (StreamReader file = new StreamReader(filePath))
+            {
+                while ((fileLine = file.ReadLine()) != null)
+                {
+                    linesFile.Add(fileLine);
+                }
+            }
+
+            cabecera.FilPosicionFin = cabecera.FilPosicionFin == 0 ? linesFile.Count() : cabecera.FilPosicionFin;
+
+            for (int i = cabecera.FilPosicionIni - 1; i < cabecera.FilPosicionFin; i++)
+            {
+                string line = linesFile[i];
+                var cabeceraArchivo = new CabeceraArchivo();
+
+                foreach (var columna in columnas)
+                {
+                    PropertyInfo propertyInfo = cabeceraArchivo.GetType().GetProperty(columna.Key);
+                    propertyInfo.SetValue(cabeceraArchivo, Convert.ChangeType(line.Substring(columna.Value.Inicial - 1, columna.Value.Longitud), propertyInfo.PropertyType), null);
+                }
+
+                result.Add(cabeceraArchivo);
+            }
+
+            return result;
+        }
+
+        public ImportacionPagoResponse ConvertirArchivoBCP_a_BcoComercio(string serverPath, HttpPostedFileBase file, CargarArchivoViewModel model, int currentUserId)
         {
             if (file == null)
             {
@@ -464,6 +514,7 @@ namespace WebApp.Models
                 fileName = GenerarNombreArchivo(model.EntidadRecaudadora, file);
                 filePathSaved = GuardarArchivoPagoEnHost(serverPath, fileName, model.TipoArchivo, file);
 
+                List<CabeceraArchivo> cabeceraArchivos = LeerCabeceraArchivoPagoObligaciones(filePathSaved, model.EntidadRecaudadora);
                 List<PagoObligacionEntity> lstPagoObligaciones = LeerDetalleArchivoPagoObligaciones(filePathSaved, model.EntidadRecaudadora);
 
                 if (lstPagoObligaciones != null)
@@ -472,7 +523,7 @@ namespace WebApp.Models
                     {
                         Success = true,
                         Message = "Archivo de pago para el Banco de Comercio generado.",
-                        File = transferenciaInformacion.GenerarArchivoPagoObligacionesDesdeRecaudacionBCP()
+                        File = transferenciaInformacion.GenerarArchivoPagoObligacionesDesdeRecaudacionBCP(cabeceraArchivos, lstPagoObligaciones)
                     };
                 }
                 else
