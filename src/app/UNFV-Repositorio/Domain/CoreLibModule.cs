@@ -19,7 +19,7 @@ namespace Domain
             builder.RegisterType<ProgramaUnfvRepository>().As<IProgramaUnfvRepository>().SingleInstance();
             builder.RegisterType<FacultadRepository>().As<IFacultadRepository>().SingleInstance();
             builder.RegisterType<EscuelaRepository>().As<IEscuelaRepository>().SingleInstance();
-            builder.RegisterType<EspecialidadRepository>().As<IEspecialidadRepository>().SingleInstance();
+            builder.RegisterType<CarreraProfesionalRepository>().As<ICarreraProfesionalRepository>().SingleInstance();
         }
     }
 }

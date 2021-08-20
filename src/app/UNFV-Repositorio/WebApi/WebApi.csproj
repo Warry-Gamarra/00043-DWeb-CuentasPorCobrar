@@ -182,7 +182,7 @@
     <Compile Include="Models\AlumnoModel.cs" />
     <Compile Include="Models\AlumnoServiceFacade.cs" />
     <Compile Include="Models\EscuelaModel.cs" />
-    <Compile Include="Models\EspecialidadModel.cs" />
+    <Compile Include="Models\CarreraProfesionalModel.cs" />
     <Compile Include="Models\FacultadModel.cs" />
     <Compile Include="Models\IAlumnoServiceFacade.cs" />
     <Compile Include="Models\IProgramaServiceFacade.cs" />

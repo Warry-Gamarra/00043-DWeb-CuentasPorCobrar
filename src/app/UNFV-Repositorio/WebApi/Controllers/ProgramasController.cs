@@ -134,17 +134,24 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("facultades/{codFac}/escuelas/{codEsc}/especialidades")]
-        public IHttpActionResult GetEspecialidadesByEsc(string codEsc, string codFac)
+        [Route("facultades/{codFac}/especialidades")]
+        public IHttpActionResult GetEspecialidadesByFac(string codFac)
         {
-            return Ok(_service.GetEspecialidadesByEsc(codEsc, codFac));
+            return Ok(_service.GetCarrerasProfesionalesByFac(codFac));
         }
 
         [HttpGet]
-        [Route("facultades/{codFac}/escuelas/{codEsc}/especialidades/{codEsp}")]
-        public IHttpActionResult GetEspecialidadByID(string codEsp, string codEsc, string codFac)
+        [Route("facultades/{codFac}/escuelas/{codEsc}/especialidades")]
+        public IHttpActionResult GetEspecialidadesByEsc(string codEsc, string codFac)
         {
-            return Ok(_service.GetEspecialidadByID(codEsp, codEsc, codFac));
+            return Ok(_service.GetCarrerasProfesionalesByEsc(codEsc, codFac));
+        }
+
+        [HttpGet]
+        [Route("facultades/escuelas/especialidades/{codRc}")]
+        public IHttpActionResult GetCarreraProfesionalByID(string codRc)
+        {
+            return Ok(_service.GetCarreraProfesionalByID(codRc));
         }
     }
 }
