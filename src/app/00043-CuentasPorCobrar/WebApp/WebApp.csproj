@@ -461,6 +461,7 @@
     <Compile Include="Models\MatriculaDbfSource.cs" />
     <Compile Include="Models\MatriculaExcelSource.cs" />
     <Compile Include="ViewModels\EstadoObligacionViewModel.cs" />
+    <Compile Include="ViewModels\ConsultaObligacionEstudianteViewModel.cs" />
     <Compile Include="ViewModels\ReporteResumenAnualPagoObligaciones_X_Dependencias.cs" />
     <Compile Include="ViewModels\ReporteResumenAnualPagoObligaciones_X_Clasificadores.cs" />
     <Compile Include="ViewModels\ReportePagosObligacionesViewModel.cs" />

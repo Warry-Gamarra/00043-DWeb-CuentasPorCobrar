@@ -155,7 +155,7 @@ namespace WebApp.Models.Facades
 
             if (matricula == null)
             {
-                throw new Exception("El alumno no sE encuentra asignado en el período actual.");
+                throw new Exception("El alumno no se encuentra asignado en el período actual.");
             }
 
             string tipoAlumno = matricula.B_Ingresante.Value ? C_TipoAlumnoIngresante : C_TipoAlumnoRegular;

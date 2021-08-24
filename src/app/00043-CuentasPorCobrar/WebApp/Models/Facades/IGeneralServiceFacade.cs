@@ -19,5 +19,11 @@ namespace WebApp.Models.Facades
         IEnumerable<SelectViewModel> Listar_ReportesPregrado();
 
         IEnumerable<SelectViewModel> Listar_ReportesPosgrado();
+
+        IEnumerable<SelectViewModel> Listar_TipoAlumno();
+
+        IEnumerable<SelectViewModel> Listar_CondicionExistenciaObligaciones();
+
+        IEnumerable<SelectViewModel> Listar_CondicionPagoObligacion();
     }
 }

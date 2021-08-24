@@ -1,5 +1,18 @@
-﻿@model IEnumerable<WebApp.ViewModels.EstadoObligacionViewModel>
+﻿@model WebApp.ViewModels.ConsultaObligacionEstudianteViewModel
 @using GridMvc.Html
+@Scripts.Render("~/bundles/jqueryval")
+
+<style>
+    .input-daterange {
+        display: flex !important;
+    }
+
+    @@media (max-width: 768px) {
+        .input-daterange {
+            display: block !important;
+        }
+    }
+</style>
 
 <div class="container-fluid">
     <div class="col-12">
@@ -23,26 +36,83 @@
                     <div class="card-body bg-light-gray">
                         <form id="frmConsultaEstudianteMatricula" method="get" action="@Url.Action("Consulta", "Estudiantes")">
                             <div class="form-row">
-                                <div class="form-group col-lg-1 col-md-2 col-6">
+                                <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
                                     <label for="anio">Año</label>
-                                    @Html.DropDownList("anio", new SelectList(ViewBag.Anios, "Value", "TextDisplay", DateTime.Now.Year), new { @class = "form-control form-control-sm" })
+                                    @Html.DropDownListFor(model => model.anio, ViewBag.Anios as SelectList, new { @class = "form-control form-control-sm" })
                                 </div>
-                                <div class="form-group col-lg-1 col-md-2 col-6 ">
+
+                                <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
                                     <label for="periodo">Periodo</label>
-                                    @Html.DropDownList("periodo", new SelectList(ViewBag.Periodos, "Value", "TextDisplay", "15"), null, new { @class = "form-control form-control-sm text-uppercase" })
+                                    @Html.DropDownListFor(model => model.periodo, ViewBag.Periodos as SelectList, "TODOS", new { @class = "form-control form-control-sm text-uppercase" })
                                 </div>
+
                                 <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
                                     <label for="tipoEstudio">Tipo de estudio</label>
-                                    @Html.DropDownList("tipoEstudio", new SelectList(ViewBag.TipoEstudios, "Value", "TextDisplay", ViewBag.DefaultTipoEstudio), null, new { @class = "form-control form-control-sm text-uppercase" })
+                                    @Html.DropDownListFor(model => model.tipoEstudio, ViewBag.TipoEstudios as SelectList, new { @class = "form-control form-control-sm text-uppercase" })
                                 </div>
+
                                 <div class="form-group col-lg-3 col-md-5 col-sm-12 col-12">
-                                    <label for="dependencia">Facultades/Posgrado</label>
-                                    @Html.DropDownList("dependencia", new SelectList(ViewBag.Dependencias, "Value", "TextDisplay", ViewBag.DefaultDependencia), "TODOS", new { @class = "form-control form-control-sm text-uppercase" })
+                                    <label for="codFac">Dependencia</label>
+                                    @Html.DropDownListFor(model => model.codFac, ViewBag.Dependencias as SelectList, (string)ViewBag.FiltroDependencias, new { @class = "form-control form-control-sm text-uppercase" })
                                 </div>
-                                <div class="form-group col-lg-1 col-md-2 col-6">
+
+                                <div class="form-group col-lg-3 col-md-5 col-sm-12 col-12">
+                                    <label for="codEsc">Escuela</label>
+                                    @Html.DropDownListFor(model => model.codEsc, ViewBag.Escuelas as SelectList, "TODOS", new { @class = "form-control form-control-sm text-uppercase" })
+                                </div>
+
+                                <div class="form-group col-lg-3 col-md-5 col-sm-12 col-12">
+                                    <label for="codRc">Especialidad</label>
+                                    @Html.DropDownListFor(model => model.codRc, ViewBag.Especialidades as SelectList, "TODOS", new { @class = "form-control form-control-sm text-uppercase" })
+                                </div>
+
+                                <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
+                                    <label for="esIngresante">Tipo de alumnos</label>
+                                    @Html.DropDownListFor(model => model.esIngresante, ViewBag.TipoAlumno as SelectList, "TODOS", new { @class = "form-control form-control-sm text-uppercase" })
+                                </div>
+
+                                <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
+                                    <label for="obligacionGenerada">Obligaciones</label>
+                                    @Html.DropDownListFor(model => model.obligacionGenerada, ViewBag.ExistenciaObligaciones as SelectList, "TODOS", new { @class = "form-control form-control-sm text-uppercase" })
+                                </div>
+
+                                <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
+                                    <label for="estaPagado">Estado de pago</label>
+                                    @Html.DropDownListFor(model => model.estaPagado, ViewBag.EstadoPagoObligaciones as SelectList, "TODOS", new { @class = "form-control form-control-sm text-uppercase" })
+                                </div>
+
+                                <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
                                     <label for="codAlumno">Código de alumno</label>
-                                    @Html.TextBox("codAlumno", null, new { @class = "form-control form-control-sm" })
+                                    @Html.TextBoxFor(model => model.codAlumno, new { @class = "form-control form-control-sm" })
                                 </div>
+
+                                <div class="form-group col-xl-4 col-lg-12 col-md-12 col-sm-12 col-12">
+                                    <div id="datepicker">
+                                        <div class="input-daterange">
+                                            <div class="form-group col-lg-6 col-md-6 col-sm-12 col-12" style="padding-left: 0px;">
+                                                <label for="fechaDesde">Pagos desde</label>
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(model => model.fechaDesde, "{0:dd/MM/yyyy}",
+                                                        new { @class = "form-control form-control-sm", @placeholder = "Fecha inicio", @readonly = "readonly" })
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text"><i class="fa fa-calendar-o"></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-lg-6 col-md-6 col-sm-12 col-12" style="padding-left: 0px;">
+                                                <label for="fechaHasta">Pagos hasta</label>
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(model => model.fechaHasta, "{0:dd/MM/yyyy}",
+                                                        new { @class = "form-control form-control-sm", @placeholder = "Fecha final", @readonly = "readonly" })
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text"><i class="fa fa-calendar-o"></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="form-group col-lg-2 col-md-3 col-12">
                                     <button type="submit" id="btnConsultarEstudiante" class="btn btn-block btn-outline-primary mt-4"><i class="fa fa-fw fa-search-plus"></i> Iniciar consulta</button>
                                 </div>
@@ -53,11 +123,11 @@
 
                 <div class="table-responsive mt-4">
                     <p class="h5">Relación de estudiantes registrados en el sistema</p>
-                    @Html.Grid(Model).Columns(columns => {
-                        columns.Add(c => c.I_Anio).Titled("Año").Filterable(true);
-                        columns.Add(c => c.T_Periodo).Titled("Periodo").Filterable(true);
-                        columns.Add(c => c.C_CodAlu).Titled("Código alumno").Filterable(true);
-                        columns.Add(c => c.T_ApellidosNombres).Titled("Nombres y apellidos").Filterable(true);
+                    @Html.Grid(Model.resultado).Columns(columns => {
+                        columns.Add(c => c.I_Anio).Titled("Año");
+                        columns.Add(c => c.T_Periodo).Titled("Periodo");
+                        columns.Add(c => c.C_CodAlu).Titled("Código alumno");
+                        columns.Add(c => c.T_ApellidosNombres).Titled("Apellidos y nombres").Filterable(true);
                         columns.Add(c => c.T_DenomProg).Titled("Especialidad").Filterable(true);
                         columns.Add(c => c.T_EsIngresante).Titled("Tipo alumno").Filterable(true);
                         columns.Add(c => c.T_ProcesoDesc).Titled("Cuota").Filterable(true).Css("text-center");
@@ -73,14 +143,43 @@
 
 @section Scripts {
     <script>
+        $('#datepicker .input-daterange').datepicker({
+            todayBtn: 'linked',
+            language: 'es',
+            format: 'dd/mm/yyyy',
+            autoclose: true,
+            weekStart: 0,
+            clearBtn: true
+        }).on('hide', function (e) {
+            e.stopPropagation();
+        });
+
+        $('#datepicker .input-daterange #fechaDesde').datepicker('update', "@Model.fechaDesde");
+        $('#datepicker .input-daterange #fechaHasta').datepicker('update', "@Model.fechaHasta");
+
         $("#frmConsultaEstudianteMatricula").on("change", "#tipoEstudio", function (e) {
             let tipoEstudio = $(this).val();
 
             CargarDependencias(tipoEstudio);
         });
 
+        $("#frmConsultaEstudianteMatricula").on("change", "#codFac", function (e) {
+            let codFac = $(this).val();
+
+            CargarEscuelas(codFac);
+        });
+
+        $("#frmConsultaEstudianteMatricula").on("change", "#codEsc", function (e) {
+            let codFac = $("#codFac").val();
+            let codEsc = $(this).val();
+
+            CargarEspecialidades(codFac, codEsc);
+        });
+
         function CargarDependencias(tipoEstudio) {
-            let cmbDependencia = $('#dependencia');
+            let cmbDependencia = $('#codFac');
+            let cmbEscuelas = $('#codEsc');
+            let cmbEspecialidades = $('#codRc');
 
             let parametros = {
                 tipoEstudio: tipoEstudio
@@ -88,21 +187,107 @@
 
             $.ajax({
                 type: 'GET',
-                url: ('@Url.Action("GetFacultades", "Service", new { httproute = "ActionApi" })'),
+                url: ('@Url.Action("GetDependencias", "Service", new { httproute = "ActionApi" })'),
                 data: parametros,
                 dataType: 'json',
                 beforeSend: function () {
                     cmbDependencia.html('');
+                    cmbEscuelas.html('');
+                    cmbEspecialidades.html('');
                 },
                 success: function (data) {
-                    if (data && data.length > 0) {
-                        let html = '<option value="">TODOS</option>';
+                    if (data) {
+                        if (data.length > 0) {
+                            let html = (data.length == 1) ? '' : '<option value="">TODOS</option>';
+
+                            $.each(data, function (i, item) {
+                                html += '<option value="' + item.Value + '">' + item.TextDisplay + '</option>'
+
+                                if (i == 0) {
+                                    CargarEscuelas(data.length == 1 ? item.Value : null);
+                                }
+                            });
+
+                            cmbDependencia.html(html);
+                        } else {
+                            cmbDependencia.html('<option value="">TODOS</option>');
+                            cmbEscuelas.html('<option value="">TODOS</option>');
+                            cmbEspecialidades.html('<option value="">TODOS</option>');
+                        }
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                }
+            });
+        }
+
+        function CargarEscuelas(codFac) {
+            let cmbEscuelas = $('#codEsc');
+            let cmbEspecialidades = $('#codRc');
+
+            let parametros = {
+                codFac: codFac
+            };
+
+            $.ajax({
+                type: 'GET',
+                url: ('@Url.Action("GetEscuelas", "Service", new { httproute = "ActionApi" })'),
+                data: parametros,
+                dataType: 'json',
+                beforeSend: function () {
+                    cmbEscuelas.html('');
+                    cmbEspecialidades.html('');
+                },
+                success: function (data) {
+                    if (data) {
+                        if (data.length > 0) {
+                            let html = (data.length == 1) ? '' : '<option value="">TODOS</option>';
+
+                            $.each(data, function (i, item) {
+                                html += '<option value="' + item.Value + '">' + item.TextDisplay + '</option>'
+
+                                if (i == 0) {
+                                    CargarEspecialidades($("#codFac").val(), data.lengh == 1 ? item.Value : null);
+                                }
+                            });
+
+                            cmbEscuelas.html(html);
+                        } else {
+                            cmbEscuelas.html('<option value="">TODOS</option>');
+                            cmbEspecialidades.html('<option value="">TODOS</option>');
+                        }
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                }
+            });
+        }
+
+        function CargarEspecialidades(codFac, codEsc) {
+            let cmbEspecialidad = $('#codRc');
+
+            let parametros = {
+                codFac: codFac,
+                codEsc: codEsc
+            };
+
+            $.ajax({
+                type: 'GET',
+                url: ('@Url.Action("GetEspecialidades", "Service", new { httproute = "ActionApi" })'),
+                data: parametros,
+                dataType: 'json',
+                beforeSend: function () {
+                    cmbEspecialidad.html('');
+                },
+                success: function (data) {
+                    if (data) {
+                        let html = (data.length == 1) ? '' : '<option value="">TODOS</option>';
 
                         $.each(data, function (i, item) {
                             html += '<option value="' + item.Value + '">' + item.TextDisplay + '</option>'
                         });
 
-                        cmbDependencia.html(html);
+                        cmbEspecialidad.html(html);
                     }
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
