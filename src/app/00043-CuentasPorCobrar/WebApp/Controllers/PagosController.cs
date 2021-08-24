@@ -11,6 +11,7 @@ using WebApp.ViewModels;
 using WebMatrix.WebData;
 using ClosedXML.Excel;
 using System.IO;
+using System.Net;
 
 namespace WebApp.Controllers
 {
@@ -460,5 +461,31 @@ namespace WebApp.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
+
+        [Route("operaciones/pagos/exportar-recaudacion-temporal-pagos")]
+        public ActionResult ExportarRecaudacionTemporal()
+        {
+            ViewBag.Title = "Exportar recaudación para el Temporal de Pagos";
+
+            ViewBag.EntidadesFinancieras = new SelectList(ListaEntidadesFinancieras(), "Value", "TextDisplay");
+            ViewBag.TipoEstudios = new SelectList(generalServiceFacade.Listar_TipoEstudios(), "Value", "TextDisplay"); 
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult ExportarRecaudacionTemporalPost(int cboEntFinan, TipoEstudio cboTipoEst, string fechaDesde, string fechaHasta)
+        {
+            try
+            {
+                MemoryStream memoryStream = pagosModel.ExportarInformacionTemporalPagos(cboEntFinan, DateTime.Parse(fechaDesde), DateTime.Parse(fechaHasta), cboTipoEst);
+                return File(memoryStream, "text/plain", "TestFile.txt");
+            }
+            catch (Exception ex)
+            {
+                return Content(ex.Message);
+            }
+
+        }
     }
 }

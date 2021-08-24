@@ -1,4 +1,5 @@
-﻿using Domain.Helpers;
+﻿using Domain.Entities;
+using Domain.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using WebApp.Models.Facades;
+using WebApp.ViewModels;
 
 namespace WebApp.Models
 {
@@ -13,11 +15,13 @@ namespace WebApp.Models
     {
         IObligacionServiceFacade obligacionServiceFacade;
         private DateTime fecha_actual;
+        private readonly EstructuraArchivoModel estructuraArchivoModel;
 
         public TransferenciaInformacionBcoComercio()
         {
             obligacionServiceFacade = new ObligacionServiceFacade();
             fecha_actual = DateTime.Now;
+            estructuraArchivoModel = new EstructuraArchivoModel();
         }
 
         public MemoryStream GenerarInformacionObligaciones(int anio, int? periodo, TipoEstudio tipoEstudio, string dependencia)
@@ -97,7 +101,7 @@ namespace WebApp.Models
             #endregion
 
             writer.Flush();
-            
+
             memoryStream.Seek(0, SeekOrigin.Begin);
 
             return memoryStream;
@@ -112,5 +116,6 @@ namespace WebApp.Models
         {
             throw new NotImplementedException();
         }
+
     }
 }

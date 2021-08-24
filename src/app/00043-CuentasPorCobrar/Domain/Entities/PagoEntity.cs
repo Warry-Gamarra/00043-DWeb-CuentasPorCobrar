@@ -17,6 +17,7 @@ namespace Domain.Entities
         public string NomDepositante { get; set; }
         public string Referencia { get; set; }
         public DateTime FecPago { get; set; }
+        public DateTime FecVencto { get; set; }
         public int Cantidad { get; set; }
         public string Moneda { get; set; }
         public decimal MontoPago { get; set; }
@@ -30,6 +31,8 @@ namespace Domain.Entities
         public TipoPago I_TipoPago { get; set; }
         public int ConceptoPagoId { get; set; }
         public string ConceptoPagoDesc { get; set; }
+        public string CodServicio { get; set; }
+        public int CuotaPago { get; set; }
 
         private readonly VW_Pagos vW_Pagos;
 
@@ -43,23 +46,24 @@ namespace Domain.Entities
             this.PagoProcesId = tabla.I_PagoProcesID;
             this.PagoBancoId = tabla.I_PagoBancoID;
             this.CodOperacion = tabla.C_CodOperacion;
-            this.CodDepositante = tabla.C_CodDepositante;
-            this.NomDepositante = tabla.T_NomDepositante;
-            this.Referencia = tabla.C_Referencia;
+            this.CodDepositante = string.IsNullOrEmpty(tabla.C_CodDepositante) ? "" : tabla.C_CodDepositante;
+            this.NomDepositante = string.IsNullOrEmpty(tabla.T_NomAlumno) ? tabla.T_NomDepositante : tabla.T_NomAlumno;
+            this.Referencia = string.IsNullOrEmpty(tabla.C_Referencia) ? "" : tabla.C_Referencia;
             this.FecPago = tabla.D_FecPago;
+            this.FecVencto = tabla.D_FecVencto;
             this.Cantidad = tabla.I_Cantidad;
             this.Moneda = tabla.C_Moneda;
             this.MontoPago = tabla.I_MontoPagado;
             this.LugarPago = tabla.T_LugarPago;
             this.EntidadRecaudaID = tabla.I_EntidadFinanID;
-            this.EntidadRecaudaDesc = tabla.T_EntidadDesc;
+            this.EntidadRecaudaDesc = string.IsNullOrEmpty(tabla.T_EntidadDesc) ? "" : tabla.T_EntidadDesc;
             this.CtaDepositoID = tabla.I_CtaDepositoID;
             this.NumeroCuenta = tabla.C_NumeroCuenta;
             this.Anulado = tabla.B_Anulado;
             this.NroSIAF = tabla.N_NroSIAF;
-            this.I_TipoPago = tabla.I_ObligacionAluID.HasValue ? TipoPago.Obligacion: TipoPago.Tasa;
-            //this. = tabla.;
-            //this. = tabla.;
+            this.I_TipoPago = tabla.I_ObligacionAluID.HasValue ? TipoPago.Obligacion : TipoPago.Tasa;
+            this.CodServicio = tabla.C_CodServicio;
+            this.CuotaPago = tabla.I_ProcesoID;
             //this. = tabla.;
             //this. = tabla.;
             //this. = tabla.;

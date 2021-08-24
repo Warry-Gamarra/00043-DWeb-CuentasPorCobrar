@@ -120,7 +120,22 @@ DBCC CHECKIDENT([BD_OCEF_CtasPorCobrar.dbo.TC_Proceso], RESEED, 0)
 
 
 
+--SELECT	C_RCCOD, C_CODALU , REPLACE(T_APEPATER, '-', ' ') AS T_APEPATER, 
+--		REPLACE(T_APEMATER, '-', ' ') AS T_APEMATER, REPLACE(T_NOMBRE, '-', ' ') AS T_NOMBRE,
+--		C_NUMDNI, C_CODTIPDO, C_CODMODIN, C_ANIOINGR, CONVERT(DATE, D_FECNAC, 103) AS D_FECNAC, C_SEXO
+--FROM	alumnos 
+--WHERE 
+--		PATINDEX('%[^a-zA-Z0-9.'' ]%', REPLACE(T_NOMBRE, '-', ' ')) <> 0 
+--		OR PATINDEX('%[^a-zA-Z0-9.'' ]%', REPLACE(T_APEPATER, '-', ' ')) <> 0 
+--		OR PATINDEX('%[^a-zA-Z0-9.'' ]%', REPLACE(T_APEMATER, '-', ' ')) <> 0 
 
+
+--select	*
+--FROM	TR_MG_Alumnos
+--WHERE 
+--		PATINDEX('%[^a-zA-Z0-9.'' ]%',T_NOMBRE) <> 0 
+--		OR PATINDEX('%[^a-zA-Z0-9.'' ]%',T_ApePaterno) <> 0 
+--		OR PATINDEX('%[^a-zA-Z0-9.'' ]%', T_ApeMaterno) <> 0 
 
 
 
@@ -202,3 +217,37 @@ declare @B_Resultado  bit, @I_AnioIni int, @I_AnioFin int, @T_Message	  nvarchar
 exec USP_IU_MigrarDataConceptoPagoCtasPorCobrar @I_AnioIni = null, @I_AnioFin = null, @B_Resultado = @B_Resultado output, @T_Message = @T_Message output
 select @B_Resultado as resultado, @T_Message as mensaje
 GO
+
+
+
+
+declare @B_Resultado  bit,
+		@T_Message	  nvarchar(4000)
+exec USP_IU_CopiarTablaObligacionesPago @B_Resultado output, @T_Message output
+select @B_Resultado as resultado, @T_Message as mensaje
+
+
+declare @B_Resultado  bit,
+		@T_Message	  nvarchar(4000)
+exec USP_IU_CopiarTablaDetalleObligacionesPago @B_Resultado output, @T_Message output
+select @B_Resultado as resultado, @T_Message as mensaje
+
+
+declare @B_Resultado  bit,
+		@T_Message	  nvarchar(4000)
+exec USP_IU_CopiarTablaAlumno @B_Resultado output, @T_Message output
+select @B_Resultado as resultado, @T_Message as mensaje
+
+
+declare @B_Resultado  bit,
+		@T_Message	  nvarchar(4000)
+exec USP_U_ValidarCaracteresEspeciales @B_Resultado output, @T_Message output
+select @B_Resultado as resultado, @T_Message as mensaje
+
+
+declare @B_Resultado  bit,
+		@T_Message	  nvarchar(4000)
+exec USP_U_ValidarCodigosAlumnoRepetidos @B_Resultado output, @T_Message output
+select @B_Resultado as resultado, @T_Message as mensaje
+
+

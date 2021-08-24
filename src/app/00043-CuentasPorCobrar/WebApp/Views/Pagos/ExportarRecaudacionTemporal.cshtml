@@ -1,0 +1,97 @@
+﻿
+<div class="container-fluid">
+    <div class="col-12">
+        <section class="content-header">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb float-right small d-none d-sm-inline-flex">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")"><i class="fa fa-home">&nbsp;</i>Inicio</a></li>
+                    <li class="breadcrumb-item"><span><i class="fa fa-refresh">&nbsp;</i>Operaciones </span></li>
+                    <li class="breadcrumb-item active"><span><i class="fa bi-journal-arrow-up">&nbsp;</i>@ViewBag.Title </span></li>
+                </ol>
+            </nav>
+            <h1 class="">@ViewBag.Title <small></small></h1>
+        </section>
+    </div>
+
+    <div class="mt-5">
+        <div class="col-md-8 col-12 offset-md-2">
+            <div class="card">
+                <div class="card-body bg-light-gray">
+                    <div class="card-title">
+                        <p class="h6 text-secondary"><i class="fa fa-file-text-o">&nbsp;</i>Generar de archivo para carga en el Sistema Temporal de Pagos </p>
+                    </div>
+                    @using (Html.BeginForm("ExportarRecaudacionTemporalPost", "Pagos", FormMethod.Post))
+                    {
+                    <div class="row mt-3">
+                        <div class="form-group col-lg-4 col-md-6 col-sm-12 col-12">
+                            <label for="cboEntFinan" class="control-label">Entidad Financiera</label>
+                            @Html.DropDownList("cboEntFinan", ViewBag.EntidadesFinancieras as SelectList, "SELECCIONAR", new { @class = "form-control form-control-sm text-uppercase", @required = "required" })
+                        </div>
+                        <div class="form-group col-lg-4 col-md-6 col-sm-12 col-12">
+                            <label for="cboTipoEst" class="control-label">Tipo de Estudio</label>
+                            @Html.DropDownList("cboTipoEst", ViewBag.TipoEstudios as SelectList, "TODOS", new { @class = "form-control form-control-sm text-uppercase" })
+                        </div>
+                        <div class="form-group col-lg-4 col-md-6 col-sm-12 col-12">
+                            <div id="datepicker">
+                                <div class="input-daterange row">
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12 col-12" style="padding-left: 0px;">
+                                        <label for="fechaDesde" class="control-label">Pagos desde</label>
+                                        <div class="input-group">
+                                            @Html.TextBox("fechaDesde", DateTime.Now, "{0:dd/MM/yyyy}",
+                                                new { @class = "form-control form-control-sm", @placeholder = "Fecha inicio", @readonly = "readonly" })
+                                            <div class="input-group-append">
+                                                <span class="input-group-text"><i class="fa fa-calendar-o"></i></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12 col-12" style="padding-left: 0px;">
+                                        <label for="fechaHasta" class="control-label">Pagos hasta</label>
+                                        <div class="input-group">
+                                            @Html.TextBox("fechaHasta", DateTime.Now, "{0:dd/MM/yyyy}",
+                                                new { @class = "form-control form-control-sm", @placeholder = "Fecha final", @readonly = "readonly" })
+                                            <div class="input-group-append">
+                                                <span class="input-group-text"><i class="fa fa-calendar-o"></i></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-12 text-center">
+                            <button id="btnGenerar" type="submit" class="btn btn-primary mt-2 px-5">
+                                <i class="fa fa-fw fa-cogs"></i>
+                                <div class="spinner-border spinner-border-sm" role="status" style="display:none;">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                                Generar archivo
+                            </button>
+                        </div>
+                    </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+    <script>
+        $('#datepicker .input-daterange').datepicker({
+            todayBtn: 'linked',
+            language: 'es',
+            format: 'dd/mm/yyyy',
+            autoclose: true,
+            weekStart: 0
+        }).on('hide', function (e) {
+            e.stopPropagation();
+        });
+
+        $('form').on('submit', function () {
+            $('#btnGenerar i.fa').hide();
+            $('#btnGenerar .spinner-border').show();
+        })
+
+    </script>
+}

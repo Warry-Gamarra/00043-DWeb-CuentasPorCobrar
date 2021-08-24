@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Text;
 using System.Web;
 using WebApp.ViewModels;
 
@@ -63,7 +65,7 @@ namespace WebApp.Models
 
                 if (response.Success)
                 {
-                    GrabarHistorialCargaArchivo(lstPagoObligaciones.Count(), fileName, filePathSaved, currentUserId, 
+                    GrabarHistorialCargaArchivo(lstPagoObligaciones.Count(), fileName, filePathSaved, currentUserId,
                         model.EntidadRecaudadora, (int)TipoArchivoEntFinan.Recaudacion_Obligaciones);
                     ResponseModel.Success(response);
                 }
@@ -126,6 +128,7 @@ namespace WebApp.Models
         {
             File.Delete(serverPath + fileName);
         }
+
 
         private List<PagoObligacionEntity> LeerDetalleArchivoPagoObligaciones(string filePath, int entFinanId)
         {
@@ -201,7 +204,7 @@ namespace WebApp.Models
                     pagoEntity.B_Correcto = false;
                     pagoEntity.T_ErrorMessage = ex.Message;
                 }
-                
+
                 pagoEntity.C_Moneda = line.Substring(columnas["C_Moneda"].Inicial - 1, columnas["C_Moneda"].Final - columnas["C_Moneda"].Inicial + 1).Trim();
 
                 string sInteresMora = line.Substring(columnas["I_InteresMora"].Inicial - 1, columnas["I_MontoPago"].Final - columnas["I_MontoPago"].Inicial + 1);
@@ -262,11 +265,11 @@ namespace WebApp.Models
                     pagoEntity.B_Correcto = false;
                     pagoEntity.T_ErrorMessage = ex.Message;
                 }
-                                
+
                 pagoEntity.I_EntidadFinanID = entFinanId;
 
                 pagoEntity.C_Extorno = line.Substring(columnas["C_Extorno"].Inicial - 1, columnas["C_Extorno"].Final - columnas["C_Extorno"].Inicial + 1).Trim();
-                
+
                 if (pagoEntity.B_Correcto && pagoEntity.I_EntidadFinanID.Equals(Bancos.BCP_ID) && pagoEntity.C_Extorno.Equals(ConstantesBCP.CodExtorno))
                 {
                     pagoEntity.B_Correcto = false;
@@ -407,10 +410,10 @@ namespace WebApp.Models
                 }
             }
 
-            if (failsResult> 0)
+            if (failsResult > 0)
             {
                 result.Value = false;
-                result.Message = errors; 
+                result.Message = errors;
                 result.Error(false);
             }
 
@@ -441,6 +444,178 @@ namespace WebApp.Models
             var result = lista.Select(x => Mapper.ArchivoImportadoDTO_To_ArchivoImportadoViewModel(x));
 
             return result;
+        }
+
+
+        private List<CabeceraArchivo> LeerCabeceraArchivoPagoObligaciones(string filePath, int entFinanId)
+        {
+            var result = new List<CabeceraArchivo>();
+
+            string fileLine;
+            List<string> linesFile = new List<string>();
+            List<SeccionArchivoViewModel> estructuraArchivo = _estructuraArchivoModel.ObtenerEstructuraArchivo(entFinanId, TipoArchivoEntFinan.Recaudacion_Obligaciones);
+
+            if (estructuraArchivo.Count == 0)
+            {
+                return null;
+            }
+
+            var cabecera = estructuraArchivo.Find(x => x.TipoSeccion == TipoSeccionArchivo.Cabecera_Resumen);
+            if (cabecera == null)
+            {
+                return null;
+            }
+
+            var columnas = cabecera.ColumnasSeccion.ToDictionary(x => x.CampoTablaNom, x => new Posicion { Inicial = x.ColPosicionIni, Final = x.ColPosicionFin });
+
+            using (StreamReader file = new StreamReader(filePath))
+            {
+                while ((fileLine = file.ReadLine()) != null)
+                {
+                    linesFile.Add(fileLine);
+                }
+            }
+
+            cabecera.FilPosicionFin = cabecera.FilPosicionFin == 0 ? linesFile.Count() : cabecera.FilPosicionFin;
+
+            for (int i = cabecera.FilPosicionIni - 1; i < cabecera.FilPosicionFin; i++)
+            {
+                string line = linesFile[i];
+                var cabeceraArchivo = new CabeceraArchivo();
+
+                foreach (var columna in columnas)
+                {
+                    PropertyInfo propertyInfo = cabeceraArchivo.GetType().GetProperty(columna.Key);
+                    propertyInfo.SetValue(cabeceraArchivo, Convert.ChangeType(line.Substring(columna.Value.Inicial - 1, columna.Value.Longitud), propertyInfo.PropertyType), null);
+                }
+
+                result.Add(cabeceraArchivo);
+            }
+
+            return result;
+        }
+
+
+        public MemoryStream ExportarInformacionTemporalPagos(int entRecaudaId, DateTime fecIni, DateTime fecFin, TipoEstudio tipoEstudio)
+        {
+            var memoryStream = new MemoryStream();
+            var writer = new StreamWriter(memoryStream, Encoding.Default);
+
+            var infoPagos = pagoService.ListarPagosRegistrados(fecIni, fecFin, null, entRecaudaId);
+
+            #region Cabecera
+
+            string codTipoRegistro = "T";
+            string totalMontoSoles = Convert.ToInt64(infoPagos.Where(x => x.Moneda == "PEN").Sum(x => x.MontoPago * 100)).ToString().PadLeft(14, '0'); ;
+            string totalMontoDolares = Convert.ToInt64(infoPagos.Where(x => x.Moneda != "PEN").Sum(x => x.MontoPago * 100)).ToString().PadLeft(14, '0'); ;
+            string nroRegistrosSoles = infoPagos.Where(x => x.Moneda == "PEN").Count().ToString().PadLeft(6, '0');
+            string nroRegistrosDolares = infoPagos.Where(x => x.Moneda != "PEN").Count().ToString().PadLeft(6, '0'); ;
+            string fechaEnvio = fecIni.ToString("yyyyMMdd");
+            string fechaVencimiento = fecFin.ToString("yyyyMMdd");
+            string cadenaCabecera;
+
+            cadenaCabecera = string.Format("{0}{1}{2}{3}{4}{5}", codTipoRegistro, nroRegistrosSoles, totalMontoSoles, nroRegistrosDolares, totalMontoDolares, fechaEnvio);
+            writer.WriteLine(cadenaCabecera);
+
+            #endregion
+
+            #region Detalle
+            string identificadorRegistroDetalle = "D";
+            string codigoServicio;
+            string codigoSucursal;
+            string codAlu;
+            string codOperacion;
+            string referencia;
+            string codRc;
+            string moneda;
+            string fecPago;
+            string fecEmision = "00000000";
+            string fecVencto;
+            string cantidad;
+            string montoPago;
+            string procesoID;
+            string lugarPago;
+            string agencia = "";
+            string nomDepositante;
+            string horaPago;
+            string interesMora;
+            string extorno;
+            string informacionAdicional;
+            string medioPago = "";
+            string formaPago = "";
+            string importeDescontdo = "0";
+            string importeReajustado = "0";
+            string codigoTarifa = "";
+            string usuarioPago = "";
+            string referenciaPago = "";
+            string cadenaDetalle = "";
+
+            foreach (var item in infoPagos)
+            {
+                codigoServicio = item.CodServicio.PadRight(4, ' ');
+                codigoSucursal = "".PadRight(3, ' ');
+                codAlu = item.CodDepositante.PadLeft(10, '0').PadRight(20, ' ');
+                codOperacion = item.CodOperacion.PadRight(20, ' ');
+                referencia = string.Empty.PadRight(20, ' ');
+                referenciaPago = item.Referencia.Substring(1,20).PadRight(20, ' ');
+                moneda = item.Moneda == "PEN" ? "01" : "02";
+                fecPago = item.FecPago.ToString("yyyyMMdd");
+                fecVencto = item.FecVencto.ToString("yyyyMMdd");
+                cantidad = item.Cantidad.ToString();
+                montoPago = Convert.ToInt32(item.MontoPago * 100).ToString().PadLeft(14, '0');
+                procesoID = item.CuotaPago.ToString();
+                lugarPago = item.LugarPago.PadRight(10, ' '); ;
+                nomDepositante = item.NomDepositante.PadRight(40, ' ');
+                horaPago = item.FecPago.ToString("hhmmss");
+                interesMora = 0.ToString().PadLeft(14, '0');
+                //Extorno = item.ex;
+                informacionAdicional = "".PadRight(50, ' ');
+                codigoTarifa = codigoTarifa.PadRight(20, ' ');
+                cantidad = item.Cantidad.ToString().PadLeft(4, '0');
+                importeDescontdo = importeDescontdo.PadLeft(14, '0');
+                importeReajustado = importeReajustado.PadLeft(14, '0');
+                formaPago = "1";
+                medioPago = "0";
+                usuarioPago = usuarioPago.PadRight(10, ' ');
+
+                cadenaDetalle = string.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11}{12}{13}{14}{15}{16}{17}{18}{19}{20}{21}{22}{23}{24}",
+                    identificadorRegistroDetalle,
+                    codigoServicio,
+                    codigoSucursal,
+                    codAlu,
+                    nomDepositante,
+                    codOperacion,
+                    referencia,
+                    fecEmision,
+                    fechaVencimiento,
+                    moneda,
+                    montoPago,
+                    informacionAdicional,
+                    interesMora,
+                    fecPago,
+                    horaPago,
+                    lugarPago.Substring(1,2),
+                    agencia,
+                    medioPago,
+                    formaPago,
+                    importeDescontdo,
+                    importeReajustado,
+                    codigoTarifa,
+                    cantidad,
+                    usuarioPago,
+                    referenciaPago);
+                writer.WriteLine(cadenaDetalle);
+            }
+
+
+            #endregion
+
+
+            writer.Flush();
+
+            memoryStream.Seek(0, SeekOrigin.Begin);
+
+            return memoryStream;
         }
     }
 }

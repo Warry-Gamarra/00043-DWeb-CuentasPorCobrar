@@ -14,5 +14,6 @@ namespace WebApp.Models
         string NombreArchivoGenerado();
 
         void RecepcionarInformacionPagos();
+
     }
 }

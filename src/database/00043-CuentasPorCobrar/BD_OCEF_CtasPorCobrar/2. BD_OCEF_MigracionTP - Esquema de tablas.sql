@@ -1,6 +1,10 @@
 USE [BD_OCEF_MigracionTP]
 GO
 
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'TR_MG_EcPri')
+	DROP TABLE TR_MG_EcPri
+GO
+
 CREATE TABLE TR_MG_EcPri (
 	I_RowID			int IDENTITY(1, 1) NOT NULL,
 	COD_ALU			nvarchar(255)  NULL,
@@ -27,6 +31,10 @@ CREATE TABLE TR_MG_EcPri (
 GO
 
 
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'TR_MG_EcObl')
+	DROP TABLE TR_MG_EcObl
+GO
+
 CREATE TABLE dbo.TR_MG_EcObl (
 	I_RowID			int IDENTITY(1, 1) NOT NULL,
 	ANO				nvarchar(255)  NULL,
@@ -51,6 +59,10 @@ CREATE TABLE dbo.TR_MG_EcObl (
 )
 GO
 
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'TR_MG_EcDet')
+	DROP TABLE TR_MG_EcDet
+GO
 
 CREATE TABLE TR_MG_EcDet (
 	I_RowID			bigint IDENTITY(1, 1) NOT NULL,
@@ -91,6 +103,9 @@ CREATE TABLE TR_MG_EcDet (
 ) 
 GO
 
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'TR_MG_CpDes')
+	DROP TABLE TR_MG_CpDes
+GO
 
 CREATE TABLE TR_MG_CpDes(
 	I_RowID			int IDENTITY(1, 1) NOT NULL,
@@ -118,6 +133,10 @@ CREATE TABLE TR_MG_CpDes(
 )
 GO
 
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'TR_MG_CpPri')
+	DROP TABLE TR_MG_CpPri
+GO
 
 CREATE TABLE TR_MG_CpPri (
 	I_RowID			int IDENTITY(1, 1) NOT NULL,
@@ -169,4 +188,36 @@ CREATE TABLE TR_MG_CpPri (
 	T_Observacion	nvarchar(4000) NULL
 )
 GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'TR_MG_Alumnos')
+	DROP TABLE TR_MG_Alumnos
+GO
+
+CREATE TABLE TR_MG_Alumnos
+(
+	C_RcCod			varchar(3), 
+	C_CodAlu		varchar(20), 
+	C_NumDNI		varchar(20), 
+	C_CodTipDoc		varchar(5),
+	T_ApePaterno	varchar(50), 
+	T_ApeMaterno	varchar(50), 
+	T_Nombre		varchar(50), 
+	C_Sexo			char(1), 
+	D_FecNac		date, 
+	C_CodModIng		varchar(2), 
+	C_AnioIngreso	smallint, 
+	D_FecCarga		datetime  NULL,
+	B_Actualizado	bit  NOT NULL DEFAULT 0,
+	D_FecActualiza	datetime  NULL,
+	B_Migrable		bit  NOT NULL DEFAULT 0,
+	D_FecEvalua		datetime  NULL,
+	B_Migrado		bit  NOT NULL DEFAULT 0,
+	D_FecMigrado	datetime  NULL,
+	B_Removido		bit  NOT NULL DEFAULT 0,
+	D_FecRemovido	datetime  NULL,
+	T_Observacion	nvarchar(4000) NULL
+)
+GO
+
 
