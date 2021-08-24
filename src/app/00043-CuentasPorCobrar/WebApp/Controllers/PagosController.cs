@@ -11,6 +11,7 @@ using WebApp.ViewModels;
 using WebMatrix.WebData;
 using ClosedXML.Excel;
 using System.IO;
+using System.Net;
 
 namespace WebApp.Controllers
 {
@@ -461,30 +462,30 @@ namespace WebApp.Controllers
         }
 
 
-        [Route("operaciones/pagos/transformar-bcp-a-bco-comercio")]
-        public ActionResult TransformarBcpBcoComercio()
+        [Route("operaciones/pagos/exportar-recaudacion-temporal-pagos")]
+        public ActionResult ExportarRecaudacionTemporal()
         {
-            ViewBag.Title = "Transformar archivo BCP a Banco Comercio";
+            ViewBag.Title = "Exportar recaudación para el Temporal de Pagos";
 
-            ViewBag.Anios = new SelectList(generalServiceFacade.Listar_Anios(), "Value", "TextDisplay");
-            ViewBag.Periodos = new SelectList(catalogoServiceFacade.Listar_Periodos(), "Value", "TextDisplay");
-            var model = new CargarArchivoViewModel() { EntidadRecaudadora = Bancos.BCP_ID, TipoArchivo = TipoPago.Obligacion };
+            ViewBag.EntidadesFinancieras = new SelectList(ListaEntidadesFinancieras(), "Value", "TextDisplay");
+            ViewBag.TipoEstudios = new SelectList(generalServiceFacade.Listar_TipoEstudios(), "Value", "TextDisplay"); 
 
-            return View(model);
+            return View();
         }
 
         [HttpPost]
-        public ActionResult CargarArchivoBcpBcoComercio(HttpPostedFileBase file, CargarArchivoViewModel model)
+        public ActionResult ExportarRecaudacionTemporalPost(int cboEntFinan, TipoEstudio cboTipoEst, string fechaDesde, string fechaHasta)
         {
-            if (model.EntidadRecaudadora == 0)
+            try
             {
-                model.EntidadRecaudadora = Bancos.BCP_ID;
+                MemoryStream memoryStream = pagosModel.ExportarInformacionTemporalPagos(cboEntFinan, DateTime.Parse(fechaDesde), DateTime.Parse(fechaHasta), cboTipoEst);
+                return File(memoryStream, "text/plain", "TestFile.txt");
+            }
+            catch (Exception ex)
+            {
+                return Content(ex.Message);
             }
 
-            var result = pagosModel.ConvertirArchivoBCP_a_BcoComercio(Server.MapPath("~/Upload/Pagos/"), file, model, WebSecurity.CurrentUserId);
-
-
-            return Json(result, JsonRequestBehavior.AllowGet);
         }
     }
 }

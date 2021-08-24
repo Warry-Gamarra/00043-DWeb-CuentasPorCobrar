@@ -616,7 +616,7 @@
     <Content Include="Views\EstadosCuenta\ResumenAnualObligacionesPorClasificadores.cshtml" />
     <Content Include="Views\EstadosCuenta\ResumenAnualObligacionesPorDependencias.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
-    <Content Include="Views\Pagos\TransformarBcpBcoComercio.cshtml" />
+    <Content Include="Views\Pagos\ExportarRecaudacionTemporal.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

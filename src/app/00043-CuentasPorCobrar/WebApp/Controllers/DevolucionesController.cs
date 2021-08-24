@@ -76,9 +76,9 @@ namespace WebApp.Controllers
             }
             else
             {
-                if (true)
+                if (model.Count > 1)
                 {
-
+                    return PartialView("_ResultadoBusquedaPago", model[0]);
                 }
                 ViewBag.Mensaje = "Se encontró más de un resultado para la búsqueda";
                 ViewBag.Color = "secondary";

@@ -8,6 +8,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Web;
 using WebApp.ViewModels;
 
@@ -494,56 +495,127 @@ namespace WebApp.Models
             return result;
         }
 
-        public ImportacionPagoResponse ConvertirArchivoBCP_a_BcoComercio(string serverPath, HttpPostedFileBase file, CargarArchivoViewModel model, int currentUserId)
+
+        public MemoryStream ExportarInformacionTemporalPagos(int entRecaudaId, DateTime fecIni, DateTime fecFin, TipoEstudio tipoEstudio)
         {
-            if (file == null)
+            var memoryStream = new MemoryStream();
+            var writer = new StreamWriter(memoryStream, Encoding.Default);
+
+            var infoPagos = pagoService.ListarPagosRegistrados(fecIni, fecFin, null, entRecaudaId);
+
+            #region Cabecera
+
+            string codTipoRegistro = "T";
+            string totalMontoSoles = Convert.ToInt64(infoPagos.Where(x => x.Moneda == "PEN").Sum(x => x.MontoPago * 100)).ToString().PadLeft(14, '0'); ;
+            string totalMontoDolares = Convert.ToInt64(infoPagos.Where(x => x.Moneda != "PEN").Sum(x => x.MontoPago * 100)).ToString().PadLeft(14, '0'); ;
+            string nroRegistrosSoles = infoPagos.Where(x => x.Moneda == "PEN").Count().ToString().PadLeft(6, '0');
+            string nroRegistrosDolares = infoPagos.Where(x => x.Moneda != "PEN").Count().ToString().PadLeft(6, '0'); ;
+            string fechaEnvio = fecIni.ToString("yyyyMMdd");
+            string fechaVencimiento = fecFin.ToString("yyyyMMdd");
+            string cadenaCabecera;
+
+            cadenaCabecera = string.Format("{0}{1}{2}{3}{4}{5}", codTipoRegistro, nroRegistrosSoles, totalMontoSoles, nroRegistrosDolares, totalMontoDolares, fechaEnvio);
+            writer.WriteLine(cadenaCabecera);
+
+            #endregion
+
+            #region Detalle
+            string identificadorRegistroDetalle = "D";
+            string codigoServicio;
+            string codigoSucursal;
+            string codAlu;
+            string codOperacion;
+            string referencia;
+            string codRc;
+            string moneda;
+            string fecPago;
+            string fecEmision = "00000000";
+            string fecVencto;
+            string cantidad;
+            string montoPago;
+            string procesoID;
+            string lugarPago;
+            string agencia = "";
+            string nomDepositante;
+            string horaPago;
+            string interesMora;
+            string extorno;
+            string informacionAdicional;
+            string medioPago = "";
+            string formaPago = "";
+            string importeDescontdo = "0";
+            string importeReajustado = "0";
+            string codigoTarifa = "";
+            string usuarioPago = "";
+            string referenciaPago = "";
+            string cadenaDetalle = "";
+
+            foreach (var item in infoPagos)
             {
-                return new ImportacionPagoResponse()
-                {
-                    Message = "No existe archivo seleccionado."
-                };
+                codigoServicio = item.CodServicio.PadRight(4, ' ');
+                codigoSucursal = "".PadRight(3, ' ');
+                codAlu = item.CodDepositante.PadLeft(10, '0').PadRight(20, ' ');
+                codOperacion = item.CodOperacion.PadRight(20, ' ');
+                referencia = string.Empty.PadRight(20, ' ');
+                referenciaPago = item.Referencia.Substring(1,20).PadRight(20, ' ');
+                moneda = item.Moneda == "PEN" ? "01" : "02";
+                fecPago = item.FecPago.ToString("yyyyMMdd");
+                fecVencto = item.FecVencto.ToString("yyyyMMdd");
+                cantidad = item.Cantidad.ToString();
+                montoPago = Convert.ToInt32(item.MontoPago * 100).ToString().PadLeft(14, '0');
+                procesoID = item.CuotaPago.ToString();
+                lugarPago = item.LugarPago.PadRight(10, ' '); ;
+                nomDepositante = item.NomDepositante.PadRight(40, ' ');
+                horaPago = item.FecPago.ToString("hhmmss");
+                interesMora = 0.ToString().PadLeft(14, '0');
+                //Extorno = item.ex;
+                informacionAdicional = "".PadRight(50, ' ');
+                codigoTarifa = codigoTarifa.PadRight(20, ' ');
+                cantidad = item.Cantidad.ToString().PadLeft(4, '0');
+                importeDescontdo = importeDescontdo.PadLeft(14, '0');
+                importeReajustado = importeReajustado.PadLeft(14, '0');
+                formaPago = "1";
+                medioPago = "0";
+                usuarioPago = usuarioPago.PadRight(10, ' ');
+
+                cadenaDetalle = string.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11}{12}{13}{14}{15}{16}{17}{18}{19}{20}{21}{22}{23}{24}",
+                    identificadorRegistroDetalle,
+                    codigoServicio,
+                    codigoSucursal,
+                    codAlu,
+                    nomDepositante,
+                    codOperacion,
+                    referencia,
+                    fecEmision,
+                    fechaVencimiento,
+                    moneda,
+                    montoPago,
+                    informacionAdicional,
+                    interesMora,
+                    fecPago,
+                    horaPago,
+                    lugarPago.Substring(1,2),
+                    agencia,
+                    medioPago,
+                    formaPago,
+                    importeDescontdo,
+                    importeReajustado,
+                    codigoTarifa,
+                    cantidad,
+                    usuarioPago,
+                    referenciaPago);
+                writer.WriteLine(cadenaDetalle);
             }
 
-            var transferenciaInformacion = new TransferenciaInformacionBcoComercio();
-            ImportacionPagoResponse response;
-            string fileName = "";
-            string filePathSaved = "";
 
-            try
-            {
-                fileName = GenerarNombreArchivo(model.EntidadRecaudadora, file);
-                filePathSaved = GuardarArchivoPagoEnHost(serverPath, fileName, model.TipoArchivo, file);
+            #endregion
 
-                List<CabeceraArchivo> cabeceraArchivos = LeerCabeceraArchivoPagoObligaciones(filePathSaved, model.EntidadRecaudadora);
-                List<PagoObligacionEntity> lstPagoObligaciones = LeerDetalleArchivoPagoObligaciones(filePathSaved, model.EntidadRecaudadora);
 
-                if (lstPagoObligaciones != null)
-                {
-                    response = new ImportacionPagoResponse()
-                    {
-                        Success = true,
-                        Message = "Archivo de pago para el Banco de Comercio generado.",
-                        File = transferenciaInformacion.GenerarArchivoPagoObligacionesDesdeRecaudacionBCP(cabeceraArchivos, lstPagoObligaciones)
-                    };
-                }
-                else
-                {
-                    response = new ImportacionPagoResponse() { Message = "No se encontró una estructura de columnas configuradas para el archivo" };
-                }
+            writer.Flush();
 
-                EliminarArchivoHost(serverPath, fileName);
-            }
-            catch (Exception ex)
-            {
-                EliminarArchivoHost(serverPath, fileName);
-                response = new ImportacionPagoResponse()
-                {
-                    Message = ex.Message
-                };
-                ResponseModel.Error(response);
-            }
+            memoryStream.Seek(0, SeekOrigin.Begin);
 
-            return response;
+            return memoryStream;
         }
     }
 }
