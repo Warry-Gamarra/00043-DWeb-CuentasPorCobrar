@@ -16,9 +16,11 @@ namespace WebApi.Models
 
         EscuelaModel GetEscuelaByID(string codEsc, string codFac);
 
-        IEnumerable<EspecialidadModel> GetEspecialidadesByEsc(string codEsc, string codFac);
+        IEnumerable<CarreraProfesionalModel> GetCarrerasProfesionalesByFac(string codFac);
 
-        EspecialidadModel GetEspecialidadByID(string codEsp, string codEsc, string codFac);
+        IEnumerable<CarreraProfesionalModel> GetCarrerasProfesionalesByEsc(string codEsc, string codFac);
+
+        CarreraProfesionalModel GetCarreraProfesionalByID(string codRc);
 
         ServiceResponse GrabarProgramaUnfv(MantenimientoProgramaUnfvModel programaUnfvModel, int currentUserID);
 

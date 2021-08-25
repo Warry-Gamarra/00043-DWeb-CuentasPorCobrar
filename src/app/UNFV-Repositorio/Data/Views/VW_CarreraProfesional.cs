@@ -26,6 +26,8 @@ namespace Data.Views
 
         public string T_FacDesc { get; set; }
 
+        public string T_CarProfDesc { get; set; }
+
         public string C_Tipo { get; set; }
 
         public int? I_Duracion { get; set; }
@@ -51,7 +53,7 @@ namespace Data.Views
             {
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    command = "SELECT * FROM dbo.VW_CarreraProfesional WHERE B_Eliminado = 0";
+                    command = "SELECT * FROM dbo.VW_CarreraProfesional WHERE B_Eliminado = 0 ORDER BY T_FacDesc, T_EscDesc, T_CarProfDesc";
 
                     result = _dbConnection.Query<VW_CarreraProfesional>(command, commandType: CommandType.Text);
                 }

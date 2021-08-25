@@ -153,6 +153,30 @@ namespace WebApp.Controllers
             return programasClientFacade.GetFacultades(tipoEstudio);
         }
 
+        // GET: api/service/GetDependencias?tipoEstudio=TipoEstudio
+        public IEnumerable<SelectViewModel> GetDependencias(TipoEstudio tipoEstudio)
+        {
+            return programasClientFacade.GetDependencias(tipoEstudio);
+        }
+
+        // GET: api/service/GetEscuelas?codFac=codFac
+        public IEnumerable<SelectViewModel> GetEscuelas(string codFac)
+        {
+            return programasClientFacade.GetEscuelas(codFac);
+        }
+
+        // GET: api/service/GetEspecialidades?codFac=codFac
+        public IEnumerable<SelectViewModel> GetEspecialidades(string codFac)
+        {
+            return programasClientFacade.GetEspecialidades(codFac);
+        }
+
+        // GET: api/service/GetEspecialidades?codFac=codFac&codEsc=codEsc
+        public IEnumerable<SelectViewModel> GetEspecialidades(string codFac, string codEsc)
+        {
+            return programasClientFacade.GetEspecialidades(codFac, codEsc);
+        }
+
         public IEnumerable<SelectViewModel> GetReportesPagoObligaciones(TipoEstudio tipoEstudio)
         {
             switch (tipoEstudio)

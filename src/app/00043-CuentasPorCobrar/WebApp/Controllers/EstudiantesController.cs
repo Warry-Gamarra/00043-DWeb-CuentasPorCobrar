@@ -13,7 +13,7 @@ using WebMatrix.WebData;
 
 namespace WebApp.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Administrador, Consulta")]
     public class EstudiantesController : Controller
     {
         private readonly EstudianteModel _seleccionarArchivoModel;
@@ -38,6 +38,7 @@ namespace WebApp.Controllers
             reportePosgradoServiceFacade = new ReportePosgradoServiceFacade();
         }
 
+        [Authorize(Roles = "Administrador")]
         [Route("operaciones/cargar-estudiantes")]
         public ActionResult Index()
         {
@@ -46,6 +47,7 @@ namespace WebApp.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Administrador")]
         [Route("operaciones/cargar-aptos-pregrado")]
         public ActionResult CargarArchivoMatriculaPregrado()
         {
@@ -53,6 +55,7 @@ namespace WebApp.Controllers
             return PartialView("_SeleccionarArchivo", model);
         }
 
+        [Authorize(Roles = "Administrador")]
         [Route("operaciones/cargar-aptos-posgrado")]
         public ActionResult CargarArchivoMatriculaPosgrado()
         {
@@ -61,6 +64,7 @@ namespace WebApp.Controllers
         }
 
 
+        [Authorize(Roles = "Administrador")]
         [Route("operaciones/cargar-multas-pregrado")]
         public ActionResult CargarArchivoMultaPregrado()
         {
@@ -68,6 +72,7 @@ namespace WebApp.Controllers
             return PartialView("_SeleccionarArchivo", model);
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpPost]
         public ActionResult CargarArchivoMatricula(HttpPostedFileBase file, TipoAlumno tipoAlumno)
         {
@@ -79,7 +84,8 @@ namespace WebApp.Controllers
 
             return Json(response, JsonRequestBehavior.AllowGet);
         }
-       
+
+        [Authorize(Roles = "Administrador")]
         public ActionResult DescargarRegistrosObservados()
         {
             if (Session["MATRICULA_RESPONSE"] == null)
@@ -131,6 +137,7 @@ namespace WebApp.Controllers
             }
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpPost]
         public ActionResult CargarArchivoMulta(HttpPostedFileBase file, TipoAlumno tipoAlumno)
         {
@@ -143,6 +150,7 @@ namespace WebApp.Controllers
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize(Roles = "Administrador")]
         public ActionResult DescargarMultasSinRegistrar()
         {
             if (Session["MULTAS_SIN_REGISTRAR_RESPONSE"] == null)
@@ -184,63 +192,51 @@ namespace WebApp.Controllers
         }
 
         [Route("consulta/estudiantes")]
-        public ActionResult Consulta(int? anio, int? periodo, string dependencia, string codAlumno, TipoEstudio tipoEstudio = TipoEstudio.Pregrado)
+        public ActionResult Consulta(ConsultaObligacionEstudianteViewModel model)
         {
             ViewBag.Title = "Consulta de Estudiantes";
 
-            //Listas
-            ViewBag.Anios = generalServiceFacade.Listar_Anios();
-            ViewBag.Periodos = catalogoServiceFacade.Listar_Periodos();
-            ViewBag.TipoEstudios = generalServiceFacade.Listar_TipoEstudios();
-            ViewBag.Dependencias = programasClientFacade.GetFacultades(tipoEstudio);
-
-            //Valores por defecto
-            ViewBag.CurrentYear = anio.HasValue ? anio.Value : DateTime.Now.Year;
-            ViewBag.DefaultPeriodo = periodo.HasValue ? periodo.Value : 15;
-            ViewBag.DefaultTipoEstudio = tipoEstudio;
-            ViewBag.DefaultDependencia = dependencia;
-            ViewBag.CodigoAlumno = codAlumno;
-
-            IEnumerable<EstadoObligacionViewModel> consultaObligaciones;
-
-            if (anio.HasValue)
+            if (model.anio.HasValue)
             {
-                switch (tipoEstudio)
+                switch (model.tipoEstudio)
                 {
                     case TipoEstudio.Pregrado:
-                        consultaObligaciones = reportePregradoServiceFacade.EstadoObligacionAlumnos(anio.Value, periodo, null, null, null, null);
+                        model.resultado = reportePregradoServiceFacade.EstadoObligacionAlumnos(
+                            model.anio.Value, model.periodo, model.codRc, model.esIngresante, model.estaPagado, model.obligacionGenerada, model.fechaInicio, model.fechaFin);
 
-                        if (!String.IsNullOrEmpty(dependencia))
+                        if (!String.IsNullOrEmpty(model.codFac))
                         {
-                            consultaObligaciones = consultaObligaciones.Where(x => x.C_CodFac.Equals(dependencia));
+                            model.resultado = model.resultado.Where(x => x.C_CodFac.Equals(model.codFac));
                         }
 
                         break;
                     case TipoEstudio.Posgrado:
-                        consultaObligaciones = reportePosgradoServiceFacade.EstadoObligacionAlumnos(anio.Value, periodo, null, null, null, null);
+                        model.resultado = reportePosgradoServiceFacade.EstadoObligacionAlumnos(
+                            model.anio.Value, model.periodo, model.codRc, model.esIngresante, model.estaPagado, model.obligacionGenerada, model.fechaInicio, model.fechaFin);
 
-                        if (!String.IsNullOrEmpty(dependencia))
-                        {
-                            consultaObligaciones = consultaObligaciones.Where(x => x.C_CodEsc.Equals(dependencia));
-                        }
-
-                        break;
-                    default:
-                        consultaObligaciones = new List<EstadoObligacionViewModel>();
                         break;
                 }
-            }
-            else
-            {
-                consultaObligaciones = new List<EstadoObligacionViewModel>();
+
+                if (!String.IsNullOrEmpty(model.codAlumno) && !String.IsNullOrWhiteSpace(model.codAlumno))
+                {
+                    model.resultado = model.resultado.Where(m => m.C_CodAlu.Equals(model.codAlumno));
+                }
             }
 
-            if (!String.IsNullOrEmpty(codAlumno) && !String.IsNullOrWhiteSpace(codAlumno))
-            {
-                consultaObligaciones = consultaObligaciones.Where(m => m.C_CodAlu.Equals(codAlumno));
-            }
+            ViewBag.Anios = new SelectList(generalServiceFacade.Listar_Anios(), "Value", "TextDisplay", model.anio.HasValue ? model.anio.Value : DateTime.Now.Year);
+            ViewBag.Periodos = new SelectList(catalogoServiceFacade.Listar_Periodos(), "Value", "TextDisplay", model.periodo);
+            ViewBag.TipoEstudios = new SelectList(generalServiceFacade.Listar_TipoEstudios(), "Value", "TextDisplay", model.tipoEstudio);
+            ViewBag.Dependencias = new SelectList(programasClientFacade.GetDependencias(model.tipoEstudio), "Value", "TextDisplay", model.codFac);
+            ViewBag.Escuelas = new SelectList(programasClientFacade.GetEscuelas(model.codFac), "Value", "TextDisplay", model.codEsc);
+            ViewBag.Especialidades = new SelectList(programasClientFacade.GetEspecialidades(model.codFac, model.codEsc), "Value", "TextDisplay", model.codRc);
 
-            return View("Consulta", consultaObligaciones);
+            ViewBag.TipoAlumno = new SelectList(generalServiceFacade.Listar_TipoAlumno(), "Value", "TextDisplay", model.esIngresante);
+            ViewBag.ExistenciaObligaciones = new SelectList(generalServiceFacade.Listar_CondicionExistenciaObligaciones(), "Value", "TextDisplay", model.obligacionGenerada);
+            ViewBag.EstadoPagoObligaciones = new SelectList(generalServiceFacade.Listar_CondicionPagoObligacion(), "Value", "TextDisplay", model.estaPagado);
+
+            ViewBag.FiltroDependencias = (model.tipoEstudio == TipoEstudio.Posgrado) ? null : "TODOS";
+
+            return View("Consulta", model);
         }
     }
 }

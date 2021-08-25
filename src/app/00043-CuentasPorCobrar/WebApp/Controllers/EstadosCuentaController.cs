@@ -13,6 +13,7 @@ namespace WebApp.Controllers
 {
     [Authorize]
     //[Route("consultas/estados-de-cuenta/{action}")]
+    [Authorize(Roles = "Administrador, Consulta")]
     public class EstadosCuentaController : Controller
     {
         IReportePregradoServiceFacade reportePregradoServiceFacade;

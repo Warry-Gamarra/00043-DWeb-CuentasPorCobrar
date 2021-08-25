@@ -91,5 +91,94 @@ namespace Domain.UnfvRepositorioClient
 
             return result;
         }
+
+        public IEnumerable<EspecialidadModel> GetEspecialidades(string codFac)
+        {
+            string url, jsonResponse;
+            HttpWebRequest request;
+            IEnumerable<EspecialidadModel> result;
+
+            try
+            {
+                if (String.IsNullOrWhiteSpace(codFac))
+                {
+                    throw new Exception("El código de Facultad es obligatorio.");
+                }
+
+                var uri = UnfvRepositorioClientConfiguration.BaseUrl("facultades/" + codFac + "/especialidades");
+
+                url = uri.ToString();
+
+                request = (HttpWebRequest)WebRequest.Create(url);
+
+                request.Method = HttpVerb.GET.ToString();
+
+                using (var response = (HttpWebResponse)request.GetResponse())
+                using (var responseStream = response.GetResponseStream())
+                using (var reader = new StreamReader(responseStream))
+                {
+                    jsonResponse = reader.ReadToEnd();
+
+                    result = JsonConvert.DeserializeObject<List<EspecialidadModel>>(jsonResponse);
+                }
+            }
+            catch (WebException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
+
+        public IEnumerable<EspecialidadModel> GetEspecialidades(string codFac, string codEsc)
+        {
+            string url, jsonResponse;
+            HttpWebRequest request;
+            IEnumerable<EspecialidadModel> result;
+
+            try
+            {
+                if (String.IsNullOrWhiteSpace(codFac))
+                {
+                    throw new Exception("El código de Facultad es obligatorio.");
+                }
+
+                if (String.IsNullOrWhiteSpace(codEsc))
+                {
+                    throw new Exception("El código de Escuela es obligatorio.");
+                }
+
+                var uri = UnfvRepositorioClientConfiguration.BaseUrl("facultades/" + codFac + "/escuelas/" + codEsc + "/especialidades");
+
+                url = uri.ToString();
+
+                request = (HttpWebRequest)WebRequest.Create(url);
+
+                request.Method = HttpVerb.GET.ToString();
+
+                using (var response = (HttpWebResponse)request.GetResponse())
+                using (var responseStream = response.GetResponseStream())
+                using (var reader = new StreamReader(responseStream))
+                {
+                    jsonResponse = reader.ReadToEnd();
+
+                    result = JsonConvert.DeserializeObject<List<EspecialidadModel>>(jsonResponse);
+                }
+            }
+            catch (WebException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
     }
 }

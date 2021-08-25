@@ -392,7 +392,7 @@ SELECT
 	a.C_CodModIng, modIng.T_ModIngDesc, 
 	car.N_Grado, grad.T_GradoDesc, car.N_Grupo, a.C_AnioIngreso, 
 	a.I_IdPlan, a.B_Habilitado, a.B_Eliminado FROM dbo.TC_Persona p
-INNER JOIN dbo.TC_Alumno a ON a.I_PersonaID = p.I_PersonaID AND p.B_Eliminado = 0
+INNER JOIN dbo.TC_Alumno a ON a.I_PersonaID = p.I_PersonaID
 LEFT JOIN dbo.TC_TipoDocumentoIdentidad tdoc ON tdoc.C_CodTipDoc = p.C_CodTipDoc
 LEFT JOIN dbo.TC_ModalidadIngreso modIng ON  modIng.C_CodModIng = a.C_CodModIng
 INNER JOIN dbo.TI_CarreraProfesional car ON car.C_RcCod = a.C_RcCod
@@ -402,7 +402,7 @@ INNER JOIN dbo.TC_Escuela esc ON esc.C_CodEsc = car.C_CodEsc AND esc.C_CodFac = 
 INNER JOIN dbo.TC_Facultad fac ON fac.C_CodFac = car.C_CodFac AND fac.B_Eliminado = 0
 LEFT JOIN dbo.TC_ProgramaUnfv prog ON prog.C_RcCod = car.C_RcCod
 LEFT JOIN dbo.TC_GradoAcademico grad ON grad.C_CodGrado = car.N_Grado
-WHERE a.B_Eliminado = 0
+WHERE a.B_Eliminado = 0 AND p.B_Eliminado = 0
 GO
 
 

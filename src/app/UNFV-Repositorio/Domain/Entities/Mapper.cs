@@ -145,21 +145,6 @@ namespace Domain.Entities
             return escuelaDTO;
         }
 
-        public static EspecialidadDTO TC_Especialidad_To_EspecialidadDTO(TC_Especialidad especialidad)
-        {
-            EspecialidadDTO especialidadDTO = new EspecialidadDTO()
-            {
-                CodEsp = especialidad.C_CodEsp,
-                CodEsc = especialidad.C_CodEsc,
-                CodFac = especialidad.C_CodFac,
-                EspDesc = especialidad.T_EspDesc,
-                EspAbrev = especialidad.T_EspAbrev,
-                Habilitado = especialidad.B_Habilitado
-            };
-
-            return especialidadDTO;
-        }
-
         public static USP_I_GrabarCarreraProfesional AlumnoEntity_To_USP_I_GrabarCarreraProfesional(ProgramaUnfvEntity programaUnfvEntity)
         {
             USP_I_GrabarCarreraProfesional alumno = new USP_I_GrabarCarreraProfesional()
@@ -278,6 +263,31 @@ namespace Domain.Entities
             };
 
             return programaUnfvDTO;
+        }
+
+        public static CarreraProfesionalDTO VW_CarreraProfesional_To_CarreraProfesionalDTO(VW_CarreraProfesional carreraProfesional)
+        {
+            CarreraProfesionalDTO carreraProfesionalDTO = new CarreraProfesionalDTO()
+            {
+                C_RcCod = carreraProfesional.C_RcCod,
+                C_CodEsp = carreraProfesional.C_CodEsp,
+                C_CodEsc = carreraProfesional.C_CodEsc,
+                C_CodFac = carreraProfesional.C_CodFac,
+                T_EspDesc = carreraProfesional.T_EspDesc,
+                T_EscDesc = carreraProfesional.T_EscDesc,
+                T_FacDesc = carreraProfesional.T_FacDesc,
+                T_CarProfDesc = carreraProfesional.T_CarProfDesc,
+                C_Tipo = carreraProfesional.C_Tipo,
+                I_Duracion = carreraProfesional.I_Duracion,
+                B_Anual = carreraProfesional.B_Anual,
+                N_Grupo = carreraProfesional.N_Grupo,
+                N_Grado = carreraProfesional.N_Grado,
+                I_IdAplica = carreraProfesional.I_IdAplica,
+                B_Habilitado = carreraProfesional.B_Habilitado,
+                B_Eliminado = carreraProfesional.B_Eliminado,
+            };
+
+            return carreraProfesionalDTO;
         }
     }
 }

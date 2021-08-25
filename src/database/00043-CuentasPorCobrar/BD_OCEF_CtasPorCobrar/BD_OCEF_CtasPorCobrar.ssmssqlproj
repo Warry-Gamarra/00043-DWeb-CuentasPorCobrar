@@ -39,6 +39,18 @@
           <ConnectionProtocol>NotSpecified</ConnectionProtocol>
           <ApplicationName>Microsoft SQL Server Management Studio - Consulta</ApplicationName>
         </ConnectionNode>
+        <ConnectionNode Name="HUMBERTO-PC\SQLEXPRESS:HUMBERTO-PC\Humberto">
+          <Created>2021-08-20T11:19:56.0089392-05:00</Created>
+          <Type>SQL</Type>
+          <Server>HUMBERTO-PC\SQLEXPRESS</Server>
+          <UserName />
+          <Authentication>Windows Authentication</Authentication>
+          <InitialDB />
+          <LoginTimeout>30</LoginTimeout>
+          <ExecutionTimeout>0</ExecutionTimeout>
+          <ConnectionProtocol>NotSpecified</ConnectionProtocol>
+          <ApplicationName>Microsoft SQL Server Management Studio - Query</ApplicationName>
+        </ConnectionNode>
         <ConnectionNode Name="HUMBERTO-PC\SQLEXPRESS:sa">
           <Created>2021-02-23T20:06:16.173324-05:00</Created>
           <Type>SQL</Type>

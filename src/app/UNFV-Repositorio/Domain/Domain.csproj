@@ -47,6 +47,7 @@
     <Compile Include="CoreLibModule.cs" />
     <Compile Include="Entities\AlumnoDTO.cs" />
     <Compile Include="Entities\AlumnoEntity.cs" />
+    <Compile Include="Entities\CarreraProfesionalDTO.cs" />
     <Compile Include="Entities\EscuelaDTO.cs" />
     <Compile Include="Entities\EspecialidadDTO.cs" />
     <Compile Include="Entities\FacultadDTO.cs" />
@@ -56,12 +57,12 @@
     <Compile Include="Entities\ServiceResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\IEscuelaService.cs" />
-    <Compile Include="Services\IEspecialidadService.cs" />
+    <Compile Include="Services\ICarreraProfesionalService.cs" />
     <Compile Include="Services\IFacultadService.cs" />
     <Compile Include="Services\Implementations\AlumnoService.cs" />
     <Compile Include="Services\IAlumnoService.cs" />
     <Compile Include="Services\Implementations\EscuelaService.cs" />
-    <Compile Include="Services\Implementations\EspecialidadService.cs" />
+    <Compile Include="Services\Implementations\CarreraProfesionalService.cs" />
     <Compile Include="Services\Implementations\FacultadService.cs" />
     <Compile Include="Services\Implementations\ProgramaUnfvService.cs" />
     <Compile Include="Services\IProgramaUnfvService.cs" />

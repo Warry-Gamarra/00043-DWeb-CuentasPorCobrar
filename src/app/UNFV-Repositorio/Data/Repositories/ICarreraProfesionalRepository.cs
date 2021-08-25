@@ -9,7 +9,9 @@ namespace Data.Repositories
 {
     public interface ICarreraProfesionalRepository
     {
-        IEnumerable<VW_CarreraProfesional> GetAll(string codRc);
+        IEnumerable<VW_CarreraProfesional> GetByFac(string codFac);
+
+        IEnumerable<VW_CarreraProfesional> GetByEsc(string codEsc, string codFac);
 
         VW_CarreraProfesional GetByID(string codRc);
     }

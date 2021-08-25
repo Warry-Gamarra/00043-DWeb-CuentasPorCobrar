@@ -41,22 +41,32 @@ namespace WebApi.Models
             return escuelaModel;
         }
 
-        public static EspecialidadModel EspecialidadDTO_To_EspecialidadModel(EspecialidadDTO especialidadDTO)
+        public static CarreraProfesionalModel CarreraProfesionalDTO_To_CarreraProfesionalModel(CarreraProfesionalDTO carreraProfesionalDTO)
         {
-            if (especialidadDTO == null)
+            if (carreraProfesionalDTO == null)
                 return null;
 
-            EspecialidadModel especialidadModel = new EspecialidadModel()
+            CarreraProfesionalModel carreraProfesionalModel = new CarreraProfesionalModel()
             {
-                CodEsp = especialidadDTO.CodEsp,
-                CodEsc = especialidadDTO.CodEsc,
-                CodFac = especialidadDTO.CodFac,
-                EspDesc = especialidadDTO.EspDesc,
-                EspAbrev = especialidadDTO.EspAbrev,
-                Habilitado = especialidadDTO.Habilitado
+                C_RcCod = carreraProfesionalDTO.C_RcCod,
+                C_CodEsp = carreraProfesionalDTO.C_CodEsp,
+                C_CodEsc = carreraProfesionalDTO.C_CodEsc,
+                C_CodFac = carreraProfesionalDTO.C_CodFac,
+                T_EspDesc = carreraProfesionalDTO.T_EspDesc,
+                T_EscDesc = carreraProfesionalDTO.T_EscDesc,
+                T_FacDesc = carreraProfesionalDTO.T_FacDesc,
+                T_CarProfDesc = carreraProfesionalDTO.T_CarProfDesc,
+                C_Tipo = carreraProfesionalDTO.C_Tipo,
+                I_Duracion = carreraProfesionalDTO.I_Duracion,
+                B_Anual = carreraProfesionalDTO.B_Anual,
+                N_Grupo = carreraProfesionalDTO.N_Grupo,
+                N_Grado = carreraProfesionalDTO.N_Grado,
+                I_IdAplica = carreraProfesionalDTO.I_IdAplica,
+                B_Habilitado = carreraProfesionalDTO.B_Habilitado,
+                B_Eliminado = carreraProfesionalDTO.B_Eliminado,
             };
 
-            return especialidadModel;
+            return carreraProfesionalModel;
         }
 
         public static AlumnoEntity MantenimientoAlumnoModel_To_AlumnoEntity(MantenimientoAlumnoModel alumnoModel, int currentUserID)

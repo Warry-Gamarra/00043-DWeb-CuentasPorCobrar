@@ -59,13 +59,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\ICarreraProfesionalRepository.cs" />
     <Compile Include="Repositories\IEscuelaRepository.cs" />
-    <Compile Include="Repositories\IEspecialidadRepository.cs" />
     <Compile Include="Repositories\IFacultadRepository.cs" />
     <Compile Include="Repositories\Implementations\AlumnoRepository.cs" />
     <Compile Include="Repositories\IAlumnoRepository.cs" />
     <Compile Include="Repositories\Implementations\CarreraProfesionalRepository.cs" />
     <Compile Include="Repositories\Implementations\EscuelaRepository.cs" />
-    <Compile Include="Repositories\Implementations\EspecialidadRepository.cs" />
     <Compile Include="Repositories\Implementations\FacultadRepository.cs" />
     <Compile Include="Repositories\Implementations\PersonaRepository.cs" />
     <Compile Include="Repositories\IPersonaRepository.cs" />

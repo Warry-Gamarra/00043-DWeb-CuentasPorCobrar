@@ -40,7 +40,8 @@ namespace WebApp.Models.Facades
         {
             var lista = generalService.Listar_Horas();
 
-            var result = lista.Select(x => new SelectViewModel() {
+            var result = lista.Select(x => new SelectViewModel()
+            {
                 Value = x.ToString(),
                 TextDisplay = x.ToString("D2")
             });
@@ -64,7 +65,8 @@ namespace WebApp.Models.Facades
         public IEnumerable<SelectViewModel> Listar_ReportesPregrado()
         {
             var lista = Reportes.Pregrado.Select(
-                x => new SelectViewModel() {
+                x => new SelectViewModel()
+                {
                     Value = x.Key.ToString(),
                     TextDisplay = x.Value
                 });
@@ -82,6 +84,42 @@ namespace WebApp.Models.Facades
                 });
 
             return lista;
+        }
+
+        public IEnumerable<SelectViewModel> Listar_TipoAlumno()
+        {
+            var lista = new List<SelectViewModel>();
+
+            lista.Add(new SelectViewModel() { Value = true.ToString(), TextDisplay = "Ingresante" });
+
+            lista.Add(new SelectViewModel() { Value = false.ToString(), TextDisplay = "Regular" });
+
+            return lista;
+
+        }
+
+        public IEnumerable<SelectViewModel> Listar_CondicionExistenciaObligaciones()
+        {
+            var lista = new List<SelectViewModel>();
+
+            lista.Add(new SelectViewModel() { Value = true.ToString(), TextDisplay = "Obligaciones generadas" });
+
+            lista.Add(new SelectViewModel() { Value = false.ToString(), TextDisplay = "Obligaciones sin generar" });
+
+            return lista;
+
+        }
+
+        public IEnumerable<SelectViewModel> Listar_CondicionPagoObligacion()
+        {
+            var lista = new List<SelectViewModel>();
+
+            lista.Add(new SelectViewModel() { Value = true.ToString(), TextDisplay = "Obligaciones pagadas" });
+
+            lista.Add(new SelectViewModel() { Value = false.ToString(), TextDisplay = "Obligaciones pendientes de pago" });
+
+            return lista;
+
         }
     }
 }

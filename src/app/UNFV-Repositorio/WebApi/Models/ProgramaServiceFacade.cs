@@ -11,18 +11,18 @@ namespace WebApi.Models
     {
         IFacultadService _facultadService;
         IEscuelaService _escuelaService;
-        IEspecialidadService _especialidadService;
+        ICarreraProfesionalService _especialidadService;
         IProgramaUnfvService _programaUnfvService;
 
         public ProgramaServiceFacade(
             IFacultadService facultadService,
             IEscuelaService escuelaService,
-            IEspecialidadService especialidadService,
+            ICarreraProfesionalService CarreraProfesionalService,
             IProgramaUnfvService programaUnfvService)
         {
             _facultadService = facultadService;
             _escuelaService = escuelaService;
-            _especialidadService = especialidadService;
+            _especialidadService = CarreraProfesionalService;
             _programaUnfvService = programaUnfvService;
         }
 
@@ -50,16 +50,21 @@ namespace WebApi.Models
             return Mapper.EscuelaDTO_To_EscuelaModel(escuelaDTO);
         }
 
-        public IEnumerable<EspecialidadModel> GetEspecialidadesByEsc(string codEsc, string codFac)
+        public IEnumerable<CarreraProfesionalModel> GetCarrerasProfesionalesByFac(string codFac)
         {
-            return _especialidadService.GetByEsc(codEsc, codFac).Select(e => Mapper.EspecialidadDTO_To_EspecialidadModel(e)); ;
+            return _especialidadService.GetByFac(codFac).Select(e => Mapper.CarreraProfesionalDTO_To_CarreraProfesionalModel(e)); ;
         }
 
-        public EspecialidadModel GetEspecialidadByID(string codEsp, string codEsc, string codFac)
+        public IEnumerable<CarreraProfesionalModel> GetCarrerasProfesionalesByEsc(string codEsc, string codFac)
         {
-            var especialidadDTO = _especialidadService.GetByID(codEsp, codEsc, codFac);
+            return _especialidadService.GetByEsc(codEsc, codFac).Select(e => Mapper.CarreraProfesionalDTO_To_CarreraProfesionalModel(e)); ;
+        }
 
-            return Mapper.EspecialidadDTO_To_EspecialidadModel(especialidadDTO);
+        public CarreraProfesionalModel GetCarreraProfesionalByID(string codRc)
+        {
+            var carreraProfesionalDTO = _especialidadService.GetByID(codRc);
+
+            return Mapper.CarreraProfesionalDTO_To_CarreraProfesionalModel(carreraProfesionalDTO);
         }
 
         public ServiceResponse GrabarProgramaUnfv(MantenimientoProgramaUnfvModel programaUnfvModel, int currentUserID)

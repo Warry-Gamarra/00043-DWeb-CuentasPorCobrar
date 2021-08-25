@@ -2,35 +2,6 @@ USE BD_OCEF_CtasPorCobrar
 GO
 
 
---CREATE NONCLUSTERED INDEX IDX_Persona ON BD_UNFV_Repositorio.dbo.TC_Persona(B_Eliminado) 
---INCLUDE(I_PersonaID, T_ApePaterno, T_ApeMaterno, T_Nombre)
---GO
-
---CREATE NONCLUSTERED INDEX IDX_Alumno ON BD_UNFV_Repositorio.dbo.TC_Alumno(C_RcCod, C_CodAlu, B_Eliminado)
---GO
-
---CREATE	NONCLUSTERED INDEX IDX_MatriculaAlumno ON TC_MatriculaAlumno(I_Anio, I_Periodo, B_Habilitado, B_Eliminado) 
---INCLUDE(I_MatAluID, C_CodAlu, C_CodRc, B_Ingresante, I_CredDesaprob)
---GO
-
---CREATE NONCLUSTERED INDEX IDX_ObligacionCab ON TR_ObligacionAluCab(I_MatAluID, B_Habilitado, B_Eliminado) 
---INCLUDE(I_ObligacionAluID, I_MontoOblig, D_FecVencto, B_Pagado)
---GO
-
---CREATE INDEX IDX_ObligacionDet ON TR_ObligacionAluDet(I_ObligacionAluID, B_Habilitado, B_Eliminado)
---INCLUDE (I_ConcPagID, I_Monto, B_Pagado, D_FecVencto)
---GO
-
---CREATE NONCLUSTERED INDEX IDX_PagoBanco ON TR_PagoBanco(I_PagoBancoID, D_FecPago, B_Anulado)
---INCLUDE(C_CodOperacion)
---GO
-
---CREATE NONCLUSTERED INDEX IDX_PagoProcesadoUnfv ON TRI_PagoProcesadoUnfv(I_ObligacionAluID, B_Anulado) 
---INCLUDE(I_MontoPagado)
---GO
-
-
-
 IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'USP_IU_GenerarObligacionesPregrado_X_Ciclo' AND ROUTINE_TYPE = 'PROCEDURE')
 	DROP PROCEDURE [dbo].[USP_IU_GenerarObligacionesPregrado_X_Ciclo]
 GO
@@ -146,7 +117,7 @@ BEGIN
 		begin try
 			
 			--4to obtengo la información alumno por alumno e inicializo variables
-			select @I_MatAluID= I_MatAluID, @C_CodRc = C_CodRc, @C_CodAlu = C_CodAlu, @C_EstMat = C_EstMat, @C_CodModIng = C_CodModIng, 
+			select @I_MatAluID = I_MatAluID, @C_CodRc = C_CodRc, @C_CodAlu = C_CodAlu, @C_EstMat = C_EstMat, @C_CodModIng = C_CodModIng, 
 				@N_Grupo = N_Grupo, @I_CredDesaprob = ISNULL(I_CredDesaprob, 0), 
 				@I_TipoAlumno = (case when B_Ingresante = 0 then @I_AlumnoRegular else @I_AlumnoIngresante end) 
 			from @Tmp_MatriculaAlumno 
@@ -1120,6 +1091,25 @@ GO
 
 
 
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_MatriculaAlumno')
+	DROP VIEW [dbo].[VW_MatriculaAlumno]
+GO
+
+CREATE VIEW [dbo].[VW_MatriculaAlumno]
+AS
+SELECT 
+	m.I_MatAluID, a.C_CodAlu, a.C_RcCod, a.T_Nombre, a.T_ApePaterno, ISNULL(a.T_ApeMaterno, '') AS T_ApeMaterno, a.N_Grado, m.I_Anio, m.I_Periodo, 
+	a.C_CodFac, a.T_FacDesc, a.C_CodEsc, a.T_EscDesc, m.C_EstMat, m.C_Ciclo, m.B_Ingresante, m.I_CredDesaprob, m.B_Habilitado, cat.T_OpcionCod as C_Periodo, cat.T_OpcionDesc as T_Periodo,
+	a.T_DenomProg, a.C_CodModIng, A.T_ModIngDesc, CASE WHEN nv.I_AluMultaID IS NULL THEN 0 ELSE 1 END B_TieneMultaPorNoVotar
+FROM TC_MatriculaAlumno m 
+INNER JOIN BD_UNFV_Repositorio.dbo.VW_Alumnos a ON a.C_CodAlu = m.C_CodAlu AND a.C_RcCod = m.C_CodRc
+LEFT JOIN dbo.TC_CatalogoOpcion cat ON cat.I_ParametroID = 5 and cat.I_OpcionID = m.I_Periodo
+LEFT JOIN dbo.TC_AlumnoMultaNoVotar nv ON nv.B_Eliminado = 0 and nv.C_CodAlu = m.C_CodAlu and nv.C_CodRc = m.C_CodRc and nv.I_Periodo = m.I_Periodo and nv.I_Anio = m.I_Anio
+WHERE m.B_Eliminado = 0
+GO
+
+
+
 IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_DetalleObligaciones')
 	DROP VIEW [dbo].[VW_DetalleObligaciones]
 GO
@@ -1128,9 +1118,9 @@ GO
 CREATE VIEW [dbo].[VW_DetalleObligaciones]
 AS
 SELECT 
-	cab.I_ObligacionAluID, pro.I_ProcesoID, pro.N_CodBanco, mat.C_CodAlu, mat.C_RcCod, mat.C_CodFac, mat.T_Nombre, mat.T_ApePaterno, mat.T_ApeMaterno, mat.I_Anio, mat.I_Periodo, 
+	cab.I_ObligacionAluID, pro.I_ProcesoID, pro.N_CodBanco, mat.C_CodAlu, mat.C_RcCod, mat.C_CodFac, mat.T_Nombre, mat.T_ApePaterno, mat.T_ApeMaterno, mat.I_Anio, mat.I_Periodo, mat.C_CodModIng,
 	per.T_OpcionCod AS C_Periodo, per.T_OpcionDesc AS T_Periodo, 
-	pro.T_ProcesoDesc, ISNULL(cp.T_ConceptoPagoDesc, con.T_ConceptoDesc) AS T_ConceptoDesc, cat.T_CatPagoDesc, det.I_Monto, det.B_Pagado, cab.D_FecVencto, pro.I_Prioridad,
+	pro.T_ProcesoDesc, ISNULL(cp.T_ConceptoPagoDesc, con.T_ConceptoDesc) AS T_ConceptoDesc, cat.T_CatPagoDesc, det.I_Monto, det.B_Pagado, det.D_FecVencto, pro.I_Prioridad,
 	cab.C_Moneda, cp.I_TipoObligacion, cat.I_Nivel, niv.T_OpcionCod AS C_Nivel, niv.T_OpcionDesc AS T_Nivel, cat.I_TipoAlumno, tipal.T_OpcionCod AS C_TipoAlumno, tipal.T_OpcionDesc AS T_TipoAlumno
 FROM dbo.VW_MatriculaAlumno mat
 INNER JOIN dbo.TR_ObligacionAluCab cab ON cab.I_MatAluID = mat.I_MatAluID AND cab.B_Habilitado = 1 AND cab.B_Eliminado = 0 
@@ -1208,27 +1198,6 @@ GO
 
 
 
-IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_MatriculaAlumno')
-	DROP VIEW [dbo].[VW_MatriculaAlumno]
-GO
-
-CREATE VIEW [dbo].[VW_MatriculaAlumno]
-AS
-SELECT 
-	m.I_MatAluID, a.C_CodAlu, a.C_RcCod, a.T_Nombre, a.T_ApePaterno, ISNULL(a.T_ApeMaterno, '') AS T_ApeMaterno, a.N_Grado, m.I_Anio, m.I_Periodo, 
-	a.C_CodFac, a.T_FacDesc, a.C_CodEsc, a.T_EscDesc, m.C_EstMat, m.C_Ciclo, m.B_Ingresante, m.I_CredDesaprob, m.B_Habilitado, cat.T_OpcionCod as C_Periodo, cat.T_OpcionDesc as T_Periodo,
-	a.T_DenomProg, a.C_CodModIng, A.T_ModIngDesc, CASE WHEN nv.I_AluMultaID IS NULL THEN 0 ELSE 1 END B_TieneMultaPorNoVotar
-FROM TC_MatriculaAlumno m 
-INNER JOIN BD_UNFV_Repositorio.dbo.VW_Alumnos a ON a.C_CodAlu = m.C_CodAlu AND a.C_RcCod = m.C_CodRc
-LEFT JOIN dbo.TC_CatalogoOpcion cat ON cat.I_ParametroID = 5 and cat.I_OpcionID = m.I_Periodo
-LEFT JOIN dbo.TC_AlumnoMultaNoVotar nv ON nv.B_Eliminado = 0 and nv.C_CodAlu = m.C_CodAlu and nv.C_CodRc = m.C_CodRc and nv.I_Periodo = m.I_Periodo and nv.I_Anio = m.I_Anio
-WHERE m.B_Eliminado = 0
-GO
-
-
-
-
-
 IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_ListadoEstadoObligaciones')
 	DROP PROCEDURE [dbo].[USP_S_ListadoEstadoObligaciones]
 GO
@@ -1256,7 +1225,7 @@ BEGIN
 			@ParmDefinition NVARCHAR(500)
   
 	SET @SQLString = N'SELECT mat.I_MatAluID, cab.I_ObligacionAluID, mat.C_CodAlu, mat.C_RcCod, mat.T_Nombre, mat.T_ApePaterno, mat.T_ApeMaterno, 
-			mat.N_Grado, mat.T_FacDesc, mat.T_EscDesc, mat.T_DenomProg, mat.B_Ingresante, mat.I_CredDesaprob,
+			mat.N_Grado, mat.C_CodFac, mat.T_FacDesc, mat.C_CodEsc, mat.T_EscDesc, mat.T_DenomProg, mat.B_Ingresante, mat.I_CredDesaprob,
 			mat.I_Anio, 
 			mat.T_Periodo,
 			ISNULL(pro.T_ProcesoDesc, '''') AS T_ProcesoDesc,
@@ -1279,7 +1248,7 @@ BEGIN
 			' + CASE WHEN @F_FecIni IS NULL THEN '' ELSE 'and DATEDIFF(DAY, @F_FecIni, pagban.D_FecPago) >= 0' END + '
 			' + CASE WHEN @F_FecFin IS NULL	THEN '' ELSE 'and DATEDIFF(DAY, pagban.D_FecPago, @F_FecFin) >= 0' END + '
 		GROUP BY mat.I_MatAluID, cab.I_ObligacionAluID, mat.C_CodAlu, mat.C_RcCod, mat.T_Nombre, mat.T_ApePaterno, mat.T_ApeMaterno, 
-			mat.N_Grado, mat.T_FacDesc, mat.T_EscDesc, mat.T_DenomProg, mat.B_Ingresante, mat.I_CredDesaprob,
+			mat.N_Grado, mat.C_CodFac, mat.T_FacDesc, mat.C_CodEsc, mat.T_EscDesc, mat.T_DenomProg, mat.B_Ingresante, mat.I_CredDesaprob,
 			mat.I_Anio, mat.T_Periodo, pro.T_ProcesoDesc, cab.I_MontoOblig, cab.D_FecVencto, cab.B_Pagado
 		' + CASE WHEN @B_MontoPagadoDiff IS NULL OR @B_MontoPagadoDiff = 0 THEN '' ELSE 'HAVING NOT cab.I_MontoOblig = SUM(pagpro.I_MontoPagado)' END + '
 		ORDER BY mat.T_FacDesc, mat.T_DenomProg, mat.T_ApePaterno, mat.T_ApeMaterno';
@@ -1302,77 +1271,18 @@ BEGIN
 		@F_FecFin = @F_FecFin
 /*
 EXEC USP_S_ListadoEstadoObligaciones
-@B_EsPregrado = 0,
+@B_EsPregrado = 1,
 @I_Anio = 2021,
-@I_Periodo = 19,
+@I_Periodo = NULL,
 @C_RcCod = NULL,
 @B_Ingresante = NULL,
-@B_ObligacionGenerada = 1,
-@B_Pagado = 1,
+@B_ObligacionGenerada = NULL,
+@B_Pagado = NULL,
 @F_FecIni = NULL,
 @F_FecFin = NULL,
 @B_MontoPagadoDiff = NULL
 GO
 */
-END
-GO
-
-
-
-
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_ListarCuotasPagos_X_Periodo')
-	DROP PROCEDURE [dbo].[USP_S_ListarCuotasPagos_X_Periodo]
-GO
-
-CREATE PROCEDURE [dbo].[USP_S_ListarCuotasPagos_X_Periodo]
-@C_CodAlu VARCHAR(10),
-@I_Anio INT,
-@I_PeriodoID INT
-AS
-/*
-exec USP_S_ListarCuotasPagos_X_Periodo '2019310028',2021, 19
-go
-*/
-BEGIN
-	SET NOCOUNT ON;
-	SELECT 
-		vw.C_CodAlu, vw.T_ApePaterno, vw.T_ApeMaterno, vw.T_Nombre, vw.C_RcCod, vw.T_DenomProg, 
-		vw.T_ProcesoDesc, vw.I_Anio, vw.T_Periodo, vw.D_FecVencto, 
-		CASE WHEN (vw.C_RcCod = '064' AND vw.B_Pagado = 0 AND vw.I_MontoPagadoActual = 40) THEN CAST(1 AS BIT) ELSE vw.B_Pagado END AS B_Pagado,
-		vw.I_MontoOblig, 
-		null AS D_FecPago, 
-		'' as C_CodOperacion, 
-		'' as C_NumeroCuenta, 
-		'' as T_EntidadDesc 
-		--vw.D_FecPago, vw.C_CodOperacion, vw.C_NumeroCuenta, vw.T_EntidadDesc 
-	FROM dbo.VW_CuotasPago_General vw
-	WHERE vw.C_CodAlu = @C_CodAlu AND vw.I_Anio = @I_Anio AND vw.I_Periodo = @I_PeriodoID AND vw.I_Prioridad = 1
-END
-GO
-
-
-
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_ListarIngresos_X_CuotasPagos')
-	DROP PROCEDURE [dbo].[USP_S_ListarIngresos_X_CuotasPagos]
-GO
-
-CREATE PROCEDURE [dbo].[USP_S_ListarIngresos_X_CuotasPagos]
-@C_CodAlu VARCHAR(10),
-@I_Anio INT,
-@I_PeriodoID INT
-AS
-/*
-exec USP_S_ListarIngresos_X_CuotasPagos '2021006524',2021, 19
-go
-*/
-BEGIN
-	SET NOCOUNT ON;
-	SELECT pagban.I_MontoPago, pagban.D_FecPago, pagban.C_CodOperacion, cta.C_NumeroCuenta, ef.T_EntidadDesc  FROM dbo.VW_CuotasPago_General vw
-	INNER JOIN dbo.TRI_PagoProcesadoUnfv pagpro ON pagpro.I_ObligacionAluID = vw.I_ObligacionAluID AND pagpro.B_Anulado = 0
-	INNER JOIN dbo.TR_PagoBanco pagban ON pagban.I_PagoBancoID = pagpro.I_PagoBancoID AND pagban.B_Anulado = 0
-	INNER JOIN dbo.TC_CuentaDeposito cta ON cta.I_CtaDepositoID = pagpro.I_CtaDepositoID
-	INNER JOIN dbo.TC_EntidadFinanciera ef ON ef.I_EntidadFinanID = pagban.I_EntidadFinanID
-	WHERE vw.C_CodAlu = @C_CodAlu AND vw.I_Anio = @I_Anio AND vw.I_Periodo = @I_PeriodoID AND vw.I_Prioridad = 1
 END
 GO
 
@@ -1538,3 +1448,235 @@ GO
 */
 END
 GO
+
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_ReportePagoObligacionesPregrado')
+	DROP PROCEDURE [dbo].[USP_S_ReportePagoObligacionesPregrado]
+GO
+
+CREATE PROCEDURE [dbo].[USP_S_ReportePagoObligacionesPregrado]
+@I_TipoReporte int,
+@C_CodFac	varchar(2) = NULL,
+@D_FechaIni date,
+@D_FechaFin date,
+@I_EntidadFinanID int = NULL
+AS
+BEGIN
+	SET NOCOUNT ON;
+	DECLARE @Pregrado char(1) = '1'
+
+	--@I_TipoReporte: 1: Pagos agrupados por facultad.
+	if (@I_TipoReporte = 1) begin
+		select mat.T_FacDesc, mat.C_CodFac, SUM(pagpro.I_MontoPagado) AS I_MontoTotal 
+		from dbo.TR_PagoBanco pagban
+		inner join dbo.TRI_PagoProcesadoUnfv pagpro on pagban.I_PagoBancoID = pagpro.I_PagoBancoID
+		inner join dbo.TR_ObligacionAluCab cab on cab.I_ObligacionAluID = pagpro.I_ObligacionAluID and cab.B_Habilitado = 1 AND  cab.B_Eliminado = 0
+		inner join dbo.TR_ObligacionAluDet det on det.I_ObligacionAluID = cab.I_ObligacionAluID and det.B_Habilitado = 1 AND  det.B_Eliminado = 0
+		inner join dbo.TI_ConceptoPago conpag on conpag.I_ConcPagID = det.I_ConcPagID
+		inner join dbo.VW_MatriculaAlumno mat on mat.I_MatAluID = cab.I_MatAluID
+		where pagban.B_Anulado = 0 and pagpro.B_Anulado = 0 and mat.N_Grado = @Pregrado
+			and datediff(day, @D_FechaIni, pagban.D_FecPago) >= 0 and datediff(day, pagban.D_FecPago, @D_FechaFin) >= 0
+			and pagban.I_EntidadFinanID = ISNULL(@I_EntidadFinanID, pagban.I_EntidadFinanID)
+		group by mat.T_FacDesc, mat.C_CodFac
+		order by mat.T_FacDesc
+	end
+
+	--@I_TipoReporte: 2: Pagos agrupados por concepto.
+	if (@I_TipoReporte = 2) begin
+		select conpag.I_ConceptoID, cl.C_CodClasificador, conpag.T_ConceptoPagoDesc, SUM(pagpro.I_MontoPagado) AS I_MontoTotal 
+		from dbo.TR_PagoBanco pagban
+		inner join dbo.TRI_PagoProcesadoUnfv pagpro on pagban.I_PagoBancoID = pagpro.I_PagoBancoID
+		inner join dbo.TR_ObligacionAluCab cab on cab.I_ObligacionAluID = pagpro.I_ObligacionAluID and cab.B_Habilitado = 1 AND  cab.B_Eliminado = 0
+		inner join dbo.TR_ObligacionAluDet det on det.I_ObligacionAluID = cab.I_ObligacionAluID and det.B_Habilitado = 1 AND  det.B_Eliminado = 0
+		inner join dbo.TI_ConceptoPago conpag on conpag.I_ConcPagID = det.I_ConcPagID
+		inner join dbo.VW_MatriculaAlumno mat on mat.I_MatAluID = cab.I_MatAluID
+		left join dbo.VW_Clasificadores cl on cl.C_ClasificConceptoCod = conpag.T_Clasificador
+		where pagban.B_Anulado = 0 and pagpro.B_Anulado = 0 and mat.N_Grado = @Pregrado
+			and datediff(day, @D_FechaIni, pagban.D_FecPago) >= 0 and datediff(day, pagban.D_FecPago, @D_FechaFin) >= 0
+			and pagban.I_EntidadFinanID = ISNULL(@I_EntidadFinanID, pagban.I_EntidadFinanID)
+		group by conpag.I_ConceptoID, cl.C_CodClasificador, conpag.T_ConceptoPagoDesc
+		order by cl.C_CodClasificador, conpag.T_ConceptoPagoDesc
+	end
+
+	--@I_TipoReporte: 2: Pagos agrupados por concepto según para una facultad.
+	if (@I_TipoReporte = 3) begin
+		select mat.T_FacDesc, mat.C_CodFac, conpag.I_ConceptoID, cl.C_CodClasificador, conpag.T_ConceptoPagoDesc, 
+			COUNT(pagban.I_PagoBancoID) AS I_Cantidad,
+			SUM(pagpro.I_MontoPagado) AS I_MontoTotal 
+		from dbo.TR_PagoBanco pagban
+		inner join dbo.TRI_PagoProcesadoUnfv pagpro on pagban.I_PagoBancoID = pagpro.I_PagoBancoID
+		inner join dbo.TR_ObligacionAluCab cab on cab.I_ObligacionAluID = pagpro.I_ObligacionAluID and cab.B_Habilitado = 1 AND  cab.B_Eliminado = 0
+		inner join dbo.TR_ObligacionAluDet det on det.I_ObligacionAluID = cab.I_ObligacionAluID and det.B_Habilitado = 1 AND  det.B_Eliminado = 0
+		inner join dbo.TI_ConceptoPago conpag on conpag.I_ConcPagID = det.I_ConcPagID
+		inner join dbo.VW_MatriculaAlumno mat on mat.I_MatAluID = cab.I_MatAluID
+		left join dbo.VW_Clasificadores cl on cl.C_ClasificConceptoCod = conpag.T_Clasificador
+		where pagban.B_Anulado = 0 and pagpro.B_Anulado = 0 and mat.N_Grado = @Pregrado
+			and datediff(day, @D_FechaIni, pagban.D_FecPago) >= 0 and datediff(day, pagban.D_FecPago, @D_FechaFin) >= 0 
+			and mat.C_CodFac = @C_CodFac
+			and pagban.I_EntidadFinanID = ISNULL(@I_EntidadFinanID, pagban.I_EntidadFinanID)
+		group by mat.T_FacDesc, mat.C_CodFac, conpag.I_ConceptoID, cl.C_CodClasificador, conpag.T_ConceptoPagoDesc
+		order by mat.T_FacDesc, cl.C_CodClasificador, conpag.T_ConceptoPagoDesc
+	end
+	/*
+	EXEC USP_S_ReportePagoObligacionesPregrado 
+		@I_TipoReporte = 1,
+		@C_CodFac = NULL,
+		@D_FechaIni = '20210101', 
+		@D_FechaFin = '20211231',
+		@I_EntidadFinanID = NULL
+	*/
+END
+GO
+
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_ReportePagoObligacionesPosgrado')
+	DROP PROCEDURE [dbo].[USP_S_ReportePagoObligacionesPosgrado]
+GO
+
+CREATE PROCEDURE [dbo].[USP_S_ReportePagoObligacionesPosgrado]
+@I_TipoReporte int,
+@C_CodEsc	varchar(2) = NULL,
+@D_FechaIni date,
+@D_FechaFin date,
+@I_EntidadFinanID int = NULL
+AS
+BEGIN
+	SET NOCOUNT ON;
+	DECLARE @Maestria char(1) = '2',
+			@Doctorado char(1) = '3'
+
+	--@I_TipoReporte: 1: Pagos agrupados por maestría y doctorado.
+	if (@I_TipoReporte = 1) begin
+		select mat.T_EscDesc, mat.C_CodEsc,  SUM(pagpro.I_MontoPagado) AS I_MontoTotal 
+		from dbo.TR_PagoBanco pagban
+		inner join dbo.TRI_PagoProcesadoUnfv pagpro on pagban.I_PagoBancoID = pagpro.I_PagoBancoID
+		inner join dbo.TR_ObligacionAluCab cab on cab.I_ObligacionAluID = pagpro.I_ObligacionAluID and cab.B_Habilitado = 1 AND  cab.B_Eliminado = 0
+		inner join dbo.TR_ObligacionAluDet det on det.I_ObligacionAluID = cab.I_ObligacionAluID and det.B_Habilitado = 1 AND  det.B_Eliminado = 0
+		inner join dbo.TI_ConceptoPago conpag on conpag.I_ConcPagID = det.I_ConcPagID
+		inner join dbo.VW_MatriculaAlumno mat on mat.I_MatAluID = cab.I_MatAluID
+		where pagban.B_Anulado = 0 and pagpro.B_Anulado = 0 and mat.N_Grado IN (@Maestria, @Doctorado)
+			and datediff(day, @D_FechaIni, pagban.D_FecPago) >= 0 and datediff(day, pagban.D_FecPago, @D_FechaFin) >= 0
+			and pagban.I_EntidadFinanID = ISNULL(@I_EntidadFinanID, pagban.I_EntidadFinanID)
+		group by mat.T_EscDesc, mat.C_CodEsc
+		order by mat.T_EscDesc DESC
+	end
+
+	--@I_TipoReporte: 2: Pagos agrupados por concepto.
+	if (@I_TipoReporte = 2) begin
+		select conpag.I_ConceptoID, cl.C_CodClasificador, conpag.T_ConceptoPagoDesc, SUM(pagpro.I_MontoPagado) AS I_MontoTotal 
+		from dbo.TR_PagoBanco pagban
+		inner join dbo.TRI_PagoProcesadoUnfv pagpro on pagban.I_PagoBancoID = pagpro.I_PagoBancoID
+		inner join dbo.TR_ObligacionAluCab cab on cab.I_ObligacionAluID = pagpro.I_ObligacionAluID and cab.B_Habilitado = 1 AND  cab.B_Eliminado = 0
+		inner join dbo.TR_ObligacionAluDet det on det.I_ObligacionAluID = cab.I_ObligacionAluID and det.B_Habilitado = 1 AND  det.B_Eliminado = 0
+		inner join dbo.TI_ConceptoPago conpag on conpag.I_ConcPagID = det.I_ConcPagID
+		inner join dbo.VW_MatriculaAlumno mat on mat.I_MatAluID = cab.I_MatAluID
+		left join dbo.VW_Clasificadores cl on cl.C_ClasificConceptoCod = conpag.T_Clasificador
+		where pagban.B_Anulado = 0 and pagpro.B_Anulado = 0 and mat.N_Grado IN (@Maestria, @Doctorado)
+			and datediff(day, @D_FechaIni, pagban.D_FecPago) >= 0 and datediff(day, pagban.D_FecPago, @D_FechaFin) >= 0
+			and pagban.I_EntidadFinanID = ISNULL(@I_EntidadFinanID, pagban.I_EntidadFinanID)
+		group by conpag.I_ConceptoID, cl.C_CodClasificador, conpag.T_ConceptoPagoDesc
+		order by cl.C_CodClasificador, conpag.T_ConceptoPagoDesc
+	end
+
+	--@I_TipoReporte: 2: Pagos agrupados por concepto según maestría o doctorado.
+	if (@I_TipoReporte = 3) begin
+		select mat.T_EscDesc, mat.C_CodEsc, conpag.I_ConceptoID, cl.C_CodClasificador, conpag.T_ConceptoPagoDesc, 
+			COUNT(pagban.I_PagoBancoID) AS I_Cantidad,
+			SUM(pagpro.I_MontoPagado) AS I_MontoTotal 
+		from dbo.TR_PagoBanco pagban
+		inner join dbo.TRI_PagoProcesadoUnfv pagpro on pagban.I_PagoBancoID = pagpro.I_PagoBancoID
+		inner join dbo.TR_ObligacionAluCab cab on cab.I_ObligacionAluID = pagpro.I_ObligacionAluID and cab.B_Habilitado = 1 AND  cab.B_Eliminado = 0
+		inner join dbo.TR_ObligacionAluDet det on det.I_ObligacionAluID = cab.I_ObligacionAluID and det.B_Habilitado = 1 AND  det.B_Eliminado = 0
+		inner join dbo.TI_ConceptoPago conpag on conpag.I_ConcPagID = det.I_ConcPagID
+		inner join dbo.VW_MatriculaAlumno mat on mat.I_MatAluID = cab.I_MatAluID
+		left join dbo.VW_Clasificadores cl on cl.C_ClasificConceptoCod = conpag.T_Clasificador
+		where pagban.B_Anulado = 0 and pagpro.B_Anulado = 0 and mat.N_Grado IN (@Maestria, @Doctorado)
+			and datediff(day, @D_FechaIni, pagban.D_FecPago) >= 0 and datediff(day, pagban.D_FecPago, @D_FechaFin) >= 0 
+			and mat.C_CodEsc = @C_CodEsc
+			and pagban.I_EntidadFinanID = ISNULL(@I_EntidadFinanID, pagban.I_EntidadFinanID)
+		group by mat.T_EscDesc, mat.C_CodEsc, conpag.I_ConceptoID, cl.C_CodClasificador, conpag.T_ConceptoPagoDesc
+		order by mat.T_EscDesc, cl.C_CodClasificador, conpag.T_ConceptoPagoDesc
+	end
+	/*
+	EXEC USP_S_ReportePagoObligacionesPosgrado 
+		@I_TipoReporte = 3,
+		@C_CodEsc = 'MG',
+		@D_FechaIni = '20210101', 
+		@D_FechaFin = '20211231',
+		@I_EntidadFinanID = NULL
+	*/
+END
+GO
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/************************************** PROCEDIMIENTOS MATRICULA 2021 **********************************/
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_ListarCuotasPagos_X_Periodo')
+	DROP PROCEDURE [dbo].[USP_S_ListarCuotasPagos_X_Periodo]
+GO
+
+CREATE PROCEDURE [dbo].[USP_S_ListarCuotasPagos_X_Periodo]
+@C_CodAlu VARCHAR(10),
+@I_Anio INT,
+@I_PeriodoID INT
+AS
+/*
+exec USP_S_ListarCuotasPagos_X_Periodo '2018039291',2021, 19
+go
+*/
+BEGIN
+	SET NOCOUNT ON;
+	SELECT 
+		vw.C_CodAlu, vw.T_ApePaterno, vw.T_ApeMaterno, vw.T_Nombre, vw.C_RcCod, vw.T_DenomProg, 
+		vw.T_ProcesoDesc, vw.I_Anio, vw.T_Periodo, vw.D_FecVencto, 
+		CASE WHEN (vw.C_RcCod = '064' AND vw.B_Pagado = 0 AND vw.I_MontoPagadoActual = 40) THEN CAST(1 AS BIT) ELSE vw.B_Pagado END AS B_Pagado,
+		vw.I_MontoOblig, 
+		null AS D_FecPago, 
+		'' as C_CodOperacion, 
+		'' as C_NumeroCuenta, 
+		'' as T_EntidadDesc 
+		--vw.D_FecPago, vw.C_CodOperacion, vw.C_NumeroCuenta, vw.T_EntidadDesc 
+	FROM dbo.VW_CuotasPago_General vw
+	WHERE vw.C_CodAlu = @C_CodAlu AND vw.I_Anio = @I_Anio AND vw.I_Periodo = @I_PeriodoID AND vw.I_Prioridad = 1
+END
+GO
+
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_ListarIngresos_X_CuotasPagos')
+	DROP PROCEDURE [dbo].[USP_S_ListarIngresos_X_CuotasPagos]
+GO
+
+CREATE PROCEDURE [dbo].[USP_S_ListarIngresos_X_CuotasPagos]
+@C_CodAlu VARCHAR(10),
+@I_Anio INT,
+@I_PeriodoID INT
+AS
+/*
+exec USP_S_ListarIngresos_X_CuotasPagos '2018039291',2021, 19
+go
+*/
+BEGIN
+	SET NOCOUNT ON;
+	SELECT pagban.I_MontoPago, pagban.D_FecPago, pagban.C_CodOperacion, cta.C_NumeroCuenta, ef.T_EntidadDesc  FROM dbo.VW_CuotasPago_General vw
+	INNER JOIN dbo.TRI_PagoProcesadoUnfv pagpro ON pagpro.I_ObligacionAluID = vw.I_ObligacionAluID AND pagpro.B_Anulado = 0
+	INNER JOIN dbo.TR_PagoBanco pagban ON pagban.I_PagoBancoID = pagpro.I_PagoBancoID AND pagban.B_Anulado = 0
+	INNER JOIN dbo.TC_CuentaDeposito cta ON cta.I_CtaDepositoID = pagpro.I_CtaDepositoID
+	INNER JOIN dbo.TC_EntidadFinanciera ef ON ef.I_EntidadFinanID = pagban.I_EntidadFinanID
+	WHERE vw.C_CodAlu = @C_CodAlu AND vw.I_Anio = @I_Anio AND vw.I_Periodo = @I_PeriodoID AND vw.I_Prioridad = 1
+END
+GO
+/************************************************************************/
