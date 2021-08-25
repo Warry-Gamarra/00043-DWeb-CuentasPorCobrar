@@ -11,6 +11,7 @@ namespace Data.Views
 {
     public class VW_Pagos
     {
+        public int I_NroOrden { get; set; }
         public int I_PagoProcesID { get; set; }
         public int I_PagoBancoID { get; set; }
         public int I_CtaDepositoID { get; set; }

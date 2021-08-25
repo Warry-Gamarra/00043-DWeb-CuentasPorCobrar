@@ -16,11 +16,10 @@ namespace Domain.Helpers
         public string Icon { get; set; }
         public string Color { get; set; }
         public string Display { get; set; }
-        public MemoryStream File { get; set; }
 
         public IEnumerable<PagoObligacionObsEntity> ListaResultados { get; }
 
-        public ImportacionPagoResponse() { this.File = new MemoryStream(); }
+        public ImportacionPagoResponse() { }
 
         public ImportacionPagoResponse(IEnumerable<DataPagoObligacionesResult> spResult)
         {
@@ -56,7 +55,6 @@ namespace Domain.Helpers
             Message = String.Format("Se han analizado \"{0}\" pago(s). Se han registrado \"{1}\" pago(s).",
                 spResult.Count(), spResult.Count() - errors);
 
-            File = new MemoryStream();
         }
     }
 }

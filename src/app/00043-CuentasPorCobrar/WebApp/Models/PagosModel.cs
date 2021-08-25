@@ -447,55 +447,6 @@ namespace WebApp.Models
         }
 
 
-        private List<CabeceraArchivo> LeerCabeceraArchivoPagoObligaciones(string filePath, int entFinanId)
-        {
-            var result = new List<CabeceraArchivo>();
-
-            string fileLine;
-            List<string> linesFile = new List<string>();
-            List<SeccionArchivoViewModel> estructuraArchivo = _estructuraArchivoModel.ObtenerEstructuraArchivo(entFinanId, TipoArchivoEntFinan.Recaudacion_Obligaciones);
-
-            if (estructuraArchivo.Count == 0)
-            {
-                return null;
-            }
-
-            var cabecera = estructuraArchivo.Find(x => x.TipoSeccion == TipoSeccionArchivo.Cabecera_Resumen);
-            if (cabecera == null)
-            {
-                return null;
-            }
-
-            var columnas = cabecera.ColumnasSeccion.ToDictionary(x => x.CampoTablaNom, x => new Posicion { Inicial = x.ColPosicionIni, Final = x.ColPosicionFin });
-
-            using (StreamReader file = new StreamReader(filePath))
-            {
-                while ((fileLine = file.ReadLine()) != null)
-                {
-                    linesFile.Add(fileLine);
-                }
-            }
-
-            cabecera.FilPosicionFin = cabecera.FilPosicionFin == 0 ? linesFile.Count() : cabecera.FilPosicionFin;
-
-            for (int i = cabecera.FilPosicionIni - 1; i < cabecera.FilPosicionFin; i++)
-            {
-                string line = linesFile[i];
-                var cabeceraArchivo = new CabeceraArchivo();
-
-                foreach (var columna in columnas)
-                {
-                    PropertyInfo propertyInfo = cabeceraArchivo.GetType().GetProperty(columna.Key);
-                    propertyInfo.SetValue(cabeceraArchivo, Convert.ChangeType(line.Substring(columna.Value.Inicial - 1, columna.Value.Longitud), propertyInfo.PropertyType), null);
-                }
-
-                result.Add(cabeceraArchivo);
-            }
-
-            return result;
-        }
-
-
         public MemoryStream ExportarInformacionTemporalPagos(int entRecaudaId, DateTime fecIni, DateTime fecFin, TipoEstudio tipoEstudio)
         {
             var memoryStream = new MemoryStream();
