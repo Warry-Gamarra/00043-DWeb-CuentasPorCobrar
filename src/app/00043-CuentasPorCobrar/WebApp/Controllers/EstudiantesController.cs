@@ -202,18 +202,12 @@ namespace WebApp.Controllers
                 {
                     case TipoEstudio.Pregrado:
                         model.resultado = reportePregradoServiceFacade.EstadoObligacionAlumnos(
-                            model.anio.Value, model.periodo, model.codRc, model.esIngresante, model.estaPagado, model.obligacionGenerada, model.fechaInicio, model.fechaFin);
-
-                        if (!String.IsNullOrEmpty(model.codFac))
-                        {
-                            model.resultado = model.resultado.Where(x => x.C_CodFac.Equals(model.codFac));
-                        }
-
+                            model.anio.Value, model.periodo, model.codFac, model.codEsc, model.codRc, model.esIngresante, model.estaPagado, model.obligacionGenerada, model.fechaInicio, model.fechaFin);
                         break;
+
                     case TipoEstudio.Posgrado:
                         model.resultado = reportePosgradoServiceFacade.EstadoObligacionAlumnos(
-                            model.anio.Value, model.periodo, model.codRc, model.esIngresante, model.estaPagado, model.obligacionGenerada, model.fechaInicio, model.fechaFin);
-
+                            model.anio.Value, model.periodo, model.codFac, model.codEsc, model.codRc, model.esIngresante, model.estaPagado, model.obligacionGenerada, model.fechaInicio, model.fechaFin);
                         break;
                 }
 
@@ -237,6 +231,91 @@ namespace WebApp.Controllers
             ViewBag.FiltroDependencias = (model.tipoEstudio == TipoEstudio.Posgrado) ? null : "TODOS";
 
             return View("Consulta", model);
+        }
+
+        [Route("consulta/estudiantes/download")]
+        public ActionResult DescargaConsulta(ConsultaObligacionEstudianteViewModel model)
+        {
+            if (!model.anio.HasValue)
+            {
+                return RedirectToAction("Consulta", "Estudiantes");
+            }
+
+            switch (model.tipoEstudio)
+            {
+                case TipoEstudio.Pregrado:
+                    model.resultado = reportePregradoServiceFacade.EstadoObligacionAlumnos(
+                        model.anio.Value, model.periodo, model.codFac, model.codEsc, model.codRc, model.esIngresante, model.estaPagado, model.obligacionGenerada, model.fechaInicio, model.fechaFin);
+                    break;
+
+                case TipoEstudio.Posgrado:
+                    model.resultado = reportePosgradoServiceFacade.EstadoObligacionAlumnos(
+                        model.anio.Value, model.periodo, model.codFac, model.codEsc, model.codRc, model.esIngresante, model.estaPagado, model.obligacionGenerada, model.fechaInicio, model.fechaFin);
+                    break;
+            }
+
+            if (!String.IsNullOrEmpty(model.codAlumno) && !String.IsNullOrWhiteSpace(model.codAlumno))
+            {
+                model.resultado = model.resultado.Where(m => m.C_CodAlu.Equals(model.codAlumno));
+            }
+
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.Worksheets.Add("Obligaciones");
+
+                worksheet.Columns("A:M").Width = 14;
+
+                worksheet.Column("B").Width = 23;
+                worksheet.Columns("D:E").Width = 23;
+
+                var currentRow = 1;
+
+                #region Header
+                worksheet.Cell(currentRow, 1).Value = "CodAlumno";
+                worksheet.Cell(currentRow, 2).Value = "NomAlumno";
+                worksheet.Cell(currentRow, 3).Value = "CodRc";
+                worksheet.Cell(currentRow, 4).Value = "Facultad";                
+                worksheet.Cell(currentRow, 5).Value = "Especialidad";
+                worksheet.Cell(currentRow, 6).Value = "TipoAlumno";
+                worksheet.Cell(currentRow, 7).Value = "Año";
+                worksheet.Cell(currentRow, 8).Value = "Periodo";
+                worksheet.Cell(currentRow, 9).Value = "CuotaPago";
+                worksheet.Cell(currentRow, 10).Value = "MontoOblig";
+                worksheet.Cell(currentRow, 11).Value = "FecVencto";
+                worksheet.Cell(currentRow, 12).Value = "Estado";
+                worksheet.Cell(currentRow, 13).Value = "MontoPagado";
+                #endregion
+                
+                #region Body
+                foreach (var item in model.resultado)
+                {
+                    currentRow++;
+                    worksheet.Cell(currentRow, 1).SetValue<string>(item.C_CodAlu);
+                    worksheet.Cell(currentRow, 2).SetValue<string>(item.T_ApellidosNombres);
+                    worksheet.Cell(currentRow, 3).SetValue<string>(item.C_RcCod);
+                    worksheet.Cell(currentRow, 4).SetValue<string>(item.T_FacDesc);
+                    worksheet.Cell(currentRow, 5).SetValue<string>(item.T_DenomProg);
+                    worksheet.Cell(currentRow, 6).SetValue<string>(item.T_EsIngresante);
+                    worksheet.Cell(currentRow, 7).SetValue<string>(item.I_Anio.ToString());
+                    worksheet.Cell(currentRow, 8).SetValue<string>(item.T_Periodo);
+                    worksheet.Cell(currentRow, 9).SetValue<string>(item.T_ProcesoDesc);
+                    worksheet.Cell(currentRow, 10).SetValue<decimal?>(item.I_MontoOblig);
+                    worksheet.Cell(currentRow, 11).SetValue<string>(item.T_FecVencto);
+                    worksheet.Cell(currentRow, 12).SetValue<string>(item.T_Pagado);
+                    worksheet.Cell(currentRow, 13).SetValue<decimal?>(item.I_MontoPagadoActual);
+                }
+                #endregion
+
+                worksheet.Range(worksheet.Cell(2, 10), worksheet.Cell(currentRow, 10)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
+
+                using (var stream = new MemoryStream())
+                {
+                    workbook.SaveAs(stream);
+                    var content = stream.ToArray();
+
+                    return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Consulta Obligaciones de Estudiantes.xlsx");
+                }
+            }
         }
     }
 }

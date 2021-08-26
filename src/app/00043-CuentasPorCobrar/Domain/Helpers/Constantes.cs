@@ -17,6 +17,8 @@ namespace Domain.Helpers
     {
         public const string BASIC_DATE = "dd/MM/yyyy";
 
+        public const string BASIC_DATE2 = "dd-MM-yyyy";
+
         public const string BASIC_TIME = "HH:mm:ss";
 
         public const string BASIC_DATETIME = "dd/MM/yyyy HH:mm:ss";
@@ -32,5 +34,13 @@ namespace Domain.Helpers
     public static class ConstantesBCP
     {
         public const string CodExtorno = "E";
+    }
+
+    public static class EstadoObligacion
+    {
+        public static string ObtenerDescripcion(bool? pagado)
+        {
+            return pagado.HasValue ? (pagado.Value ? "Pagado" : "Pendiente") : "";
+        }
     }
 }

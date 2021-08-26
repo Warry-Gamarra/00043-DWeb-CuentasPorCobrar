@@ -17,11 +17,17 @@ namespace WebApp.ViewModels
             this.nombreEntidadFinanc = nombreEntidadFinanc;
             this.numCuenta = numCuenta;
             this.resumen_x_dependencias = resumen_x_dependencias;
+
+            FechaActual = DateTime.Now.ToString(FormatosDateTime.BASIC_DATE);
+            HoraActual = DateTime.Now.ToString(FormatosDateTime.BASIC_TIME);
         }
 
         public ReporteResumenAnualPagoObligaciones_X_Dependencias()
         {
             resumen_x_dependencias = new List<ResumenAnualPagoDeObligaciones_X_DependenciaDTO>();
+
+            FechaActual = DateTime.Now.ToString(FormatosDateTime.BASIC_DATE);
+            HoraActual = DateTime.Now.ToString(FormatosDateTime.BASIC_TIME);
         }
 
         public TipoEstudio tipoEstudio { get; set; }
@@ -247,6 +253,10 @@ namespace WebApp.ViewModels
                 return TotalGeneral.ToString(FormatosDecimal.BASIC_DECIMAL);
             }
         }
+
+        public string FechaActual { get; }
+
+        public string HoraActual { get; }
 
         public decimal TotalDependencia(string codDependencia)
         {

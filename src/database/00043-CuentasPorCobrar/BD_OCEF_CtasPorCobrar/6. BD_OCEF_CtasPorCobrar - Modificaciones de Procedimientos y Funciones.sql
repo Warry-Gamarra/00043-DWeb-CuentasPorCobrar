@@ -1206,6 +1206,8 @@ CREATE PROCEDURE [dbo].[USP_S_ListadoEstadoObligaciones]
 @B_EsPregrado BIT,
 @I_Anio INT,
 @I_Periodo INT = NULL,
+@C_CodFac VARCHAR(2) = NULL ,
+@C_CodEsc VARCHAR(3) = NULL ,
 @C_RcCod VARCHAR(3) = NULL ,
 @B_Ingresante BIT = NULL,
 @B_ObligacionGenerada BIT = NULL,
@@ -1241,6 +1243,8 @@ BEGIN
 		WHERE mat.B_Habilitado = 1 and mat.I_Anio = @I_Anio
 			' + CASE WHEN @B_EsPregrado = 1 THEN 'and mat.N_Grado = @Pregrado' ELSE 'and mat.N_Grado IN (@Maestria, @Doctorado)' END + '
 			' + CASE WHEN @I_Periodo IS NULL THEN '' ELSE 'and mat.I_Periodo = @I_Periodo' END + '
+			' + CASE WHEN @C_CodFac IS NULL THEN '' ELSE 'and mat.C_CodFac = @C_CodFac' END + '
+			' + CASE WHEN @C_CodEsc IS NULL THEN '' ELSE 'and mat.C_CodEsc = @C_CodEsc' END + '
 			' + CASE WHEN @C_RcCod IS NULL THEN '' ELSE 'and mat.C_RcCod = @C_RcCod' END + '
 			' + CASE WHEN @B_Ingresante IS NULL THEN '' ELSE 'and mat.B_Ingresante = @B_Ingresante' END + '
 			' + CASE WHEN @B_ObligacionGenerada IS NULL THEN '' ELSE (CASE WHEN @B_ObligacionGenerada = 1 THEN 'and cab.I_ObligacionAluID IS NOT NULL' ELSE 'and cab.I_ObligacionAluID IS NULL' END) END  + '
@@ -1254,7 +1258,7 @@ BEGIN
 		ORDER BY mat.T_FacDesc, mat.T_DenomProg, mat.T_ApePaterno, mat.T_ApeMaterno';
 	
 	SET @ParmDefinition = N'@Pregrado CHAR(1), @Maestria CHAR(1), @Doctorado CHAR(1), @I_Anio INT, @I_Periodo INT = NULL, 
-		@C_RcCod VARCHAR(3) = NULL , @B_Ingresante BIT = NULL, @B_Pagado BIT = NULL, @F_FecIni DATE = NULL, @F_FecFin DATE = NULL';  
+		@C_CodFac VARCHAR(2), @C_CodEsc VARCHAR(2), @C_RcCod VARCHAR(3) = NULL , @B_Ingresante BIT = NULL, @B_Pagado BIT = NULL, @F_FecIni DATE = NULL, @F_FecFin DATE = NULL';  
 	
 	PRINT @SQLString
 
@@ -1264,6 +1268,8 @@ BEGIN
 		@Doctorado = @Doctorado,
 		@I_Anio = @I_Anio,
 		@I_Periodo = @I_Periodo,
+		@C_CodFac = @C_CodFac,
+		@C_CodEsc = @C_CodEsc,
 		@C_RcCod = @C_RcCod,
 		@B_Ingresante = @B_Ingresante,
 		@B_Pagado = @B_Pagado,
@@ -1271,9 +1277,11 @@ BEGIN
 		@F_FecFin = @F_FecFin
 /*
 EXEC USP_S_ListadoEstadoObligaciones
-@B_EsPregrado = 1,
+@B_EsPregrado = 0,
 @I_Anio = 2021,
 @I_Periodo = NULL,
+@C_CodFac = 'EP',
+@C_CodEsc = NULL,
 @C_RcCod = NULL,
 @B_Ingresante = NULL,
 @B_ObligacionGenerada = NULL,
