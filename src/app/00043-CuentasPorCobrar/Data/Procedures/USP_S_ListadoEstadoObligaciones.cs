@@ -56,6 +56,10 @@ namespace Data.Procedures
 
         public decimal? I_MontoPagadoActual { get; set; }
 
+        public DateTime D_FecCre { get; set; }
+
+        public DateTime? D_FecMod { get; set; }
+
         public static IEnumerable<USP_S_ListadoEstadoObligaciones> Execute(USP_S_ListadoEstadoObligaciones_Parameters pr)
         {
             IEnumerable<USP_S_ListadoEstadoObligaciones> result;

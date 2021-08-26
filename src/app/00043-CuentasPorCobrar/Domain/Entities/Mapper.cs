@@ -552,7 +552,9 @@ namespace Domain.Entities
                 I_MontoOblig = sp.I_MontoOblig,
                 D_FecVencto = sp.D_FecVencto,
                 B_Pagado = sp.B_Pagado,
-                I_MontoPagadoActual = sp.I_MontoPagadoActual
+                I_MontoPagadoActual = sp.I_MontoPagadoActual,
+                D_FecCre = sp.D_FecCre,
+                D_FecMod = sp.D_FecMod
             };
 
             return result;

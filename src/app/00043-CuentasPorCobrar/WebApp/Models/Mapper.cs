@@ -337,7 +337,9 @@ namespace WebApp.Models
                 I_MontoOblig = dto.I_MontoOblig,
                 D_FecVencto = dto.D_FecVencto,
                 B_Pagado = dto.B_Pagado,
-                I_MontoPagadoActual = dto.I_MontoPagadoActual
+                I_MontoPagadoActual = dto.I_MontoPagadoActual,
+                D_FecCre = dto.D_FecCre,
+                D_FecMod = dto.D_FecMod
             };
 
             return result;

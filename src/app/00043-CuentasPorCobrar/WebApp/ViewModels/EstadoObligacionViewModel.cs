@@ -113,5 +113,9 @@ namespace WebApp.ViewModels
                 return I_MontoPagadoActual.HasValue ? I_MontoPagadoActual.Value.ToString(FormatosDecimal.BASIC_DECIMAL) : "";
             }
         }
+
+        public DateTime D_FecCre { get; set; }
+
+        public DateTime? D_FecMod { get; set; }
     }
 }

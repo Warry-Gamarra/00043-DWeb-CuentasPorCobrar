@@ -263,10 +263,13 @@ namespace WebApp.Controllers
             {
                 var worksheet = workbook.Worksheets.Add("Obligaciones");
 
-                worksheet.Columns("A:M").Width = 14;
-
-                worksheet.Column("B").Width = 23;
-                worksheet.Columns("D:E").Width = 23;
+                worksheet.Column("A").Width = 14;
+                worksheet.Column("B").Width = 30;
+                worksheet.Column("C").Width = 14;
+                worksheet.Columns("D:E").Width = 30;
+                worksheet.Columns("F:M").Width = 14;
+                worksheet.Column("N").Width = 15;
+                worksheet.Column("O").Width = 15;
 
                 var currentRow = 1;
 
@@ -281,11 +284,13 @@ namespace WebApp.Controllers
                 worksheet.Cell(currentRow, 8).Value = "Periodo";
                 worksheet.Cell(currentRow, 9).Value = "CuotaPago";
                 worksheet.Cell(currentRow, 10).Value = "MontoOblig";
-                worksheet.Cell(currentRow, 11).Value = "FecVencto";
+                worksheet.Cell(currentRow, 11).Value = "FechaVencto";
                 worksheet.Cell(currentRow, 12).Value = "Estado";
                 worksheet.Cell(currentRow, 13).Value = "MontoPagado";
+                worksheet.Cell(currentRow, 14).Value = "FechaCreación";
+                worksheet.Cell(currentRow, 15).Value = "UltimaModificación";
                 #endregion
-                
+
                 #region Body
                 foreach (var item in model.resultado)
                 {
@@ -303,10 +308,13 @@ namespace WebApp.Controllers
                     worksheet.Cell(currentRow, 11).SetValue<string>(item.T_FecVencto);
                     worksheet.Cell(currentRow, 12).SetValue<string>(item.T_Pagado);
                     worksheet.Cell(currentRow, 13).SetValue<decimal?>(item.I_MontoPagadoActual);
+                    worksheet.Cell(currentRow, 14).SetValue<DateTime>(item.D_FecCre);
+                    worksheet.Cell(currentRow, 15).SetValue<DateTime?>(item.D_FecMod);
                 }
                 #endregion
 
                 worksheet.Range(worksheet.Cell(2, 10), worksheet.Cell(currentRow, 10)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
+                worksheet.Range(worksheet.Cell(2, 13), worksheet.Cell(currentRow, 13)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
 
                 using (var stream = new MemoryStream())
                 {
