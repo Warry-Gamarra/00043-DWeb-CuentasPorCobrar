@@ -167,7 +167,7 @@ namespace WebApp.Controllers
             ViewBag.Anios = new SelectList(generalServiceFacade.Listar_Anios(), "Value", "TextDisplay");
             ViewBag.Periodos = new SelectList(catalogoServiceFacade.Listar_Periodos(), "Value", "TextDisplay");
 
-            var model = new CargarArchivoViewModel() { TipoArchivo = TipoPago.Tasa }; ;
+            var model = new CargarArchivoViewModel() { TipoArchivo = TipoPago.Tasa }; 
             return PartialView("_SeleccionarArchivo", model);
         }
 
