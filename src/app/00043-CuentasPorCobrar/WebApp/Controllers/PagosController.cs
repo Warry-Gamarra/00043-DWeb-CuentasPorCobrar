@@ -476,10 +476,12 @@ namespace WebApp.Controllers
         [HttpPost]
         public ActionResult ExportarRecaudacionTemporalPost(int cboEntFinan, TipoEstudio cboTipoEst, string fechaDesde, string fechaHasta)
         {
+            DateTime fecDesde = DateTime.Parse(fechaDesde);
+            DateTime fecHasta = DateTime.Parse(fechaHasta);
             try
             {
-                MemoryStream memoryStream = pagosModel.ExportarInformacionTemporalPagos(cboEntFinan, DateTime.Parse(fechaDesde), DateTime.Parse(fechaHasta), cboTipoEst);
-                return File(memoryStream, "text/plain", "TestFile.txt");
+                MemoryStream memoryStream = pagosModel.ExportarInformacionTemporalPagos(cboEntFinan, fecDesde, fecHasta, cboTipoEst);
+                return File(memoryStream, "text/plain", $"RecaudacionBCP_de_{fecDesde.ToString("yyyyMMdd")}_a_{fecHasta.ToString("yyyyMMdd")}.txt");
             }
             catch (Exception ex)
             {
