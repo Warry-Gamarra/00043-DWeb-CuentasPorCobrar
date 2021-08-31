@@ -132,5 +132,33 @@ namespace Domain.Services.Implementations
 
             return result;
         }
+
+        public List<PagoEntity> ListarPagosRegistrados(DateTime? fecIni, DateTime? fecFin, TipoEstudio? tipoEstudio, int? entRecaudaId)
+        {
+            List<PagoEntity> result = new List<PagoEntity>();
+            IEnumerable<VW_Pagos> data; 
+            fecIni = fecIni ?? DateTime.ParseExact("19010101", "yyyyMMdd", CultureInfo.InvariantCulture);
+            fecFin = fecFin ?? DateTime.Now.AddDays(1);
+
+            switch (tipoEstudio)
+            {
+                case TipoEstudio.Pregrado:
+                    data = VW_Pagos.FindPregrado(entRecaudaId, null, fecIni.Value, fecFin.Value);
+                    break;
+                case TipoEstudio.Posgrado:
+                    data = VW_Pagos.FindPosgrado(entRecaudaId, null, fecIni.Value, fecFin.Value);
+                    break;
+                default:
+                    data = VW_Pagos.Find(entRecaudaId, null, fecIni.Value, fecFin.Value);
+                    break;
+            }
+
+            foreach (var item in data.OrderBy(x => x.C_CodDepositante))
+            {
+                result.Add(new PagoEntity(item));
+            }
+
+            return result;
+        }
     }
 }

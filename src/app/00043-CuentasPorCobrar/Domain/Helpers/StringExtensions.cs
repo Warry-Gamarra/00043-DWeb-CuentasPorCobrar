@@ -19,5 +19,16 @@ namespace Domain.Helpers
                 .Normalize(NormalizationForm.FormC)
                 .Replace('\'', ' ');
         }
+
+        public static string Substring2(this string text, int startIndex, int length)
+        {
+            if (length > text.Length)
+            {
+                length = text.Length;
+            }
+
+            return text.Substring(startIndex, length);
+        }
+
     }
 }

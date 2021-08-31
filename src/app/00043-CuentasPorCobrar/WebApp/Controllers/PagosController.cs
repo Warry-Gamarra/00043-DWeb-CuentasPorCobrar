@@ -474,14 +474,17 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
-        public ActionResult ExportarRecaudacionTemporalPost(int cboEntFinan, TipoEstudio cboTipoEst, string fechaDesde, string fechaHasta)
+        public ActionResult ExportarRecaudacionTemporalPost(int cboEntFinan, TipoEstudio? cboTipoEst, string fechaDesde, string fechaHasta)
         {
             DateTime fecDesde = DateTime.Parse(fechaDesde);
             DateTime fecHasta = DateTime.Parse(fechaHasta);
+            string nombreEntidad = new CultureInfo("es-MX", false).TextInfo.ToTitleCase(entidadRecaudadora.Find(cboEntFinan).NombreEntidad.ToLower()).Replace(" ", "");
+            string tipoEstudio = cboTipoEst.HasValue ?  "_" + cboTipoEst.Value.ToString() : string.Empty;
+
             try
             {
                 MemoryStream memoryStream = pagosModel.ExportarInformacionTemporalPagos(cboEntFinan, fecDesde, fecHasta, cboTipoEst);
-                return File(memoryStream, "text/plain", $"RecaudacionBCP_de_{fecDesde.ToString("yyyyMMdd")}_a_{fecHasta.ToString("yyyyMMdd")}.txt");
+                return File(memoryStream, "text/plain", $"Recaudacion{nombreEntidad}{tipoEstudio}_de_{fecDesde.ToString("yyyyMMdd")}_a_{fecHasta.ToString("yyyyMMdd")}.txt");
             }
             catch (Exception ex)
             {

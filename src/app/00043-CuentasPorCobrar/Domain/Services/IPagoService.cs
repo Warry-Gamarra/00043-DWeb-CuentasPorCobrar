@@ -16,6 +16,7 @@ namespace Domain.Services
         Response GrabarNroSiafPago(int pagoProcesId, int nroSiaf, int currentUserId, DateTime fecUpdate);
         PagoEntity ObtenerDatosPago(int pagoProcesId);
         List<PagoEntity> ListarPagosRegistrados(DateTime? fecIni, DateTime? fecFin, int? dependenciaId, int? entRecaudaId);
+        List<PagoEntity> ListarPagosRegistrados(DateTime? fecIni, DateTime? fecFin, TipoEstudio? tipoEstudio, int? entRecaudaId);
         List<PagoEntity> BuscarPagoRegistrado(int entRecaudaId, string codOperacion);
         IEnumerable<ArchivoImportadoDTO> ListarArchivosImportados(TipoArchivoEntFinan tipoArchivo);
     }

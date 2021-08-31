@@ -34,6 +34,11 @@ namespace Domain.Entities
         public string ConceptoPagoDesc { get; set; }
         public string CodServicio { get; set; }
         public int CuotaPago { get; set; }
+        public string Anio { get; set; }
+        public string Periodo { get; set; }
+        public string CodRc { get; set; }
+        public string CodAlumno { get; set; }
+        public string InformacionAdicional { get; set; }
 
         private readonly VW_Pagos vW_Pagos;
 
@@ -49,7 +54,7 @@ namespace Domain.Entities
             this.PagoBancoId = tabla.I_PagoBancoID;
             this.CtaDepositoID = tabla.I_CtaDepositoID;
             this.CodOperacion = tabla.C_CodOperacion;
-            this.CodDepositante = string.IsNullOrEmpty(tabla.C_CodDepositante) ? "" : tabla.C_CodDepositante;
+            this.CodDepositante = string.IsNullOrEmpty(tabla.C_CodDepositante) ? tabla.C_CodAlu : tabla.C_CodDepositante;
             this.NomDepositante = string.IsNullOrEmpty(tabla.T_NomAlumno) ? tabla.T_NomDepositante : tabla.T_NomAlumno;
             this.Referencia = string.IsNullOrEmpty(tabla.C_Referencia) ? "" : tabla.C_Referencia;
             this.FecPago = tabla.D_FecPago;
@@ -66,6 +71,11 @@ namespace Domain.Entities
             this.I_TipoPago = tabla.I_ObligacionAluID.HasValue ? TipoPago.Obligacion : TipoPago.Tasa;
             this.CodServicio = tabla.C_CodServicio;
             this.CuotaPago = tabla.I_ProcesoID;
+            this.InformacionAdicional = tabla.T_InformacionAdicional;
+            this.Anio = tabla.I_Anio.ToString();
+            this.Periodo = tabla.C_Periodo;
+            this.CodRc = tabla.C_RcCod;
+            this.CodAlumno = tabla.C_CodAlu; 
         }
     }
 }

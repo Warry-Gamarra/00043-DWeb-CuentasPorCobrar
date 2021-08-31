@@ -447,20 +447,21 @@ namespace WebApp.Models
         }
 
 
-        public MemoryStream ExportarInformacionTemporalPagos(int entRecaudaId, DateTime fecIni, DateTime fecFin, TipoEstudio tipoEstudio)
+        public MemoryStream ExportarInformacionTemporalPagos(int entRecaudaId, DateTime fecIni, DateTime fecFin, TipoEstudio? tipoEstudio)
         {
             var memoryStream = new MemoryStream();
             var writer = new StreamWriter(memoryStream, Encoding.Default);
 
-            var infoPagos = pagoService.ListarPagosRegistrados(fecIni, fecFin, null, entRecaudaId);
+            var infoPagos = pagoService.ListarPagosRegistrados(fecIni, fecFin, tipoEstudio, entRecaudaId);
+
 
             #region Cabecera
 
             string codTipoRegistro = "T";
-            string totalMontoSoles = Convert.ToInt64(infoPagos.Where(x => x.Moneda == "PEN").Sum(x => x.MontoPago * 100)).ToString().PadLeft(14, '0'); ;
-            string totalMontoDolares = Convert.ToInt64(infoPagos.Where(x => x.Moneda != "PEN").Sum(x => x.MontoPago * 100)).ToString().PadLeft(14, '0'); ;
+            string totalMontoSoles = Convert.ToInt64(infoPagos.Where(x => x.Moneda == "PEN").Sum(x => x.MontoPago * 100)).ToString().PadLeft(14, '0');
+            string totalMontoDolares = Convert.ToInt64(infoPagos.Where(x => x.Moneda != "PEN").Sum(x => x.MontoPago * 100)).ToString().PadLeft(14, '0');
             string nroRegistrosSoles = infoPagos.Where(x => x.Moneda == "PEN").Count().ToString().PadLeft(6, '0');
-            string nroRegistrosDolares = infoPagos.Where(x => x.Moneda != "PEN").Count().ToString().PadLeft(6, '0'); ;
+            string nroRegistrosDolares = infoPagos.Where(x => x.Moneda != "PEN").Count().ToString().PadLeft(6, '0');
             string fechaEnvio = fecIni.ToString("yyyyMMdd");
             string fechaVencimiento = fecFin.ToString("yyyyMMdd");
             string cadenaCabecera;
@@ -470,6 +471,11 @@ namespace WebApp.Models
 
             #endregion
 
+            if (nroRegistrosSoles.Length != 6)
+            {
+                throw new Exception("La cantidad de registros en el intervalo de fechas seleccionado sobrepasa los límites del archivo. Seleccione un intervalo menor de fechas");
+            }
+
             #region Detalle
             string identificadorRegistroDetalle = "D";
             string codigoServicio;
@@ -477,7 +483,7 @@ namespace WebApp.Models
             string codAlu;
             string codOperacion;
             string referencia;
-            string codRc;
+            string nroRecibo;
             string moneda;
             string fecPago;
             string fecEmision = "00000000";
@@ -486,12 +492,11 @@ namespace WebApp.Models
             string montoPago;
             string procesoID;
             string lugarPago;
-            string agencia = "";
+            string agencia;
             string nomDepositante;
             string horaPago;
             string interesMora;
-            string extorno;
-            string informacionAdicional;
+            string datosEntidad;
             string medioPago = "";
             string formaPago = "";
             string importeDescontdo = "0";
@@ -503,30 +508,33 @@ namespace WebApp.Models
 
             foreach (var item in infoPagos)
             {
+                fecVencto = item.FecVencto.ToString("yyyyMMdd");
+                item.InformacionAdicional = item.CodAlumno + item.CodRc + item.Anio + item.Periodo + fecVencto + item.CuotaPago.ToString().PadLeft(10, ' ') + item.MontoPago.ToString("#.00").PadLeft(10, ' ');
+
                 codigoServicio = item.CodServicio.PadRight(4, ' ');
                 codigoSucursal = "".PadRight(3, ' ');
                 codAlu = item.CodDepositante.PadLeft(10, '0').PadRight(20, ' ');
                 codOperacion = item.CodOperacion.PadRight(20, ' ');
+                nroRecibo = item.NroCuota.ToString("000000").PadRight(20, ' ');
                 referencia = string.Empty.PadRight(20, ' ');
-                referenciaPago = item.Referencia.Substring(1,20).PadRight(20, ' ');
+                referenciaPago = (entRecaudaId == 1 ? item.Referencia : item.CodOperacion).Substring2(0, 10).PadRight(10, ' ');
                 moneda = item.Moneda == "PEN" ? "01" : "02";
                 fecPago = item.FecPago.ToString("yyyyMMdd");
-                fecVencto = item.FecVencto.ToString("yyyyMMdd");
                 cantidad = item.Cantidad.ToString();
                 montoPago = Convert.ToInt32(item.MontoPago * 100).ToString().PadLeft(14, '0');
                 procesoID = item.CuotaPago.ToString();
-                lugarPago = item.LugarPago.PadRight(10, ' '); ;
-                nomDepositante = item.NomDepositante.PadRight(40, ' ');
-                horaPago = item.FecPago.ToString("hhmmss");
+                nomDepositante = item.NomDepositante.Substring2(0, 40).PadRight(40, ' ');
+                horaPago = item.FecPago.ToString("HHmmss");
                 interesMora = 0.ToString().PadLeft(14, '0');
-                //Extorno = item.ex;
-                informacionAdicional = "".PadRight(50, ' ');
+                datosEntidad = item.InformacionAdicional.Substring2(0, 50).PadRight(50, ' ');
                 codigoTarifa = codigoTarifa.PadRight(20, ' ');
                 cantidad = item.Cantidad.ToString().PadLeft(4, '0');
                 importeDescontdo = importeDescontdo.PadLeft(14, '0');
                 importeReajustado = importeReajustado.PadLeft(14, '0');
-                formaPago = "1";
-                medioPago = "0";
+                lugarPago = item.LugarPago.Substring2(0, 2);
+                agencia = entRecaudaId == 1 ? item.LugarPago.Substring(2, 3) : item.LugarPago.Substring(3, 3);
+                formaPago = entRecaudaId == 1 ? item.LugarPago.Substring2(5, 1): "1";
+                medioPago = entRecaudaId == 1 ? item.LugarPago.Substring2(6, 1): "1";
                 usuarioPago = usuarioPago.PadRight(10, ' ');
 
                 cadenaDetalle = string.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11}{12}{13}{14}{15}{16}{17}{18}{19}{20}{21}{22}{23}{24}",
@@ -535,17 +543,17 @@ namespace WebApp.Models
                     codigoSucursal,
                     codAlu,
                     nomDepositante,
-                    codOperacion,
+                    nroRecibo,
                     referencia,
                     fecEmision,
                     fechaVencimiento,
                     moneda,
                     montoPago,
-                    informacionAdicional,
+                    datosEntidad,
                     interesMora,
                     fecPago,
                     horaPago,
-                    lugarPago.Substring(1,2),
+                    lugarPago,
                     agencia,
                     medioPago,
                     formaPago,
@@ -558,9 +566,7 @@ namespace WebApp.Models
                 writer.WriteLine(cadenaDetalle);
             }
 
-
             #endregion
-
 
             writer.Flush();
 
