@@ -167,7 +167,7 @@ namespace WebApp.Controllers
             ViewBag.Anios = new SelectList(generalServiceFacade.Listar_Anios(), "Value", "TextDisplay");
             ViewBag.Periodos = new SelectList(catalogoServiceFacade.Listar_Periodos(), "Value", "TextDisplay");
 
-            var model = new CargarArchivoViewModel() { TipoArchivo = TipoPago.Tasa }; 
+            var model = new CargarArchivoViewModel() { TipoArchivo = TipoPago.Tasa };
             return PartialView("_SeleccionarArchivo", model);
         }
 
@@ -369,7 +369,7 @@ namespace WebApp.Controllers
         {
             ViewBag.Title = "Actualizar información de pagos";
 
-            var model = pagosModel.ListarPagosRegistrados();
+            var model = pagosModel.ListarPagosRegistrados(DateTime.Now.Date, DateTime.Now.Date, null, null);
             ViewBag.EntidadRecaudadora = new SelectList(entidadRecaudadora.Find(enabled: true), "Id", "NombreEntidad");
             ViewBag.Dependencia = new SelectList(_dependenciaModel.Find(enabled: true), dataValueField: "DependenciaID", dataTextField: "DependDesc");
 
@@ -377,16 +377,14 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
-        public ActionResult ObtenerPagosRegistrados(string txtFecDesde, string txtFecHasta, int cboEntRecauda, int cboDependencia)
+        public ActionResult ObtenerPagosRegistrados(string txtFecDesde, string txtFecHasta, int? cboEntRecauda, int? cboDependencia)
         {
-            ViewBag.Title = "Actualizar información de pagos";
+            DateTime fecDesde = DateTime.Parse(txtFecDesde);
+            DateTime fecHasta = DateTime.Parse(txtFecHasta);
 
+            var model = pagosModel.ListarPagosRegistrados(fecDesde, fecHasta, cboDependencia, cboEntRecauda);
 
-            var model = pagosModel.ListarPagosRegistrados();
-            ViewBag.EntidadRecaudadora = new SelectList(entidadRecaudadora.Find(enabled: true), "Id", "NombreEntidad");
-            ViewBag.Dependencia = new SelectList(_dependenciaModel.Find(enabled: true), dataValueField: "DependenciaID", dataTextField: "DependDesc");
-
-            return View(model);
+            return PartialView("_ResultadoConsultaPagos", model);
         }
 
 
@@ -401,7 +399,7 @@ namespace WebApp.Controllers
         }
 
         [Route("operaciones/pagos/{id}/registrar-nro-siaf")]
-        public ActionResult RegistrarSiaf(int id)
+        public ActionResult RegistrarSiaf(int[] pagosId)
         {
             ViewBag.Title = "Registrar Nro. SIAF";
 
@@ -468,7 +466,7 @@ namespace WebApp.Controllers
             ViewBag.Title = "Exportar recaudación para el Temporal de Pagos";
 
             ViewBag.EntidadesFinancieras = new SelectList(ListaEntidadesFinancieras(), "Value", "TextDisplay");
-            ViewBag.TipoEstudios = new SelectList(generalServiceFacade.Listar_TipoEstudios(), "Value", "TextDisplay"); 
+            ViewBag.TipoEstudios = new SelectList(generalServiceFacade.Listar_TipoEstudios(), "Value", "TextDisplay");
 
             return View();
         }
@@ -479,7 +477,7 @@ namespace WebApp.Controllers
             DateTime fecDesde = DateTime.Parse(fechaDesde);
             DateTime fecHasta = DateTime.Parse(fechaHasta);
             string nombreEntidad = new CultureInfo("es-MX", false).TextInfo.ToTitleCase(entidadRecaudadora.Find(cboEntFinan).NombreEntidad.ToLower()).Replace(" ", "");
-            string tipoEstudio = cboTipoEst.HasValue ?  "_" + cboTipoEst.Value.ToString() : string.Empty;
+            string tipoEstudio = cboTipoEst.HasValue ? "_" + cboTipoEst.Value.ToString() : string.Empty;
 
             try
             {
