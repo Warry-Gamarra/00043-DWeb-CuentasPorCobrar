@@ -1,0 +1,102 @@
+﻿@model WebApp.ViewModels.CargarArchivoViewModel
+
+<link href="~/Assets/fileInput/css/fileinput.min.css" rel="stylesheet" />
+<script src="~/Assets/fileInput/js/fileinput.min.js"></script>
+<script src="~/Assets/fileInput/js/locales/es.js"></script>
+<script src="~/Assets/jquery/jquery.form.js"></script>
+
+@using (Html.BeginForm("CargarArchivoPago", "Pagos", FormMethod.Post, new { id = "form-upload", enctype = "multipart/form-data" }))
+{
+    <div class="modal-header">
+        <h5 class="modal-title"><i class="fa fa-paperclip text-primary">&nbsp;</i>Adjuntar archivo de pago @ViewBag.Tipo</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="col-md-12">
+            @Html.HiddenFor(model => model.TipoArchivo)
+
+            <div class="form-group form-row">
+                <label class="control-label col-form-label col-md-3 col-sm-4 col-12">Entidad recaudadora</label>
+                <div class="col-md-9 col-sm-8 col-10">
+                    @Html.DropDownListFor(model => model.EntidadRecaudadora, ViewBag.EntidadesFinancieras as SelectList, "[ SELECCIONAR ]", new { @class = "form-control" })
+                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.EntidadRecaudadora)</p>
+                </div>
+            </div>
+
+            <div class="form-group form-row" id="div-file">
+                <label class="control-label col-form-label col-md-3 col-sm-4 col-12">Seleccione archivo</label>
+                <div class="col-md-9 col-sm-10 col-12">
+                    <div class="file-loading">
+                        <input id="input_file" type="file" name="file" required>
+                    </div>
+                    <div id="error-pago"></div>
+                </div>
+            </div>
+
+            <div class="form-group form-row">
+                <label class="control-label col-form-label col-md-3 col-sm-4 col-12">Observación</label>
+                <div class="col-md-9 col-sm-8 col-10">
+                    @Html.TextAreaFor(m => m.Observacion, new { @class = "form-control", @maxlength = "250", @rows = "3" })
+                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.Observacion)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-info"><i id="icon-submit" class="fa fa-cloud-upload">&nbsp;</i>Cargar archivo</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+    </div>
+}
+
+<script>
+    $("#input_file").fileinput({
+        showCaption: true,
+        dropZoneEnabled: false,
+        language: 'es',
+        allowedFileExtensions: ["txt"],
+        showPreview: false,
+        showUpload: false,
+        elErrorContainer: '#error-pago'
+    }).on('change', function () {
+        $('#div_msg').remove();
+    }).on('filecleared', function () {
+        $('#div_msg').remove();
+    });
+
+    $(".btn-file>i").removeClass("glyphicon glyphicon-folder-open").addClass("fa fa-folder-open");
+    $("button.fileinput-remove>i").removeClass("glyphicon glyphicon-trash").addClass("fa fa-trash");
+
+    $('#form-upload').on('submit', function (event) {
+        event.preventDefault();
+        var form = $(this);
+
+        form.ajaxSubmit({
+            cache: false,
+            url: form.attr('action'),
+            type: "POST",
+            processData: false,
+            dataType: "json",
+            beforeSend: function () {
+                $('#icon-submit').removeClass('fa-cloud-upload').addClass('fa-spin fa-cog');
+            },
+            success: function (result) {
+                debugger;
+                let alert = result.Success ? 'success' : 'danger';
+
+                $('.modal-footer').html(
+                    '<div class="col-md-12" id="div_msg">' +
+                    '<p class="alert alert-' + result.Color + '">' + result.Message + '</p>' +
+                    '<p><a href="@Url.Action("DescargarResultadoPagoTasas", "Pagos")">Descargar resultados</a></p></div>' +
+                    '<button type="submit" class="btn btn-info"><i id="icon-submit" class="fa fa-cloud-upload">&nbsp;</i>Cargar archivo</button>' +
+                    '<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>');
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                debugger;
+                toastr.error(errorThrown);
+                $('#icon-submit').addClass('fa-cloud-upload').removeClass('fa-spin fa-cog');
+            }
+        });
+    });
+</script>

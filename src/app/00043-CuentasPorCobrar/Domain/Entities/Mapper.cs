@@ -388,7 +388,7 @@ namespace Domain.Entities
                 I_TasaUnfvID = tasa.I_TasaUnfvID,
                 C_CodTasa = tasa.C_CodTasa,
                 T_ConceptoPagoDesc = tasa.T_ConceptoPagoDesc,
-                I_MontoTasa = tasa.I_MontoTasa,
+                I_MontoTasa = tasa.M_Monto,
                 T_clasificador = tasa.T_clasificador,
                 B_Habilitado = tasa.B_Habilitado
             };
@@ -558,6 +558,46 @@ namespace Domain.Entities
             };
 
             return result;
+        }
+
+        public static DataTable PagoTasaEntity_To_DataTable(List<PagoTasaEntity> dataPagoTasas)
+        {
+            DataTable dataTable = new DataTable();
+            dataTable.Columns.Add("C_CodDepositante");
+            dataTable.Columns.Add("T_NomDepositante");
+            dataTable.Columns.Add("C_CodTasa");
+            dataTable.Columns.Add("T_TasaDesc");
+            dataTable.Columns.Add("C_CodOperacion");
+            dataTable.Columns.Add("C_Referencia");
+            dataTable.Columns.Add("I_EntidadFinanID");
+            dataTable.Columns.Add("I_CtaDepositoID").AllowDBNull = true;
+            dataTable.Columns.Add("D_FecPago").DataType = typeof(DateTime);
+            dataTable.Columns.Add("I_Cantidad");
+            dataTable.Columns.Add("C_Moneda");
+            dataTable.Columns.Add("I_MontoPago");
+            dataTable.Columns.Add("I_InteresMora");
+            dataTable.Columns.Add("T_LugarPago");
+            dataTable.Columns.Add("T_InformacionAdicional");
+
+            dataPagoTasas.ForEach(x => dataTable.Rows.Add(
+                x.C_CodDepositante,
+                x.T_NomDepositante,
+                x.C_CodTasa,
+                x.T_TasaDesc,
+                x.C_CodOperacion,
+                x.T_Referencia,
+                x.I_EntidadFinanID,
+                x.I_CtaDepositoID,
+                x.D_FecPago,
+                x.I_Cantidad,
+                x.C_Moneda,
+                x.I_MontoPago,
+                x.I_InteresMora,
+                x.T_LugarPago,
+                x.T_InformacionAdicional
+            ));
+
+            return dataTable;
         }
     }
 }

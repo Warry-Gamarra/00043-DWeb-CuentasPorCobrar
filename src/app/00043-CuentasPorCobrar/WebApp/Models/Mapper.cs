@@ -344,5 +344,27 @@ namespace WebApp.Models
 
             return result;
         }
+
+        public static PagoTasaEntity PagoTasaViewModel_To_PagoTasaEntity(PagoTasaViewModel model)
+        {
+            var result = new PagoTasaEntity()
+            {
+                C_CodDepositante = model.codigoDepositante,
+                T_NomDepositante = model.nombreDepositante,
+                C_CodOperacion = model.codigoOperacion,
+                T_Referencia = model.codigoReferencia,
+                I_EntidadFinanID = model.idEntidadFinanciera,
+                I_CtaDepositoID = model.idCtaDeposito,
+                D_FecPago = model.fechaPagoTasa,
+                I_Cantidad = model.cantidad,
+                C_Moneda = model.moneda,
+                I_MontoPago = 0,
+                I_InteresMora = 0,
+                T_LugarPago = model.lugarPago,
+                T_InformacionAdicional = null
+            };
+
+            return result;
+        }
     }
 }

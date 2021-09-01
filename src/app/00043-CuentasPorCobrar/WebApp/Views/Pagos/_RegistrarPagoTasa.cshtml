@@ -15,7 +15,7 @@
         UpdateTargetId = "div_footer",
         OnBegin = "Load",
         OnComplete = "Stop"
-    }, new { @id = "form-obligacion-manual" })
+    }, new { @id = "form-tasas-manual" })
 )
 {
     <div class="modal-header">
@@ -126,6 +126,14 @@
                     <p class="text-danger small">@Html.ValidationMessageFor(m => m.lugarPago)</p>
                 </div>
             </div>
+
+            <div class="form-group form-row">
+                <label for="observacion" class="control-label col-form-label col-md-3 col-sm-4 col-12">Observación</label>
+                <div class="col-md-9 col-sm-10 col-12">
+                    @Html.TextAreaFor(m => m.observacion, new { @class = "form-control", @maxlength = "250", @rows = "3" })
+                    <p class="text-danger small">@Html.ValidationMessageFor(m => m.observacion)</p>
+                </div>
+            </div>
         </div>
     </div>
     <div class="modal-footer" id="div_footer">
@@ -147,7 +155,7 @@
     $('.input-group.date').datepicker({
         todayBtn: 'linked',
         language: 'es',
-        format: 'dd/MM/yyyy',
+        format: 'dd/mm/yyyy',
         autoclose: true,
         weekStart: 0,
         orientation: 'bottom auto',
@@ -170,36 +178,36 @@
         });
     });
 
-    $(document).on('change', '#form-obligacion-manual #idEntidadFinanciera', function (e) {
+    $(document).on('change', '#form-tasas-manual #idEntidadFinanciera', function (e) {
         let idEntidadFinanc = this.value;
 
         ObtenerCtasDeposito(idEntidadFinanc);
     });
 
-    $(document).on('click', '#form-obligacion-manual #btnNuevo', function (e) {
-        //$('#form-obligacion-manual #codigoAlumno').val('');
-        //limpiarComboEspecialidades();
-        //$('#form-obligacion-manual #nombreAlumno').val('');
-        //limpiarComboObligaciones();
+    $(document).on('click', '#form-tasas-manual #btnNuevo', function (e) {
+        $('#form-tasas-manual #codigoDepositante').val('');
+        $('#form-tasas-manual #nombreDepositante').val('');
 
-        //$('#form-obligacion-manual #codigoOperacion').val('');
-        //$('#form-obligacion-manual #codigoReferencia').val('');
+        $('#form-tasas-manual #tasa').val(null).trigger('change');
 
-        //$('#form-obligacion-manual #idEntidadFinanciera').val('');
-        //limpiarCtasDeposito();
+        $('#form-tasas-manual #cantidad').val(1);
+        $('#form-tasas-manual #codigoOperacion').val('');
+        $('#form-tasas-manual #codigoReferencia').val('');
 
-        //$('#form-obligacion-manual #fechaPago').val('');
-        //$('#form-obligacion-manual #horas').val(0);
-        //$('#form-obligacion-manual #minutos').val(0);
+        $('#form-tasas-manual #idEntidadFinanciera').val('');
+        limpiarCtasDeposito();
 
-        //$('#form-obligacion-manual #lugarPago').val('');
+        $('#form-tasas-manual #fechaPago').val('');
+        $('#form-tasas-manual #horas').val(0);
+        $('#form-tasas-manual #minutos').val(0);
+        $('#form-tasas-manual #lugarPago').val('');
 
-        //$('#form-obligacion-manual #div_footer #div_msg').remove();
-        //$('.field-validation-error').html('').addClass('field-validation-valid').removeClass('field-validation-error');
+        $('#form-tasas-manual #div_footer #div_msg').remove();
+        $('.field-validation-error').html('').addClass('field-validation-valid').removeClass('field-validation-error');
     });
 
     function ObtenerCtasDeposito(idEntidadFinanc) {
-        let cmbCtasDeposito = $('#form-obligacion-manual #idCtaDeposito');
+        let cmbCtasDeposito = $('#form-tasas-manual #idCtaDeposito');
 
         if (idEntidadFinanc !== undefined && idEntidadFinanc !== null && !isNaN(idEntidadFinanc) && idEntidadFinanc > 0) {
             $.ajax({
@@ -231,7 +239,7 @@
     }
 
     function limpiarCtasDeposito() {
-        $('#form-obligacion-manual #idCtaDeposito').empty();
+        $('#form-tasas-manual #idCtaDeposito').empty();
     }
 
     function MostrarMensajeSistema(errorMessage, messageType) {

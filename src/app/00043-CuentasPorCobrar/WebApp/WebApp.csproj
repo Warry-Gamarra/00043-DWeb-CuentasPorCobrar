@@ -580,7 +580,7 @@
     <Content Include="Views\Procesos\_ListadoConceptosProceso.cshtml" />
     <Content Include="Views\Procesos\_ListadoTasasProcesoBusqueda.cshtml" />
     <Content Include="Views\Pagos\ImportarPagoObligaciones.cshtml" />
-    <Content Include="Views\Pagos\_SeleccionarArchivo.cshtml" />
+    <Content Include="Views\Pagos\_SeleccionarArchivoTasas.cshtml" />
     <Content Include="Views\Pagos\_ResultadoCargaPago.cshtml" />
     <Compile Include="ViewModels\EstructuraArchivoViewModels.cs" />
     <Content Include="Views\EstructuraArchivo\CamposTabla.cshtml" />
@@ -618,6 +618,8 @@
     <Content Include="Views\EstadosCuenta\ResumenAnualObligacionesPorDependencias.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <Content Include="Views\Pagos\ExportarRecaudacionTemporal.cshtml" />
+    <Content Include="Views\Pagos\_SeleccionarArchivoObligaciones.cshtml" />
+    <Content Include="Views\Pagos\_MsgRegistrarPagoTasa.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
