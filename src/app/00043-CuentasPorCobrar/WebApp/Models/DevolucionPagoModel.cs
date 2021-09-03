@@ -48,10 +48,11 @@ namespace WebApp.Models
             {
                 DevolucionId = model.DevolucionId ?? 0,
                 EntidadRecaudadoraId = model.EntidadRecaudadora,
-                PagoReferenciaId = model.PagoReferenciaId,
+                PagoReferenciaId = model.DatosPago.PagoId,
                 MontoDevolucion = model.MontoDevolucion,
                 FecAprueba = model.FecAprueba,
                 FecDevuelve = model.FecDevuelve,
+                FecPagoRef = model.DatosPago.FecPago,
             };
 
             Response result = _devolucionPago.Save(devolucionPago, currentUserId, (devolucionPago.DevolucionId == 0 ? SaveOption.Insert : SaveOption.Update));

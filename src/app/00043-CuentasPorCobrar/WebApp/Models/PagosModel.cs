@@ -466,7 +466,7 @@ namespace WebApp.Models
             string fechaVencimiento = fecFin.ToString("yyyyMMdd");
             string cadenaCabecera;
 
-            cadenaCabecera = string.Format("{0}{1}{2}{3}{4}{5}", codTipoRegistro, nroRegistrosSoles, totalMontoSoles, nroRegistrosDolares, totalMontoDolares, fechaEnvio);
+            cadenaCabecera = string.Format("{0}{1}{2}{3}{4}{5}", codTipoRegistro, nroRegistrosSoles, totalMontoSoles, nroRegistrosDolares, totalMontoDolares, fechaVencimiento);
             writer.WriteLine(cadenaCabecera);
 
             #endregion

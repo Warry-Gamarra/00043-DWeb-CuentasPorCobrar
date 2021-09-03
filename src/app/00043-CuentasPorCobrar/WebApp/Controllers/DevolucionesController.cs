@@ -67,18 +67,22 @@ namespace WebApp.Controllers
         [HttpGet]
         public ActionResult BuscarPagoDevolucion(int entidadId, string codreferencia)
         {
-            var model = _pagosModel.BuscarPagoRegistrado(entidadId, codreferencia);
+            var model = new RegistrarDevolucionPagoViewModel();
 
-            if (model.Count == 0)
+            var datosPago = _pagosModel.BuscarPagoRegistrado(entidadId, codreferencia);
+
+            if (datosPago.Count == 0)
             {
                 ViewBag.Mensaje = "No se encontró ningún pago para el codigo ingresado";
                 ViewBag.Color = "danger";
             }
             else
             {
-                if (model.Count > 1)
+                model.DatosPago = datosPago[0];
+
+                if (datosPago.Count > 1)
                 {
-                    return PartialView("_ResultadoBusquedaPago", model[0]);
+                    return PartialView("_ResultadoBusquedaPago", model);
                 }
                 ViewBag.Mensaje = "Se encontró más de un resultado para la búsqueda";
                 ViewBag.Color = "secondary";
@@ -96,9 +100,12 @@ namespace WebApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Save(RegistrarDevolucionPagoViewModel model)
+        public ActionResult Save(RegistrarDevolucionPagoViewModel model, string txtFecAprueba, string txtFecDevuelve)
         {
             Response result = new Response();
+
+            if (!string.IsNullOrEmpty(txtFecAprueba)) model.FecAprueba = DateTime.Parse(txtFecAprueba);
+            if (!string.IsNullOrEmpty(txtFecDevuelve)) model.FecDevuelve = DateTime.Parse(txtFecDevuelve);
 
             if (ModelState.IsValid)
             {

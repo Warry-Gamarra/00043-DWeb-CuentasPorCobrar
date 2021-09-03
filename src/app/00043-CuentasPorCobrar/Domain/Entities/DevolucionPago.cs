@@ -46,6 +46,8 @@ namespace Domain.Entities
             this.FecDevuelve = table.D_FecDevPago;
             this.FecPagoRef = table.D_FecProc.Value;
             this.Comentario = table.T_Comentario;
+            this.EntidadRecaudadoraDesc = table.T_EntidadDesc;
+            this.EntidadRecaudadoraId = table.I_EntidadFinanID;
         }
 
 

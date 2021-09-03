@@ -403,7 +403,7 @@ namespace WebApp.Controllers
         {
             ViewBag.Title = "Registrar Nro. SIAF";
 
-            var model = pagosModel.ObtenerDatosPago(id);
+            var model = pagosModel.ObtenerDatosPago(pagosId[0]);
 
             return PartialView("_RegistrarSiaf", model);
         }

@@ -3992,27 +3992,25 @@ GO
 CREATE VIEW [dbo].[VW_DevolucionPago]
 AS
 (
-	SELECT DP.*, PP.I_MontoPagado, PP.N_NroSIAF, PB.I_EntidadFinanID, PB.C_CodOperacion, PB.C_Referencia, PB.D_FecPago
-		   , EF.T_EntidadDesc, (CL.C_TipoTransCod + '.' + CL.C_GenericaCod + '.' + CL.C_SubGeneCod + '.' + CL.C_EspecificaCod) AS C_CodClasificador
-		   , CP.T_ConceptoPagoDesc 
-	  FROM TR_DevolucionPago DP
-		   INNER JOIN TRI_PagoProcesadoUnfv PP ON DP.I_PagoProcesID = PP.I_PagoProcesID 
-		   INNER JOIN TR_PagoBanco PB ON PP.I_PagoBancoID = PB.I_PagoBancoID
-		   INNER JOIN TC_EntidadFinanciera EF ON PB.I_EntidadFinanID = EF.I_EntidadFinanID
-		   INNER JOIN TR_ObligacionAluCab OC ON OC.I_ObligacionAluID = PP.I_ObligacionAluID
-		   INNER JOIN TR_ObligacionAluDet OD ON OD.I_ObligacionAluID = OC.I_ObligacionAluID 
-		   INNER JOIN TI_ConceptoPago CP ON CP.I_ConcPagID = OD.I_ConcPagID
-		   LEFT JOIN VW_Clasificadores cl ON cl.C_ClasificConceptoCod = CP.T_Clasificador
-	UNION
-	SELECT DP.*, PP.I_MontoPagado, PP.N_NroSIAF, PB.I_EntidadFinanID, PB.C_CodOperacion, PB.C_Referencia, PB.D_FecPago
-		   , EF.T_EntidadDesc, (CL.C_TipoTransCod + '.' + CL.C_GenericaCod + '.' + CL.C_SubGeneCod + '.' + CL.C_EspecificaCod) AS C_CodClasificador
-		   , TU.T_ConceptoPagoDesc
-	  FROM TR_DevolucionPago DP
-		   INNER JOIN TRI_PagoProcesadoUnfv PP ON DP.I_PagoProcesID = PP.I_PagoProcesID 
-		   INNER JOIN TR_PagoBanco PB ON PP.I_PagoBancoID = PB.I_PagoBancoID
-		   INNER JOIN TC_EntidadFinanciera EF ON PB.I_EntidadFinanID = EF.I_EntidadFinanID
-		   INNER JOIN TI_TasaUnfv TU ON TU.I_TasaUnfvID = PP.I_TasaUnfvID
-		   LEFT JOIN VW_Clasificadores cl ON cl.C_ClasificConceptoCod = TU.T_Clasificador
+	 SELECT DP.*, PP.I_MontoPagado, PP.N_NroSIAF, PB.I_EntidadFinanID, PB.C_CodOperacion, PB.C_Referencia, PB.D_FecPago  
+		 , EF.T_EntidadDesc, '' AS C_CodClasificador  
+		 , PR.T_ProcesoDesc AS T_ConceptoPagoDesc   
+	   FROM TR_DevolucionPago DP  
+		 INNER JOIN TRI_PagoProcesadoUnfv PP ON DP.I_PagoProcesID = PP.I_PagoProcesID   
+		 INNER JOIN TR_PagoBanco PB ON PP.I_PagoBancoID = PB.I_PagoBancoID  
+		 INNER JOIN TC_EntidadFinanciera EF ON PB.I_EntidadFinanID = EF.I_EntidadFinanID  
+		 INNER JOIN TR_ObligacionAluCab OC ON OC.I_ObligacionAluID = PP.I_ObligacionAluID
+		 INNER JOIN TC_Proceso PR ON PR.I_ProcesoID = OC.I_ProcesoID
+	 UNION  
+	 SELECT DP.*, PP.I_MontoPagado, PP.N_NroSIAF, PB.I_EntidadFinanID, PB.C_CodOperacion, PB.C_Referencia, PB.D_FecPago  
+		 , EF.T_EntidadDesc, (CL.C_TipoTransCod + '.' + CL.C_GenericaCod + '.' + CL.C_SubGeneCod + '.' + CL.C_EspecificaCod) AS C_CodClasificador  
+		 , TU.T_ConceptoPagoDesc  
+	   FROM TR_DevolucionPago DP  
+		 INNER JOIN TRI_PagoProcesadoUnfv PP ON DP.I_PagoProcesID = PP.I_PagoProcesID   
+		 INNER JOIN TR_PagoBanco PB ON PP.I_PagoBancoID = PB.I_PagoBancoID  
+		 INNER JOIN TC_EntidadFinanciera EF ON PB.I_EntidadFinanID = EF.I_EntidadFinanID  
+		 INNER JOIN TI_TasaUnfv TU ON TU.I_TasaUnfvID = PP.I_TasaUnfvID  
+		 LEFT JOIN VW_Clasificadores cl ON cl.C_ClasificConceptoCod = TU.T_Clasificador  
 )
 GO
 
