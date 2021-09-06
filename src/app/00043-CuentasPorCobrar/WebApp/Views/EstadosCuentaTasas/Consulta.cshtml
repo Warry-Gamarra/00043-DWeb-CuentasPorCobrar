@@ -43,6 +43,11 @@
                                 </div>
 
                                 <div class="form-group col-xl-2 col-lg-6 col-md-5 col-sm-12 col-12">
+                                    <label for="idCtaDeposito">Cta. Deposito</label>
+                                    @Html.DropDownListFor(model => model.idCtaDeposito, ViewBag.CtaDeposito as SelectList, "TODOS", new { @class = "form-control form-control-sm text-uppercase" })
+                                </div>
+
+                                <div class="form-group col-xl-2 col-lg-6 col-md-5 col-sm-12 col-12">
                                     <label for="codOperacion">Cod. de operación</label>
                                     @Html.TextBoxFor(model => model.codOperacion, new { @class = "form-control form-control-sm" })
                                 </div>
@@ -98,8 +103,8 @@
                             columns.Add(c => c.D_FecPago).Titled("Fec.Pago").Css("text-center");
                             columns.Add(c => c.M_Monto).Titled("Monto Tasa").Filterable(true).Css("text-center");
                             columns.Add(c => c.T_EntidadDesc).Titled("Banco");
+                            columns.Add(c => c.C_NumeroCuenta).Titled("Cta.Deposito").Css("text-center");
                             columns.Add(c => c.I_MontoTotalPagado).Titled("Monto Pagado").Filterable(true).Css("text-center");
-                            columns.Add(c => c.D_FecCre).Titled("Fec.Registro").Css("text-center");
                         }).WithPaging(12).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
                 </div>
             </div>
@@ -129,8 +134,46 @@
         });
 
         $(document).on("click", "#btnExcelDownload", function (e) {
-            document.forms.frmConsultaTasas.action = "@Url.Action("DescargaExcel", "EstadosCuentaTasas")";
+            document.forms.frmConsultaTasas.action = "@Url.Action("DescargaExcelConsultaTasas", "EstadosCuentaTasas")";
             document.forms.frmConsultaTasas.submit();
         });
+
+        $(document).on('change', '#frmConsultaTasas #entidadFinanciera', function (e) {
+            let idEntidadFinanc = this.value;
+
+            ObtenerCtasDeposito(idEntidadFinanc);
+        });
+
+        function ObtenerCtasDeposito(idEntidadFinanc) {
+            let cmbCtasDeposito = $('#frmConsultaTasas #idCtaDeposito');
+
+            if (idEntidadFinanc !== undefined && idEntidadFinanc !== null && !isNaN(idEntidadFinanc) && idEntidadFinanc > 0) {
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetCtasDepositoPorBco", "Service", new { httproute = "ActionApi" })' + '/' + idEntidadFinanc,
+                    dataType: 'json',
+                    beforeSend: function () {
+                        cmbCtasDeposito.empty();
+                    },
+                    success: function (data) {
+                        if (data) {
+                            let html = '<option>TODOS</option>';
+
+                            $.each(data, function (i, item) {
+                                html += '<option value="' + item.Value + '">' + item.TextDisplay + '</option>';
+                            });
+
+                            cmbCtasDeposito.html(html);
+                        }
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        var jsonException = JSON.parse(xhr.responseText);
+                        MostrarMensajeSistema(jsonException.Message, 'error');
+                    }
+                });
+            } else {
+                cmbCtasDeposito.empty();
+            }
+        }
     </script>
 }

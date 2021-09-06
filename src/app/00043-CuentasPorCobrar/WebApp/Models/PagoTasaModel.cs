@@ -11,6 +11,10 @@ namespace WebApp.Models
 
         public string T_EntidadDesc { get; set; }
 
+        public int I_CtaDepositoID { get; set; }
+
+        public string C_NumeroCuenta { get; set; }
+
         public string C_CodTasa { get; set; }
 
         public string T_ConceptoPagoDesc { get; set; }

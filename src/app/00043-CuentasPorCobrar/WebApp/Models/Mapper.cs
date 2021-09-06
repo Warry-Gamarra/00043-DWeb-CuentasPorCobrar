@@ -373,6 +373,8 @@ namespace WebApp.Models
             {
                 I_EntidadFinanID = dto.I_EntidadFinanID,
                 T_EntidadDesc = dto.T_EntidadDesc,
+                I_CtaDepositoID = dto.I_CtaDepositoID,
+                C_NumeroCuenta = dto.C_NumeroCuenta,
                 C_CodTasa = dto.C_CodTasa,
                 T_ConceptoPagoDesc = dto.T_ConceptoPagoDesc,
                 T_Clasificador = dto.T_Clasificador,

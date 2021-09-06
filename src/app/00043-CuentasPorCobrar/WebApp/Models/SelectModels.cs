@@ -16,6 +16,7 @@ namespace WebApp.Models
         private readonly ConceptoPagoService _conceptoPagoService;
         private readonly EntidadRecaudadora _entidadFinanciera;
         private readonly IClasificadorEquivalencia _clasificadorEquivalencia;
+        private ICuentaDeposito _cuentaDeposito;
 
         public SelectModel()
         {
@@ -24,6 +25,7 @@ namespace WebApp.Models
             _conceptoPagoService = new ConceptoPagoService();
             _entidadFinanciera = new EntidadRecaudadora();
             _clasificadorEquivalencia = new ClasificadorEquivalencia();
+            _cuentaDeposito = new CuentaDeposito();
         }
 
         public List<SelectViewModel> GetRoles()
@@ -152,5 +154,16 @@ namespace WebApp.Models
             return result.OrderByDescending(x => x.Value).ToList();
         }
 
+        public List<SelectViewModel> GetCtasDeposito(int idEntidadFinanciera)
+        {
+            List<SelectViewModel> result = new List<SelectViewModel>();
+
+            foreach (var item in _cuentaDeposito.Find().Where(x => x.I_EntidadFinanId == idEntidadFinanciera))
+            {
+                result.Add(new SelectViewModel() { Value = item.I_CtaDepID.ToString(), TextDisplay = item.C_NumeroCuenta });
+            }
+
+            return result;
+        }
     }
 }

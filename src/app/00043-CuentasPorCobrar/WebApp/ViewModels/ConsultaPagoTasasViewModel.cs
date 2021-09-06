@@ -14,6 +14,8 @@ namespace WebApp.ViewModels
 
         public int? entidadFinanciera { get; set; }
 
+        public int? idCtaDeposito {get; set; }
+
         public string codOperacion { get; set; }
 
         public string codDepositante { get; set; }

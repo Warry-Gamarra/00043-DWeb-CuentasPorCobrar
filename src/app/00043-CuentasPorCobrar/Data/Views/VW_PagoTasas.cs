@@ -16,6 +16,10 @@ namespace Data.Views
 
         public string T_EntidadDesc { get; set; }
 
+        public int I_CtaDepositoID { get; set; }
+
+        public string C_NumeroCuenta { get; set; }
+
         public string C_CodTasa { get; set; }
 
         public string T_ConceptoPagoDesc { get; set; }
@@ -42,7 +46,7 @@ namespace Data.Views
 
         public DateTime D_FecCre { get; set; }
 
-        public static IEnumerable<VW_PagoTasas> GetAll(int? idEntidadFinanciera, string codOperacion, DateTime? fechaInicio, DateTime? fechaFinal)
+        public static IEnumerable<VW_PagoTasas> GetAll(int? idEntidadFinanciera, int? idCtaDeposito, string codOperacion, DateTime? fechaInicio, DateTime? fechaFinal)
         {
             string s_command, filters;
             IEnumerable<VW_PagoTasas> result;
@@ -61,6 +65,13 @@ namespace Data.Views
                     filters = "WHERE t.I_EntidadFinanID = @I_EntidadFinanID ";
 
                     parameters.Add(name: "I_EntidadFinanID", dbType: DbType.Int32, value: idEntidadFinanciera);
+                }
+
+                if (idCtaDeposito.HasValue)
+                {
+                    filters = filters + (filters.Length == 0 ? "WHERE " : "AND ") + "t.I_CtaDepositoID = @I_CtaDepositoID ";
+
+                    parameters.Add(name: "I_CtaDepositoID", dbType: DbType.String, value: idCtaDeposito);
                 }
 
                 if (!String.IsNullOrWhiteSpace(codOperacion))

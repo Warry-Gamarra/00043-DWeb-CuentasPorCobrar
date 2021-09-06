@@ -233,7 +233,7 @@ namespace WebApp.Controllers
             return View("Consulta", model);
         }
 
-        [Route("consulta/estudiantes/download")]
+        [Route("consulta/estudiantes/descarga")]
         public ActionResult DescargaConsulta(ConsultaObligacionEstudianteViewModel model)
         {
             if (!model.anio.HasValue)

@@ -608,6 +608,8 @@ namespace Domain.Entities
             {
                 I_EntidadFinanID = vw.I_EntidadFinanID,
                 T_EntidadDesc = vw.T_EntidadDesc,
+                I_CtaDepositoID = vw.I_CtaDepositoID,
+                C_NumeroCuenta = vw.C_NumeroCuenta,
                 C_CodTasa = vw.C_CodTasa,
                 T_ConceptoPagoDesc = vw.T_ConceptoPagoDesc,
                 T_Clasificador = vw.T_Clasificador,
