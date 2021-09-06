@@ -943,6 +943,7 @@ BEGIN
 			@I_MontoOblig		decimal(15,2),
 			@I_MontoPago		decimal(15,2),
 			@I_InteresMora		decimal(15,2),
+			@I_MontoPagoTotal	decimal(15,2),
 			@T_LugarPago		varchar(250),
 			@I_EntidadFinanID	int,
 			@I_CtaDepositoID	int,
@@ -1019,11 +1020,13 @@ BEGIN
 		IF (@B_ExisteError = 0) BEGIN
 			BEGIN TRANSACTION
 			BEGIN TRY
+				SET @I_MontoPagoTotal = @I_MontoPago + @I_InteresMora
+
 				INSERT dbo.TR_PagoBanco(C_CodOperacion, C_CodDepositante, T_NomDepositante, C_Referencia, D_FecPago, I_Cantidad, 
 					C_Moneda, I_MontoPago, T_LugarPago, B_Anulado, I_UsuarioCre, D_FecCre, I_EntidadFinanID, T_Observacion,
 					T_InformacionAdicional)
 				VALUES(@C_CodOperacion, @C_CodDepositante, @T_NomDepositante, @C_Referencia, @D_FecPago, @I_Cantidad, 
-					@C_Moneda, (@I_MontoPago + @I_InteresMora), @T_LugarPago, 0, @UserID, @D_FecRegistro, @I_EntidadFinanID, @Observacion,
+					@C_Moneda, @I_MontoPagoTotal, @T_LugarPago, 0, @UserID, @D_FecRegistro, @I_EntidadFinanID, @Observacion,
 					@T_InformacionAdicional)
 
 				SET @I_PagoBancoID = SCOPE_IDENTITY()
@@ -1047,12 +1050,10 @@ BEGIN
 
 				SET @B_PagoDemas = CASE WHEN @I_PagoDemas > 0 THEN 1 ELSE 0 END
 
-				--SET @I_MontoPago = @I_MontoPago - @I_PagoDemas
-
 				INSERT dbo.TRI_PagoProcesadoUnfv(I_PagoBancoID, I_ObligacionAluID, I_MontoPagado, I_SaldoAPagar, I_PagoDemas,
-					B_PagoDemas, D_FecCre, I_UsuarioCre, B_Anulado, I_CtaDepositoID)
+					B_PagoDemas, D_FecCre, I_UsuarioCre, B_Anulado, I_CtaDepositoID, I_InteresMoratorio)
 				VALUES(@I_PagoBancoID, @I_ObligacionAluID, @I_MontoPago, @I_SaldoAPagar, @I_PagoDemas, 
-					@B_PagoDemas, @D_FecRegistro, @UserID, 0, @I_CtaDepositoID)
+					@B_PagoDemas, @D_FecRegistro, @UserID, 0, @I_CtaDepositoID, @I_InteresMora)
 
 
 				IF (@B_Pagado = 1)
@@ -1140,6 +1141,7 @@ GO
 CREATE TYPE [dbo].[type_dataPagoTasa] AS TABLE(
 	C_CodDepositante	varchar(20),
 	T_NomDepositante	varchar(200),
+	C_CodServicio		varchar(20),
 	C_CodTasa			varchar(5),
 	T_TasaDesc			varchar(200),
 	C_CodOperacion		varchar(50),
@@ -1196,12 +1198,18 @@ BEGIN
 		T_ErrorMessage		varchar(250)
 	);
 
-	INSERT @Tmp_PagoTasas(I_TasaUnfvID, I_MontoTasa, C_CodDepositante, T_NomDepositante, C_CodTasa, T_TasaDesc, C_CodOperacion, C_Referencia, I_EntidadFinanID, I_CtaDepositoID, D_FecPago, 
+	INSERT @Tmp_PagoTasas(I_TasaUnfvID, I_MontoTasa, C_CodDepositante, T_NomDepositante, C_CodTasa, 
+		T_TasaDesc, C_CodOperacion, C_Referencia, I_EntidadFinanID, I_CtaDepositoID, D_FecPago, 
 		I_Cantidad, C_Moneda, I_MontoPago, I_InteresMora, T_LugarPago, T_InformacionAdicional)
-	
-	SELECT t.I_TasaUnfvID, t.M_Monto, p.C_CodDepositante, p.T_NomDepositante, p.C_CodTasa, 
-		CASE WHEN t.I_TasaUnfvID IS NULL THEN p.T_TasaDesc ELSE t.T_ConceptoPagoDesc END, 
-		p.C_CodOperacion, p.C_Referencia, p.I_EntidadFinanID, p.I_CtaDepositoID, p.D_FecPago, p.I_Cantidad, p.C_Moneda, p.I_MontoPago, p.I_InteresMora, p.T_LugarPago, p.T_InformacionAdicional FROM @Tbl_Pagos p
+	SELECT t.I_TasaUnfvID, t.M_Monto, p.C_CodDepositante, p.T_NomDepositante, p.C_CodTasa,
+		CASE WHEN t.I_TasaUnfvID IS NULL THEN p.T_TasaDesc ELSE t.T_ConceptoPagoDesc END,
+		p.C_CodOperacion, p.C_Referencia, p.I_EntidadFinanID,
+		CASE WHEN p.I_CtaDepositoID IS NULL 
+			THEN 
+				(SELECT tc.I_CtaDepositoID FROM VW_PagoTasas_X_Cuenta tc WHERE tc.I_TasaUnfvID = t.I_TasaUnfvID AND tc.C_CodServicio = p.C_CodServicio AND tc.I_EntidadFinanID = p.I_EntidadFinanID)
+			ELSE p.I_CtaDepositoID END,
+		p.D_FecPago, p.I_Cantidad, p.C_Moneda, p.I_MontoPago, p.I_InteresMora, p.T_LugarPago, p.T_InformacionAdicional
+	FROM @Tbl_Pagos p
 	LEFT JOIN dbo.TI_TasaUnfv t ON t.C_CodTasa = p.C_CodTasa and t.B_Habilitado = 1 and t.B_Eliminado = 0
 
 	DECLARE @I_FilaActual		int = 1,
@@ -1226,6 +1234,7 @@ BEGIN
 			@C_Moneda			varchar(3),
 			@I_MontoPago		decimal(15,2),
 			@I_InteresMora		decimal(15,2),
+			@I_MontoPagoTotal	decimal(15,2),
 			@T_LugarPago		varchar(250),	
 			@T_InformacionAdicional varchar(250),
 			@B_ExisteError		bit,
@@ -1259,6 +1268,11 @@ BEGIN
 			UPDATE @Tmp_PagoTasas SET B_Success = 0, T_ErrorMessage = 'No existe el código de tasa.' WHERE id = @I_FilaActual
 		END
 
+		IF (@B_ExisteError = 0 AND @I_CtaDepositoID IS NULL) BEGIN
+			SET @B_ExisteError = 1
+			UPDATE @Tmp_PagoTasas SET B_Success = 0, T_ErrorMessage = 'Esta tasa no tiene asignado una cuenta.' WHERE id = @I_FilaActual
+		END
+
 		IF  (@B_ExisteError = 0) BEGIN
 			EXEC USP_S_ValidarCodOperacionTasa @C_CodOperacion, @I_EntidadFinanID, @D_FecPago, @B_CodOpeCorrecto OUTPUT
 
@@ -1272,11 +1286,13 @@ BEGIN
 		IF (@B_ExisteError = 0) BEGIN
 			BEGIN TRANSACTION
 			BEGIN TRY
+				SET @I_MontoPagoTotal = @I_MontoPago + @I_InteresMora
+
 				INSERT dbo.TR_PagoBanco(C_CodOperacion, C_CodDepositante, T_NomDepositante, C_Referencia, D_FecPago, I_Cantidad, 
 					C_Moneda, I_MontoPago, T_LugarPago, B_Anulado, I_UsuarioCre, D_FecCre, I_EntidadFinanID, T_Observacion,
 					T_InformacionAdicional)
 				VALUES(@C_CodOperacion, @C_CodDepositante, @T_NomDepositante, @C_Referencia, @D_FecPago, @I_Cantidad, 
-					@C_Moneda, (@I_MontoPago + @I_InteresMora), @T_LugarPago, 0, @UserID, @D_FecRegistro, @I_EntidadFinanID, @Observacion,
+					@C_Moneda, @I_MontoPagoTotal, @T_LugarPago, 0, @UserID, @D_FecRegistro, @I_EntidadFinanID, @Observacion,
 					@T_InformacionAdicional)
 
 				SET @I_PagoBancoID = SCOPE_IDENTITY()
@@ -1293,12 +1309,10 @@ BEGIN
 
 				SET @B_PagoDemas = CASE WHEN @I_PagoDemas > 0 THEN 1 ELSE 0 END
 
-				--SET @I_MontoPago = @I_MontoPago - @I_PagoDemas
-
 				INSERT dbo.TRI_PagoProcesadoUnfv(I_PagoBancoID, I_TasaUnfvID, I_MontoPagado, I_SaldoAPagar, I_PagoDemas,
-					B_PagoDemas, D_FecCre, I_UsuarioCre, B_Anulado, I_CtaDepositoID)
+					B_PagoDemas, D_FecCre, I_UsuarioCre, B_Anulado, I_CtaDepositoID, I_InteresMoratorio)
 				VALUES(@I_PagoBancoID, @I_TasaUnfvID, @I_MontoPago, @I_SaldoAPagar, @I_PagoDemas, 
-					@B_PagoDemas, @D_FecRegistro, @UserID, 0, @I_CtaDepositoID)
+					@B_PagoDemas, @D_FecRegistro, @UserID, 0, @I_CtaDepositoID, @I_InteresMora)
 
 				UPDATE @Tmp_PagoTasas SET B_Success = 1, T_ErrorMessage = 'Registro correcto.' WHERE id = @I_FilaActual
 
@@ -1597,7 +1611,7 @@ BEGIN
 /*
 EXEC USP_S_ResumenAnualPagoDeObligaciones_X_Clasificadores 
 	@I_Anio = 2021, 
-	@B_EsPregrado = 1, 
+	@B_EsPregrado = 0, 
 	@I_EntidadFinanID = 1,
 	@I_CtaDepositoID = NULL
 GO
@@ -1873,7 +1887,7 @@ CREATE PROCEDURE [dbo].[USP_S_ListarCuotasPagos_X_Periodo]
 @I_PeriodoID INT
 AS
 /*
-exec USP_S_ListarCuotasPagos_X_Periodo '2003014074',2021, 15
+exec USP_S_ListarCuotasPagos_X_Periodo '2021001307',2021, 19
 go
 */
 BEGIN
@@ -1905,7 +1919,7 @@ CREATE PROCEDURE [dbo].[USP_S_ListarIngresos_X_CuotasPagos]
 @I_PeriodoID INT
 AS
 /*
-exec USP_S_ListarIngresos_X_CuotasPagos '2003014074',2021, 15
+exec USP_S_ListarIngresos_X_CuotasPagos '2021001307',2021, 19
 go
 */
 BEGIN
@@ -1918,7 +1932,29 @@ BEGIN
 	WHERE vw.C_CodAlu = @C_CodAlu AND vw.I_Anio = @I_Anio AND vw.I_Periodo = @I_PeriodoID AND vw.I_Prioridad = 1
 END
 GO
+/************************************** PROCEDIMIENTOS MATRICULA 2021 **********************************/
 
+
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_PagoTasas_X_Cuenta')
+	DROP VIEW [dbo].[VW_PagoTasas_X_Cuenta]
+GO
+
+CREATE VIEW [dbo].[VW_PagoTasas_X_Cuenta]
+AS
+SELECT tu.I_TasaUnfvID, ef.I_EntidadFinanID, ef.T_EntidadDesc, cd.I_CtaDepositoID, tu.C_CodTasa, 
+	tu.T_ConceptoPagoDesc, tu.M_Monto, cd.C_NumeroCuenta, s.C_CodServicio, s.T_DescServ 
+FROM TI_TasaUnfv_CtaDepoServicio t
+INNER JOIN TI_CtaDepo_Servicio td  on td.I_CtaDepoServicioID = t.I_CtaDepoServicioID
+INNER JOIN TI_TasaUnfv tu on tu.I_TasaUnfvID = t.I_TasaUnfvID
+INNER JOIN TC_CuentaDeposito cd on cd.I_CtaDepositoID = td.I_CtaDepositoID
+INNER JOIN TC_EntidadFinanciera ef on ef.I_EntidadFinanID = cd.I_EntidadFinanID
+INNER JOIN TC_Servicios s on s.I_ServicioID = td.I_ServicioID
+WHERE t.B_Habilitado = 1 AND t.B_Eliminado = 0 AND
+	td.B_Habilitado = 1 AND td.B_Eliminado = 0 AND
+	tu.B_Habilitado = 1 AND tu.B_Eliminado = 0 AND
+	s.B_Habilitado = 1 AND s.B_Eliminado = 0
+GO
 
 
 
@@ -1928,13 +1964,16 @@ GO
 
 CREATE VIEW [dbo].[VW_PagoTasas]
 AS
-	SELECT pag.I_EntidadFinanID, ef.T_EntidadDesc, t.C_CodTasa, t.T_ConceptoPagoDesc, t.M_Monto, 
-		pag.C_CodOperacion, pag.C_CodDepositante, pag.T_NomDepositante, pag.D_FecPago, pr.I_MontoPagado, pag.D_FecCre
+	SELECT pag.I_EntidadFinanID, ef.T_EntidadDesc, t.C_CodTasa, t.T_ConceptoPagoDesc, tu.T_Clasificador, cl.C_CodClasificador, cl.T_ClasificadorDesc, t.M_Monto, 
+		pag.C_CodOperacion, pag.C_CodDepositante, pag.T_NomDepositante, pag.D_FecPago, pr.I_MontoPagado, pr.I_InteresMoratorio,
+		pag.D_FecCre
 	FROM dbo.TR_PagoBanco pag
 	INNER JOIN dbo.TRI_PagoProcesadoUnfv pr ON pr.I_PagoBancoID = pag.I_PagoBancoID
 	INNER JOIN dbo.TI_TasaUnfv t ON t.I_TasaUnfvID = pr.I_TasaUnfvID
 	INNER JOIN dbo.TC_EntidadFinanciera ef ON ef.I_EntidadFinanID = pag.I_EntidadFinanID
-	WHERE pag.B_Anulado = 0 AND pr.B_Anulado = 0 AND t.B_Eliminado = 0 AND ef.B_Eliminado = 0
+	INNER JOIN dbo.TI_TasaUnfv tu ON tu.I_TasaUnfvID = pr.I_TasaUnfvID
+	LEFT JOIN dbo.VW_Clasificadores cl ON cl.C_ClasificConceptoCod = tu.T_Clasificador
+	WHERE pag.B_Anulado = 0 AND pr.B_Anulado = 0 AND t.B_Eliminado = 0 AND ef.B_Eliminado = 0 AND tu.B_Eliminado = 0
 GO
 
 
@@ -2025,4 +2064,3 @@ EXEC USP_S_ListarPagoTasas
 */
 END
 GO
-/************************************************************************/

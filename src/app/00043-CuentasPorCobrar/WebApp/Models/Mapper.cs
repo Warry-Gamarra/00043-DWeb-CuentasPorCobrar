@@ -366,5 +366,29 @@ namespace WebApp.Models
 
             return result;
         }
+
+        public static PagoTasaModel PagoTasaDTO_To_PagoTasaModel(PagoTasaDTO dto)
+        {
+            var model = new PagoTasaModel()
+            {
+                I_EntidadFinanID = dto.I_EntidadFinanID,
+                T_EntidadDesc = dto.T_EntidadDesc,
+                C_CodTasa = dto.C_CodTasa,
+                T_ConceptoPagoDesc = dto.T_ConceptoPagoDesc,
+                T_Clasificador = dto.T_Clasificador,
+                C_CodClasificador = dto.C_CodClasificador,
+                T_ClasificadorDesc = dto.T_ClasificadorDesc,
+                M_Monto = dto.M_Monto,
+                C_CodOperacion = dto.C_CodOperacion,
+                C_CodDepositante = dto.C_CodDepositante,
+                T_NomDepositante = dto.T_NomDepositante,
+                D_FecPago = dto.D_FecPago,
+                I_MontoPagado = dto.I_MontoPagado,
+                I_InteresMoratorio = dto.I_InteresMoratorio,
+                D_FecCre = dto.D_FecCre
+            };
+
+            return model;
+        }
     }
 }

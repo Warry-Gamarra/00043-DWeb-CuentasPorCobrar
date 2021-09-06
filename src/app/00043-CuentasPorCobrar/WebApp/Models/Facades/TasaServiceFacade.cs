@@ -34,5 +34,14 @@ namespace WebApp.Models.Facades
 
             return result;
         }
+
+        public IEnumerable<PagoTasaModel> listarPagoTasas(int? idEntidadFinanciera, string codOperacion, DateTime? fechaInicio, DateTime? fechaFinal)
+        {
+            var lista = tasaService.Listar_Pago_Tasas(idEntidadFinanciera, codOperacion, fechaInicio, fechaFinal);
+
+            var result = lista.Select(x => Mapper.PagoTasaDTO_To_PagoTasaModel(x));
+
+            return result;
+        }
     }
 }

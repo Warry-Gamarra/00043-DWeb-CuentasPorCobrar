@@ -10,6 +10,7 @@ namespace Domain.Entities
     {
         public string C_CodDepositante { get; set; }
         public string T_NomDepositante { get; set; }
+        public string C_CodServicio { get; set; }
         public string C_CodTasa { get; set; }
         public string T_TasaDesc { get; set; }
         public string C_CodOperacion { get; set; }

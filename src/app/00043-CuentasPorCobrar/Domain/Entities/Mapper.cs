@@ -565,6 +565,7 @@ namespace Domain.Entities
             DataTable dataTable = new DataTable();
             dataTable.Columns.Add("C_CodDepositante");
             dataTable.Columns.Add("T_NomDepositante");
+            dataTable.Columns.Add("C_CodServicio");
             dataTable.Columns.Add("C_CodTasa");
             dataTable.Columns.Add("T_TasaDesc");
             dataTable.Columns.Add("C_CodOperacion");
@@ -582,6 +583,7 @@ namespace Domain.Entities
             dataPagoTasas.ForEach(x => dataTable.Rows.Add(
                 x.C_CodDepositante,
                 x.T_NomDepositante,
+                x.C_CodServicio,
                 x.C_CodTasa,
                 x.T_TasaDesc,
                 x.C_CodOperacion,
@@ -598,6 +600,30 @@ namespace Domain.Entities
             ));
 
             return dataTable;
+        }
+
+        public static PagoTasaDTO VW_PagoTasas_To_PagoTasaDTO(VW_PagoTasas vw)
+        {
+            var dto = new PagoTasaDTO()
+            {
+                I_EntidadFinanID = vw.I_EntidadFinanID,
+                T_EntidadDesc = vw.T_EntidadDesc,
+                C_CodTasa = vw.C_CodTasa,
+                T_ConceptoPagoDesc = vw.T_ConceptoPagoDesc,
+                T_Clasificador = vw.T_Clasificador,
+                C_CodClasificador = vw.C_CodClasificador,
+                T_ClasificadorDesc = vw.T_ClasificadorDesc,
+                M_Monto = vw.M_Monto,
+                C_CodOperacion = vw.C_CodOperacion,
+                C_CodDepositante = vw.C_CodDepositante,
+                T_NomDepositante = vw.T_NomDepositante,
+                D_FecPago = vw.D_FecPago,
+                I_MontoPagado = vw.I_MontoPagado,
+                I_InteresMoratorio = vw.I_InteresMoratorio,
+                D_FecCre = vw.D_FecCre
+            };
+
+            return dto;
         }
     }
 }

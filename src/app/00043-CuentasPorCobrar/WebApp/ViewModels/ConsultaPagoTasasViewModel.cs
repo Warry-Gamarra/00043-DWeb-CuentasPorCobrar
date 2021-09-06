@@ -4,30 +4,21 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Web;
+using WebApp.Models;
 
 namespace WebApp.ViewModels
 {
-    public class ConsultaObligacionEstudianteViewModel
+    public class ConsultaPagoTasasViewModel
     {
-        public int? anio { get; set; }
+        public bool buscar { get; set; }
 
-        public int? periodo { get; set; }
+        public int? entidadFinanciera { get; set; }
 
-        public string codFac { get; set; }
+        public string codOperacion { get; set; }
 
-        public string codEsc { get; set; }
+        public string codDepositante { get; set; }
 
-        public string codRc { get; set; }
-
-        public string codAlumno { get; set; }
-
-        public bool? esIngresante { get; set; }
-
-        public bool? estaPagado { get; set; }
-
-        public bool? obligacionGenerada { get; set; }
-
-        public TipoEstudio tipoEstudio { get; set; }
+        public string nomDepositante { get; set; }
 
         public string fechaDesde { get; set; }
 
@@ -55,13 +46,11 @@ namespace WebApp.ViewModels
             }
         }
 
-        public IEnumerable<EstadoObligacionViewModel> resultado;
+        public IEnumerable<PagoTasaModel> resultado { get; set; }
 
-        public ConsultaObligacionEstudianteViewModel()
+        public ConsultaPagoTasasViewModel()
         {
-            tipoEstudio = TipoEstudio.Pregrado;
-
-            resultado = new List<EstadoObligacionViewModel>();
+            resultado = new List<PagoTasaModel>();
         }
     }
 }

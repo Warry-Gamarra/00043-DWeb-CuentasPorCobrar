@@ -79,5 +79,14 @@ namespace Domain.Services.Implementations
 
             return result;
         }
+
+        public IEnumerable<PagoTasaDTO> Listar_Pago_Tasas(int? idEntidadFinanciera, string codOperacion, DateTime? fechaInicio, DateTime? fechaFinal)
+        {
+            var pagoTasas = VW_PagoTasas.GetAll(idEntidadFinanciera, codOperacion, fechaInicio, fechaFinal);
+
+            var result = pagoTasas.Select(x => Mapper.VW_PagoTasas_To_PagoTasaDTO(x));
+
+            return result;
+        }
     }
 }

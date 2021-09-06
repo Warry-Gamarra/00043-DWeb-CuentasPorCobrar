@@ -13,5 +13,7 @@ namespace Domain.Services
         IEnumerable<TasaDTO> listar_TasasHabilitadas();
 
         ImportacionPagoResponse Grabar_Pago_Tasas(List<PagoTasaEntity> dataPagoTasas, string observacion, int currentUserID);
+
+        IEnumerable<PagoTasaDTO> Listar_Pago_Tasas(int? idEntidadFinanciera, string codOperacion, DateTime? fechaInicio, DateTime? fechaFinal);
     }
 }

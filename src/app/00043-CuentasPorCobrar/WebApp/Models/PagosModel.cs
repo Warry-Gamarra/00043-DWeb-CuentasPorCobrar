@@ -356,6 +356,8 @@ namespace WebApp.Models
 
                 pagoEntity.T_NomDepositante = line.Substring(columnas["T_NomDepositante"].Inicial - 1, columnas["T_NomDepositante"].Final - columnas["T_NomDepositante"].Inicial + 1).Trim();
 
+                pagoEntity.C_CodServicio = line.Substring(columnas["C_CodServicio"].Inicial - 1, columnas["C_CodServicio"].Final - columnas["C_CodServicio"].Inicial + 1).Trim();
+
                 pagoEntity.C_CodTasa = line.Substring(columnas["C_CodTasa"].Inicial - 1, columnas["C_CodTasa"].Final - columnas["C_CodTasa"].Inicial + 1).Trim();
 
                 pagoEntity.T_TasaDesc = line.Substring(columnas["T_TasaDesc"].Inicial - 1, columnas["T_TasaDesc"].Final - columnas["T_TasaDesc"].Inicial + 1).Trim();
@@ -520,7 +522,6 @@ namespace WebApp.Models
                 return response;
             }
         }
-
 
         public List<DatosPagoViewModel> ListarPagosRegistrados(DateTime? fecIni = null, DateTime? fecFin = null, int? dependenciaId = null, int? entRecaudaId = null)
         {
