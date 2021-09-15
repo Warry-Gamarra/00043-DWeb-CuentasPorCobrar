@@ -28,7 +28,7 @@ namespace WebApp.Models.Facades
                 switch (tipoEstudio)
                 {
                     case TipoEstudio.Pregrado:
-                        string[] excluidos = { "CA", "CI", "CP", "CV", "EP", "ET" };
+                        string[] excluidos = { "CA", "CI", "CP", "CV", "EP" };
 
                         facultades = programasClient.GetFacultades();
 

@@ -24,6 +24,8 @@ namespace WebApp.ViewModels
         }
 
         [Required]
+        public string tipoReporte { get; set; }
+
         public int reporte { get; set; }
 
         public TipoEstudio tipoEstudio { get; set; }

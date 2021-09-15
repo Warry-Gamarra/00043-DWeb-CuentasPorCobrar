@@ -50,54 +50,20 @@ namespace WebApp.Controllers
 
             ViewBag.EntidadesFinancieras = selectModels.GetEntidadesFinancieras();
 
+            ViewBag.TipoReportes = generalServiceFacade.Listar_TipoReporteObligaciones();
+
             if (model.tipoEstudio == TipoEstudio.Pregrado)
             {
-                switch (model.reporte)
-                {
-                    case 1:
-                        model.reportePagosPorFacultadViewModel = reportePregradoServiceFacade.ReportePagosPorFacultad(model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera);
-
-                        break;
-
-                    case 2:
-                        model.reportePagosPorConceptoViewModel = reportePregradoServiceFacade.ReportePagosPorConcepto(model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera);
-
-                        break;
-
-                    case 3:
-                        model.reporteConceptosPorUnaFacultadViewModel = reportePregradoServiceFacade.ReporteConceptosPorUnaFacultad(model.dependencia, model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera);
-
-                        break;
-                }
+                ObtenerReportePregradoObligacion(model);
 
                 ViewBag.Title = "Reportes de Pago de Obligaciones de Pregrado";
-
-                ViewBag.TipoReportes = generalServiceFacade.Listar_ReportesPregrado();
             }
 
             if (model.tipoEstudio == TipoEstudio.Posgrado)
             {
-                switch (model.reporte)
-                {
-                    case 1:
-                        model.reportePagosPorGradodViewModel = reportePosgradoServiceFacade.ReportePagosPorGrado(model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera);
-
-                        break;
-
-                    case 2:
-                        model.reportePagosPorConceptoPosgradoViewModel = reportePosgradoServiceFacade.ReportePagosPorConcepto(model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera);
-
-                        break;
-
-                    case 3:
-                        model.reporteConceptosPorGradoViewModel = reportePosgradoServiceFacade.ReporteConceptosPorGrado(model.dependencia, model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera);
-
-                        break;
-                }
+                ObtenerReportePosgradoObligacion(model);
 
                 ViewBag.Title = "Reportes de Pago de Obligaciones de Posgrado";
-
-                ViewBag.TipoReportes = generalServiceFacade.Listar_ReportesPosgrado();
             }
 
             return View(model);
@@ -419,6 +385,46 @@ namespace WebApp.Controllers
                     string nombreArchivo = "Resumen Dependencias " + tipoEstudio.ToString() + " al " + DateTime.Now.ToString(FormatosDateTime.BASIC_DATE2) + ".xlsx";
 
                     return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", nombreArchivo);
+                }
+            }
+        }
+
+        private void ObtenerReportePregradoObligacion(ReportePagosObligacionesViewModel model)
+        {
+            if (model.tipoReporte == Reportes.REPORTE_GENERAL)
+            {
+                model.reportePagosPorFacultadViewModel = reportePregradoServiceFacade.ReportePagosPorFacultad(model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera);
+            }
+
+            if (model.tipoReporte == Reportes.REPORTE_CONCEPTO)
+            {
+                if (String.IsNullOrEmpty(model.dependencia))
+                {
+                    model.reportePagosPorConceptoViewModel = reportePregradoServiceFacade.ReportePagosPorConcepto(model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera);
+                }
+                else
+                {
+                    model.reporteConceptosPorUnaFacultadViewModel = reportePregradoServiceFacade.ReporteConceptosPorUnaFacultad(model.dependencia, model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera);
+                }
+            }
+        }
+
+        private void ObtenerReportePosgradoObligacion(ReportePagosObligacionesViewModel model)
+        {
+            if (model.tipoReporte == Reportes.REPORTE_GENERAL)
+            {
+                model.reportePagosPorGradodViewModel = reportePosgradoServiceFacade.ReportePagosPorGrado(model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera);
+            }
+
+            if (model.tipoReporte == Reportes.REPORTE_CONCEPTO)
+            {
+                if (String.IsNullOrEmpty(model.dependencia))
+                {
+                    model.reportePagosPorConceptoPosgradoViewModel = reportePosgradoServiceFacade.ReportePagosPorConcepto(model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera);
+                }
+                else
+                {
+                    model.reporteConceptosPorGradoViewModel = reportePosgradoServiceFacade.ReporteConceptosPorGrado(model.dependencia, model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera);
                 }
             }
         }

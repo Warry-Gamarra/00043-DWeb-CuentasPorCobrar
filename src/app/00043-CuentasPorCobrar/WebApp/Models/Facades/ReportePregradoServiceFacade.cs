@@ -29,7 +29,7 @@ namespace WebApp.Models.Facades
             {
                 FechaInicio = fechaInicio.ToString(FormatosDateTime.BASIC_DATE),
                 FechaFin = fechaFin.ToString(FormatosDateTime.BASIC_DATE),
-                Titulo = Reportes.Pregrado.First(x => x.Key.Equals(1)).Value
+                Titulo = "Reporte de Pagos de Pregrado"
             };
 
             return reporte;
@@ -43,7 +43,7 @@ namespace WebApp.Models.Facades
             {
                 FechaInicio = fechaInicio.ToString(FormatosDateTime.BASIC_DATE),
                 FechaFin = fechaFin.ToString(FormatosDateTime.BASIC_DATE),
-                Titulo = Reportes.Pregrado.First(x => x.Key.Equals(2)).Value
+                Titulo = "Reporte de Pagos por Conceptos"
             };
 
             return reporte;
@@ -58,7 +58,7 @@ namespace WebApp.Models.Facades
                 Facultad = pagos.Count() > 0 ? pagos.FirstOrDefault().T_FacDesc : "",
                 FechaInicio = fechaInicio.ToString(FormatosDateTime.BASIC_DATE),
                 FechaFin = fechaFin.ToString(FormatosDateTime.BASIC_DATE),
-                Titulo = Reportes.Pregrado.First(x => x.Key.Equals(3)).Value
+                Titulo = "Reporte de Pagos de Conceptos por Facultad"
             };
 
             return reporte;

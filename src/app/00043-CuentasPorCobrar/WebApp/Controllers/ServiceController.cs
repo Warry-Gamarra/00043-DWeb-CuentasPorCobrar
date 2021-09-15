@@ -176,18 +176,5 @@ namespace WebApp.Controllers
         {
             return programasClientFacade.GetEspecialidades(codFac, codEsc);
         }
-
-        public IEnumerable<SelectViewModel> GetReportesPagoObligaciones(TipoEstudio tipoEstudio)
-        {
-            switch (tipoEstudio)
-            {
-                case TipoEstudio.Pregrado:
-                    return generalServiceFacade.Listar_ReportesPregrado();
-                case TipoEstudio.Posgrado:
-                    return generalServiceFacade.Listar_ReportesPosgrado();
-                default:
-                    return new List<SelectViewModel>();
-            }
-        }
     }
 }

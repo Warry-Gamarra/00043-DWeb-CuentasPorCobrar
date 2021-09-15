@@ -23,12 +23,16 @@ namespace WebApp.Models
 
         public MemoryStream GenerarInformacionObligaciones(int anio, int? periodo, TipoEstudio tipoEstudio, string dependencia)
         {
-            var cuotas_pago = _obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(anio, periodo, tipoEstudio, dependencia).Where(x => !x.B_Pagado).ToList();
+            var cuotas_pago = _obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(anio, periodo, TipoEstudio.Pregrado, dependencia).Where(x => !x.B_Pagado).ToList();
 
-            if (tipoEstudio == TipoEstudio.Pregrado)
-            {
-                cuotas_pago = cuotas_pago.Where(x => !(x.I_MontoOblig.Value == 125)).ToList();//EXCLUIR A LOS INGRESANTES POR CEPREVI(PROVISIONAL)
-            }
+            //if (tipoEstudio == TipoEstudio.Pregrado)
+            //{
+            //    cuotas_pago = cuotas_pago.Where(x => !(x.I_MontoOblig.Value == 125)).ToList();//EXCLUIR A LOS INGRESANTES POR CEPREVI(PROVISIONAL)
+            //}
+
+            var cuotas_pago2 = _obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(anio, periodo, TipoEstudio.Posgrado, dependencia).Where(x => !x.B_Pagado).ToList();
+
+            cuotas_pago.AddRange(cuotas_pago2);
 
             if (cuotas_pago.Count == 0)
             {
@@ -90,7 +94,7 @@ namespace WebApp.Models
                 int montoMinimo = (item.C_CodRc == "064") ? 4000 : montoCupon;//MONTO DE 40 PARA LOS DE CONTABILIDAD (PROVISIONAL)
                 //int montoMinimo = montoCupon;
                 string tipoRegistroActualizacion = "A";//M, E
-                string nroDocumentoPago = "";
+                string nroDocumentoPago = item.I_NroOrden.ToString("D20");
                 string nroDocumentoIdentidad = "";
                 string fillerDetalle = "";
 
