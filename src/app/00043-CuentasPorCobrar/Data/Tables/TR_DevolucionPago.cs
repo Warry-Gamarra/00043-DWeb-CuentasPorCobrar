@@ -109,7 +109,7 @@ namespace Data.Tables
                 {
                     parameters.Add(name: "I_DevolucionPagoID", dbType: DbType.Int32, value: this.I_DevolucionPagoID);
                     parameters.Add(name: "I_PagoProcesID", dbType: DbType.Int32, value: this.I_PagoProcesID);
-                    parameters.Add(name: "I_MontoPagoDev", dbType: DbType.Decimal, value: this.I_PagoProcesID);
+                    parameters.Add(name: "I_MontoPagoDev", dbType: DbType.Decimal, value: this.I_MontoPagoDev);
                     parameters.Add(name: "D_FecDevAprob", dbType: DbType.DateTime, value: this.D_FecDevAprob);
                     parameters.Add(name: "D_FecDevPago", dbType: DbType.DateTime, value: this.D_FecDevPago);
                     parameters.Add(name: "T_Comentario", dbType: DbType.String, value: this.T_Comentario);

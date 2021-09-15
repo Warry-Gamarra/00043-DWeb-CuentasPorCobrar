@@ -432,7 +432,7 @@ namespace WebApp.Controllers
         {
             ViewBag.Title = "Actualizar información de pagos";
 
-            var model = pagosModel.ListarPagosRegistrados();
+            var model = pagosModel.ListarPagosRegistrados(DateTime.Now.Date, DateTime.Now.Date, null, null);
             ViewBag.EntidadRecaudadora = new SelectList(entidadRecaudadora.Find(enabled: true), "Id", "NombreEntidad");
             ViewBag.Dependencia = new SelectList(_dependenciaModel.Find(enabled: true), dataValueField: "DependenciaID", dataTextField: "DependDesc");
 
@@ -440,16 +440,14 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
-        public ActionResult ObtenerPagosRegistrados(string txtFecDesde, string txtFecHasta, int cboEntRecauda, int cboDependencia)
+        public ActionResult ObtenerPagosRegistrados(string txtFecDesde, string txtFecHasta, int? cboEntRecauda, int? cboDependencia)
         {
-            ViewBag.Title = "Actualizar información de pagos";
+            DateTime fecDesde = DateTime.Parse(txtFecDesde);
+            DateTime fecHasta = DateTime.Parse(txtFecHasta);
 
+            var model = pagosModel.ListarPagosRegistrados(fecDesde, fecHasta, cboDependencia, cboEntRecauda);
 
-            var model = pagosModel.ListarPagosRegistrados();
-            ViewBag.EntidadRecaudadora = new SelectList(entidadRecaudadora.Find(enabled: true), "Id", "NombreEntidad");
-            ViewBag.Dependencia = new SelectList(_dependenciaModel.Find(enabled: true), dataValueField: "DependenciaID", dataTextField: "DependDesc");
-
-            return View(model);
+            return PartialView("_ResultadoConsultaPagos", model);
         }
 
 
@@ -464,11 +462,11 @@ namespace WebApp.Controllers
         }
 
         [Route("operaciones/pagos/{id}/registrar-nro-siaf")]
-        public ActionResult RegistrarSiaf(int id)
+        public ActionResult RegistrarSiaf(int[] pagosId)
         {
             ViewBag.Title = "Registrar Nro. SIAF";
 
-            var model = pagosModel.ObtenerDatosPago(id);
+            var model = pagosModel.ObtenerDatosPago(pagosId[0]);
 
             return PartialView("_RegistrarSiaf", model);
         }
@@ -531,18 +529,23 @@ namespace WebApp.Controllers
             ViewBag.Title = "Exportar recaudación para el Temporal de Pagos";
 
             ViewBag.EntidadesFinancieras = new SelectList(ListaEntidadesFinancieras(), "Value", "TextDisplay");
-            ViewBag.TipoEstudios = new SelectList(generalServiceFacade.Listar_TipoEstudios(), "Value", "TextDisplay"); 
+            ViewBag.TipoEstudios = new SelectList(generalServiceFacade.Listar_TipoEstudios(), "Value", "TextDisplay");
 
             return View();
         }
 
         [HttpPost]
-        public ActionResult ExportarRecaudacionTemporalPost(int cboEntFinan, TipoEstudio cboTipoEst, string fechaDesde, string fechaHasta)
+        public ActionResult ExportarRecaudacionTemporalPost(int cboEntFinan, TipoEstudio? cboTipoEst, string fechaDesde, string fechaHasta)
         {
+            DateTime fecDesde = DateTime.Parse(fechaDesde);
+            DateTime fecHasta = DateTime.Parse(fechaHasta);
+            string nombreEntidad = new CultureInfo("es-MX", false).TextInfo.ToTitleCase(entidadRecaudadora.Find(cboEntFinan).NombreEntidad.ToLower()).Replace(" ", "");
+            string tipoEstudio = cboTipoEst.HasValue ? "_" + cboTipoEst.Value.ToString() : string.Empty;
+
             try
             {
-                MemoryStream memoryStream = pagosModel.ExportarInformacionTemporalPagos(cboEntFinan, DateTime.Parse(fechaDesde), DateTime.Parse(fechaHasta), cboTipoEst);
-                return File(memoryStream, "text/plain", "TestFile.txt");
+                MemoryStream memoryStream = pagosModel.ExportarInformacionTemporalPagos(cboEntFinan, fecDesde, fecHasta, cboTipoEst);
+                return File(memoryStream, "text/plain", $"Recaudacion{nombreEntidad}{tipoEstudio}_de_{fecDesde.ToString("yyyyMMdd")}_a_{fecHasta.ToString("yyyyMMdd")}.txt");
             }
             catch (Exception ex)
             {

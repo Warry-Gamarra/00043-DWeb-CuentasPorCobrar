@@ -31,7 +31,6 @@ namespace WebApp.ViewModels
         public decimal MontoPago { get; set; }
 
         [Display(Name = "Nro SIAF")]
-        [Required]
         public int? NroSIAF { get; set; }
 
         public DatosPagoViewModel() { }

@@ -20,13 +20,21 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body bg-light-gray">
-                        @using (Ajax.BeginForm("", "Pagos", new AjaxOptions { }))
+                        @using (Ajax.BeginForm("ObtenerPagosRegistrados", "Pagos",
+                            new AjaxOptions
+                            {
+                                HttpMethod = "POST",
+                                InsertionMode = InsertionMode.Replace,
+                                UpdateTargetId = "resultadoConsulta",
+                                OnBegin = "BeforSend",
+                                OnComplete = "Complete"
+                            }))
                         {
                             <div id="datepicker" class="input-daterange form-row">
                                 <div class="form-group col-md-3 col-lg-2 col-sm-4 col-12">
                                     <label for="inputCodAlu" class="control-label">Desde</label>
                                     <div class="input-group">
-                                        @Html.TextBox("txtFecDesde", "", new { @class = "form-control form-control-sm" })
+                                        @Html.TextBox("txtFecDesde", DateTime.Now.ToShortDateString(), new { @class = "form-control form-control-sm" })
                                         <div class="input-group-append">
                                             <span class="input-group-text"><i class="fa fa-calendar-o"></i></span>
                                         </div>
@@ -35,7 +43,7 @@
                                 <div class="form-group col-md-3 col-lg-2 col-sm-4 col-12">
                                     <label for="inputCodAlu" class="control-label">Hasta</label>
                                     <div class="input-group">
-                                        @Html.TextBox("txtFecHasta", "", new { @class = "form-control form-control-sm" })
+                                        @Html.TextBox("txtFecHasta", DateTime.Now.ToShortDateString(), new { @class = "form-control form-control-sm" })
                                         <div class="input-group-append">
                                             <span class="input-group-text"><i class="fa fa-calendar-o"></i></span>
                                         </div>
@@ -66,6 +74,17 @@
     <div class="col-12 my-4" id="resultadoConsulta">
         @Html.Partial("_ResultadoConsultaPagos", Model)
     </div>
+    <div id="search-loader" class="container-fluid mt-5" style="display:none;">
+        <div class="d-flex justify-content-center py-4">
+            <div class="spinner-border mt-5 text-info" role="status" style="height: 5rem; width:5rem;">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <div class="d-flex justify-content-center">
+            <span id="load-message" class="h5">Buscando pagos...</span>
+        </div>
+    </div>
+
 </div>
 
 
@@ -74,7 +93,7 @@
         $('#datepicker.input-daterange').datepicker({
             todayBtn: 'linked',
             language: 'es',
-            format: 'dd/MM/yyyy',
+            format: 'dd/mm/yyyy',
             autoclose: true,
             weekStart: 0,
             orientation: 'bottom auto',
@@ -84,4 +103,20 @@
             e.stopPropagation();
         });
     })
+
+    function BeforSend() {
+        $('#resultadoConsulta').hide();
+        $('#search-loader').show();
+    }
+
+    function Complete() {
+        $('#resultadoConsulta').show();
+        $('#search-loader').hide();
+    }
+
+    function Error(errors) {
+        toastr.error("Ha ocurrido un error al procesar los datos.")
+    }
+
+
 </script>

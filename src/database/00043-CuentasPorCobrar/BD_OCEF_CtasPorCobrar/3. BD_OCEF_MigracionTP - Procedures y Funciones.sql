@@ -239,7 +239,7 @@ END
 GO
 
 
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_IU_ValidarCodigosAlumnoRepetidos')
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ValidarCodigosAlumnoRepetidos')
 	DROP PROCEDURE [dbo].[USP_U_ValidarCodigosAlumnoRepetidos]
 GO
 
@@ -913,7 +913,8 @@ BEGIN
 		SET		B_Migrable = 0,
 				D_FecEvalua = @D_FecProceso,
 				T_Observacion = ISNULL(T_Observacion, '') + '012 - NO COINCIDE AÑO : ('+ CONVERT(varchar, @D_FecProceso, 112) + '). Año del concepto de pago de obligacion no coincide con el año de la cuota de pagos.|'
-		WHERE	NOT EXISTS (SELECT * FROM TR_MG_CpDes WHERE I_Anio = TR_MG_CpPri.ANO)
+		WHERE	NOT EXISTS (SELECT * FROM TR_MG_CpDes WHERE I_Anio = TR_MG_CpPri.ANO) AND TIPO_OBLIG = 1
+
 
 		SELECT * FROM TR_MG_CpPri WHERE B_Migrable = 0 AND T_Observacion LIKE '%011%' OR T_Observacion LIKE '%012%'
 
@@ -954,7 +955,7 @@ BEGIN
 		SET		B_Migrable = 0,
 				D_FecEvalua = @D_FecProceso,
 				T_Observacion = ISNULL(T_Observacion, '') + '012 - NO COINCIDE AÑO : ('+ CONVERT(varchar, @D_FecProceso, 112) + '). Año del concepto de pago de obligacion no coincide con el año de la cuota de pagos.|'
-		WHERE	NOT EXISTS (SELECT * FROM TR_MG_CpDes WHERE I_Anio = TR_MG_CpPri.ANO)
+		WHERE	NOT EXISTS (SELECT * FROM TR_MG_CpDes WHERE I_Anio = TR_MG_CpPri.ANO) AND TIPO_OBLIG = 1
 
 		SELECT * FROM TR_MG_CpPri WHERE B_Migrable = 0 AND T_Observacion LIKE '%011%' OR T_Observacion LIKE '%012%'
 
@@ -989,7 +990,7 @@ BEGIN
 		SET		B_Migrable = 0,
 				D_FecEvalua = @D_FecProceso,
 				T_Observacion = ISNULL(T_Observacion, '') + '013 - SIN CUOTA PAGO: ('+ CONVERT(varchar, @D_FecProceso, 112) + '). Concepto de pago de obligacion sin cuota de pago.|'
-		WHERE	NOT EXISTS (SELECT * FROM TR_MG_CpDes WHERE CUOTA_PAGO = TR_MG_CpPri.CUOTA_PAGO)
+		WHERE	NOT EXISTS (SELECT * FROM TR_MG_CpDes WHERE CUOTA_PAGO = TR_MG_CpPri.CUOTA_PAGO) AND TIPO_OBLIG = 1
 
 		UPDATE	TR_MG_CpPri
 		SET		B_Migrable = 0,
@@ -997,7 +998,7 @@ BEGIN
 				T_Observacion = ISNULL(T_Observacion, '') + '014 - CUOTA PAGO SM: ('+ CONVERT(varchar, @D_FecProceso, 112) + '). La cuota de pago asociada no fue migrada.|'
 		WHERE	EXISTS (SELECT * FROM TR_MG_CpDes WHERE CUOTA_PAGO = TR_MG_CpPri.CUOTA_PAGO AND B_Migrable = 0)
 
-		SELECT * FROM TR_MG_CpPri WHERE B_Migrable = 0 AND (T_Observacion LIKE '%013%' OR  T_Observacion LIKE '%014%')
+		SELECT * FROM TR_MG_CpPri WHERE B_Migrable = 0 AND (T_Observacion LIKE '%013%' OR  T_Observacion LIKE '%014%') AND TIPO_OBLIG = 1
 
 		SET @B_Resultado = 1
 		SET @T_Message = 'Ok'
@@ -1123,7 +1124,7 @@ IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCE
 	DROP PROCEDURE [dbo].[USP_IU_MigrarDataConceptoPagoCtasPorCobrar]
 GO
 
-CREATE PROCEDURE USP_IU_MigrarDataConceptoPagoCtasPorCobrar	
+CREATE PROCEDURE USP_IU_MigrarDataConceptoPagoObligacionesCtasPorCobrar	
 	@I_AnioIni	  int = NULL,
 	@I_AnioFin	  int = NULL,
 	@B_Resultado  bit output,
@@ -1146,7 +1147,7 @@ BEGIN
 		SET IDENTITY_INSERT BD_OCEF_CtasPorCobrar.dbo.TI_ConceptoPago ON;
 
 		MERGE INTO  BD_OCEF_CtasPorCobrar.dbo.TI_ConceptoPago AS TRG
-		USING (SELECT * FROM TR_MG_CpPri WHERE B_Migrable = 1 AND ANO BETWEEN @I_AnioIni AND @I_AnioFin) AS SRC
+		USING (SELECT * FROM TR_MG_CpPri WHERE B_Migrable = 1 AND TIPO_OBLIG = 1 AND ANO BETWEEN @I_AnioIni AND @I_AnioFin) AS SRC
 		ON TRG.I_ConcPagID = SRC.ID_CP
 		WHEN NOT MATCHED BY TARGET THEN 
 			INSERT (I_ConcPagID, I_ProcesoID, I_ConceptoID, T_ConceptoPagoDesc, B_Fraccionable, B_ConceptoGeneral, B_AgrupaConcepto, I_AlumnosDestino, 

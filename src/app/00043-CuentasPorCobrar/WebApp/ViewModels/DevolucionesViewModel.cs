@@ -13,7 +13,9 @@ namespace WebApp.ViewModels
         public string NroRecibo { get; set; }
         public string EntidadRecaudadora { get; set; }
         public DateTime? FecAprobacion { get; set; }
-        public decimal Monto { get; set; }
+        public DateTime? FecDevuelve { get; set; }
+        public decimal MontoPago { get; set; }
+        public decimal MontoDevolucion { get; set; }
         public string Concepto { get; set; }
         public bool Anulado { get; set; }
 
@@ -25,8 +27,9 @@ namespace WebApp.ViewModels
             this.EntidadRecaudadora = devolucionPago.EntidadRecaudadoraDesc;
             this.Concepto = devolucionPago.ConceptoPago;
             this.NroRecibo = devolucionPago.ReferenciaPago;
-            this.Monto = devolucionPago.MontoDevolucion;
+            this.MontoDevolucion = devolucionPago.MontoDevolucion;
             this.FecAprobacion = devolucionPago.FecAprueba;
+            this.FecDevuelve = devolucionPago.FecDevuelve;
         }
     }
 
@@ -35,23 +38,13 @@ namespace WebApp.ViewModels
         public int? DevolucionId { get; set; }
 
         [Display(Name = "Entidad recaudadora")]
-        [Required]
         public int EntidadRecaudadora { get; set; }
 
-        [Required]
-        public int PagoReferenciaId { get; set; }
-
         [Display(Name = "Referencia de pago")]
-        [Required]
         public string ReferenciaPago { get; set; }
 
         public DatosPagoViewModel DatosPago { get; set; }
 
-        [Required]
-        public int? PagoRefId { get; set; }
-
-        [Required]
-        public DateTime? FecPagoRef { get; set; }
 
         [Display(Name = "Total descuentos")]
         [Required]
@@ -80,14 +73,19 @@ namespace WebApp.ViewModels
         {
             this.DevolucionId = devolucionPago.DevolucionId;
             this.EntidadRecaudadora = devolucionPago.EntidadRecaudadoraId;
-            this.PagoReferenciaId = devolucionPago.PagoReferenciaId;
             this.ReferenciaPago = devolucionPago.ReferenciaPago;
-            this.FecPagoRef = devolucionPago.FecPagoRef;
             this.MontoDevolucion = devolucionPago.MontoDevolucion;
             this.FecAprueba = devolucionPago.FecAprueba;
             this.FecDevuelve = devolucionPago.FecDevuelve;
             this.Comentario = devolucionPago.Comentario;
-            this.DatosPago = new DatosPagoViewModel();
+            this.DatosPago = new DatosPagoViewModel()
+            {
+                PagoId = devolucionPago.PagoReferenciaId,
+                FecPago = devolucionPago.FecPagoRef,
+                EntidadRecaudadoraId = devolucionPago.EntidadRecaudadoraId,
+                EntidadRecaudadora = devolucionPago.EntidadRecaudadoraDesc,
+                Concepto = devolucionPago.ConceptoPago
+            };
         }
 
     }
