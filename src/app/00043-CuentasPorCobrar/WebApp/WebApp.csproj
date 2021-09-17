@@ -409,6 +409,7 @@
     <Compile Include="Controllers\DevolucionesController.cs" />
     <Compile Include="Controllers\EntidadRecaudadoraController.cs" />
     <Compile Include="Controllers\EstadosCuentaController.cs" />
+    <Compile Include="Controllers\EstadosCuentaTasasController.cs" />
     <Compile Include="Controllers\EstructuraArchivoController.cs" />
     <Compile Include="Controllers\EstudiantesController.cs" />
     <Compile Include="Controllers\HelpCenterController.cs" />
@@ -460,6 +461,8 @@
     <Compile Include="Models\IMatriculaSource.cs" />
     <Compile Include="Models\MatriculaDbfSource.cs" />
     <Compile Include="Models\MatriculaExcelSource.cs" />
+    <Compile Include="Models\PagoTasaModel.cs" />
+    <Compile Include="ViewModels\ConsultaPagoTasasViewModel.cs" />
     <Compile Include="ViewModels\EstadoObligacionViewModel.cs" />
     <Compile Include="ViewModels\ConsultaObligacionEstudianteViewModel.cs" />
     <Compile Include="ViewModels\ReporteResumenAnualPagoObligaciones_X_Dependencias.cs" />
@@ -580,7 +583,7 @@
     <Content Include="Views\Procesos\_ListadoConceptosProceso.cshtml" />
     <Content Include="Views\Procesos\_ListadoTasasProcesoBusqueda.cshtml" />
     <Content Include="Views\Pagos\ImportarPagoObligaciones.cshtml" />
-    <Content Include="Views\Pagos\_SeleccionarArchivo.cshtml" />
+    <Content Include="Views\Pagos\_SeleccionarArchivoTasas.cshtml" />
     <Content Include="Views\Pagos\_ResultadoCargaPago.cshtml" />
     <Compile Include="ViewModels\EstructuraArchivoViewModels.cs" />
     <Content Include="Views\EstructuraArchivo\CamposTabla.cshtml" />
@@ -618,6 +621,9 @@
     <Content Include="Views\EstadosCuenta\ResumenAnualObligacionesPorDependencias.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <Content Include="Views\Pagos\ExportarRecaudacionTemporal.cshtml" />
+    <Content Include="Views\Pagos\_SeleccionarArchivoObligaciones.cshtml" />
+    <Content Include="Views\Pagos\_MsgRegistrarPagoTasa.cshtml" />
+    <Content Include="Views\EstadosCuentaTasas\Consulta.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -76,13 +76,21 @@ namespace WebApp.ViewModels
 
         public decimal? I_MontoOblig { get; set; }
 
+        public string T_MontoOblig
+        {
+            get
+            {
+                return I_MontoOblig.HasValue ? I_MontoOblig.Value.ToString(FormatosDecimal.BASIC_DECIMAL) : "";
+            }
+        }
+
         public DateTime? D_FecVencto { get; set; }
 
         public string T_FecVencto
         {
             get
             {
-                return D_FecVencto.HasValue ? D_FecVencto.Value.ToString(FormatosDateTime.BASIC_DATE) : "-";
+                return D_FecVencto.HasValue ? D_FecVencto.Value.ToString(FormatosDateTime.BASIC_DATE) : "";
             }
         }
 
@@ -92,10 +100,22 @@ namespace WebApp.ViewModels
         {
             get
             {
-                return B_Pagado.HasValue ? (B_Pagado.Value ? "Pagd." : "Pendt.") : "-";
+                return EstadoObligacion.ObtenerDescripcion(B_Pagado);
             }
         }
 
         public decimal? I_MontoPagadoActual { get; set; }
+
+        public string T_MontoPagadoActual
+        {
+            get
+            {
+                return I_MontoPagadoActual.HasValue ? I_MontoPagadoActual.Value.ToString(FormatosDecimal.BASIC_DECIMAL) : "";
+            }
+        }
+
+        public DateTime D_FecCre { get; set; }
+
+        public DateTime? D_FecMod { get; set; }
     }
 }

@@ -337,10 +337,60 @@ namespace WebApp.Models
                 I_MontoOblig = dto.I_MontoOblig,
                 D_FecVencto = dto.D_FecVencto,
                 B_Pagado = dto.B_Pagado,
-                I_MontoPagadoActual = dto.I_MontoPagadoActual
+                I_MontoPagadoActual = dto.I_MontoPagadoActual,
+                D_FecCre = dto.D_FecCre,
+                D_FecMod = dto.D_FecMod
             };
 
             return result;
+        }
+
+        public static PagoTasaEntity PagoTasaViewModel_To_PagoTasaEntity(PagoTasaViewModel model)
+        {
+            var result = new PagoTasaEntity()
+            {
+                C_CodDepositante = model.codigoDepositante,
+                T_NomDepositante = model.nombreDepositante,
+                C_CodOperacion = model.codigoOperacion,
+                T_Referencia = model.codigoReferencia,
+                I_EntidadFinanID = model.idEntidadFinanciera,
+                I_CtaDepositoID = model.idCtaDeposito,
+                D_FecPago = model.fechaPagoTasa,
+                I_Cantidad = model.cantidad,
+                C_Moneda = model.moneda,
+                I_MontoPago = 0,
+                I_InteresMora = 0,
+                T_LugarPago = model.lugarPago,
+                T_InformacionAdicional = null
+            };
+
+            return result;
+        }
+
+        public static PagoTasaModel PagoTasaDTO_To_PagoTasaModel(PagoTasaDTO dto)
+        {
+            var model = new PagoTasaModel()
+            {
+                I_EntidadFinanID = dto.I_EntidadFinanID,
+                T_EntidadDesc = dto.T_EntidadDesc,
+                I_CtaDepositoID = dto.I_CtaDepositoID,
+                C_NumeroCuenta = dto.C_NumeroCuenta,
+                C_CodTasa = dto.C_CodTasa,
+                T_ConceptoPagoDesc = dto.T_ConceptoPagoDesc,
+                T_Clasificador = dto.T_Clasificador,
+                C_CodClasificador = dto.C_CodClasificador,
+                T_ClasificadorDesc = dto.T_ClasificadorDesc,
+                M_Monto = dto.M_Monto,
+                C_CodOperacion = dto.C_CodOperacion,
+                C_CodDepositante = dto.C_CodDepositante,
+                T_NomDepositante = dto.T_NomDepositante,
+                D_FecPago = dto.D_FecPago,
+                I_MontoPagado = dto.I_MontoPagado,
+                I_InteresMoratorio = dto.I_InteresMoratorio,
+                D_FecCre = dto.D_FecCre
+            };
+
+            return model;
         }
     }
 }

@@ -29,7 +29,7 @@ namespace WebApp.Models.Facades
             {
                 FechaInicio = fechaInicio.ToString(FormatosDateTime.BASIC_DATE),
                 FechaFin = fechaFin.ToString(FormatosDateTime.BASIC_DATE),
-                Titulo = Reportes.Pregrado.First(x => x.Key.Equals(1)).Value
+                Titulo = "Reporte de Pagos de Pregrado"
             };
 
             return reporte;
@@ -43,7 +43,7 @@ namespace WebApp.Models.Facades
             {
                 FechaInicio = fechaInicio.ToString(FormatosDateTime.BASIC_DATE),
                 FechaFin = fechaFin.ToString(FormatosDateTime.BASIC_DATE),
-                Titulo = Reportes.Pregrado.First(x => x.Key.Equals(2)).Value
+                Titulo = "Reporte de Pagos por Conceptos"
             };
 
             return reporte;
@@ -58,7 +58,7 @@ namespace WebApp.Models.Facades
                 Facultad = pagos.Count() > 0 ? pagos.FirstOrDefault().T_FacDesc : "",
                 FechaInicio = fechaInicio.ToString(FormatosDateTime.BASIC_DATE),
                 FechaFin = fechaFin.ToString(FormatosDateTime.BASIC_DATE),
-                Titulo = Reportes.Pregrado.First(x => x.Key.Equals(3)).Value
+                Titulo = "Reporte de Pagos de Conceptos por Facultad"
             };
 
             return reporte;
@@ -86,9 +86,10 @@ namespace WebApp.Models.Facades
             return result;
         }
 
-        public IEnumerable<EstadoObligacionViewModel> EstadoObligacionAlumnos(int anio, int? periodo, string codRc, bool? esIngresante, bool? estaPagado, bool? obligacionGenerada, DateTime? fechaInicio, DateTime? fechaFin)
+        public IEnumerable<EstadoObligacionViewModel> EstadoObligacionAlumnos(int anio, int? periodo, string codFac, string codEsc, string codRc, 
+            bool? esIngresante, bool? estaPagado, bool? obligacionGenerada, DateTime? fechaInicio, DateTime? fechaFin)
         {
-            var lista = reporteService.EstadoObligacionAlumnos(anio, periodo, codRc, esIngresante, estaPagado, obligacionGenerada, fechaInicio, fechaFin);
+            var lista = reporteService.EstadoObligacionAlumnos(anio, periodo, codFac, codEsc, codRc, esIngresante, estaPagado, obligacionGenerada, fechaInicio, fechaFin);
 
             var result = lista.Select(x => Mapper.EstadoObligacionDTO_To_EstadoObligacionViewModel(x));
 

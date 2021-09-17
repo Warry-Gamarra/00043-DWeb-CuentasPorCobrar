@@ -46,11 +46,21 @@
             RESUMEN DE INGRESOS DE @Model.tipoEstudio<br />AL AÑO @Model.anio
         </p>
 
+        <div class="row">
+            <div class="col-lg-6">
+                @if (!String.IsNullOrEmpty(Model.nombreEntidadFinanc))
+                {
+                    <p>Entidad Financiera: <b>@Model.nombreEntidadFinanc</b></p>
+
+                }
+            </div>
+            <div class="col-lg-6">
+                <p class="h5 text-right"><small>Fecha consulta: <b>@Model.FechaActual</b></small></p>
+                <p class="h5 text-right"><small>Hora consulta: <b>@Model.HoraActual</b></small></p>
+            </div>
+        </div>
+
         <div class="table-responsive">
-            @if (!String.IsNullOrEmpty(Model.nombreEntidadFinanc))
-            {
-                <p>Entidad Financiera: <b>@Model.nombreEntidadFinanc</b></p>
-            }
             <table class="table table-bordered table-hover table-sm">
                 <thead>
                     <tr>
@@ -141,6 +151,8 @@
                     </tr>
                 </tbody>
             </table>
+
+            <button type="button" id="btnExcelDownload" class="btn btn-link pl-0">Descargar información en Excel [.xlsx]</button>
         </div>
 
     </div>
@@ -160,6 +172,11 @@
 
             $('#entidadFinanID').on('change', function () {
                 location.href = '@Url.Action("ResumenAnualObligacionesPorClasificadores", "EstadosCuenta")' + buildFilters($('#anio').val(), $('#tipoEstudio').val(), $(this).val());
+            });
+
+            $('#btnExcelDownload').on('click', function () {
+                debugger;
+                location.href = '@Url.Action("DescargaResumenAnualObligacionesPorClasificadores", "EstadosCuenta")' + buildFilters($('#anio').val(), $('#tipoEstudio').val(), $('#entidadFinanID').val());
             });
         });
 

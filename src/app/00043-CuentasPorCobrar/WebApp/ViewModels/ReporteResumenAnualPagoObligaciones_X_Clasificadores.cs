@@ -17,11 +17,17 @@ namespace WebApp.ViewModels
             this.nombreEntidadFinanc = nombreEntidadFinanc;
             this.numCuenta = numCuenta;
             this.resumen_x_clasificadores = resumen_x_clasificadores;
+
+            FechaActual = DateTime.Now.ToString(FormatosDateTime.BASIC_DATE);
+            HoraActual = DateTime.Now.ToString(FormatosDateTime.BASIC_TIME);
         }
 
         public ReporteResumenAnualPagoObligaciones_X_Clasificadores()
         {
             resumen_x_clasificadores = new List<ResumenAnualPagoDeObligaciones_X_ClasificadorDTO>();
+
+            FechaActual = DateTime.Now.ToString(FormatosDateTime.BASIC_DATE);
+            HoraActual = DateTime.Now.ToString(FormatosDateTime.BASIC_TIME);
         }
 
         public TipoEstudio tipoEstudio { get; set; }
@@ -246,6 +252,10 @@ namespace WebApp.ViewModels
                 return TotalGeneral.ToString(FormatosDecimal.BASIC_DECIMAL);
             }
         }
+
+        public string FechaActual { get; }
+
+        public string HoraActual { get; }
 
         public decimal TotalClasificador(string codClasificador)
         {

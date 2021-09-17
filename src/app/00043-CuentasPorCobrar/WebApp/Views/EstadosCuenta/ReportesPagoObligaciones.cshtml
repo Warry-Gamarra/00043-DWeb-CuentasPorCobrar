@@ -40,8 +40,8 @@
                                         new { @class = "form-control form-control-sm text-uppercase" })
                                 </div>
                                 <div class="form-group col-xl-2 col-lg-6 col-md-6 col-sm-12 col-12">
-                                    <label for="reporte">Reporte</label>
-                                    @Html.DropDownListFor(model => model.reporte, new SelectList(ViewBag.TipoReportes, "Value", "TextDisplay"), "SELECCIONAR",
+                                    <label for="tipoReporte">Reporte</label>
+                                    @Html.DropDownListFor(model => model.tipoReporte, new SelectList(ViewBag.TipoReportes, "Value", "TextDisplay"), "SELECCIONAR",
                                         new { @class = "form-control form-control-sm text-uppercase", @required = "required" })
                                 </div>
                                 <div class="form-group col-xl-2 col-lg-6 col-md-6 col-sm-12 col-12">
@@ -129,6 +129,9 @@
 
 @section Scripts {
     <script>
+        const REPORTE_GENERAL = "G";
+        const REPORTE_CONCEPTO = "C";
+
         $('#datepicker .input-daterange').datepicker({
             todayBtn: 'linked',
             language: 'es',
@@ -142,37 +145,27 @@
         $('#datepicker .input-daterange #fechaDesde').datepicker('update', "@Model.fechaDesde");
         $('#datepicker .input-daterange #fechaHasta').datepicker('update', "@Model.fechaHasta");
 
-        if ($('#frmGenerarReporteObl #reporte').val() === '3') {
+        if ($('#frmGenerarReporteObl #tipoReporte').val() !== REPORTE_GENERAL) {
             $('#frmGenerarReporteObl #dependencia').prop('disabled', false);
         }
 
-        $(document).on('change', '#frmGenerarReporteObl #reporte', function () {
+        $(document).on('change', '#frmGenerarReporteObl #tipoReporte', function () {
             let cmbDependencia = $('#frmGenerarReporteObl #dependencia');
-            
-            if (this.value === '3') {
-                cmbDependencia.prop('disabled', false);
-            } else {
+            debugger;
+            if (this.value === REPORTE_GENERAL) {
                 cmbDependencia.val('');
                 cmbDependencia.prop('disabled', true);
+            } else {
+                cmbDependencia.prop('disabled', false);
             }
         });
 
         $(document).on('click', '#frmGenerarReporteObl button[type=submit]', function () {
-            let cmbReporte = $('#frmGenerarReporteObl #reporte');
+            let cmbReporte = $('#frmGenerarReporteObl #tipoReporte');
             let cmbDependencia = $('#frmGenerarReporteObl #dependencia');
             
             if (cmbReporte.val() === '') {
                 MostrarMensaje("Debe seleccionar un Tipo de Reporte.");
-                return false;
-            }
-
-            if (cmbReporte.val() === '3' && cmbDependencia.val() === '') {
-                if ($("#frmGenerarReporteObl #tipoEstudio").val() === "Pregrado") {
-                    MostrarMensaje("Debe seleccionar una facultad.");
-                } else {
-                    MostrarMensaje("Debe seleccionar un grado.");
-                }
-                
                 return false;
             }
         });
@@ -187,7 +180,6 @@
         }
 
         $(document).on("change", "#frmGenerarReporteObl #tipoEstudio", function (e) {
-            CargarReportes($(this).val());
             CargarDependencias($(this).val());
             $('#frmGenerarReporteObl #dependencia').prop('disabled', true);
         });
@@ -222,38 +214,5 @@
                 }
             });
         }
-
-        function CargarReportes(tipoEstudio) {
-            let cmbDependencia = $('#frmGenerarReporteObl #reporte');
-
-            let parametros = {
-                tipoEstudio: tipoEstudio
-            };
-
-            $.ajax({
-                type: 'GET',
-                url: ('@Url.Action("GetReportesPagoObligaciones", "Service", new { httproute = "ActionApi" })'),
-                data: parametros,
-                dataType: 'json',
-                beforeSend: function () {
-                    cmbDependencia.html('');
-                },
-                success: function (data) {
-                    console.log(data);
-                    if (data && data.length > 0) {
-                        let html = '<option value="">SELECCIONAR</option>';
-
-                        $.each(data, function (i, item) {
-                            html += '<option value="' + item.Value + '">' + item.TextDisplay + '</option>'
-                        });
-
-                        cmbDependencia.html(html);
-                    }
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                }
-            });
-        }
-
     </script>
 }

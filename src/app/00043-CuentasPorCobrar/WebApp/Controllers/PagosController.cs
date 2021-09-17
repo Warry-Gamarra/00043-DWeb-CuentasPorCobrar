@@ -147,7 +147,7 @@ namespace WebApp.Controllers
 
             var model = new CargarArchivoViewModel() { TipoArchivo = TipoPago.Obligacion };
 
-            return PartialView("_SeleccionarArchivo", model);
+            return PartialView("_SeleccionarArchivoObligaciones", model);
         }
 
         //[Route("operaciones/cargar-pagos/tasas")]
@@ -164,11 +164,10 @@ namespace WebApp.Controllers
         {
             ViewBag.Tipo = "(TASAS)";
             ViewBag.EntidadesFinancieras = new SelectList(ListaEntidadesFinancieras(), "Value", "TextDisplay");
-            ViewBag.Anios = new SelectList(generalServiceFacade.Listar_Anios(), "Value", "TextDisplay");
-            ViewBag.Periodos = new SelectList(catalogoServiceFacade.Listar_Periodos(), "Value", "TextDisplay");
+            
+            var model = new CargarArchivoViewModel() { TipoArchivo = TipoPago.Tasa }; ;
 
-            var model = new CargarArchivoViewModel() { TipoArchivo = TipoPago.Tasa };
-            return PartialView("_SeleccionarArchivo", model);
+            return PartialView("_SeleccionarArchivoTasas", model);
         }
 
 
@@ -177,7 +176,15 @@ namespace WebApp.Controllers
         {
             var result = pagosModel.CargarArchivoPagos(Server.MapPath("~/Upload/Pagos/"), file, model, WebSecurity.CurrentUserId);
 
-            Session["PAGO_OBLIG_RESULT"] = result.ListaResultados;
+            switch (model.TipoArchivo)
+            {
+                case TipoPago.Obligacion:
+                    Session["PAGO_OBLIG_RESULT"] = result.ListaResultadosOblig;
+                    break;
+                case TipoPago.Tasa:
+                    Session["PAGO_TASA_RESULT"] = result.ListaResultadosTasas;
+                    break;
+            }
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
@@ -193,7 +200,6 @@ namespace WebApp.Controllers
                 var worksheet = workbook.Worksheets.Add("PagoObligaciones");
                 var currentRow = 1;
 
-                #region Header
                 worksheet.Cell(currentRow, 1).Value = "CodOperacion";
                 worksheet.Cell(currentRow, 2).Value = "CodAlumno";
                 worksheet.Cell(currentRow, 3).Value = "NomAlumno";
@@ -205,13 +211,10 @@ namespace WebApp.Controllers
                 worksheet.Cell(currentRow, 9).Value = "MontoPago";
                 worksheet.Cell(currentRow, 10).Value = "InteresMoratorio";
                 worksheet.Cell(currentRow, 11).Value = "LugarPago";
-                worksheet.Cell(currentRow, 12).Value = "InforUnfv";
+                worksheet.Cell(currentRow, 12).Value = "InformacionAdicional";
                 worksheet.Cell(currentRow, 13).Value = "Estado";
                 worksheet.Cell(currentRow, 14).Value = "Mensaje";
 
-                #endregion
-
-                #region Body
                 var resultados = (IEnumerable<Domain.Entities.PagoObligacionObsEntity>)Session["PAGO_OBLIG_RESULT"];
 
                 foreach (var item in resultados.OrderBy(x => x.D_FecPago))
@@ -225,21 +228,83 @@ namespace WebApp.Controllers
                     worksheet.Cell(currentRow, 6).SetValue<string>(item.D_FecPago.ToString(FormatosDateTime.BASIC_DATETIME));
                     worksheet.Cell(currentRow, 7).SetValue<string>(item.I_Cantidad.ToString());
                     worksheet.Cell(currentRow, 8).SetValue<string>(item.C_Moneda);
-                    worksheet.Cell(currentRow, 9).SetValue<string>(item.I_MontoPago.ToString("N2"));
-                    worksheet.Cell(currentRow, 10).SetValue<string>(item.I_InteresMora.ToString("N2"));
+                    worksheet.Cell(currentRow, 9).SetValue<decimal?>(item.I_MontoPago);
+                    worksheet.Cell(currentRow, 10).SetValue<decimal?>(item.I_InteresMora);
                     worksheet.Cell(currentRow, 11).SetValue<string>(item.T_LugarPago);
                     worksheet.Cell(currentRow, 12).SetValue<string>(item.T_InformacionAdicional);
                     worksheet.Cell(currentRow, 13).SetValue<string>(item.B_Success ? "Correcto" : "Observado");
                     worksheet.Cell(currentRow, 14).SetValue<string>(item.T_ErrorMessage);
                 }
-                #endregion
+
+                worksheet.Range(worksheet.Cell(2, 9), worksheet.Cell(currentRow, 10)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
 
                 using (var stream = new MemoryStream())
                 {
                     workbook.SaveAs(stream);
                     var content = stream.ToArray();
 
-                    return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Resultado del registro de pagos.xlsx");
+                    return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Resultado del registro de pago de obligaciones.xlsx");
+                }
+            }
+        }
+
+        [HttpGet]
+        public ActionResult DescargarResultadoPagoTasas()
+        {
+            if (Session["PAGO_TASA_RESULT"] == null)
+                return RedirectToAction("ImportarPagoTasas", "Pagos");
+
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.Worksheets.Add("PagoTasas");
+                var currentRow = 1;
+
+                worksheet.Cell(currentRow, 1).Value = "CodDepositante";
+                worksheet.Cell(currentRow, 2).Value = "NomDepositante";
+                worksheet.Cell(currentRow, 3).Value = "CodTasa";
+                worksheet.Cell(currentRow, 4).Value = "TasaDesc";
+                worksheet.Cell(currentRow, 5).Value = "CodOperacion";
+                worksheet.Cell(currentRow, 6).Value = "Referencia";
+                worksheet.Cell(currentRow, 7).Value = "FechaPago";
+                worksheet.Cell(currentRow, 8).Value = "Cantidad";
+                worksheet.Cell(currentRow, 9).Value = "Moneda";
+                worksheet.Cell(currentRow, 10).Value = "MontoPago";
+                worksheet.Cell(currentRow, 11).Value = "Recargo";
+                worksheet.Cell(currentRow, 12).Value = "LugarPago";
+                worksheet.Cell(currentRow, 13).Value = "InformacionAdicional";
+                worksheet.Cell(currentRow, 14).Value = "Estado";
+                worksheet.Cell(currentRow, 15).Value = "Mensaje";
+
+                var resultados = (IEnumerable<Domain.Entities.PagoTasaObsEntity>)Session["PAGO_TASA_RESULT"];
+
+                foreach (var item in resultados.OrderBy(x => x.D_FecPago))
+                {
+                    currentRow++;
+                    worksheet.Cell(currentRow, 1).SetValue<string>(item.C_CodDepositante);
+                    worksheet.Cell(currentRow, 2).SetValue<string>(item.T_NomDepositante);
+                    worksheet.Cell(currentRow, 3).SetValue<string>(item.C_CodTasa);
+                    worksheet.Cell(currentRow, 4).SetValue<string>(item.T_TasaDesc);
+                    worksheet.Cell(currentRow, 5).SetValue<string>(item.C_CodOperacion);
+                    worksheet.Cell(currentRow, 6).SetValue<string>(item.C_Referencia);
+                    worksheet.Cell(currentRow, 7).SetValue<string>(item.D_FecPago.ToString(FormatosDateTime.BASIC_DATETIME));
+                    worksheet.Cell(currentRow, 8).SetValue<string>(item.I_Cantidad.ToString());
+                    worksheet.Cell(currentRow, 9).SetValue<string>(item.C_Moneda);
+                    worksheet.Cell(currentRow, 10).SetValue<decimal?>(item.I_MontoPago);
+                    worksheet.Cell(currentRow, 11).SetValue<decimal?>(item.I_InteresMora);
+                    worksheet.Cell(currentRow, 12).SetValue<string>(item.T_LugarPago);
+                    worksheet.Cell(currentRow, 13).SetValue<string>(item.T_InformacionAdicional);
+                    worksheet.Cell(currentRow, 14).SetValue<string>(item.B_Success ? "Correcto" : "Observado");
+                    worksheet.Cell(currentRow, 15).SetValue<string>(item.T_ErrorMessage);
+                }
+
+                worksheet.Range(worksheet.Cell(2, 10), worksheet.Cell(currentRow, 11)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
+
+                using (var stream = new MemoryStream())
+                {
+                    workbook.SaveAs(stream);
+                    var content = stream.ToArray();
+
+                    return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Resultado del registro de pago de tasas.xlsx");
                 }
             }
         }
@@ -299,7 +364,7 @@ namespace WebApp.Controllers
                     }
                 }
 
-                ResponseModel.Error(result, "Ha ocurrido un error con el envio de datos" + details);
+                ResponseModel.Error(result, "Ha ocurrido un error con el envío de datos" + details);
             }
 
             return PartialView("_MsgRegistrarPagoObligacion", result);
@@ -323,7 +388,7 @@ namespace WebApp.Controllers
         [HttpPost]
         public ActionResult RegistrarPagoTasa(PagoTasaViewModel model)
         {
-            Response result = new Response();
+            ImportacionPagoResponse result = new ImportacionPagoResponse();
 
             if (ModelState.IsValid)
             {
@@ -331,11 +396,9 @@ namespace WebApp.Controllers
                 {
                     int currentUserID = WebSecurity.CurrentUserId;
 
-                    model.fechaPago = model.fechaPago.Value.AddHours(model.horas).AddMinutes(model.minutos);
-
                     result = pagosModel.GrabarPagoTasa(model, currentUserID);
 
-                    if (!result.Value)
+                    if (!result.Success)
                     {
                         throw new Exception(result.Message);
                     }
@@ -357,10 +420,10 @@ namespace WebApp.Controllers
                     }
                 }
 
-                ResponseModel.Error(result, "Ha ocurrido un error con el envio de datos" + details);
+                ResponseModel.Error(result, "Ha ocurrido un error con el envío de datos" + details);
             }
 
-            return PartialView("_MsgRegistrarPagoObligacion", result);
+            return PartialView("_MsgRegistrarPagoTasa", result);
         }
 
 

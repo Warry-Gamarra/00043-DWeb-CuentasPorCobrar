@@ -42,7 +42,7 @@ namespace Domain.Services.Implementations
             dataMatriculas.RemoveAll(mat => CampoCodRcIncorrecto(mat.C_CodRC));
 
             //Validando códigos duplicados.
-            var codigosRepetidos = dataMatriculas.GroupBy(x => new { x.C_CodRC, x.C_CodAlu }).Where(x => x.Count() > 1);
+            var codigosRepetidos = dataMatriculas.GroupBy(x => new { x.C_CodRC, x.C_CodAlu, x.C_Periodo }).Where(x => x.Count() > 1);
 
             if (codigosRepetidos != null && codigosRepetidos.Count() > 0)
             {
@@ -50,7 +50,7 @@ namespace Domain.Services.Implementations
                     c => c.ToList().ForEach(rep => {
                         observados.Add(Mapper.MatriculaEntity_To_MatriculaObsEntity(rep, false, "Código de alumno repetido."));
 
-                        dataMatriculas.RemoveAll(mat => mat.C_CodRC == rep.C_CodRC && mat.C_CodAlu == rep.C_CodAlu);
+                        dataMatriculas.RemoveAll(mat => mat.C_CodRC == rep.C_CodRC && mat.C_CodAlu == rep.C_CodAlu && mat.C_Periodo == rep.C_Periodo);
                     })
                 );
             }

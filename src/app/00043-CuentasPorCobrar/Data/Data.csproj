@@ -72,12 +72,14 @@
     <Compile Include="Procedures\USP_IU_GenerarObligacionesPregrado_X_Ciclo.cs" />
     <Compile Include="Procedures\USP_I_GrabarAlumnoMultaNoVotar.cs" />
     <Compile Include="Procedures\USP_I_GrabarPagoObligaciones.cs" />
+    <Compile Include="Procedures\USP_I_GrabarPagoTasas.cs" />
     <Compile Include="Procedures\USP_S_ListadoEstadoObligaciones.cs" />
     <Compile Include="Procedures\USP_S_ResumenAnualPagoDeObligaciones_X_Clasificadores.cs" />
     <Compile Include="Procedures\USP_S_ReportePagoObligacionesPosgrado.cs" />
     <Compile Include="Procedures\USP_S_ReportePagoObligacionesPregrado.cs" />
     <Compile Include="Procedures\USP_S_ResumenAnualPagoDeObligaciones_X_Dependencia.cs" />
-    <Compile Include="Procedures\USP_S_ValidarCodOperacion.cs" />
+    <Compile Include="Procedures\USP_S_ValidarCodOperacionTasa.cs" />
+    <Compile Include="Procedures\USP_S_ValidarCodOperacionObligacion.cs" />
     <Compile Include="Procedures\USP_U_ActualizarConceptoPago.cs" />
     <Compile Include="Procedures\USP_I_GrabarConceptoPago.cs" />
     <Compile Include="Procedures\USP_IU_GrabarMatricula.cs" />
@@ -101,6 +103,7 @@
     <Compile Include="Tables\TC_ColumnaSeccion.cs" />
     <Compile Include="Tables\TC_SeccionArchivo.cs" />
     <Compile Include="Types\DataPagoObligacionesResult.cs" />
+    <Compile Include="Types\DataPagoTasasResult.cs" />
     <Compile Include="Types\MultaNoVotarResult.cs" />
     <Compile Include="Views\VW_DevolucionPago.cs" />
     <Compile Include="Views\VW_CtaDepositoProceso.cs" />
@@ -121,6 +124,7 @@
     <Compile Include="Views\VW_CuotasPago.cs" />
     <Compile Include="Views\VW_DetalleObligaciones.cs" />
     <Compile Include="Views\VW_Pagos.cs" />
+    <Compile Include="Views\VW_PagoTasas.cs" />
     <Compile Include="Views\VW_Tasas.cs" />
     <Compile Include="Views\VW_Usuario.cs" />
     <Compile Include="Tables\TS_CorreoAplicacion.cs" />

@@ -62,24 +62,12 @@ namespace WebApp.Models.Facades
             return result;
         }
 
-        public IEnumerable<SelectViewModel> Listar_ReportesPregrado()
+        public IEnumerable<SelectViewModel> Listar_TipoReporteObligaciones()
         {
-            var lista = Reportes.Pregrado.Select(
+            var lista = Reportes.Listar().Select(
                 x => new SelectViewModel()
                 {
-                    Value = x.Key.ToString(),
-                    TextDisplay = x.Value
-                });
-
-            return lista;
-        }
-
-        public IEnumerable<SelectViewModel> Listar_ReportesPosgrado()
-        {
-            var lista = Reportes.Posgrado.Select(
-                x => new SelectViewModel()
-                {
-                    Value = x.Key.ToString(),
+                    Value = x.Key,
                     TextDisplay = x.Value
                 });
 

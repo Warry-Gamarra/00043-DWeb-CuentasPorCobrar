@@ -56,6 +56,10 @@ namespace Data.Procedures
 
         public decimal? I_MontoPagadoActual { get; set; }
 
+        public DateTime D_FecCre { get; set; }
+
+        public DateTime? D_FecMod { get; set; }
+
         public static IEnumerable<USP_S_ListadoEstadoObligaciones> Execute(USP_S_ListadoEstadoObligaciones_Parameters pr)
         {
             IEnumerable<USP_S_ListadoEstadoObligaciones> result;
@@ -73,6 +77,8 @@ namespace Data.Procedures
                     parameters.Add(name: "B_EsPregrado", dbType: DbType.Boolean, value: pr.B_EsPregrado);
                     parameters.Add(name: "I_Anio", dbType: DbType.Int32, value: pr.I_Anio);
                     parameters.Add(name: "I_Periodo", dbType: DbType.Int32, value: pr.I_Periodo);
+                    parameters.Add(name: "C_CodFac", dbType: DbType.String, value: pr.C_CodFac);
+                    parameters.Add(name: "C_CodEsc", dbType: DbType.String, value: pr.C_CodEsc);
                     parameters.Add(name: "C_RcCod", dbType: DbType.String, value: pr.C_RcCod);
                     parameters.Add(name: "B_Ingresante", dbType: DbType.Boolean, value: pr.B_Ingresante);
                     parameters.Add(name: "B_ObligacionGenerada", dbType: DbType.Boolean, value: pr.B_ObligacionGenerada);
@@ -98,6 +104,8 @@ namespace Data.Procedures
         public bool B_EsPregrado { get; set; }
         public int I_Anio { get; set; }
         public int? I_Periodo { get; set; }
+        public string C_CodFac { get; set; }
+        public string C_CodEsc { get; set; }
         public string C_RcCod { get; set; }
         public bool? B_Ingresante { get; set; }
         public bool? B_ObligacionGenerada { get; set; }

@@ -349,3 +349,4 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 /src/app/00043-CuentasPorCobrar/WebApp/Upload/Pagos/Obligaciones
+/src/app/00043-CuentasPorCobrar/WebApp/Upload/Pagos/Tasas

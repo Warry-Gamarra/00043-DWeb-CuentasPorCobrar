@@ -35,7 +35,7 @@ namespace WebApp.Models
 
             var memoryStream = new MemoryStream();
 
-            var writer = new StreamWriter(memoryStream, Encoding.UTF8);
+            var writer = new StreamWriter(memoryStream, Encoding.Default);
 
             string identificadorRegistro = "T";
             int cantRegistrosSoles = cuotas_pago.Count();
@@ -67,6 +67,7 @@ namespace WebApp.Models
                 string codigoContrato = item.C_CodAlu.PadLeft(10, '0');
                 string nombres = item.T_NombresCompletos;
                 nombres = StringExtensions.SinCaracteresEspecialies(nombres.Substring(0, (nombres.Length < 40 ? nombres.Length : 40)));
+                //nombres = nombres.Substring(0, (nombres.Length < 40 ? nombres.Length : 40));
                 string numeroRecibo = item.I_NroOrden.ToString("D6").PadRight(20, ' ');
                 string referenciaRecibo = new String(' ', 20);
                 string fechaEmision = "00000000";

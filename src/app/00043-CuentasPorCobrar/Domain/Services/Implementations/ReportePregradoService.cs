@@ -76,12 +76,15 @@ namespace Domain.Services.Implementations
             return result;
         }
 
-        public IEnumerable<EstadoObligacionDTO> EstadoObligacionAlumnos(int anio, int? periodo, string codRc, bool? esIngresante, bool? estaPagado, bool? obligacionGenerada, DateTime? fechaInicio, DateTime? fechaFin)
+        public IEnumerable<EstadoObligacionDTO> EstadoObligacionAlumnos(int anio, int? periodo, string codFac, string codEsc, string codRc, 
+            bool? esIngresante, bool? estaPagado, bool? obligacionGenerada, DateTime? fechaInicio, DateTime? fechaFin)
         {
             var pr = new USP_S_ListadoEstadoObligaciones_Parameters()
             {
                 I_Anio = anio,
                 I_Periodo = periodo,
+                C_CodFac = codFac,
+                C_CodEsc = codEsc,
                 C_RcCod = codRc,
                 B_EsPregrado = true,
                 B_Ingresante = esIngresante,
