@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class PagoPosgradoPorGradodDTO
+    public class PagoPosgradoPorGradoDTO
     {
         public string T_EscDesc { get; set; }
         public string C_CodEsc { get; set; }

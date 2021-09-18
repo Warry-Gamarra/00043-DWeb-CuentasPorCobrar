@@ -14,7 +14,6 @@ using WebApp.ViewModels;
 namespace WebApp.Controllers
 {
     [Authorize]
-    //[Route("consultas/estados-de-cuenta/{action}")]
     [Authorize(Roles = "Administrador, Consulta")]
     public class EstadosCuentaController : Controller
     {
@@ -69,6 +68,37 @@ namespace WebApp.Controllers
             return View(model);
         }
 
+        [Route("consultas/reporte-pago-de-obligaciones/descarga")]
+        public ActionResult DescargaReportesPagoObligaciones(ReportePagosObligacionesViewModel model)
+        {
+            Tuple<string, XLWorkbook> reporte;
+
+            switch (model.tipoEstudio)
+            {
+                case TipoEstudio.Pregrado:
+                    reporte = ObtenerReporteExcelPregradoObligacion(model);
+                    break;
+
+                case TipoEstudio.Posgrado:
+                    reporte = ObtenerExcelReportePosgradoObligacion(model);
+                    break;
+
+                default:
+                    reporte = null;
+                    break;
+            }
+
+            using (var stream = new MemoryStream())
+            {
+                reporte.Item2.SaveAs(stream);
+
+                var content = stream.ToArray();
+
+                return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", reporte.Item1);
+            }
+        }
+
+
         [Route("consultas/resumen-anual-obligaciones-por-clasificadores")]
         public ActionResult ResumenAnualObligacionesPorClasificadores(int anio = 0, TipoEstudio tipoEstudio = TipoEstudio.Pregrado, int? entidadFinanID = null, int? ctaDepositoID = null)
         {
@@ -103,7 +133,7 @@ namespace WebApp.Controllers
             return View(model);
         }
 
-        [Route("consultas/resumen-anual-obligaciones-por-clasificadores/descargar")]
+        [Route("consultas/resumen-anual-obligaciones-por-clasificadores/descarga")]
         public ActionResult DescargaResumenAnualObligacionesPorClasificadores(int anio, TipoEstudio tipoEstudio, int? entidadFinanID = null, int? ctaDepositoID = null)
         {
             ReporteResumenAnualPagoObligaciones_X_Clasificadores model;
@@ -174,7 +204,7 @@ namespace WebApp.Controllers
                 worksheet.Cell(currentRow, 12).Value = "Octubre";
                 worksheet.Cell(currentRow, 13).Value = "Noviembre";
                 worksheet.Cell(currentRow, 14).Value = "Diciembre";
-                worksheet.Cell(currentRow, 15).Value = "Total (S/.)";
+                worksheet.Cell(currentRow, 15).Value = "Total (S/)";
 
                 currentRow++;
 
@@ -201,7 +231,7 @@ namespace WebApp.Controllers
                     currentRow++;
                 }
 
-                worksheet.Cell(currentRow, 2).Value = "Total (S/.)";
+                worksheet.Cell(currentRow, 2).Value = "Total (S/)";
                 worksheet.Cell(currentRow, 3).SetValue<decimal>(model.TotalEnero);
                 worksheet.Cell(currentRow, 4).SetValue<decimal>(model.TotalFebrero);
                 worksheet.Cell(currentRow, 5).SetValue<decimal>(model.TotalMarzo);
@@ -265,7 +295,7 @@ namespace WebApp.Controllers
             return View(model);
         }
 
-        [Route("consultas/resumen-anual-obligaciones-por-dependencias/descargar")]
+        [Route("consultas/resumen-anual-obligaciones-por-dependencias/descarga")]
         public ActionResult DescargaResumenAnualObligacionesPorDependencias(int anio, TipoEstudio tipoEstudio, int? entidadFinanID = null, int? ctaDepositoID = null)
         {
             ReporteResumenAnualPagoObligaciones_X_Dependencias model;
@@ -333,7 +363,7 @@ namespace WebApp.Controllers
                 worksheet.Cell(currentRow, 11).Value = "Octubre";
                 worksheet.Cell(currentRow, 12).Value = "Noviembre";
                 worksheet.Cell(currentRow, 13).Value = "Diciembre";
-                worksheet.Cell(currentRow, 14).Value = "Total (S/.)";
+                worksheet.Cell(currentRow, 14).Value = "Total (S/)";
 
                 currentRow++;
 
@@ -359,7 +389,7 @@ namespace WebApp.Controllers
                     currentRow++;
                 }
 
-                worksheet.Cell(currentRow, 1).Value = "Total (S/.)";
+                worksheet.Cell(currentRow, 1).Value = "Total (S/)";
                 worksheet.Cell(currentRow, 2).SetValue<decimal>(model.TotalEnero);
                 worksheet.Cell(currentRow, 3).SetValue<decimal>(model.TotalFebrero);
                 worksheet.Cell(currentRow, 4).SetValue<decimal>(model.TotalMarzo);
@@ -409,11 +439,278 @@ namespace WebApp.Controllers
             }
         }
 
+        private Tuple<string, XLWorkbook> ObtenerReporteExcelPregradoObligacion(ReportePagosObligacionesViewModel model)
+        {
+            string nombreArchivo = "";
+            XLWorkbook workbook = null;
+
+            if (model.tipoReporte == Reportes.REPORTE_GENERAL)
+            {
+                nombreArchivo = "Reporte Pregrado General" + " al " + DateTime.Now.ToString(FormatosDateTime.BASIC_DATE2) + ".xlsx";
+
+                workbook  = ReporteExcelPagosPorFacultad(
+                    reportePregradoServiceFacade.ReportePagosPorFacultad(model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera));
+            }
+
+            if (model.tipoReporte == Reportes.REPORTE_CONCEPTO)
+            {
+                if (String.IsNullOrEmpty(model.dependencia))
+                {
+                    nombreArchivo = "Reporte Pregrado por Conceptos" + " al " + DateTime.Now.ToString(FormatosDateTime.BASIC_DATE2) + ".xlsx";
+
+                    workbook = ReporteExcelPagosPorConcepto(
+                        reportePregradoServiceFacade.ReportePagosPorConcepto(model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera));
+                }
+                else
+                {
+                    nombreArchivo = "Reporte Pregrado por Conceptos" + " al " + DateTime.Now.ToString(FormatosDateTime.BASIC_DATE2) + ".xlsx";
+
+                    workbook = ReporteExcelConceptosPorUnaFacultad(
+                        reportePregradoServiceFacade.ReporteConceptosPorUnaFacultad(model.dependencia, model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera));
+                }
+            }
+
+            return new Tuple<string, XLWorkbook>(nombreArchivo, workbook);
+        }
+
+        private XLWorkbook ReporteExcelPagosPorFacultad(ReportePagosPorFacultadViewModel reporte)
+        {
+            var workbook = new XLWorkbook();
+
+            var worksheet = workbook.Worksheets.Add("ReportePregrado");
+
+            worksheet.Column("A").Width = 14;
+
+            worksheet.Column("B").Width = 60;
+
+            worksheet.Column("C").Width = 14;
+
+            var titleCell = worksheet.Cell(1, 1);
+
+            titleCell.Value = reporte.Titulo.ToUpper();
+
+            titleCell.RichText.SetBold(true);
+
+            titleCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+
+            worksheet.Range(titleCell, worksheet.Cell(1, 3)).Merge(true);
+
+            var subTitleCell = worksheet.Cell(2, 1);
+
+            subTitleCell.Value = reporte.SubTitulo.ToUpper();
+
+            subTitleCell.RichText.SetBold(true);
+
+            subTitleCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+
+            worksheet.Range(subTitleCell, worksheet.Cell(2, 3)).Merge(true);
+
+            var bankNameCell = worksheet.Cell(4, 1);
+
+            bankNameCell.Value = String.IsNullOrEmpty(reporte.nombreEntidadFinanc) ? "" : "Entidad Financiera: " + reporte.nombreEntidadFinanc;
+
+            var dateCell = worksheet.Cell(4, 3);
+
+            dateCell.Value = "Fecha consulta: " + reporte.FechaActual;
+
+            dateCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
+
+            var timeCell = worksheet.Cell(5, 3);
+
+            timeCell.Value = "Hora consulta: " + reporte.HoraActual;
+
+            timeCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
+
+            var currentRow = 7;
+
+            worksheet.Cell(currentRow, 1).Value = "Código";
+            worksheet.Cell(currentRow, 2).Value = "Facultad";
+            worksheet.Cell(currentRow, 3).Value = "Monto (S/)";
+
+            currentRow++;
+
+            var inicial = currentRow;
+
+            foreach (var item in reporte.listaPagos)
+            {
+                worksheet.Cell(currentRow, 1).SetValue<string>(item.C_CodFac);
+                worksheet.Cell(currentRow, 2).SetValue<string>(item.T_FacDesc);
+                worksheet.Cell(currentRow, 3).SetValue<decimal>(item.I_MontoTotal);
+
+                currentRow++;
+            }
+            
+            worksheet.Cell(currentRow, 2).Value = "Total (S/)";
+            worksheet.Cell(currentRow, 3).SetValue<decimal>(reporte.MontoTotal);
+            
+            worksheet.Range(worksheet.Cell(inicial, 3), worksheet.Cell(currentRow, 3)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
+
+            return workbook;
+        }
+
+        private XLWorkbook ReporteExcelPagosPorConcepto(ReportePagosPorConceptoViewModel reporte)
+        {
+            var workbook = new XLWorkbook();
+
+            var worksheet = workbook.Worksheets.Add("ReportePregrado");
+
+            worksheet.Column("A").Width = 14;
+
+            worksheet.Column("B").Width = 60;
+
+            worksheet.Column("C").Width = 14;
+
+            var titleCell = worksheet.Cell(1, 1);
+
+            titleCell.Value = reporte.Titulo.ToUpper();
+
+            titleCell.RichText.SetBold(true);
+
+            titleCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+
+            worksheet.Range(titleCell, worksheet.Cell(1, 3)).Merge(true);
+
+            var subTitleCell = worksheet.Cell(2, 1);
+
+            subTitleCell.Value = reporte.SubTitulo.ToUpper();
+
+            subTitleCell.RichText.SetBold(true);
+
+            subTitleCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+
+            worksheet.Range(subTitleCell, worksheet.Cell(2, 3)).Merge(true);
+
+            var bankNameCell = worksheet.Cell(4, 1);
+
+            bankNameCell.Value = String.IsNullOrEmpty(reporte.nombreEntidadFinanc) ? "" : "Entidad Financiera: " + reporte.nombreEntidadFinanc;
+
+            var dateCell = worksheet.Cell(4, 3);
+
+            dateCell.Value = "Fecha consulta: " + reporte.FechaActual;
+
+            dateCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
+
+            var timeCell = worksheet.Cell(5, 3);
+
+            timeCell.Value = "Hora consulta: " + reporte.HoraActual;
+
+            timeCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
+
+            var currentRow = 7;
+
+            worksheet.Cell(currentRow, 1).Value = "Clasificador";
+            worksheet.Cell(currentRow, 2).Value = "Concepto";
+            worksheet.Cell(currentRow, 3).Value = "Monto (S/)";
+
+            currentRow++;
+
+            var inicial = currentRow;
+
+            foreach (var item in reporte.listaPagos)
+            {
+                worksheet.Cell(currentRow, 1).SetValue<string>(item.C_CodClasificador);
+                worksheet.Cell(currentRow, 2).SetValue<string>(item.T_ConceptoPagoDesc);
+                worksheet.Cell(currentRow, 3).SetValue<decimal>(item.I_MontoTotal);
+
+                currentRow++;
+            }
+
+            worksheet.Cell(currentRow, 2).Value = "Total (S/)";
+            worksheet.Cell(currentRow, 3).SetValue<decimal>(reporte.MontoTotal);
+
+            worksheet.Range(worksheet.Cell(inicial, 3), worksheet.Cell(currentRow, 3)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
+
+            return workbook;
+        }
+
+        private XLWorkbook ReporteExcelConceptosPorUnaFacultad(ReporteConceptosPorUnaFacultadViewModel reporte)
+        {
+            var workbook = new XLWorkbook();
+
+            var worksheet = workbook.Worksheets.Add("ReportePregrado");
+
+            worksheet.Column("A").Width = 60;
+
+            worksheet.Column("B").Width = 14;
+
+            worksheet.Column("C").Width = 14;
+
+            worksheet.Column("D").Width = 14;
+
+            var titleCell = worksheet.Cell(1, 1);
+
+            titleCell.Value = reporte.Titulo.ToUpper();
+
+            titleCell.RichText.SetBold(true);
+
+            titleCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+
+            worksheet.Range(titleCell, worksheet.Cell(1, 4)).Merge(true);
+
+            var subTitleCell = worksheet.Cell(2, 1);
+
+            subTitleCell.Value = reporte.SubTitulo.ToUpper();
+
+            subTitleCell.RichText.SetBold(true);
+
+            subTitleCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+
+            worksheet.Range(subTitleCell, worksheet.Cell(2, 4)).Merge(true);
+
+            var facultadCell = worksheet.Cell(4, 1);
+
+            facultadCell.Value = "Facultad: " + reporte.Facultad.ToUpper();
+
+            var dateCell = worksheet.Cell(4, 4);
+
+            dateCell.Value = "Fecha consulta: " + reporte.FechaActual;
+
+            dateCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
+
+            var bankNameCell = worksheet.Cell(5, 1);
+
+            bankNameCell.Value = String.IsNullOrEmpty(reporte.nombreEntidadFinanc) ? "" : "Entidad Financiera: " + reporte.nombreEntidadFinanc;
+
+            var timeCell = worksheet.Cell(5, 4);
+
+            timeCell.Value = "Hora consulta: " + reporte.HoraActual;
+
+            timeCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
+
+            var currentRow = 7;
+
+            worksheet.Cell(currentRow, 1).Value = "Concepto";
+            worksheet.Cell(currentRow, 2).Value = "Clasificador";
+            worksheet.Cell(currentRow, 3).Value = "Cantidad";
+            worksheet.Cell(currentRow, 4).Value = "Monto (S/)";
+
+            currentRow++;
+
+            var inicial = currentRow;
+
+            foreach (var item in reporte.listaPagos)
+            {
+                worksheet.Cell(currentRow, 1).SetValue<string>(item.T_ConceptoPagoDesc);
+                worksheet.Cell(currentRow, 2).SetValue<string>(item.C_CodClasificador);
+                worksheet.Cell(currentRow, 3).SetValue<int>(item.I_Cantidad);
+                worksheet.Cell(currentRow, 4).SetValue<decimal>(item.I_MontoTotal);
+
+                currentRow++;
+            }
+
+            worksheet.Cell(currentRow, 3).Value = "Total (S/)";
+            worksheet.Cell(currentRow, 4).SetValue<decimal>(reporte.MontoTotal);
+
+            worksheet.Range(worksheet.Cell(inicial, 4), worksheet.Cell(currentRow, 4)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
+
+            return workbook;
+        }
+
         private void ObtenerReportePosgradoObligacion(ReportePagosObligacionesViewModel model)
         {
             if (model.tipoReporte == Reportes.REPORTE_GENERAL)
             {
-                model.reportePagosPorGradodViewModel = reportePosgradoServiceFacade.ReportePagosPorGrado(model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera);
+                model.reportePagosPorGradoViewModel = reportePosgradoServiceFacade.ReportePagosPorGrado(model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera);
             }
 
             if (model.tipoReporte == Reportes.REPORTE_CONCEPTO)
@@ -427,6 +724,273 @@ namespace WebApp.Controllers
                     model.reporteConceptosPorGradoViewModel = reportePosgradoServiceFacade.ReporteConceptosPorGrado(model.dependencia, model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera);
                 }
             }
+        }
+
+        private Tuple<string, XLWorkbook> ObtenerExcelReportePosgradoObligacion(ReportePagosObligacionesViewModel model)
+        {
+            string nombreArchivo = "";
+            XLWorkbook workbook = null;
+
+            if (model.tipoReporte == Reportes.REPORTE_GENERAL)
+            {
+                nombreArchivo = "Reporte Posgrado General" + " al " + DateTime.Now.ToString(FormatosDateTime.BASIC_DATE2) + ".xlsx";
+
+                workbook = ReporteExcelPagosPorGrado(
+                    reportePosgradoServiceFacade.ReportePagosPorGrado(model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera));
+            }
+
+            if (model.tipoReporte == Reportes.REPORTE_CONCEPTO)
+            {
+                if (String.IsNullOrEmpty(model.dependencia))
+                {
+                    nombreArchivo = "Reporte Posgrado por Conceptos" + " al " + DateTime.Now.ToString(FormatosDateTime.BASIC_DATE2) + ".xlsx";
+
+                    workbook = ReporteExcelPagosPorConceptoPosgrado(
+                        reportePosgradoServiceFacade.ReportePagosPorConcepto(model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera));
+                }
+                else
+                {
+                    nombreArchivo = "Reporte Posgrado por Conceptos" + " al " + DateTime.Now.ToString(FormatosDateTime.BASIC_DATE2) + ".xlsx";
+
+                    workbook = ReporteExcelConceptosPorGrado(
+                        reportePosgradoServiceFacade.ReporteConceptosPorGrado(model.dependencia, model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera));
+                }
+            }
+
+            return new Tuple<string, XLWorkbook>(nombreArchivo, workbook);
+        }
+
+        private XLWorkbook ReporteExcelPagosPorGrado(ReportePagosPorGradoViewModel reporte)
+        {
+            var workbook = new XLWorkbook();
+
+            var worksheet = workbook.Worksheets.Add("ReportePosgrado");
+
+            worksheet.Column("A").Width = 14;
+
+            worksheet.Column("B").Width = 60;
+
+            worksheet.Column("C").Width = 14;
+
+            var titleCell = worksheet.Cell(1, 1);
+
+            titleCell.Value = reporte.Titulo.ToUpper();
+
+            titleCell.RichText.SetBold(true);
+
+            titleCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+
+            worksheet.Range(titleCell, worksheet.Cell(1, 3)).Merge(true);
+
+            var subTitleCell = worksheet.Cell(2, 1);
+
+            subTitleCell.Value = reporte.SubTitulo.ToUpper();
+
+            subTitleCell.RichText.SetBold(true);
+
+            subTitleCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+
+            worksheet.Range(subTitleCell, worksheet.Cell(2, 3)).Merge(true);
+
+            var bankNameCell = worksheet.Cell(4, 1);
+
+            bankNameCell.Value = String.IsNullOrEmpty(reporte.nombreEntidadFinanc) ? "" : "Entidad Financiera: " + reporte.nombreEntidadFinanc;
+
+            var dateCell = worksheet.Cell(4, 3);
+
+            dateCell.Value = "Fecha consulta: " + reporte.FechaActual;
+
+            dateCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
+
+            var timeCell = worksheet.Cell(5, 3);
+
+            timeCell.Value = "Hora consulta: " + reporte.HoraActual;
+
+            timeCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
+
+            var currentRow = 7;
+
+            worksheet.Cell(currentRow, 1).Value = "Código";
+            worksheet.Cell(currentRow, 2).Value = "Grado";
+            worksheet.Cell(currentRow, 3).Value = "Monto (S/)";
+
+            currentRow++;
+
+            var inicial = currentRow;
+
+            foreach (var item in reporte.listaPagos)
+            {
+                worksheet.Cell(currentRow, 1).SetValue<string>(item.C_CodEsc);
+                worksheet.Cell(currentRow, 2).SetValue<string>(item.T_EscDesc);
+                worksheet.Cell(currentRow, 3).SetValue<decimal>(item.I_MontoTotal);
+
+                currentRow++;
+            }
+
+            worksheet.Cell(currentRow, 2).Value = "Total (S/)";
+            worksheet.Cell(currentRow, 3).SetValue<decimal>(reporte.MontoTotal);
+
+            worksheet.Range(worksheet.Cell(inicial, 3), worksheet.Cell(currentRow, 3)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
+
+            return workbook;
+        }
+
+        private XLWorkbook ReporteExcelPagosPorConceptoPosgrado(ReportePagosPorConceptoPosgradoViewModel reporte)
+        {
+            var workbook = new XLWorkbook();
+
+            var worksheet = workbook.Worksheets.Add("ReportePosgrado");
+
+            worksheet.Column("A").Width = 14;
+
+            worksheet.Column("B").Width = 60;
+
+            worksheet.Column("C").Width = 14;
+
+            var titleCell = worksheet.Cell(1, 1);
+
+            titleCell.Value = reporte.Titulo.ToUpper();
+
+            titleCell.RichText.SetBold(true);
+
+            titleCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+
+            worksheet.Range(titleCell, worksheet.Cell(1, 3)).Merge(true);
+
+            var subTitleCell = worksheet.Cell(2, 1);
+
+            subTitleCell.Value = reporte.SubTitulo.ToUpper();
+
+            subTitleCell.RichText.SetBold(true);
+
+            subTitleCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+
+            worksheet.Range(subTitleCell, worksheet.Cell(2, 3)).Merge(true);
+
+            var bankNameCell = worksheet.Cell(4, 1);
+
+            bankNameCell.Value = String.IsNullOrEmpty(reporte.nombreEntidadFinanc) ? "" : "Entidad Financiera: " + reporte.nombreEntidadFinanc;
+
+            var dateCell = worksheet.Cell(4, 3);
+
+            dateCell.Value = "Fecha consulta: " + reporte.FechaActual;
+
+            dateCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
+
+            var timeCell = worksheet.Cell(5, 3);
+
+            timeCell.Value = "Hora consulta: " + reporte.HoraActual;
+
+            timeCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
+
+            var currentRow = 7;
+
+            worksheet.Cell(currentRow, 1).Value = "Clasificador";
+            worksheet.Cell(currentRow, 2).Value = "Concepto";
+            worksheet.Cell(currentRow, 3).Value = "Monto (S/)";
+
+            currentRow++;
+
+            var inicial = currentRow;
+
+            foreach (var item in reporte.listaPagos)
+            {
+                worksheet.Cell(currentRow, 1).SetValue<string>(item.C_CodClasificador);
+                worksheet.Cell(currentRow, 2).SetValue<string>(item.T_ConceptoPagoDesc);
+                worksheet.Cell(currentRow, 3).SetValue<decimal>(item.I_MontoTotal);
+
+                currentRow++;
+            }
+
+            worksheet.Cell(currentRow, 2).Value = "Total (S/)";
+            worksheet.Cell(currentRow, 3).SetValue<decimal>(reporte.MontoTotal);
+
+            worksheet.Range(worksheet.Cell(inicial, 3), worksheet.Cell(currentRow, 3)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
+
+            return workbook;
+        }
+
+        private XLWorkbook ReporteExcelConceptosPorGrado(ReporteConceptosPorGradoViewModel reporte)
+        {
+            var workbook = new XLWorkbook();
+
+            var worksheet = workbook.Worksheets.Add("ReportePosgrado");
+
+            worksheet.Column("A").Width = 60;
+
+            worksheet.Column("B").Width = 14;
+
+            worksheet.Column("C").Width = 14;
+
+            worksheet.Column("D").Width = 14;
+
+            var titleCell = worksheet.Cell(1, 1);
+
+            titleCell.Value = reporte.Titulo.ToUpper();
+
+            titleCell.RichText.SetBold(true);
+
+            titleCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+
+            worksheet.Range(titleCell, worksheet.Cell(1, 4)).Merge(true);
+
+            var subTitleCell = worksheet.Cell(2, 1);
+
+            subTitleCell.Value = reporte.SubTitulo.ToUpper();
+
+            subTitleCell.RichText.SetBold(true);
+
+            subTitleCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+
+            worksheet.Range(subTitleCell, worksheet.Cell(2, 4)).Merge(true);
+
+            var gradoDescripCell = worksheet.Cell(4, 1);
+
+            gradoDescripCell.Value = "Grado: " + reporte.Grado.ToUpper();
+
+            var dateCell = worksheet.Cell(4, 4);
+
+            dateCell.Value = "Fecha consulta: " + reporte.FechaActual;
+
+            dateCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
+
+            var bankNameCell = worksheet.Cell(5, 1);
+
+            bankNameCell.Value = String.IsNullOrEmpty(reporte.nombreEntidadFinanc) ? "" : "Entidad Financiera: " + reporte.nombreEntidadFinanc;
+
+            var timeCell = worksheet.Cell(5, 4);
+
+            timeCell.Value = "Hora consulta: " + reporte.HoraActual;
+
+            timeCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
+
+            var currentRow = 7;
+
+            worksheet.Cell(currentRow, 1).Value = "Concepto";
+            worksheet.Cell(currentRow, 2).Value = "Clasificador";
+            worksheet.Cell(currentRow, 3).Value = "Cantidad";
+            worksheet.Cell(currentRow, 4).Value = "Monto (S/)";
+
+            currentRow++;
+
+            var inicial = currentRow;
+
+            foreach (var item in reporte.listaPagos)
+            {
+                worksheet.Cell(currentRow, 1).SetValue<string>(item.T_ConceptoPagoDesc);
+                worksheet.Cell(currentRow, 2).SetValue<string>(item.C_CodClasificador);
+                worksheet.Cell(currentRow, 3).SetValue<int>(item.I_Cantidad);
+                worksheet.Cell(currentRow, 4).SetValue<decimal>(item.I_MontoTotal);
+
+                currentRow++;
+            }
+
+            worksheet.Cell(currentRow, 3).Value = "Total (S/)";
+            worksheet.Cell(currentRow, 4).SetValue<decimal>(reporte.MontoTotal);
+
+            worksheet.Range(worksheet.Cell(inicial, 4), worksheet.Cell(currentRow, 4)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
+
+            return workbook;
         }
     }
 }

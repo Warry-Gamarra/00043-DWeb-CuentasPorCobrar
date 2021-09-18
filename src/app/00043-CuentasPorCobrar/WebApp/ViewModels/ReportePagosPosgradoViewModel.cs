@@ -9,13 +9,23 @@ using System.Web;
 
 namespace WebApp.ViewModels
 {
-    public class ReportePagosPorGradodViewModel
+    public class ReportePagosPorGradoViewModel
     {
         public string Titulo { get; set; }
         public string FechaInicio { get; set; }
         public string FechaFin { get; set; }
         public string FechaActual { get; }
         public string HoraActual { get; }
+        public string nombreEntidadFinanc { get; set; }
+        public IEnumerable<PagoPosgradoPorGradoDTO> listaPagos { get; }
+
+        public string SubTitulo
+        {
+            get
+            {
+                return String.Format("Resumen del {0} al {1}", FechaInicio, FechaFin);
+            }
+        }
         public decimal MontoTotal
         {
             get
@@ -30,9 +40,8 @@ namespace WebApp.ViewModels
                 return MontoTotal.ToString(FormatosDecimal.BASIC_DECIMAL);
             }
         }
-        public IEnumerable<PagoPosgradoPorGradodDTO> listaPagos { get; }
-
-        public ReportePagosPorGradodViewModel(IEnumerable<PagoPosgradoPorGradodDTO> listaPagos)
+        
+        public ReportePagosPorGradoViewModel(IEnumerable<PagoPosgradoPorGradoDTO> listaPagos)
         {
             FechaActual = DateTime.Now.ToString(FormatosDateTime.BASIC_DATE);
             HoraActual = DateTime.Now.ToString(FormatosDateTime.BASIC_TIME);
@@ -49,6 +58,16 @@ namespace WebApp.ViewModels
         public string FechaFin { get; set; }
         public string FechaActual { get; }
         public string HoraActual { get; }
+        public string nombreEntidadFinanc { get; set; }
+        public IEnumerable<PagoPosgradoPorConceptoDTO> listaPagos { get; }
+
+        public string SubTitulo
+        {
+            get
+            {
+                return String.Format("Resumen del {0} al {1}", FechaInicio, FechaFin);
+            }
+        }
         public decimal MontoTotal
         {
             get
@@ -63,8 +82,7 @@ namespace WebApp.ViewModels
                 return MontoTotal.ToString(FormatosDecimal.BASIC_DECIMAL);
             }
         }
-        public IEnumerable<PagoPosgradoPorConceptoDTO> listaPagos { get; }
-
+        
         public ReportePagosPorConceptoPosgradoViewModel(IEnumerable<PagoPosgradoPorConceptoDTO> listaPagos)
         {
             FechaActual = DateTime.Now.ToString(FormatosDateTime.BASIC_DATE);
@@ -83,6 +101,16 @@ namespace WebApp.ViewModels
         public string FechaFin { get; set; }
         public string FechaActual { get; }
         public string HoraActual { get; }
+        public string nombreEntidadFinanc { get; set; }
+        public IEnumerable<ConceptoPosgradoPorGradoDTO> listaPagos { get; }
+
+        public string SubTitulo
+        {
+            get
+            {
+                return String.Format("Resumen del {0} al {1}", FechaInicio, FechaFin);
+            }
+        }
         public decimal MontoTotal
         {
             get
@@ -97,7 +125,6 @@ namespace WebApp.ViewModels
                 return MontoTotal.ToString(FormatosDecimal.BASIC_DECIMAL);
             }
         }
-        public IEnumerable<ConceptoPosgradoPorGradoDTO> listaPagos { get; }
 
         public ReporteConceptosPorGradoViewModel(IEnumerable<ConceptoPosgradoPorGradoDTO> listaPagos)
         {

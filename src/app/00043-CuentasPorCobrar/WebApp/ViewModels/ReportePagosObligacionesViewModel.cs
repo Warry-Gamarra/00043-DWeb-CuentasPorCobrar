@@ -70,7 +70,7 @@ namespace WebApp.ViewModels
         public ReporteConceptosPorUnaFacultadViewModel reporteConceptosPorUnaFacultadViewModel { get; set; }
 
         //Posgrado
-        public ReportePagosPorGradodViewModel reportePagosPorGradodViewModel { get; set; }
+        public ReportePagosPorGradoViewModel reportePagosPorGradoViewModel { get; set; }
 
         public ReportePagosPorConceptoPosgradoViewModel reportePagosPorConceptoPosgradoViewModel { get; set; }
 

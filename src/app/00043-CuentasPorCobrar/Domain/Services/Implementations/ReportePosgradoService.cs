@@ -14,7 +14,7 @@ namespace Domain.Services.Implementations
         {
         }
 
-        public IEnumerable<PagoPosgradoPorGradodDTO> ReportePagosPorGrado(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc)
+        public IEnumerable<PagoPosgradoPorGradoDTO> ReportePagosPorGrado(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc)
         {
             if (DateTime.Compare(fechaInicio, fechaFin) > 0)
             {
@@ -23,7 +23,7 @@ namespace Domain.Services.Implementations
 
             var pagos = USP_S_ReportePagoObligacionesPosgrado.PagosPorGrado(fechaInicio, fechaFin, idEntidanFinanc);
 
-            var result = pagos.Select(p => Mapper.USP_S_ReportePagoObligacionesPosgrado_To_PagoPosgradoPorGradodDTO(p));
+            var result = pagos.Select(p => Mapper.USP_S_ReportePagoObligacionesPosgrado_To_PagoPosgradoPorGradoDTO(p));
 
             return result;
         }
