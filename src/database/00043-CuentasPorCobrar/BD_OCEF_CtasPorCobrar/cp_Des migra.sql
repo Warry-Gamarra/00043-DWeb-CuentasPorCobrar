@@ -218,6 +218,7 @@ exec USP_IU_MigrarDataConceptoPagoCtasPorCobrar @I_AnioIni = null, @I_AnioFin = 
 select @B_Resultado as resultado, @T_Message as mensaje
 GO
 
+
 declare @B_Resultado  bit, @I_AnioIni int, @I_AnioFin int, @T_Message	  nvarchar(4000)
 exec USP_IU_MigrarDataConceptoTasasCtasPorCobrar @I_AnioIni = null, @I_AnioFin = null, @B_Resultado = @B_Resultado output, @T_Message = @T_Message output
 select @B_Resultado as resultado, @T_Message as mensaje
