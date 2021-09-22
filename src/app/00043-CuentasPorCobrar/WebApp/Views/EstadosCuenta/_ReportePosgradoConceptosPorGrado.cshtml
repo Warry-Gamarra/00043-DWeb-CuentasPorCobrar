@@ -2,17 +2,25 @@
 
 <p class="h2 text-center">@Model.Titulo.ToUpper()</p>
 
-<p class="h4 text-center"><small>Resumen del @Model.FechaInicio al @Model.FechaFin</small></p>
+<p class="h4 text-center"><small>@Model.SubTitulo</small></p>
 
-<p class="h5 text-right"><small>Fecha: @Model.FechaActual</small></p>
+<div class="row">
+    <div class="col-lg-6">
+        <p>Grado: <b>@Model.Grado.ToUpper()</b></p>
+        @if (!String.IsNullOrEmpty(Model.nombreEntidadFinanc))
+        {
+            <p>Entidad Financiera: <b>@Model.nombreEntidadFinanc</b></p>
 
-<p class="h5 text-right"><small>Hora: @Model.HoraActual</small></p>
+        }
+    </div>
+    <div class="col-lg-6">
+        <p class="h5 text-right"><small>Fecha consulta: <b>@Model.FechaActual</b></small></p>
+        <p class="h5 text-right"><small>Hora consulta: <b>@Model.HoraActual</b></small></p>
+    </div>
+</div>
 
 <div class="table-responsive">
-
-    <p class="h5">GRADO: <b>@Model.Grado.ToUpper()</b></p>
-
-    <table class="table table-bordered table-hover table-sm" id="tbl_pagos">
+<table class="table table-bordered table-hover table-sm" id="tbl_pagos">
         <thead>
             <tr class="thead-light">
                 <th class="text-center">Concepto</th>

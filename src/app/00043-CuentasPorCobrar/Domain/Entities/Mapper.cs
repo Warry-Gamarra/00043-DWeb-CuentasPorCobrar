@@ -418,9 +418,9 @@ namespace Domain.Entities
             return result;
         }
 
-        public static PagoPosgradoPorGradodDTO USP_S_ReportePagoObligacionesPosgrado_To_PagoPosgradoPorGradodDTO(USP_S_ReportePagoObligacionesPosgrado sp)
+        public static PagoPosgradoPorGradoDTO USP_S_ReportePagoObligacionesPosgrado_To_PagoPosgradoPorGradoDTO(USP_S_ReportePagoObligacionesPosgrado sp)
         {
-            var result = new PagoPosgradoPorGradodDTO()
+            var result = new PagoPosgradoPorGradoDTO()
             {
                 T_EscDesc = sp.T_EscDesc,
                 C_CodEsc = sp.C_CodEsc,

@@ -2,41 +2,49 @@
 
 <p class="h2 text-center">@Model.Titulo.ToUpper()</p>
 
-<p class="h4 text-center"><small>Resumen del @Model.FechaInicio al @Model.FechaFin</small></p>
+<p class="h4 text-center"><small>@Model.SubTitulo</small></p>
 
-<p class="h5 text-right"><small>Fecha: @Model.FechaActual</small></p>
+<div class="row">
+    <div class="col-lg-6">
+        <p>Facultad: <b>@Model.Facultad.ToUpper()</b></p>
+        @if (!String.IsNullOrEmpty(Model.nombreEntidadFinanc))
+        {
+            <p>Entidad Financiera: <b>@Model.nombreEntidadFinanc</b></p>
 
-<p class="h5 text-right"><small>Hora: @Model.HoraActual</small></p>
+        }
+    </div>
+    <div class="col-lg-6">
+        <p class="h5 text-right"><small>Fecha consulta: <b>@Model.FechaActual</b></small></p>
+        <p class="h5 text-right"><small>Hora consulta: <b>@Model.HoraActual</b></small></p>
+    </div>
+</div>
 
 <div class="table-responsive">
-
-    <p class="h5">FACULTAD: <b>@Model.Facultad.ToUpper()</b></p>
-
     <table class="table table-bordered table-hover table-sm" id="tbl_pagos">
         <thead>
             <tr class="thead-light">
                 <th class="text-center">Concepto</th>
                 <th class="text-center">Clasificador</th>
                 <th class="text-center">Cantidad</th>
-                <th class="text-center">Monto (S/. )</th>
+                <th class="text-center">Monto (S/)</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model.listaPagos)
             {
-            <tr>
-                <td>@item.T_ConceptoPagoDesc</td>
-                <td class="text-center">@item.C_CodClasificador</td>
-                <td class="text-center">@item.I_Cantidad</td>
-                <td class="text-right">@item.T_MontoTotal</td>
-            </tr>
-            }
                 <tr>
-                    <th></th>
-                    <th></th>
-                    <th class="text-right">Total</th>
-                    <th class="text-right">@Model.T_MontoTotal</th>
+                    <td>@item.T_ConceptoPagoDesc</td>
+                    <td class="text-center">@item.C_CodClasificador</td>
+                    <td class="text-center">@item.I_Cantidad</td>
+                    <td class="text-right">@item.T_MontoTotal</td>
                 </tr>
+            }
+            <tr>
+                <th></th>
+                <th></th>
+                <th class="text-right">Total (S/)</th>
+                <th class="text-right">@Model.T_MontoTotal</th>
+            </tr>
         </tbody>
     </table>
 </div>

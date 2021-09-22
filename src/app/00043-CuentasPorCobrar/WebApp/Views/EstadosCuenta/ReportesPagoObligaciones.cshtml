@@ -32,7 +32,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body bg-light-gray">
-                        <form id="frmGenerarReporteObl" action="@Url.Action("ReportesPagoObligaciones", "EstadosCuenta")" method="GET">
+                        <form name="frmGenerarReporteObl" id="frmGenerarReporteObl" action="/" method="GET">
                             <div class="form-row">
                                 <div class="form-group col-xl-2 col-lg-6 col-md-6 col-sm-12 col-12">
                                     <label for="tipoEstudio">Tipo de Estudio</label>
@@ -83,7 +83,7 @@
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-xl-2 col-lg-4 col-md-6">
-                                    <button type="submit" class="btn btn-block btn-outline-primary mt-4">
+                                    <button type="button" id="btnConsultar" class="btn btn-block btn-outline-primary mt-4">
                                         <i class="fa fa-fw fa-engine">&nbsp;</i> Generar reporte
                                     </button>
                                 </div>
@@ -98,31 +98,43 @@
         @if (Model != null && Model.reportePagosPorFacultadViewModel != null)
         {
             @Html.Partial("_ReportePagosPregradoPorFacultad", Model.reportePagosPorFacultadViewModel)
+
+            <button type="button" id="btnExcelDescargar" class="btn btn-link pl-0">Descargar información en Excel [.xlsx]</button>
         }
 
         @if (Model != null && Model.reportePagosPorConceptoViewModel != null)
         {
             @Html.Partial("_ReportePagosPregradoPorConcepto", Model.reportePagosPorConceptoViewModel)
+
+            <button type="button" id="btnExcelDescargar" class="btn btn-link pl-0">Descargar información en Excel [.xlsx]</button>
         }
 
         @if (Model != null && Model.reporteConceptosPorUnaFacultadViewModel != null)
         {
             @Html.Partial("_ReportePregradoConceptosPorUnaFacultad", Model.reporteConceptosPorUnaFacultadViewModel)
+
+            <button type="button" id="btnExcelDescargar" class="btn btn-link pl-0">Descargar información en Excel [.xlsx]</button>
         }
 
-        @if (Model != null && Model.reportePagosPorGradodViewModel != null)
+        @if (Model != null && Model.reportePagosPorGradoViewModel != null)
         {
-            @Html.Partial("_ReportePagosPosgradoPorGrado", Model.reportePagosPorGradodViewModel)
+            @Html.Partial("_ReportePagosPosgradoPorGrado", Model.reportePagosPorGradoViewModel)
+
+            <button type="button" id="btnExcelDescargar" class="btn btn-link pl-0">Descargar información en Excel [.xlsx]</button>
         }
 
         @if (Model != null && Model.reportePagosPorConceptoPosgradoViewModel != null)
         {
             @Html.Partial("_ReportePagosPosgradoPorConcepto", Model.reportePagosPorConceptoPosgradoViewModel)
+
+            <button type="button" id="btnExcelDescargar" class="btn btn-link pl-0">Descargar información en Excel [.xlsx]</button>
         }
 
         @if (Model != null && Model.reporteConceptosPorGradoViewModel != null)
         {
             @Html.Partial("_ReportePosgradoConceptosPorGrado", Model.reporteConceptosPorGradoViewModel)
+
+            <button type="button" id="btnExcelDescargar" class="btn btn-link pl-0">Descargar información en Excel [.xlsx]</button>
         }
     </div>
 </div>
@@ -151,22 +163,11 @@
 
         $(document).on('change', '#frmGenerarReporteObl #tipoReporte', function () {
             let cmbDependencia = $('#frmGenerarReporteObl #dependencia');
-            debugger;
             if (this.value === REPORTE_GENERAL) {
                 cmbDependencia.val('');
                 cmbDependencia.prop('disabled', true);
             } else {
                 cmbDependencia.prop('disabled', false);
-            }
-        });
-
-        $(document).on('click', '#frmGenerarReporteObl button[type=submit]', function () {
-            let cmbReporte = $('#frmGenerarReporteObl #tipoReporte');
-            let cmbDependencia = $('#frmGenerarReporteObl #dependencia');
-            
-            if (cmbReporte.val() === '') {
-                MostrarMensaje("Debe seleccionar un Tipo de Reporte.");
-                return false;
             }
         });
 
@@ -214,5 +215,30 @@
                 }
             });
         }
+
+        $(document).on("click", "#btnConsultar", function (e) {
+
+            let cmbReporte = $('#frmGenerarReporteObl #tipoReporte');
+            let cmbDependencia = $('#frmGenerarReporteObl #dependencia');
+
+            if (cmbReporte.val() === '') {
+                MostrarMensaje("Debe seleccionar un Tipo de Reporte.");
+            } else {
+                document.forms.frmGenerarReporteObl.action = "@Url.Action("ReportesPagoObligaciones", "EstadosCuenta")";
+                document.forms.frmGenerarReporteObl.submit();
+            }
+        });
+
+        $(document).on("click", "#btnExcelDescargar", function (e) {
+            let cmbReporte = $('#frmGenerarReporteObl #tipoReporte');
+            let cmbDependencia = $('#frmGenerarReporteObl #dependencia');
+
+            if (cmbReporte.val() === '') {
+                MostrarMensaje("Debe seleccionar un Tipo de Reporte.");
+            } else {
+                document.forms.frmGenerarReporteObl.action = "@Url.Action("DescargaReportesPagoObligaciones", "EstadosCuenta")";
+                document.forms.frmGenerarReporteObl.submit();
+            }
+        });
     </script>
 }

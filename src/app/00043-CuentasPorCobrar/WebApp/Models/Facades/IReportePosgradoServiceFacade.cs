@@ -8,7 +8,7 @@ namespace WebApp.Models.Facades
 {
     public interface IReportePosgradoServiceFacade
     {
-        ReportePagosPorGradodViewModel ReportePagosPorGrado(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc);
+        ReportePagosPorGradoViewModel ReportePagosPorGrado(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc);
 
         ReportePagosPorConceptoPosgradoViewModel ReportePagosPorConcepto(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc);
 

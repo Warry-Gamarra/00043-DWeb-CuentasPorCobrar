@@ -16,6 +16,16 @@ namespace WebApp.ViewModels
         public string FechaFin { get; set; }
         public string FechaActual { get; }
         public string HoraActual { get; }
+        public string nombreEntidadFinanc { get; set; }
+        public IEnumerable<PagoPregradoPorFacultadDTO> listaPagos { get; }
+
+        public string SubTitulo
+        {
+            get
+            {
+                return String.Format("Resumen del {0} al {1}", FechaInicio, FechaFin);
+            }
+        }
         public decimal MontoTotal
         {
             get
@@ -30,7 +40,7 @@ namespace WebApp.ViewModels
                 return MontoTotal.ToString(FormatosDecimal.BASIC_DECIMAL);
             }
         }
-        public IEnumerable<PagoPregradoPorFacultadDTO> listaPagos { get; }
+        
 
         public ReportePagosPorFacultadViewModel(IEnumerable<PagoPregradoPorFacultadDTO> listaPagos)
         {
@@ -49,6 +59,16 @@ namespace WebApp.ViewModels
         public string FechaFin { get; set; }
         public string FechaActual { get; }
         public string HoraActual { get; }
+        public string nombreEntidadFinanc { get; set; }
+        public IEnumerable<PagoPregradoPorConceptoDTO> listaPagos { get; }
+
+        public string SubTitulo
+        {
+            get
+            {
+                return String.Format("Resumen del {0} al {1}", FechaInicio, FechaFin);
+            }
+        }
         public decimal MontoTotal
         {
             get
@@ -63,8 +83,7 @@ namespace WebApp.ViewModels
                 return MontoTotal.ToString(FormatosDecimal.BASIC_DECIMAL);
             }
         }
-        public IEnumerable<PagoPregradoPorConceptoDTO> listaPagos { get; }
-
+        
         public ReportePagosPorConceptoViewModel(IEnumerable<PagoPregradoPorConceptoDTO> listaPagos)
         {
             FechaActual = DateTime.Now.ToString(FormatosDateTime.BASIC_DATE);
@@ -83,6 +102,16 @@ namespace WebApp.ViewModels
         public string FechaFin { get; set; }
         public string FechaActual { get; }
         public string HoraActual { get; }
+        public string nombreEntidadFinanc { get; set; }
+        public IEnumerable<ConceptoPregradoPorFacultadDTO> listaPagos { get; }
+
+        public string SubTitulo
+        {
+            get
+            {
+                return String.Format("Resumen del {0} al {1}", FechaInicio, FechaFin);
+            }
+        }
         public decimal MontoTotal
         {
             get
@@ -97,7 +126,6 @@ namespace WebApp.ViewModels
                 return MontoTotal.ToString(FormatosDecimal.BASIC_DECIMAL);
             }
         }
-        public IEnumerable<ConceptoPregradoPorFacultadDTO> listaPagos { get; }
 
         public ReporteConceptosPorUnaFacultadViewModel(IEnumerable<ConceptoPregradoPorFacultadDTO> listaPagos)
         {
