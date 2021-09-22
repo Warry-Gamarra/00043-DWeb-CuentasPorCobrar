@@ -221,3 +221,48 @@ CREATE TABLE TR_MG_Alumnos
 GO
 
 
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'TC_CatalogoObservacion')
+	DROP TABLE TC_CatalogoObservacion
+GO
+
+CREATE TABLE TC_CatalogoObservacion
+(
+	I_ObservID		tinyint,
+	T_ObservDesc	varchar(100),
+	T_ObservCod		varchar(10),
+	I_Severidad		smallint,
+	CONSTRAINT PK_CatalogoObservacion PRIMARY KEY (I_ObservID)
+)
+GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'TC_CatalogoTablas')
+	DROP TABLE TC_CatalogoTablas
+GO
+
+CREATE TABLE TC_CatalogoTabla
+(
+	I_TablaID	tinyint,
+	T_TablaNom	varchar(50)
+	CONSTRAINT PK_CatalogoTabla PRIMARY KEY (I_TablaID)
+)
+GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'TI_ObservacionRegistroTabla')
+	DROP TABLE TI_ObservacionRegistroTabla
+GO
+
+CREATE TABLE TI_ObservacionRegistroTabla
+(
+	I_ObsTablaID	int IDENTITY(1, 1),
+	I_ObservID		tinyint,
+	I_TablaID		tinyint,
+	I_FilaTablaID	int,
+	D_FecRegistro	datetime,
+	CONSTRAINT PK_ObservacionRegistroTabla PRIMARY KEY (I_ObsTablaID),
+	CONSTRAINT FK_CatalogoObservacion_ObservacionRegistroTabla FOREIGN KEY (I_ObservID) REFERENCES TC_CatalogoObservacion (I_ObservID),
+	CONSTRAINT FK_CatalogoTabla_ObservacionRegistroTabla FOREIGN KEY (I_TablaID) REFERENCES TC_CatalogoTabla (I_TablaID)
+)
+GO
+
