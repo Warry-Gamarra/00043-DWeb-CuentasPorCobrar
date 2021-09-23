@@ -239,6 +239,48 @@ END
 GO
 
 
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ValidarCodigosAlumnoRepetidos')
+	DROP PROCEDURE [dbo].[USP_U_ValidarCodigosAlumnoRepetidos]
+GO
+
+CREATE PROCEDURE USP_U_ValidarCodigosAlumnoRepetidos	
+	@B_Resultado  bit output,
+	@T_Message	  nvarchar(4000) OUTPUT	
+AS
+--declare @B_Resultado  bit,
+--		@T_Message	  nvarchar(4000)
+--exec USP_U_ValidarCodigosAlumnoRepetidos @B_Resultado output, @T_Message output
+--select @B_Resultado as resultado, @T_Message as mensaje
+BEGIN
+	DECLARE @I_Actualizados int = 0
+	DECLARE @D_FecProceso datetime = GETDATE() 
+
+	BEGIN TRY 
+		UPDATE	TR_MG_Alumnos
+		SET		B_Migrable = 0,
+				D_FecEvalua = @D_FecProceso,
+				T_Observacion = ISNULL(T_Observacion, '') + '021 - REPETIDOS: ('+ CONVERT(varchar, @D_FecProceso, 112) + ').  La combinación código de carrera + código de alumno se encuentran repetidos.|'
+		WHERE	EXISTS (SELECT C_CodAlu, C_RcCod, COUNT(*) FROM TR_MG_Alumnos A 
+						WHERE A.C_CodAlu = TR_MG_Alumnos.C_CodAlu AND A.C_RcCod = TR_MG_Alumnos.C_RcCod
+						GROUP BY C_CodAlu, C_RcCod HAVING COUNT(*) > 1)
+				
+
+		SET @I_Actualizados = (SELECT COUNT(*) FROM TR_MG_Alumnos WHERE T_Observacion LIKE '%021%')
+
+		SELECT @I_Actualizados as cant_updated, @D_FecProceso as fec_proceso
+		
+		SET @B_Resultado = 1
+		SET @T_Message = 'Ok'
+	END TRY
+	BEGIN CATCH
+		SET @B_Resultado = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+END
+GO
+
+
+
 IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_IU_MigrarDataAlumnosUnfvRepositorio')
 	DROP PROCEDURE [dbo].[USP_IU_MigrarDataAlumnosUnfvRepositorio]
 GO
@@ -828,7 +870,7 @@ BEGIN
 		UPDATE	TR_MG_CpPri
 		SET		B_Migrable = 0,
 				D_FecEvalua = @D_FecProceso,
-				T_Observacion = ISNULL(T_Observacion, '') + '010 - REPETIDA: ('+ CONVERT(varchar, @D_FecProceso, 112) + '). El concepto de pago se encuentra repetido y con estado ELIMINADO.|'
+				T_Observacion = ISNULL(T_Observacion, '') + '010 - REPETIDA: ('+ CONVERT(varchar, @D_FecProceso, 112) + '). El concepto de pago se encuentra repetido y con estado ACTIVO.|'
 		WHERE	ID_CP IN (SELECT ID_CP FROM TR_MG_CpPri WHERE ELIMINADO = 1 
 								GROUP BY ID_CP HAVING COUNT(ID_CP) > 1)
 
@@ -907,13 +949,13 @@ BEGIN
 		SET		B_Migrable = 0,
 				D_FecEvalua = @D_FecProceso,
 				T_Observacion = ISNULL(T_Observacion, '') + '013 - 0 Periodo: ('+ CONVERT(varchar, @D_FecProceso, 112) + '). Concepto de pago de obligacion sin año asignado.|'
-		WHERE	(P IS NULL OR P = '') AND TIPO_OBLIG = 1
+		WHERE	(ANO IS NULL OR ANO = 0) AND TIPO_OBLIG = 1
 
 		UPDATE	TR_MG_CpPri
 		SET		B_Migrable = 0,
 				D_FecEvalua = @D_FecProceso,
 				T_Observacion = ISNULL(T_Observacion, '') + '012 - NO COINCIDE AÑO : ('+ CONVERT(varchar, @D_FecProceso, 112) + '). Año del concepto de pago de obligacion no coincide con el año de la cuota de pagos.|'
-		WHERE	NOT EXISTS (SELECT * FROM TR_MG_CpDes WHERE P = TR_MG_CpPri.P) AND TIPO_OBLIG = 1
+		WHERE	NOT EXISTS (SELECT * FROM TR_MG_CpDes WHERE I_Anio = TR_MG_CpPri.ANO) AND TIPO_OBLIG = 1
 
 		SELECT * FROM TR_MG_CpPri WHERE B_Migrable = 0 AND T_Observacion LIKE '%011%' OR T_Observacion LIKE '%012%'
 
