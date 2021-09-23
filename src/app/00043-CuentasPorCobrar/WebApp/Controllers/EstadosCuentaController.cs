@@ -22,6 +22,7 @@ namespace WebApp.Controllers
         IProgramasClientFacade programasClientFacade;
         IGeneralServiceFacade generalServiceFacade;
         SelectModel selectModels;
+        PagosModel pagoModel;
 
         public EstadosCuentaController()
         {
@@ -30,6 +31,7 @@ namespace WebApp.Controllers
             programasClientFacade = new ProgramasClientFacade();
             generalServiceFacade = new GeneralServiceFacade();
             selectModels = new SelectModel();
+            pagoModel = new PagosModel();
         }
 
         // GET: EstadosCuenta
@@ -991,6 +993,82 @@ namespace WebApp.Controllers
             worksheet.Range(worksheet.Cell(inicial, 4), worksheet.Cell(currentRow, 4)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
 
             return workbook;
+        }
+
+        [Route("consulta/pagos-banco-obligaciones")]
+        public ActionResult ListarPagosBancoObligaciones(ConsultaPagosBancoObligacionesViewModel model)
+        {
+            if (model.buscar)
+            {
+                model.resultado = pagoModel.ListarPagoBancoObligacion(model.idBanco, model.codOperacion, model.codAlumno,
+                model.fechaInicio, model.fechaFin);
+            }
+            
+            ViewBag.Title = "Pagos en Banco de Obligaciones";
+
+            ViewBag.EntidadesFinancieras = selectModels.GetEntidadesFinancieras();
+
+            return View(model);
+        }
+
+        [Route("consulta/pagos-banco-obligaciones/descarga")]
+        public ActionResult ListarPagosBancoObligacionesDescargaExcel(ConsultaPagosBancoObligacionesViewModel model)
+        {
+            model.resultado = pagoModel.ListarPagoBancoObligacion(model.idBanco, model.codOperacion, model.codAlumno,
+                model.fechaInicio, model.fechaFin);
+
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.Worksheets.Add("PagosBanco");
+
+                worksheet.Column("A").Width = 30;
+                worksheet.Columns("B:D").Width  = 16;
+                worksheet.Column("E").Width = 30;
+                worksheet.Columns("F:I").Width = 16;
+                worksheet.Column("J").Width = 30;
+
+                var currentRow = 1;
+
+                #region Header
+                worksheet.Cell(currentRow, 1).Value = "Banco";
+                worksheet.Cell(currentRow, 2).Value = "Cta.Deposito";
+                worksheet.Cell(currentRow, 3).Value = "Cod.Operación";
+                worksheet.Cell(currentRow, 4).Value = "Cod.Depositante";
+                worksheet.Cell(currentRow, 5).Value = "Depositante";
+                worksheet.Cell(currentRow, 6).Value = "Fecha Pago";
+                worksheet.Cell(currentRow, 7).Value = "Monto Pagado";
+                worksheet.Cell(currentRow, 8).Value = "Lugar";
+                worksheet.Cell(currentRow, 9).Value = "Fec.Reg.Sistema";
+                worksheet.Cell(currentRow, 10).Value = "Observación";
+                #endregion
+
+                #region Body
+                foreach (var item in model.resultado)
+                {
+                    currentRow++;
+                    worksheet.Cell(currentRow, 1).SetValue<string>(item.T_EntidadDesc);
+                    worksheet.Cell(currentRow, 2).SetValue<string>(item.C_NumeroCuenta);
+                    worksheet.Cell(currentRow, 3).SetValue<string>(item.C_CodOperacion);
+                    worksheet.Cell(currentRow, 4).SetValue<string>(item.C_CodDepositante);
+                    worksheet.Cell(currentRow, 5).SetValue<string>(item.T_DatosDepositante);
+                    worksheet.Cell(currentRow, 6).SetValue<DateTime?>(item.D_FecPago);
+                    worksheet.Cell(currentRow, 7).SetValue<decimal>(item.I_MontoPago);
+                    worksheet.Cell(currentRow, 8).SetValue<string>(item.T_LugarPago);
+                    worksheet.Cell(currentRow, 9).SetValue<DateTime>(item.D_FecCre);
+                    worksheet.Cell(currentRow, 10).SetValue<string>(item.T_Observacion);
+                }
+                #endregion
+
+                worksheet.Range(worksheet.Cell(2, 7), worksheet.Cell(currentRow, 7)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
+
+                using (var stream = new MemoryStream())
+                {
+                    workbook.SaveAs(stream);
+                    var content = stream.ToArray();
+
+                    return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Consulta Pago de Obligaciones.xlsx");
+                }
+            }
         }
     }
 }

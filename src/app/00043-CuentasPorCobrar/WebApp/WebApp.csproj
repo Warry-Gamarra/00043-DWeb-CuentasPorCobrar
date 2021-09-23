@@ -429,6 +429,7 @@
     <Compile Include="Models\AlumnosSinVotoSourceFactory.cs" />
     <Compile Include="Models\CategoriaPagoModel.cs" />
     <Compile Include="Models\ConceptoModel.cs" />
+    <Compile Include="ViewModels\ConsultaPagosBancoObligacionesViewModel.cs" />
     <Compile Include="Models\CtaDepoProcesoModel.cs" />
     <Compile Include="Models\CuotaPagoModel.cs" />
     <Compile Include="Models\DependenciaModel.cs" />
@@ -465,6 +466,7 @@
     <Compile Include="ViewModels\ConsultaPagoTasasViewModel.cs" />
     <Compile Include="ViewModels\EstadoObligacionViewModel.cs" />
     <Compile Include="ViewModels\ConsultaObligacionEstudianteViewModel.cs" />
+    <Compile Include="ViewModels\PagoBancoObligacionViewModel.cs" />
     <Compile Include="ViewModels\ReporteResumenAnualPagoObligaciones_X_Dependencias.cs" />
     <Compile Include="ViewModels\ReporteResumenAnualPagoObligaciones_X_Clasificadores.cs" />
     <Compile Include="ViewModels\ReportePagosObligacionesViewModel.cs" />
@@ -624,6 +626,7 @@
     <Content Include="Views\Pagos\_SeleccionarArchivoObligaciones.cshtml" />
     <Content Include="Views\Pagos\_MsgRegistrarPagoTasa.cshtml" />
     <Content Include="Views\EstadosCuentaTasas\Consulta.cshtml" />
+    <Content Include="Views\EstadosCuenta\ListarPagosBancoObligaciones.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

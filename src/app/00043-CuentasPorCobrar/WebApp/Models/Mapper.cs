@@ -392,5 +392,33 @@ namespace WebApp.Models
 
             return model;
         }
+
+        public static PagoBancoObligacionViewModel PagoBancoObligacionDTO_ToPagoBancoObligacionViewModel(PagoBancoObligacionDTO dto)
+        {
+            var model = new PagoBancoObligacionViewModel()
+            {
+                I_PagoBancoID = dto.I_PagoBancoID,
+                I_EntidadFinanID = dto.I_EntidadFinanID,
+                T_EntidadDesc = dto.T_EntidadDesc,
+                I_CtaDepositoID = dto.I_CtaDepositoID,
+                C_NumeroCuenta = dto.C_NumeroCuenta,
+                C_CodOperacion = dto.C_CodOperacion,
+                C_CodDepositante = dto.C_CodDepositante,
+                I_MatAluID = dto.I_MatAluID,
+                C_CodAlu = dto.C_CodAlu,
+                T_NomDepositante = dto.T_NomDepositante,
+                T_Nombre = dto.T_Nombre,
+                T_ApePaterno = dto.T_ApePaterno,
+                T_ApeMaterno = dto.T_ApeMaterno,
+                D_FecPago = dto.D_FecPago,
+                I_MontoPago = dto.I_MontoPago,
+                T_LugarPago = dto.T_LugarPago,
+                D_FecCre = dto.D_FecCre,
+                T_Observacion = dto.T_Observacion,
+                I_MontoProcesado = dto.I_MontoProcesado
+            };
+
+            return model;
+        }
     }
 }

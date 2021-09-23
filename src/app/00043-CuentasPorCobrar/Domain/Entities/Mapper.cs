@@ -627,5 +627,33 @@ namespace Domain.Entities
 
             return dto;
         }
+
+        public static PagoBancoObligacionDTO VW_PagoBancoObligaciones_To_PagoObligacionDTO(VW_PagoBancoObligaciones vw)
+        {
+            var dto = new PagoBancoObligacionDTO()
+            {
+                I_PagoBancoID = vw.I_PagoBancoID,
+                I_EntidadFinanID = vw.I_EntidadFinanID,
+                T_EntidadDesc = vw.T_EntidadDesc,
+                I_CtaDepositoID = vw.I_CtaDepositoID,
+                C_NumeroCuenta = vw.C_NumeroCuenta,
+                C_CodOperacion = vw.C_CodOperacion,
+                C_CodDepositante = vw.C_CodDepositante,
+                I_MatAluID = vw.I_MatAluID,
+                C_CodAlu = vw.C_CodAlu,
+                T_NomDepositante = vw.T_NomDepositante,
+                T_Nombre = vw.T_Nombre,
+                T_ApePaterno = vw.T_ApePaterno,
+                T_ApeMaterno = vw.T_ApeMaterno,
+                D_FecPago = vw.D_FecPago,
+                I_MontoPago = vw.I_MontoPago,
+                T_LugarPago = vw.T_LugarPago,
+                D_FecCre = vw.D_FecCre,
+                T_Observacion = vw.T_Observacion,
+                I_MontoProcesado = vw.I_MontoProcesado
+            };
+
+            return dto;
+        }
     }
 }

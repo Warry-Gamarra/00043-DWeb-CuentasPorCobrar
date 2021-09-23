@@ -20,5 +20,6 @@ namespace Domain.Services
         List<PagoEntity> ListarPagosRegistrados(DateTime? fecIni, DateTime? fecFin, TipoEstudio? tipoEstudio, int? entRecaudaId);
         List<PagoEntity> BuscarPagoRegistrado(int entRecaudaId, string codOperacion);
         IEnumerable<ArchivoImportadoDTO> ListarArchivosImportados(TipoArchivoEntFinan tipoArchivo);
+        IEnumerable<PagoBancoObligacionDTO> ListarPagosBanco(int? idEntidadFinanciera, string codOperacion, string codDepositante, DateTime? fechaInicio, DateTime? fechaFinal);
     }
 }
