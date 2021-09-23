@@ -26,7 +26,6 @@ CREATE TABLE TR_MG_EcPri (
 	D_FecMigrado	datetime  NULL,
 	B_Removido		bit  NOT NULL DEFAULT 0,
 	D_FecRemovido	datetime  NULL,
-	T_Observacion	nvarchar(4000) NULL
 )
 GO
 
@@ -55,7 +54,6 @@ CREATE TABLE dbo.TR_MG_EcObl (
 	D_FecMigrado	datetime  NULL,
 	B_Removido		bit  NOT NULL DEFAULT 0,
 	D_FecRemovido	datetime  NULL,
-	T_Observacion	nvarchar(4000) NULL
 )
 GO
 
@@ -99,7 +97,6 @@ CREATE TABLE TR_MG_EcDet (
 	D_FecMigrado	datetime  NULL,
 	B_Removido		bit  NOT NULL DEFAULT 0,
 	D_FecRemovido	datetime  NULL,
-	T_Observacion	nvarchar(4000) NULL
 ) 
 GO
 
@@ -129,7 +126,6 @@ CREATE TABLE TR_MG_CpDes(
 	D_FecMigrado	datetime  NULL,
 	B_Removido		bit  NOT NULL DEFAULT 0,
 	D_FecRemovido	datetime  NULL,
-	T_Observacion	nvarchar(4000) NULL
 )
 GO
 
@@ -185,7 +181,6 @@ CREATE TABLE TR_MG_CpPri (
 	D_FecMigrado	datetime  NULL,
 	B_Removido		bit  NOT NULL DEFAULT 0,
 	D_FecRemovido	datetime  NULL,
-	T_Observacion	nvarchar(4000) NULL
 )
 GO
 
@@ -216,29 +211,33 @@ CREATE TABLE TR_MG_Alumnos
 	D_FecMigrado	datetime  NULL,
 	B_Removido		bit  NOT NULL DEFAULT 0,
 	D_FecRemovido	datetime  NULL,
-	T_Observacion	nvarchar(4000) NULL
 )
 GO
 
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'TI_ObservacionRegistroTabla')
+	DROP TABLE TI_ObservacionRegistroTabla
+GO
 
 IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'TC_CatalogoObservacion')
 	DROP TABLE TC_CatalogoObservacion
 GO
 
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'TC_CatalogoTabla')
+	DROP TABLE TC_CatalogoTabla
+GO
+
+
 CREATE TABLE TC_CatalogoObservacion
 (
 	I_ObservID		tinyint,
 	T_ObservDesc	varchar(100),
-	T_ObservCod		varchar(10),
+	T_ObservCod		varchar(20),
 	I_Severidad		smallint,
 	CONSTRAINT PK_CatalogoObservacion PRIMARY KEY (I_ObservID)
 )
 GO
 
-
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'TC_CatalogoTablas')
-	DROP TABLE TC_CatalogoTablas
-GO
 
 CREATE TABLE TC_CatalogoTabla
 (
@@ -248,10 +247,6 @@ CREATE TABLE TC_CatalogoTabla
 )
 GO
 
-
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'TI_ObservacionRegistroTabla')
-	DROP TABLE TI_ObservacionRegistroTabla
-GO
 
 CREATE TABLE TI_ObservacionRegistroTabla
 (
@@ -265,4 +260,3 @@ CREATE TABLE TI_ObservacionRegistroTabla
 	CONSTRAINT FK_CatalogoTabla_ObservacionRegistroTabla FOREIGN KEY (I_TablaID) REFERENCES TC_CatalogoTabla (I_TablaID)
 )
 GO
-
