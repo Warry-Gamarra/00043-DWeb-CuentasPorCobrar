@@ -171,5 +171,14 @@ namespace Domain.Services.Implementations
 
             return result;
         }
+
+        public IEnumerable<PagoBancoObligacionDTO> ListarPagosBanco(int? idEntidadFinanciera, string codOperacion, string codDepositante, DateTime? fechaInicio, DateTime? fechaFinal)
+        {
+            var lista = VW_PagoBancoObligaciones.GetAll(idEntidadFinanciera, codOperacion, codDepositante, fechaInicio, fechaFinal);
+
+            var result = lista.Select(x => Mapper.VW_PagoBancoObligaciones_To_PagoObligacionDTO(x));
+
+            return result;
+        }
     }
 }

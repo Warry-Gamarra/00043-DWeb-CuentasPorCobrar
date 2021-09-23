@@ -123,6 +123,7 @@
     <Compile Include="Tables\Webpages_Roles.cs" />
     <Compile Include="Views\VW_CuotasPago.cs" />
     <Compile Include="Views\VW_DetalleObligaciones.cs" />
+    <Compile Include="Views\VW_PagoBancoObligaciones.cs" />
     <Compile Include="Views\VW_Pagos.cs" />
     <Compile Include="Views\VW_PagoTasas.cs" />
     <Compile Include="Views\VW_Tasas.cs" />
