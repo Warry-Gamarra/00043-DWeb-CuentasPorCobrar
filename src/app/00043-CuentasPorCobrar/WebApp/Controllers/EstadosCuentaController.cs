@@ -1006,7 +1006,7 @@ namespace WebApp.Controllers
                 model.fechaInicio, model.fechaFin, model.condicion);
             }
             
-            ViewBag.Title = "Consulta de Ingresos por Obligaciones";
+            ViewBag.Title = "Consulta de Ingresos de Pago de Obligaciones";
 
             ViewBag.EntidadesFinancieras = new SelectList(selectModels.GetEntidadesFinancieras(), "Value", "TextDisplay", model.banco);
 
@@ -1096,7 +1096,7 @@ namespace WebApp.Controllers
 
             ViewBag.CondicionesPago = new SelectList(selectModels.GetCondicionesPago(), "Value", "TextDisplay", condicion);
 
-            ViewBag.Title = "Resumen de Ingresos por Día (Obligaciones)";
+            ViewBag.Title = "Resumen de Ingresos de Pago de Obligaciones";
 
             return View(model);
         }
@@ -1116,7 +1116,7 @@ namespace WebApp.Controllers
 
                 var titleCell = worksheet.Cell(1, 1);
 
-                titleCell.Value = "RESUMEN DE INGRESOS DE OBLIGACIONES POR DÍA AL AÑO " + model.anio;
+                titleCell.Value = "RESUMEN DE INGRESOS DE PAGO DE OBLIGACIONES AL AÑO " + model.anio;
 
                 titleCell.RichText.SetBold(true);
 
