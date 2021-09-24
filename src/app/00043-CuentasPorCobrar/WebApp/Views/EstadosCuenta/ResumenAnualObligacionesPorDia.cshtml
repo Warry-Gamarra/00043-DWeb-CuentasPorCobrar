@@ -1,4 +1,4 @@
-﻿@model WebApp.ViewModels.ReporteResumenAnualPagoObligaciones_X_Dependencias
+﻿@model WebApp.ViewModels.ReporteResumenAnualPagoObligaciones_X_Dia
 
 <div class="container-fluid">
     <div class="col-12">
@@ -26,24 +26,32 @@
             </div>
             <div class="col-xl-3 col-lg-4 col-md-12">
                 <div class="form-group row">
-                    <label for="tipoEstudio" class="col-6 col-form-label text-right">Tipo estudio</label>
+                    <label for="entidadFinanID" class="col-6 col-form-label text-right">Banco</label>
                     <div class="col-6">
-                        @Html.DropDownList("tipoEstudio", ViewBag.TipoEstudios as SelectList, new { Class = "form-control text-center" })
+                        @Html.DropDownList("entidadFinanID", ViewBag.EntidadesFinancieras as SelectList, "TODOS", new { Class = "form-control text-uppercase" })
                     </div>
                 </div>
             </div>
             <div class="col-xl-3 col-lg-4 col-md-12">
                 <div class="form-group row">
-                    <label for="entidadFinanID" class="col-6 col-form-label text-right">Banco</label>
+                    <label for="ctaDepositoID" class="col-6 col-form-label text-right">Cta.Deposito</label>
                     <div class="col-6">
-                        @Html.DropDownList("entidadFinanID", ViewBag.EntidadesFinancieras as SelectList, "  TODOS", new { Class = "form-control text-center" })
+                        @Html.DropDownList("ctaDepositoID", ViewBag.CtaDeposito as SelectList, "TODOS", new { Class = "form-control text-uppercase" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-12">
+                <div class="form-group row">
+                    <label for="condicion" class="col-6 col-form-label text-right">Condición</label>
+                    <div class="col-6">
+                        @Html.DropDownList("condicion", ViewBag.CondicionesPago as SelectList, "TODOS", new { Class = "form-control text-uppercase" })
                     </div>
                 </div>
             </div>
         </div>
 
         <p class="h3 text-center mt-5 mb-5 text-uppercase">
-            RESUMEN DE INGRESOS DE @Model.tipoEstudio<br />AL AÑO @Model.anio
+            RESUMEN DE INGRESOS POR DÍA<br />AL AÑO @Model.anio
         </p>
 
         <div class="row">
@@ -64,7 +72,7 @@
             <table class="table table-bordered table-hover table-sm">
                 <thead>
                     <tr>
-                        <th class="text-center" style="width: 18%">Dependencia</th>
+                        <th class="text-center" style="width: 5%">Día</th>
                         <th class="text-center">Enero</th>
                         <th class="text-center">Febrero</th>
                         <th class="text-center">Marzo</th>
@@ -81,11 +89,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model.resumen_x_dependencias)
+                    @foreach (var item in Model.resumen_x_dia)
                     {
                         <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.T_Dependencia)
+                            <td class="text-center">
+                                @Html.DisplayFor(modelItem => item.I_Dia)
                             </td>
                             <td class="text-right">
                                 @Html.DisplayFor(modelItem => item.T_Enero)
@@ -124,7 +132,7 @@
                                 @Html.DisplayFor(modelItem => item.T_Diciembre)
                             </td>
                             <th class="text-right">
-                                @Model.T_TotalDependencia(item.C_CodDependencia)
+                                @Model.T_TotalDia(item.I_Dia)
                             </th>
                         </tr>
                     }
@@ -158,24 +166,33 @@
     <script>
         $(document).ready(function () {
             $('#anio').on('change', function () {
-                location.href = '@Url.Action("ResumenAnualObligacionesPorDependencias", "EstadosCuenta")' + buildFilters($(this).val(), $('#tipoEstudio').val(), $('#entidadFinanID').val());
-            });
-
-            $('#tipoEstudio').on('change', function () {
-                location.href = '@Url.Action("ResumenAnualObligacionesPorDependencias", "EstadosCuenta")' + buildFilters($('#anio').val(), $(this).val(), $('#entidadFinanID').val());
+                location.href = '@Url.Action("ResumenAnualObligacionesPorDia", "EstadosCuenta")' + buildFilters($(this).val(), $('#entidadFinanID').val(), $('#ctaDepositoID').val(),
+                    $('#condicion').val());
             });
 
             $('#entidadFinanID').on('change', function () {
-                location.href = '@Url.Action("ResumenAnualObligacionesPorDependencias", "EstadosCuenta")' + buildFilters($('#anio').val(), $('#tipoEstudio').val(), $(this).val());
+                location.href = '@Url.Action("ResumenAnualObligacionesPorDia", "EstadosCuenta")' + buildFilters($('#anio').val(), $(this).val(), $('#ctaDepositoID').val(),
+                    $('#condicion').val());
+            });
+
+            $('#ctaDepositoID').on('change', function () {
+                location.href = '@Url.Action("ResumenAnualObligacionesPorDia", "EstadosCuenta")' + buildFilters($('#anio').val(), $('#entidadFinanID').val(), $(this).val(),
+                    $('#condicion').val());
+            });
+
+            $('#condicion').on('change', function () {
+                location.href = '@Url.Action("ResumenAnualObligacionesPorDia", "EstadosCuenta")' + buildFilters($('#anio').val(), $('#entidadFinanID').val(), $('#ctaDepositoID').val(),
+                    $(this).val());
             });
 
             $('#btnExcelDownload').on('click', function () {
-                location.href = '@Url.Action("DescargaResumenAnualObligacionesPorDependencias", "EstadosCuenta")' + buildFilters($('#anio').val(), $('#tipoEstudio').val(), $('#entidadFinanID').val());
+                location.href = '@Url.Action("DescargaResumenAnualObligacionesPorDia", "EstadosCuenta")' + buildFilters($('#anio').val(), $('#entidadFinanID').val(), $('#ctaDepositoID').val(),
+                    $('#condicion').val());
             });
         });
 
-        function buildFilters(anio, tipoEstudio, entidadFinanID) {
-            let filters = '?anio=' + anio + '&entidadFinanID=' + entidadFinanID + '&tipoEstudio=' + tipoEstudio;
+        function buildFilters(anio, entidadFinanID, ctaDepositoID, condicion) {
+            let filters = '?anio=' + anio + '&entidadFinanID=' + entidadFinanID + '&ctaDepositoID=' + ctaDepositoID + '&condicion=' + condicion;
             return filters;
         }
     </script>

@@ -60,6 +60,10 @@ namespace WebApp.ViewModels
 
         public string T_Observacion { get; set; }
 
+        public int I_CondicionPagoID { get; set; }
+
+        public string T_Condicion { get; set; }
+
         public decimal I_MontoProcesado { get; set; }
     }
 }

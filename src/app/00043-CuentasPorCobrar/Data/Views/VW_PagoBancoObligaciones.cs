@@ -48,9 +48,14 @@ namespace Data.Views
 
         public string T_Observacion { get; set; }
 
+        public int I_CondicionPagoID { get; set; }
+
+        public string T_Condicion { get; set; }
+
         public decimal I_MontoProcesado { get; set; }
 
-        public static IEnumerable<VW_PagoBancoObligaciones> GetAll(int? idEntidadFinanciera, string codOperacion, string codDepositante, DateTime? fechaInicio, DateTime? fechaFinal)
+        public static IEnumerable<VW_PagoBancoObligaciones> GetAll(int? idEntidadFinanciera, int? ctdDeposito, string codOperacion, string codDepositante, DateTime? fechaInicio, DateTime? fechaFinal,
+            int? condicion)
         {
             string s_command, filters;
             IEnumerable<VW_PagoBancoObligaciones> result;
@@ -69,6 +74,13 @@ namespace Data.Views
                     filters = "WHERE b.I_EntidadFinanID = @I_EntidadFinanID ";
 
                     parameters.Add(name: "I_EntidadFinanID", dbType: DbType.Int32, value: idEntidadFinanciera);
+                }
+
+                if (ctdDeposito.HasValue)
+                {
+                    filters = filters + (filters.Length == 0 ? "WHERE " : "AND ") + "b.I_CtaDepositoID = @I_CtaDepositoID ";
+
+                    parameters.Add(name: "I_CtaDepositoID", dbType: DbType.Int32, value: ctdDeposito);
                 }
 
                 if (!String.IsNullOrWhiteSpace(codOperacion))
@@ -97,6 +109,13 @@ namespace Data.Views
                     filters = filters + (filters.Length == 0 ? "WHERE " : "AND ") + "DATEDIFF(DAY, b.D_FecPago, @D_FechaFin) >= 0";
 
                     parameters.Add(name: "D_FechaFin", dbType: DbType.DateTime, value: fechaFinal.Value);
+                }
+
+                if (condicion.HasValue)
+                {
+                    filters = filters + (filters.Length == 0 ? "WHERE " : "AND ") + "b.I_CondicionPagoID = @I_CondicionPagoID ";
+
+                    parameters.Add(name: "I_CondicionPagoID", dbType: DbType.Int32, value: condicion);
                 }
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))

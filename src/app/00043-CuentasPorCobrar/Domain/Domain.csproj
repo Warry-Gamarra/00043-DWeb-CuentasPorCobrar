@@ -87,8 +87,9 @@
     <Compile Include="Entities\PagoTasaDTO.cs" />
     <Compile Include="Entities\PagoTasaObsEntity.cs" />
     <Compile Include="Entities\PagoTasaEntity.cs" />
-    <Compile Include="Entities\ResumenAnualPagoDeObligaciones_X_DependenciaDTO.cs" />
     <Compile Include="Entities\ResumenAnualPagoDeObligaciones_X_ClasificadorDTO.cs" />
+    <Compile Include="Entities\ResumenAnualPagoDeObligaciones_X_DependenciaDTO.cs" />
+    <Compile Include="Entities\ResumenAnualPagoDeObligaciones_X_DiaDTO.cs" />
     <Compile Include="Entities\MatriculaDTO.cs" />
     <Compile Include="Entities\MatriculaEntity.cs" />
     <Compile Include="Entities\MultaNoVotarSinRegistrarEntity.cs" />
@@ -122,9 +123,11 @@
     <Compile Include="Entities\CatalogoOpcionEntity.cs" />
     <Compile Include="Entities\CategoriaPago.cs" />
     <Compile Include="Services\Implementations\PagoService.cs" />
+    <Compile Include="Services\Implementations\ReporteGeneralService.cs" />
     <Compile Include="Services\Implementations\ReportePosgradoService.cs" />
     <Compile Include="Services\Implementations\TasaService.cs" />
     <Compile Include="Services\IPagoService.cs" />
+    <Compile Include="Services\IReporteGeneralService.cs" />
     <Compile Include="Services\IReportePosgradoService.cs" />
     <Compile Include="Services\ITasaService.cs" />
     <Compile Include="Services\IArchivoIntercambio.cs" />

@@ -78,6 +78,7 @@
     <Compile Include="Procedures\USP_S_ReportePagoObligacionesPosgrado.cs" />
     <Compile Include="Procedures\USP_S_ReportePagoObligacionesPregrado.cs" />
     <Compile Include="Procedures\USP_S_ResumenAnualPagoDeObligaciones_X_Dependencia.cs" />
+    <Compile Include="Procedures\USP_S_ResumenAnualPagoDeObligaciones_X_Dia.cs" />
     <Compile Include="Procedures\USP_S_ValidarCodOperacionTasa.cs" />
     <Compile Include="Procedures\USP_S_ValidarCodOperacionObligacion.cs" />
     <Compile Include="Procedures\USP_U_ActualizarConceptoPago.cs" />

@@ -14,6 +14,9 @@ namespace Domain.Helpers
         CampoCalculado = 4,
         Periodo = 5,
         GrupoCodRc = 6,
-        CodIngreso = 7
+        CodIngreso = 7,
+        MotivoMatricula = 8,
+        CondicionPago = 9,
+        TipoPago = 10
     }
 }

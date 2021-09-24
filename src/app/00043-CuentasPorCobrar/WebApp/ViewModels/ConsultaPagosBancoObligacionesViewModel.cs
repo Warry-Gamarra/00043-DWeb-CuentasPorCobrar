@@ -15,7 +15,11 @@ namespace WebApp.ViewModels
 
         public string codAlumno { get; set; }
 
-        public int? idBanco { get; set; }
+        public int? banco { get; set; }
+
+        public int? ctaDeposito { get; set; }
+
+        public int? condicion { get; set; }
 
         public string fechaDesde { get; set; }
 

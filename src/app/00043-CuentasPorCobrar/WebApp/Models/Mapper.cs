@@ -415,6 +415,8 @@ namespace WebApp.Models
                 T_LugarPago = dto.T_LugarPago,
                 D_FecCre = dto.D_FecCre,
                 T_Observacion = dto.T_Observacion,
+                I_CondicionPagoID = dto.I_CondicionPagoID,
+                T_Condicion = dto.T_Condicion,
                 I_MontoProcesado = dto.I_MontoProcesado
             };
 

@@ -165,5 +165,17 @@ namespace WebApp.Models
 
             return result;
         }
+
+        public List<SelectViewModel> GetCondicionesPago()
+        {
+            List<SelectViewModel> result = new List<SelectViewModel>();
+
+            foreach (var item in _conceptoPagoService.Listar_CatalogoOpcion_Habilitadas_X_Parametro(Domain.Helpers.Parametro.CondicionPago))
+            {
+                result.Add(new SelectViewModel() { Value = item.I_OpcionID.ToString(), TextDisplay = item.T_OpcionDesc });
+            }
+
+            return result;
+        }
     }
 }

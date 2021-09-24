@@ -172,9 +172,10 @@ namespace Domain.Services.Implementations
             return result;
         }
 
-        public IEnumerable<PagoBancoObligacionDTO> ListarPagosBanco(int? idEntidadFinanciera, string codOperacion, string codDepositante, DateTime? fechaInicio, DateTime? fechaFinal)
+        public IEnumerable<PagoBancoObligacionDTO> ListarPagosBanco(int? idEntidadFinanciera, int? ctdDeposito, string codOperacion, string codDepositante, DateTime? fechaInicio, DateTime? fechaFinal,
+            int? condicion)
         {
-            var lista = VW_PagoBancoObligaciones.GetAll(idEntidadFinanciera, codOperacion, codDepositante, fechaInicio, fechaFinal);
+            var lista = VW_PagoBancoObligaciones.GetAll(idEntidadFinanciera, ctdDeposito, codOperacion, codDepositante, fechaInicio, fechaFinal, condicion);
 
             var result = lista.Select(x => Mapper.VW_PagoBancoObligaciones_To_PagoObligacionDTO(x));
 

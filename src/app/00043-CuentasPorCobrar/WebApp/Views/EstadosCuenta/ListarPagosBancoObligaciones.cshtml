@@ -38,16 +38,21 @@
                         <form name="frmConsultaPagosBancoObligaciones" id="frmConsultaPagosBancoObligaciones" method="get" action="/">
                             <div class="form-row">
                                 <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
-                                    <label for="codAlumno">Código de alumno</label>
+                                    <label for="codAlumno">Cod. Alumno</label>
                                     @Html.TextBoxFor(model => model.codAlumno, new { @class = "form-control form-control-sm" })
                                 </div>
                                 <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
-                                    <label for="codOperacion">Código de operación</label>
+                                    <label for="codOperacion">Cod Operación</label>
                                     @Html.TextBoxFor(model => model.codOperacion, new { @class = "form-control form-control-sm" })
                                 </div>
                                 <div class="form-group col-lg-2 col-md-2 col-sm-4 col-6">
-                                    <label for="idEntidadFinanciera">Entidad Financiera</label>
-                                    @Html.DropDownListFor(model => model.idBanco, new SelectList(ViewBag.EntidadesFinancieras, "Value", "TextDisplay"), "TODOS",
+                                    <label for="banco">Entidad Financiera</label>
+                                    @Html.DropDownListFor(model => model.banco, ViewBag.EntidadesFinancieras as SelectList, "TODOS",
+                                        new { @class = "form-control form-control-sm text-uppercase" })
+                                </div>
+                                <div class="form-group col-lg-2 col-md-2 col-sm-4 col-6">
+                                    <label for="ctaDeposito">Cta.Deposito</label>
+                                    @Html.DropDownListFor(model => model.ctaDeposito, ViewBag.CtaDeposito as SelectList, "TODOS",
                                         new { @class = "form-control form-control-sm text-uppercase" })
                                 </div>
                                 <div class="form-group col-xl-4 col-lg-12 col-md-12 col-sm-12 col-12">
@@ -77,6 +82,12 @@
                                     </div>
                                 </div>
 
+                                <div class="form-group col-lg-2 col-md-2 col-sm-4 col-6">
+                                    <label for="condicion">Condición</label>
+                                    @Html.DropDownListFor(model => model.condicion, ViewBag.CondicionesPago as SelectList, "TODOS",
+                                        new { @class = "form-control form-control-sm text-uppercase" })
+                                </div>
+
                                 <div class="form-group col-lg-2 col-md-3 col-12">
                                     @Html.Hidden("buscar", true)
                                     <button type="button" id="btnConsultar" class="btn btn-block btn-outline-primary mt-4"><i class="fa fa-fw fa-search-plus"></i> Iniciar consulta</button>
@@ -103,6 +114,7 @@
                         columns.Add(c => c.I_MontoPago).Titled("Monto Pagado").Filterable(true).Css("text-center");
                         columns.Add(c => c.T_LugarPago).Titled("Lugar");
                         columns.Add(c => c.D_FecCre).Titled("Fec.Reg.Sistema").Filterable(true).Css("text-center");
+                        columns.Add(c => c.T_Condicion).Titled("Condición");
                     }).WithPaging(12).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
                 </div>
             </div>
@@ -135,5 +147,45 @@
             document.forms.frmConsultaPagosBancoObligaciones.action = "@Url.Action("ListarPagosBancoObligacionesDescargaExcel", "EstadosCuenta")";
             document.forms.frmConsultaPagosBancoObligaciones.submit();
         });
+
+        $(document).on('change', '#frmConsultaPagosBancoObligaciones #banco', function (e) {
+            let idEntidadFinanc = this.value;
+
+            ObtenerCtasDeposito(idEntidadFinanc);
+        });
+
+        function ObtenerCtasDeposito(idEntidadFinanc) {
+            let cmbCtasDeposito = $('#frmConsultaPagosBancoObligaciones #ctaDeposito');
+
+            if (idEntidadFinanc !== undefined && idEntidadFinanc !== null && !isNaN(idEntidadFinanc) && idEntidadFinanc > 0) {
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetCtasDepositoPorBco", "Service", new { httproute = "ActionApi" })' + '/' + idEntidadFinanc,
+                    dataType: 'json',
+                    beforeSend: function () {
+                        cmbCtasDeposito.empty();
+                    },
+                    success: function (data) {
+                        if (data) {
+                            let html = '<option>TODOS</option>';
+
+                            $.each(data, function (i, item) {
+                                html += '<option value="' + item.Value + '">' + item.TextDisplay + '</option>';
+                            });
+
+                            cmbCtasDeposito.html(html);
+                        }
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        var jsonException = JSON.parse(xhr.responseText);
+                        MostrarMensajeSistema(jsonException.Message, 'error');
+                    }
+                });
+            } else {
+                cmbCtasDeposito.empty();
+                let html = '<option>TODOS</option>';
+                cmbCtasDeposito.html(html);
+            }
+        }
     </script>
 }

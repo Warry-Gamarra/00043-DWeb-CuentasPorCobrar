@@ -650,10 +650,34 @@ namespace Domain.Entities
                 T_LugarPago = vw.T_LugarPago,
                 D_FecCre = vw.D_FecCre,
                 T_Observacion = vw.T_Observacion,
+                I_CondicionPagoID = vw.I_CondicionPagoID,
+                T_Condicion = vw.T_Condicion,
                 I_MontoProcesado = vw.I_MontoProcesado
             };
 
             return dto;
+        }
+
+        public static ResumenAnualPagoDeObligaciones_X_DiaDTO USP_S_ResumenAnualPagoDeObligaciones_X_Dia_To_ResumenAnualPagoDeObligaciones_X_DiaDTO(USP_S_ResumenAnualPagoDeObligaciones_X_Dia sp)
+        {
+            var result = new ResumenAnualPagoDeObligaciones_X_DiaDTO()
+            {
+                I_Dia = sp.I_Dia,
+                Enero = sp.Enero,
+                Febrero = sp.Febrero,
+                Marzo = sp.Marzo,
+                Abril = sp.Abril,
+                Mayo = sp.Mayo,
+                Junio = sp.Junio,
+                Julio = sp.Julio,
+                Agosto = sp.Agosto,
+                Setiembre = sp.Setiembre,
+                Octubre = sp.Octubre,
+                Noviembre = sp.Noviembre,
+                Diciembre = sp.Diciembre
+            };
+
+            return result;
         }
     }
 }
