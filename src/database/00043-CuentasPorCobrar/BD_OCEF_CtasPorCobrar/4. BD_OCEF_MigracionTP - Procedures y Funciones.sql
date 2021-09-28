@@ -119,7 +119,7 @@ BEGIN
 				deleted.C_Sexo, deleted.D_FecNac, deleted.C_CodModIng, deleted.C_AnioIngreso, deleted.B_Removido INTO @Tbl_output;
 		
 		UPDATE	TR_MG_Alumnos 
-				SET	B_Actualizado = 0, B_Migrable = 1, D_FecMigrado = NULL, B_Migrado = 0, T_Observacion = NULL
+				SET	B_Actualizado = 0, B_Migrable = 1, D_FecMigrado = NULL, B_Migrado = 0
 
 		UPDATE	t_Alu
 		SET		t_Alu.B_Actualizado = 1,
@@ -171,24 +171,32 @@ AS
 BEGIN
 	DECLARE @I_Actualizados int = 0
 	DECLARE @D_FecProceso datetime = GETDATE() 
+	DECLARE @I_ObservID int = 1
+	DECLARE @I_TablaID int = 1
 
 	BEGIN TRY 
 		UPDATE	TR_MG_Alumnos
 		SET		B_Migrable = 0,
-				D_FecEvalua = @D_FecProceso,
-				T_Observacion = ISNULL(T_Observacion, '') + '020 - CARACTERES: ('+ CONVERT(varchar, @D_FecProceso, 112) + ').  El nombre de alumno tiene caracteres extraños.|'
+				D_FecEvalua = @D_FecProceso
 		WHERE	
 				PATINDEX('%[^a-zA-Z0-9.'' ]%', REPLACE(T_Nombre, '-', ' ')) <> 0 
 				OR PATINDEX('%[^a-zA-Z0-9.'' ]%', REPLACE(T_ApePaterno, '-', ' ')) <> 0 
 				OR PATINDEX('%[^a-zA-Z0-9.'' ]%', REPLACE(T_ApeMaterno, '-', ' ')) <> 0
 
-		SET @I_Actualizados = (SELECT COUNT(*) FROM TR_MG_Alumnos WHERE T_Observacion LIKE '%020%')
+		INSERT INTO TI_ObservacionRegistroTabla (I_ObservID, I_TablaID, I_FilaTablaID, D_FecRegistro)
+		SELECT	@I_ObservID, @I_TablaID, I_RowID, @D_FecProceso
+		FROM	TR_MG_Alumnos
+		WHERE	
+				PATINDEX('%[^a-zA-Z0-9.'' ]%', REPLACE(T_Nombre, '-', ' ')) <> 0 
+				OR PATINDEX('%[^a-zA-Z0-9.'' ]%', REPLACE(T_ApePaterno, '-', ' ')) <> 0 
+				OR PATINDEX('%[^a-zA-Z0-9.'' ]%', REPLACE(T_ApeMaterno, '-', ' ')) <> 0
+
+		SET @I_Actualizados = (SELECT COUNT(*) FROM TI_ObservacionRegistroTabla WHERE @I_ObservID = 1 AND @I_TablaID = 1)
 
 		SELECT @I_Actualizados as cant_updated, @D_FecProceso as fec_proceso
-		
-		
+				
 		SET @B_Resultado = 1
-		SET @T_Message = 'Ok'
+		SET @T_Message = CAST(@I_Actualizados AS varchar)
 	END TRY
 	BEGIN CATCH
 		SET @B_Resultado = 0
@@ -1599,3 +1607,15 @@ GO
 --END
 --GO
 
+
+
+CREATE VIEW VW_ObservacionesTabla
+AS
+(
+	SELECT  I_ObsTablaID, ORT.D_FecRegistro, ORT.I_TablaID, T_TablaNom, ORT.I_ObservID, CO.T_ObservDesc,
+			ORT.I_FilaTablaID, CO.T_ObservCod, CO.I_Severidad
+	FROM	TI_ObservacionRegistroTabla ORT
+			INNER JOIN TC_CatalogoTabla CT ON ORT.I_TablaID = CT.I_TablaID
+			INNER JOIN TC_CatalogoObservacion CO ON ORT.I_ObservID = CO.I_ObservID
+)
+GO
