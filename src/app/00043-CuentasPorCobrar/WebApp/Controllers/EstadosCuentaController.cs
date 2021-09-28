@@ -23,6 +23,7 @@ namespace WebApp.Controllers
         IGeneralServiceFacade generalServiceFacade;
         SelectModel selectModels;
         PagosModel pagoModel;
+        IReporteGeneralServiceFacade reporteGeneralServiceFacade;
 
         public EstadosCuentaController()
         {
@@ -32,6 +33,7 @@ namespace WebApp.Controllers
             generalServiceFacade = new GeneralServiceFacade();
             selectModels = new SelectModel();
             pagoModel = new PagosModel();
+            reporteGeneralServiceFacade = new ReporteGeneralServiceFacade();
         }
 
         // GET: EstadosCuenta
@@ -995,27 +997,32 @@ namespace WebApp.Controllers
             return workbook;
         }
 
-        [Route("consulta/pagos-banco-obligaciones")]
+        [Route("consulta/ingresos-de-obligaciones")]
         public ActionResult ListarPagosBancoObligaciones(ConsultaPagosBancoObligacionesViewModel model)
         {
             if (model.buscar)
             {
-                model.resultado = pagoModel.ListarPagoBancoObligacion(model.idBanco, model.codOperacion, model.codAlumno,
-                model.fechaInicio, model.fechaFin);
+                model.resultado = pagoModel.ListarPagoBancoObligacion(model.banco, model.ctaDeposito, model.codOperacion, model.codAlumno,
+                model.fechaInicio, model.fechaFin, model.condicion);
             }
             
-            ViewBag.Title = "Pagos en Banco de Obligaciones";
+            ViewBag.Title = "Consulta de Ingresos de Pago de Obligaciones";
 
-            ViewBag.EntidadesFinancieras = selectModels.GetEntidadesFinancieras();
+            ViewBag.EntidadesFinancieras = new SelectList(selectModels.GetEntidadesFinancieras(), "Value", "TextDisplay", model.banco);
+
+            ViewBag.CtaDeposito = new SelectList(
+                model.banco.HasValue ? selectModels.GetCtasDeposito(model.banco.Value) : new List<SelectViewModel>(), "Value", "TextDisplay", model.ctaDeposito);
+
+            ViewBag.CondicionesPago = new SelectList(selectModels.GetCondicionesPago(), "Value", "TextDisplay", model.condicion);
 
             return View(model);
         }
 
-        [Route("consulta/pagos-banco-obligaciones/descarga")]
+        [Route("consulta/ingresos-de-obligaciones/descarga")]
         public ActionResult ListarPagosBancoObligacionesDescargaExcel(ConsultaPagosBancoObligacionesViewModel model)
         {
-            model.resultado = pagoModel.ListarPagoBancoObligacion(model.idBanco, model.codOperacion, model.codAlumno,
-                model.fechaInicio, model.fechaFin);
+            model.resultado = pagoModel.ListarPagoBancoObligacion(model.banco, model.ctaDeposito, model.codOperacion, model.codAlumno,
+                model.fechaInicio, model.fechaFin, model.condicion);
 
             using (var workbook = new XLWorkbook())
             {
@@ -1024,8 +1031,8 @@ namespace WebApp.Controllers
                 worksheet.Column("A").Width = 30;
                 worksheet.Columns("B:D").Width  = 16;
                 worksheet.Column("E").Width = 30;
-                worksheet.Columns("F:I").Width = 16;
-                worksheet.Column("J").Width = 30;
+                worksheet.Columns("F:J").Width = 16;
+                worksheet.Column("K").Width = 30;
 
                 var currentRow = 1;
 
@@ -1039,7 +1046,8 @@ namespace WebApp.Controllers
                 worksheet.Cell(currentRow, 7).Value = "Monto Pagado";
                 worksheet.Cell(currentRow, 8).Value = "Lugar";
                 worksheet.Cell(currentRow, 9).Value = "Fec.Reg.Sistema";
-                worksheet.Cell(currentRow, 10).Value = "Observación";
+                worksheet.Cell(currentRow, 10).Value = "Condición";
+                worksheet.Cell(currentRow, 11).Value = "Observación";
                 #endregion
 
                 #region Body
@@ -1055,7 +1063,8 @@ namespace WebApp.Controllers
                     worksheet.Cell(currentRow, 7).SetValue<decimal>(item.I_MontoPago);
                     worksheet.Cell(currentRow, 8).SetValue<string>(item.T_LugarPago);
                     worksheet.Cell(currentRow, 9).SetValue<DateTime>(item.D_FecCre);
-                    worksheet.Cell(currentRow, 10).SetValue<string>(item.T_Observacion);
+                    worksheet.Cell(currentRow, 10).SetValue<string>(item.T_Condicion);
+                    worksheet.Cell(currentRow, 11).SetValue<string>(item.T_Observacion);
                 }
                 #endregion
 
@@ -1067,6 +1076,137 @@ namespace WebApp.Controllers
                     var content = stream.ToArray();
 
                     return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Consulta Pago de Obligaciones.xlsx");
+                }
+            }
+        }
+
+        [Route("consultas/resumen-obligaciones-por-dia")]
+        public ActionResult ResumenAnualObligacionesPorDia(int? anio, int? entidadFinanID, int? ctaDepositoID, int? condicion)
+        {
+            anio = anio.HasValue ? anio : DateTime.Now.Year;
+
+            var model = reporteGeneralServiceFacade.ReporteResumenAnualPagoObligaciones_X_Dia(anio.Value, entidadFinanID, ctaDepositoID, condicion);
+
+            ViewBag.Anios = new SelectList(generalServiceFacade.Listar_Anios(), "Value", "TextDisplay", anio);
+            
+            ViewBag.EntidadesFinancieras = new SelectList(selectModels.GetEntidadesFinancieras(), "Value", "TextDisplay", entidadFinanID);
+
+            ViewBag.CtaDeposito = new SelectList(
+                entidadFinanID.HasValue ? selectModels.GetCtasDeposito(entidadFinanID.Value) : new List<SelectViewModel>(), "Value", "TextDisplay", ctaDepositoID);
+
+            ViewBag.CondicionesPago = new SelectList(selectModels.GetCondicionesPago(), "Value", "TextDisplay", condicion);
+
+            ViewBag.Title = "Resumen de Ingresos de Pago de Obligaciones";
+
+            return View(model);
+        }
+
+        [Route("consultas/resumen-obligaciones-por-dia/descarga")]
+        public ActionResult DescargaResumenAnualObligacionesPorDia(int anio, int? entidadFinanID, int? ctaDepositoID, int? condicion)
+        {
+            var model = reporteGeneralServiceFacade.ReporteResumenAnualPagoObligaciones_X_Dia(anio, entidadFinanID, ctaDepositoID, condicion);
+
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.Worksheets.Add("IngresosDiarios");
+
+                worksheet.Column("A").Width = 14;
+
+                worksheet.Columns("B:N").Width = 14;
+
+                var titleCell = worksheet.Cell(1, 1);
+
+                titleCell.Value = "RESUMEN DE INGRESOS DE PAGO DE OBLIGACIONES AL AÑO " + model.anio;
+
+                titleCell.RichText.SetBold(true);
+
+                titleCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+
+                worksheet.Range(titleCell, worksheet.Cell(1, 14)).Merge(true);
+
+                var bankNameCell = worksheet.Cell(3, 1);
+
+                bankNameCell.Value = String.IsNullOrEmpty(model.nombreEntidadFinanc) ? "" : "Entidad Financiera: " + model.nombreEntidadFinanc;
+
+                var dateCell = worksheet.Cell(3, 14);
+
+                dateCell.Value = "Fecha consulta: " + model.FechaActual;
+
+                dateCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
+
+                var timeCell = worksheet.Cell(4, 14);
+
+                timeCell.Value = "Hora consulta: " + model.HoraActual;
+
+                timeCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
+
+                var currentRow = 6;
+
+                worksheet.Cell(currentRow, 1).Value = "Día";
+                worksheet.Cell(currentRow, 2).Value = "Enero";
+                worksheet.Cell(currentRow, 3).Value = "Febrero";
+                worksheet.Cell(currentRow, 4).Value = "Marzo";
+                worksheet.Cell(currentRow, 5).Value = "Abril";
+                worksheet.Cell(currentRow, 6).Value = "Mayo";
+                worksheet.Cell(currentRow, 7).Value = "Junio";
+                worksheet.Cell(currentRow, 8).Value = "Julio";
+                worksheet.Cell(currentRow, 9).Value = "Agosto";
+                worksheet.Cell(currentRow, 10).Value = "Setiembre";
+                worksheet.Cell(currentRow, 11).Value = "Octubre";
+                worksheet.Cell(currentRow, 12).Value = "Noviembre";
+                worksheet.Cell(currentRow, 13).Value = "Diciembre";
+                worksheet.Cell(currentRow, 14).Value = "Total (S/)";
+
+                currentRow++;
+
+                var inicial = currentRow;
+
+                foreach (var item in model.resumen_x_dia)
+                {
+                    worksheet.Cell(currentRow, 1).SetValue<string>(item.I_Dia.ToString());
+                    worksheet.Cell(currentRow, 2).SetValue<decimal>(item.Enero);
+                    worksheet.Cell(currentRow, 3).SetValue<decimal>(item.Febrero);
+                    worksheet.Cell(currentRow, 4).SetValue<decimal>(item.Marzo);
+                    worksheet.Cell(currentRow, 5).SetValue<decimal>(item.Abril);
+                    worksheet.Cell(currentRow, 6).SetValue<decimal>(item.Mayo);
+                    worksheet.Cell(currentRow, 7).SetValue<decimal>(item.Junio);
+                    worksheet.Cell(currentRow, 8).SetValue<decimal>(item.Julio);
+                    worksheet.Cell(currentRow, 9).SetValue<decimal>(item.Agosto);
+                    worksheet.Cell(currentRow, 10).SetValue<decimal>(item.Setiembre);
+                    worksheet.Cell(currentRow, 11).SetValue<decimal>(item.Octubre);
+                    worksheet.Cell(currentRow, 12).SetValue<decimal>(item.Noviembre);
+                    worksheet.Cell(currentRow, 13).SetValue<decimal>(item.Diciembre);
+                    worksheet.Cell(currentRow, 14).SetValue<decimal>(model.TotalDia(item.I_Dia));
+
+                    currentRow++;
+                }
+
+                worksheet.Cell(currentRow, 1).Value = "Total (S/)";
+                worksheet.Cell(currentRow, 2).SetValue<decimal>(model.TotalEnero);
+                worksheet.Cell(currentRow, 3).SetValue<decimal>(model.TotalFebrero);
+                worksheet.Cell(currentRow, 4).SetValue<decimal>(model.TotalMarzo);
+                worksheet.Cell(currentRow, 5).SetValue<decimal>(model.TotalAbril);
+                worksheet.Cell(currentRow, 6).SetValue<decimal>(model.TotalMayo);
+                worksheet.Cell(currentRow, 7).SetValue<decimal>(model.TotalJunio);
+                worksheet.Cell(currentRow, 8).SetValue<decimal>(model.TotalJulio);
+                worksheet.Cell(currentRow, 9).SetValue<decimal>(model.TotalAgosto);
+                worksheet.Cell(currentRow, 10).SetValue<decimal>(model.TotalSetiembre);
+                worksheet.Cell(currentRow, 11).SetValue<decimal>(model.TotalOctubre);
+                worksheet.Cell(currentRow, 12).SetValue<decimal>(model.TotalNoviembre);
+                worksheet.Cell(currentRow, 13).SetValue<decimal>(model.TotalDiciembre);
+                worksheet.Cell(currentRow, 14).SetValue<decimal>(model.TotalGeneral);
+
+                worksheet.Range(worksheet.Cell(inicial, 2), worksheet.Cell(currentRow, 14)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
+
+                using (var stream = new MemoryStream())
+                {
+                    workbook.SaveAs(stream);
+
+                    var content = stream.ToArray();
+
+                    string nombreArchivo = "Resumen Ingresos por día  al " + DateTime.Now.ToString(FormatosDateTime.BASIC_DATE2) + ".xlsx";
+
+                    return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", nombreArchivo);
                 }
             }
         }

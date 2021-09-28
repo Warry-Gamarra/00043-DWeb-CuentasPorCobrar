@@ -2135,16 +2135,91 @@ GO
 CREATE VIEW [dbo].[VW_PagoBancoObligaciones]
 AS
 	SELECT b.I_PagoBancoID, e.I_EntidadFinanID, e.T_EntidadDesc, cd.I_CtaDepositoID, cd.C_NumeroCuenta, b.C_CodOperacion, b.C_CodDepositante, m.I_MatAluID, m.C_CodAlu, b.T_NomDepositante, m.T_Nombre, m.T_ApePaterno, m.T_ApeMaterno, 
-		b.D_FecPago, b.I_MontoPago, b.T_LugarPago, b.D_FecCre, b.T_Observacion, ISNULL(SUM(p.I_MontoPagado), 0) AS I_MontoProcesado
+		b.D_FecPago, b.I_MontoPago, b.T_LugarPago, b.D_FecCre, b.I_CondicionPagoID, cn.T_OpcionDesc AS T_Condicion, b.T_Observacion, ISNULL(SUM(p.I_MontoPagado), 0) AS I_MontoProcesado
 	FROM TR_PagoBanco b
 	LEFT JOIN dbo.TRI_PagoProcesadoUnfv p ON p.I_PagoBancoID = b.I_PagoBancoID AND p.B_Anulado = 0
-	LEFT JOIN dbo.TC_CuentaDeposito cd ON cd.I_CtaDepositoID = p.I_CtaDepositoID
 	LEFT JOIN dbo.TR_ObligacionAluDet d ON d.I_ObligacionAluDetID = p.I_ObligacionAluDetID AND d.B_Habilitado = 1 AND d.B_Eliminado = 0
 	LEFT JOIN dbo.TR_ObligacionAluCab c ON c.I_ObligacionAluID = d.I_ObligacionAluID AND c.B_Habilitado = 1 AND c.B_Eliminado = 0
 	LEFT JOIN dbo.VW_MatriculaAlumno m ON m.I_MatAluID = c.I_MatAluID
 	INNER JOIN dbo.TC_EntidadFinanciera e ON e.I_EntidadFinanID = b.I_EntidadFinanID
+	INNER JOIN dbo.TC_CuentaDeposito cd ON cd.I_CtaDepositoID = b.I_CtaDepositoID
+	INNER JOIN dbo.TC_CatalogoOpcion cn ON cn.I_OpcionID = b.I_CondicionPagoID
 	WHERE b.I_TipoPagoID = 133
 	GROUP BY b.I_PagoBancoID, e.I_EntidadFinanID, cd.I_CtaDepositoID, cd.C_NumeroCuenta, e.T_EntidadDesc, b.C_CodOperacion, b.C_CodDepositante, m.I_MatAluID, m.C_CodAlu, b.T_NomDepositante, m.T_Nombre, m.T_ApePaterno, m.T_ApeMaterno, 
-		b.D_FecPago, b.I_MontoPago, b.T_LugarPago, b.D_FecCre, b.T_Observacion
+		b.D_FecPago, b.I_MontoPago, b.T_LugarPago, b.D_FecCre, b.I_CondicionPagoID, cn.T_OpcionDesc, b.T_Observacion
 GO
+
+
+
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_ResumenAnualPagoDeObligaciones_X_Dia')
+	DROP PROCEDURE [dbo].[USP_S_ResumenAnualPagoDeObligaciones_X_Dia]
+GO
+
+CREATE PROCEDURE [dbo].[USP_S_ResumenAnualPagoDeObligaciones_X_Dia]
+@I_Anio				INT,
+@I_EntidadFinanID	INT = NULL,
+@I_CtaDepositoID	INT = NULL,
+@I_CondicionPagoID	INT = NULL
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	DECLARE @PagoObligacion INT = 133 
+	
+	DECLARE @SQLString NVARCHAR(4000),
+			@ParmDefinition NVARCHAR(500)
+
+	SET @SQLString = N'
+		SELECT
+			I_Dia,
+			ISNULL([1], 0) AS Enero,
+			ISNULL([2], 0) AS Febrero,
+			ISNULL([3], 0) AS Marzo,
+			ISNULL([4], 0) AS Abril,
+			ISNULL([5], 0) AS Mayo,
+			ISNULL([6], 0) AS Junio,
+			ISNULL([7], 0) AS Julio,
+			ISNULL([8], 0) AS Agosto,
+			ISNULL([9], 0) AS Setiembre,
+			ISNULL([10], 0) AS Octubre,
+			ISNULL([11], 0) AS Noviembre,
+			ISNULL([12], 0) AS Diciembre
+		FROM
+		(
+		SELECT MONTH(b.D_FecPago) AS I_Month, DAY(b.D_FecPago) AS I_Dia, SUM(b.I_MontoPago) AS I_MontoTotal
+		FROM dbo.TR_PagoBanco b 
+		INNER JOIN dbo.TC_CatalogoOpcion cn ON cn.I_OpcionID = b.I_CondicionPagoID
+		WHERE b.B_Anulado = 0 AND Year(b.D_FecPago) = @I_Anio AND b.I_TipoPagoID = @I_TipoPagoID ' +
+			CASE WHEN @I_EntidadFinanID IS NULL THEN '' ELSE 'AND b.I_EntidadFinanID = @I_EntidadFinanID' END + '
+			' + CASE WHEN @I_CtaDepositoID IS NULL THEN '' ELSE 'AND b.I_CtaDepositoID = @I_CtaDepositoID' END + '
+			' + CASE WHEN @I_CondicionPagoID IS NULL THEN '' ELSE 'AND b.I_CondicionPagoID = @I_CondicionPagoID' END + '
+		GROUP BY MONTH(b.D_FecPago), DAY(b.D_FecPago), MONTH(b.D_FecPago)
+		) p
+		PIVOT
+		(
+			SUM(p.I_MontoTotal) 
+			FOR p.I_Month IN ([1],[2],[3],[4],[5],[6],[7],[8],[9],[10],[11],[12])
+		) AS pvt'
+
+	SET @ParmDefinition = N'@I_TipoPagoID INT, @I_Anio INT, @I_EntidadFinanID INT, @I_CtaDepositoID INT, @I_CondicionPagoID INT'
+	
+	EXECUTE sp_executesql @SQLString, @ParmDefinition,
+		@I_TipoPagoID = @PagoObligacion,
+		@I_Anio = @I_Anio,
+		@I_EntidadFinanID = @I_EntidadFinanID,
+		@I_CtaDepositoID = @I_CtaDepositoID,
+		@I_CondicionPagoID = @I_CondicionPagoID
+/*
+EXEC USP_S_ResumenAnualPagoDeObligaciones_X_Dia 
+	@I_Anio = 2021,
+	@I_EntidadFinanID = 2,
+	@I_CtaDepositoID = 9,
+	@I_CondicionPagoID = NULL
+GO
+*/
+END
+GO
+
 

@@ -175,7 +175,6 @@
             });
 
             $('#btnExcelDownload').on('click', function () {
-                debugger;
                 location.href = '@Url.Action("DescargaResumenAnualObligacionesPorClasificadores", "EstadosCuenta")' + buildFilters($('#anio').val(), $('#tipoEstudio').val(), $('#entidadFinanID').val());
             });
         });
