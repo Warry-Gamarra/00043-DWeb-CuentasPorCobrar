@@ -191,7 +191,7 @@ BEGIN
 				OR PATINDEX('%[^a-zA-Z0-9.'' ]%', REPLACE(T_ApePaterno, '-', ' ')) <> 0 
 				OR PATINDEX('%[^a-zA-Z0-9.'' ]%', REPLACE(T_ApeMaterno, '-', ' ')) <> 0
 
-		SET @I_Actualizados = (SELECT COUNT(*) FROM TI_ObservacionRegistroTabla WHERE @I_ObservID = 1 AND @I_TablaID = 1)
+		SET @I_Actualizados = (SELECT COUNT(*) FROM TI_ObservacionRegistroTabla WHERE I_ObservID = @I_ObservID AND I_TablaID = @I_TablaID)
 
 		SELECT @I_Actualizados as cant_updated, @D_FecProceso as fec_proceso
 				
@@ -221,23 +221,31 @@ AS
 BEGIN
 	DECLARE @I_Actualizados int = 0
 	DECLARE @D_FecProceso datetime = GETDATE() 
+	DECLARE @I_ObservID int = 2
+	DECLARE @I_TablaID int = 1
 
 	BEGIN TRY 
 		UPDATE	TR_MG_Alumnos
 		SET		B_Migrable = 0,
-				D_FecEvalua = @D_FecProceso,
-				T_Observacion = ISNULL(T_Observacion, '') + '021 - REPETIDOS: ('+ CONVERT(varchar, @D_FecProceso, 112) + ').  La combinación código de carrera + código de alumno se encuentran repetidos.|'
+				D_FecEvalua = @D_FecProceso
 		WHERE	EXISTS (SELECT C_CodAlu, C_RcCod, COUNT(*) FROM TR_MG_Alumnos A 
 						WHERE A.C_CodAlu = TR_MG_Alumnos.C_CodAlu AND A.C_RcCod = TR_MG_Alumnos.C_RcCod
 						GROUP BY C_CodAlu, C_RcCod HAVING COUNT(*) > 1)
 				
+		
+		INSERT INTO TI_ObservacionRegistroTabla (I_ObservID, I_TablaID, I_FilaTablaID, D_FecRegistro)
+		SELECT	@I_ObservID, @I_TablaID, I_RowID, @D_FecProceso
+		FROM	TR_MG_Alumnos
+		WHERE	EXISTS (SELECT C_CodAlu, C_RcCod, COUNT(*) FROM TR_MG_Alumnos A 
+						WHERE A.C_CodAlu = TR_MG_Alumnos.C_CodAlu AND A.C_RcCod = TR_MG_Alumnos.C_RcCod
+						GROUP BY C_CodAlu, C_RcCod HAVING COUNT(*) > 1)
 
-		SET @I_Actualizados = (SELECT COUNT(*) FROM TR_MG_Alumnos WHERE T_Observacion LIKE '%021%')
+		SET @I_Actualizados = (SELECT COUNT(*) FROM TI_ObservacionRegistroTabla WHERE I_ObservID = @I_ObservID AND I_TablaID = @I_TablaID)
 
 		SELECT @I_Actualizados as cant_updated, @D_FecProceso as fec_proceso
-		
+				
 		SET @B_Resultado = 1
-		SET @T_Message = 'Ok'
+		SET @T_Message = CAST(@I_Actualizados AS varchar)
 	END TRY
 	BEGIN CATCH
 		SET @B_Resultado = 0
@@ -246,39 +254,43 @@ BEGIN
 END
 GO
 
-
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ValidarCodigosAlumnoRepetidos')
-	DROP PROCEDURE [dbo].[USP_U_ValidarCodigosAlumnoRepetidos]
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ValidarCodigoCarreraAlumno')
+	DROP PROCEDURE [dbo].[USP_U_ValidarCodigoCarreraAlumno]
 GO
 
-CREATE PROCEDURE USP_U_ValidarCodigosAlumnoRepetidos	
+CREATE PROCEDURE USP_U_ValidarCodigoCarreraAlumno	
 	@B_Resultado  bit output,
 	@T_Message	  nvarchar(4000) OUTPUT	
 AS
 --declare @B_Resultado  bit,
 --		@T_Message	  nvarchar(4000)
---exec USP_U_ValidarCodigosAlumnoRepetidos @B_Resultado output, @T_Message output
+--exec USP_U_ValidarCodigoCarreraAlumno @B_Resultado output, @T_Message output
 --select @B_Resultado as resultado, @T_Message as mensaje
 BEGIN
 	DECLARE @I_Actualizados int = 0
 	DECLARE @D_FecProceso datetime = GETDATE() 
+	DECLARE @I_ObservID int = 21
+	DECLARE @I_TablaID int = 1
 
 	BEGIN TRY 
 		UPDATE	TR_MG_Alumnos
 		SET		B_Migrable = 0,
-				D_FecEvalua = @D_FecProceso,
-				T_Observacion = ISNULL(T_Observacion, '') + '021 - REPETIDOS: ('+ CONVERT(varchar, @D_FecProceso, 112) + ').  La combinación código de carrera + código de alumno se encuentran repetidos.|'
-		WHERE	EXISTS (SELECT C_CodAlu, C_RcCod, COUNT(*) FROM TR_MG_Alumnos A 
-						WHERE A.C_CodAlu = TR_MG_Alumnos.C_CodAlu AND A.C_RcCod = TR_MG_Alumnos.C_RcCod
-						GROUP BY C_CodAlu, C_RcCod HAVING COUNT(*) > 1)
-				
+				D_FecEvalua = @D_FecProceso
+		WHERE	NOT EXISTS (SELECT C_RcCod FROM BD_UNFV_Repositorio.dbo.TI_CarreraProfesional c
+							WHERE C.C_RcCod = TR_MG_Alumnos.C_RcCod)
+						
+		INSERT INTO TI_ObservacionRegistroTabla (I_ObservID, I_TablaID, I_FilaTablaID, D_FecRegistro)
+		SELECT	@I_ObservID, @I_TablaID, I_RowID, @D_FecProceso
+		FROM	TR_MG_Alumnos
+		WHERE	NOT EXISTS (SELECT C_RcCod FROM BD_UNFV_Repositorio.dbo.TI_CarreraProfesional c
+							WHERE C.C_RcCod = TR_MG_Alumnos.C_RcCod)
 
-		SET @I_Actualizados = (SELECT COUNT(*) FROM TR_MG_Alumnos WHERE T_Observacion LIKE '%021%')
+		SET @I_Actualizados = (SELECT COUNT(*) FROM TI_ObservacionRegistroTabla WHERE I_ObservID = @I_ObservID AND I_TablaID = @I_TablaID)
 
 		SELECT @I_Actualizados as cant_updated, @D_FecProceso as fec_proceso
-		
+				
 		SET @B_Resultado = 1
-		SET @T_Message = 'Ok'
+		SET @T_Message = CAST(@I_Actualizados AS varchar)
 	END TRY
 	BEGIN CATCH
 		SET @B_Resultado = 0
@@ -287,13 +299,58 @@ BEGIN
 END
 GO
 
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ValidarAnioIngresoAlumno')
+	DROP PROCEDURE [dbo].[USP_U_ValidarAnioIngresoAlumno]
+GO
+
+CREATE PROCEDURE USP_U_ValidarAnioIngresoAlumno	
+	@B_Resultado  bit output,
+	@T_Message	  nvarchar(4000) OUTPUT	
+AS
+--declare @B_Resultado  bit,
+--		@T_Message	  nvarchar(4000)
+--exec USP_U_ValidarAnioIngresoAlumno @B_Resultado output, @T_Message output
+--select @B_Resultado as resultado, @T_Message as mensaje
+BEGIN
+	DECLARE @I_Actualizados int = 0
+	DECLARE @D_FecProceso datetime = GETDATE() 
+	DECLARE @I_ObservID int = 22
+	DECLARE @I_TablaID int = 1
+
+	BEGIN TRY 
+		UPDATE	TR_MG_Alumnos
+		SET		B_Migrable = 0,
+				D_FecEvalua = @D_FecProceso
+		WHERE	C_AnioIngreso IS NULL OR C_AnioIngreso = 0
+						
+		INSERT INTO TI_ObservacionRegistroTabla (I_ObservID, I_TablaID, I_FilaTablaID, D_FecRegistro)
+		SELECT	@I_ObservID, @I_TablaID, I_RowID, @D_FecProceso
+		FROM	TR_MG_Alumnos
+		WHERE	C_AnioIngreso IS NULL OR C_AnioIngreso = 0
+
+		SET @I_Actualizados = (SELECT COUNT(*) FROM TI_ObservacionRegistroTabla WHERE I_ObservID = @I_ObservID AND I_TablaID = @I_TablaID)
+
+		SELECT @I_Actualizados as cant_updated, @D_FecProceso as fec_proceso
+				
+		SET @B_Resultado = 1
+		SET @T_Message = CAST(@I_Actualizados AS varchar)
+	END TRY
+	BEGIN CATCH
+		SET @B_Resultado = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+END
+GO
 
 
 IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_IU_MigrarDataAlumnosUnfvRepositorio')
 	DROP PROCEDURE [dbo].[USP_IU_MigrarDataAlumnosUnfvRepositorio]
 GO
 
-CREATE PROCEDURE USP_IU_MigrarDataAlumnosUnfvRepositorio	
+CREATE PROCEDURE USP_IU_MigrarDataAlumnosUnfvRepositorio
+	@C_CodAlu	  varchar(20),
+	@C_AnioIng	  smallint,	
 	@B_Resultado  bit output,
 	@T_Message	  nvarchar(4000) OUTPUT	
 AS
@@ -302,7 +359,7 @@ AS
 --exec USP_IU_MigrarDataAlumnosUnfvRepositorio @B_Resultado output, @T_Message output
 --select @B_Resultado as resultado, @T_Message as mensaje
 BEGIN
-	DECLARE @I_CpDes int = 0
+	DECLARE @I_CantAlu int = 0
 	DECLARE @I_Removidos int = 0
 	DECLARE @I_Actualizados int = 0
 	DECLARE @I_Insertados int = 0
