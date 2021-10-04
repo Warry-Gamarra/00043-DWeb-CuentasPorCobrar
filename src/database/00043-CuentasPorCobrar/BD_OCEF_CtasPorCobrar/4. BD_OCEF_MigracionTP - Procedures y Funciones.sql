@@ -175,6 +175,7 @@ BEGIN
 	DECLARE @I_ObservID int = 1
 	DECLARE @I_TablaID int = 1
 
+	BEGIN TRANSACTION
 	BEGIN TRY 
 		UPDATE	TR_MG_Alumnos
 		SET		B_Migrable = 0,
@@ -184,22 +185,30 @@ BEGIN
 				OR PATINDEX('%[^a-zA-Z0-9.'' ]%', REPLACE(T_ApePaterno, '-', ' ')) <> 0 
 				OR PATINDEX('%[^a-zA-Z0-9.'' ]%', REPLACE(T_ApeMaterno, '-', ' ')) <> 0
 
-		INSERT INTO TI_ObservacionRegistroTabla (I_ObservID, I_TablaID, I_FilaTablaID, D_FecRegistro)
-		SELECT	@I_ObservID, @I_TablaID, I_RowID, @D_FecProceso
-		FROM	TR_MG_Alumnos
-		WHERE	
-				PATINDEX('%[^a-zA-Z0-9.'' ]%', REPLACE(T_Nombre, '-', ' ')) <> 0 
-				OR PATINDEX('%[^a-zA-Z0-9.'' ]%', REPLACE(T_ApePaterno, '-', ' ')) <> 0 
-				OR PATINDEX('%[^a-zA-Z0-9.'' ]%', REPLACE(T_ApeMaterno, '-', ' ')) <> 0
+		MERGE TI_ObservacionRegistroTabla AS TRG
+		USING 	(SELECT	@I_ObservID AS I_ObservID, @I_TablaID AS I_TablaID, I_RowID AS I_FilaTablaID, @D_FecProceso AS D_FecRegistro FROM TR_MG_Alumnos
+				  WHERE	PATINDEX('%[^a-zA-Z0-9.'' ]%', REPLACE(T_Nombre, '-', ' ')) <> 0 
+						OR PATINDEX('%[^a-zA-Z0-9.'' ]%', REPLACE(T_ApePaterno, '-', ' ')) <> 0 
+						OR PATINDEX('%[^a-zA-Z0-9.'' ]%', REPLACE(T_ApeMaterno, '-', ' ')) <> 0) AS SRC
+		ON TRG.I_ObservID = SRC.I_ObservID AND TRG.I_TablaID = SRC.I_TablaID AND TRG.I_FilaTablaID = SRC.I_FilaTablaID
+		WHEN MATCHED THEN
+			UPDATE SET D_FecRegistro = SRC.D_FecRegistro
+		WHEN NOT MATCHED BY TARGET THEN
+			INSERT (I_ObservID, I_TablaID, I_FilaTablaID, D_FecRegistro)
+			VALUES (SRC.I_ObservID, SRC.I_TablaID, SRC.I_FilaTablaID, SRC.D_FecRegistro)
+		WHEN NOT MATCHED BY SOURCE AND TRG.I_ObservID = @I_ObservID THEN
+			DELETE;
 
 		SET @I_Actualizados = (SELECT COUNT(*) FROM TI_ObservacionRegistroTabla WHERE I_ObservID = @I_ObservID AND I_TablaID = @I_TablaID)
 
 		SELECT @I_Actualizados as cant_updated, @D_FecProceso as fec_proceso
 				
+		COMMIT TRANSACTION
 		SET @B_Resultado = 1
 		SET @T_Message = CAST(@I_Actualizados AS varchar)
 	END TRY
 	BEGIN CATCH
+		ROLLBACK TRANSACTION
 		SET @B_Resultado = 0
 		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
 	END CATCH
@@ -225,6 +234,7 @@ BEGIN
 	DECLARE @I_ObservID int = 2
 	DECLARE @I_TablaID int = 1
 
+	BEGIN TRANSACTION
 	BEGIN TRY 
 		UPDATE	TR_MG_Alumnos
 		SET		B_Migrable = 0,
@@ -233,22 +243,30 @@ BEGIN
 						WHERE A.C_CodAlu = TR_MG_Alumnos.C_CodAlu AND A.C_RcCod = TR_MG_Alumnos.C_RcCod
 						GROUP BY C_CodAlu, C_RcCod HAVING COUNT(*) > 1)
 				
-		
-		INSERT INTO TI_ObservacionRegistroTabla (I_ObservID, I_TablaID, I_FilaTablaID, D_FecRegistro)
-		SELECT	@I_ObservID, @I_TablaID, I_RowID, @D_FecProceso
-		FROM	TR_MG_Alumnos
-		WHERE	EXISTS (SELECT C_CodAlu, C_RcCod, COUNT(*) FROM TR_MG_Alumnos A 
+		MERGE TI_ObservacionRegistroTabla AS TRG
+		USING 	(SELECT	@I_ObservID AS I_ObservID, @I_TablaID AS I_TablaID, I_RowID AS I_FilaTablaID, @D_FecProceso AS D_FecRegistro FROM TR_MG_Alumnos
+				  WHERE	EXISTS (SELECT C_CodAlu, C_RcCod, COUNT(*) FROM TR_MG_Alumnos A 
 						WHERE A.C_CodAlu = TR_MG_Alumnos.C_CodAlu AND A.C_RcCod = TR_MG_Alumnos.C_RcCod
-						GROUP BY C_CodAlu, C_RcCod HAVING COUNT(*) > 1)
+						GROUP BY C_CodAlu, C_RcCod HAVING COUNT(*) > 1)) AS SRC
+		ON TRG.I_ObservID = SRC.I_ObservID AND TRG.I_TablaID = SRC.I_TablaID AND TRG.I_FilaTablaID = SRC.I_FilaTablaID
+		WHEN MATCHED THEN
+			UPDATE SET D_FecRegistro = SRC.D_FecRegistro
+		WHEN NOT MATCHED BY TARGET THEN
+			INSERT (I_ObservID, I_TablaID, I_FilaTablaID, D_FecRegistro)
+			VALUES (SRC.I_ObservID, SRC.I_TablaID, SRC.I_FilaTablaID, SRC.D_FecRegistro)
+		WHEN NOT MATCHED BY SOURCE AND TRG.I_ObservID = @I_ObservID THEN
+			DELETE;
 
 		SET @I_Actualizados = (SELECT COUNT(*) FROM TI_ObservacionRegistroTabla WHERE I_ObservID = @I_ObservID AND I_TablaID = @I_TablaID)
 
 		SELECT @I_Actualizados as cant_updated, @D_FecProceso as fec_proceso
 				
+		COMMIT TRANSACTION
 		SET @B_Resultado = 1
 		SET @T_Message = CAST(@I_Actualizados AS varchar)
 	END TRY
 	BEGIN CATCH
+		ROLLBACK TRANSACTION
 		SET @B_Resultado = 0
 		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
 	END CATCH
@@ -273,27 +291,37 @@ BEGIN
 	DECLARE @I_ObservID int = 21
 	DECLARE @I_TablaID int = 1
 
+	BEGIN TRANSACTION
 	BEGIN TRY 
 		UPDATE	TR_MG_Alumnos
 		SET		B_Migrable = 0,
 				D_FecEvalua = @D_FecProceso
 		WHERE	NOT EXISTS (SELECT C_RcCod FROM BD_UNFV_Repositorio.dbo.TI_CarreraProfesional c
 							WHERE C.C_RcCod = TR_MG_Alumnos.C_RcCod)
-						
-		INSERT INTO TI_ObservacionRegistroTabla (I_ObservID, I_TablaID, I_FilaTablaID, D_FecRegistro)
-		SELECT	@I_ObservID, @I_TablaID, I_RowID, @D_FecProceso
-		FROM	TR_MG_Alumnos
-		WHERE	NOT EXISTS (SELECT C_RcCod FROM BD_UNFV_Repositorio.dbo.TI_CarreraProfesional c
-							WHERE C.C_RcCod = TR_MG_Alumnos.C_RcCod)
+					
+		MERGE TI_ObservacionRegistroTabla AS TRG
+		USING 	(SELECT	@I_ObservID AS I_ObservID, @I_TablaID AS I_TablaID, I_RowID AS I_FilaTablaID, @D_FecProceso AS D_FecRegistro FROM TR_MG_Alumnos
+				  WHERE	NOT EXISTS (SELECT C_RcCod FROM BD_UNFV_Repositorio.dbo.TI_CarreraProfesional c
+							WHERE C.C_RcCod = TR_MG_Alumnos.C_RcCod)) AS SRC
+		ON TRG.I_ObservID = SRC.I_ObservID AND TRG.I_TablaID = SRC.I_TablaID AND TRG.I_FilaTablaID = SRC.I_FilaTablaID
+		WHEN MATCHED THEN
+			UPDATE SET D_FecRegistro = SRC.D_FecRegistro
+		WHEN NOT MATCHED BY TARGET THEN
+			INSERT (I_ObservID, I_TablaID, I_FilaTablaID, D_FecRegistro)
+			VALUES (SRC.I_ObservID, SRC.I_TablaID, SRC.I_FilaTablaID, SRC.D_FecRegistro)
+		WHEN NOT MATCHED BY SOURCE AND TRG.I_ObservID = @I_ObservID THEN
+			DELETE;
 
 		SET @I_Actualizados = (SELECT COUNT(*) FROM TI_ObservacionRegistroTabla WHERE I_ObservID = @I_ObservID AND I_TablaID = @I_TablaID)
 
 		SELECT @I_Actualizados as cant_updated, @D_FecProceso as fec_proceso
 				
+		COMMIT TRANSACTION
 		SET @B_Resultado = 1
 		SET @T_Message = CAST(@I_Actualizados AS varchar)
 	END TRY
 	BEGIN CATCH
+		ROLLBACK TRANSACTION
 		SET @B_Resultado = 0
 		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
 	END CATCH
@@ -319,25 +347,91 @@ BEGIN
 	DECLARE @I_ObservID int = 22
 	DECLARE @I_TablaID int = 1
 
+	BEGIN TRANSACTION
 	BEGIN TRY 
 		UPDATE	TR_MG_Alumnos
 		SET		B_Migrable = 0,
 				D_FecEvalua = @D_FecProceso
 		WHERE	C_AnioIngreso IS NULL OR C_AnioIngreso = 0
-						
-		INSERT INTO TI_ObservacionRegistroTabla (I_ObservID, I_TablaID, I_FilaTablaID, D_FecRegistro)
-		SELECT	@I_ObservID, @I_TablaID, I_RowID, @D_FecProceso
-		FROM	TR_MG_Alumnos
-		WHERE	C_AnioIngreso IS NULL OR C_AnioIngreso = 0
+					
+		MERGE TI_ObservacionRegistroTabla AS TRG
+		USING 	(SELECT	@I_ObservID AS I_ObservID, @I_TablaID AS I_TablaID, I_RowID AS I_FilaTablaID, @D_FecProceso AS D_FecRegistro FROM TR_MG_Alumnos
+				  WHERE	C_AnioIngreso IS NULL OR C_AnioIngreso = 0) AS SRC
+		ON TRG.I_ObservID = SRC.I_ObservID AND TRG.I_TablaID = SRC.I_TablaID AND TRG.I_FilaTablaID = SRC.I_FilaTablaID
+		WHEN MATCHED THEN
+			UPDATE SET D_FecRegistro = SRC.D_FecRegistro
+		WHEN NOT MATCHED BY TARGET THEN
+			INSERT (I_ObservID, I_TablaID, I_FilaTablaID, D_FecRegistro)
+			VALUES (SRC.I_ObservID, SRC.I_TablaID, SRC.I_FilaTablaID, SRC.D_FecRegistro)
+		WHEN NOT MATCHED BY SOURCE AND TRG.I_ObservID = @I_ObservID THEN
+			DELETE;
+
+		SET @I_Actualizados = (SELECT COUNT(*) FROM TI_ObservacionRegistroTabla WHERE I_ObservID = @I_ObservID AND I_TablaID = @I_TablaID)
+
+		SELECT @I_Actualizados as cant_updated, @D_FecProceso as fec_proceso
+
+		COMMIT TRANSACTION				
+		SET @B_Resultado = 1
+		SET @T_Message = CAST(@I_Actualizados AS varchar)
+	END TRY
+	BEGIN CATCH
+		ROLLBACK TRANSACTION
+		SET @B_Resultado = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+END
+GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ValidarModalidadIngresoAlumno')
+	DROP PROCEDURE [dbo].[USP_U_ValidarModalidadIngresoAlumno]
+GO
+
+CREATE PROCEDURE USP_U_ValidarModalidadIngresoAlumno	
+	@B_Resultado  bit output,
+	@T_Message	  nvarchar(4000) OUTPUT	
+AS
+--declare @B_Resultado  bit,
+--		@T_Message	  nvarchar(4000)
+--exec USP_U_ValidarModalidadIngresoAlumno @B_Resultado output, @T_Message output
+--select @B_Resultado as resultado, @T_Message as mensaje
+BEGIN
+	DECLARE @I_Actualizados int = 0
+	DECLARE @D_FecProceso datetime = GETDATE() 
+	DECLARE @I_ObservID int = 23
+	DECLARE @I_TablaID int = 1
+
+	BEGIN TRANSACTION
+	BEGIN TRY 
+		UPDATE	TR_MG_Alumnos
+		SET		B_Migrable = 0,
+				D_FecEvalua = @D_FecProceso
+		WHERE	NOT EXISTS (SELECT C_CodModIng FROM BD_UNFV_Repositorio.dbo.TC_ModalidadIngreso MI
+							WHERE MI.C_CodModIng = TR_MG_Alumnos.C_CodModIng)
+		
+		MERGE TI_ObservacionRegistroTabla AS TRG
+		USING 	(SELECT	@I_ObservID AS I_ObservID, @I_TablaID AS I_TablaID, I_RowID AS I_FilaTablaID, @D_FecProceso AS D_FecRegistro FROM TR_MG_Alumnos
+				  WHERE	NOT EXISTS (SELECT C_CodModIng FROM BD_UNFV_Repositorio.dbo.TC_ModalidadIngreso MI
+									WHERE MI.C_CodModIng = TR_MG_Alumnos.C_CodModIng)) AS SRC
+		ON TRG.I_ObservID = SRC.I_ObservID AND TRG.I_TablaID = SRC.I_TablaID AND TRG.I_FilaTablaID = SRC.I_FilaTablaID
+		WHEN MATCHED THEN
+			UPDATE SET D_FecRegistro = SRC.D_FecRegistro
+		WHEN NOT MATCHED BY TARGET THEN
+			INSERT (I_ObservID, I_TablaID, I_FilaTablaID, D_FecRegistro)
+			VALUES (SRC.I_ObservID, SRC.I_TablaID, SRC.I_FilaTablaID, SRC.D_FecRegistro)
+		WHEN NOT MATCHED BY SOURCE AND TRG.I_ObservID = @I_ObservID THEN
+			DELETE;
 
 		SET @I_Actualizados = (SELECT COUNT(*) FROM TI_ObservacionRegistroTabla WHERE I_ObservID = @I_ObservID AND I_TablaID = @I_TablaID)
 
 		SELECT @I_Actualizados as cant_updated, @D_FecProceso as fec_proceso
 				
+		COMMIT TRANSACTION
 		SET @B_Resultado = 1
 		SET @T_Message = CAST(@I_Actualizados AS varchar)
 	END TRY
 	BEGIN CATCH
+		ROLLBACK TRANSACTION
 		SET @B_Resultado = 0
 		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
 	END CATCH
@@ -350,8 +444,8 @@ IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCE
 GO
 
 CREATE PROCEDURE USP_IU_MigrarDataAlumnosUnfvRepositorio
-	@C_CodAlu	  varchar(20),
-	@C_AnioIng	  smallint,	
+	@C_CodAlu	  varchar(20) = NULL,
+	@C_AnioIng	  smallint = NULL,	
 	@B_Resultado  bit output,
 	@T_Message	  nvarchar(4000) OUTPUT	
 AS
@@ -418,6 +512,7 @@ BEGIN
 		C_CodTipDoc		varchar(5)
 	)
 
+	BEGIN TRANSACTION
 	BEGIN TRY 
 		SET IDENTITY_INSERT ##TEMP_AlumnoPersona ON
 
@@ -440,8 +535,7 @@ BEGIN
 		WHERE ((A.C_CodAlu = @C_CodAlu OR @C_CodAlu IS NULL) OR (A.C_AnioIngreso = @C_AnioIng OR @C_AnioIng IS NULL))
 			  AND A.I_PersonaID IS NULL
 
-		SELECT * FROM ##TEMP_AlumnoPersona ORDER BY I_PersonaID
-
+		--SELECT * FROM ##TEMP_AlumnoPersona ORDER BY I_PersonaID
 
 		SET IDENTITY_INSERT BD_UNFV_Repositorio.dbo.TC_Persona ON
 
@@ -458,11 +552,13 @@ BEGIN
 						TRG.D_FecNac	 = SRC.D_FecNac,
 						TRG.C_Sexo		 = SRC.C_Sexo
 		WHEN NOT MATCHED BY TARGET THEN
-			INSERT (C_NumDNI, C_CodTipDoc, T_ApePaterno, T_ApeMaterno, T_Nombre, C_Sexo, D_FecNac, B_Habilitado)
-			VALUES (SRC.C_NUMDNI, SRC.C_CodTipDoc, SRC.T_ApePaterno, SRC.T_ApeMaterno, SRC.T_Nombre, SRC.C_Sexo, D_FecNac, 1)
+			INSERT (I_PersonaID, C_NumDNI, C_CodTipDoc, T_ApePaterno, T_ApeMaterno, T_Nombre, C_Sexo, D_FecNac, B_Habilitado, B_Eliminado)
+			VALUES (SRC.I_PersonaID,SRC.C_NUMDNI, SRC.C_CodTipDoc, SRC.T_ApePaterno, SRC.T_ApeMaterno, SRC.T_Nombre, SRC.C_Sexo, D_FecNac, 1, 0)
 		OUTPUT	$ACTION, inserted.C_NumDNI, inserted.C_CodTipDoc, inserted.T_ApePaterno, inserted.T_ApeMaterno, inserted.T_Nombre, 
 				inserted.C_Sexo, inserted.D_FecNac,deleted.C_NumDNI, deleted.C_CodTipDoc, deleted.T_ApePaterno, deleted.T_ApeMaterno, 
-				deleted.T_Nombre, deleted.C_Sexo, deleted.D_FecNac, SRC.I_RowID INTO @Tbl_output_persona;		
+				deleted.T_Nombre, deleted.C_Sexo, deleted.D_FecNac, SRC.I_RowID, 0 INTO @Tbl_output_persona;		
+		
+		SET IDENTITY_INSERT BD_UNFV_Repositorio.dbo.TC_Persona OFF
 
 
 		MERGE BD_UNFV_Repositorio.dbo.TC_Alumno AS TRG
@@ -475,10 +571,10 @@ BEGIN
 						TRG.C_CodModIng	 = SRC.C_CodModIng,
 						TRG.C_AnioIngreso = SRC.C_AnioIngreso
 		WHEN NOT MATCHED BY TARGET THEN
-			INSERT (C_RcCod, C_CodAlu, I_PersonaID, C_CodModIng, C_AnioIngreso, B_Habilitado)
-			VALUES (SRC.C_RcCod, SRC.C_CodAlu, SRC.I_PersonaID, SRC.C_CodModIng, SRC.C_AnioIngreso, 1)
+			INSERT (C_RcCod, C_CodAlu, I_PersonaID, C_CodModIng, C_AnioIngreso, B_Habilitado, B_Eliminado)
+			VALUES (SRC.C_RcCod, SRC.C_CodAlu, SRC.I_PersonaID, SRC.C_CodModIng, SRC.C_AnioIngreso, 1, 0)
 		OUTPUT	$ACTION, inserted.C_RcCod, inserted.C_CodAlu, inserted.I_PersonaID, inserted.C_CodModIng, inserted.C_AnioIngreso, 
-				deleted.I_PersonaID, deleted.C_CodModIng, deleted.C_AnioIngreso, SRC.I_RowID INTO @Tbl_output_alumno;
+				deleted.I_PersonaID, deleted.C_CodModIng, deleted.C_AnioIngreso, SRC.I_RowID, 0 INTO @Tbl_output_alumno;
 		
 
 		UPDATE	t_Alumnos
@@ -494,11 +590,19 @@ BEGIN
 		SET @I_Actualizados_persona = (SELECT COUNT(*) FROM @Tbl_output_persona WHERE accion = 'UPDATE' AND B_Removido = 0)
 		SET @I_Actualizados_alumno = (SELECT COUNT(*) FROM @Tbl_output_alumno WHERE accion = 'UPDATE' AND B_Removido = 0)
 		
+		IF EXISTS (SELECT * FROM tempdb.INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '##TEMP_AlumnoPersona')
+		BEGIN
+			DROP TABLE ##TEMP_AlumnoPersona
+		END
+
+		COMMIT TRANSACTION
 		SET @B_Resultado = 1
 		SET @T_Message =  'Total: ' + CAST(@I_CantAlu AS varchar) + '|Insertados Persona: ' + CAST(@I_Insertados_persona AS varchar) + '|Insertados Alumno: ' + CAST(@I_Insertados_alumno AS varchar)
 						+ '|Actualizados Persona: ' + CAST(@I_Actualizados_persona AS varchar) + '|Actualizados Alumno: ' + CAST(@I_Actualizados_alumno AS varchar)
+
 	END TRY
 	BEGIN CATCH
+		ROLLBACK TRANSACTION
 		SET @B_Resultado = 0
 		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
 	END CATCH
