@@ -495,7 +495,7 @@ BEGIN
 		DEL_C_CodModIng	  varchar(2), 
 		DEL_C_AnioIngreso smallint,
 		I_RowID			  int,
-		B_Removido		bit
+		B_Removido		  bit
 	)
 
 	IF EXISTS (SELECT * FROM tempdb.INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '##TEMP_AlumnoPersona')
@@ -584,7 +584,7 @@ BEGIN
 		INNER JOIN 	@Tbl_output_persona as t_out_p ON t_out_p.I_RowID = t_Alumnos.I_RowID
 		INNER JOIN 	@Tbl_output_alumno as t_out_a ON t_out_a.I_RowID = t_Alumnos.I_RowID
 
-		SET @I_CantAlu = (SELECT COUNT(*) FROM ##TEMP_AlumnoPersona)
+		SET @I_CantAlu = (SELECT COUNT(*) FROM ##TEMP_AlumnoPersona AP INNER JOIN TR_MG_Alumnos A ON AP.I_RowID = A.I_RowID AND A.B_Migrable = 1)
 		SET @I_Insertados_persona = (SELECT COUNT(*) FROM @Tbl_output_persona WHERE accion = 'INSERT')
 		SET @I_Insertados_alumno = (SELECT COUNT(*) FROM @Tbl_output_alumno WHERE accion = 'INSERT')
 		SET @I_Actualizados_persona = (SELECT COUNT(*) FROM @Tbl_output_persona WHERE accion = 'UPDATE' AND B_Removido = 0)
@@ -603,6 +603,106 @@ BEGIN
 	END TRY
 	BEGIN CATCH
 		ROLLBACK TRANSACTION
+		SET @B_Resultado = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+END
+GO
+
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_IU_CopiarTablaCuotaDePago')
+	DROP PROCEDURE [dbo].[USP_IU_CopiarTablaCuotaDePago]
+GO
+
+CREATE PROCEDURE USP_IU_CopiarTablaCuotaDePago
+	@B_Resultado  bit output,
+	@T_Message	  nvarchar(4000) OUTPUT	
+AS
+--declare @B_Resultado  bit,
+--		@T_Message	  nvarchar(4000)
+--exec USP_IU_CopiarTablaCuotaDePago @B_Resultado output, @T_Message output
+--select @B_Resultado as resultado, @T_Message as mensaje
+BEGIN
+	DECLARE @I_CpDes int = 0
+	DECLARE @I_Removidos int = 0
+	DECLARE @I_Actualizados int = 0
+	DECLARE @I_Insertados int = 0
+	DECLARE @D_FecProceso datetime = GETDATE() 
+
+	DECLARE @Tbl_output AS TABLE 
+	(
+		accion  varchar(20), 
+		CUOTA_PAGO	float, 
+		ELIMINADO bit,
+		INS_DESCRIPCIO varchar(255), 
+		INS_N_CTA_CTE varchar(255), 
+		INS_CODIGO_BNC varchar(255), 
+		INS_FCH_VENC datetime, 
+		INS_PRIORIDAD varchar(255), 
+		INS_C_MORA varchar(255), 
+		DEL_DESCRIPCIO varchar(255), 
+		DEL_N_CTA_CTE varchar(255), 
+		DEL_CODIGO_BNC varchar(255), 
+		DEL_FCH_VENC datetime, 
+		DEL_PRIORIDAD varchar(255), 
+		DEL_C_MORA varchar(255),
+		B_Removido	bit
+	)
+
+	BEGIN TRY 
+		
+		MERGE TR_MG_CpDes AS TRG
+		USING cp_des AS SRC
+		ON	TRG.CUOTA_PAGO = SRC.CUOTA_PAGO 
+			AND TRG.ELIMINADO = SRC.ELIMINADO
+		WHEN MATCHED THEN
+			UPDATE SET	TRG.DESCRIPCIO = SRC.DESCRIPCIO,
+						TRG.N_CTA_CTE = SRC.N_CTA_CTE,
+						TRG.CODIGO_BNC = SRC.CODIGO_BNC,
+						TRG.FCH_VENC = SRC.FCH_VENC,
+						TRG.PRIORIDAD = SRC.PRIORIDAD,
+						TRG.C_MORA = SRC.C_MORA
+		WHEN NOT MATCHED BY TARGET THEN
+			INSERT (CUOTA_PAGO, DESCRIPCIO, N_CTA_CTE, ELIMINADO, CODIGO_BNC, FCH_VENC, PRIORIDAD, C_MORA, D_FecCarga, B_Actualizado)
+			VALUES (SRC.CUOTA_PAGO, SRC.DESCRIPCIO, SRC.N_CTA_CTE, SRC.ELIMINADO, SRC.CODIGO_BNC, SRC.FCH_VENC, SRC.PRIORIDAD, SRC.C_MORA, @D_FecProceso, 1)
+		WHEN NOT MATCHED BY SOURCE THEN
+			UPDATE SET TRG.B_Removido = 1, 
+					   TRG.D_FecRemovido = @D_FecProceso
+		OUTPUT	$ACTION, inserted.CUOTA_PAGO, inserted.ELIMINADO, inserted.DESCRIPCIO, inserted.N_CTA_CTE,  
+				inserted.CODIGO_BNC, inserted.FCH_VENC, inserted.PRIORIDAD, inserted.C_MORA, deleted.DESCRIPCIO, 
+				deleted.N_CTA_CTE, deleted.CODIGO_BNC, deleted.FCH_VENC, deleted.PRIORIDAD, deleted.C_MORA, 
+				deleted.B_Removido INTO @Tbl_output;
+		
+		UPDATE	TR_MG_CpDes 
+				SET	B_Actualizado = 0, B_Migrable = 1, D_FecMigrado = NULL, B_Migrado = 0, T_Observacion = NULL,
+					I_Anio = NULL, I_CatPagoID = NULL, I_Periodo = NULL
+
+		UPDATE	t_CpDes
+		SET		t_CpDes.B_Actualizado = 1,
+				t_CpDes.D_FecActualiza = @D_FecProceso
+		FROM TR_MG_CpDes AS t_CpDes
+		INNER JOIN 	@Tbl_output as t_out ON t_out.CUOTA_PAGO = t_CpDes.CUOTA_PAGO 
+					AND t_out.ELIMINADO = t_CpDes.ELIMINADO AND t_out.accion = 'UPDATE' AND t_out.B_Removido = 0
+		WHERE 
+				t_out.INS_DESCRIPCIO <> t_out.DEL_DESCRIPCIO OR
+				t_out.INS_N_CTA_CTE <> t_out.DEL_N_CTA_CTE OR
+				t_out.INS_CODIGO_BNC <> t_out.DEL_CODIGO_BNC OR
+				t_out.INS_FCH_VENC <> t_out.DEL_FCH_VENC OR
+				t_out.INS_PRIORIDAD <> t_out.DEL_PRIORIDAD OR
+				t_out.INS_C_MORA <> t_out.DEL_C_MORA
+
+		SET @I_CpDes = (SELECT COUNT(*) FROM cp_des)
+		SET @I_Insertados = (SELECT COUNT(*) FROM @Tbl_output WHERE accion = 'INSERT')
+		SET @I_Actualizados = (SELECT COUNT(*) FROM @Tbl_output WHERE accion = 'UPDATE' AND B_Removido = 0)
+		SET @I_Removidos = (SELECT COUNT(*) FROM @Tbl_output WHERE accion = 'UPDATE' AND B_Removido = 1)
+
+		SELECT @I_CpDes AS tot_cuotaPago, @I_Insertados AS cant_inserted, @I_Actualizados as cant_updated, @I_Removidos as cant_removed, @D_FecProceso as fec_proceso
+		
+		SET @B_Resultado = 1
+		SET @T_Message = 'Ok'
+	END TRY
+	BEGIN CATCH
 		SET @B_Resultado = 0
 		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
 	END CATCH
