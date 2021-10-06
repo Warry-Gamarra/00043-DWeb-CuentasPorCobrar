@@ -631,6 +631,9 @@
     <Content Include="Views\EstadosCuentaTasas\Consulta.cshtml" />
     <Content Include="Views\EstadosCuenta\ListarPagosBancoObligaciones.cshtml" />
     <Content Include="Views\EstadosCuenta\ResumenAnualObligacionesPorDia.cshtml" />
+    <Content Include="Views\Obligaciones\ConsultaGeneracionObligaciones.cshtml" />
+    <Content Include="Views\Obligaciones\_VerObligaciones.cshtml" />
+    <Content Include="Views\Pagos\_VerPagosObligaciones.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

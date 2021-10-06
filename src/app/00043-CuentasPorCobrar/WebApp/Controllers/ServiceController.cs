@@ -24,6 +24,7 @@ namespace WebApp.Controllers
         ICuentaDeposito _cuentaDeposito;
         IProgramasClientFacade programasClientFacade;
         IGeneralServiceFacade generalServiceFacade;
+        PagosModel pagoModel;
 
         public ServiceController()
         {
@@ -36,6 +37,7 @@ namespace WebApp.Controllers
             _cuentaDeposito = new CuentaDeposito();
             programasClientFacade = new ProgramasClientFacade();
             generalServiceFacade = new GeneralServiceFacade();
+            pagoModel = new PagosModel();
         }
 
         // GET: api/service/GetPrioridad/5
@@ -175,6 +177,12 @@ namespace WebApp.Controllers
         public IEnumerable<SelectViewModel> GetEspecialidades(string codFac, string codEsc)
         {
             return programasClientFacade.GetEspecialidades(codFac, codEsc);
+        }
+
+        public IEnumerable<PagoBancoObligacionViewModel> GetPagosObservados(string codOperacion, string codAlumno)
+        {
+            return  pagoModel.ListarPagoBancoObligacion(null, null, codOperacion, codAlumno,
+                null, null, null).Where(x => x.I_CondicionPagoID != (int)CatalogoTipoPago.Correcto && x.I_CondicionPagoID != (int)CatalogoTipoPago.Extorno);
         }
     }
 }

@@ -30,5 +30,7 @@ namespace Domain.Services
         IEnumerable<CtaDepoProceso> Obtener_CtaDeposito_X_Periodo(int anio, int? periodo);
 
         ObligacionAluCabEntity Obtener_ObligacionAluCab(int obligacionCabID);
+
+        CuotaPagoDTO Obtener_CuotaPago(int obligacionID);
     }
 }

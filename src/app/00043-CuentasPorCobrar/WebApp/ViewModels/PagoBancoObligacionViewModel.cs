@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -52,8 +53,26 @@ namespace WebApp.ViewModels
 
         public DateTime? D_FecPago { get; set; }
 
+        public string T_FecPago
+        {
+            get
+            {
+                return D_FecPago.HasValue ? D_FecPago.Value.ToString(FormatosDateTime.BASIC_DATETIME) : "";
+            }
+        }
+
         public decimal I_MontoPago { get; set; }
 
+        public decimal I_InteresMora { get; set; }
+
+        public decimal I_MontoPagoTotal
+        {
+            get
+            {
+                return I_MontoPago + I_InteresMora;
+            }
+        }
+        
         public string T_LugarPago { get; set; }
 
         public DateTime D_FecCre { get; set; }

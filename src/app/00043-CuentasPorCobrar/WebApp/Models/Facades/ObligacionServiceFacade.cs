@@ -222,7 +222,7 @@ namespace WebApp.Models.Facades
             return result;
         }
 
-        public List<CuotaPagoModel> Obtener_CuotaPago(int anio, int periodo, string codAlu, string codRc)
+        public List<CuotaPagoModel> Obtener_CuotasPago(int anio, int periodo, string codAlu, string codRc)
         {
             var cuotasPago = _obligacionService.Obtener_CuotasPago(anio, periodo, codAlu, codRc);
 
@@ -265,6 +265,13 @@ namespace WebApp.Models.Facades
             result = ctasDeposito.Select(x => Mapper.CtaDepoProceso_To_CtaDepoProcesoModel(x));
 
             return result;
+        }
+
+        public CuotaPagoModel Obtener_CuotaPago(int obligacionID)
+        {
+            var cuotaPago = _obligacionService.Obtener_CuotaPago(obligacionID);
+
+            return (cuotaPago == null) ? null : Mapper.CuotaPagoDTO_To_CuotaPagoModel(cuotaPago);
         }
     }
 }

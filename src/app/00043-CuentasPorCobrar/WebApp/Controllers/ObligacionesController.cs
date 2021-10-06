@@ -22,6 +22,8 @@ namespace WebApp.Controllers
         IAlumnosClientFacade alumnosClientFacade;
         IProgramasClientFacade programasClientFacade;
         IMatriculaServiceFacade matriculaServiceFacade;
+        IReportePregradoServiceFacade reportePregradoServiceFacade;
+        IReportePosgradoServiceFacade reportePosgradoServiceFacade;
 
         public ObligacionesController()
         {
@@ -31,6 +33,9 @@ namespace WebApp.Controllers
             alumnosClientFacade = new AlumnosClientFacade();
             programasClientFacade = new ProgramasClientFacade();
             matriculaServiceFacade = new MatriculaServiceFacade();
+
+            reportePregradoServiceFacade = new ReportePregradoServiceFacade();
+            reportePosgradoServiceFacade = new ReportePosgradoServiceFacade();
         }
 
         public ActionResult Generar(int? cmbAnioGrupal, int? cmbPeriodoGrupal, string cmbDependencia, TipoEstudio cmbTipoEstudio = TipoEstudio.Pregrado)
@@ -140,7 +145,7 @@ namespace WebApp.Controllers
 
             var detalle_pago = obligacionServiceFacade.Obtener_DetallePago(anio, periodo, codAlu, codRc);
 
-            var cuotas_pago = obligacionServiceFacade.Obtener_CuotaPago(anio, periodo, codAlu, codRc);
+            var cuotas_pago = obligacionServiceFacade.Obtener_CuotasPago(anio, periodo, codAlu, codRc);
 
             detalle_pago.ForEach(d => {
                 d.I_NroOrden = cuotas_pago.Find(c => c.I_ObligacionAluID == d.I_ObligacionAluID).I_NroOrden;
@@ -170,6 +175,51 @@ namespace WebApp.Controllers
             var result = obligacionServiceFacade.Generar_Obligaciones_PorAlumno(anio, periodo, codAlu, codRc, alumno.First().N_Grado, currentUserID);
 
             return Json(result, JsonRequestBehavior.AllowGet);
-        }        
+        }
+
+        //[Route("operaciones/obligaciones-generadas")]
+        public ActionResult ConsultaGeneracionObligaciones(ConsultaObligacionEstudianteViewModel model)
+        {
+            ViewBag.Title = "Obligaciones Generadas";
+
+            if (model.anio.HasValue)
+            {
+                switch (model.tipoEstudio)
+                {
+                    case TipoEstudio.Pregrado:
+                        model.resultado = reportePregradoServiceFacade.EstadoObligacionAlumnos(
+                            model.anio.Value, model.periodo, model.codFac, model.codEsc, model.codRc, model.esIngresante, model.estaPagado, true, null, null);
+                        break;
+
+                    case TipoEstudio.Posgrado:
+                        model.resultado = reportePosgradoServiceFacade.EstadoObligacionAlumnos(
+                            model.anio.Value, model.periodo, model.codFac, model.codEsc, model.codRc, model.esIngresante, model.estaPagado, true, null, null);
+                        break;
+                }
+
+                if (!String.IsNullOrEmpty(model.codAlumno) && !String.IsNullOrWhiteSpace(model.codAlumno))
+                {
+                    model.resultado = model.resultado.Where(m => m.C_CodAlu.Equals(model.codAlumno));
+                }
+            }
+
+            ViewBag.Anios = new SelectList(generalServiceFacade.Listar_Anios(), "Value", "TextDisplay", model.anio.HasValue ? model.anio.Value : DateTime.Now.Year);
+            ViewBag.Periodos = new SelectList(catalogoServiceFacade.Listar_Periodos(), "Value", "TextDisplay", model.periodo);
+            ViewBag.TipoEstudios = new SelectList(generalServiceFacade.Listar_TipoEstudios(), "Value", "TextDisplay", model.tipoEstudio);
+            ViewBag.Dependencias = new SelectList(programasClientFacade.GetDependencias(model.tipoEstudio), "Value", "TextDisplay", model.codFac);
+            ViewBag.Escuelas = new SelectList(programasClientFacade.GetEscuelas(model.codFac), "Value", "TextDisplay", model.codEsc);
+            ViewBag.Especialidades = new SelectList(programasClientFacade.GetEspecialidades(model.codFac, model.codEsc), "Value", "TextDisplay", model.codRc);
+            ViewBag.TipoAlumno = new SelectList(generalServiceFacade.Listar_TipoAlumno(), "Value", "TextDisplay", model.esIngresante);
+            ViewBag.EstadoPagoObligaciones = new SelectList(generalServiceFacade.Listar_CondicionPagoObligacion(), "Value", "TextDisplay", model.estaPagado);
+            ViewBag.FiltroDependencias = (model.tipoEstudio == TipoEstudio.Posgrado) ? null : "TODOS";
+
+            return View(model);
+        }
+
+        public ActionResult VerObligaciones(int obligacionID)
+        {
+
+            return PartialView("_VerObligaciones");
+        }
     }   
 }
