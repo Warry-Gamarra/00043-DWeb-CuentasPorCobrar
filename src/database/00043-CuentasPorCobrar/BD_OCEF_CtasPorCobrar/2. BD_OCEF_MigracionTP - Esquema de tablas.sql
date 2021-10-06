@@ -191,6 +191,7 @@ GO
 
 CREATE TABLE TR_MG_Alumnos
 (
+	I_RowID			int IDENTITY(1, 1) NOT NULL,
 	C_RcCod			varchar(3), 
 	C_CodAlu		varchar(20), 
 	C_NumDNI		varchar(20), 
@@ -260,3 +261,4 @@ CREATE TABLE TI_ObservacionRegistroTabla
 	CONSTRAINT FK_CatalogoTabla_ObservacionRegistroTabla FOREIGN KEY (I_TablaID) REFERENCES TC_CatalogoTabla (I_TablaID)
 )
 GO
+
