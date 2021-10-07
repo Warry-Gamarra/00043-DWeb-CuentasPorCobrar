@@ -1,7 +1,7 @@
 ﻿@Scripts.Render("~/bundles/jqueryval")
 
-@{ 
-    var obligaciones = (WebApp.Models.CuotaPagoModel)ViewBag.CuotaPago;
+@{
+    var obligacion = (WebApp.Models.CuotaPagoModel)ViewBag.CuotaPago;
 }
 
 <div class="modal-header bg-dark-gray" style="border-radius: .2rem .2rem 0px 0px">
@@ -12,84 +12,183 @@
 <div class="modal-body">
     <dl class="row">
         <dt class="col-sm-3">Alumno</dt>
-        <dd class="col-sm-9">@obligaciones.T_NombresCompletos</dd>
+        <dd class="col-sm-9">@obligacion.T_NombresCompletos</dd>
 
         <dt class="col-sm-3">Código</dt>
-        <dd class="col-sm-9">@obligaciones.C_CodAlu</dd>
+        <dd class="col-sm-9">@obligacion.C_CodAlu</dd>
 
         <dt class="col-sm-3">Periodo</dt>
-        <dd class="col-sm-9">@obligaciones.I_Anio - @obligaciones.T_Periodo</dd>
+        <dd class="col-sm-9">@obligacion.I_Anio - @obligacion.T_Periodo</dd>
 
         <dt class="col-sm-3">Cuota</dt>
-        <dd class="col-sm-9">@obligaciones.T_ProcesoDesc</dd>
+        <dd class="col-sm-9">@obligacion.T_ProcesoDesc</dd>
 
         <dt class="col-sm-3">Monto</dt>
-        <dd class="col-sm-9">@obligaciones.T_MontoOblig</dd>
+        <dd class="col-sm-9">@obligacion.T_MontoOblig</dd>
 
         <dt class="col-sm-3">Vencimiento</dt>
-        <dd class="col-sm-9">@obligaciones.T_FecVencto</dd>
+        <dd class="col-sm-9">@obligacion.T_FecVencto</dd>
     </dl>
 </div>
 
-<div class="modal-body">
-    <form name="formConsultaPago" id="formConsultaPago">
-        @Html.Hidden("Submited", 0)
-        @Html.AntiForgeryToken()
-        <div class="container-fluid">
-            @Html.Hidden("hdn_ObligacionID", (int)ViewBag.I_ObligacionID)
+@if (!obligacion.B_Pagado)
+{
+    <div class="modal-body">
+        <form name="formConsultaPago" id="formConsultaPago">
+            @Html.Hidden("Submited", 0)
+            @Html.AntiForgeryToken()
+            <div class="container-fluid">
+                @Html.Hidden("hdn_ObligacionID", obligacion.I_ObligacionAluID)
 
-            <div class="form-row">
-                <div class="form-group col-md-5">
-                    <label class="control-label">Cod. Operación</label>
-                    @Html.TextBox("CodOperacion", "", new { @class = "form-control" })
+                <div class="form-row">
+                    <div class="form-group col-md-5">
+                        <label class="control-label">Cod. Operación</label>
+                        @Html.TextBox("CodOperacion", "", new { @class = "form-control" })
+                    </div>
+                    <div class="form-group col-md-5">
+                        <label class="control-label">Cod. Alumno</label>
+                        @Html.TextBox("CodAlumno", obligacion.C_CodAlu, new { @class = "form-control" })
+                    </div>
                 </div>
-                <div class="form-group col-md-5">
-                    <label class="control-label">Cod. Alumno</label>
-                    @Html.TextBox("CodAlumno", "", new { @class = "form-control" })
+                <div class="form-row">
+                    <button type="button" class="btn btn-primary" id="btnBuscarPago"><i class="fa fa-search"></i> Buscar</button>
                 </div>
             </div>
-            <div class="form-row">
-                <button type="button" class="btn btn-primary" id="btnBuscarPago"><i class="fa fa-search"></i> Buscar</button>
-            </div>
-        </div>
-    </form>
-</div>
+        </form>
+    </div>
 
-<div class="modal-body">
-    <table class="table table-bordered table-hover table-sm" id="tblPagosObs">
-        <thead>
-            <tr>
-                <th>Banco</th>
-                <th>Cta.Depósito</th>
-                <th>Cod.Operacion</th>
-                <th>Fecha Pago</th>
-                <th>Monto</th>
-                <th>Mora</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
-</div>
+    <div class="modal-body">
+        <table class="table table-bordered table-hover table-sm" id="tblPagosObs">
+            <thead>
+                <tr>
+                    <th>Depositante</th>
+                    <th>Banco</th>
+                    <th>Cod.Operacion</th>
+                    <th>Fecha Pago</th>
+                    <th>Monto</th>
+                    <th>Mora</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (ViewBag.Pagos != null)
+                {
+                    foreach (var item in (IEnumerable<WebApp.ViewModels.PagoBancoObligacionViewModel>)ViewBag.Pagos)
+                    {
+                        <tr>
+                            <td>@item.T_DatosDepositante<br />(@item.C_CodDepositante)</td>
+                            <td>@item.T_EntidadDesc<br />(@item.C_NumeroCuenta)</td>
+                            <td>@item.C_CodOperacion</td>
+                            <td>@item.T_FecPago</td>
+                            <td>@item.T_MontoPago</td>
+                            <td>@item.T_InteresMora</td>
+                            <td><button class="btn btn-success btn-sm btnAsignarPago" data-id-pago-banco="@item.I_PagoBancoID">Asignar</button></td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+}
 
-<div class="modal-footer" id="div_msg">
-    <div class="col-md-12" style="display:none" id="loading">
-        <h6>Actualizando los datos...</h6>
-
+<div class="modal-footer" id="div_msg_busq_pagos">
+    <div class="col-md-12" style="display: none;" id="loading">
+        <h6></h6>
         <div class="progress">
             <div class="indeterminate"></div>
         </div>
     </div>
-
-    <button type="button" class="btn btn-primary" id="btnsubmit"><i class="fa fa-save"></i> Guardar</button>
     <button type="button" class="btn btn-secondary" id="btnCancel" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> Cancelar</button>
 </div>
 
 <script type="text/javascript">
+    const MESSAGE_TYPE = {
+        INFO: 'info',
+        SUCCESS: 'success',
+        WARNING: 'warning',
+        ERROR: 'error'
+    };
 
     $(document).on('click', '#formConsultaPago #btnBuscarPago', function (e) {
         let codOperacion = $('#formConsultaPago #CodOperacion').val();
         let codAlumno = $('#formConsultaPago #CodAlumno').val();
+
+        GenerarTablaPagosObservados(codOperacion, codAlumno);
+    });
+
+    
+
+    $(document).on('click', '#tblPagosObs .btnAsignarPago', function (e) {
+        let idPagoBanco = $(this).data('id-pago-banco');
+        let idObligacion = $('#formConsultaPago #hdn_ObligacionID').val();
+
+        let parametros = {
+            idPagoBanco: idPagoBanco,
+            idObligacion: idObligacion
+        };
+
+        Swal.fire({
+            title: '',
+            text: "¿Está seguro de asignar este pago a la obligación actual?.",
+            icon: MESSAGE_TYPE.WARNING,
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, continuar.',
+            cancelButtonText: 'No, cancelar.'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                 $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("AsignarPagoObservado", "Pagos")',
+                    data: parametros,
+                    dataType: 'json',
+                    beforeSend: function () {
+                        mostrarBarraEspera('Actualizando el pago...');
+                    },
+                    success: function (data) {
+                        if (data !== null) {
+                            let icon = MESSAGE_TYPE.ERROR;
+
+                            if (data.Value) {
+                                icon = MESSAGE_TYPE.SUCCESS;
+
+                                let codOperacion = $('#formConsultaPago #CodOperacion').val();
+                                let codAlumno = $('#formConsultaPago #CodAlumno').val();
+                                GenerarTablaPagosObservados(codOperacion, codAlumno);
+                            }
+
+                            Swal.fire({
+                                title: '',
+                                text: data.Message,
+                                icon: icon,
+                                timer: 6000
+                            });
+                        }
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        var jsonException = JSON.parse(xhr.responseText);
+                        console.log(jsonException);
+                    },
+                    complete: function () {
+                        ocultarBarraEspera();
+                    }
+                });
+            }
+        });
+    });
+
+    function mostrarBarraEspera(msg) {
+        $('#div_msg_busq_pagos #loading').css('display', 'block');
+        $('#div_msg_busq_pagos #loading h6').html(msg);
+    }
+
+    function ocultarBarraEspera() {
+        $('#div_msg_busq_pagos #loading').css('display', 'none');
+        $('#div_msg_busq_pagos #loading h6').html('');
+    }
+
+    function GenerarTablaPagosObservados(codOperacion, codAlumno) {
         let tabla = $('#tblPagosObs tbody');
 
         let parametros = {
@@ -104,32 +203,30 @@
             dataType: 'json',
             beforeSend: function () {
                 tabla.html('');
+                mostrarBarraEspera('Consultando pagos...');
             },
             success: function (data) {
                 let html = '';
 
                 $.each(data, function (i, item) {
                     html = html + '<tr>' +
-                        '<td>' + item.T_EntidadDesc + '</td>' +
-                        '<td>' + item.C_NumeroCuenta + '</td>' +
+                        '<td>' + item.T_DatosDepositante + '<br />(' + item.T_CodDepositante + ')</td>' +
+                        '<td>' + item.T_EntidadDesc + '<br />(' + item.C_NumeroCuenta + ')</td>' +
                         '<td>' + item.C_CodOperacion + '</td>' +
                         '<td>' + item.T_FecPago + '</td>' +
-                        '<td>' + item.I_MontoPago + '</td>' +
-                        '<td>' + item.I_InteresMora + '</td>' +
-                        '<td>' + '<button class="btn btn-success btn-sm btnAsignarPago" data-id-pago-banco="' + item.I_PagoBancoID + '">check</button>' + '</td>' +
+                        '<td>' + item.T_MontoPago + '</td>' +
+                        '<td>' + item.T_InteresMora + '</td>' +
+                        '<td>' + '<button class="btn btn-success btn-sm btnAsignarPago" data-id-pago-banco="' + item.I_PagoBancoID + '">Asignar</button>' + '</td>' +
                         '</tr>';
                 });
 
                 tabla.html(html);
             },
             error: function (xhr, ajaxOptions, thrownError) {
+            },
+            complete: function () {
+                ocultarBarraEspera();
             }
         });
-    });
-
-    $(document).on('click', '#tblPagosObs .btnAsignarPago', function (e) {
-        let idPagoBanco = $(this).data('id-pago-banco');
-        let idObligacion = $('#formConsultaPago #hdn_ObligacionID').val();
-        alert(idObligacion);
-    });
+    }
 </script>

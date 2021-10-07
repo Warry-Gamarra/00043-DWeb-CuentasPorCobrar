@@ -63,7 +63,23 @@ namespace WebApp.ViewModels
 
         public decimal I_MontoPago { get; set; }
 
+        public string T_MontoPago
+        {
+            get
+            {
+                return I_MontoPago.ToString(FormatosDecimal.BASIC_DECIMAL);
+            }
+        }
+
         public decimal I_InteresMora { get; set; }
+
+        public string T_InteresMora
+        {
+            get
+            {
+                return I_InteresMora.ToString(FormatosDecimal.BASIC_DECIMAL);
+            }
+        }
 
         public decimal I_MontoPagoTotal
         {
@@ -72,7 +88,15 @@ namespace WebApp.ViewModels
                 return I_MontoPago + I_InteresMora;
             }
         }
-        
+
+        public string T_MontoPagoTotal
+        {
+            get
+            {
+                return I_MontoPagoTotal.ToString(FormatosDecimal.BASIC_DECIMAL);
+            }
+        }
+
         public string T_LugarPago { get; set; }
 
         public DateTime D_FecCre { get; set; }

@@ -181,5 +181,19 @@ namespace Domain.Services.Implementations
 
             return result;
         }
+
+        public PagoBancoObligacionDTO ObtenerPagoBanco(int idPagoBanco)
+        {
+            var pago = VW_PagoBancoObligaciones.FindByID(idPagoBanco);
+
+            return pago == null ? null : Mapper.VW_PagoBancoObligaciones_To_PagoObligacionDTO(pago);
+        }
+
+        public Response AsignarPagoObligacion(int obligacionID, int pagoBancoID, int UserID)
+        {
+            var result = USP_IU_RelacionarPagoConObligacion.Execute(obligacionID, pagoBancoID, UserID);
+
+            return new Response(result);
+        }
     }
 }

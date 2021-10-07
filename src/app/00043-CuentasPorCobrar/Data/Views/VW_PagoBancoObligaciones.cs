@@ -56,6 +56,34 @@ namespace Data.Views
 
         public decimal I_MontoProcesado { get; set; }
 
+        public static VW_PagoBancoObligaciones FindByID(int idPagoBanco)
+        {
+            string s_command, filters;
+            VW_PagoBancoObligaciones result;
+            DynamicParameters parameters;
+
+            try
+            {
+                s_command = "SELECT b.* FROM dbo.VW_PagoBancoObligaciones b WHERE b.I_PagoBancoID = @I_PagoBancoID";
+
+                filters = "";
+
+                parameters = new DynamicParameters();
+                parameters.Add(name: "I_PagoBancoID", dbType: DbType.Int32, value: idPagoBanco);
+                
+                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
+                {
+                    result = _dbConnection.Query<VW_PagoBancoObligaciones>(s_command + filters, parameters, commandType: CommandType.Text).FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
+
         public static IEnumerable<VW_PagoBancoObligaciones> GetAll(int? idEntidadFinanciera, int? ctdDeposito, string codOperacion, string codDepositante, DateTime? fechaInicio, DateTime? fechaFinal,
             int? condicion)
         {

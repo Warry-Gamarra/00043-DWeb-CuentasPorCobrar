@@ -556,13 +556,62 @@ namespace WebApp.Controllers
 
         public ActionResult VerPagosObligaciones(int obligacionID)
         {
+            var obligacion = obligacionServiceFacade.Obtener_CuotaPago(obligacionID);
+
             ViewBag.Title = "Asignar Pago";
 
-            ViewBag.I_ObligacionID = obligacionID;
+            ViewBag.CuotaPago = obligacion;
 
-            ViewBag.CuotaPago = obligacionServiceFacade.Obtener_CuotaPago(obligacionID);
-
+            if (!obligacion.B_Pagado)
+            {
+                ViewBag.Pagos = pagosModel.ListarPagoBancoObligacion(null, null, null, obligacion.C_CodAlu, null, null, null)
+                .Where(x => x.I_CondicionPagoID != (int)CatalogoTipoPago.Correcto && x.I_CondicionPagoID != (int)CatalogoTipoPago.Extorno)
+                .OrderBy(x => x.D_FecPago);
+            }
+            
             return PartialView("_VerPagosObligaciones");
+        }
+
+        [HttpPost]
+        [HandleJsonExceptionAttribute]
+        public ActionResult AsignarPagoObservado(int idObligacion, int idPagoBanco)
+        {
+            Response response;
+
+            var obligacion = obligacionServiceFacade.Obtener_CuotaPago(idObligacion);
+
+            var pago = pagosModel.ObtenerPagoBanco(idPagoBanco);
+
+            if (obligacion.B_Pagado)
+            {
+                response = new Response()
+                {
+                    Value = false,
+                    Message = "La obligación ya tiene un pago asignado."
+                };
+            }
+            else if (pago.I_CondicionPagoID == (int)CatalogoTipoPago.Correcto)
+            {
+                response = new Response()
+                {
+                    Value = false,
+                    Message = "El pago ya ha sido asignado a una obligación."
+                };
+            }
+            else if (pago.I_CondicionPagoID == (int)CatalogoTipoPago.Extorno)
+            {
+                response = new Response()
+                {
+                    Value = false,
+                    Message = "Los extornos no se pueden utilizar para pagar una obligación."
+                };
+            }
+            else
+            {
+                response = pagosModel.AsignarPagoObligacion(idObligacion, idPagoBanco, WebSecurity.CurrentUserId);
+            }
+
+            return Json(response, JsonRequestBehavior.AllowGet);
         }
     }
 }

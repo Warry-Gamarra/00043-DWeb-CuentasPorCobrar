@@ -760,5 +760,28 @@ namespace WebApp.Models
 
             return result;
         }
+
+        public PagoBancoObligacionViewModel ObtenerPagoBanco(int idPagoBanco)
+        {
+            var pago = pagoService.ObtenerPagoBanco(idPagoBanco);
+
+            return pago == null ? null : Mapper.PagoBancoObligacionDTO_ToPagoBancoObligacionViewModel(pago);
+        }
+
+        public Response AsignarPagoObligacion(int obligacionID, int pagoBancoID, int UserID)
+        {
+            Response result = pagoService.AsignarPagoObligacion(obligacionID, pagoBancoID, UserID);
+
+            if (result.Value)
+            {
+                result.Success(false);
+            }
+            else
+            {
+                result.Error(false);
+            }
+
+            return result;
+        }
     }
 }

@@ -22,5 +22,7 @@ namespace Domain.Services
         IEnumerable<ArchivoImportadoDTO> ListarArchivosImportados(TipoArchivoEntFinan tipoArchivo);
         IEnumerable<PagoBancoObligacionDTO> ListarPagosBanco(int? idEntidadFinanciera, int? ctdDeposito, string codOperacion, string codDepositante, DateTime? fechaInicio, DateTime? fechaFinal,
             int? condicion);
+        PagoBancoObligacionDTO ObtenerPagoBanco(int idPagoBanco);
+        Response AsignarPagoObligacion(int obligacionID, int pagoBancoID, int UserID);
     }
 }

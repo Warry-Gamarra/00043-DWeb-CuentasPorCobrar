@@ -182,7 +182,9 @@ namespace WebApp.Controllers
         public IEnumerable<PagoBancoObligacionViewModel> GetPagosObservados(string codOperacion, string codAlumno)
         {
             return  pagoModel.ListarPagoBancoObligacion(null, null, codOperacion, codAlumno,
-                null, null, null).Where(x => x.I_CondicionPagoID != (int)CatalogoTipoPago.Correcto && x.I_CondicionPagoID != (int)CatalogoTipoPago.Extorno);
+                null, null, null)
+                .Where(x => x.I_CondicionPagoID != (int)CatalogoTipoPago.Correcto && x.I_CondicionPagoID != (int)CatalogoTipoPago.Extorno)
+                .OrderBy(x => x.T_DatosDepositante);
         }
     }
 }
