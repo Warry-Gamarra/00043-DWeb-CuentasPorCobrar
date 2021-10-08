@@ -42,6 +42,8 @@ namespace Data.Views
 
         public decimal I_MontoPago { get; set; }
 
+        public decimal I_InteresMora { get; set; }
+
         public string T_LugarPago { get; set; }
 
         public DateTime D_FecCre { get; set; }

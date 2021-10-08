@@ -14,10 +14,12 @@ namespace WebApp.Models.Facades
 
         List<ObligacionDetalleModel> Obtener_DetallePago(int anio, int periodo, string codAlu, string codRc);
 
-        List<CuotaPagoModel> Obtener_CuotaPago(int anio, int periodo, string codAlu, string codRc);
+        List<CuotaPagoModel> Obtener_CuotasPago(int anio, int periodo, string codAlu, string codRc);
 
         List<CuotaPagoModel> Obtener_CuotasPago_X_Proceso(int anio, int? periodo, TipoEstudio tipoEstudio, string codDependencia);
 
         IEnumerable<CtaDepoProcesoModel> Obtener_CtaDeposito_X_Periodo(int anio, int? periodo, TipoEstudio tipoEstudio);
+
+        CuotaPagoModel Obtener_CuotaPago(int obligacionID);
     }
 }

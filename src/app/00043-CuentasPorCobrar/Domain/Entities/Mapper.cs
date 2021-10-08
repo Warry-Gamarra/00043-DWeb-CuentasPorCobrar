@@ -647,6 +647,7 @@ namespace Domain.Entities
                 T_ApeMaterno = vw.T_ApeMaterno,
                 D_FecPago = vw.D_FecPago,
                 I_MontoPago = vw.I_MontoPago,
+                I_InteresMora = vw.I_InteresMora,
                 T_LugarPago = vw.T_LugarPago,
                 D_FecCre = vw.D_FecCre,
                 T_Observacion = vw.T_Observacion,

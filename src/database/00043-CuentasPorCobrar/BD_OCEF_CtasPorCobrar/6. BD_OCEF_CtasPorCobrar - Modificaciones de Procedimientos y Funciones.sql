@@ -2,6 +2,18 @@ USE BD_OCEF_CtasPorCobrar
 GO
 
 
+ALTER TABLE TR_PagoBanco ADD I_InteresMora DECIMAL(15,2)
+GO
+
+UPDATE TR_PagoBanco SET I_InteresMora = 0
+GO
+
+ALTER TABLE TR_PagoBanco ALTER COLUMN I_InteresMora DECIMAL(15,2) NOT NULL
+GO
+
+
+
+
 IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'USP_IU_GenerarObligacionesPregrado_X_Ciclo' AND ROUTINE_TYPE = 'PROCEDURE')
 	DROP PROCEDURE [dbo].[USP_IU_GenerarObligacionesPregrado_X_Ciclo]
 GO
@@ -306,8 +318,8 @@ BEGIN
 
 							set @I_ObligacionAluID = SCOPE_IDENTITY()
 
-							insert dbo.TR_ObligacionAluDet(I_ObligacionAluID, I_ConcPagID, I_Monto, B_Pagado, D_FecVencto, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
-							select @I_ObligacionAluID, p.I_ConcPagID, p.M_Monto, 0, p.D_FecVencto, 1, 0, @I_UsuarioCre, @D_CurrentDate from @Tmp_Procesos p
+							insert dbo.TR_ObligacionAluDet(I_ObligacionAluID, I_ConcPagID, I_Monto, B_Pagado, D_FecVencto, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, B_Mora)
+							select @I_ObligacionAluID, p.I_ConcPagID, p.M_Monto, 0, p.D_FecVencto, 1, 0, @I_UsuarioCre, @D_CurrentDate, 0 from @Tmp_Procesos p
 							where p.I_Prioridad = 1
 						end
 					end
@@ -322,8 +334,8 @@ BEGIN
 
 					set @I_ObligacionAluID = SCOPE_IDENTITY()
 
-					insert dbo.TR_ObligacionAluDet(I_ObligacionAluID, I_ConcPagID, I_Monto, B_Pagado, D_FecVencto, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
-					select @I_ObligacionAluID, p.I_ConcPagID, p.M_Monto, 0, p.D_FecVencto, 1, 0, @I_UsuarioCre, @D_CurrentDate from @Tmp_Procesos p
+					insert dbo.TR_ObligacionAluDet(I_ObligacionAluID, I_ConcPagID, I_Monto, B_Pagado, D_FecVencto, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, B_Mora)
+					select @I_ObligacionAluID, p.I_ConcPagID, p.M_Monto, 0, p.D_FecVencto, 1, 0, @I_UsuarioCre, @D_CurrentDate, 0 from @Tmp_Procesos p
 					where p.I_Prioridad = 1
 				end
 			end
@@ -344,8 +356,8 @@ BEGIN
 					group by p.I_ProcesoID, p.D_FecVencto
 
 					--Insert de detalle
-					insert dbo.TR_ObligacionAluDet(I_ObligacionAluID, I_ConcPagID, I_Monto, B_Pagado, D_FecVencto, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
-					select cab.I_ObligacionAluID, p.I_ConcPagID, p.M_Monto, 0, p.D_FecVencto, 1, 0, @I_UsuarioCre, @D_CurrentDate from @Tmp_Procesos p
+					insert dbo.TR_ObligacionAluDet(I_ObligacionAluID, I_ConcPagID, I_Monto, B_Pagado, D_FecVencto, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, B_Mora)
+					select cab.I_ObligacionAluID, p.I_ConcPagID, p.M_Monto, 0, p.D_FecVencto, 1, 0, @I_UsuarioCre, @D_CurrentDate, 0 from @Tmp_Procesos p
 					inner join dbo.TR_ObligacionAluCab cab on cab.B_Habilitado = 1 and cab.B_Eliminado = 0 and p.I_ProcesoID = cab.I_ProcesoID and cab.I_MatAluID = @I_MatAluID and
 						DATEDIFF(Day, p.D_FecVencto, cab.D_FecVencto) = 0
 					where p.I_Prioridad = 2
@@ -392,8 +404,8 @@ BEGIN
 							where p.I_Prioridad = 2 and p.I_ProcesoID = @I_ProcesoID_OtrsPag
 							group by p.I_ProcesoID, p.D_FecVencto
 
-							insert dbo.TR_ObligacionAluDet(I_ObligacionAluID, I_ConcPagID, I_Monto, B_Pagado, D_FecVencto, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
-							select cab.I_ObligacionAluID, p.I_ConcPagID, p.M_Monto, 0, p.D_FecVencto, 1, 0, @I_UsuarioCre, @D_CurrentDate from @Tmp_Procesos p
+							insert dbo.TR_ObligacionAluDet(I_ObligacionAluID, I_ConcPagID, I_Monto, B_Pagado, D_FecVencto, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, B_Mora)
+							select cab.I_ObligacionAluID, p.I_ConcPagID, p.M_Monto, 0, p.D_FecVencto, 1, 0, @I_UsuarioCre, @D_CurrentDate, 0 from @Tmp_Procesos p
 							inner join dbo.TR_ObligacionAluCab cab on cab.B_Habilitado = 1 and cab.B_Eliminado = 0 and p.I_ProcesoID = cab.I_ProcesoID  and cab.I_MatAluID = @I_MatAluID and
 								DATEDIFF(Day, p.D_FecVencto, cab.D_FecVencto) = 0
 							where p.I_Prioridad = 2 and p.I_ProcesoID = @I_ProcesoID_OtrsPag
@@ -679,8 +691,8 @@ BEGIN
 
 					set @I_ObligacionAluID = SCOPE_IDENTITY()
 
-					insert dbo.TR_ObligacionAluDet(I_ObligacionAluID, I_ConcPagID, I_Monto, B_Pagado, D_FecVencto, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
-					select @I_ObligacionAluID, p.I_ConcPagID, p.M_Monto, 0, p.D_FecVencto, 1, 0, @I_UsuarioCre, @D_CurrentDate from @Tmp_Procesos p
+					insert dbo.TR_ObligacionAluDet(I_ObligacionAluID, I_ConcPagID, I_Monto, B_Pagado, D_FecVencto, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, B_Mora)
+					select @I_ObligacionAluID, p.I_ConcPagID, p.M_Monto, 0, p.D_FecVencto, 1, 0, @I_UsuarioCre, @D_CurrentDate, 0 from @Tmp_Procesos p
 					where p.I_Prioridad = 1
 				end
 			end
@@ -701,8 +713,8 @@ BEGIN
 					group by p.I_ProcesoID, p.D_FecVencto
 
 					--Insert de detalle
-					insert dbo.TR_ObligacionAluDet(I_ObligacionAluID, I_ConcPagID, I_Monto, B_Pagado, D_FecVencto, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
-					select cab.I_ObligacionAluID, p.I_ConcPagID, p.M_Monto, 0, p.D_FecVencto, 1, 0, @I_UsuarioCre, @D_CurrentDate from @Tmp_Procesos p
+					insert dbo.TR_ObligacionAluDet(I_ObligacionAluID, I_ConcPagID, I_Monto, B_Pagado, D_FecVencto, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, B_Mora)
+					select cab.I_ObligacionAluID, p.I_ConcPagID, p.M_Monto, 0, p.D_FecVencto, 1, 0, @I_UsuarioCre, @D_CurrentDate, 0 from @Tmp_Procesos p
 					inner join dbo.TR_ObligacionAluCab cab on cab.B_Habilitado = 1 and cab.B_Eliminado = 0 and p.I_ProcesoID = cab.I_ProcesoID and cab.I_MatAluID = @I_MatAluID and
 						DATEDIFF(Day, p.D_FecVencto, cab.D_FecVencto) = 0
 					where p.I_Prioridad = 2
@@ -749,8 +761,8 @@ BEGIN
 							where p.I_Prioridad = 2 and p.I_ProcesoID = @I_ProcesoID_OtrsPag
 							group by p.I_ProcesoID, p.D_FecVencto
 
-							insert dbo.TR_ObligacionAluDet(I_ObligacionAluID, I_ConcPagID, I_Monto, B_Pagado, D_FecVencto, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
-							select cab.I_ObligacionAluID, p.I_ConcPagID, p.M_Monto, 0, p.D_FecVencto, 1, 0, @I_UsuarioCre, @D_CurrentDate from @Tmp_Procesos p
+							insert dbo.TR_ObligacionAluDet(I_ObligacionAluID, I_ConcPagID, I_Monto, B_Pagado, D_FecVencto, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, B_Mora)
+							select cab.I_ObligacionAluID, p.I_ConcPagID, p.M_Monto, 0, p.D_FecVencto, 1, 0, @I_UsuarioCre, @D_CurrentDate, 0 from @Tmp_Procesos p
 							inner join dbo.TR_ObligacionAluCab cab on cab.B_Habilitado = 1 and cab.B_Eliminado = 0 and p.I_ProcesoID = cab.I_ProcesoID  and cab.I_MatAluID = @I_MatAluID and
 								DATEDIFF(Day, p.D_FecVencto, cab.D_FecVencto) = 0
 							where p.I_Prioridad = 2 and p.I_ProcesoID = @I_ProcesoID_OtrsPag
@@ -921,7 +933,7 @@ BEGIN
 		C_Referencia, D_FecPago, D_FecVencto, I_Cantidad, C_Moneda, I_MontoOblig, I_MontoPago, I_InteresMora, T_LugarPago, I_EntidadFinanID, I_CtaDepositoID, B_Pagado,
 		T_InformacionAdicional, T_ProcesoDesc, D_FecVenctoBD)
 	SELECT m.I_ProcesoID, m.I_ObligacionAluID, p.C_CodOperacion, p.C_CodAlu, p.T_NomDepositante,
-		p.C_Referencia, p.D_FecPago, p.D_FecVencto, p.I_Cantidad, p.C_Moneda, m.I_MontoOblig, p.I_MontoPago, p.I_InteresMora, p.T_LugarPago, p.I_EntidadFinanID, I_CtaDepositoID, m.B_Pagado,
+		p.C_Referencia, p.D_FecPago, p.D_FecVencto, p.I_Cantidad, p.C_Moneda, m.I_MontoOblig, p.I_MontoPago, ISNULL(p.I_InteresMora, 0), p.T_LugarPago, p.I_EntidadFinanID, I_CtaDepositoID, m.B_Pagado,
 		p.T_InformacionAdicional, p.T_ProcesoDesc, m.D_FecVencto
 	FROM @Tbl_Pagos p
 	LEFT JOIN Matriculados m ON m.C_CodAlu = p.C_CodAlu AND m.C_CodRc = p.C_CodRc AND 
@@ -942,7 +954,6 @@ BEGIN
 			@C_Moneda			varchar(3),
 			@I_MontoPago		decimal(15,2),
 			@I_InteresMora		decimal(15,2),
-			@I_MontoPagoTotal	decimal(15,2),
 			@T_LugarPago		varchar(250),
 			@I_EntidadFinanID	int,
 			@I_CtaDepositoID	int,
@@ -1006,7 +1017,7 @@ BEGIN
 		END
 
 		IF  (@B_ExisteError = 0) BEGIN
-			EXEC USP_S_ValidarCodOperacionObligacion @C_CodOperacion, @C_CodDepositante, @I_EntidadFinanID, @D_FecPago, @B_CodOpeCorrecto OUTPUT
+			EXEC dbo.USP_S_ValidarCodOperacionObligacion @C_CodOperacion, @C_CodDepositante, @I_EntidadFinanID, @D_FecPago, @B_CodOpeCorrecto OUTPUT
 
 			IF NOT (@B_CodOpeCorrecto = 1) BEGIN
 				SET @B_ExisteError = 1
@@ -1039,14 +1050,12 @@ BEGIN
 		IF (@B_ExisteError = 0) BEGIN
 			BEGIN TRANSACTION
 			BEGIN TRY
-				SET @I_MontoPagoTotal = @I_MontoPago + @I_InteresMora
-
 				INSERT dbo.TR_PagoBanco(C_CodOperacion, C_CodDepositante, T_NomDepositante, C_Referencia, D_FecPago, I_Cantidad, 
 					C_Moneda, I_MontoPago, T_LugarPago, B_Anulado, I_UsuarioCre, D_FecCre, I_EntidadFinanID, T_Observacion,
-					T_InformacionAdicional, I_CondicionPagoID, I_TipoPagoID)
+					T_InformacionAdicional, I_CondicionPagoID, I_TipoPagoID, I_CtaDepositoID, I_InteresMora)
 				VALUES(@C_CodOperacion, @C_CodDepositante, @T_NomDepositante, @C_Referencia, @D_FecPago, @I_Cantidad, 
-					@C_Moneda, @I_MontoPagoTotal, @T_LugarPago, 0, @UserID, @D_FecRegistro, @I_EntidadFinanID, @Observacion,
-					@T_InformacionAdicional, @CondicionCorrecto, @PagoTipoObligacion)
+					@C_Moneda, @I_MontoPago, @T_LugarPago, 0, @UserID, @D_FecRegistro, @I_EntidadFinanID, @Observacion,
+					@T_InformacionAdicional, @CondicionCorrecto, @PagoTipoObligacion, @I_CtaDepositoID, @I_InteresMora)
 
 				SET @I_PagoBancoID = SCOPE_IDENTITY()
 
@@ -1073,32 +1082,16 @@ BEGIN
 
 					SET @I_SaldoPendiente = @I_MontoOligacionDet - @I_MontoPagadoActual
 
-					IF (@I_MontoPago >= @I_SaldoPendiente) BEGIN
-						SET @B_Pagado = 1
-
-						SET @I_MontoAPagar = @I_SaldoPendiente
-
-						SET @I_NuevoSaldoPend = 0
-
-						SET @I_PagoDemas = CASE WHEN (@I_FilaActualDet = @I_CantRegistrosDet) THEN @I_MontoPago - @I_SaldoPendiente ELSE 0 END
-						
-						SET @B_PagoDemas = CASE WHEN (@I_PagoDemas > 0) THEN 1 ELSE 0 END
-
-						SET @I_MontoPago = CASE WHEN (@I_FilaActualDet = @I_CantRegistrosDet) THEN 0 ELSE @I_MontoPago - @I_SaldoPendiente END
-					END
-					ELSE BEGIN
-						SET @B_Pagado = 0
-
-						SET @I_MontoAPagar = @I_MontoPago
-
-						SET @I_NuevoSaldoPend = @I_SaldoPendiente - @I_MontoPago
-
-						SET @I_PagoDemas = 0
-
-						SET @B_PagoDemas = 0
-
-						SET @I_MontoPago = 0
-					END
+					EXEC dbo.USP_AsignarPagoDetalleObligacion
+						@I_FilaActualDet = @I_FilaActualDet,
+						@I_CantRegistrosDet = @I_CantRegistrosDet,
+						@I_SaldoPendiente  = @I_SaldoPendiente,
+						@I_MontoPago = @I_MontoPago OUTPUT,
+						@B_Pagado = @B_Pagado OUTPUT,
+						@I_MontoAPagar = @I_MontoAPagar OUTPUT,
+						@I_NuevoSaldoPend = @I_NuevoSaldoPend OUTPUT,
+						@I_PagoDemas = @I_PagoDemas OUTPUT,
+						@B_PagoDemas = @B_PagoDemas OUTPUT
 				
 					INSERT dbo.TRI_PagoProcesadoUnfv(I_PagoBancoID, I_ObligacionAluDetID, I_MontoPagado, I_SaldoAPagar, I_PagoDemas, B_PagoDemas,
 						D_FecCre, I_UsuarioCre, B_Anulado, I_CtaDepositoID)
@@ -1269,7 +1262,7 @@ BEGIN
 			THEN 
 				(SELECT tc.I_CtaDepositoID FROM VW_PagoTasas_X_Cuenta tc WHERE tc.I_TasaUnfvID = t.I_TasaUnfvID AND tc.C_CodServicio = p.C_CodServicio AND tc.I_EntidadFinanID = p.I_EntidadFinanID)
 			ELSE p.I_CtaDepositoID END,
-		p.D_FecPago, p.I_Cantidad, p.C_Moneda, p.I_MontoPago, p.I_InteresMora, p.T_LugarPago, p.T_InformacionAdicional
+		p.D_FecPago, p.I_Cantidad, p.C_Moneda, p.I_MontoPago, ISNULL(p.I_InteresMora, 0), p.T_LugarPago, p.T_InformacionAdicional
 	FROM @Tbl_Pagos p
 	LEFT JOIN dbo.TI_TasaUnfv t ON t.C_CodTasa = p.C_CodTasa and t.B_Habilitado = 1 and t.B_Eliminado = 0
 
@@ -1295,7 +1288,6 @@ BEGIN
 			@C_Moneda			varchar(3),
 			@I_MontoPago		decimal(15,2),
 			@I_InteresMora		decimal(15,2),
-			@I_MontoPagoTotal	decimal(15,2),
 			@T_LugarPago		varchar(250),	
 			@T_InformacionAdicional varchar(250),
 			@B_ExisteError		bit,
@@ -1350,14 +1342,12 @@ BEGIN
 		IF (@B_ExisteError = 0) BEGIN
 			BEGIN TRANSACTION
 			BEGIN TRY
-				SET @I_MontoPagoTotal = @I_MontoPago + @I_InteresMora
-
 				INSERT dbo.TR_PagoBanco(C_CodOperacion, C_CodDepositante, T_NomDepositante, C_Referencia, D_FecPago, I_Cantidad, 
 					C_Moneda, I_MontoPago, T_LugarPago, B_Anulado, I_UsuarioCre, D_FecCre, I_EntidadFinanID, T_Observacion,
-					T_InformacionAdicional, I_CondicionPagoID, I_TipoPagoID)
+					T_InformacionAdicional, I_CondicionPagoID, I_TipoPagoID, I_CtaDepositoID, I_InteresMora)
 				VALUES(@C_CodOperacion, @C_CodDepositante, @T_NomDepositante, @C_Referencia, @D_FecPago, @I_Cantidad, 
-					@C_Moneda, @I_MontoPagoTotal, @T_LugarPago, 0, @UserID, @D_FecRegistro, @I_EntidadFinanID, @Observacion,
-					@T_InformacionAdicional, @CondicionCorrecto, @PagoTipoTasa)
+					@C_Moneda, @I_MontoPago, @T_LugarPago, 0, @UserID, @D_FecRegistro, @I_EntidadFinanID, @Observacion,
+					@T_InformacionAdicional, @CondicionCorrecto, @PagoTipoTasa, @I_CtaDepositoID, @I_InteresMora)
 
 				SET @I_PagoBancoID = SCOPE_IDENTITY()
 
@@ -1375,7 +1365,7 @@ BEGIN
 
 				INSERT dbo.TRI_PagoProcesadoUnfv(I_PagoBancoID, I_TasaUnfvID, I_MontoPagado, I_SaldoAPagar, I_PagoDemas,
 					B_PagoDemas, D_FecCre, I_UsuarioCre, B_Anulado, I_CtaDepositoID)
-				VALUES(@I_PagoBancoID, @I_TasaUnfvID, @I_MontoPagoTotal, @I_SaldoAPagar, @I_PagoDemas, 
+				VALUES(@I_PagoBancoID, @I_TasaUnfvID, @I_MontoPago, @I_SaldoAPagar, @I_PagoDemas, 
 					@B_PagoDemas, @D_FecRegistro, @UserID, 0, @I_CtaDepositoID)
 
 				UPDATE @Tmp_PagoTasas SET B_Success = 1, T_ErrorMessage = 'Registro correcto.' WHERE id = @I_FilaActual
@@ -1982,14 +1972,14 @@ go
 */
 BEGIN
 	SET NOCOUNT ON;
-	SELECT vw.I_ObligacionAluID, pagban.I_MontoPago, pagban.D_FecPago, pagban.C_CodOperacion, cta.C_NumeroCuenta, ef.T_EntidadDesc FROM dbo.VW_CuotasPago_General vw
+	SELECT vw.I_ObligacionAluID, pagban.I_MontoPago + pagban.I_InteresMora AS I_MontoPago, pagban.D_FecPago, pagban.C_CodOperacion, cta.C_NumeroCuenta, ef.T_EntidadDesc FROM dbo.VW_CuotasPago_General vw
 	INNER JOIN dbo.TR_ObligacionAluDet det ON det.I_ObligacionAluID = vw.I_ObligacionAluID AND det.B_Habilitado = 1 AND det.B_Eliminado = 0
 	INNER JOIN dbo.TRI_PagoProcesadoUnfv pagpro ON pagpro.I_ObligacionAluDetID = det.I_ObligacionAluDetID AND pagpro.B_Anulado = 0
 	INNER JOIN dbo.TR_PagoBanco pagban ON pagban.I_PagoBancoID = pagpro.I_PagoBancoID AND pagban.B_Anulado = 0
 	INNER JOIN dbo.TC_CuentaDeposito cta ON cta.I_CtaDepositoID = pagpro.I_CtaDepositoID
 	INNER JOIN dbo.TC_EntidadFinanciera ef ON ef.I_EntidadFinanID = pagban.I_EntidadFinanID
 	WHERE vw.C_CodAlu = @C_CodAlu AND vw.I_Anio = @I_Anio AND vw.I_Periodo = @I_PeriodoID AND vw.I_Prioridad = 1
-	GROUP BY vw.I_ObligacionAluID, pagban.I_MontoPago, pagban.D_FecPago, pagban.C_CodOperacion, cta.C_NumeroCuenta, ef.T_EntidadDesc
+	GROUP BY vw.I_ObligacionAluID, pagban.I_MontoPago + pagban.I_InteresMora, pagban.D_FecPago, pagban.C_CodOperacion, cta.C_NumeroCuenta, ef.T_EntidadDesc
 	ORDER BY pagban.D_FecPago
 END
 GO
@@ -2135,7 +2125,7 @@ GO
 CREATE VIEW [dbo].[VW_PagoBancoObligaciones]
 AS
 	SELECT b.I_PagoBancoID, e.I_EntidadFinanID, e.T_EntidadDesc, cd.I_CtaDepositoID, cd.C_NumeroCuenta, b.C_CodOperacion, b.C_CodDepositante, m.I_MatAluID, m.C_CodAlu, b.T_NomDepositante, m.T_Nombre, m.T_ApePaterno, m.T_ApeMaterno, 
-		b.D_FecPago, b.I_MontoPago, b.T_LugarPago, b.D_FecCre, b.I_CondicionPagoID, cn.T_OpcionDesc AS T_Condicion, b.T_Observacion, ISNULL(SUM(p.I_MontoPagado), 0) AS I_MontoProcesado
+		b.D_FecPago, b.I_MontoPago, b.I_InteresMora, b.T_LugarPago, b.D_FecCre, b.I_CondicionPagoID, cn.T_OpcionDesc AS T_Condicion, b.T_Observacion, ISNULL(SUM(p.I_MontoPagado), 0) AS I_MontoProcesado
 	FROM TR_PagoBanco b
 	LEFT JOIN dbo.TRI_PagoProcesadoUnfv p ON p.I_PagoBancoID = b.I_PagoBancoID AND p.B_Anulado = 0
 	LEFT JOIN dbo.TR_ObligacionAluDet d ON d.I_ObligacionAluDetID = p.I_ObligacionAluDetID AND d.B_Habilitado = 1 AND d.B_Eliminado = 0
@@ -2145,8 +2135,9 @@ AS
 	INNER JOIN dbo.TC_CuentaDeposito cd ON cd.I_CtaDepositoID = b.I_CtaDepositoID
 	INNER JOIN dbo.TC_CatalogoOpcion cn ON cn.I_OpcionID = b.I_CondicionPagoID
 	WHERE b.I_TipoPagoID = 133
-	GROUP BY b.I_PagoBancoID, e.I_EntidadFinanID, cd.I_CtaDepositoID, cd.C_NumeroCuenta, e.T_EntidadDesc, b.C_CodOperacion, b.C_CodDepositante, m.I_MatAluID, m.C_CodAlu, b.T_NomDepositante, m.T_Nombre, m.T_ApePaterno, m.T_ApeMaterno, 
-		b.D_FecPago, b.I_MontoPago, b.T_LugarPago, b.D_FecCre, b.I_CondicionPagoID, cn.T_OpcionDesc, b.T_Observacion
+	GROUP BY b.I_PagoBancoID, e.I_EntidadFinanID, cd.I_CtaDepositoID, cd.C_NumeroCuenta, e.T_EntidadDesc, b.C_CodOperacion, b.C_CodDepositante, m.I_MatAluID, m.C_CodAlu, 
+		b.T_NomDepositante, m.T_Nombre, m.T_ApePaterno, m.T_ApeMaterno, 
+		b.D_FecPago, b.I_MontoPago, b.I_InteresMora, b.T_LugarPago, b.D_FecCre, b.I_CondicionPagoID, cn.T_OpcionDesc, b.T_Observacion
 GO
 
 
@@ -2188,7 +2179,7 @@ BEGIN
 			ISNULL([12], 0) AS Diciembre
 		FROM
 		(
-		SELECT MONTH(b.D_FecPago) AS I_Month, DAY(b.D_FecPago) AS I_Dia, SUM(b.I_MontoPago) AS I_MontoTotal
+		SELECT MONTH(b.D_FecPago) AS I_Month, DAY(b.D_FecPago) AS I_Dia, SUM(b.I_MontoPago + b.I_InteresMora) AS I_MontoTotal
 		FROM dbo.TR_PagoBanco b 
 		INNER JOIN dbo.TC_CatalogoOpcion cn ON cn.I_OpcionID = b.I_CondicionPagoID
 		WHERE b.B_Anulado = 0 AND Year(b.D_FecPago) = @I_Anio AND b.I_TipoPagoID = @I_TipoPagoID ' +
@@ -2214,12 +2205,61 @@ BEGIN
 /*
 EXEC USP_S_ResumenAnualPagoDeObligaciones_X_Dia 
 	@I_Anio = 2021,
-	@I_EntidadFinanID = 2,
-	@I_CtaDepositoID = 9,
+	@I_EntidadFinanID = 1,
+	@I_CtaDepositoID = NULL,
 	@I_CondicionPagoID = NULL
 GO
 */
 END
 GO
 
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_AsignarPagoDetalleObligacion')
+	DROP PROCEDURE [dbo].[USP_AsignarPagoDetalleObligacion]
+GO
+
+
+CREATE PROCEDURE [dbo].[USP_AsignarPagoDetalleObligacion]
+@I_FilaActualDet INT,
+@I_CantRegistrosDet INT,
+@I_SaldoPendiente DECIMAL(15,2),
+@I_MontoPago DECIMAL(15,2) OUTPUT,
+@B_Pagado BIT OUTPUT,
+@I_MontoAPagar DECIMAL(5,2) OUTPUT,
+@I_NuevoSaldoPend DECIMAL(15,2) OUTPUT,
+@I_PagoDemas DECIMAL(15,2) OUTPUT,
+@B_PagoDemas BIT OUTPUT
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	IF (@I_MontoPago >= @I_SaldoPendiente) BEGIN
+		SET @B_Pagado = 1
+
+		SET @I_MontoAPagar = @I_SaldoPendiente
+
+		SET @I_NuevoSaldoPend = 0
+
+		SET @I_PagoDemas = CASE WHEN (@I_FilaActualDet = @I_CantRegistrosDet) THEN @I_MontoPago - @I_SaldoPendiente ELSE 0 END
+						
+		SET @B_PagoDemas = CASE WHEN (@I_PagoDemas > 0) THEN 1 ELSE 0 END
+
+		SET @I_MontoPago = CASE WHEN (@I_FilaActualDet = @I_CantRegistrosDet) THEN 0 ELSE @I_MontoPago - @I_SaldoPendiente END
+	END
+	ELSE BEGIN
+		SET @B_Pagado = 0
+
+		SET @I_MontoAPagar = @I_MontoPago
+
+		SET @I_NuevoSaldoPend = @I_SaldoPendiente - @I_MontoPago
+
+		SET @I_PagoDemas = 0
+
+		SET @B_PagoDemas = 0
+
+		SET @I_MontoPago = 0
+	END
+END
+GO
 

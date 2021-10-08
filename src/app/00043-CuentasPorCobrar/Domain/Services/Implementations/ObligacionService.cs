@@ -193,5 +193,12 @@ namespace Domain.Services.Implementations
 
             return result;
         }
+
+        public CuotaPagoDTO Obtener_CuotaPago(int obligacionID)
+        {
+            var cuotaPago = VW_CuotasPago.FindByObligacionID(obligacionID);
+
+            return (cuotaPago == null) ? null : Mapper.VW_CuotaPago_To_CuotaPagoDTO(cuotaPago);
+        }
     }
 }

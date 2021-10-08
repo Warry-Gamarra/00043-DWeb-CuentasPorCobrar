@@ -553,5 +553,16 @@ namespace WebApp.Controllers
             }
 
         }
+
+        public ActionResult VerPagosObligaciones(int obligacionID)
+        {
+            ViewBag.Title = "Asignar Pago";
+
+            ViewBag.I_ObligacionID = obligacionID;
+
+            ViewBag.CuotaPago = obligacionServiceFacade.Obtener_CuotaPago(obligacionID);
+
+            return PartialView("_VerPagosObligaciones");
+        }
     }
 }

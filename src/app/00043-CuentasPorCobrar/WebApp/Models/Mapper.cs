@@ -412,6 +412,7 @@ namespace WebApp.Models
                 T_ApeMaterno = dto.T_ApeMaterno,
                 D_FecPago = dto.D_FecPago,
                 I_MontoPago = dto.I_MontoPago,
+                I_InteresMora = dto.I_InteresMora,
                 T_LugarPago = dto.T_LugarPago,
                 D_FecCre = dto.D_FecCre,
                 T_Observacion = dto.T_Observacion,

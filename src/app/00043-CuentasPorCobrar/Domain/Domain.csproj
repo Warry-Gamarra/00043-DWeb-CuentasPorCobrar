@@ -102,6 +102,7 @@
     <Compile Include="Entities\PagoPorFacultadYFechaDTO.cs" />
     <Compile Include="Entities\SeccionArchivo.cs" />
     <Compile Include="Entities\TasaDTO.cs" />
+    <Compile Include="Helpers\Catalogo.cs" />
     <Compile Include="Helpers\Constantes.cs" />
     <Compile Include="Helpers\ImportacionPagoResponse.cs" />
     <Compile Include="Helpers\MultaNoVotarResponse.cs" />

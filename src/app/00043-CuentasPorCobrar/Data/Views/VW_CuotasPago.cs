@@ -68,6 +68,30 @@ namespace Data.Views
 
         public string T_DenomProg { get; set; }
 
+        public static VW_CuotasPago FindByObligacionID(int obligacionID)
+        {
+            VW_CuotasPago result;
+
+            try
+            {
+                string s_command = @"SELECT * FROM dbo.VW_CuotasPago_X_Ciclo c
+                    WHERE c.I_ObligacionAluID = @I_ObligacionAluID";
+
+                var parameters = new { I_ObligacionAluID = obligacionID };
+
+                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
+                {
+                    result = _dbConnection.Query<VW_CuotasPago>(s_command, parameters, commandType: CommandType.Text).FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
+
         public static IEnumerable<VW_CuotasPago> FindByAlumno(int anio, int periodo, string codAlu, string codRc)
         {
             IEnumerable<VW_CuotasPago> result;
@@ -131,38 +155,38 @@ namespace Data.Views
                 //    WHERE c.I_Anio <= @I_Anio AND c.C_Nivel IN ('2', '3') AND
                 //        c.C_CodEsc = ISNULL(@C_CodEsc, c.C_CodEsc)";
 
-                //string s_command = @"SELECT * FROM dbo.VW_CuotasPago_General c 
-                //WHERE c.I_Anio <= @I_Anio AND c.C_Nivel IN ('2', '3') AND
-                //    c.C_CodEsc = ISNULL(@C_CodEsc, c.C_CodEsc) AND c.B_Pagado = 0 AND c.I_Prioridad = 2 AND
-                //	EXISTS(select mat.C_CodAlu, mat.C_CodRc from dbo.TR_ObligacionAluCab cab 
-                //inner join dbo.TC_MatriculaAlumno mat on mat.I_MatAluID = cab.I_MatAluID and mat.B_Habilitado = 1 and mat.B_Eliminado = 0
-                //where cab.B_Pagado = 1 and cab.B_Habilitado = 1 and cab.B_Eliminado = 0 and cab.I_ProcesoID in (499, 500, 508, 510) AND mat.C_CodAlu = c.C_CodAlu AND mat.C_CodRc = c.C_RcCod)";
-
                 string s_command = @"SELECT * FROM dbo.VW_CuotasPago_General c 
-WHERE c.I_Anio <= @I_Anio AND c.C_Nivel IN ('2', '3') AND c.C_CodEsc = ISNULL(@C_CodEsc, c.C_CodEsc) AND c.B_Pagado = 0 AND 
-	(
-		(
-			EXISTS(select mat.C_CodAlu, mat.C_CodRc from dbo.TR_ObligacionAluCab cab 
-				inner join dbo.TC_MatriculaAlumno mat on mat.I_MatAluID = cab.I_MatAluID and mat.B_Habilitado = 1 and mat.B_Eliminado = 0
-				where cab.B_Pagado = 1 and cab.B_Habilitado = 1 and cab.B_Eliminado = 0 and cab.I_ProcesoID in (499, 500, 508, 510) AND mat.C_CodAlu = c.C_CodAlu AND mat.C_CodRc = c.C_RcCod) 
-			AND
-			c.I_Prioridad = 2
-		)
-	OR
-		(
-			c.C_CodAlu IN ('2021008358',
-			'2021008367',
-			'2021008376',
-			'2021008385',
-			'2021008394',
-			'2021008402',
-			'2021008411',
-			'2021008429',
-			'2021005385',
-			'2018039469',
-			'2016320933')
-		)
-	)";
+                WHERE c.I_Anio <= @I_Anio AND c.C_Nivel IN ('2', '3') AND
+                    c.C_CodEsc = ISNULL(@C_CodEsc, c.C_CodEsc) AND c.B_Pagado = 0 AND c.I_Prioridad = 2 AND
+                	EXISTS(select mat.C_CodAlu, mat.C_CodRc from dbo.TR_ObligacionAluCab cab 
+                inner join dbo.TC_MatriculaAlumno mat on mat.I_MatAluID = cab.I_MatAluID and mat.B_Habilitado = 1 and mat.B_Eliminado = 0
+                where cab.B_Pagado = 1 and cab.B_Habilitado = 1 and cab.B_Eliminado = 0 and cab.I_ProcesoID in (499, 500, 508, 510) AND mat.C_CodAlu = c.C_CodAlu AND mat.C_CodRc = c.C_RcCod)";
+
+                //                string s_command = @"SELECT * FROM dbo.VW_CuotasPago_General c 
+                //WHERE c.I_Anio <= @I_Anio AND c.C_Nivel IN ('2', '3') AND c.C_CodEsc = ISNULL(@C_CodEsc, c.C_CodEsc) AND c.B_Pagado = 0 AND 
+                //	(
+                //		(
+                //			EXISTS(select mat.C_CodAlu, mat.C_CodRc from dbo.TR_ObligacionAluCab cab 
+                //				inner join dbo.TC_MatriculaAlumno mat on mat.I_MatAluID = cab.I_MatAluID and mat.B_Habilitado = 1 and mat.B_Eliminado = 0
+                //				where cab.B_Pagado = 1 and cab.B_Habilitado = 1 and cab.B_Eliminado = 0 and cab.I_ProcesoID in (499, 500, 508, 510) AND mat.C_CodAlu = c.C_CodAlu AND mat.C_CodRc = c.C_RcCod) 
+                //			AND
+                //			c.I_Prioridad = 2
+                //		)
+                //	OR
+                //		(
+                //			c.C_CodAlu IN ('2021008358',
+                //			'2021008367',
+                //			'2021008376',
+                //			'2021008385',
+                //			'2021008394',
+                //			'2021008402',
+                //			'2021008411',
+                //			'2021008429',
+                //			'2021005385',
+                //			'2018039469',
+                //			'2016320933')
+                //		)
+                //	)";
 
                 var parameters = new { I_Anio = anio, C_CodEsc = codPosgrado };
 
