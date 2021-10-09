@@ -423,5 +423,43 @@ namespace WebApp.Models
 
             return model;
         }
+
+        public static ObligacionDetallePagoViewModel ObligacionDetallePagoDTO_To_ObligacionDetallePagoViewModel(ObligacionDetallePagoDTO dto)
+        {
+            var model = new ObligacionDetallePagoViewModel()
+            {
+                I_MatAluID = dto.I_MatAluID,
+                C_CodAlu = dto.C_CodAlu,
+                C_RcCod = dto.C_RcCod,
+                T_Nombre = dto.T_Nombre,
+                T_ApePaterno = dto.T_ApePaterno,
+                T_ApeMaterno = dto.T_ApeMaterno,
+                I_ProcesoID = dto.I_ProcesoID,
+                T_ProcesoDesc = dto.T_ProcesoDesc,
+                I_ObligacionAluID = dto.I_ObligacionAluID,
+                I_MontoOblig = dto.I_MontoOblig,
+                I_ObligacionAluDetID = dto.I_ObligacionAluDetID,
+                I_ConcPagID = dto.I_ConcPagID,
+                T_ConceptoPagoDesc = dto.T_ConceptoPagoDesc,
+                I_Monto = dto.I_Monto,
+                D_FecVencto = dto.D_FecVencto,
+                I_TipoDocumento = dto.I_TipoDocumento,
+                T_DescDocumento = dto.T_DescDocumento,
+                I_MontoPagado = dto.I_MontoPagado,
+                I_PagoBancoID = dto.I_PagoBancoID,
+                I_EntidadFinanID = dto.I_EntidadFinanID,
+                T_EntidadDesc = dto.T_EntidadDesc,
+                I_CtaDepositoID = dto.I_CtaDepositoID,
+                C_NumeroCuenta = dto.C_NumeroCuenta,
+                C_CodOperacion = dto.C_CodOperacion,
+                D_FecPago = dto.D_FecPago,
+                T_LugarPago = dto.T_LugarPago,
+                D_FecCre = dto.D_FecCre,
+                T_Observacion = dto.T_Observacion,
+                I_Prioridad = dto.I_Prioridad
+            };
+
+            return model;
+        }
     }
 }

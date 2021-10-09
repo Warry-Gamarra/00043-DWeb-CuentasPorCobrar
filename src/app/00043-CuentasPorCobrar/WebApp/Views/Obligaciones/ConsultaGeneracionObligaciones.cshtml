@@ -95,20 +95,20 @@
                     <p class="h5">Relación de estudiantes registrados en el sistema</p>
 
                     @Html.Grid(Model.resultado).Columns(columns => {
-                        columns.Add(c => c.I_Anio).Titled("Año");
-                        columns.Add(c => c.T_Periodo).Titled("Periodo");
-                        columns.Add(c => c.C_CodAlu).Titled("Código alumno");
-                        columns.Add(c => c.T_ApellidosNombres).Titled("Apellidos y nombres").Filterable(true);
-                        columns.Add(c => c.T_DenomProg).Titled("Especialidad").Filterable(true);
-                        columns.Add(c => c.T_EsIngresante).Titled("Tipo alumno").Filterable(true);
-                        columns.Add(c => c.T_ProcesoDesc).Titled("Cuota").Filterable(true).Css("text-center");
-                        columns.Add(c => c.I_MontoOblig).Titled("Monto Obl.").Filterable(true).Css("text-center");
-                        columns.Add(c => c.T_Pagado).Titled("Estado").Filterable(true).Css("text-center");
-                        columns.Add().SetWidth(125).Css("text-center").Encoded(false).Sanitized(false).RenderValueAs(model =>
-                            model.B_Pagado.HasValue ? (model.B_Pagado.Value ? "" : "<a href=\""+ Url.Action("VerPagosObligaciones", "Pagos", new { obligacionID = model.I_ObligacionAluID }) + 
-                            "\" class=\"modal-link-lg\"><i class=\"fa fa-fw fa-money\"></i> Pagar</a>") : "");
-                        columns.Add().SetWidth(125).Css("text-center").Encoded(false).Sanitized(false).RenderValueAs(model => 
-                            @<a href="@Url.Action("VerObligaciones", "Obligaciones", new { obligacionID = model.I_ObligacionAluID })" class="modal-link-lg"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Editar</a>);
+                       columns.Add(c => c.I_Anio).Titled("Año");
+                       columns.Add(c => c.T_Periodo).Titled("Periodo");
+                       columns.Add(c => c.C_CodAlu).Titled("Código alumno");
+                       columns.Add(c => c.T_ApellidosNombres).Titled("Apellidos y nombres").Filterable(true);
+                       columns.Add(c => c.T_DenomProg).Titled("Especialidad").Filterable(true);
+                       columns.Add(c => c.T_EsIngresante).Titled("Tipo alumno").Filterable(true);
+                       columns.Add(c => c.T_ProcesoDesc).Titled("Cuota").Filterable(true).Css("text-center");
+                       columns.Add(c => c.I_MontoOblig).Titled("Monto Obl.").Filterable(true).Css("text-center");
+                       columns.Add(c => c.T_Pagado).Titled("Estado").Filterable(true).Css("text-center");
+                       columns.Add().SetWidth(125).Css("text-center").Encoded(false).Sanitized(false).RenderValueAs(model =>
+                           model.B_Pagado.HasValue ? (model.B_Pagado.Value ? "" : "<a href=\""+ Url.Action("AsignarPagoObligacion", "Pagos", new { obligacionID = model.I_ObligacionAluID }) +
+                           "\" class=\"modal-link-lg\"><i class=\"fa fa-pencil-square-o\"></i> Asignar</a>") : "");
+                       columns.Add().SetWidth(125).Css("text-center").Encoded(false).Sanitized(false).RenderValueAs(model =>
+                           @<a href="@Url.Action("VerPagosObligacion", "Pagos", new { obligacionID = model.I_ObligacionAluID })" class="modal-link-lg"><i class="fa fa-fw fa-money" aria-hidden="true"></i> Pago</a>);
                     }).WithPaging(12).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
                 </div>
             </div>

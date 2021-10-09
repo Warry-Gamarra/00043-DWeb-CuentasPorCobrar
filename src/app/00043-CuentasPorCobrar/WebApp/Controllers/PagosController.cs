@@ -554,7 +554,7 @@ namespace WebApp.Controllers
 
         }
 
-        public ActionResult VerPagosObligaciones(int obligacionID)
+        public ActionResult AsignarPagoObligacion(int obligacionID)
         {
             var obligacion = obligacionServiceFacade.Obtener_CuotaPago(obligacionID);
 
@@ -569,7 +569,7 @@ namespace WebApp.Controllers
                 .OrderBy(x => x.D_FecPago);
             }
             
-            return PartialView("_VerPagosObligaciones");
+            return PartialView("_AsignarPagoObligacion");
         }
 
         [HttpPost]
@@ -612,6 +612,21 @@ namespace WebApp.Controllers
             }
 
             return Json(response, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult VerPagosObligacion(int obligacionID)
+        {
+            var obligacion = obligacionServiceFacade.Obtener_CuotaPago(obligacionID);
+
+            var pagosDetalle = pagosModel.FindByObligacion(obligacionID);
+
+            ViewBag.Title = "Lista de Pagos";
+
+            ViewBag.CuotaPago = obligacion;
+
+            ViewBag.Pagos = pagosDetalle;
+
+            return PartialView("_VerPagosObligacion");
         }
     }
 }

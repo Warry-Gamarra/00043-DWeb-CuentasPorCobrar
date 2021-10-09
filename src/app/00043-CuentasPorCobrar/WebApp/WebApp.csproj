@@ -468,6 +468,7 @@
     <Compile Include="ViewModels\ConsultaPagoTasasViewModel.cs" />
     <Compile Include="ViewModels\EstadoObligacionViewModel.cs" />
     <Compile Include="ViewModels\ConsultaObligacionEstudianteViewModel.cs" />
+    <Compile Include="ViewModels\ObligacionDetallePagoViewModel.cs" />
     <Compile Include="ViewModels\PagoBancoObligacionViewModel.cs" />
     <Compile Include="ViewModels\ReporteResumenAnualPagoObligaciones_X_Dia.cs" />
     <Compile Include="ViewModels\ReporteResumenAnualPagoObligaciones_X_Dependencias.cs" />
@@ -633,7 +634,8 @@
     <Content Include="Views\EstadosCuenta\ResumenAnualObligacionesPorDia.cshtml" />
     <Content Include="Views\Obligaciones\ConsultaGeneracionObligaciones.cshtml" />
     <Content Include="Views\Obligaciones\_VerObligaciones.cshtml" />
-    <Content Include="Views\Pagos\_VerPagosObligaciones.cshtml" />
+    <Content Include="Views\Pagos\_AsignarPagoObligacion.cshtml" />
+    <Content Include="Views\Pagos\_VerPagosObligacion.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

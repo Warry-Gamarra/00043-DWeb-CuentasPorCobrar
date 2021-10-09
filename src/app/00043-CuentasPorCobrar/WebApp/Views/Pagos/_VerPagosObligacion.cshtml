@@ -1,0 +1,79 @@
+﻿@Scripts.Render("~/bundles/jqueryval")
+
+@{
+    var obligacion = (WebApp.Models.CuotaPagoModel)ViewBag.CuotaPago;
+    var detallePagos = (IEnumerable<WebApp.ViewModels.ObligacionDetallePagoViewModel>)ViewBag.Pagos;
+}
+
+<div class="modal-header bg-dark-gray" style="border-radius: .2rem .2rem 0px 0px">
+    <h5 class="modal-title text-center"><i class="fa bi-layers-half">&nbsp;</i> @ViewBag.Title</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+
+<div class="modal-body">
+    <dl class="row">
+        <dt class="col-sm-3">Alumno</dt>
+        <dd class="col-sm-9">@obligacion.T_NombresCompletos</dd>
+
+        <dt class="col-sm-3">Código</dt>
+        <dd class="col-sm-9">@obligacion.C_CodAlu</dd>
+
+        <dt class="col-sm-3">Periodo</dt>
+        <dd class="col-sm-9">@obligacion.I_Anio - @obligacion.T_Periodo</dd>
+
+        <dt class="col-sm-3">Cuota</dt>
+        <dd class="col-sm-9">@obligacion.T_ProcesoDesc</dd>
+
+        <dt class="col-sm-3">Monto</dt>
+        <dd class="col-sm-9">@obligacion.T_MontoOblig</dd>
+
+        <dt class="col-sm-3">Vencimiento</dt>
+        <dd class="col-sm-9">@obligacion.T_FecVencto</dd>
+
+        <dt class="col-sm-3">Pagado a la fecha</dt>
+        <dd class="col-sm-9">@obligacion.T_MontoPagadoActual</dd>
+    </dl>
+</div>
+
+<div class="modal-body">
+    <table class="table table-bordered table-hover table-sm" id="tblDetallePagos">
+        <thead>
+            <tr>
+                <th>Concepto</th>
+                <th>Banco</th>
+                <th>Cod.Operacion</th>
+                <th>Fecha Pago</th>
+                <th>Monto</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (detallePagos != null)
+            {
+                foreach (var item in detallePagos)
+                {
+                    <tr>
+                        <td>@item.T_ConceptoPagoDesc</td>
+                        <td>@item.T_EntidadDesc<br />(@item.C_NumeroCuenta)</td>
+                        <td>@item.C_CodOperacion</td>
+                        <td>@item.T_FecPago</td>
+                        <td>@item.T_MontoPagado</td>
+                        <td>
+                            @*<button class="btn btn-success btn-sm btnAsignarPago" data-id-pago-banco="@item.I_PagoBancoID">Asignar</button>*@
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="modal-footer" id="div_msg_busq_pagos">
+    <div class="col-md-12" style="display: none;" id="loading">
+        <h6></h6>
+        <div class="progress">
+            <div class="indeterminate"></div>
+        </div>
+    </div>
+    <button type="button" class="btn btn-secondary" id="btnCancel" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> Cancelar</button>
+</div>

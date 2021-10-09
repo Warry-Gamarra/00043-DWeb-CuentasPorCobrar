@@ -195,5 +195,14 @@ namespace Domain.Services.Implementations
 
             return new Response(result);
         }
+
+        public IEnumerable<ObligacionDetallePagoDTO> FindByObligacion(int idObligacion)
+        {
+            var pagosDetalle = VW_ObligacionesPagadas.FindByObligacion(idObligacion);
+
+            var result = pagosDetalle.Select(x => Mapper.VW_ObligacionesPagadas_To_ObligacionDetallePagoDTO(x));
+
+            return result;
+        }
     }
 }

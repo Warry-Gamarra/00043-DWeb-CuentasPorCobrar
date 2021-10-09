@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -61,7 +62,7 @@ namespace WebApp.Models
         {
             get
             {
-                return D_FecVencto.ToString("dd/MM/yyyy");
+                return D_FecVencto.ToString(FormatosDateTime.BASIC_DATE);
             }
         }
 
@@ -79,7 +80,7 @@ namespace WebApp.Models
         {
             get
             {
-                return I_MontoOblig.HasValue ? I_MontoOblig.Value.ToString("N2") : "";
+                return I_MontoOblig.HasValue ? I_MontoOblig.Value.ToString(FormatosDecimal.BASIC_DECIMAL) : "";
             }
         }
 
@@ -89,7 +90,7 @@ namespace WebApp.Models
         {
             get
             {
-                return I_MontoPagadoActual.ToString("N2");
+                return I_MontoPagadoActual.ToString(FormatosDecimal.BASIC_DECIMAL);
             }
         }
 

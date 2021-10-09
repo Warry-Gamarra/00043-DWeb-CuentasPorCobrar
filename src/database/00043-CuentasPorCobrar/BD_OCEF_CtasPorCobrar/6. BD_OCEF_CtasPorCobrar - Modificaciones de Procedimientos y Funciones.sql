@@ -2131,6 +2131,35 @@ GO
 
 
 
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_ObligacionesPagadas')
+	DROP VIEW [dbo].[VW_ObligacionesPagadas]
+GO
+
+CREATE VIEW [dbo].[VW_ObligacionesPagadas]
+AS
+	SELECT 
+		m.I_MatAluID, m.C_CodAlu, m.C_RcCod, m.T_Nombre, m.T_ApePaterno, m.T_ApeMaterno, 
+		pr.I_ProcesoID, pr.T_ProcesoDesc, c.I_ObligacionAluID, c.I_MontoOblig, d.I_ObligacionAluDetID, d.I_ConcPagID, cp.T_ConceptoPagoDesc,
+		d.I_Monto, d.D_FecVencto, d.I_TipoDocumento, d.T_DescDocumento, SUM(p.I_MontoPagado) AS I_MontoPagado, b.I_PagoBancoID, e.I_EntidadFinanID, e.T_EntidadDesc, cd.I_CtaDepositoID, cd.C_NumeroCuenta,
+		b.C_CodOperacion, b.D_FecPago, b.T_LugarPago, b.D_FecCre, b.T_Observacion, pr.I_Prioridad
+	FROM dbo.TR_ObligacionAluCab c
+	INNER JOIN dbo.TR_ObligacionAluDet d ON d.I_ObligacionAluID = c.I_ObligacionAluID AND d.B_Habilitado = 1 AND d.B_Eliminado = 0
+	INNER JOIN dbo.TRI_PagoProcesadoUnfv p ON p.I_ObligacionAluDetID = d.I_ObligacionAluDetID AND p.B_Anulado = 0
+	INNER JOIN dbo.TR_PagoBanco b ON b.I_PagoBancoID = p.I_PagoBancoID AND b.B_Anulado = 0
+	INNER JOIN dbo.VW_MatriculaAlumno m ON m.I_MatAluID = c.I_MatAluID
+	INNER JOIN dbo.TC_EntidadFinanciera e ON e.I_EntidadFinanID = b.I_EntidadFinanID
+	INNER JOIN dbo.TC_CuentaDeposito cd ON cd.I_CtaDepositoID = b.I_CtaDepositoID
+	INNER JOIN dbo.TC_Proceso pr ON pr.I_ProcesoID = c.I_ProcesoID AND pr.B_Eliminado = 0
+	INNER JOIN dbo.TI_ConceptoPago cp ON cp.I_ConcPagID = d.I_ConcPagID AND cp.B_Eliminado = 0
+	WHERE c.B_Habilitado = 1 AND c.B_Eliminado = 0
+	GROUP BY m.I_MatAluID, m.C_CodAlu, m.C_RcCod, m.T_Nombre, m.T_ApePaterno, m.T_ApeMaterno, 
+		pr.I_ProcesoID, pr.T_ProcesoDesc, c.I_ObligacionAluID, c.I_MontoOblig, d.I_ObligacionAluDetID, d.I_ConcPagID, cp.T_ConceptoPagoDesc,
+		d.I_Monto, d.D_FecVencto, d.I_TipoDocumento, d.T_DescDocumento, b.I_PagoBancoID, e.I_EntidadFinanID, e.T_EntidadDesc, cd.I_CtaDepositoID, cd.C_NumeroCuenta,
+		b.C_CodOperacion, b.D_FecPago, b.T_LugarPago, b.D_FecCre, b.T_Observacion, pr.I_Prioridad
+GO
+
+
+
 IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_ResumenAnualPagoDeObligaciones_X_Dia')
 	DROP PROCEDURE [dbo].[USP_S_ResumenAnualPagoDeObligaciones_X_Dia]
 GO

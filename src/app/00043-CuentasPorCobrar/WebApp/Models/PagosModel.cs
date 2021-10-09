@@ -709,8 +709,8 @@ namespace WebApp.Models
                 importeReajustado = importeReajustado.PadLeft(14, '0');
                 lugarPago = item.LugarPago.Substring2(0, 2);
                 agencia = entRecaudaId == 1 ? item.LugarPago.Substring(2, 3) : item.LugarPago.Substring(3, 3);
-                formaPago = entRecaudaId == 1 ? item.LugarPago.Substring2(5, 1): "1";
-                medioPago = entRecaudaId == 1 ? item.LugarPago.Substring2(6, 1): "1";
+                formaPago = entRecaudaId == 1 ? item.LugarPago.Substring2(5, 1) : "1";
+                medioPago = entRecaudaId == 1 ? item.LugarPago.Substring2(6, 1) : "1";
                 usuarioPago = usuarioPago.PadRight(10, ' ');
 
                 cadenaDetalle = string.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11}{12}{13}{14}{15}{16}{17}{18}{19}{20}{21}{22}{23}{24}",
@@ -780,6 +780,16 @@ namespace WebApp.Models
             {
                 result.Error(false);
             }
+
+            return result;
+        }
+
+        public IEnumerable<ObligacionDetallePagoViewModel> FindByObligacion(int idObligacion)
+        {
+
+            var pagosDetalle = pagoService.FindByObligacion(idObligacion);
+
+            var result = pagosDetalle.Select(x => Mapper.ObligacionDetallePagoDTO_To_ObligacionDetallePagoViewModel(x));
 
             return result;
         }

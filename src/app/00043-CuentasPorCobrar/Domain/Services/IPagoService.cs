@@ -24,5 +24,6 @@ namespace Domain.Services
             int? condicion);
         PagoBancoObligacionDTO ObtenerPagoBanco(int idPagoBanco);
         Response AsignarPagoObligacion(int obligacionID, int pagoBancoID, int UserID);
+        IEnumerable<ObligacionDetallePagoDTO> FindByObligacion(int idObligacion);
     }
 }
