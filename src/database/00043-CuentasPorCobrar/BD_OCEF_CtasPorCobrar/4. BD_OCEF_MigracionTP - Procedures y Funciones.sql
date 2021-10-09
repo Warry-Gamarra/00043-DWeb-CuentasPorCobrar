@@ -170,7 +170,7 @@ AS
 --exec USP_U_ValidarCaracteresEspeciales @B_Resultado output, @T_Message output
 --select @B_Resultado as resultado, @T_Message as mensaje
 BEGIN
-	DECLARE @I_Actualizados int = 0
+	DECLARE @I_Observados int = 0
 	DECLARE @D_FecProceso datetime = GETDATE() 
 	DECLARE @I_ObservID int = 1
 	DECLARE @I_TablaID int = 1
@@ -199,13 +199,13 @@ BEGIN
 		WHEN NOT MATCHED BY SOURCE AND TRG.I_ObservID = @I_ObservID THEN
 			DELETE;
 
-		SET @I_Actualizados = (SELECT COUNT(*) FROM TI_ObservacionRegistroTabla WHERE I_ObservID = @I_ObservID AND I_TablaID = @I_TablaID)
+		SET @I_Observados = (SELECT COUNT(*) FROM TI_ObservacionRegistroTabla WHERE I_ObservID = @I_ObservID AND I_TablaID = @I_TablaID)
 
-		SELECT @I_Actualizados as cant_updated, @D_FecProceso as fec_proceso
+		SELECT @I_Observados as cant_obs, @D_FecProceso as fec_proceso
 				
 		COMMIT TRANSACTION
 		SET @B_Resultado = 1
-		SET @T_Message = CAST(@I_Actualizados AS varchar)
+		SET @T_Message = CAST(@I_Observados AS varchar)
 	END TRY
 	BEGIN CATCH
 		ROLLBACK TRANSACTION
@@ -229,7 +229,7 @@ AS
 --exec USP_U_ValidarCodigosAlumnoRepetidos @B_Resultado output, @T_Message output
 --select @B_Resultado as resultado, @T_Message as mensaje
 BEGIN
-	DECLARE @I_Actualizados int = 0
+	DECLARE @I_Observados int = 0
 	DECLARE @D_FecProceso datetime = GETDATE() 
 	DECLARE @I_ObservID int = 2
 	DECLARE @I_TablaID int = 1
@@ -257,13 +257,13 @@ BEGIN
 		WHEN NOT MATCHED BY SOURCE AND TRG.I_ObservID = @I_ObservID THEN
 			DELETE;
 
-		SET @I_Actualizados = (SELECT COUNT(*) FROM TI_ObservacionRegistroTabla WHERE I_ObservID = @I_ObservID AND I_TablaID = @I_TablaID)
+		SET @I_Observados = (SELECT COUNT(*) FROM TI_ObservacionRegistroTabla WHERE I_ObservID = @I_ObservID AND I_TablaID = @I_TablaID)
 
-		SELECT @I_Actualizados as cant_updated, @D_FecProceso as fec_proceso
+		SELECT @I_Observados as cant_obs, @D_FecProceso as fec_proceso
 				
 		COMMIT TRANSACTION
 		SET @B_Resultado = 1
-		SET @T_Message = CAST(@I_Actualizados AS varchar)
+		SET @T_Message = CAST(@I_Observados AS varchar)
 	END TRY
 	BEGIN CATCH
 		ROLLBACK TRANSACTION
@@ -286,7 +286,7 @@ AS
 --exec USP_U_ValidarCodigoCarreraAlumno @B_Resultado output, @T_Message output
 --select @B_Resultado as resultado, @T_Message as mensaje
 BEGIN
-	DECLARE @I_Actualizados int = 0
+	DECLARE @I_Observados int = 0
 	DECLARE @D_FecProceso datetime = GETDATE() 
 	DECLARE @I_ObservID int = 21
 	DECLARE @I_TablaID int = 1
@@ -312,13 +312,13 @@ BEGIN
 		WHEN NOT MATCHED BY SOURCE AND TRG.I_ObservID = @I_ObservID THEN
 			DELETE;
 
-		SET @I_Actualizados = (SELECT COUNT(*) FROM TI_ObservacionRegistroTabla WHERE I_ObservID = @I_ObservID AND I_TablaID = @I_TablaID)
+		SET @I_Observados = (SELECT COUNT(*) FROM TI_ObservacionRegistroTabla WHERE I_ObservID = @I_ObservID AND I_TablaID = @I_TablaID)
 
-		SELECT @I_Actualizados as cant_updated, @D_FecProceso as fec_proceso
+		SELECT @I_Observados as cant_obs, @D_FecProceso as fec_proceso
 				
 		COMMIT TRANSACTION
 		SET @B_Resultado = 1
-		SET @T_Message = CAST(@I_Actualizados AS varchar)
+		SET @T_Message = CAST(@I_Observados AS varchar)
 	END TRY
 	BEGIN CATCH
 		ROLLBACK TRANSACTION
@@ -342,7 +342,7 @@ AS
 --exec USP_U_ValidarAnioIngresoAlumno @B_Resultado output, @T_Message output
 --select @B_Resultado as resultado, @T_Message as mensaje
 BEGIN
-	DECLARE @I_Actualizados int = 0
+	DECLARE @I_Observados int = 0
 	DECLARE @D_FecProceso datetime = GETDATE() 
 	DECLARE @I_ObservID int = 22
 	DECLARE @I_TablaID int = 1
@@ -366,13 +366,13 @@ BEGIN
 		WHEN NOT MATCHED BY SOURCE AND TRG.I_ObservID = @I_ObservID THEN
 			DELETE;
 
-		SET @I_Actualizados = (SELECT COUNT(*) FROM TI_ObservacionRegistroTabla WHERE I_ObservID = @I_ObservID AND I_TablaID = @I_TablaID)
+		SET @I_Observados = (SELECT COUNT(*) FROM TI_ObservacionRegistroTabla WHERE I_ObservID = @I_ObservID AND I_TablaID = @I_TablaID)
 
-		SELECT @I_Actualizados as cant_updated, @D_FecProceso as fec_proceso
+		SELECT @I_Observados as cant_obs, @D_FecProceso as fec_proceso
 
 		COMMIT TRANSACTION				
 		SET @B_Resultado = 1
-		SET @T_Message = CAST(@I_Actualizados AS varchar)
+		SET @T_Message = CAST(@I_Observados AS varchar)
 	END TRY
 	BEGIN CATCH
 		ROLLBACK TRANSACTION
@@ -396,7 +396,7 @@ AS
 --exec USP_U_ValidarModalidadIngresoAlumno @B_Resultado output, @T_Message output
 --select @B_Resultado as resultado, @T_Message as mensaje
 BEGIN
-	DECLARE @I_Actualizados int = 0
+	DECLARE @I_Observados int = 0
 	DECLARE @D_FecProceso datetime = GETDATE() 
 	DECLARE @I_ObservID int = 23
 	DECLARE @I_TablaID int = 1
@@ -422,13 +422,13 @@ BEGIN
 		WHEN NOT MATCHED BY SOURCE AND TRG.I_ObservID = @I_ObservID THEN
 			DELETE;
 
-		SET @I_Actualizados = (SELECT COUNT(*) FROM TI_ObservacionRegistroTabla WHERE I_ObservID = @I_ObservID AND I_TablaID = @I_TablaID)
+		SET @I_Observados = (SELECT COUNT(*) FROM TI_ObservacionRegistroTabla WHERE I_ObservID = @I_ObservID AND I_TablaID = @I_TablaID)
 
-		SELECT @I_Actualizados as cant_updated, @D_FecProceso as fec_proceso
+		SELECT @I_Observados as cant_obs, @D_FecProceso as fec_proceso
 				
 		COMMIT TRANSACTION
 		SET @B_Resultado = 1
-		SET @T_Message = CAST(@I_Actualizados AS varchar)
+		SET @T_Message = CAST(@I_Observados AS varchar)
 	END TRY
 	BEGIN CATCH
 		ROLLBACK TRANSACTION
@@ -675,7 +675,8 @@ BEGIN
 				deleted.B_Removido INTO @Tbl_output;
 		
 		UPDATE	TR_MG_CpDes 
-				SET	B_Actualizado = 0, B_Migrable = 1, D_FecMigrado = NULL, B_Migrado = 0, T_Observacion = NULL,
+				SET	B_Actualizado = 0, B_Migrable = 1, 
+					D_FecMigrado = NULL, B_Migrado = 0,
 					I_Anio = NULL, I_CatPagoID = NULL, I_Periodo = NULL
 
 		UPDATE	t_CpDes
@@ -700,7 +701,8 @@ BEGIN
 		SELECT @I_CpDes AS tot_cuotaPago, @I_Insertados AS cant_inserted, @I_Actualizados as cant_updated, @I_Removidos as cant_removed, @D_FecProceso as fec_proceso
 		
 		SET @B_Resultado = 1
-		SET @T_Message = 'Ok'
+		SET @T_Message =  'Total: ' + CAST(@I_CpDes AS varchar) + '|Insertados: ' + CAST(@I_Insertados AS varchar) 
+						+ '|Actualizados: ' + CAST(@I_Actualizados AS varchar) + '|Removidos: ' + CAST(@I_Removidos AS varchar)
 	END TRY
 	BEGIN CATCH
 		SET @B_Resultado = 0
@@ -724,25 +726,38 @@ AS
 --select @B_Resultado as resultado, @T_Message as mensaje
 BEGIN	
 	DECLARE @D_FecProceso datetime = GETDATE() 
+	DECLARE @I_ObservID int = 21
+	DECLARE @I_TablaID int = 1
+	DECLARE @I_Observados int = 0
 
 	BEGIN TRY 
 		UPDATE	TR_MG_CpDes
 		SET		B_Migrable = 0,
-				D_FecEvalua = @D_FecProceso,
-				T_Observacion = ISNULL(T_Observacion, '') + '001 - REPETIDA: ('+ CONVERT(varchar, @D_FecProceso, 112) + '). La cuota de pago se encuentra repetida y con estado ACTIVO.|'
-		WHERE	CUOTA_PAGO IN (SELECT CUOTA_PAGO FROM TR_MG_CpDes WHERE ELIMINADO = 0 
-								GROUP BY CUOTA_PAGO HAVING COUNT(CUOTA_PAGO) > 1)
+				D_FecEvalua = @D_FecProceso
+		WHERE	CUOTA_PAGO IN (SELECT CUOTA_PAGO FROM TR_MG_CpDes WHERE ELIMINADO = 0 GROUP BY CUOTA_PAGO HAVING COUNT(CUOTA_PAGO) > 1
+								UNION
+							   SELECT CUOTA_PAGO FROM TR_MG_CpDes WHERE ELIMINADO = 1 GROUP BY CUOTA_PAGO HAVING COUNT(CUOTA_PAGO) > 1)
 
-		UPDATE	TR_MG_CpDes
-		SET		B_Migrable = 0,
-				D_FecEvalua = @D_FecProceso,
-				T_Observacion = ISNULL(T_Observacion, '') + '001 - REPETIDA: ('+ CONVERT(varchar, @D_FecProceso, 112) + ').  La cuota de pago se encuentra repetida con estado ELIMINADO.|'
-		WHERE	CUOTA_PAGO IN (SELECT CUOTA_PAGO FROM TR_MG_CpDes GROUP BY CUOTA_PAGO HAVING COUNT(CUOTA_PAGO) > 1)
-				AND ELIMINADO = 1
+		MERGE TI_ObservacionRegistroTabla AS TRG
+		USING (SELECT @I_ObservID AS I_ObservID, @I_TablaID AS I_TablaID, I_RowID AS I_FilaTablaID, @D_FecProceso AS D_FecRegistro 
+				 FROM TR_MG_CpDes 
+				 WHERE CUOTA_PAGO IN (SELECT CUOTA_PAGO FROM TR_MG_CpDes WHERE ELIMINADO = 0 GROUP BY CUOTA_PAGO HAVING COUNT(CUOTA_PAGO) > 1
+									  UNION
+									  SELECT CUOTA_PAGO FROM TR_MG_CpDes WHERE ELIMINADO = 1 GROUP BY CUOTA_PAGO HAVING COUNT(CUOTA_PAGO) > 1)
+			  ) AS SRC
+		ON TRG.I_ObservID = SRC.I_ObservID AND TRG.I_TablaID = SRC.I_TablaID AND TRG.I_FilaTablaID = SRC.I_FilaTablaID
+		WHEN MATCHED THEN
+			UPDATE SET D_FecRegistro = SRC.D_FecRegistro
+		WHEN NOT MATCHED BY TARGET THEN
+			INSERT (I_ObservID, I_TablaID, I_FilaTablaID, D_FecRegistro)
+			VALUES (SRC.I_ObservID, SRC.I_TablaID, SRC.I_FilaTablaID, SRC.D_FecRegistro)
+		WHEN NOT MATCHED BY SOURCE AND TRG.I_ObservID = @I_ObservID THEN
+			DELETE;
 
-		SELECT * FROM TR_MG_CpDes WHERE B_Migrable = 0 AND T_Observacion LIKE '%001%'
+		SET @I_Observados = (SELECT COUNT(*) FROM TI_ObservacionRegistroTabla WHERE I_ObservID = @I_ObservID AND I_TablaID = @I_TablaID)
+
 		SET @B_Resultado = 1
-		SET @T_Message = 'Ok'
+		SET @T_Message = CAST(@I_Observados AS varchar)
 	END TRY
 	BEGIN CATCH
 		SET @B_Resultado = 0
@@ -766,6 +781,16 @@ AS
 --select @B_Resultado as resultado, @T_Message as mensaje
 BEGIN
 	DECLARE @D_FecProceso datetime = GETDATE() 
+	DECLARE @I_TablaID int = 2
+	DECLARE @I_ObsMasUnAnio int = 5
+	DECLARE @I_ObsSinAnio int = 6
+	DECLARE @I_ObsMasUnPeriodo int = 7
+	DECLARE @I_ObsSinPeriodo int = 8
+
+	DECLARE @I_cant_MasUnAnio int = 0
+	DECLARE @I_cant_SinAnio int = 0
+	DECLARE @I_cant_MasUnPeriodo int = 0
+	DECLARE @I_cant_SinPeriodo int = 0
 
 	BEGIN TRY 
 		--1. ASIGNAR AÑO CUOTA PAGO
@@ -788,18 +813,41 @@ BEGIN
 
 		UPDATE	TR_MG_CpDes
 		SET		B_Migrable = 0,
-				D_FecEvalua = @D_FecProceso,
-				T_Observacion = ISNULL(T_Observacion, '') + '002 - 1+ AÑOS: ('+ CONVERT(varchar, @D_FecProceso, 112) + '). La cuota de pago presenta más de un año asociado en las tablas cp_pri o ec_det.|' 
+				D_FecEvalua = @D_FecProceso
 		WHERE	CUOTA_PAGO IN (SELECT cuota_pago FROM @cuota_anio GROUP BY cuota_pago HAVING COUNT(*) > 1)
 		
 		UPDATE	TR_MG_CpDes
 		SET		B_Migrable = 0,
-				D_FecEvalua = @D_FecProceso,
-				T_Observacion = ISNULL(T_Observacion, '') + '003 - 0 AÑOS: ('+ CONVERT(varchar, @D_FecProceso, 112) + ') La cuota de pago no presenta año asociado en las tablas cp_pri o ec_det.|' 
+				D_FecEvalua = @D_FecProceso
 		WHERE	CUOTA_PAGO IN (SELECT cd.CUOTA_PAGO FROM TR_MG_CpDes cd
 							  LEFT JOIN @cuota_anio ca ON cd.CUOTA_PAGO = ca.cuota_pago
 							  WHERE anio_cuota IS NULL)
 	
+		MERGE TI_ObservacionRegistroTabla AS TRG
+		USING 	(SELECT	@I_ObsMasUnAnio AS I_ObservID, @I_TablaID AS I_TablaID, I_RowID AS I_FilaTablaID, @D_FecProceso AS D_FecRegistro FROM TR_MG_CpDes
+				 WHERE CUOTA_PAGO IN (SELECT cuota_pago FROM @cuota_anio GROUP BY cuota_pago HAVING COUNT(*) > 1)) AS SRC
+		ON TRG.I_ObservID = SRC.I_ObservID AND TRG.I_TablaID = SRC.I_TablaID AND TRG.I_FilaTablaID = SRC.I_FilaTablaID
+		WHEN MATCHED THEN
+			UPDATE SET D_FecRegistro = SRC.D_FecRegistro
+		WHEN NOT MATCHED BY TARGET THEN
+			INSERT (I_ObservID, I_TablaID, I_FilaTablaID, D_FecRegistro)
+			VALUES (SRC.I_ObservID, SRC.I_TablaID, SRC.I_FilaTablaID, SRC.D_FecRegistro)
+		WHEN NOT MATCHED BY SOURCE AND TRG.I_ObservID = @I_ObsMasUnAnio THEN
+			DELETE;
+
+		MERGE TI_ObservacionRegistroTabla AS TRG
+		USING 	(SELECT	@I_ObsSinAnio AS I_ObservID, @I_TablaID AS I_TablaID, I_RowID AS I_FilaTablaID, @D_FecProceso AS D_FecRegistro FROM TR_MG_CpDes
+				  WHERE	CUOTA_PAGO IN (SELECT cd.CUOTA_PAGO FROM TR_MG_CpDes cd LEFT JOIN @cuota_anio ca ON cd.CUOTA_PAGO = ca.cuota_pago WHERE anio_cuota IS NULL)
+				) AS SRC
+		ON TRG.I_ObservID = SRC.I_ObservID AND TRG.I_TablaID = SRC.I_TablaID AND TRG.I_FilaTablaID = SRC.I_FilaTablaID
+		WHEN MATCHED THEN
+			UPDATE SET D_FecRegistro = SRC.D_FecRegistro
+		WHEN NOT MATCHED BY TARGET THEN
+			INSERT (I_ObservID, I_TablaID, I_FilaTablaID, D_FecRegistro)
+			VALUES (SRC.I_ObservID, SRC.I_TablaID, SRC.I_FilaTablaID, SRC.D_FecRegistro)
+		WHEN NOT MATCHED BY SOURCE AND TRG.I_ObservID = @I_ObsSinAnio THEN
+			DELETE;
+
 		UPDATE	tb_des  
 		SET		I_Anio = a1.anio_cuota,
 				D_FecEvalua = @D_FecProceso
@@ -817,9 +865,20 @@ BEGIN
 
 		UPDATE	TR_MG_CpDes
 		SET		B_Migrable = 0,
-				D_FecEvalua = @D_FecProceso,
-				T_Observacion = ISNULL(T_Observacion, '') + '004 - 1+ PERIODOS: ('+ CONVERT(varchar, @D_FecProceso, 112) + ').  La cuota de pago presenta más de un periodo asociado en la tabla cp_pri.|' 
+				D_FecEvalua = @D_FecProceso
 		WHERE	CUOTA_PAGO IN (SELECT cuota_pago FROM @periodo GROUP BY cuota_pago HAVING COUNT(*) > 1)
+	
+		MERGE TI_ObservacionRegistroTabla AS TRG
+		USING 	(SELECT	@I_ObsMasUnPeriodo AS I_ObservID, @I_TablaID AS I_TablaID, I_RowID AS I_FilaTablaID, @D_FecProceso AS D_FecRegistro FROM TR_MG_CpDes
+				 WHERE CUOTA_PAGO IN (SELECT cuota_pago FROM @periodo GROUP BY cuota_pago HAVING COUNT(*) > 1)) AS SRC
+		ON TRG.I_ObservID = SRC.I_ObservID AND TRG.I_TablaID = SRC.I_TablaID AND TRG.I_FilaTablaID = SRC.I_FilaTablaID
+		WHEN MATCHED THEN
+			UPDATE SET D_FecRegistro = SRC.D_FecRegistro
+		WHEN NOT MATCHED BY TARGET THEN
+			INSERT (I_ObservID, I_TablaID, I_FilaTablaID, D_FecRegistro)
+			VALUES (SRC.I_ObservID, SRC.I_TablaID, SRC.I_FilaTablaID, SRC.D_FecRegistro)
+		WHEN NOT MATCHED BY SOURCE AND TRG.I_ObservID = @I_ObsMasUnPeriodo THEN
+			DELETE;
 
 		UPDATE	tb_des  
 		SET		I_Periodo = per1.I_Periodo,
@@ -831,16 +890,29 @@ BEGIN
 
 		UPDATE	TR_MG_CpDes
 		SET		B_Migrable = 0,
-				D_FecEvalua = @D_FecProceso,
-				T_Observacion = ISNULL(T_Observacion, '') + '005 - 0 PERIODOS: ('+ CONVERT(varchar, @D_FecProceso, 112) + ').  La cuota de pago no presenta un periodo asociado en la tabla cp_pri.|' 
+				D_FecEvalua = @D_FecProceso
 		WHERE	I_Periodo IS NULL
 
+		MERGE TI_ObservacionRegistroTabla AS TRG
+		USING 	(SELECT	@I_ObsSinPeriodo AS I_ObservID, @I_TablaID AS I_TablaID, I_RowID AS I_FilaTablaID, @D_FecProceso AS D_FecRegistro FROM TR_MG_CpDes
+				 WHERE I_Periodo IS NULL) AS SRC
+		ON TRG.I_ObservID = SRC.I_ObservID AND TRG.I_TablaID = SRC.I_TablaID AND TRG.I_FilaTablaID = SRC.I_FilaTablaID
+		WHEN MATCHED THEN
+			UPDATE SET D_FecRegistro = SRC.D_FecRegistro
+		WHEN NOT MATCHED BY TARGET THEN
+			INSERT (I_ObservID, I_TablaID, I_FilaTablaID, D_FecRegistro)
+			VALUES (SRC.I_ObservID, SRC.I_TablaID, SRC.I_FilaTablaID, SRC.D_FecRegistro)
+		WHEN NOT MATCHED BY SOURCE AND TRG.I_ObservID = @I_ObsSinPeriodo THEN
+			DELETE;
+	
+		SET @I_cant_MasUnAnio = (SELECT COUNT(*) FROM TI_ObservacionRegistroTabla WHERE I_ObservID = @I_ObsMasUnAnio AND I_TablaID = @I_TablaID)
+		SET @I_cant_SinAnio = (SELECT COUNT(*) FROM TI_ObservacionRegistroTabla WHERE I_ObservID = @I_ObsSinAnio AND I_TablaID = @I_TablaID)
+		SET @I_cant_MasUnPeriodo = (SELECT COUNT(*) FROM TI_ObservacionRegistroTabla WHERE I_ObservID = @I_ObsMasUnPeriodo AND I_TablaID = @I_TablaID)
+		SET @I_cant_SinPeriodo = (SELECT COUNT(*) FROM TI_ObservacionRegistroTabla WHERE I_ObservID = @I_ObsSinPeriodo AND I_TablaID = @I_TablaID)
 
-		SELECT * FROM TR_MG_CpDes WHERE B_Migrable = 0 
-		AND (T_Observacion LIKE '%002%' OR T_Observacion LIKE '%003%' OR T_Observacion LIKE '%004%' OR T_Observacion LIKE '%005%')
-		
 		SET @B_Resultado = 1
-		SET @T_Message = 'Ok'
+		SET @T_Message = CAST(@I_cant_MasUnAnio AS varchar) + ' | ' + CAST(@I_cant_SinAnio AS varchar) + ' | ' + 
+						 CAST(@I_cant_MasUnPeriodo AS varchar) + ' | ' + CAST(@I_cant_SinPeriodo AS varchar)
 	END TRY
 	BEGIN CATCH
 		SET @B_Resultado = 0
@@ -864,7 +936,13 @@ AS
 --select @B_Resultado as resultado, @T_Message as mensaje
 BEGIN
 	DECLARE @D_FecProceso datetime = GETDATE() 
+	DECLARE @I_TablaID int = 2
+	DECLARE @I_ObsMasUnCategoria int = 9
+	DECLARE @I_ObsSinCategoria int = 10
+	DECLARE @I_cant_masCategorias int = 0
+	DECLARE @I_cant_sinCategorias int = 0
 	
+	BEGIN TRANSACTION
 	BEGIN TRY 
 		DECLARE @categoria_pago AS TABLE (cuota_pago int, I_CatPagoID int, N_CodBanco varchar(10))
 		INSERT INTO @categoria_pago (cuota_pago, I_CatPagoID, N_CodBanco)
@@ -873,9 +951,20 @@ BEGIN
 
 		UPDATE	TR_MG_CpDes
 		SET		B_Migrable = 0,
-				D_FecEvalua = @D_FecProceso,
-				T_Observacion = ISNULL(T_Observacion, '') + '006 - 1+ CATEGORIAS: ('+ CONVERT(varchar, @D_FecProceso, 112) + ').  La cuota de pago presenta más de una categoría según codBanco.|' 
+				D_FecEvalua = @D_FecProceso
 		WHERE	CUOTA_PAGO IN (SELECT cuota_pago FROM @categoria_pago GROUP BY cuota_pago HAVING COUNT(*) > 1)
+
+		MERGE TI_ObservacionRegistroTabla AS TRG
+		USING 	(SELECT	@I_ObsMasUnCategoria AS I_ObservID, @I_TablaID AS I_TablaID, I_RowID AS I_FilaTablaID, @D_FecProceso AS D_FecRegistro FROM TR_MG_CpDes
+				  WHERE	CUOTA_PAGO IN (SELECT cuota_pago FROM @categoria_pago GROUP BY cuota_pago HAVING COUNT(*) > 1)) AS SRC
+		ON TRG.I_ObservID = SRC.I_ObservID AND TRG.I_TablaID = SRC.I_TablaID AND TRG.I_FilaTablaID = SRC.I_FilaTablaID
+		WHEN MATCHED THEN
+			UPDATE SET D_FecRegistro = SRC.D_FecRegistro
+		WHEN NOT MATCHED BY TARGET THEN
+			INSERT (I_ObservID, I_TablaID, I_FilaTablaID, D_FecRegistro)
+			VALUES (SRC.I_ObservID, SRC.I_TablaID, SRC.I_FilaTablaID, SRC.D_FecRegistro)
+		WHEN NOT MATCHED BY SOURCE AND TRG.I_ObservID = @I_ObsMasUnCategoria THEN
+			DELETE;
 
 		UPDATE	tb_des  
 		SET		I_CatPagoID = cat1.I_CatPagoID,
@@ -887,17 +976,31 @@ BEGIN
 
 		UPDATE	TR_MG_CpDes
 		SET		B_Migrable = 0,
-				D_FecEvalua = @D_FecProceso,
-				T_Observacion = ISNULL(T_Observacion, '') + '007 - 0 CATEGORIAS: ('+ CONVERT(varchar, @D_FecProceso, 112) + ').  La cuota de pago no presenta una categoria asociada según codBanco.|' 
+				D_FecEvalua = @D_FecProceso
 		WHERE	I_CatPagoID IS NULL
 
-		SELECT * FROM TR_MG_CpDes WHERE B_Migrable = 0 AND (T_Observacion LIKE '%006%' OR T_Observacion LIKE '%007%')
+		MERGE TI_ObservacionRegistroTabla AS TRG
+		USING 	(SELECT	@I_ObsSinCategoria AS I_ObservID, @I_TablaID AS I_TablaID, I_RowID AS I_FilaTablaID, @D_FecProceso AS D_FecRegistro FROM TR_MG_CpDes
+				  WHERE	I_CatPagoID IS NULL) AS SRC
+		ON TRG.I_ObservID = SRC.I_ObservID AND TRG.I_TablaID = SRC.I_TablaID AND TRG.I_FilaTablaID = SRC.I_FilaTablaID
+		WHEN MATCHED THEN
+			UPDATE SET D_FecRegistro = SRC.D_FecRegistro
+		WHEN NOT MATCHED BY TARGET THEN
+			INSERT (I_ObservID, I_TablaID, I_FilaTablaID, D_FecRegistro)
+			VALUES (SRC.I_ObservID, SRC.I_TablaID, SRC.I_FilaTablaID, SRC.D_FecRegistro)
+		WHEN NOT MATCHED BY SOURCE AND TRG.I_ObservID = @I_ObsMasUnCategoria THEN
+			DELETE;
+
+		SET @I_cant_masCategorias = (SELECT COUNT(*) FROM TI_ObservacionRegistroTabla WHERE I_ObservID = @I_ObsMasUnCategoria AND I_TablaID = @I_TablaID)
+		SET @I_cant_sinCategorias = (SELECT COUNT(*) FROM TI_ObservacionRegistroTabla WHERE I_ObservID = @I_ObsSinCategoria AND I_TablaID = @I_TablaID)
 		
+		COMMIT TRANSACTION
 		SET @B_Resultado = 1
-		SET @T_Message = 'Ok'
+		SET @T_Message = CAST(@I_cant_masCategorias AS varchar) + ' | ' + CAST(@I_cant_sinCategorias AS varchar)
 	END TRY
 	BEGIN CATCH
-		SET @B_Resultado = 0
+		ROLLBACK TRANSACTION
+ 		SET @B_Resultado = 0
 		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
 	END CATCH
 END
@@ -909,13 +1012,14 @@ IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCE
 GO
 
 CREATE PROCEDURE USP_IU_MigrarDataCuotaDePagoCtasPorCobrar
+	@I_ProcesoID	  int = NULL,
 	@I_AnioIni	  int = NULL,
 	@I_AnioFin	  int = NULL,
 	@B_Resultado  bit output,
 	@T_Message	  nvarchar(4000) OUTPUT	
 AS
---declare @B_Resultado  bit, @I_AnioIni int, @I_AnioFin int, @T_Message	  nvarchar(4000)
---exec USP_IU_MigrarDataCuotaDePagoCtasPorCobrar @I_AnioIni = null, @I_AnioFin = null, @B_Resultado = @B_Resultado output, @T_Message = @T_Message output
+--declare @B_Resultado  bit, @I_ProcesoID int, @I_AnioIni int, @I_AnioFin int, @T_Message nvarchar(4000)
+--exec USP_IU_MigrarDataCuotaDePagoCtasPorCobrar @I_ProcesoID = null, @I_AnioIni = null, @I_AcategorinioFin = null, @B_Resultado = @B_Resultado output, @T_Message = @T_Message output
 --select @B_Resultado as resultado, @T_Message as mensaje
 BEGIN
 	DECLARE @D_FecProceso datetime = GETDATE() 
@@ -928,6 +1032,8 @@ BEGIN
 	DECLARE @I_Ctas_Updated int = 0
 	DECLARE @I_CtaCat_Inserted int = 0
 	DECLARE @I_CtaCat_Updated int = 0
+	DECLARE @I_ObservID int = 11
+	DECLARE @I_TablaID int = 1
 
 	BEGIN TRANSACTION;
 	BEGIN TRY 
@@ -937,7 +1043,10 @@ BEGIN
 		SET IDENTITY_INSERT BD_OCEF_CtasPorCobrar.dbo.TC_Proceso ON;
 
 		MERGE INTO  BD_OCEF_CtasPorCobrar.dbo.TC_Proceso AS TRG
-		USING (SELECT * FROM TR_MG_CpDes WHERE B_Migrable = 1 AND I_Anio BETWEEN @I_AnioIni AND @I_AnioFin) AS SRC
+		USING (SELECT * FROM TR_MG_CpDes 
+				WHERE B_Migrable = 1 AND I_Anio BETWEEN @I_AnioIni AND @I_AnioFin
+					  AND (CUOTA_PAGO = @I_ProcesoID OR @I_ProcesoID IS NULL)
+			  ) AS SRC
 		ON TRG.I_ProcesoID = SRC.CUOTA_PAGO 
 		WHEN NOT MATCHED BY TARGET THEN 
 			 INSERT (I_ProcesoID, I_CatPagoID, T_ProcesoDesc, I_Anio, I_Periodo, N_CodBanco, D_FecVencto, I_Prioridad, B_Mora, B_Migrado, D_FecCre, B_Habilitado, B_Eliminado)
@@ -957,16 +1066,17 @@ BEGIN
 		
 		SET IDENTITY_INSERT BD_OCEF_CtasPorCobrar.dbo.TC_Proceso OFF
 		
-		DECLARE @I_ProcesoID	int
-		SET @I_ProcesoID = (SELECT MAX(CAST(CUOTA_PAGO as int)) FROM TR_MG_CpDes) + 1 
-
-		DBCC CHECKIDENT([BD_OCEF_CtasPorCobrar.dbo.TC_Proceso], RESEED, @I_ProcesoID)
-		
+		IF(@I_ProcesoID IS NULL)
+		BEGIN
+			SET @I_ProcesoID = (SELECT MAX(CAST(CUOTA_PAGO as int)) FROM TR_MG_CpDes) + 1 
+			DBCC CHECKIDENT([BD_OCEF_CtasPorCobrar.dbo.TC_Proceso], RESEED, @I_ProcesoID)
+		END
 
 		MERGE INTO BD_OCEF_CtasPorCobrar.dbo.TI_CtaDepo_Proceso AS TRG
 		USING (SELECT CD.I_CtaDepositoID, TP_CD.* FROM TR_MG_CpDes TP_CD
-				INNER JOIN BD_OCEF_CtasPorCobrar.dbo.TC_CuentaDeposito CD ON CD.C_NumeroCuenta COLLATE DATABASE_DEFAULT = TP_CD.N_CTA_CTE COLLATE DATABASE_DEFAULT
-				WHERE B_Migrable = 1 AND I_Anio BETWEEN @I_AnioIni AND @I_AnioFin) AS SRC
+					INNER JOIN BD_OCEF_CtasPorCobrar.dbo.TC_CuentaDeposito CD ON CD.C_NumeroCuenta COLLATE DATABASE_DEFAULT = TP_CD.N_CTA_CTE COLLATE DATABASE_DEFAULT
+					WHERE B_Migrable = 1 AND I_Anio BETWEEN @I_AnioIni AND @I_AnioFin AND (CUOTA_PAGO = @I_ProcesoID OR @I_ProcesoID IS NULL)
+			   ) AS SRC
 		ON TRG.I_ProcesoID = SRC.CUOTA_PAGO AND TRG.I_CtaDepositoID = SRC.I_CtaDepositoID
 		WHEN NOT MATCHED BY TARGET THEN
 			INSERT (I_CtaDepositoID, I_ProcesoID, B_Habilitado, B_Eliminado, D_FecCre)
@@ -995,10 +1105,23 @@ BEGIN
 		WHERE	I_RowID IN (SELECT I_RowID FROM @Tbl_outputProceso)
 
 		UPDATE	TR_MG_CpDes 
-		SET		T_Observacion = '000 - EXTERNO: ('+ CONVERT(varchar, @D_FecProceso, 112) + '). La cuota de pago ha sido ingresada o modificada desde una fuente externa.|',
-				B_Migrado = 0 
+		SET		B_Migrado = 0 
 		WHERE	I_RowID IN (SELECT CD.I_RowID FROM TR_MG_CpDes CD LEFT JOIN @Tbl_outputProceso O ON CD.I_RowID = o.I_RowID 
 							WHERE CD.B_Migrable = 1 AND O.I_RowID IS NULL)
+
+		MERGE TI_ObservacionRegistroTabla AS TRG
+		USING 	(SELECT	@I_ObservID AS I_ObservID, @I_TablaID AS I_TablaID, I_RowID AS I_FilaTablaID, @D_FecProceso AS D_FecRegistro FROM TR_MG_CpDes
+				  WHERE	I_RowID IN (SELECT CD.I_RowID FROM TR_MG_CpDes CD LEFT JOIN @Tbl_outputProceso O ON CD.I_RowID = o.I_RowID 
+									WHERE CD.B_Migrable = 1 AND O.I_RowID IS NULL)
+				) AS SRC
+		ON TRG.I_ObservID = SRC.I_ObservID AND TRG.I_TablaID = SRC.I_TablaID AND TRG.I_FilaTablaID = SRC.I_FilaTablaID
+		WHEN MATCHED THEN
+			UPDATE SET D_FecRegistro = SRC.D_FecRegistro
+		WHEN NOT MATCHED BY TARGET THEN
+			INSERT (I_ObservID, I_TablaID, I_FilaTablaID, D_FecRegistro)
+			VALUES (SRC.I_ObservID, SRC.I_TablaID, SRC.I_FilaTablaID, SRC.D_FecRegistro)
+		WHEN NOT MATCHED BY SOURCE AND TRG.I_ObservID = @I_ObservID THEN
+			DELETE;
 
 		SET @I_Proc_Inserted = (SELECT COUNT(*) FROM @Tbl_outputProceso WHERE T_Action = 'INSERT')
 		SET @I_Proc_Updated = (SELECT COUNT(*) FROM @Tbl_outputProceso WHERE T_Action = 'UPDATE')
@@ -1008,18 +1131,20 @@ BEGIN
 		SET @I_CtaCat_Updated = (SELECT COUNT(*) FROM @Tbl_outputCtasCat WHERE T_Action = 'UPDATE')
 
 		SELECT @I_Proc_Inserted AS proc_count_insert, @I_Proc_Updated AS proc_count_update, 
-				@I_Ctas_Inserted AS ctas_count_insert, @I_Ctas_Updated AS ctas_count_update,
-				@I_CtaCat_Inserted AS ctas_cat_count_insert, @I_CtaCat_Updated AS ctas_cat_count_update
+			   @I_Ctas_Inserted AS ctas_count_insert, @I_Ctas_Updated AS ctas_count_update,
+			   @I_CtaCat_Inserted AS ctas_cat_count_insert, @I_CtaCat_Updated AS ctas_cat_count_update
 
 		COMMIT TRANSACTION;
 
 		SET @B_Resultado = 1
-		SET @T_Message = 'Ok'
+		SET @T_Message = CAST(@I_Proc_Inserted AS varchar) + ' | ' + CAST(@I_Proc_Updated AS varchar)
+						 + ' | ' + CAST(@I_Ctas_Inserted AS varchar) + ' | ' + CAST(@I_Ctas_Updated AS varchar)
+						 + ' | ' + CAST(@I_CtaCat_Inserted AS varchar) + ' | ' + CAST(@I_CtaCat_Inserted AS varchar)
 	END TRY
 	BEGIN CATCH
+		ROLLBACK TRANSACTION;
 		SET @B_Resultado = 0
 		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
-		ROLLBACK TRANSACTION;
 	END CATCH
 END
 GO
