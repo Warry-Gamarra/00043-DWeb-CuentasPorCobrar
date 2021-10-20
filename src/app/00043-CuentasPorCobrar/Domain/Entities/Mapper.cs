@@ -639,6 +639,7 @@ namespace Domain.Entities
                 C_NumeroCuenta = vw.C_NumeroCuenta,
                 C_CodOperacion = vw.C_CodOperacion,
                 C_CodDepositante = vw.C_CodDepositante,
+                I_ObligacionAluID = vw.I_ObligacionAluID,
                 I_MatAluID = vw.I_MatAluID,
                 C_CodAlu = vw.C_CodAlu,
                 T_NomDepositante = vw.T_NomDepositante,
@@ -653,7 +654,8 @@ namespace Domain.Entities
                 T_Observacion = vw.T_Observacion,
                 I_CondicionPagoID = vw.I_CondicionPagoID,
                 T_Condicion = vw.T_Condicion,
-                I_MontoProcesado = vw.I_MontoProcesado
+                I_MontoProcesado = vw.I_MontoProcesado,
+                T_MotivoCoreccion = vw.T_MotivoCoreccion
             };
 
             return dto;
@@ -676,44 +678,6 @@ namespace Domain.Entities
                 Octubre = sp.Octubre,
                 Noviembre = sp.Noviembre,
                 Diciembre = sp.Diciembre
-            };
-
-            return result;
-        }
-
-        public static ObligacionDetallePagoDTO VW_ObligacionesPagadas_To_ObligacionDetallePagoDTO(VW_ObligacionesPagadas vw)
-        {
-            var result = new ObligacionDetallePagoDTO()
-            {
-                I_MatAluID = vw.I_MatAluID,
-                C_CodAlu = vw.C_CodAlu,
-                C_RcCod = vw.C_RcCod,
-                T_Nombre = vw.T_Nombre,
-                T_ApePaterno = vw.T_ApePaterno,
-                T_ApeMaterno = vw.T_ApeMaterno,
-                I_ProcesoID = vw.I_ProcesoID,
-                T_ProcesoDesc = vw.T_ProcesoDesc,
-                I_ObligacionAluID = vw.I_ObligacionAluID,
-                I_MontoOblig = vw.I_MontoOblig,
-                I_ObligacionAluDetID = vw.I_ObligacionAluDetID,
-                I_ConcPagID = vw.I_ConcPagID,
-                T_ConceptoPagoDesc = vw.T_ConceptoPagoDesc,
-                I_Monto = vw.I_Monto,
-                D_FecVencto = vw.D_FecVencto,
-                I_TipoDocumento = vw.I_TipoDocumento,
-                T_DescDocumento = vw.T_DescDocumento,
-                I_MontoPagado = vw.I_MontoPagado,
-                I_PagoBancoID = vw.I_PagoBancoID,
-                I_EntidadFinanID = vw.I_EntidadFinanID,
-                T_EntidadDesc = vw.T_EntidadDesc,
-                I_CtaDepositoID = vw.I_CtaDepositoID,
-                C_NumeroCuenta = vw.C_NumeroCuenta,
-                C_CodOperacion = vw.C_CodOperacion,
-                D_FecPago = vw.D_FecPago,
-                T_LugarPago = vw.T_LugarPago,
-                D_FecCre = vw.D_FecCre,
-                T_Observacion = vw.T_Observacion,
-                I_Prioridad = vw.I_Prioridad
             };
 
             return result;

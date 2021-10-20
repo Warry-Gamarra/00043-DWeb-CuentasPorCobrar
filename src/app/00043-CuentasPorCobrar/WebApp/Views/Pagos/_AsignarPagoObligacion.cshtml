@@ -6,7 +6,7 @@
 
 <div class="modal-header bg-dark-gray" style="border-radius: .2rem .2rem 0px 0px">
     <h5 class="modal-title text-center"><i class="fa bi-layers-half">&nbsp;</i> @ViewBag.Title</h5>
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <button type="button" class="close closeModal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 </div>
 
 <div class="modal-body">
@@ -70,6 +70,7 @@
                     <th>Fecha Pago</th>
                     <th>Monto</th>
                     <th>Mora</th>
+                    <th>Obs</th>
                     <th></th>
                 </tr>
             </thead>
@@ -85,7 +86,10 @@
                             <td>@item.T_FecPago</td>
                             <td>@item.T_MontoPago</td>
                             <td>@item.T_InteresMora</td>
-                            <td><button class="btn btn-success btn-sm btnAsignarPago" data-id-pago-banco="@item.I_PagoBancoID">Asignar</button></td>
+                            <td>@item.T_Observacion</td>
+                            <td>
+                                <button class="btn btn-success btn-sm btnAsignarPago" data-id-pago-banco="@item.I_PagoBancoID">Asignar</button>
+                            </td>
                         </tr>
                     }
                 }
@@ -101,7 +105,7 @@
             <div class="indeterminate"></div>
         </div>
     </div>
-    <button type="button" class="btn btn-secondary" id="btnCancel" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> Cancelar</button>
+    <button type="button" class="btn btn-secondary closeModal"><i class="fa fa-times-circle-o"></i> Cancelar</button>
 </div>
 
 <script type="text/javascript">
@@ -125,23 +129,29 @@
         let idPagoBanco = $(this).data('id-pago-banco');
         let idObligacion = $('#formConsultaPago #hdn_ObligacionID').val();
 
-        let parametros = {
-            idPagoBanco: idPagoBanco,
-            idObligacion: idObligacion
-        };
-
         Swal.fire({
             title: '',
-            text: "¿Está seguro de asignar este pago a la obligación actual?.",
+            text: "¿Está seguro de asignar este pago a la obligación actual?. De ser así, por favor ingrese el motivo de la asignación del pago.",
             icon: MESSAGE_TYPE.WARNING,
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Si, continuar.',
-            cancelButtonText: 'No, cancelar.'
+            cancelButtonText: 'No, cancelar.',
+            input: 'textarea',
+            preConfirm: (obs) => {
+                return obs;
+            }
         }).then((result) => {
             if (result.isConfirmed) {
-                 $.ajax({
+                
+                let parametros = {
+                    idPagoBanco: idPagoBanco,
+                    idObligacion: idObligacion,
+                    motivoCoreccion: result.value
+                };
+
+                $.ajax({
                     type: 'POST',
                     url: '@Url.Action("AsignarPagoObservado", "Pagos")',
                     data: parametros,
@@ -171,7 +181,6 @@
                     },
                     error: function (xhr, ajaxOptions, thrownError) {
                         var jsonException = JSON.parse(xhr.responseText);
-                        console.log(jsonException);
                     },
                     complete: function () {
                         ocultarBarraEspera();

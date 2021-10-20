@@ -2,12 +2,12 @@
 
 @{
     var obligacion = (WebApp.Models.CuotaPagoModel)ViewBag.CuotaPago;
-    var detallePagos = (IEnumerable<WebApp.ViewModels.ObligacionDetallePagoViewModel>)ViewBag.Pagos;
+    var detallePagos = (IEnumerable<WebApp.ViewModels.PagoBancoObligacionViewModel>)ViewBag.Pagos;
 }
 
 <div class="modal-header bg-dark-gray" style="border-radius: .2rem .2rem 0px 0px">
     <h5 class="modal-title text-center"><i class="fa bi-layers-half">&nbsp;</i> @ViewBag.Title</h5>
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <button type="button" class="close closeModal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 </div>
 
 <div class="modal-body">
@@ -36,14 +36,15 @@
 </div>
 
 <div class="modal-body">
-    <table class="table table-bordered table-hover table-sm" id="tblDetallePagos">
+    <table class="table table-bordered table-hover table-sm" id="tblPagos">
         <thead>
             <tr>
-                <th>Concepto</th>
                 <th>Banco</th>
                 <th>Cod.Operacion</th>
                 <th>Fecha Pago</th>
                 <th>Monto</th>
+                <th>Interés</th>
+                <th>Comentarios</th>
                 <th></th>
             </tr>
         </thead>
@@ -53,13 +54,14 @@
                 foreach (var item in detallePagos)
                 {
                     <tr>
-                        <td>@item.T_ConceptoPagoDesc</td>
                         <td>@item.T_EntidadDesc<br />(@item.C_NumeroCuenta)</td>
                         <td>@item.C_CodOperacion</td>
                         <td>@item.T_FecPago</td>
-                        <td>@item.T_MontoPagado</td>
+                        <td>@item.T_MontoPago</td>
+                        <td>@item.T_InteresMora</td>
+                        <td>@item.T_MotivoCoreccion</td>
                         <td>
-                            @*<button class="btn btn-success btn-sm btnAsignarPago" data-id-pago-banco="@item.I_PagoBancoID">Asignar</button>*@
+                            <button class="btn btn-success btn-sm btnDesenlazarPago" data-id-pago-banco="@item.I_PagoBancoID">Quitar</button>
                         </td>
                     </tr>
                 }
@@ -68,12 +70,90 @@
     </table>
 </div>
 
-<div class="modal-footer" id="div_msg_busq_pagos">
+<div class="modal-footer" id="div_msg_pagos">
     <div class="col-md-12" style="display: none;" id="loading">
         <h6></h6>
         <div class="progress">
             <div class="indeterminate"></div>
         </div>
     </div>
-    <button type="button" class="btn btn-secondary" id="btnCancel" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> Cancelar</button>
+    <button type="button" class="btn btn-secondary closeModal"><i class="fa fa-times-circle-o"></i> Cancelar</button>
 </div>
+
+<script type="text/javascript">
+    const MESSAGE_TYPE = {
+        INFO: 'info',
+        SUCCESS: 'success',
+        WARNING: 'warning',
+        ERROR: 'error'
+    };
+
+    $(document).on('click', '#tblPagos .btnDesenlazarPago', function (e) {
+        let idPagoBanco = $(this).data('id-pago-banco');
+
+        Swal.fire({
+            title: '',
+            text: "¿Está seguro de desenlazar este pago a la obligación actual?.",
+            icon: MESSAGE_TYPE.WARNING,
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, continuar.',
+            cancelButtonText: 'No, cancelar.',
+            input: 'textarea',
+            preConfirm: (obs) => {
+                return obs;
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+                let parametros = {
+                    idPagoBanco: idPagoBanco,
+                    motivoCoreccion: result.value
+                };
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("DesenlazarPagoObligacion", "Pagos")',
+                    data: parametros,
+                    dataType: 'json',
+                    beforeSend: function () {
+                        mostrarBarraEspera('Retirando el pago de la obligación...');
+                    },
+                    success: function (data) {
+                        if (data !== null) {
+                            let icon = MESSAGE_TYPE.ERROR;
+
+                            if (data.Value) {
+                                icon = MESSAGE_TYPE.SUCCESS;
+                            }
+
+                            Swal.fire({
+                                title: '',
+                                text: data.Message,
+                                icon: icon,
+                                timer: 6000
+                            });
+                        }
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        var jsonException = JSON.parse(xhr.responseText);
+                    },
+                    complete: function () {
+                        ocultarBarraEspera();
+                    }
+                });
+            }
+        });
+    });
+
+    function mostrarBarraEspera(msg) {
+        $('#div_msg_pagos #loading').css('display', 'block');
+        $('#div_msg_pagos #loading h6').html(msg);
+    }
+
+    function ocultarBarraEspera() {
+        $('#div_msg_pagos #loading').css('display', 'none');
+        $('#div_msg_pagos #loading h6').html('');
+    }
+</script>

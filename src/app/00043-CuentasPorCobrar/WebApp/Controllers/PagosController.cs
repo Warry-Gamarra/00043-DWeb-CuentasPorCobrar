@@ -574,7 +574,7 @@ namespace WebApp.Controllers
 
         [HttpPost]
         [HandleJsonExceptionAttribute]
-        public ActionResult AsignarPagoObservado(int idObligacion, int idPagoBanco)
+        public ActionResult AsignarPagoObservado(int idObligacion, int idPagoBanco, string motivoCoreccion)
         {
             Response response;
 
@@ -582,7 +582,15 @@ namespace WebApp.Controllers
 
             var pago = pagosModel.ObtenerPagoBanco(idPagoBanco);
 
-            if (obligacion.B_Pagado)
+            if (pago == null)
+            {
+                response = new Response()
+                {
+                    Value = false,
+                    Message = "El pago seleccionado no existe."
+                };
+            }
+            else if (obligacion.B_Pagado)
             {
                 response = new Response()
                 {
@@ -608,7 +616,7 @@ namespace WebApp.Controllers
             }
             else
             {
-                response = pagosModel.AsignarPagoObligacion(idObligacion, idPagoBanco, WebSecurity.CurrentUserId);
+                response = pagosModel.AsignarPagoObligacion(idObligacion, idPagoBanco, WebSecurity.CurrentUserId, motivoCoreccion);
             }
 
             return Json(response, JsonRequestBehavior.AllowGet);
@@ -618,7 +626,7 @@ namespace WebApp.Controllers
         {
             var obligacion = obligacionServiceFacade.Obtener_CuotaPago(obligacionID);
 
-            var pagosDetalle = pagosModel.FindByObligacion(obligacionID);
+            var pagosDetalle = pagosModel.ListarPagosBancoPorObligacion(obligacionID);
 
             ViewBag.Title = "Lista de Pagos";
 
@@ -627,6 +635,38 @@ namespace WebApp.Controllers
             ViewBag.Pagos = pagosDetalle;
 
             return PartialView("_VerPagosObligacion");
+        }
+
+        [HttpPost]
+        [HandleJsonExceptionAttribute]
+        public ActionResult DesenlazarPagoObligacion(int idPagoBanco, string motivoCoreccion)
+        {
+            Response response = null;
+
+            var pago = pagosModel.ObtenerPagoBanco(idPagoBanco);
+
+            if (pago == null)
+            {
+                response = new Response()
+                {
+                    Value = false,
+                    Message = "El pago seleccionado no existe."
+                };
+            }
+            else if (pago.I_CondicionPagoID != (int)CatalogoTipoPago.Correcto)
+            {
+                response = new Response()
+                {
+                    Value = false,
+                    Message = "La condición del pago ya ha sido modificado con anterioridad."
+                };
+            }
+            else
+            {
+                response = pagosModel.DesenlazarPagoObligacion(idPagoBanco, WebSecurity.CurrentUserId, motivoCoreccion);
+            }
+
+            return Json(response, JsonRequestBehavior.AllowGet);
         }
     }
 }

@@ -46,7 +46,8 @@ namespace Data.Views
 
         public DateTime D_FecCre { get; set; }
 
-        public static IEnumerable<VW_PagoTasas> GetAll(int? idEntidadFinanciera, int? idCtaDeposito, string codOperacion, DateTime? fechaInicio, DateTime? fechaFinal)
+        public static IEnumerable<VW_PagoTasas> GetAll(int? idEntidadFinanciera, int? idCtaDeposito, string codOperacion, DateTime? fechaInicio, DateTime? fechaFinal,
+                string codDepositante)
         {
             string s_command, filters;
             IEnumerable<VW_PagoTasas> result;
@@ -79,6 +80,13 @@ namespace Data.Views
                     filters = filters + (filters.Length == 0 ? "WHERE " : "AND ") + "t.C_CodOperacion = @C_CodOperacion ";
 
                     parameters.Add(name: "C_CodOperacion", dbType: DbType.String, value: codOperacion);
+                }
+
+                if (!String.IsNullOrWhiteSpace(codDepositante))
+                {
+                    filters = filters + (filters.Length == 0 ? "WHERE " : "AND ") + "t.C_CodDepositante LIKE '%' + @C_CodDepositante + '%' ";
+
+                    parameters.Add(name: "C_CodDepositante", dbType: DbType.String, value: codDepositante);
                 }
 
                 if (fechaInicio.HasValue)

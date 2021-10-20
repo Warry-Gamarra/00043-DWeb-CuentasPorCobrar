@@ -2113,8 +2113,10 @@ GO
 
 CREATE VIEW [dbo].[VW_PagoBancoObligaciones]
 AS
-	SELECT b.I_PagoBancoID, e.I_EntidadFinanID, e.T_EntidadDesc, cd.I_CtaDepositoID, cd.C_NumeroCuenta, b.C_CodOperacion, b.C_CodDepositante, m.I_MatAluID, m.C_CodAlu, b.T_NomDepositante, m.T_Nombre, m.T_ApePaterno, m.T_ApeMaterno, 
-		b.D_FecPago, b.I_MontoPago, b.I_InteresMora, b.T_LugarPago, b.D_FecCre, b.I_CondicionPagoID, cn.T_OpcionDesc AS T_Condicion, b.T_Observacion, ISNULL(SUM(p.I_MontoPagado), 0) AS I_MontoProcesado
+	SELECT b.I_PagoBancoID, e.I_EntidadFinanID, e.T_EntidadDesc, cd.I_CtaDepositoID, cd.C_NumeroCuenta, b.C_CodOperacion, b.C_CodDepositante, 
+		c.I_ObligacionAluID, m.I_MatAluID, m.C_CodAlu, b.T_NomDepositante, m.T_Nombre, m.T_ApePaterno, m.T_ApeMaterno, 
+		b.D_FecPago, b.I_MontoPago, b.I_InteresMora, b.T_LugarPago, b.D_FecCre, b.I_CondicionPagoID, cn.T_OpcionDesc AS T_Condicion, b.T_Observacion, 
+		b.T_MotivoCoreccion, ISNULL(SUM(p.I_MontoPagado), 0) AS I_MontoProcesado
 	FROM TR_PagoBanco b
 	LEFT JOIN dbo.TRI_PagoProcesadoUnfv p ON p.I_PagoBancoID = b.I_PagoBancoID AND p.B_Anulado = 0
 	LEFT JOIN dbo.TR_ObligacionAluDet d ON d.I_ObligacionAluDetID = p.I_ObligacionAluDetID AND d.B_Habilitado = 1 AND d.B_Eliminado = 0
@@ -2123,41 +2125,11 @@ AS
 	INNER JOIN dbo.TC_EntidadFinanciera e ON e.I_EntidadFinanID = b.I_EntidadFinanID
 	INNER JOIN dbo.TC_CuentaDeposito cd ON cd.I_CtaDepositoID = b.I_CtaDepositoID
 	INNER JOIN dbo.TC_CatalogoOpcion cn ON cn.I_OpcionID = b.I_CondicionPagoID
-	WHERE b.I_TipoPagoID = 133
-	GROUP BY b.I_PagoBancoID, e.I_EntidadFinanID, cd.I_CtaDepositoID, cd.C_NumeroCuenta, e.T_EntidadDesc, b.C_CodOperacion, b.C_CodDepositante, m.I_MatAluID, m.C_CodAlu, 
+	WHERE b.I_TipoPagoID = 133 AND b.B_Anulado = 0
+	GROUP BY b.I_PagoBancoID, e.I_EntidadFinanID, cd.I_CtaDepositoID, cd.C_NumeroCuenta, e.T_EntidadDesc, b.C_CodOperacion, b.C_CodDepositante, c.I_ObligacionAluID, m.I_MatAluID, m.C_CodAlu, 
 		b.T_NomDepositante, m.T_Nombre, m.T_ApePaterno, m.T_ApeMaterno, 
-		b.D_FecPago, b.I_MontoPago, b.I_InteresMora, b.T_LugarPago, b.D_FecCre, b.I_CondicionPagoID, cn.T_OpcionDesc, b.T_Observacion
+		b.D_FecPago, b.I_MontoPago, b.I_InteresMora, b.T_LugarPago, b.D_FecCre, b.I_CondicionPagoID, cn.T_OpcionDesc, b.T_Observacion, b.T_MotivoCoreccion
 GO
-
-
-
-IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_ObligacionesPagadas')
-	DROP VIEW [dbo].[VW_ObligacionesPagadas]
-GO
-
-CREATE VIEW [dbo].[VW_ObligacionesPagadas]
-AS
-	SELECT 
-		m.I_MatAluID, m.C_CodAlu, m.C_RcCod, m.T_Nombre, m.T_ApePaterno, m.T_ApeMaterno, 
-		pr.I_ProcesoID, pr.T_ProcesoDesc, c.I_ObligacionAluID, c.I_MontoOblig, d.I_ObligacionAluDetID, d.I_ConcPagID, cp.T_ConceptoPagoDesc,
-		d.I_Monto, d.D_FecVencto, d.I_TipoDocumento, d.T_DescDocumento, SUM(p.I_MontoPagado) AS I_MontoPagado, b.I_PagoBancoID, e.I_EntidadFinanID, e.T_EntidadDesc, cd.I_CtaDepositoID, cd.C_NumeroCuenta,
-		b.C_CodOperacion, b.D_FecPago, b.T_LugarPago, b.D_FecCre, b.T_Observacion, pr.I_Prioridad
-	FROM dbo.TR_ObligacionAluCab c
-	INNER JOIN dbo.TR_ObligacionAluDet d ON d.I_ObligacionAluID = c.I_ObligacionAluID AND d.B_Habilitado = 1 AND d.B_Eliminado = 0
-	INNER JOIN dbo.TRI_PagoProcesadoUnfv p ON p.I_ObligacionAluDetID = d.I_ObligacionAluDetID AND p.B_Anulado = 0
-	INNER JOIN dbo.TR_PagoBanco b ON b.I_PagoBancoID = p.I_PagoBancoID AND b.B_Anulado = 0
-	INNER JOIN dbo.VW_MatriculaAlumno m ON m.I_MatAluID = c.I_MatAluID
-	INNER JOIN dbo.TC_EntidadFinanciera e ON e.I_EntidadFinanID = b.I_EntidadFinanID
-	INNER JOIN dbo.TC_CuentaDeposito cd ON cd.I_CtaDepositoID = b.I_CtaDepositoID
-	INNER JOIN dbo.TC_Proceso pr ON pr.I_ProcesoID = c.I_ProcesoID AND pr.B_Eliminado = 0
-	INNER JOIN dbo.TI_ConceptoPago cp ON cp.I_ConcPagID = d.I_ConcPagID AND cp.B_Eliminado = 0
-	WHERE c.B_Habilitado = 1 AND c.B_Eliminado = 0
-	GROUP BY m.I_MatAluID, m.C_CodAlu, m.C_RcCod, m.T_Nombre, m.T_ApePaterno, m.T_ApeMaterno, 
-		pr.I_ProcesoID, pr.T_ProcesoDesc, c.I_ObligacionAluID, c.I_MontoOblig, d.I_ObligacionAluDetID, d.I_ConcPagID, cp.T_ConceptoPagoDesc,
-		d.I_Monto, d.D_FecVencto, d.I_TipoDocumento, d.T_DescDocumento, b.I_PagoBancoID, e.I_EntidadFinanID, e.T_EntidadDesc, cd.I_CtaDepositoID, cd.C_NumeroCuenta,
-		b.C_CodOperacion, b.D_FecPago, b.T_LugarPago, b.D_FecCre, b.T_Observacion, pr.I_Prioridad
-GO
-
 
 
 IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_ResumenAnualPagoDeObligaciones_X_Dia')
@@ -2288,6 +2260,7 @@ GO
 CREATE PROCEDURE [dbo].[USP_IU_RelacionarPagoConObligacion]
 @I_PagoBancoID INT,
 @I_ObligacionAluID INT,
+@T_MotivoCoreccion VARCHAR(250),
 @UserID INT,
 @B_Result BIT OUTPUT,
 @T_Message VARCHAR(4000) OUTPUT
@@ -2394,8 +2367,13 @@ BEGIN
 			VALUES(@I_PagoBancoID, @I_ObligacionAluDetID, @I_InteresMora, 0, 0, 0, @D_FecActual, @UserID, 0, @I_CtaDepositoID)
 		END
 
-		UPDATE dbo.TR_PagoBanco SET I_CondicionPagoID = @PagoCorrecto WHERE I_PagoBancoID = @I_PagoBancoID
-
+		UPDATE dbo.TR_PagoBanco SET 
+			I_CondicionPagoID = @PagoCorrecto, 
+			T_MotivoCoreccion = @T_MotivoCoreccion,
+			D_FecMod = @D_FecActual, 
+			I_UsuarioMod = @UserID 
+		WHERE I_PagoBancoID = @I_PagoBancoID
+		
 		COMMIT TRAN
 
 		SET @B_Result = 1
@@ -2405,6 +2383,62 @@ BEGIN
 		ROLLBACK TRAN
 		SET @B_Result = 0
 		SET @T_Message = ERROR_MESSAGE()
+	END CATCH
+END
+GO
+
+
+
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'USP_U_DesenlazarPagoObligacion' AND ROUTINE_TYPE = 'PROCEDURE')
+	DROP PROCEDURE [dbo].[USP_U_DesenlazarPagoObligacion]
+GO
+
+CREATE PROCEDURE [dbo].[USP_U_DesenlazarPagoObligacion]
+@I_PagoBancoID INT,
+@T_MotivoCoreccion VARCHAR(250),
+@UserID INT,
+@B_Result BIT OUTPUT,
+@T_Message VARCHAR(4000) OUTPUT
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	BEGIN TRAN
+	BEGIN TRY
+		DECLARE @CurrentDate DATETIME = GETDATE(),
+				@PagoDesenlazado INT = 137
+
+		UPDATE cab SET B_Pagado = 0, cab.I_UsuarioMod = @UserID, cab.D_FecMod = @CurrentDate FROM dbo.TR_ObligacionAluCab cab
+		INNER JOIN dbo.TR_ObligacionAluDet det ON det.I_ObligacionAluID = cab.I_ObligacionAluID AND det.B_Habilitado = 1 AND det.B_Eliminado = 0
+		INNER JOIN dbo.TRI_PagoProcesadoUnfv p ON p.I_ObligacionAluDetID = det.I_ObligacionAluDetID AND p.B_Anulado = 0
+		WHERE p.I_PagoBancoID = @I_PagoBancoID AND cab.B_Habilitado = 1 AND cab.B_Eliminado = 0
+
+		UPDATE det SET det.B_Pagado = 0, det.I_UsuarioMod = @UserID, det.D_FecMod = @CurrentDate FROM dbo.TR_ObligacionAluDet det
+		INNER JOIN dbo.TRI_PagoProcesadoUnfv p ON p.I_ObligacionAluDetID = det.I_ObligacionAluDetID
+		WHERE p.I_PagoBancoID = @I_PagoBancoID AND det.B_Habilitado = 1 AND det.B_Eliminado = 0
+
+		UPDATE dbo.TR_PagoBanco SET
+			I_CondicionPagoID = @PagoDesenlazado,
+			T_MotivoCoreccion = @T_MotivoCoreccion,
+			D_FecMod = @CurrentDate,
+			I_UsuarioMod = @UserID
+		WHERE I_PagoBancoID = @I_PagoBancoID
+
+		UPDATE dbo.TRI_PagoProcesadoUnfv SET
+			B_Anulado = 1,
+			D_FecMod = @CurrentDate,
+			I_UsuarioMod = @UserID
+		WHERE I_PagoBancoID = @I_PagoBancoID
+
+		COMMIT TRAN
+		SET @T_Message = 'Acción realizada con éxito.'
+		SET @B_Result = 1
+	END TRY
+	BEGIN CATCH
+		ROLLBACK TRAN
+		SET @T_Message = ERROR_MESSAGE()
+		SET @B_Result = 0
 	END CATCH
 END
 GO

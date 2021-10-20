@@ -182,6 +182,15 @@ namespace Domain.Services.Implementations
             return result;
         }
 
+        public IEnumerable<PagoBancoObligacionDTO> ListarPagosBancoPorObligacion(int idObligacion)
+        {
+            var lista = VW_PagoBancoObligaciones.FindByObligacionID(idObligacion);
+
+            var result = lista.Select(x => Mapper.VW_PagoBancoObligaciones_To_PagoObligacionDTO(x));
+
+            return result;
+        }
+
         public PagoBancoObligacionDTO ObtenerPagoBanco(int idPagoBanco)
         {
             var pago = VW_PagoBancoObligaciones.FindByID(idPagoBanco);
@@ -189,20 +198,18 @@ namespace Domain.Services.Implementations
             return pago == null ? null : Mapper.VW_PagoBancoObligaciones_To_PagoObligacionDTO(pago);
         }
 
-        public Response AsignarPagoObligacion(int obligacionID, int pagoBancoID, int UserID)
+        public Response AsignarPagoObligacion(int obligacionID, int pagoBancoID, int UserID, string motivoCoreccion)
         {
-            var result = USP_IU_RelacionarPagoConObligacion.Execute(obligacionID, pagoBancoID, UserID);
+            var result = USP_IU_RelacionarPagoConObligacion.Execute(obligacionID, pagoBancoID, UserID, motivoCoreccion);
 
             return new Response(result);
         }
 
-        public IEnumerable<ObligacionDetallePagoDTO> FindByObligacion(int idObligacion)
+        public Response DesenlazarPagoObligacion(int pagoBancoID, int UserID, string motivoCoreccion)
         {
-            var pagosDetalle = VW_ObligacionesPagadas.FindByObligacion(idObligacion);
+            var result = USP_U_DesenlazarPagoObligacion.Execute(pagoBancoID, UserID, motivoCoreccion);
 
-            var result = pagosDetalle.Select(x => Mapper.VW_ObligacionesPagadas_To_ObligacionDetallePagoDTO(x));
-
-            return result;
+            return new Response(result);
         }
     }
 }

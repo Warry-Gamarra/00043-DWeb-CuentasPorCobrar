@@ -26,6 +26,8 @@ namespace Data.Views
 
         public string C_CodDepositante { get; set; }
 
+        public int? I_ObligacionAluID { get; set; }
+
         public int? I_MatAluID { get; set; }
 
         public string C_CodAlu { get; set; }
@@ -56,9 +58,11 @@ namespace Data.Views
 
         public decimal I_MontoProcesado { get; set; }
 
+        public string T_MotivoCoreccion { get; set; }
+
         public static VW_PagoBancoObligaciones FindByID(int idPagoBanco)
         {
-            string s_command, filters;
+            string s_command;
             VW_PagoBancoObligaciones result;
             DynamicParameters parameters;
 
@@ -66,14 +70,40 @@ namespace Data.Views
             {
                 s_command = "SELECT b.* FROM dbo.VW_PagoBancoObligaciones b WHERE b.I_PagoBancoID = @I_PagoBancoID";
 
-                filters = "";
-
                 parameters = new DynamicParameters();
                 parameters.Add(name: "I_PagoBancoID", dbType: DbType.Int32, value: idPagoBanco);
                 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    result = _dbConnection.Query<VW_PagoBancoObligaciones>(s_command + filters, parameters, commandType: CommandType.Text).FirstOrDefault();
+                    result = _dbConnection.Query<VW_PagoBancoObligaciones>(s_command, parameters, commandType: CommandType.Text).FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
+
+        public static IEnumerable<VW_PagoBancoObligaciones> FindByObligacionID(int idObligacion)
+        {
+            string s_command, filters;
+            IEnumerable<VW_PagoBancoObligaciones> result;
+            DynamicParameters parameters;
+
+            try
+            {
+                s_command = "SELECT b.* FROM dbo.VW_PagoBancoObligaciones b WHERE b.I_ObligacionAluID = @I_ObligacionAluID ORDER BY b.D_FecPago";
+
+                filters = "";
+
+                parameters = new DynamicParameters();
+                parameters.Add(name: "I_ObligacionAluID", dbType: DbType.Int32, value: idObligacion);
+
+                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
+                {
+                    result = _dbConnection.Query<VW_PagoBancoObligaciones>(s_command + filters, parameters, commandType: CommandType.Text);
                 }
             }
             catch (Exception ex)

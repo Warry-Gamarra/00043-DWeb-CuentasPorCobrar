@@ -761,6 +761,15 @@ namespace WebApp.Models
             return result;
         }
 
+        public IEnumerable<PagoBancoObligacionViewModel> ListarPagosBancoPorObligacion(int idObligacion)
+        {
+            var lista = pagoService.ListarPagosBancoPorObligacion(idObligacion);
+
+            var result = lista.Select(x => Mapper.PagoBancoObligacionDTO_ToPagoBancoObligacionViewModel(x));
+
+            return result;
+        }
+
         public PagoBancoObligacionViewModel ObtenerPagoBanco(int idPagoBanco)
         {
             var pago = pagoService.ObtenerPagoBanco(idPagoBanco);
@@ -768,9 +777,9 @@ namespace WebApp.Models
             return pago == null ? null : Mapper.PagoBancoObligacionDTO_ToPagoBancoObligacionViewModel(pago);
         }
 
-        public Response AsignarPagoObligacion(int obligacionID, int pagoBancoID, int UserID)
+        public Response AsignarPagoObligacion(int obligacionID, int pagoBancoID, int UserID, string motivoCoreccion)
         {
-            Response result = pagoService.AsignarPagoObligacion(obligacionID, pagoBancoID, UserID);
+            Response result = pagoService.AsignarPagoObligacion(obligacionID, pagoBancoID, UserID, motivoCoreccion);
 
             if (result.Value)
             {
@@ -784,12 +793,18 @@ namespace WebApp.Models
             return result;
         }
 
-        public IEnumerable<ObligacionDetallePagoViewModel> FindByObligacion(int idObligacion)
+        public Response DesenlazarPagoObligacion(int pagoBancoID, int UserID, string motivoCoreccion)
         {
+            Response result = pagoService.DesenlazarPagoObligacion(pagoBancoID, UserID, motivoCoreccion);
 
-            var pagosDetalle = pagoService.FindByObligacion(idObligacion);
-
-            var result = pagosDetalle.Select(x => Mapper.ObligacionDetallePagoDTO_To_ObligacionDetallePagoViewModel(x));
+            if (result.Value)
+            {
+                result.Success(false);
+            }
+            else
+            {
+                result.Error(false);
+            }
 
             return result;
         }

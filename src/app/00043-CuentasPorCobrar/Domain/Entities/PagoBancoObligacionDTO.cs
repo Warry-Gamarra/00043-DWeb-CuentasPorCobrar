@@ -22,6 +22,8 @@ namespace Domain.Entities
 
         public string C_CodDepositante { get; set; }
 
+        public int? I_ObligacionAluID { get; set; }
+
         public int? I_MatAluID { get; set; }
 
         public string C_CodAlu { get; set; }
@@ -51,5 +53,7 @@ namespace Domain.Entities
         public string T_Condicion { get; set; }
 
         public decimal I_MontoProcesado { get; set; }
+
+        public string T_MotivoCoreccion { get; set; }
     }
 }

@@ -468,7 +468,6 @@
     <Compile Include="ViewModels\ConsultaPagoTasasViewModel.cs" />
     <Compile Include="ViewModels\EstadoObligacionViewModel.cs" />
     <Compile Include="ViewModels\ConsultaObligacionEstudianteViewModel.cs" />
-    <Compile Include="ViewModels\ObligacionDetallePagoViewModel.cs" />
     <Compile Include="ViewModels\PagoBancoObligacionViewModel.cs" />
     <Compile Include="ViewModels\ReporteResumenAnualPagoObligaciones_X_Dia.cs" />
     <Compile Include="ViewModels\ReporteResumenAnualPagoObligaciones_X_Dependencias.cs" />

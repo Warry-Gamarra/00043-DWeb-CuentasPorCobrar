@@ -137,6 +137,14 @@
             CargarEspecialidades(codFac, codEsc);
         });
 
+        $(document).on("click", ".modal-header .closeModal", function (e) {
+            window.location.reload();
+        });
+
+        $(document).on("click", ".modal-footer .closeModal", function (e) {
+            window.location.reload();
+        });
+
         function CargarDependencias(tipoEstudio) {
             let cmbDependencia = $('#formConsultaObligaciones #codFac');
             let cmbEscuelas = $('#formConsultaObligaciones #codEsc');
@@ -255,5 +263,9 @@
                 }
             });
         }
+
+        $('#modal-container-lg').on('shown.bs.modal', function () {
+            $(document).off('focusin.modal');
+        });
     </script>
 }

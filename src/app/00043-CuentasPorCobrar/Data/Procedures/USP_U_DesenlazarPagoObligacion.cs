@@ -10,21 +10,20 @@ using System.Threading.Tasks;
 
 namespace Data.Procedures
 {
-    public class USP_IU_RelacionarPagoConObligacion
+    public class USP_U_DesenlazarPagoObligacion
     {
-        public static ResponseData Execute(int obligacionID, int pagoBancoID, int UserID, string motivoCoreccion)
+        public static ResponseData Execute(int pagoBancoID, int UserID, string motivoCoreccion)
         {
             ResponseData result;
             DynamicParameters parameters;
 
             try
             {
-                string s_command = @"USP_IU_RelacionarPagoConObligacion";
+                string s_command = @"USP_U_DesenlazarPagoObligacion";
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
                     parameters = new DynamicParameters();
-                    parameters.Add(name: "I_ObligacionAluID", dbType: DbType.Int32, value: obligacionID);
                     parameters.Add(name: "I_PagoBancoID", dbType: DbType.Int32, value: pagoBancoID);
                     parameters.Add(name: "T_MotivoCoreccion", dbType: DbType.String, value: motivoCoreccion);
                     parameters.Add(name: "UserID", dbType: DbType.Int32, value: UserID);

@@ -11,6 +11,7 @@ namespace Domain.Helpers
         Correcto = 131,
         Extorno = 132,
         ObligacionYaPagada = 135,
-        ObligacoinInexistente = 136
+        ObligacoinInexistente = 136,
+        Desenlazado = 137
     }
 }

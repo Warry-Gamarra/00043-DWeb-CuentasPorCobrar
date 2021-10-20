@@ -33,7 +33,8 @@ namespace WebApp.Controllers
 
             if (model.buscar)
             {
-                model.resultado = tasaService.listarPagoTasas(model.entidadFinanciera, model.idCtaDeposito, model.codOperacion, model.fechaInicio, model.fechaFin);
+                model.resultado = tasaService.listarPagoTasas(model.entidadFinanciera, model.idCtaDeposito, model.codOperacion, model.fechaInicio, model.fechaFin,
+                    model.codDepositante);
             }
 
             ViewBag.EntidadesFinancieras = new SelectList(selectModels.GetEntidadesFinancieras(), "Value", "TextDisplay", model.entidadFinanciera);
@@ -49,7 +50,8 @@ namespace WebApp.Controllers
         {
             if (model.buscar)
             {
-                model.resultado = tasaService.listarPagoTasas(model.entidadFinanciera, model.idCtaDeposito, model.codOperacion, model.fechaInicio, model.fechaFin);
+                model.resultado = tasaService.listarPagoTasas(model.entidadFinanciera, model.idCtaDeposito, model.codOperacion, model.fechaInicio, model.fechaFin,
+                    model.codDepositante);
             }
             else
             {
