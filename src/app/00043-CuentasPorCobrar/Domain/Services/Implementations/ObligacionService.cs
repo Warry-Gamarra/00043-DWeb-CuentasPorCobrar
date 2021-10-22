@@ -200,5 +200,23 @@ namespace Domain.Services.Implementations
 
             return (cuotaPago == null) ? null : Mapper.VW_CuotaPago_To_CuotaPagoDTO(cuotaPago);
         }
+
+        public IEnumerable<ObligacionDetalleDTO> Obtener_DetalleObligacion_X_Obligacion(int idObligacion)
+        {
+            var detalle = VW_DetalleObligaciones.FindByObligacion(idObligacion);
+
+            var result = detalle.Select(d => Mapper.VW_DetalleObligaciones_To_ObligacionDetalleDTO(d));
+
+            return result;
+        }
+
+        public ObligacionDetalleDTO Obtener_DetalleObligacion_X_ID(int idObligacionDet)
+        {
+            var detalle = VW_DetalleObligaciones.FindByID(idObligacionDet);
+
+            var result = detalle == null ? null : Mapper.VW_DetalleObligaciones_To_ObligacionDetalleDTO(detalle);
+
+            return result;
+        }
     }
 }

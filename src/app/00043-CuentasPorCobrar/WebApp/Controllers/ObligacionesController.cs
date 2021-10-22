@@ -24,6 +24,7 @@ namespace WebApp.Controllers
         IMatriculaServiceFacade matriculaServiceFacade;
         IReportePregradoServiceFacade reportePregradoServiceFacade;
         IReportePosgradoServiceFacade reportePosgradoServiceFacade;
+        SelectModel selectModels;
 
         public ObligacionesController()
         {
@@ -36,6 +37,8 @@ namespace WebApp.Controllers
 
             reportePregradoServiceFacade = new ReportePregradoServiceFacade();
             reportePosgradoServiceFacade = new ReportePosgradoServiceFacade();
+
+            selectModels = new SelectModel();
         }
 
         public ActionResult Generar(int? cmbAnioGrupal, int? cmbPeriodoGrupal, string cmbDependencia, TipoEstudio cmbTipoEstudio = TipoEstudio.Pregrado)
@@ -216,10 +219,21 @@ namespace WebApp.Controllers
             return View(model);
         }
 
-        public ActionResult VerObligaciones(int obligacionID)
+        public ActionResult EditarDetalleObligacion(int obligacionID)
         {
+            var obligacion = obligacionServiceFacade.Obtener_CuotaPago(obligacionID);
 
-            return PartialView("_VerObligaciones");
+            var detalleObligacion = obligacionServiceFacade.Obtener_DetalleObligacion_X_Obligacion(obligacionID);
+
+            ViewBag.Title = "Detalle Obligaciones";
+
+            ViewBag.Obligacion = obligacion;
+
+            ViewBag.DetalleObligacion = detalleObligacion;
+
+            ViewBag.TipoDocumento = new SelectList(selectModels.GetTipoDocumentos(), "Value", "TextDisplay");
+
+            return PartialView("_VerDetalleObligacion");
         }
     }   
 }

@@ -32,5 +32,9 @@ namespace Domain.Services
         ObligacionAluCabEntity Obtener_ObligacionAluCab(int obligacionCabID);
 
         CuotaPagoDTO Obtener_CuotaPago(int obligacionID);
+
+        IEnumerable<ObligacionDetalleDTO> Obtener_DetalleObligacion_X_Obligacion(int idObligacion);
+
+        ObligacionDetalleDTO Obtener_DetalleObligacion_X_ID(int idObligacionDet);
     }
 }

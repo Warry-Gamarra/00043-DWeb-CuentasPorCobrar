@@ -632,7 +632,7 @@
     <Content Include="Views\EstadosCuenta\ListarPagosBancoObligaciones.cshtml" />
     <Content Include="Views\EstadosCuenta\ResumenAnualObligacionesPorDia.cshtml" />
     <Content Include="Views\Obligaciones\ConsultaGeneracionObligaciones.cshtml" />
-    <Content Include="Views\Obligaciones\_VerObligaciones.cshtml" />
+    <Content Include="Views\Obligaciones\_VerDetalleObligacion.cshtml" />
     <Content Include="Views\Pagos\_AsignarPagoObligacion.cshtml" />
     <Content Include="Views\Pagos\_VerPagosObligacion.cshtml" />
     <None Include="Web.Debug.config">

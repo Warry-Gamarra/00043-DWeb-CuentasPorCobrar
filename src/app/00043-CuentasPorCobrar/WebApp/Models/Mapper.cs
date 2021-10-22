@@ -28,6 +28,7 @@ namespace WebApp.Models
         {
             var obligacionDetalleModel = new ObligacionDetalleModel()
             {
+                I_ObligacionAluDetID = obligacionDetalleDTO.I_ObligacionAluDetID,
                 I_ObligacionAluID = obligacionDetalleDTO.I_ObligacionAluID,
                 I_ProcesoID = obligacionDetalleDTO.I_ProcesoID,
                 N_CodBanco = obligacionDetalleDTO.N_CodBanco,

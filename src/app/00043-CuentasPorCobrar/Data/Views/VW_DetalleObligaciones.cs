@@ -12,6 +12,8 @@ namespace Data.Views
 {
     public class VW_DetalleObligaciones
     {
+        public int I_ObligacionAluDetID { get; set; }
+
         public int I_ObligacionAluID { get; set; }
 
         public int I_ProcesoID { get; set; }
@@ -83,6 +85,52 @@ namespace Data.Views
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
                     result = _dbConnection.Query<VW_DetalleObligaciones>(s_command, parameters, commandType: CommandType.Text);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
+
+        public static IEnumerable<VW_DetalleObligaciones> FindByObligacion(int idObligacion)
+        {
+            IEnumerable<VW_DetalleObligaciones> result;
+
+            try
+            {
+                string s_command = @"SELECT * FROM dbo.VW_DetalleObligaciones d WHERE d.I_ObligacionAluID = @I_ObligacionAluID ORDER BY d.T_ConceptoDesc";
+
+                var parameters = new { I_ObligacionAluID = idObligacion };
+
+                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
+                {
+                    result = _dbConnection.Query<VW_DetalleObligaciones>(s_command, parameters, commandType: CommandType.Text);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
+
+        public static VW_DetalleObligaciones FindByID(int idObligacionDet)
+        {
+            VW_DetalleObligaciones result;
+
+            try
+            {
+                string s_command = @"SELECT * FROM dbo.VW_DetalleObligaciones d WHERE d.I_ObligacionAluDetID = @I_ObligacionAluDetID";
+
+                var parameters = new { I_ObligacionAluDetID = idObligacionDet };
+
+                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
+                {
+                    result = _dbConnection.Query<VW_DetalleObligaciones>(s_command, parameters, commandType: CommandType.Text).FirstOrDefault();
                 }
             }
             catch (Exception ex)

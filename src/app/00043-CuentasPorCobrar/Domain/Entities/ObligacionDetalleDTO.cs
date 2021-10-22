@@ -8,6 +8,8 @@ namespace Domain.Entities
 {
     public class ObligacionDetalleDTO
     {
+        public int I_ObligacionAluDetID { get; set; }
+
         public int I_ObligacionAluID { get; set; }
 
         public int I_ProcesoID { get; set; }

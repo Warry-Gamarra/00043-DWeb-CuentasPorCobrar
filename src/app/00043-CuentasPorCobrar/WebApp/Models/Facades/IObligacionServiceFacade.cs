@@ -21,5 +21,9 @@ namespace WebApp.Models.Facades
         IEnumerable<CtaDepoProcesoModel> Obtener_CtaDeposito_X_Periodo(int anio, int? periodo, TipoEstudio tipoEstudio);
 
         CuotaPagoModel Obtener_CuotaPago(int obligacionID);
+
+        List<ObligacionDetalleModel> Obtener_DetalleObligacion_X_Obligacion(int idObligacion);
+
+        ObligacionDetalleModel Obtener_DetalleObligacion_X_ID(int idObligacionDet);
     }
 }

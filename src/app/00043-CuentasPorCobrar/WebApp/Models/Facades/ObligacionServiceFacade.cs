@@ -273,5 +273,23 @@ namespace WebApp.Models.Facades
 
             return (cuotaPago == null) ? null : Mapper.CuotaPagoDTO_To_CuotaPagoModel(cuotaPago);
         }
+
+        public List<ObligacionDetalleModel> Obtener_DetalleObligacion_X_Obligacion(int idObligacion)
+        {
+            var detalle = _obligacionService.Obtener_DetalleObligacion_X_Obligacion(idObligacion);
+
+            var result = detalle.Select(d => Mapper.ObligacionDetalleDTO_To_ObligacionDetalleModel(d)).ToList();
+
+            return result;
+        }
+
+        public ObligacionDetalleModel Obtener_DetalleObligacion_X_ID(int idObligacionDet)
+        {
+            var detalle = _obligacionService.Obtener_DetalleObligacion_X_ID(idObligacionDet);
+
+            var result = detalle == null ? null : Mapper.ObligacionDetalleDTO_To_ObligacionDetalleModel(detalle);
+
+            return result;
+        }
     }
 }

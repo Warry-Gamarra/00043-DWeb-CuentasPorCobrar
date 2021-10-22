@@ -114,6 +114,7 @@ namespace Domain.Entities
         {
             var obligacionDetalleDTO = new ObligacionDetalleDTO()
             {
+                I_ObligacionAluDetID = detalleObligaciones.I_ObligacionAluDetID,
                 I_ObligacionAluID = detalleObligaciones.I_ObligacionAluID,
                 I_ProcesoID = detalleObligaciones.I_ProcesoID,
                 N_CodBanco = detalleObligaciones.N_CodBanco ?? "",

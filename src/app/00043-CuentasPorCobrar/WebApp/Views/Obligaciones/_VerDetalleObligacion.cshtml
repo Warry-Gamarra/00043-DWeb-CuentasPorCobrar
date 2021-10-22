@@ -1,0 +1,145 @@
+﻿@Scripts.Render("~/bundles/jqueryval")
+
+@{
+    var obligacion = (WebApp.Models.CuotaPagoModel)ViewBag.Obligacion;
+    var detalleObligacion = (IEnumerable<WebApp.Models.ObligacionDetalleModel>)ViewBag.DetalleObligacion;
+}
+
+
+<div class="modal-header bg-dark-gray" style="border-radius: .2rem .2rem 0px 0px">
+    <h5 class="modal-title text-center"><i class="fa bi-layers-half">&nbsp;</i> @ViewBag.Title</h5>
+    <button type="button" class="close closeModal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+
+<div class="modal-body">
+    <dl class="row">
+        <dt class="col-sm-3">Alumno</dt>
+        <dd class="col-sm-9">@obligacion.T_NombresCompletos</dd>
+
+        <dt class="col-sm-3">Código</dt>
+        <dd class="col-sm-9">@obligacion.C_CodAlu</dd>
+
+        <dt class="col-sm-3">Periodo</dt>
+        <dd class="col-sm-9">@obligacion.I_Anio - @obligacion.T_Periodo</dd>
+
+        <dt class="col-sm-3">Cuota</dt>
+        <dd class="col-sm-9">@obligacion.T_ProcesoDesc</dd>
+
+        <dt class="col-sm-3">Monto</dt>
+        <dd class="col-sm-9">@obligacion.T_MontoOblig</dd>
+
+        <dt class="col-sm-3">Vencimiento</dt>
+        <dd class="col-sm-9">@obligacion.T_FecVencto</dd>
+
+        <dt class="col-sm-3">Pagado a la fecha</dt>
+        <dd class="col-sm-9">@obligacion.T_MontoPagadoActual</dd>
+    </dl>
+</div>
+
+<hr />
+
+<div class="modal-body">
+    <table class="table table-bordered table-hover table-sm" id="tblDetObligaciones">
+        <thead>
+            <tr>
+                <th>Concepto</th>
+                <th>Fec.Vcto.</th>
+                <th>Monto</th>
+                <th>Estado</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (detalleObligacion != null)
+            {
+                foreach (var item in detalleObligacion)
+                {
+                    <tr>
+                        <td>@item.T_ConceptoDesc</td>
+                        <td>@item.T_FecVencto</td>
+                        <td>@item.T_Monto</td>
+                        <td>@item.T_Pagado</td>
+                        <td>
+                            @if (!item.B_Pagado)
+                            {
+                                <button class="btn btn-success btn-sm btEditarObligacion" data-id-obligacion-detalle="@item.I_ObligacionAluDetID">
+                                    Editar
+                                </button>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<hr />
+
+<div class="modal-body">
+    <form name="frmEditarConcepto" id="frmEditarConcepto" style="display: none;">
+        <div class="form-group row">
+            <label for="concepto" class="col-sm-2 col-form-label">Concepto</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control-plaintext" id="concepto" name="concepto" value="PENSIONES" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="monto" class="col-sm-2 col-form-label">Monto</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="monto" name="monto" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="tipoDocumento" class="col-sm-2 col-form-label">Tip.Documento</label>
+            <div class="col-sm-10">
+                @Html.DropDownList("tipoDocumento", ViewBag.TipoDocumento as SelectList, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="documento" class="col-sm-2 col-form-label">Documento</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="documento" name="documento" />
+            </div>
+        </div>
+        `<input type="hidden" name="hdnObligacionAluDetID" id="hdnObligacionAluDetID" />
+        <button type="button" class="btn btn-primary"><i class="fa fa-save"></i> Guardar</button>
+    </form>
+</div>
+
+<div class="modal-footer" id="div_msg_pagos">
+    <div class="col-md-12" style="display: none;" id="loading">
+        <h6></h6>
+        <div class="progress">
+            <div class="indeterminate"></div>
+        </div>
+    </div>
+    <button type="button" class="btn btn-secondary closeModal"><i class="fa fa-times-circle-o"></i> Cancelar</button>
+</div>
+
+<script type="text/javascript">
+
+    $(document).on('click', '#tblDetObligaciones .btEditarObligacion', function () {
+
+        let idObligacionDet = $(this).data('id-obligacion-detalle');
+
+        $.ajax({
+            type: 'GET',
+            url: ('@Url.Action("GetDetalleObligacion", "Service", new { httproute = "ActionApi" })' + '/' + idObligacionDet),
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            success: function (data) {
+                if (data) {
+                    $('#frmEditarConcepto #concepto').val(data.T_ConceptoDesc);
+                    $('#frmEditarConcepto #monto').val(data.T_Monto);
+                    $('#frmEditarConcepto #hdnObligacionAluDetID').val(data.I_ObligacionAluDetID);
+
+                    $('#frmEditarConcepto').css('display', 'block');
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
+    });
+</script>

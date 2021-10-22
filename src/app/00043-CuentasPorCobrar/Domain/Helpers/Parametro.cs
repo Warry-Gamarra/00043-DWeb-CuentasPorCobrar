@@ -17,6 +17,7 @@ namespace Domain.Helpers
         CodIngreso = 7,
         MotivoMatricula = 8,
         CondicionPago = 9,
-        TipoPago = 10
+        TipoPago = 10,
+        Documentos = 11
     }
 }
