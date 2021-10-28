@@ -10,6 +10,7 @@ using WebMatrix.WebData;
 
 namespace WebApp.Controllers
 {
+    [Authorize]
     public class DevolucionesController : Controller
     {
         // GET: Devoluciones
@@ -47,7 +48,7 @@ namespace WebApp.Controllers
             ViewBag.Mensaje = "Ingrese los datos del pago de referencia para la devolución";
             ViewBag.Color = "secondary";
 
-            return PartialView("_RegistrarDevolucionPago", new RegistrarDevolucionPagoViewModel());
+            return PartialView("_NuevoDevolucionPago");
         }
 
         [Route("operaciones/devolucion-pagos/{id}/editar")]

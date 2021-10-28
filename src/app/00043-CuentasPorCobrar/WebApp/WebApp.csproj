@@ -607,7 +607,7 @@
     <Content Include="Views\Devoluciones\Index.cshtml" />
     <Content Include="Views\Clasificadores\_RegistrarEquivalenciasAnio.cshtml" />
     <Content Include="Views\Clasificadores\_ListadoEquivalencias.cshtml" />
-    <Content Include="Views\Devoluciones\_RegistrarDevolucionPago.cshtml" />
+    <Content Include="Views\Devoluciones\_NuevoDevolucionPago.cshtml" />
     <Content Include="Views\Clasificadores\_RegistrarCopiaEquivalenciasAnio.cshtml" />
     <Content Include="Views\Devoluciones\_ResultadoBusquedaPago.cshtml" />
     <Content Include="Views\Pagos\_ResultadoConsultaPagos.cshtml" />
