@@ -70,6 +70,10 @@ namespace Data.Views
 
         public string T_TipoAlumno { get; set; }
 
+        public int? I_TipoDocumento { get; set; }
+
+        public string T_DescDocumento { get; set; }
+
         public static IEnumerable<VW_DetalleObligaciones> FindByAlumno(int anio, int periodo, string codAlu, string codRc)
         {
             IEnumerable<VW_DetalleObligaciones> result;

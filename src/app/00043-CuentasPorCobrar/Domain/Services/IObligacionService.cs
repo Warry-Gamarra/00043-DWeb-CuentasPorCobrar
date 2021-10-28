@@ -36,5 +36,7 @@ namespace Domain.Services
         IEnumerable<ObligacionDetalleDTO> Obtener_DetalleObligacion_X_Obligacion(int idObligacion);
 
         ObligacionDetalleDTO Obtener_DetalleObligacion_X_ID(int idObligacionDet);
+
+        Response ActualizarMontoObligaciones(int obligacionAluDetID, decimal monto, int tipoDocumento, string documento, int userID);
     }
 }

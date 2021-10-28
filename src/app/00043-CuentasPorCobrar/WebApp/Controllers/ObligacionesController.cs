@@ -235,5 +235,45 @@ namespace WebApp.Controllers
 
             return PartialView("_VerDetalleObligacion");
         }
-    }   
+
+        [HttpPost]
+        [HandleJsonExceptionAttribute]
+        public ActionResult ActualizarConceptoObligacion(int obligacionAluDetID, decimal monto, int tipoDocumento, string documento)
+        {
+            Response response = null;
+
+            var detalleObligacion = obligacionServiceFacade.Obtener_DetalleObligacion_X_ID(obligacionAluDetID);
+
+            if (detalleObligacion == null)
+            {
+                response = new Response()
+                {
+                    Value = false,
+                    Message = "El concepto seleccionado no existe."
+                };
+            }
+            else if (detalleObligacion.B_Pagado)
+            {
+                response = new Response()
+                {
+                    Value = false,
+                    Message = "El concepto ya ha sido pagado, por lo que no se puede modificar su monto."
+                };
+            }
+            else if (String.IsNullOrWhiteSpace(documento))
+            {
+                response = new Response()
+                {
+                    Value = false,
+                    Message = "El campo Descripción es obligatorio."
+                };
+            }
+            else
+            {
+                response = obligacionServiceFacade.ActualizarMontoObligaciones(obligacionAluDetID, monto, tipoDocumento, documento, WebSecurity.CurrentUserId);
+            }
+
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+    }
 }

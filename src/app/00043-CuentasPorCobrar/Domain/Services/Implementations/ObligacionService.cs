@@ -218,5 +218,12 @@ namespace Domain.Services.Implementations
 
             return result;
         }
+
+        public Response ActualizarMontoObligaciones(int obligacionAluDetID, decimal monto, int tipoDocumento, string documento, int userID)
+        {
+            var result = USP_U_ActualizarMontoObligaciones.Execute(obligacionAluDetID, monto, tipoDocumento, documento, userID);
+
+            return new Response(result);
+        }
     }
 }

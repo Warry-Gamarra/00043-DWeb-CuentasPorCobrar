@@ -65,5 +65,9 @@ namespace Domain.Entities
         public string C_TipoAlumno { get; set; }
 
         public string T_TipoAlumno { get; set; }
+
+        public int? I_TipoDocumento { get; set; }
+
+        public string T_DescDocumento { get; set; }
     }
 }

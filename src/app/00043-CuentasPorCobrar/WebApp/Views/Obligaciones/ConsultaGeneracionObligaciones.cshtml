@@ -121,6 +121,13 @@
 
 @section Scripts {
     <script>
+        const MESSAGE_TYPE = {
+            INFO: 'info',
+            SUCCESS: 'success',
+            WARNING: 'warning',
+            ERROR: 'error'
+        }; 
+
         $("#formConsultaObligaciones").on("change", "#tipoEstudio", function (e) {
             let tipoEstudio = $(this).val();
 
@@ -270,5 +277,15 @@
         $('#modal-container-lg').on('shown.bs.modal', function () {
             $(document).off('focusin.modal');
         });
+
+        function mostrarBarraEspera(div, msg) {
+            $('#' + div + ' #loading').css('display', 'block');
+            $('#' + div + ' #loading h6').html(msg);
+        }
+
+        function ocultarBarraEspera(div) {
+            $('#' + div + ' #loading').css('display', 'none');
+            $('#' + div + ' #loading h6').html('');
+        }
     </script>
 }

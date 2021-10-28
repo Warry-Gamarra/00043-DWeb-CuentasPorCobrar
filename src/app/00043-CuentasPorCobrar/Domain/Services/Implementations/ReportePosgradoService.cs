@@ -14,42 +14,56 @@ namespace Domain.Services.Implementations
         {
         }
 
-        public IEnumerable<PagoPosgradoPorGradoDTO> ReportePagosPorGrado(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc)
+        public IEnumerable<PagoPosgradoGeneralDTO> ReporteGeneral(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito)
         {
             if (DateTime.Compare(fechaInicio, fechaFin) > 0)
             {
                 throw new Exception("La Fecha de Fin debe ser mayor a la Fecha de Inicio.");
             }
 
-            var pagos = USP_S_ReportePagoObligacionesPosgrado.PagosPorGrado(fechaInicio, fechaFin, idEntidanFinanc);
+            var pagos = USP_S_ReportePagoObligacionesPosgrado.ReporteGeneral(fechaInicio, fechaFin, idEntidanFinanc, ctaDeposito);
 
-            var result = pagos.Select(p => Mapper.USP_S_ReportePagoObligacionesPosgrado_To_PagoPosgradoPorGradoDTO(p));
+            var result = pagos.Select(p => Mapper.USP_S_ReportePagoObligacionesPosgrado_To_PagoPosgradoGeneralDTO(p));
 
             return result;
         }
 
-        public IEnumerable<PagoPosgradoPorConceptoDTO> ReportePagosPorConcepto(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc)
+        public IEnumerable<PagoPosgradoPorConceptoDTO> ReportePorConceptos(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito)
         {
             if (DateTime.Compare(fechaInicio, fechaFin) > 0)
             {
                 throw new Exception("La Fecha de Fin debe ser mayor a la Fecha de Inicio.");
             }
 
-            var pagos = USP_S_ReportePagoObligacionesPosgrado.PagosPorConcepto(fechaInicio, fechaFin, idEntidanFinanc);
+            var pagos = USP_S_ReportePagoObligacionesPosgrado.ReportePorConceptos(fechaInicio, fechaFin, idEntidanFinanc, ctaDeposito);
 
             var result = pagos.Select(p => Mapper.USP_S_ReportePagoObligacionesPosgrado_To_PagoPosgradoPorConceptoDTO(p));
 
             return result;
         }
 
-        public IEnumerable<ConceptoPosgradoPorGradoDTO> ReporteConceptosPorGrado(string codEsc, DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc)
+        public IEnumerable<ConceptoPosgradoPorGradoDTO> ReportePorGradoYConcepto(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito)
         {
             if (DateTime.Compare(fechaInicio, fechaFin) > 0)
             {
                 throw new Exception("La Fecha de Fin debe ser mayor a la Fecha de Inicio.");
             }
 
-            var pagos = USP_S_ReportePagoObligacionesPosgrado.ConceptosPorGrado(codEsc, fechaInicio, fechaFin, idEntidanFinanc);
+            var pagos = USP_S_ReportePagoObligacionesPosgrado.ReportePorGradoYConcepto(fechaInicio, fechaFin, idEntidanFinanc, ctaDeposito);
+
+            var result = pagos.Select(p => Mapper.USP_S_ReportePagoObligacionesPosgrado_To_ConceptoPosgradoPorGradoDTO(p));
+
+            return result;
+        }
+
+        public IEnumerable<ConceptoPosgradoPorGradoDTO> ReporteConceptosPorGrado(string codEsc, DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito)
+        {
+            if (DateTime.Compare(fechaInicio, fechaFin) > 0)
+            {
+                throw new Exception("La Fecha de Fin debe ser mayor a la Fecha de Inicio.");
+            }
+
+            var pagos = USP_S_ReportePagoObligacionesPosgrado.ReporteConceptosPorGrado(codEsc, fechaInicio, fechaFin, idEntidanFinanc, ctaDeposito);
 
             var result = pagos.Select(p => Mapper.USP_S_ReportePagoObligacionesPosgrado_To_ConceptoPosgradoPorGradoDTO(p));
 

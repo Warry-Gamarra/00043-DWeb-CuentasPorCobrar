@@ -142,7 +142,9 @@ namespace Domain.Entities
                 T_Nivel = detalleObligaciones.T_Nivel,
                 I_TipoAlumno = detalleObligaciones.I_TipoAlumno,
                 C_TipoAlumno = detalleObligaciones.C_TipoAlumno,
-                T_TipoAlumno = detalleObligaciones.T_TipoAlumno
+                T_TipoAlumno = detalleObligaciones.T_TipoAlumno,
+                I_TipoDocumento = detalleObligaciones.I_TipoDocumento,
+                T_DescDocumento = detalleObligaciones.T_DescDocumento
             };
 
             return obligacionDetalleDTO;
@@ -341,9 +343,9 @@ namespace Domain.Entities
             return multaNoVotarSinRegistrar;
         }
 
-        public static PagoPregradoPorFacultadDTO USP_S_ReportePagoObligacionesPregrado_To_PagoPregradoPorFacultadDTO(USP_S_ReportePagoObligacionesPregrado sp)
+        public static PagoPregradoGeneralDTO USP_S_ReportePagoObligacionesPregrado_To_PagoPregradoGeneralDTO(USP_S_ReportePagoObligacionesPregrado sp)
         {
-            var result = new PagoPregradoPorFacultadDTO()
+            var result = new PagoPregradoGeneralDTO()
             {
                 T_FacDesc = sp.T_FacDesc,
                 C_CodFac = sp.C_CodFac,
@@ -419,9 +421,9 @@ namespace Domain.Entities
             return result;
         }
 
-        public static PagoPosgradoPorGradoDTO USP_S_ReportePagoObligacionesPosgrado_To_PagoPosgradoPorGradoDTO(USP_S_ReportePagoObligacionesPosgrado sp)
+        public static PagoPosgradoGeneralDTO USP_S_ReportePagoObligacionesPosgrado_To_PagoPosgradoGeneralDTO(USP_S_ReportePagoObligacionesPosgrado sp)
         {
-            var result = new PagoPosgradoPorGradoDTO()
+            var result = new PagoPosgradoGeneralDTO()
             {
                 T_EscDesc = sp.T_EscDesc,
                 C_CodEsc = sp.C_CodEsc,

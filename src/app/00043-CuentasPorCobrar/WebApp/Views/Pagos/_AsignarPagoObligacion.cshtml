@@ -109,21 +109,12 @@
 </div>
 
 <script type="text/javascript">
-    const MESSAGE_TYPE = {
-        INFO: 'info',
-        SUCCESS: 'success',
-        WARNING: 'warning',
-        ERROR: 'error'
-    };
-
     $(document).on('click', '#formConsultaPago #btnBuscarPago', function (e) {
         let codOperacion = $('#formConsultaPago #CodOperacion').val();
         let codAlumno = $('#formConsultaPago #CodAlumno').val();
 
         GenerarTablaPagosObservados(codOperacion, codAlumno);
     });
-
-    
 
     $(document).on('click', '#tblPagosObs .btnAsignarPago', function (e) {
         let idPagoBanco = $(this).data('id-pago-banco');
@@ -157,7 +148,7 @@
                     data: parametros,
                     dataType: 'json',
                     beforeSend: function () {
-                        mostrarBarraEspera('Actualizando el pago...');
+                        mostrarBarraEspera('div_msg_busq_pagos', 'Actualizando el pago...');
                     },
                     success: function (data) {
                         if (data !== null) {
@@ -183,22 +174,12 @@
                         var jsonException = JSON.parse(xhr.responseText);
                     },
                     complete: function () {
-                        ocultarBarraEspera();
+                        ocultarBarraEspera('div_msg_busq_pagos');
                     }
                 });
             }
         });
     });
-
-    function mostrarBarraEspera(msg) {
-        $('#div_msg_busq_pagos #loading').css('display', 'block');
-        $('#div_msg_busq_pagos #loading h6').html(msg);
-    }
-
-    function ocultarBarraEspera() {
-        $('#div_msg_busq_pagos #loading').css('display', 'none');
-        $('#div_msg_busq_pagos #loading h6').html('');
-    }
 
     function GenerarTablaPagosObservados(codOperacion, codAlumno) {
         let tabla = $('#tblPagosObs tbody');
@@ -215,7 +196,7 @@
             dataType: 'json',
             beforeSend: function () {
                 tabla.html('');
-                mostrarBarraEspera('Consultando pagos...');
+                mostrarBarraEspera('div_msg_busq_pagos', 'Consultando pagos...');
             },
             success: function (data) {
                 let html = '';
@@ -237,7 +218,7 @@
             error: function (xhr, ajaxOptions, thrownError) {
             },
             complete: function () {
-                ocultarBarraEspera();
+                ocultarBarraEspera('div_msg_busq_pagos');
             }
         });
     }

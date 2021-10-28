@@ -46,6 +46,7 @@
                 <th>Fec.Vcto.</th>
                 <th>Monto</th>
                 <th>Estado</th>
+                <th>Dscto.</th>
                 <th></th>
             </tr>
         </thead>
@@ -59,6 +60,7 @@
                         <td>@item.T_FecVencto</td>
                         <td>@item.T_Monto</td>
                         <td>@item.T_Pagado</td>
+                        <td>@item.T_DescDocumento</td>
                         <td>
                             @if (!item.B_Pagado)
                             {
@@ -77,11 +79,11 @@
 <hr />
 
 <div class="modal-body">
-    <form name="frmEditarConcepto" id="frmEditarConcepto" style="display: none;">
+    <form name="frmEditarConcepto" id="frmEditarConcepto">
         <div class="form-group row">
             <label for="concepto" class="col-sm-2 col-form-label">Concepto</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control-plaintext" id="concepto" name="concepto" value="PENSIONES" />
+                <input type="text" class="form-control-plaintext" id="concepto" name="concepto" readonly="readonly" />
             </div>
         </div>
         <div class="form-group row">
@@ -91,23 +93,29 @@
             </div>
         </div>
         <div class="form-group row">
-            <label for="tipoDocumento" class="col-sm-2 col-form-label">Tip.Documento</label>
+            <label for="tipoDocumento" class="col-sm-2 col-form-label">Descuento</label>
             <div class="col-sm-10">
                 @Html.DropDownList("tipoDocumento", ViewBag.TipoDocumento as SelectList, new { @class = "form-control" })
             </div>
         </div>
         <div class="form-group row">
-            <label for="documento" class="col-sm-2 col-form-label">Documento</label>
+            <label for="documento" class="col-sm-2 col-form-label">Descripción dscto.</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="documento" name="documento" />
+                <textarea class="form-control" id="documento" name="documento"></textarea>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="estado" class="col-sm-2 col-form-label">Estado</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control-plaintext" id="estado" name="estado" readonly="readonly" />
             </div>
         </div>
         `<input type="hidden" name="hdnObligacionAluDetID" id="hdnObligacionAluDetID" />
-        <button type="button" class="btn btn-primary"><i class="fa fa-save"></i> Guardar</button>
+        <button type="button" class="btn btn-primary" id="btnActualizar"><i class="fa fa-save"></i> Guardar</button>
     </form>
 </div>
 
-<div class="modal-footer" id="div_msg_pagos">
+<div class="modal-footer" id="div_msg_det_oblig">
     <div class="col-md-12" style="display: none;" id="loading">
         <h6></h6>
         <div class="progress">
@@ -125,7 +133,7 @@
 
         $.ajax({
             type: 'GET',
-            url: ('@Url.Action("GetDetalleObligacion", "Service", new { httproute = "ActionApi" })' + '/' + idObligacionDet),
+            url: ('@Url.Action("GetDetalleObligacionByID", "Service", new { httproute = "ActionApi" })' + '/' + idObligacionDet),
             dataType: 'json',
             beforeSend: function () {
             },
@@ -134,12 +142,119 @@
                     $('#frmEditarConcepto #concepto').val(data.T_ConceptoDesc);
                     $('#frmEditarConcepto #monto').val(data.T_Monto);
                     $('#frmEditarConcepto #hdnObligacionAluDetID').val(data.I_ObligacionAluDetID);
-
-                    $('#frmEditarConcepto').css('display', 'block');
+                    $('#frmEditarConcepto #tipoDocumento').val(data.I_TipoDocumento);
+                    $('#frmEditarConcepto #documento').val(data.T_DescDocumento);
+                    $('#frmEditarConcepto #estado').val(data.T_Pagado);
                 }
             },
             error: function (xhr, ajaxOptions, thrownError) {
             }
         });
     });
+
+
+    $(document).on('click', '#frmEditarConcepto #btnActualizar', function (e) {
+        let monto = $('#frmEditarConcepto #monto').val();
+        let obligacionAluDetID = $('#frmEditarConcepto #hdnObligacionAluDetID').val();
+        let concepto = $('#frmEditarConcepto #concepto').val();
+        let tipoDocumento = $('#frmEditarConcepto #tipoDocumento').val();
+        let documento = $('#frmEditarConcepto #documento').val();
+
+        Swal.fire({
+            title: '',
+            text: "¿Está seguro de actualizar el monto del concepto " + concepto +"?.",
+            icon: MESSAGE_TYPE.WARNING,
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, continuar.',
+            cancelButtonText: 'No, cancelar.'
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+                let parametros = {
+                    obligacionAluDetID: obligacionAluDetID,
+                    monto: monto,
+                    tipoDocumento: tipoDocumento,
+                    documento: documento
+                };
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("ActualizarConceptoObligacion", "Obligaciones")',
+                    data: parametros,
+                    dataType: 'json',
+                    beforeSend: function () {
+                        mostrarBarraEspera('div_msg_det_oblig', 'Actualizando conceptos...');
+                    },
+                    success: function (data) {
+
+                        if (data !== null) {
+                            let icon = MESSAGE_TYPE.ERROR;
+
+                            if (data.Value) {
+                                icon = MESSAGE_TYPE.SUCCESS;
+                                actualizarTablaDetalleOblig(obligacionAluDetID)
+                            }
+
+                            Swal.fire({
+                                title: '',
+                                text: data.Message,
+                                icon: icon,
+                                timer: 6000
+                            });
+                        }
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        var jsonException = JSON.parse(xhr.responseText);
+                    },
+                    complete: function () {
+                        ocultarBarraEspera('div_msg_det_oblig');
+                    }
+                });
+            }
+        });
+    });
+
+    function actualizarTablaDetalleOblig(obligacionAluDetID) {
+        let tablaDet = $('#tblDetObligaciones tbody');
+
+        $.ajax({
+            type: 'GET',
+            url: ('@Url.Action("GetDetalleObligacion", "Service", new { httproute = "ActionApi", id = obligacion.I_ObligacionAluID })'),
+            dataType: 'json',
+            beforeSend: function () {
+                tablaDet.html('');
+            },
+            success: function (data) {
+
+                if (data !== null) {
+
+                    let montoObligacion = 0;
+                    let html = '';
+
+                    $.each(data, function (i, item) {
+                        html += '<tr>' +
+                            '<td>' + item.T_ConceptoDesc + '</td>' +
+                            '<td>' + item.T_FecVencto + '</td>' +
+                            '<td>' + item.T_Monto + '</td>' +
+                            '<td>' + item.T_Pagado + '</td>' +
+                            '<td>' + (item.T_DescDocumento == null ? "" : item.T_DescDocumento) + '</td>' +
+                            '<td>' + (item.B_Pagado ? '' : '<button class="btn btn-success btn-sm btEditarObligacion" data-id-obligacion-detalle="' + item.I_ObligacionAluDetID + '">' +
+                            'Editar</button>') + '</td>' +
+                            '</tr>';
+
+                        montoObligacion += item.I_Monto;
+                    });
+                    console.log('montoObligacion: ' + montoObligacion);
+                    tablaDet.html(html);
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                var jsonException = JSON.parse(xhr.responseText);
+            },
+            complete: function () {
+            }
+        });
+    }
 </script>

@@ -26,13 +26,13 @@ namespace WebApp.ViewModels
         [Required]
         public string tipoReporte { get; set; }
 
-        public int reporte { get; set; }
-
         public TipoEstudio tipoEstudio { get; set; }
 
         public string dependencia { get; set; }
 
         public int? idEntidadFinanciera { get; set; }
+
+        public int? ctaDeposito { get; set; }
 
         [Required]
         public string fechaDesde { get; set; }
@@ -63,16 +63,20 @@ namespace WebApp.ViewModels
         }
 
         //Pregrado
-        public ReportePagosPorFacultadViewModel reportePagosPorFacultadViewModel { get; set; }
+        public ReportePagosPregradoGeneralViewModel reportePagosPorFacultadViewModel { get; set; }
 
-        public ReportePagosPorConceptoViewModel reportePagosPorConceptoViewModel { get; set; }
+        public ReportePagosPregradoPorConceptoViewModel reportePagosPregradoPorConceptoViewModel { get; set; }
 
-        public ReporteConceptosPorUnaFacultadViewModel reporteConceptosPorUnaFacultadViewModel { get; set; }
+        public ReportePorFacultadYConceptoViewModel reportePorFacultadYConceptoViewModel { get; set; }
+
+        public ReporteConceptosPorFacultadViewModel reporteConceptosPorFacultadViewModel { get; set; }
 
         //Posgrado
-        public ReportePagosPorGradoViewModel reportePagosPorGradoViewModel { get; set; }
+        public ReportePagosPosgradoGeneralViewModel reportePagosPorGradoViewModel { get; set; }
 
-        public ReportePagosPorConceptoPosgradoViewModel reportePagosPorConceptoPosgradoViewModel { get; set; }
+        public ReportePagosPosgradoPorConceptoViewModel reportePagosPosgradoPorConceptoViewModel { get; set; }
+
+        public ReportePorGradoYConceptoViewModel reportePorGradoYConceptoViewModel { get; set; }
 
         public ReporteConceptosPorGradoViewModel reporteConceptosPorGradoViewModel { get; set; }
     }

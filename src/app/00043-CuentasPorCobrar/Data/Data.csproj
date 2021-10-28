@@ -91,6 +91,7 @@
     <Compile Include="Procedures\USP_S_CuentaDeposito_Habilitadas.cs" />
     <Compile Include="Procedures\USP_S_DocumentacionUsuarioRoles.cs" />
     <Compile Include="Procedures\USP_S_Procesos.cs" />
+    <Compile Include="Procedures\USP_U_ActualizarMontoObligaciones.cs" />
     <Compile Include="Procedures\USP_U_ActualizarProceso.cs" />
     <Compile Include="Procedures\USP_U_ActualizarCtaDeposito_Proceso.cs" />
     <Compile Include="Procedures\USP_U_DesenlazarPagoObligacion.cs" />

@@ -291,5 +291,21 @@ namespace WebApp.Models.Facades
 
             return result;
         }
+
+        public Response ActualizarMontoObligaciones(int obligacionAluDetID, decimal monto, int tipoDocumento, string documento, int userID)
+        {
+            Response result = _obligacionService.ActualizarMontoObligaciones(obligacionAluDetID, monto, tipoDocumento, documento, userID);
+
+            if (result.Value)
+            {
+                result.Success(false);
+            }
+            else
+            {
+                result.Error(false);
+            }
+
+            return result;
+        }
     }
 }

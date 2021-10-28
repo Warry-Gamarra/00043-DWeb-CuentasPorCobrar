@@ -47,13 +47,16 @@ namespace WebApp.Controllers
         [Route("consultas/reporte-pago-de-obligaciones")]
         public ActionResult ReportesPagoObligaciones(ReportePagosObligacionesViewModel model)
         {
-            ViewBag.TipoEstudios = generalServiceFacade.Listar_TipoEstudios();
+            ViewBag.TipoEstudios = new SelectList(generalServiceFacade.Listar_TipoEstudios(), "Value", "TextDisplay", model.tipoEstudio);
 
-            ViewBag.Dependencias = programasClientFacade.GetFacultades(model.tipoEstudio);
+            ViewBag.Dependencias = new SelectList(programasClientFacade.GetFacultades(model.tipoEstudio), "Value", "TextDisplay", model.dependencia);
 
-            ViewBag.EntidadesFinancieras = selectModels.GetEntidadesFinancieras();
+            ViewBag.EntidadesFinancieras = new SelectList(selectModels.GetEntidadesFinancieras(), "Value", "TextDisplay", model.idEntidadFinanciera);
 
-            ViewBag.TipoReportes = generalServiceFacade.Listar_TipoReporteObligaciones();
+            ViewBag.CtaDeposito = new SelectList(
+                model.idEntidadFinanciera.HasValue ? selectModels.GetCtasDeposito(model.idEntidadFinanciera.Value) : new List<SelectViewModel>(), "Value", "TextDisplay", model.ctaDeposito);
+
+            ViewBag.TipoReportes = new SelectList(generalServiceFacade.Listar_TipoReporteObligaciones(), "Value", "TextDisplay", model.tipoReporte);
 
             if (model.tipoEstudio == TipoEstudio.Pregrado)
             {
@@ -427,18 +430,27 @@ namespace WebApp.Controllers
         {
             if (model.tipoReporte == Reportes.REPORTE_GENERAL)
             {
-                model.reportePagosPorFacultadViewModel = reportePregradoServiceFacade.ReportePagosPorFacultad(model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera);
+                model.reportePagosPorFacultadViewModel = reportePregradoServiceFacade.ReporteGeneral(
+                    model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera, model.ctaDeposito);
             }
 
             if (model.tipoReporte == Reportes.REPORTE_CONCEPTO)
             {
+                model.reportePagosPregradoPorConceptoViewModel = reportePregradoServiceFacade.ReportePorConceptos(
+                    model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera, model.ctaDeposito);
+            }
+
+            if (model.tipoReporte == Reportes.REPORTE_FACULTAD)
+            {
                 if (String.IsNullOrEmpty(model.dependencia))
                 {
-                    model.reportePagosPorConceptoViewModel = reportePregradoServiceFacade.ReportePagosPorConcepto(model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera);
+                    model.reportePorFacultadYConceptoViewModel = reportePregradoServiceFacade.ReportePorFacultadYConcepto(
+                        model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera, model.ctaDeposito);
                 }
                 else
                 {
-                    model.reporteConceptosPorUnaFacultadViewModel = reportePregradoServiceFacade.ReporteConceptosPorUnaFacultad(model.dependencia, model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera);
+                    model.reporteConceptosPorFacultadViewModel = reportePregradoServiceFacade.ReporteConceptosPorFacultad(
+                        model.dependencia, model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera, model.ctaDeposito);
                 }
             }
         }
@@ -453,31 +465,39 @@ namespace WebApp.Controllers
                 nombreArchivo = "Reporte Pregrado General" + " al " + DateTime.Now.ToString(FormatosDateTime.BASIC_DATE2) + ".xlsx";
 
                 workbook  = ReporteExcelPagosPorFacultad(
-                    reportePregradoServiceFacade.ReportePagosPorFacultad(model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera));
+                    reportePregradoServiceFacade.ReporteGeneral(model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera, model.ctaDeposito));
             }
 
             if (model.tipoReporte == Reportes.REPORTE_CONCEPTO)
             {
+                nombreArchivo = "Reporte Pregrado por Conceptos" + " al " + DateTime.Now.ToString(FormatosDateTime.BASIC_DATE2) + ".xlsx";
+
+                workbook = ReporteExcelPagosPorConcepto(
+                    reportePregradoServiceFacade.ReportePorConceptos(model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera, model.ctaDeposito));
+            }
+
+            if (model.tipoReporte == Reportes.REPORTE_FACULTAD)
+            {
                 if (String.IsNullOrEmpty(model.dependencia))
                 {
-                    nombreArchivo = "Reporte Pregrado por Conceptos" + " al " + DateTime.Now.ToString(FormatosDateTime.BASIC_DATE2) + ".xlsx";
+                    nombreArchivo = "Reporte Pregrado por Facultades" + " al " + DateTime.Now.ToString(FormatosDateTime.BASIC_DATE2) + ".xlsx";
 
-                    workbook = ReporteExcelPagosPorConcepto(
-                        reportePregradoServiceFacade.ReportePagosPorConcepto(model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera));
+                    workbook = ReporteExcelFacultadYConceptos(
+                        reportePregradoServiceFacade.ReportePorFacultadYConcepto(model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera, model.ctaDeposito));
                 }
                 else
                 {
                     nombreArchivo = "Reporte Pregrado por Conceptos" + " al " + DateTime.Now.ToString(FormatosDateTime.BASIC_DATE2) + ".xlsx";
 
-                    workbook = ReporteExcelConceptosPorUnaFacultad(
-                        reportePregradoServiceFacade.ReporteConceptosPorUnaFacultad(model.dependencia, model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera));
+                    workbook = ReporteExcelConceptosPorFacultad(
+                        reportePregradoServiceFacade.ReporteConceptosPorFacultad(model.dependencia, model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera, model.ctaDeposito));
                 }
             }
 
             return new Tuple<string, XLWorkbook>(nombreArchivo, workbook);
         }
 
-        private XLWorkbook ReporteExcelPagosPorFacultad(ReportePagosPorFacultadViewModel reporte)
+        private XLWorkbook ReporteExcelPagosPorFacultad(ReportePagosPregradoGeneralViewModel reporte)
         {
             var workbook = new XLWorkbook();
 
@@ -552,7 +572,7 @@ namespace WebApp.Controllers
             return workbook;
         }
 
-        private XLWorkbook ReporteExcelPagosPorConcepto(ReportePagosPorConceptoViewModel reporte)
+        private XLWorkbook ReporteExcelPagosPorConcepto(ReportePagosPregradoPorConceptoViewModel reporte)
         {
             var workbook = new XLWorkbook();
 
@@ -627,7 +647,86 @@ namespace WebApp.Controllers
             return workbook;
         }
 
-        private XLWorkbook ReporteExcelConceptosPorUnaFacultad(ReporteConceptosPorUnaFacultadViewModel reporte)
+        private XLWorkbook ReporteExcelFacultadYConceptos(ReportePorFacultadYConceptoViewModel reporte)
+        {
+            var workbook = new XLWorkbook();
+
+            var worksheet = workbook.Worksheets.Add("ReportePregrado");
+
+            worksheet.Column("A").Width = 60;
+
+            worksheet.Column("B").Width = 14;
+
+            worksheet.Column("C").Width = 60;
+
+            worksheet.Column("D").Width = 14;
+
+            var titleCell = worksheet.Cell(1, 1);
+
+            titleCell.Value = reporte.Titulo.ToUpper();
+
+            titleCell.RichText.SetBold(true);
+
+            titleCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+
+            worksheet.Range(titleCell, worksheet.Cell(1, 4)).Merge(true);
+
+            var subTitleCell = worksheet.Cell(2, 1);
+
+            subTitleCell.Value = reporte.SubTitulo.ToUpper();
+
+            subTitleCell.RichText.SetBold(true);
+
+            subTitleCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+
+            worksheet.Range(subTitleCell, worksheet.Cell(2, 4)).Merge(true);
+
+            var dateCell = worksheet.Cell(4, 4);
+
+            dateCell.Value = "Fecha consulta: " + reporte.FechaActual;
+
+            dateCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
+
+            var bankNameCell = worksheet.Cell(5, 1);
+
+            bankNameCell.Value = String.IsNullOrEmpty(reporte.nombreEntidadFinanc) ? "" : "Entidad Financiera: " + reporte.nombreEntidadFinanc;
+
+            var timeCell = worksheet.Cell(5, 4);
+
+            timeCell.Value = "Hora consulta: " + reporte.HoraActual;
+
+            timeCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
+
+            var currentRow = 7;
+
+            worksheet.Cell(currentRow, 1).Value = "Facultad";
+            worksheet.Cell(currentRow, 2).Value = "Clasificador";
+            worksheet.Cell(currentRow, 3).Value = "Concepto";
+            worksheet.Cell(currentRow, 4).Value = "Monto (S/)";
+
+            currentRow++;
+
+            var inicial = currentRow;
+
+            foreach (var item in reporte.listaPagos)
+            {
+                worksheet.Cell(currentRow, 1).SetValue<string>(item.T_FacDesc);
+                worksheet.Cell(currentRow, 2).SetValue<string>(item.C_CodClasificador);
+                worksheet.Cell(currentRow, 3).SetValue<string>(item.T_ConceptoPagoDesc);
+                worksheet.Cell(currentRow, 4).SetValue<decimal>(item.I_MontoTotal);
+
+                currentRow++;
+            }
+
+            worksheet.Cell(currentRow, 3).Value = "Total (S/)";
+            worksheet.Cell(currentRow, 4).SetValue<decimal>(reporte.MontoTotal);
+
+            worksheet.Range(worksheet.Cell(inicial, 4), worksheet.Cell(currentRow, 4)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
+
+            return workbook;
+        }
+
+        private XLWorkbook ReporteExcelConceptosPorFacultad(ReporteConceptosPorFacultadViewModel reporte)
         {
             var workbook = new XLWorkbook();
 
@@ -714,18 +813,27 @@ namespace WebApp.Controllers
         {
             if (model.tipoReporte == Reportes.REPORTE_GENERAL)
             {
-                model.reportePagosPorGradoViewModel = reportePosgradoServiceFacade.ReportePagosPorGrado(model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera);
+                model.reportePagosPorGradoViewModel = reportePosgradoServiceFacade.ReporteGeneral(
+                    model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera, model.ctaDeposito);
             }
 
             if (model.tipoReporte == Reportes.REPORTE_CONCEPTO)
             {
+                model.reportePagosPosgradoPorConceptoViewModel = reportePosgradoServiceFacade.ReportePorConceptos(
+                    model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera, model.ctaDeposito);   
+            }
+
+            if (model.tipoReporte == Reportes.REPORTE_FACULTAD)
+            {
                 if (String.IsNullOrEmpty(model.dependencia))
                 {
-                    model.reportePagosPorConceptoPosgradoViewModel = reportePosgradoServiceFacade.ReportePagosPorConcepto(model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera);
+                    model.reportePorGradoYConceptoViewModel = reportePosgradoServiceFacade.ReportePorGradoYConcepto(
+                        model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera, model.ctaDeposito);
                 }
                 else
                 {
-                    model.reporteConceptosPorGradoViewModel = reportePosgradoServiceFacade.ReporteConceptosPorGrado(model.dependencia, model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera);
+                    model.reporteConceptosPorGradoViewModel = reportePosgradoServiceFacade.ReporteConceptosPorGrado(
+                        model.dependencia, model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera, model.ctaDeposito);
                 }
             }
         }
@@ -740,31 +848,39 @@ namespace WebApp.Controllers
                 nombreArchivo = "Reporte Posgrado General" + " al " + DateTime.Now.ToString(FormatosDateTime.BASIC_DATE2) + ".xlsx";
 
                 workbook = ReporteExcelPagosPorGrado(
-                    reportePosgradoServiceFacade.ReportePagosPorGrado(model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera));
+                    reportePosgradoServiceFacade.ReporteGeneral(model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera, model.ctaDeposito));
             }
 
             if (model.tipoReporte == Reportes.REPORTE_CONCEPTO)
             {
+                nombreArchivo = "Reporte Posgrado por Conceptos" + " al " + DateTime.Now.ToString(FormatosDateTime.BASIC_DATE2) + ".xlsx";
+
+                workbook = ReporteExcelPagosPorConceptoPosgrado(
+                    reportePosgradoServiceFacade.ReportePorConceptos(model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera, model.ctaDeposito));   
+            }
+
+            if (model.tipoReporte == Reportes.REPORTE_FACULTAD)
+            {
                 if (String.IsNullOrEmpty(model.dependencia))
                 {
-                    nombreArchivo = "Reporte Posgrado por Conceptos" + " al " + DateTime.Now.ToString(FormatosDateTime.BASIC_DATE2) + ".xlsx";
+                    nombreArchivo = "Reporte Posgrado por Grado" + " al " + DateTime.Now.ToString(FormatosDateTime.BASIC_DATE2) + ".xlsx";
 
-                    workbook = ReporteExcelPagosPorConceptoPosgrado(
-                        reportePosgradoServiceFacade.ReportePagosPorConcepto(model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera));
+                    workbook = ReporteExcelPagosPorGradoYConceptoPosgrado(
+                        reportePosgradoServiceFacade.ReportePorGradoYConcepto(model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera, model.ctaDeposito));
                 }
                 else
                 {
                     nombreArchivo = "Reporte Posgrado por Conceptos" + " al " + DateTime.Now.ToString(FormatosDateTime.BASIC_DATE2) + ".xlsx";
 
                     workbook = ReporteExcelConceptosPorGrado(
-                        reportePosgradoServiceFacade.ReporteConceptosPorGrado(model.dependencia, model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera));
+                        reportePosgradoServiceFacade.ReporteConceptosPorGrado(model.dependencia, model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera, model.ctaDeposito));
                 }
             }
 
             return new Tuple<string, XLWorkbook>(nombreArchivo, workbook);
         }
 
-        private XLWorkbook ReporteExcelPagosPorGrado(ReportePagosPorGradoViewModel reporte)
+        private XLWorkbook ReporteExcelPagosPorGrado(ReportePagosPosgradoGeneralViewModel reporte)
         {
             var workbook = new XLWorkbook();
 
@@ -839,7 +955,7 @@ namespace WebApp.Controllers
             return workbook;
         }
 
-        private XLWorkbook ReporteExcelPagosPorConceptoPosgrado(ReportePagosPorConceptoPosgradoViewModel reporte)
+        private XLWorkbook ReporteExcelPagosPorConceptoPosgrado(ReportePagosPosgradoPorConceptoViewModel reporte)
         {
             var workbook = new XLWorkbook();
 
@@ -910,6 +1026,85 @@ namespace WebApp.Controllers
             worksheet.Cell(currentRow, 3).SetValue<decimal>(reporte.MontoTotal);
 
             worksheet.Range(worksheet.Cell(inicial, 3), worksheet.Cell(currentRow, 3)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
+
+            return workbook;
+        }
+
+        private XLWorkbook ReporteExcelPagosPorGradoYConceptoPosgrado(ReportePorGradoYConceptoViewModel reporte)
+        {
+            var workbook = new XLWorkbook();
+
+            var worksheet = workbook.Worksheets.Add("ReportePosgrado");
+
+            worksheet.Column("A").Width = 14;
+
+            worksheet.Column("B").Width = 14;
+
+            worksheet.Column("C").Width = 60;
+
+            worksheet.Column("D").Width = 14;
+
+            var titleCell = worksheet.Cell(1, 1);
+
+            titleCell.Value = reporte.Titulo.ToUpper();
+
+            titleCell.RichText.SetBold(true);
+
+            titleCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+
+            worksheet.Range(titleCell, worksheet.Cell(1, 4)).Merge(true);
+
+            var subTitleCell = worksheet.Cell(2, 1);
+
+            subTitleCell.Value = reporte.SubTitulo.ToUpper();
+
+            subTitleCell.RichText.SetBold(true);
+
+            subTitleCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+
+            worksheet.Range(subTitleCell, worksheet.Cell(2, 4)).Merge(true);
+
+            var dateCell = worksheet.Cell(4, 4);
+
+            dateCell.Value = "Fecha consulta: " + reporte.FechaActual;
+
+            dateCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
+
+            var bankNameCell = worksheet.Cell(5, 1);
+
+            bankNameCell.Value = String.IsNullOrEmpty(reporte.nombreEntidadFinanc) ? "" : "Entidad Financiera: " + reporte.nombreEntidadFinanc;
+
+            var timeCell = worksheet.Cell(5, 4);
+
+            timeCell.Value = "Hora consulta: " + reporte.HoraActual;
+
+            timeCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
+
+            var currentRow = 7;
+
+            worksheet.Cell(currentRow, 1).Value = "Grado";
+            worksheet.Cell(currentRow, 2).Value = "Clasificador";
+            worksheet.Cell(currentRow, 3).Value = "Concepto";
+            worksheet.Cell(currentRow, 4).Value = "Monto (S/)";
+
+            currentRow++;
+
+            var inicial = currentRow;
+
+            foreach (var item in reporte.listaPagos)
+            {
+                worksheet.Cell(currentRow, 1).SetValue<string>(item.T_EscDesc);
+                worksheet.Cell(currentRow, 2).SetValue<string>(item.C_CodClasificador);
+                worksheet.Cell(currentRow, 3).SetValue<string>(item.T_ConceptoPagoDesc);
+                worksheet.Cell(currentRow, 4).SetValue<decimal>(item.I_MontoTotal);
+
+                currentRow++;
+            }
+
+            worksheet.Cell(currentRow, 3).Value = "Total (S/)";
+            worksheet.Cell(currentRow, 4).SetValue<decimal>(reporte.MontoTotal);
+
+            worksheet.Range(worksheet.Cell(inicial, 4), worksheet.Cell(currentRow, 4)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
 
             return workbook;
         }

@@ -188,10 +188,16 @@ namespace WebApp.Controllers
                 .OrderBy(x => x.T_DatosDepositante);
         }
 
-        // GET: api/service/GetDetalleObligacion/id
-        public ObligacionDetalleModel GetDetalleObligacion(int id)
+        // GET: api/service/GetDetalleObligacionByID/id
+        public ObligacionDetalleModel GetDetalleObligacionByID(int id)
         {
             return _obligacionServiceFacade.Obtener_DetalleObligacion_X_ID(id);
+        }
+
+        // GET: api/service/GetDetalleObligacionByID/id
+        public List<ObligacionDetalleModel> GetDetalleObligacion(int id)
+        {
+            return _obligacionServiceFacade.Obtener_DetalleObligacion_X_Obligacion(id);
         }
     }
 }

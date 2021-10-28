@@ -1,4 +1,4 @@
-﻿@model WebApp.ViewModels.ReportePagosPorGradoViewModel
+﻿@model WebApp.ViewModels.ReportePorGradoYConceptoViewModel
 
 <p class="h2 text-center">@Model.Titulo.ToUpper()</p>
 
@@ -22,8 +22,9 @@
     <table class="table table-bordered table-hover table-sm" id="tbl_pagos">
         <thead>
             <tr class="thead-light">
-                <th class="text-center">Código</th>
                 <th class="text-center">Grado</th>
+                <th class="text-center">Concepto</th>
+                <th class="text-center">Clasificador</th>
                 <th class="text-center">Monto (S/. )</th>
             </tr>
         </thead>
@@ -31,12 +32,14 @@
             @foreach (var item in Model.listaPagos)
             {
                 <tr>
-                    <td class="text-center">@item.C_CodEsc</td>
                     <td>@item.T_EscDesc</td>
+                    <td>@item.T_ConceptoPagoDesc</td>
+                    <td class="text-center">@item.C_CodClasificador</td>
                     <td class="text-right">@item.T_MontoTotal</td>
                 </tr>
             }
             <tr>
+                <th></th>
                 <th></th>
                 <th class="text-right">Total</th>
                 <th class="text-right">@Model.T_MontoTotal</th>
