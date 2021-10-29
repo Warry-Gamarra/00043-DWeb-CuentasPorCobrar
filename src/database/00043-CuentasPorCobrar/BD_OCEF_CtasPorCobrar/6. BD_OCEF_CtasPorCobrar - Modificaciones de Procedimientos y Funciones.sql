@@ -1560,18 +1560,18 @@ BEGIN
 		@F_FecFin = @F_FecFin
 /*
 EXEC USP_S_ListadoEstadoObligaciones
-@B_EsPregrado = 0,
+@B_EsPregrado = 1,
 @I_Anio = 2021,
-@I_Periodo = 19,
+@I_Periodo = NULL,
 @C_CodFac = NULL,
 @C_CodEsc = NULL,
-@C_RcCod = NULL,
-@B_Ingresante = 1,
+@C_RcCod = '064',
+@B_Ingresante = NULL,
 @B_ObligacionGenerada = 1,
-@B_Pagado = 1,
+@B_Pagado = NULL,
 @F_FecIni = NULL,
 @F_FecFin = NULL,
-@B_MontoPagadoDiff = NULL
+@B_MontoPagadoDiff = 1
 GO
 */
 END

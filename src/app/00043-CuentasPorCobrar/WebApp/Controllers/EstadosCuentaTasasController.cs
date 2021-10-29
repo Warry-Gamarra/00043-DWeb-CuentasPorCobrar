@@ -13,7 +13,7 @@ using WebApp.ViewModels;
 namespace WebApp.Controllers
 {
     [Authorize]
-    [Authorize(Roles = "Administrador, Consulta")]
+    [Authorize(Roles = "Administrador, Consulta, Tesorería")]
     public class EstadosCuentaTasasController : Controller
     {
         ITasaServiceFacade tasaService;
