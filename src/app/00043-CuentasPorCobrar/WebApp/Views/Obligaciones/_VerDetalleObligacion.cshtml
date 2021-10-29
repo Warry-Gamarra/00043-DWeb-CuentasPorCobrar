@@ -11,7 +11,7 @@
     <button type="button" class="close closeModal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 </div>
 
-<div class="modal-body">
+<div class="modal-body" id="cabeceraObligacion">
     <dl class="row">
         <dt class="col-sm-3">Alumno</dt>
         <dd class="col-sm-9">@obligacion.T_NombresCompletos</dd>
@@ -26,7 +26,7 @@
         <dd class="col-sm-9">@obligacion.T_ProcesoDesc</dd>
 
         <dt class="col-sm-3">Monto</dt>
-        <dd class="col-sm-9">@obligacion.T_MontoOblig</dd>
+        <dd class="col-sm-9" id="montoOblig">@obligacion.T_MontoOblig</dd>
 
         <dt class="col-sm-3">Vencimiento</dt>
         <dd class="col-sm-9">@obligacion.T_FecVencto</dd>
@@ -246,8 +246,10 @@
 
                         montoObligacion += item.I_Monto;
                     });
-                    console.log('montoObligacion: ' + montoObligacion);
+
                     tablaDet.html(html);
+
+                    $('#cabeceraObligacion #montoOblig').html(parseFloat(montoObligacion).toFixed(2));
                 }
             },
             error: function (xhr, ajaxOptions, thrownError) {

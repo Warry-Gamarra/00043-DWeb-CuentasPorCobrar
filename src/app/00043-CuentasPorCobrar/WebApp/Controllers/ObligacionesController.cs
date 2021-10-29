@@ -180,7 +180,7 @@ namespace WebApp.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
-        //[Route("operaciones/obligaciones-generadas")]
+        [Route("operaciones/obligaciones-generadas")]
         public ActionResult ConsultaGeneracionObligaciones(ConsultaObligacionEstudianteViewModel model)
         {
             ViewBag.Title = "Obligaciones Generadas";
