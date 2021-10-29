@@ -1,0 +1,192 @@
+﻿@model WebApp.ViewModels.RegistrarDevolucionPagoViewModel
+
+<div class="card">
+    <div class="card-body">
+        @Html.HiddenFor(model => model.DatosPago.PagoId)
+        @Html.HiddenFor(model => model.DatosPago.FecPago)
+        @Html.HiddenFor(model => model.DatosPago.MontoPago)
+
+        @if (Model.DatosPago.PagoId == 0)
+        {
+            <h6 class="card-subtitle mb-2 text-muted">Información de pago</h6>
+            <p class="text-center text-@ViewBag.Color">@ViewBag.Mensaje</p>
+        }
+        else
+        {
+            <fieldset class="mt-1">
+                <legend class="h5 border-bottom">Información de pago</legend>
+                <div class="form-row">
+                    @Html.LabelFor(model => model.DatosPago.Concepto, new { @class = "col-md-4 control-label" })
+                    <div class="col-md-6">
+                        @Html.DisplayFor(model => model.DatosPago.Concepto)
+                    </div>
+                </div>
+                <div class="form-row">
+                    @Html.LabelFor(model => model.DatosPago.LugarPago, new { @class = "col-md-4 control-label" })
+                    <div class="col-md-6">
+                        @Html.DisplayFor(model => model.DatosPago.LugarPago)
+                    </div>
+                </div>
+                <div class="form-row">
+                    @Html.LabelFor(model => model.DatosPago.FecPago, new { @class = "col-md-4 control-label" })
+                    <div class="col-md-6">
+                        @Html.DisplayFor(model => model.DatosPago.FecPago)
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-md-6">
+                        @Html.LabelFor(model => model.DatosPago.MontoPago, new { @class = "control-label" })
+                        <span class="pull-right">@Model.DatosPago.MontoPago</span>
+                    </div>
+                    <div class="col-md-6">
+                        @Html.LabelFor(model => model.DatosPago.NroSIAF, new { @class = "control-label" })
+                        <span class="pull-right">@Model.DatosPago.NroSIAF</span>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset class="mt-1">
+                <legend class="h5 border-bottom">Datos de la devolución</legend>
+                @Html.Hidden("submited", 0)
+                @Html.HiddenFor(model => model.DevolucionId)
+
+                <div id="datepicker" class="input-daterange mt-2">
+                    <div class="form-group row">
+                        @Html.LabelFor(model => model.FecAprueba, new { @class = "col-md-4 col-form-label control-label" })
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                @Html.HiddenFor(model => model.FecAprueba, new { @class = "form-control" })
+                                @Html.TextBox("txtFecAprueba", Model.FecAprueba, "{0:dd/MM/yyyy}", new { @class = "form-control", required = "required" })
+                                <div class="input-group-append">
+                                    <span class="input-group-text"><i class="fa fa-calendar-o"></i></span>
+                                </div>
+                            </div>
+                            <p class="text-danger small">@Html.ValidationMessageFor(model => model.FecAprueba)</p>
+                        </div>
+
+                        @Html.LabelFor(model => model.FecDevuelve, new { @class = "col-md-4 control-label" })
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                @Html.HiddenFor(model => model.FecDevuelve, new { @class = "form-control" })
+                                @Html.TextBox("txtFecDevuelve", Model.FecDevuelve, "{0:dd/MM/yyyy}", new { @class = "form-control" })
+                                <div class="input-group-append">
+                                    <span class="input-group-text"><i class="fa fa-calendar-o"></i></span>
+                                </div>
+                            </div>
+                            <p class="text-danger small">@Html.ValidationMessageFor(model => model.FecDevuelve)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-row mb-2">
+                        @Html.LabelFor(model => model.MontoDescuento, new { @class = "col-md-6 col-form-label control-label" })
+                        <div class="col-10 col-md-4">
+                            @Html.TextBoxFor(model => model.MontoDescuento, new { @class = "form-control text-right", @disabled = "disabled" })
+                        </div>
+                        <div class="col-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" title="Habilitar descuentos" data-toggle="tooltip" value="" id="chk-monto">
+                            </div>
+                        </div>
+                        <p class="text-danger float-right small">@Html.ValidationMessageFor(model => model.MontoDescuento)</p>
+                    </div>
+                    <div class="form-row">
+                        @Html.LabelFor(model => model.MontoDevolucion, new { @class = "col-md-6 col-form-label control-label pt-2" })
+                        <div class="col-md-4 border-top pt-2">
+                            @Html.TextBoxFor(model => model.MontoDevolucion, new { @class = "form-control text-right", @readonly = "readonly" })
+                        </div>
+                        <p class="text-danger float-right small">@Html.ValidationMessageFor(model => model.MontoDevolucion)</p>
+                    </div>
+                </div>
+
+                <div class="form-group form-row">
+                    @Html.LabelFor(model => model.Comentario, new { @class = "col-md-4 col-form-label control-label" })
+                    <div class="col-md-8">
+                        @Html.TextAreaFor(model => model.Comentario, new { @class = "form-control", rows = "3" })
+                        <p class="text-danger small">@Html.ValidationMessageFor(model => model.Comentario)</p>
+                    </div>
+                </div>
+
+            </fieldset>
+        }
+
+    </div>
+</div>
+
+
+
+
+<script>
+    cargarMontos();
+
+    $('#datepicker.input-daterange').datepicker({
+        todayBtn: 'linked',
+        language: 'es',
+        format: 'dd/MM/yyyy',
+        autoclose: true,
+        weekStart: 0,
+        orientation: 'bottom auto',
+        daysOfWeekDisabled: '0,6',
+        calendarWeeks: true
+    }).on('hide', function (e) {
+        e.stopPropagation();
+    });
+
+    $('#chk-monto').on('change', function () {
+
+        if ($(this).is(':checked')) {
+            $('#MontoDescuento').prop('disabled', false);
+            $('#MontoDescuento').select();
+        }
+        else {
+            $('#MontoDescuento').val((0).toFixed(2));
+            $('#MontoDescuento').prop('disabled', true);
+            calcualarDevolucion();
+        }
+    })
+
+    $('#MontoDescuento').on('keyup', function () {
+        calcualarDevolucion()
+    })
+
+    $('#MontoDescuento').on('blur', function () {
+        let descuento = parseFloat($(this).val());
+        $('#MontoDescuento').val(descuento.toFixed(2));
+    })
+
+    function cargarMontos() {
+
+        const totalPago = $('#DatosPago_MontoPago').val();
+        let totalDescuento = parseFloat($('#MontoDescuento').val());
+        let totalDevolucion = parseFloat($('#MontoDevolucion').val());
+
+        if (!isNaN(totalPago) && !isNaN(totalDevolucion)) {
+            totalDevolucion = parseFloat(totalPago) - parseFloat(totalDescuento);
+            totalDescuento = parseFloat(totalPago) - parseFloat(totalDevolucion);
+        }
+        else {
+            totalDevolucion = 0;
+            totalDescuento = 0;
+        }
+
+        $('#MontoDescuento').val(totalDescuento.toFixed(2));
+        $('#MontoDevolucion').val(totalDevolucion.toFixed(2));
+    }
+
+    function calcualarDevolucion() {
+
+        const totalPago = $('#DatosPago_MontoPago').val();
+        let totalDevolucion = parseFloat($('#MontoDevolucion').val());
+        let descuento = parseFloat($('#MontoDescuento').val());
+
+        if (!isNaN(totalPago) && !isNaN(descuento)) {
+            totalDevolucion = parseFloat(totalPago) - parseFloat(descuento);
+        }
+        else {
+            totalDevolucion = 0;
+            descuento = 0;
+        }
+
+        $('#MontoDevolucion').val(totalDevolucion.toFixed(2));
+    }
+</script>
+

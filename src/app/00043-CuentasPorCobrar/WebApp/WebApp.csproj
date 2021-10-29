@@ -635,6 +635,7 @@
     <Content Include="Views\Obligaciones\_VerObligaciones.cshtml" />
     <Content Include="Views\Pagos\_AsignarPagoObligacion.cshtml" />
     <Content Include="Views\Pagos\_VerPagosObligacion.cshtml" />
+    <Content Include="Views\Devoluciones\_RegistroDevolucionPago.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

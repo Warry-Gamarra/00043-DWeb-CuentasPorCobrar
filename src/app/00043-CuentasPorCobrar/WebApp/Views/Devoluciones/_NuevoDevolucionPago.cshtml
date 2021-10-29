@@ -11,18 +11,18 @@
         <fieldset class="mb-3">
             <legend class="h5 border-bottom">Búsqueda de pagos</legend>
             <form class="form-group form-row">
-                <div class="col-md-5 my-2">
+                <div class="col-md-7 my-2">
                     @Html.Label("EntidadRecaudadora", new { @class = "control-label", @for= "EntidadRecaudadora" })
-                    @Html.DropDownList("EntidadRecaudadora", ViewBag.EntidadRecaudadora as SelectList, "[ SELECIONAR ]", new { @class = "form-control form-control-sm" })
+                    @Html.DropDownList("EntidadRecaudadora", ViewBag.EntidadRecaudadora as SelectList, "[ SELECIONAR ]", new { @class = "form-control" })
                 </div>
-                <div class="col-md-4 my-2">
+                <div class="col-md-5 my-2">
                     @Html.Label("ReferenciaPago", new { @class = "control-label", @for = "ReferenciaPago" })
-                    @Html.TextBox("ReferenciaPago", null, new { @type = "search", @class = "form-control form-control-sm text-uppercase" })
+                    @Html.TextBox("ReferenciaPago", null, new { @type = "search", @class = "form-control text-uppercase" })
                 </div>
 
-                <div class="col-md-3 my-2">
+                <div class="col-md-12 my-2">
                     <label class="control-label d-none d-md-block">&nbsp;</label>
-                    <button class="btn btn-sm btn-info btn-block pull-right mb-2" type="button" id="btn-pago-search"><i class="fa fa-search">&nbsp;</i>Buscar</button>
+                    <button class="btn btn-info btn-block pull-right mb-2" type="button" id="btn-pago-search"><i class="fa fa-search">&nbsp;</i>Buscar</button>
                 </div>
             </form>
         </fieldset>
