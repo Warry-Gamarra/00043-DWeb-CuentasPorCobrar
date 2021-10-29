@@ -69,6 +69,7 @@ namespace WebApp.Controllers
             ViewBag.Categorias = new SelectList(_categoriaPagoModel.Find(TipoObligacion.Matricula).Where(x=>x.Habilitado), "Id", "Nombre");
             ViewBag.Periodos = new SelectList(_selectModel.GetPeriodosAcademicosCatalogo(), "Value", "TextDisplay", null);
             ViewBag.CtasDeposito = new SelectList(new List<SelectViewModel>());
+            ViewBag.MostrarOpcionEdicionObl = false;
 
             return PartialView("_RegistrarProcesoObligacion", new RegistroProcesoViewModel()
             {
@@ -102,6 +103,8 @@ namespace WebApp.Controllers
             {
                 ViewBag.CodBcoComercio = listaCategoriaPago.First(x => x.Id == model.CategoriaId.Value).CodBcoComercio;
             }
+
+            ViewBag.MostrarOpcionEdicionObl = true;
 
             return PartialView("_RegistrarProcesoObligacion", model);
         }

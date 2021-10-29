@@ -49,6 +49,7 @@ namespace WebApp.ViewModels
         public bool MostrarCodBanco { get; set; }
         public int[] CtasBcoComercio { get; set; }
 
+        public bool editarFecha { get; set; }
     }
 
 

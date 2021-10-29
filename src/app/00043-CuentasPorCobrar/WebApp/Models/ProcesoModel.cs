@@ -194,7 +194,8 @@ namespace WebApp.Models
                 T_ProcesoDesc = model.DescProceso,
                 B_Habilitado = true,
                 I_UsuarioCre = currentUserId,
-                I_UsuarioMod = currentUserId
+                I_UsuarioMod = currentUserId,
+                editarFecha = model.editarFecha
             };
 
             var resultProceso = _procesoService.Grabar_Proceso(procesoEntity, procesoSaveOption);

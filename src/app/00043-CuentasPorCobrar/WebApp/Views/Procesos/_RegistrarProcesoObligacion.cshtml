@@ -71,6 +71,14 @@
                     <p class="text-danger small">@Html.ValidationMessageFor(model => model.CodBcoComercio)</p>
                 </div>
             </div>
+
+            @if ((bool)ViewBag.MostrarOpcionEdicionObl)
+            {
+                <div class="form-group form-check">
+                    @Html.CheckBoxFor(model => model.editarFecha, new { @class = "form-check-input" })
+                    <label class="form-check-label" for="editarFecha">Modificar fecha de obligaciones</label>
+                </div>
+            }
         </div>
     </div>
     <div class="modal-footer" id="div_msg">

@@ -21,6 +21,7 @@ namespace Data.Procedures
         public string T_ProcesoDesc { get; set; }
         public bool B_Habilitado { get; set; }
         public int I_UsuarioMod { get; set; }
+        public bool editarFecha { get; set; }
 
         public ResponseData Execute()
         {
@@ -42,6 +43,7 @@ namespace Data.Procedures
                     parameters.Add(name: "T_ProcesoDesc", dbType: DbType.String, size: 250, value: this.T_ProcesoDesc);
                     parameters.Add(name: "B_Habilitado", dbType: DbType.Boolean, value: this.B_Habilitado);
                     parameters.Add(name: "I_UsuarioMod", dbType: DbType.Int32, value: this.I_UsuarioMod);
+                    parameters.Add(name: "B_EditarFecha", dbType: DbType.Int32, value: this.editarFecha);
 
                     parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);
                     parameters.Add(name: "T_Message", dbType: DbType.String, size: 4000, direction: ParameterDirection.Output);
