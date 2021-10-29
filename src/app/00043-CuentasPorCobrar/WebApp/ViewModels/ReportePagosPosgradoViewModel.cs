@@ -17,6 +17,7 @@ namespace WebApp.ViewModels
         public string FechaActual { get; }
         public string HoraActual { get; }
         public string nombreEntidadFinanc { get; set; }
+        public string numeroCuenta { get; set; }
         public IEnumerable<PagoPosgradoGeneralDTO> listaPagos { get; }
 
         public string SubTitulo
@@ -59,6 +60,7 @@ namespace WebApp.ViewModels
         public string FechaActual { get; }
         public string HoraActual { get; }
         public string nombreEntidadFinanc { get; set; }
+        public string numeroCuenta { get; set; }
         public IEnumerable<PagoPosgradoPorConceptoDTO> listaPagos { get; }
 
         public string SubTitulo
@@ -101,6 +103,7 @@ namespace WebApp.ViewModels
         public string FechaActual { get; }
         public string HoraActual { get; }
         public string nombreEntidadFinanc { get; set; }
+        public string numeroCuenta { get; set; }
         public IEnumerable<ConceptoPosgradoPorGradoDTO> listaPagos { get; }
 
         public string SubTitulo
@@ -144,6 +147,7 @@ namespace WebApp.ViewModels
         public string FechaActual { get; }
         public string HoraActual { get; }
         public string nombreEntidadFinanc { get; set; }
+        public string numeroCuenta { get; set; }
         public IEnumerable<ConceptoPosgradoPorGradoDTO> listaPagos { get; }
 
         public string SubTitulo

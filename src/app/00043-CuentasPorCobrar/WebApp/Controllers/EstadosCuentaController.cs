@@ -533,6 +533,10 @@ namespace WebApp.Controllers
 
             bankNameCell.Value = String.IsNullOrEmpty(reporte.nombreEntidadFinanc) ? "" : "Entidad Financiera: " + reporte.nombreEntidadFinanc;
 
+            var ctaDepositoCell = worksheet.Cell(5, 1);
+
+            ctaDepositoCell.Value = String.IsNullOrEmpty(reporte.numeroCuenta) ? "" : "Número Cuenta: " + reporte.numeroCuenta;
+
             var dateCell = worksheet.Cell(4, 3);
 
             dateCell.Value = "Fecha consulta: " + reporte.FechaActual;
@@ -607,6 +611,10 @@ namespace WebApp.Controllers
             var bankNameCell = worksheet.Cell(4, 1);
 
             bankNameCell.Value = String.IsNullOrEmpty(reporte.nombreEntidadFinanc) ? "" : "Entidad Financiera: " + reporte.nombreEntidadFinanc;
+
+            var ctaDepositoCell = worksheet.Cell(5, 1);
+
+            ctaDepositoCell.Value = String.IsNullOrEmpty(reporte.numeroCuenta) ? "" : "Número Cuenta: " + reporte.numeroCuenta;
 
             var dateCell = worksheet.Cell(4, 3);
 
@@ -687,9 +695,13 @@ namespace WebApp.Controllers
 
             dateCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
 
-            var bankNameCell = worksheet.Cell(5, 1);
+            var bankNameCell = worksheet.Cell(4, 1);
 
             bankNameCell.Value = String.IsNullOrEmpty(reporte.nombreEntidadFinanc) ? "" : "Entidad Financiera: " + reporte.nombreEntidadFinanc;
+
+            var ctaDepositoCell = worksheet.Cell(5, 1);
+
+            ctaDepositoCell.Value = String.IsNullOrEmpty(reporte.numeroCuenta) ? "" : "Número Cuenta: " + reporte.numeroCuenta;
 
             var timeCell = worksheet.Cell(5, 4);
 
@@ -780,7 +792,11 @@ namespace WebApp.Controllers
 
             timeCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
 
-            var currentRow = 7;
+            var ctaDepositoCell = worksheet.Cell(6, 1);
+
+            ctaDepositoCell.Value = String.IsNullOrEmpty(reporte.numeroCuenta) ? "" : "Número Cuenta: " + reporte.numeroCuenta;
+
+            var currentRow = String.IsNullOrEmpty(reporte.numeroCuenta) ? 7 : 8;
 
             worksheet.Cell(currentRow, 1).Value = "Concepto";
             worksheet.Cell(currentRow, 2).Value = "Clasificador";
@@ -916,6 +932,10 @@ namespace WebApp.Controllers
 
             bankNameCell.Value = String.IsNullOrEmpty(reporte.nombreEntidadFinanc) ? "" : "Entidad Financiera: " + reporte.nombreEntidadFinanc;
 
+            var ctaDepositoCell = worksheet.Cell(5, 1);
+
+            ctaDepositoCell.Value = String.IsNullOrEmpty(reporte.numeroCuenta) ? "" : "Número Cuenta: " + reporte.numeroCuenta;
+
             var dateCell = worksheet.Cell(4, 3);
 
             dateCell.Value = "Fecha consulta: " + reporte.FechaActual;
@@ -990,6 +1010,10 @@ namespace WebApp.Controllers
             var bankNameCell = worksheet.Cell(4, 1);
 
             bankNameCell.Value = String.IsNullOrEmpty(reporte.nombreEntidadFinanc) ? "" : "Entidad Financiera: " + reporte.nombreEntidadFinanc;
+
+            var ctaDepositoCell = worksheet.Cell(5, 1);
+
+            ctaDepositoCell.Value = String.IsNullOrEmpty(reporte.numeroCuenta) ? "" : "Número Cuenta: " + reporte.numeroCuenta;
 
             var dateCell = worksheet.Cell(4, 3);
 
@@ -1070,9 +1094,13 @@ namespace WebApp.Controllers
 
             dateCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
 
-            var bankNameCell = worksheet.Cell(5, 1);
+            var bankNameCell = worksheet.Cell(4, 1);
 
             bankNameCell.Value = String.IsNullOrEmpty(reporte.nombreEntidadFinanc) ? "" : "Entidad Financiera: " + reporte.nombreEntidadFinanc;
+
+            var ctaDepositoCell = worksheet.Cell(5, 1);
+            
+            ctaDepositoCell.Value = String.IsNullOrEmpty(reporte.numeroCuenta) ? "" : "Número Cuenta: " + reporte.numeroCuenta;
 
             var timeCell = worksheet.Cell(5, 4);
 
@@ -1163,7 +1191,11 @@ namespace WebApp.Controllers
 
             timeCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
 
-            var currentRow = 7;
+            var ctaDepositoCell = worksheet.Cell(6, 1);
+
+            ctaDepositoCell.Value = String.IsNullOrEmpty(reporte.numeroCuenta) ? "" : "Número Cuenta: " + reporte.numeroCuenta;
+
+            var currentRow = String.IsNullOrEmpty(reporte.numeroCuenta) ? 7 : 8;
 
             worksheet.Cell(currentRow, 1).Value = "Concepto";
             worksheet.Cell(currentRow, 2).Value = "Clasificador";
