@@ -24,6 +24,7 @@ namespace WebApp.Controllers
         IMatriculaServiceFacade matriculaServiceFacade;
         IReportePregradoServiceFacade reportePregradoServiceFacade;
         IReportePosgradoServiceFacade reportePosgradoServiceFacade;
+        SelectModel selectModels;
 
         public ObligacionesController()
         {
@@ -36,6 +37,8 @@ namespace WebApp.Controllers
 
             reportePregradoServiceFacade = new ReportePregradoServiceFacade();
             reportePosgradoServiceFacade = new ReportePosgradoServiceFacade();
+
+            selectModels = new SelectModel();
         }
 
         public ActionResult Generar(int? cmbAnioGrupal, int? cmbPeriodoGrupal, string cmbDependencia, TipoEstudio cmbTipoEstudio = TipoEstudio.Pregrado)
@@ -177,7 +180,7 @@ namespace WebApp.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
-        //[Route("operaciones/obligaciones-generadas")]
+        [Route("operaciones/obligaciones-generadas")]
         public ActionResult ConsultaGeneracionObligaciones(ConsultaObligacionEstudianteViewModel model)
         {
             ViewBag.Title = "Obligaciones Generadas";
@@ -216,10 +219,61 @@ namespace WebApp.Controllers
             return View(model);
         }
 
-        public ActionResult VerObligaciones(int obligacionID)
+        public ActionResult EditarDetalleObligacion(int obligacionID)
         {
+            var obligacion = obligacionServiceFacade.Obtener_CuotaPago(obligacionID);
 
-            return PartialView("_VerObligaciones");
+            var detalleObligacion = obligacionServiceFacade.Obtener_DetalleObligacion_X_Obligacion(obligacionID);
+
+            ViewBag.Title = "Detalle Obligaciones";
+
+            ViewBag.Obligacion = obligacion;
+
+            ViewBag.DetalleObligacion = detalleObligacion;
+
+            ViewBag.TipoDocumento = new SelectList(selectModels.GetTipoDocumentos(), "Value", "TextDisplay");
+
+            return PartialView("_VerDetalleObligacion");
         }
-    }   
+
+        [HttpPost]
+        [HandleJsonExceptionAttribute]
+        public ActionResult ActualizarConceptoObligacion(int obligacionAluDetID, decimal monto, int tipoDocumento, string documento)
+        {
+            Response response = null;
+
+            var detalleObligacion = obligacionServiceFacade.Obtener_DetalleObligacion_X_ID(obligacionAluDetID);
+
+            if (detalleObligacion == null)
+            {
+                response = new Response()
+                {
+                    Value = false,
+                    Message = "El concepto seleccionado no existe."
+                };
+            }
+            else if (detalleObligacion.B_Pagado)
+            {
+                response = new Response()
+                {
+                    Value = false,
+                    Message = "El concepto ya ha sido pagado, por lo que no se puede modificar su monto."
+                };
+            }
+            else if (String.IsNullOrWhiteSpace(documento))
+            {
+                response = new Response()
+                {
+                    Value = false,
+                    Message = "El campo Descripción es obligatorio."
+                };
+            }
+            else
+            {
+                response = obligacionServiceFacade.ActualizarMontoObligaciones(obligacionAluDetID, monto, tipoDocumento, documento, WebSecurity.CurrentUserId);
+            }
+
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+    }
 }

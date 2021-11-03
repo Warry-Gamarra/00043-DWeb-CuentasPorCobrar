@@ -109,7 +109,10 @@
                            "\" class=\"modal-link-lg\"><i class=\"fa fa-pencil-square-o\"></i> Asignar</a>") : "");
                        columns.Add().SetWidth(125).Css("text-center").Encoded(false).Sanitized(false).RenderValueAs(model =>
                            @<a href="@Url.Action("VerPagosObligacion", "Pagos", new { obligacionID = model.I_ObligacionAluID })" class="modal-link-lg"><i class="fa fa-fw fa-money" aria-hidden="true"></i> Pago</a>);
-                    }).WithPaging(12).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
+                       columns.Add().SetWidth(125).Css("text-center").Encoded(false).Sanitized(false).RenderValueAs(model =>
+                           model.B_Pagado.HasValue ? (!model.B_Pagado.Value ? "<a href=\"" + Url.Action("EditarDetalleObligacion", "Obligaciones", new { obligacionID = model.I_ObligacionAluID }) +
+                           "\" class=\"modal-link-lg\"><i class=\"fa fa-pencil-square-o\"></i> Editar</a>" : "") : "");
+               }).WithPaging(12).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
                 </div>
             </div>
         </div>
@@ -118,6 +121,13 @@
 
 @section Scripts {
     <script>
+        const MESSAGE_TYPE = {
+            INFO: 'info',
+            SUCCESS: 'success',
+            WARNING: 'warning',
+            ERROR: 'error'
+        }; 
+
         $("#formConsultaObligaciones").on("change", "#tipoEstudio", function (e) {
             let tipoEstudio = $(this).val();
 
@@ -267,5 +277,15 @@
         $('#modal-container-lg').on('shown.bs.modal', function () {
             $(document).off('focusin.modal');
         });
+
+        function mostrarBarraEspera(div, msg) {
+            $('#' + div + ' #loading').css('display', 'block');
+            $('#' + div + ' #loading h6').html(msg);
+        }
+
+        function ocultarBarraEspera(div) {
+            $('#' + div + ' #loading').css('display', 'none');
+            $('#' + div + ' #loading h6').html('');
+        }
     </script>
 }

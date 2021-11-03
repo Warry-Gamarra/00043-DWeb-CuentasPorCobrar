@@ -1,4 +1,4 @@
-﻿@model WebApp.ViewModels.ReporteConceptosPorUnaFacultadViewModel
+﻿@model WebApp.ViewModels.ReportePagosPosgradoGeneralViewModel
 
 <p class="h2 text-center">@Model.Titulo.ToUpper()</p>
 
@@ -6,7 +6,6 @@
 
 <div class="row">
     <div class="col-lg-6">
-        <p>Facultad: <b>@Model.Facultad.ToUpper()</b></p>
         @if (!String.IsNullOrEmpty(Model.nombreEntidadFinanc))
         {
             <p>Entidad Financiera: <b>@Model.nombreEntidadFinanc</b></p>
@@ -23,26 +22,23 @@
     <table class="table table-bordered table-hover table-sm" id="tbl_pagos">
         <thead>
             <tr class="thead-light">
-                <th class="text-center">Concepto</th>
-                <th class="text-center">Clasificador</th>
-                <th class="text-center">Cantidad</th>
-                <th class="text-center">Monto (S/)</th>
+                <th class="text-center">Código</th>
+                <th class="text-center">Grado</th>
+                <th class="text-center">Monto (S/. )</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model.listaPagos)
             {
                 <tr>
-                    <td>@item.T_ConceptoPagoDesc</td>
-                    <td class="text-center">@item.C_CodClasificador</td>
-                    <td class="text-center">@item.I_Cantidad</td>
+                    <td class="text-center">@item.C_CodEsc</td>
+                    <td>@item.T_EscDesc</td>
                     <td class="text-right">@item.T_MontoTotal</td>
                 </tr>
             }
             <tr>
                 <th></th>
-                <th></th>
-                <th class="text-right">Total (S/)</th>
+                <th class="text-right">Total</th>
                 <th class="text-right">@Model.T_MontoTotal</th>
             </tr>
         </tbody>

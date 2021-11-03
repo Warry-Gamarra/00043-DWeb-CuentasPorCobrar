@@ -179,12 +179,25 @@ namespace WebApp.Controllers
             return programasClientFacade.GetEspecialidades(codFac, codEsc);
         }
 
+        // GET: api/service/GetPagosObservados?codOperacion=codOperacion&codAlumno=codAlumno
         public IEnumerable<PagoBancoObligacionViewModel> GetPagosObservados(string codOperacion, string codAlumno)
         {
             return  pagoModel.ListarPagoBancoObligacion(null, null, codOperacion, codAlumno,
                 null, null, null)
                 .Where(x => x.I_CondicionPagoID != (int)CatalogoTipoPago.Correcto && x.I_CondicionPagoID != (int)CatalogoTipoPago.Extorno)
                 .OrderBy(x => x.T_DatosDepositante);
+        }
+
+        // GET: api/service/GetDetalleObligacionByID/id
+        public ObligacionDetalleModel GetDetalleObligacionByID(int id)
+        {
+            return _obligacionServiceFacade.Obtener_DetalleObligacion_X_ID(id);
+        }
+
+        // GET: api/service/GetDetalleObligacionByID/id
+        public List<ObligacionDetalleModel> GetDetalleObligacion(int id)
+        {
+            return _obligacionServiceFacade.Obtener_DetalleObligacion_X_Obligacion(id);
         }
     }
 }

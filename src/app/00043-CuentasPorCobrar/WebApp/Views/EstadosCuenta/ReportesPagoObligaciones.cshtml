@@ -36,23 +36,23 @@
                             <div class="form-row">
                                 <div class="form-group col-xl-2 col-lg-6 col-md-6 col-sm-12 col-12">
                                     <label for="tipoEstudio">Tipo de Estudio</label>
-                                    @Html.DropDownListFor(model => model.tipoEstudio, new SelectList(ViewBag.TipoEstudios, "Value", "TextDisplay"),
-                                        new { @class = "form-control form-control-sm text-uppercase" })
+                                    @Html.DropDownListFor(model => model.tipoEstudio, ViewBag.TipoEstudios as SelectList, new { @class = "form-control form-control-sm text-uppercase" })
                                 </div>
                                 <div class="form-group col-xl-2 col-lg-6 col-md-6 col-sm-12 col-12">
                                     <label for="tipoReporte">Reporte</label>
-                                    @Html.DropDownListFor(model => model.tipoReporte, new SelectList(ViewBag.TipoReportes, "Value", "TextDisplay"), "SELECCIONAR",
-                                        new { @class = "form-control form-control-sm text-uppercase", @required = "required" })
+                                    @Html.DropDownListFor(model => model.tipoReporte, ViewBag.TipoReportes as SelectList, "SELECCIONAR", new { @class = "form-control form-control-sm text-uppercase", @required = "required" })
                                 </div>
                                 <div class="form-group col-xl-2 col-lg-6 col-md-6 col-sm-12 col-12">
                                     <label for="dependencia">Facultad / Posgrado</label>
-                                    @Html.DropDownListFor(model => model.dependencia, new SelectList(ViewBag.Dependencias, "Value", "TextDisplay"), "TODOS",
-                                        new { @class = "form-control form-control-sm text-uppercase", @disabled = "disabled" })
+                                    @Html.DropDownListFor(model => model.dependencia, ViewBag.Dependencias as SelectList, "TODOS", new { @class = "form-control form-control-sm text-uppercase", @disabled = "disabled" })
                                 </div>
                                 <div class="form-group col-xl-2 col-lg-6 col-md-6 col-sm-12 col-12">
                                     <label for="idEntidadFinanciera">Entidad Financiera</label>
-                                    @Html.DropDownListFor(model => model.idEntidadFinanciera, new SelectList(ViewBag.EntidadesFinancieras, "Value", "TextDisplay"), "TODOS",
-                                        new { @class = "form-control form-control-sm text-uppercase" })
+                                    @Html.DropDownListFor(model => model.idEntidadFinanciera, ViewBag.EntidadesFinancieras as SelectList, "TODOS", new { @class = "form-control form-control-sm text-uppercase" })
+                                </div>
+                                <div class="form-group col-xl-2 col-lg-6 col-md-6 col-sm-12 col-12">
+                                    <label for="ctaDeposito">Cta.Deposito</label>
+                                    @Html.DropDownListFor(model => model.ctaDeposito, ViewBag.CtaDeposito as SelectList, "TODOS", new { @class = "form-control form-control-sm text-uppercase" })
                                 </div>
                                 <div class="form-group col-xl-4 col-lg-12 col-md-12 col-sm-12 col-12">
                                     <div id="datepicker">
@@ -97,35 +97,52 @@
     <div class="col-xl-10 col-lg-12 mx-auto my-4">
         @if (Model != null && Model.reportePagosPorFacultadViewModel != null)
         {
-            @Html.Partial("_ReportePagosPregradoPorFacultad", Model.reportePagosPorFacultadViewModel)
+            @Html.Partial("_ReportePagosPregradoGeneral", Model.reportePagosPorFacultadViewModel)
 
             <button type="button" id="btnExcelDescargar" class="btn btn-link pl-0">Descargar información en Excel [.xlsx]</button>
         }
 
-        @if (Model != null && Model.reportePagosPorConceptoViewModel != null)
+        @if (Model != null && Model.reportePagosPregradoPorConceptoViewModel != null)
         {
-            @Html.Partial("_ReportePagosPregradoPorConcepto", Model.reportePagosPorConceptoViewModel)
+            @Html.Partial("_ReportePagosPregradoPorConcepto", Model.reportePagosPregradoPorConceptoViewModel)
 
             <button type="button" id="btnExcelDescargar" class="btn btn-link pl-0">Descargar información en Excel [.xlsx]</button>
         }
 
-        @if (Model != null && Model.reporteConceptosPorUnaFacultadViewModel != null)
+        @if (Model != null && Model.reportePorFacultadYConceptoViewModel != null)
         {
-            @Html.Partial("_ReportePregradoConceptosPorUnaFacultad", Model.reporteConceptosPorUnaFacultadViewModel)
+            @Html.Partial("_ReportePregradoPorFacultadYConcepto", Model.reportePorFacultadYConceptoViewModel)
 
             <button type="button" id="btnExcelDescargar" class="btn btn-link pl-0">Descargar información en Excel [.xlsx]</button>
         }
+
+        @if (Model != null && Model.reporteConceptosPorFacultadViewModel != null)
+        {
+            @Html.Partial("_ReportePregradoConceptosPorFacultad", Model.reporteConceptosPorFacultadViewModel)
+
+            <button type="button" id="btnExcelDescargar" class="btn btn-link pl-0">Descargar información en Excel [.xlsx]</button>
+        }
+
+
+
 
         @if (Model != null && Model.reportePagosPorGradoViewModel != null)
         {
-            @Html.Partial("_ReportePagosPosgradoPorGrado", Model.reportePagosPorGradoViewModel)
+            @Html.Partial("_ReportePagosPosgradoGeneral", Model.reportePagosPorGradoViewModel)
 
             <button type="button" id="btnExcelDescargar" class="btn btn-link pl-0">Descargar información en Excel [.xlsx]</button>
         }
 
-        @if (Model != null && Model.reportePagosPorConceptoPosgradoViewModel != null)
+        @if (Model != null && Model.reportePagosPosgradoPorConceptoViewModel != null)
         {
-            @Html.Partial("_ReportePagosPosgradoPorConcepto", Model.reportePagosPorConceptoPosgradoViewModel)
+            @Html.Partial("_ReportePagosPosgradoPorConcepto", Model.reportePagosPosgradoPorConceptoViewModel)
+
+            <button type="button" id="btnExcelDescargar" class="btn btn-link pl-0">Descargar información en Excel [.xlsx]</button>
+        }
+
+        @if (Model != null && Model.reportePorGradoYConceptoViewModel != null)
+        {
+            @Html.Partial("_ReportePosgradoPorGradoYConcepto", Model.reportePorGradoYConceptoViewModel)
 
             <button type="button" id="btnExcelDescargar" class="btn btn-link pl-0">Descargar información en Excel [.xlsx]</button>
         }
@@ -143,6 +160,7 @@
     <script>
         const REPORTE_GENERAL = "G";
         const REPORTE_CONCEPTO = "C";
+        const REPORTE_FACULTAD = "F";
 
         $('#datepicker .input-daterange').datepicker({
             todayBtn: 'linked',
@@ -157,17 +175,18 @@
         $('#datepicker .input-daterange #fechaDesde').datepicker('update', "@Model.fechaDesde");
         $('#datepicker .input-daterange #fechaHasta').datepicker('update', "@Model.fechaHasta");
 
-        if ($('#frmGenerarReporteObl #tipoReporte').val() !== REPORTE_GENERAL) {
+        if ($('#frmGenerarReporteObl #tipoReporte').val() === REPORTE_FACULTAD) {
             $('#frmGenerarReporteObl #dependencia').prop('disabled', false);
         }
 
         $(document).on('change', '#frmGenerarReporteObl #tipoReporte', function () {
             let cmbDependencia = $('#frmGenerarReporteObl #dependencia');
-            if (this.value === REPORTE_GENERAL) {
+
+            if (this.value === REPORTE_FACULTAD) {
+                cmbDependencia.prop('disabled', false);
+            } else {
                 cmbDependencia.val('');
                 cmbDependencia.prop('disabled', true);
-            } else {
-                cmbDependencia.prop('disabled', false);
             }
         });
 
@@ -182,7 +201,14 @@
 
         $(document).on("change", "#frmGenerarReporteObl #tipoEstudio", function (e) {
             CargarDependencias($(this).val());
-            $('#frmGenerarReporteObl #dependencia').prop('disabled', true);
+
+            let cmbDependencia = $('#frmGenerarReporteObl #dependencia');
+
+            if ($('#frmGenerarReporteObl #tipoReporte').val() === REPORTE_FACULTAD) {
+                cmbDependencia.prop('disabled', false);
+            } else {
+                cmbDependencia.prop('disabled', true);
+            }
         });
 
         function CargarDependencias(tipoEstudio) {
@@ -217,10 +243,8 @@
         }
 
         $(document).on("click", "#btnConsultar", function (e) {
-
             let cmbReporte = $('#frmGenerarReporteObl #tipoReporte');
-            let cmbDependencia = $('#frmGenerarReporteObl #dependencia');
-
+            
             if (cmbReporte.val() === '') {
                 MostrarMensaje("Debe seleccionar un Tipo de Reporte.");
             } else {
@@ -231,7 +255,6 @@
 
         $(document).on("click", "#btnExcelDescargar", function (e) {
             let cmbReporte = $('#frmGenerarReporteObl #tipoReporte');
-            let cmbDependencia = $('#frmGenerarReporteObl #dependencia');
 
             if (cmbReporte.val() === '') {
                 MostrarMensaje("Debe seleccionar un Tipo de Reporte.");
@@ -240,5 +263,45 @@
                 document.forms.frmGenerarReporteObl.submit();
             }
         });
+
+        $(document).on('change', '#frmGenerarReporteObl #idEntidadFinanciera', function (e) {
+            let idEntidadFinanc = this.value;
+
+            ObtenerCtasDeposito(idEntidadFinanc);
+        });
+
+        function ObtenerCtasDeposito(idEntidadFinanc) {
+            let cmbCtasDeposito = $('#frmGenerarReporteObl #ctaDeposito');
+
+            if (idEntidadFinanc !== undefined && idEntidadFinanc !== null && !isNaN(idEntidadFinanc) && idEntidadFinanc > 0) {
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetCtasDepositoPorBco", "Service", new { httproute = "ActionApi" })' + '/' + idEntidadFinanc,
+                    dataType: 'json',
+                    beforeSend: function () {
+                        cmbCtasDeposito.empty();
+                    },
+                    success: function (data) {
+                        if (data) {
+                            let html = '<option>TODOS</option>';
+
+                            $.each(data, function (i, item) {
+                                html += '<option value="' + item.Value + '">' + item.TextDisplay + '</option>';
+                            });
+
+                            cmbCtasDeposito.html(html);
+                        }
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        var jsonException = JSON.parse(xhr.responseText);
+                        //MostrarMensajeSistema(jsonException.Message, 'error');
+                    }
+                });
+            } else {
+                cmbCtasDeposito.empty();
+                let html = '<option>TODOS</option>';
+                cmbCtasDeposito.html(html);
+            }
+        }
     </script>
 }

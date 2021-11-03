@@ -20,11 +20,14 @@ namespace Data.Procedures
         public int I_Cantidad { get; set; }
         public decimal I_MontoTotal { get; set; }
 
-        public static readonly int AgrupaPorFacultad = 1;
-        public static readonly int AgrupaPorConcepto = 2;
-        public static readonly int ConceptoPorUnaFacultad = 3;
+        public static readonly int General = 1;
+        public static readonly int PorConcepto = 2;
+        public static readonly int PorFacultadYConcepto = 3;
+        public static readonly int ConceptoPorFacultad = 4;
+        
 
-        public static IEnumerable<USP_S_ReportePagoObligacionesPregrado> PagosPorFacultad(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc)
+        public static IEnumerable<USP_S_ReportePagoObligacionesPregrado> ReporteGeneral(
+            DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito)
         {
             IEnumerable<USP_S_ReportePagoObligacionesPregrado> result;
             DynamicParameters parameters;
@@ -34,10 +37,11 @@ namespace Data.Procedures
                 string s_command = @"USP_S_ReportePagoObligacionesPregrado";
 
                 parameters = new DynamicParameters();
-                parameters.Add(name: "I_TipoReporte", dbType: DbType.Int32, value: AgrupaPorFacultad);
+                parameters.Add(name: "I_TipoReporte", dbType: DbType.Int32, value: General);
                 parameters.Add(name: "D_FechaIni", dbType: DbType.Date, value: fechaInicio);
                 parameters.Add(name: "D_FechaFin", dbType: DbType.Date, value: fechaFin);
                 parameters.Add(name: "I_EntidadFinanID", dbType: DbType.Int32, value: idEntidanFinanc);
+                parameters.Add(name: "I_CtaDeposito", dbType: DbType.Int32, value: ctaDeposito);
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
@@ -52,7 +56,8 @@ namespace Data.Procedures
             return result;
         }
 
-        public static IEnumerable<USP_S_ReportePagoObligacionesPregrado> PagosPorConcepto(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc)
+        public static IEnumerable<USP_S_ReportePagoObligacionesPregrado> ReportePorConceptos(
+            DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito)
         {
             IEnumerable<USP_S_ReportePagoObligacionesPregrado> result;
             DynamicParameters parameters;
@@ -62,10 +67,11 @@ namespace Data.Procedures
                 string s_command = @"USP_S_ReportePagoObligacionesPregrado";
 
                 parameters = new DynamicParameters();
-                parameters.Add(name: "I_TipoReporte", dbType: DbType.Int32, value: AgrupaPorConcepto);
+                parameters.Add(name: "I_TipoReporte", dbType: DbType.Int32, value: PorConcepto);
                 parameters.Add(name: "D_FechaIni", dbType: DbType.Date, value: fechaInicio);
                 parameters.Add(name: "D_FechaFin", dbType: DbType.Date, value: fechaFin);
                 parameters.Add(name: "I_EntidadFinanID", dbType: DbType.Int32, value: idEntidanFinanc);
+                parameters.Add(name: "I_CtaDeposito", dbType: DbType.Int32, value: ctaDeposito);
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
@@ -80,7 +86,8 @@ namespace Data.Procedures
             return result;
         }
 
-        public static IEnumerable<USP_S_ReportePagoObligacionesPregrado> ConceptosPorUnaFacultad(string codFac, DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc)
+        public static IEnumerable<USP_S_ReportePagoObligacionesPregrado> ReportePorFacultadYConcepto(
+            DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito)
         {
             IEnumerable<USP_S_ReportePagoObligacionesPregrado> result;
             DynamicParameters parameters;
@@ -90,11 +97,42 @@ namespace Data.Procedures
                 string s_command = @"USP_S_ReportePagoObligacionesPregrado";
 
                 parameters = new DynamicParameters();
-                parameters.Add(name: "I_TipoReporte", dbType: DbType.Int32, value: ConceptoPorUnaFacultad);
+                parameters.Add(name: "I_TipoReporte", dbType: DbType.Int32, value: PorFacultadYConcepto);
+                parameters.Add(name: "D_FechaIni", dbType: DbType.Date, value: fechaInicio);
+                parameters.Add(name: "D_FechaFin", dbType: DbType.Date, value: fechaFin);
+                parameters.Add(name: "I_EntidadFinanID", dbType: DbType.Int32, value: idEntidanFinanc);
+                parameters.Add(name: "I_CtaDeposito", dbType: DbType.Int32, value: ctaDeposito);
+
+                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
+                {
+                    result = _dbConnection.Query<USP_S_ReportePagoObligacionesPregrado>(s_command, parameters, commandType: CommandType.StoredProcedure);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
+
+        public static IEnumerable<USP_S_ReportePagoObligacionesPregrado> ReporteConceptosPorFacultad(
+            string codFac, DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito)
+        {
+            IEnumerable<USP_S_ReportePagoObligacionesPregrado> result;
+            DynamicParameters parameters;
+
+            try
+            {
+                string s_command = @"USP_S_ReportePagoObligacionesPregrado";
+
+                parameters = new DynamicParameters();
+                parameters.Add(name: "I_TipoReporte", dbType: DbType.Int32, value: ConceptoPorFacultad);
                 parameters.Add(name: "C_CodFac", dbType: DbType.String, value: codFac);
                 parameters.Add(name: "D_FechaIni", dbType: DbType.Date, value: fechaInicio);
                 parameters.Add(name: "D_FechaFin", dbType: DbType.Date, value: fechaFin);
                 parameters.Add(name: "I_EntidadFinanID", dbType: DbType.Int32, value: idEntidanFinanc);
+                parameters.Add(name: "I_CtaDeposito", dbType: DbType.Int32, value: ctaDeposito);
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {

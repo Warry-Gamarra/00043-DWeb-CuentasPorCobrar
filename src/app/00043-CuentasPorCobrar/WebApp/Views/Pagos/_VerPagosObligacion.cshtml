@@ -81,13 +81,6 @@
 </div>
 
 <script type="text/javascript">
-    const MESSAGE_TYPE = {
-        INFO: 'info',
-        SUCCESS: 'success',
-        WARNING: 'warning',
-        ERROR: 'error'
-    };
-
     $(document).on('click', '#tblPagos .btnDesenlazarPago', function (e) {
         let idPagoBanco = $(this).data('id-pago-banco');
 
@@ -118,7 +111,7 @@
                     data: parametros,
                     dataType: 'json',
                     beforeSend: function () {
-                        mostrarBarraEspera('Retirando el pago de la obligación...');
+                        mostrarBarraEspera('div_msg_pagos', 'Retirando el pago de la obligación...');
                     },
                     success: function (data) {
                         if (data !== null) {
@@ -140,20 +133,10 @@
                         var jsonException = JSON.parse(xhr.responseText);
                     },
                     complete: function () {
-                        ocultarBarraEspera();
+                        ocultarBarraEspera('div_msg_pagos');
                     }
                 });
             }
         });
     });
-
-    function mostrarBarraEspera(msg) {
-        $('#div_msg_pagos #loading').css('display', 'block');
-        $('#div_msg_pagos #loading h6').html(msg);
-    }
-
-    function ocultarBarraEspera() {
-        $('#div_msg_pagos #loading').css('display', 'none');
-        $('#div_msg_pagos #loading h6').html('');
-    }
 </script>

@@ -13,12 +13,15 @@ namespace Domain.Helpers
 
         public const string REPORTE_CONCEPTO = "C";
 
+        public const string REPORTE_FACULTAD = "F";
+
         public static Dictionary<string, string> Listar()
         {
             return new Dictionary<string, string>
             {
                 { REPORTE_GENERAL, "Reporte de Pagos General" },
-                { REPORTE_CONCEPTO, "Reporte de Pagos por Conceptos" }
+                { REPORTE_CONCEPTO, "Reporte de Pagos por Conceptos" },
+                { REPORTE_FACULTAD, "Reporte de Pagos por Dependencia" }
             };
         }
     }

@@ -28,6 +28,7 @@ namespace WebApp.Models
         {
             var obligacionDetalleModel = new ObligacionDetalleModel()
             {
+                I_ObligacionAluDetID = obligacionDetalleDTO.I_ObligacionAluDetID,
                 I_ObligacionAluID = obligacionDetalleDTO.I_ObligacionAluID,
                 I_ProcesoID = obligacionDetalleDTO.I_ProcesoID,
                 N_CodBanco = obligacionDetalleDTO.N_CodBanco,
@@ -55,7 +56,9 @@ namespace WebApp.Models
                 T_Nivel = obligacionDetalleDTO.T_Nivel,
                 I_TipoAlumno = obligacionDetalleDTO.I_TipoAlumno,
                 C_TipoAlumno = obligacionDetalleDTO.C_TipoAlumno,
-                T_TipoAlumno = obligacionDetalleDTO.T_TipoAlumno
+                T_TipoAlumno = obligacionDetalleDTO.T_TipoAlumno,
+                I_TipoDocumento = obligacionDetalleDTO.I_TipoDocumento,
+                T_DescDocumento = obligacionDetalleDTO.T_DescDocumento
             };
 
             return obligacionDetalleModel;

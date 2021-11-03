@@ -131,7 +131,8 @@ namespace Domain.Services.Implementations
                         B_Habilitado = procesoEntity.B_Habilitado,
                         T_ProcesoDesc = procesoEntity.T_ProcesoDesc,
                         N_CodBanco = procesoEntity.N_CodBanco,
-                        I_UsuarioMod = procesoEntity.I_UsuarioMod.GetValueOrDefault()
+                        I_UsuarioMod = procesoEntity.I_UsuarioMod.GetValueOrDefault(),
+                        editarFecha = procesoEntity.editarFecha
                     };
 
                     result = actualizarProceso.Execute();

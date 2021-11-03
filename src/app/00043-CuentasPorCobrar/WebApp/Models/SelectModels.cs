@@ -177,5 +177,17 @@ namespace WebApp.Models
 
             return result;
         }
+
+        public List<SelectViewModel> GetTipoDocumentos()
+        {
+            List<SelectViewModel> result = new List<SelectViewModel>();
+
+            foreach (var item in _conceptoPagoService.Listar_CatalogoOpcion_Habilitadas_X_Parametro(Domain.Helpers.Parametro.Documentos))
+            {
+                result.Add(new SelectViewModel() { Value = item.I_OpcionID.ToString(), TextDisplay = item.T_OpcionDesc });
+            }
+
+            return result;
+        }
     }
 }
