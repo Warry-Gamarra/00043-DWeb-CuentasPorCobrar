@@ -35,7 +35,7 @@
                     <td class="text-right">@item.NroSIAF</td>
                     <td class="text-right">
                         <a href="@Url.Action("Detalle","Pagos", new { id = item.PagoId })" class="ml-3 modal-link"><i class="fa bi-info-circle">&nbsp;</i>Detalles</a>
-                        <a href="@Url.Action("Create","Devoluciones", new { id = item.PagoId })" class="ml-3 modal-link"><i class="fa bi-box-arrow-down-right">&nbsp;</i>Devolución</a>
+                        <a href="@Url.Action("RegistrarDevolucion","Devoluciones", new { pagoId = item.PagoId })" class="ml-3 modal-link-lg"><i class="fa bi-box-arrow-down-right">&nbsp;</i>Devolución</a>
                         <a href="javascript:;" class="ml-3" onclick="anularPago(@item.PagoId)"><i class="fa fa-ban">&nbsp;</i>Anular</a>
                     </td>
                 </tr>

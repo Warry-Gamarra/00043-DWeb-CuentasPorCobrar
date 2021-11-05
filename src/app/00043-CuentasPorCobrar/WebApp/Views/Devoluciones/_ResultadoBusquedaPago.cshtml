@@ -1,15 +1,92 @@
-﻿<div class="">
-    <h3>Resultados de búsqueda</h3>
-    <table>
-        <thead>
-            <tr>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td></td>
-            </tr>
-        </tbody>
-    </table>
+﻿@model IEnumerable<WebApp.ViewModels.DatosPagoViewModel>
+
+<div id="tbl_pagos">
+    <p class="h5">Resultados de búsqueda</p>
+    @if (Model.Count() > 0)
+    {
+        <table class="table table-sm table-striped">
+            <thead>
+                <tr>
+                    <th>Referencia</th>
+                    <th>Concepto</th>
+                    <th>Fecha</th>
+                    <th>Monto</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.CodOperacion</td>
+                        <td>@item.Concepto</td>
+                        <td>@item.FecPago</td>
+                        <td>@item.MontoPago</td>
+                        <td><button class="btn btn-link float-right btn-seleccionar" data-id="@item.PagoId">Seleccionar</button></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-warning">
+            No se encontraron resultados para la busqueda:
+            <ul>
+                <li>Entidad recaudadora: @ViewBag.EntidadRecaudadora </li>
+                <li>Codigo de operacion: @ViewBag.CodigoOperacion </li>
+            </ul>
+        </div>
+    }
+    <div class="modal-footer row" style="padding:0.75rem 0 0 0">
+        <button type="button" id="btn_back" class="btn btn-outline-primary"><i class="fa fa-arrow-left">&nbsp;</i>Volver</button>
+        <button type="button" class="btn btn-secondary" id="btnCancel" data-dismiss="modal"><i class="fa fa-times-circle-o">&nbsp;</i>Cancelar</button>
+    </div>
 </div>
+
+<div id="panel-loader" class="container-fluid" style="display:none;">
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border text-info" role="status" style="width: 3rem; height: 3rem;">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center">
+        <span id="load-message" class="h5 mt-4">Cargando</span>
+    </div>
+</div>
+
+
+<script>
+    $('#btn_back').on('click', function () {
+        $('#frm_busqueda').show()
+        $('.modal.show .modal-dialog').removeClass('modal-lg');
+        $('#busqueda_pago').hide();
+    })
+
+
+    $('button.btn-seleccionar').on('click', function () {
+        let pago_id = $(this).data("id");
+
+        $.ajax({
+            url: '@Url.Action("RegistrarDevolucion", "Devoluciones")' + '?pagoId=' + pago_id,
+            type: 'GET',
+            cache: false,
+            beforeSend: function () {
+                $('#tbl_pagos').hide();
+                $('#panel-loader').show();
+            },
+            success: function (data) {
+                $('.modal.show .modal-content').html(data);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                toastr.options.positionClass = 'toast-bottom-right';
+                toastr.error(jqXHR.responseText);
+            },
+            complete: function () {
+                $('#tbl_pagos').hide();
+                $('#panel-loader').hide();
+            }
+        });
+
+    })
+</script>

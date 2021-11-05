@@ -55,48 +55,54 @@ namespace WebApp.Controllers
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            ViewBag.Title = "Nueva devolución de pago";
+            ViewBag.Title = "Editar devolución de pago";
 
             var model = _devolucionPagoModel.Find(id);
-            ViewBag.EntidadRecaudadora = new SelectList(_entidadRecaudadora.Find(enabled: true), "Id", "NombreEntidad", model.EntidadRecaudadora);
-            ViewBag.Mensaje = "Ingrese los datos del pago de referencia para la devolución";
-            ViewBag.Color = "secondary";
 
-            return PartialView("_RegistrarDevolucionPago", model);
+            return PartialView("_RegistroDevolucionPago", model);
         }
 
         [HttpGet]
         public ActionResult BuscarPagoDevolucion(int entidadId, string codreferencia)
         {
-            var model = new RegistrarDevolucionPagoViewModel();
-
-            var datosPago = _pagosModel.BuscarPagoRegistrado(entidadId, codreferencia);
-
-            if (datosPago.Count == 0)
+            var pagoDevuleto = _devolucionPagoModel.Find(entidadId, codreferencia);
+            string entidadRecaudadora = _entidadRecaudadora.Find(entidadId).NombreEntidad;
+            if (pagoDevuleto.Count > 0)
             {
-                ViewBag.Mensaje = "No se encontró ningún pago para el codigo ingresado";
-                ViewBag.Color = "danger";
+                return PartialView("_MsgPartial", new Response()
+                {
+                    Color = "warning",
+                    Icon = "exclamation-circle",
+                    CurrentID = "display:none;",
+                    Message = $"El pago {codreferencia} en la entidad recaudadora {entidadRecaudadora} ya se presenta una devolución."
+                });
             }
             else
             {
-                model.DatosPago = datosPago[0];
+                var model = _pagosModel.BuscarPagoRegistrado(entidadId, codreferencia);
+                ViewBag.CodigoOperacion = codreferencia;
+                ViewBag.EntidadRecaudadora = entidadRecaudadora;
 
-                if (datosPago.Count > 1)
-                {
-                    return PartialView("_ResultadoBusquedaPago", model);
-                }
-                ViewBag.Mensaje = "Se encontró más de un resultado para la búsqueda";
-                ViewBag.Color = "secondary";
+                return PartialView("_ResultadoBusquedaPago", model);
             }
-
-            return PartialView("_ResultadoBusquedaPago", model);
         }
 
-        public JsonResult ChangeState(int devolucionId)
+        public JsonResult Anular(int devolucionId)
         {
             var result = _devolucionPagoModel.AnularDevolucion(devolucionId, WebSecurity.CurrentUserId);
 
             return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public ActionResult RegistrarDevolucion(int pagoId)
+        {
+            ViewBag.Title = "Nueva devolución de pago";
+            var model = new RegistrarDevolucionPagoViewModel();
+
+            model.DatosPago = _pagosModel.ObtenerDatosPago(pagoId);
+
+            return PartialView("_RegistroDevolucionPago", model);
         }
 
         [HttpPost]

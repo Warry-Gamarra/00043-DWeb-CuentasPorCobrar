@@ -24,11 +24,11 @@
                     {
                         <div class="row mt-3">
                             <div class="form-group col-lg-4 col-md-6 col-sm-12 col-12">
-                                <label for="cboEntFinan" class="control-label">Entidad Financiera</label>
+                                <label for="cboEntFinan" class="control-label">Entidad recaudadora origen</label>
                                 @Html.DropDownList("cboEntFinan", ViewBag.EntidadesFinancieras as SelectList, "SELECCIONAR", new { @class = "form-control form-control-sm text-uppercase", @required = "required" })
                             </div>
                             <div class="form-group col-lg-4 col-md-6 col-sm-12 col-12">
-                                <label for="cboTipoEst" class="control-label">Tipo de Estudio</label>
+                                <label for="cboTipoEst" class="control-label">Tipo de estudio</label>
                                 @Html.DropDownList("cboTipoEst", ViewBag.TipoEstudios as SelectList, "TODOS", new { @class = "form-control form-control-sm text-uppercase" })
                             </div>
                             <div class="form-group col-lg-4 col-md-6 col-sm-12 col-12">
@@ -69,58 +69,6 @@
                         </div>
                     }
 
-
-                    @*@using (Ajax.BeginForm("ExportarRecaudacionTemporalPost", "Pagos", new AjaxOptions() { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "file", OnBegin = "Begin", OnComplete = "Complete" }))
-                    {
-                        <div class="row mt-3">
-                            <div class="form-group col-lg-4 col-md-6 col-sm-12 col-12">
-                                <label for="cboEntFinan" class="control-label">Entidad Financiera</label>
-                                @Html.DropDownList("cboEntFinan", ViewBag.EntidadesFinancieras as SelectList, "SELECCIONAR", new { @class = "form-control form-control-sm text-uppercase", @required = "required" })
-                            </div>
-                            <div class="form-group col-lg-4 col-md-6 col-sm-12 col-12">
-                                <label for="cboTipoEst" class="control-label">Tipo de Estudio</label>
-                                @Html.DropDownList("cboTipoEst", ViewBag.TipoEstudios as SelectList, "TODOS", new { @class = "form-control form-control-sm text-uppercase" })
-                            </div>
-                            <div class="form-group col-lg-4 col-md-6 col-sm-12 col-12">
-                                <div id="datepicker">
-                                    <div class="input-daterange row">
-                                        <div class="form-group col-lg-6 col-md-6 col-sm-12 col-12" style="padding-left: 0px;">
-                                            <label for="fechaDesde" class="control-label">Pagos desde</label>
-                                            <div class="input-group">
-                                                @Html.TextBox("fechaDesde", DateTime.Now, "{0:dd/MM/yyyy}",
-                                                    new { @class = "form-control form-control-sm", @placeholder = "Fecha inicio", @readonly = "readonly" })
-                                                <div class="input-group-append">
-                                                    <span class="input-group-text"><i class="fa fa-calendar-o"></i></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-lg-6 col-md-6 col-sm-12 col-12" style="padding-left: 0px;">
-                                            <label for="fechaHasta" class="control-label">Pagos hasta</label>
-                                            <div class="input-group">
-                                                @Html.TextBox("fechaHasta", DateTime.Now, "{0:dd/MM/yyyy}",
-                                                    new { @class = "form-control form-control-sm", @placeholder = "Fecha final", @readonly = "readonly" })
-                                                <div class="input-group-append">
-                                                    <span class="input-group-text"><i class="fa fa-calendar-o"></i></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group col-12 text-center">
-                                <button id="btnGenerar" type="submit" class="btn btn-primary mt-2 px-5">
-                                    <i class="fa fa-fw fa-cogs"></i>
-                                    <div class="spinner-border spinner-border-sm" role="status" style="display:none;">
-                                        <span class="sr-only">Loading...</span>
-                                    </div>
-                                    Generar archivo
-                                </button>
-                            </div>
-
-                            <div id="file"></div>
-                        </div>
-                    }*@
-
                 </div>
             </div>
         </div>
@@ -139,12 +87,6 @@
         }).on('hide', function (e) {
             e.stopPropagation();
         });
-
-        //$('form').on('submit', function () {
-        //    $('#btnGenerar i.fa').hide();
-        //    $('#btnGenerar .spinner-border').show();
-        //})
-
 
         function Begin() {
             $('#btnGenerar i.fa').hide();

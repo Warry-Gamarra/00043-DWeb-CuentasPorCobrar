@@ -47,6 +47,7 @@ namespace Data.Views
         public string T_EntidadDesc { get; set; }
         public int I_ProcesoID { get; set; }
         public string T_InformacionAdicional { get; set; }
+        public string T_Concepto { get; set; }
 
         public static IEnumerable<VW_Pagos> Find(int entRecaudaId, string codOperacion)
         {
@@ -54,11 +55,17 @@ namespace Data.Views
 
             try
             {
-                string s_command = @"SELECT P.* FROM dbo.VW_Pagos P;";
+                string s_command = @"SELECT P.* FROM dbo.VW_Pagos P WHERE I_EntidadFinanID = @I_EntidadFinanID AND C_CodOperacion = @C_CodOperacion;";
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    result = _dbConnection.Query<VW_Pagos>(s_command, commandType: System.Data.CommandType.Text);
+                    result = _dbConnection.Query<VW_Pagos>(s_command,
+                                                            new
+                                                            {
+                                                                I_EntidadFinanID = entRecaudaId,
+                                                                C_CodOperacion = codOperacion
+                                                            },
+                                                            commandType: System.Data.CommandType.Text);
                 }
             }
             catch (Exception ex)
