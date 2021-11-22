@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace WebApp.Models
 {
     public interface IMatriculaSource
     {
-        List<MatriculaEntity> GetList(string filePath);
+        List<MatriculaEntity> GetList(TipoAlumno tipoAlumno, string filePath);
     }
 }

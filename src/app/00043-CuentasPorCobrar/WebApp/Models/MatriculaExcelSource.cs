@@ -5,17 +5,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Domain.Entities;
+using Domain.Helpers;
 using ExcelDataReader;
 
 namespace WebApp.Models
 {
     public class MatriculaExcelSource : IMatriculaSource
     {
-        readonly string[] expectedColNames = { "Cod_rc", "Cod_alu", "Año", "P", "Est_mat", "Nivel", "Es_ingresa", "Cred_desap" };
+        readonly string[] expectedColPregrado = { "Cod_rc", "Cod_alu", "Año", "P", "Est_mat", "Nivel", "Es_ingresa", "Cred_desap", "Cod_curso", "Vez" };
 
-        public List<MatriculaEntity> GetList(string filePath)
+        readonly string[] expectedColPosgrado = { "Cod_rc", "Cod_alu", "Año", "P", "Est_mat", "Nivel", "Es_ingresa", "Cred_desap" };
+
+        public List<MatriculaEntity> GetList(TipoAlumno tipoAlumno, string filePath)
         {
             var dataMatriculas = new List<MatriculaEntity>();
+
+            string[] colNames;
 
             using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
             {
@@ -29,25 +34,55 @@ namespace WebApp.Models
                         {
                             if (i == 0)
                             {
-                                string[] colNames =
+                                switch (tipoAlumno)
                                 {
-                                    reader.GetValue(0)?.ToString(),
-                                    reader.GetValue(1)?.ToString(),
-                                    reader.GetValue(2)?.ToString(),
-                                    reader.GetValue(3)?.ToString(),
-                                    reader.GetValue(4)?.ToString(),
-                                    reader.GetValue(5)?.ToString(),
-                                    reader.GetValue(6)?.ToString(),
-                                    reader.GetValue(7)?.ToString()
-                                };
+                                    case TipoAlumno.Pregrado:
+                                        colNames = new string[]
+                                            {
+                                                reader.GetValue(0)?.ToString(),
+                                                reader.GetValue(1)?.ToString(),
+                                                reader.GetValue(2)?.ToString(),
+                                                reader.GetValue(3)?.ToString(),
+                                                reader.GetValue(4)?.ToString(),
+                                                reader.GetValue(5)?.ToString(),
+                                                reader.GetValue(6)?.ToString(),
+                                                reader.GetValue(7)?.ToString(),
+                                                reader.GetValue(8)?.ToString(),
+                                                reader.GetValue(9)?.ToString()
+                                            };
 
-                                if (!expectedColNames.SequenceEqual(colNames))
-                                    throw new Exception("Las columnas no son las esperadas");
+                                        if (!expectedColPregrado.SequenceEqual(colNames))
+                                            throw new Exception("Las columnas no son las esperadas");
+
+                                        break;
+
+                                    case TipoAlumno.Posgrado:
+                                        colNames = new string[]
+                                        {
+                                            reader.GetValue(0)?.ToString(),
+                                            reader.GetValue(1)?.ToString(),
+                                            reader.GetValue(2)?.ToString(),
+                                            reader.GetValue(3)?.ToString(),
+                                            reader.GetValue(4)?.ToString(),
+                                            reader.GetValue(5)?.ToString(),
+                                            reader.GetValue(6)?.ToString(),
+                                            reader.GetValue(7)?.ToString()
+                                        };
+                                        
+                                        if (!expectedColPosgrado.SequenceEqual(colNames))
+                                            throw new Exception("Las columnas no son las esperadas");
+
+                                        break;
+
+                                    default:
+                                        throw new Exception("Tipo de archivo incorrecto");
+                                }
+                                
                                 i++;
                             }
                             else
                             {
-                                dataMatriculas.Add(Mapper.MatriculaReader_To_MatriculaEntity(reader));
+                                dataMatriculas.Add(Mapper.MatriculaReader_To_MatriculaEntity(tipoAlumno, reader));
                             }
                         }
 

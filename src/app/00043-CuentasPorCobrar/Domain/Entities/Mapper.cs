@@ -26,7 +26,9 @@ namespace Domain.Entities
                 B_Ingresante = matricula.B_Ingresante,
                 I_CredDesaprob = matricula.I_CredDesaprob,
                 B_Success = B_Success,
-                T_Message = T_Message
+                T_Message = T_Message,
+                C_CodCurso = matricula.C_CodCurso,
+                I_Vez = matricula.I_Vez
             };
 
             return dataMatriculaObs;
@@ -43,6 +45,8 @@ namespace Domain.Entities
             dataTable.Columns.Add("C_Ciclo");
             dataTable.Columns.Add("B_Ingresante");
             dataTable.Columns.Add("I_CredDesaprob");
+            dataTable.Columns.Add("C_CodCurso");
+            dataTable.Columns.Add("I_Vez");
 
             dataMatriculas.ForEach(x => dataTable.Rows.Add(
                 x.C_CodRC,
@@ -52,7 +56,9 @@ namespace Domain.Entities
                 x.C_EstMat,
                 x.C_Ciclo,
                 x.B_Ingresante,
-                x.I_CredDesaprob
+                x.I_CredDesaprob,
+                x.C_CodCurso,
+                x.I_Vez
             ));
 
             return dataTable;
@@ -71,7 +77,9 @@ namespace Domain.Entities
                 B_Ingresante = result.B_Ingresante,
                 I_CredDesaprob = result.I_CredDesaprob,
                 B_Success = result.B_Success,
-                T_Message = result.T_Message
+                T_Message = result.T_Message,
+                C_CodCurso = result.C_CodCurso,
+                I_Vez = result.I_Vez
             };
 
             return matriculaObs;

@@ -107,7 +107,7 @@ namespace WebApp.Models
         {
             var matriculaSource = MatriculaSourceFactory.Get(Path.GetExtension(filePath));
 
-            var dataMatriculas = matriculaSource.GetList(filePath);
+            var dataMatriculas = matriculaSource.GetList(tipoAlumno, filePath);
 
             bool alumnosPregado = (tipoAlumno == TipoAlumno.Pregrado);
 

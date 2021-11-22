@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Domain.Entities;
+using Domain.Helpers;
 using NDbfReader;
 
 namespace WebApp.Models
 {
     public class MatriculaDbfSource : IMatriculaSource
     {
-        public List<MatriculaEntity> GetList(string filePath)
+        public List<MatriculaEntity> GetList(TipoAlumno tipoAlumno, string filePath)
         {
             var dataMatriculas = new List<MatriculaEntity>();
 
@@ -20,7 +21,7 @@ namespace WebApp.Models
                 
                 while (reader.Read())
                 {
-                    dataMatriculas.Add(Mapper.MatriculaReader_To_MatriculaEntity(reader));
+                    dataMatriculas.Add(Mapper.MatriculaReader_To_MatriculaEntity(tipoAlumno, reader));
                 }
             }
 

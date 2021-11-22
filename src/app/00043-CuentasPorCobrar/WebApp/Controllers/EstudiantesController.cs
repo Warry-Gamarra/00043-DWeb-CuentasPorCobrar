@@ -81,6 +81,7 @@ namespace WebApp.Controllers
             var response = Mapper.DataMatriculaResponse_To_Response(result);
 
             Session["MATRICULA_RESPONSE"] = result.DataMatriculasObs;
+            Session["MATRICULA_RESPONSE_TIPO_ALUMNO"] = tipoAlumno;
 
             return Json(response, JsonRequestBehavior.AllowGet);
         }
@@ -88,8 +89,10 @@ namespace WebApp.Controllers
         [Authorize(Roles = "Administrador, Tesorería")]
         public ActionResult DescargarRegistrosObservados()
         {
-            if (Session["MATRICULA_RESPONSE"] == null)
+            if (Session["MATRICULA_RESPONSE"] == null || Session["MATRICULA_RESPONSE_TIPO_ALUMNO"] == null)
                 return  RedirectToAction("cargar-estudiantes", "operaciones");
+
+            TipoAlumno tipoAlumno = (TipoAlumno)Session["MATRICULA_RESPONSE_TIPO_ALUMNO"];
 
             using (var workbook = new XLWorkbook())
             {
@@ -105,9 +108,17 @@ namespace WebApp.Controllers
                 worksheet.Cell(currentRow, 6).Value = "Nivel";
                 worksheet.Cell(currentRow, 7).Value = "Es_ingresa";
                 worksheet.Cell(currentRow, 8).Value = "Cred_desap";
-                worksheet.Cell(currentRow, 9).Value = "Observación";
-                worksheet.Cell(currentRow, 10).Value = "Act_Obl";
-                
+
+                int obsRow = 9;
+
+                if (tipoAlumno.Equals(TipoAlumno.Pregrado))
+                {
+                    obsRow = 11;
+                    worksheet.Cell(currentRow, 9).Value = "Cod_Cur";
+                    worksheet.Cell(currentRow, 10).Value = "Vez";
+                }
+
+                worksheet.Cell(currentRow, obsRow).Value = "Observación";
                 #endregion
 
                 #region Body
@@ -122,8 +133,14 @@ namespace WebApp.Controllers
                     worksheet.Cell(currentRow, 6).SetValue<string>(item.C_Ciclo);
                     worksheet.Cell(currentRow, 7).Value = item.B_Ingresante.HasValue ? (item.B_Ingresante.Value ? "T" : "F") : null;
                     worksheet.Cell(currentRow, 8).Value = item.I_CredDesaprob;
-                    worksheet.Cell(currentRow, 9).SetValue<string>(item.T_Message);
-                    worksheet.Cell(currentRow, 10).Value = "F";
+                    
+                    if (tipoAlumno.Equals(TipoAlumno.Pregrado))
+                    {
+                        worksheet.Cell(currentRow, 9).SetValue<string>(item.C_CodCurso);
+                        worksheet.Cell(currentRow, 10).Value = item.I_Vez;   
+                    }
+
+                    worksheet.Cell(currentRow, obsRow).SetValue<string>(item.T_Message);
                 }
                 #endregion
 

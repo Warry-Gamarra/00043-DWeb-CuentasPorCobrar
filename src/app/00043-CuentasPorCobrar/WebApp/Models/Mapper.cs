@@ -125,7 +125,7 @@ namespace WebApp.Models
             return selectViewModel;
         }
 
-        public static MatriculaEntity MatriculaReader_To_MatriculaEntity(Reader reader)
+        public static MatriculaEntity MatriculaReader_To_MatriculaEntity(TipoAlumno tipoAlumno, Reader reader)
         {
             var dataMatriculaType = new MatriculaEntity()
             {
@@ -139,10 +139,16 @@ namespace WebApp.Models
                 I_CredDesaprob = reader.GetInt32("CRED_DESAP")
             };
 
+            if (tipoAlumno.Equals(TipoAlumno.Pregrado))
+            {
+                dataMatriculaType.C_CodCurso = reader.GetString("COD_CUR");
+                dataMatriculaType.I_Vez = reader.GetInt32("VEZ");
+            }
+
             return dataMatriculaType;
         }
 
-        public static MatriculaEntity MatriculaReader_To_MatriculaEntity(IExcelDataReader reader)
+        public static MatriculaEntity MatriculaReader_To_MatriculaEntity(TipoAlumno tipoAlumno, IExcelDataReader reader)
         {
             string stringValue; int intValue;
 
@@ -188,6 +194,25 @@ namespace WebApp.Models
                 dataMatriculaType.I_CredDesaprob = 0;
             }
 
+            if (tipoAlumno.Equals(TipoAlumno.Pregrado))
+            {
+                dataMatriculaType.C_CodCurso = reader.GetValue(8)?.ToString();
+
+                if (reader.GetValue(9) != null)
+                {
+                    stringValue = reader.GetValue(9).ToString();
+
+                    if (stringValue.Trim() == "")
+                        dataMatriculaType.I_Vez = 1;
+                    else if (int.TryParse(stringValue, out intValue))
+                        dataMatriculaType.I_Vez = intValue;
+                }
+                else
+                {
+                    dataMatriculaType.I_Vez = 1;
+                }
+            }
+            
             return dataMatriculaType;
         }
 

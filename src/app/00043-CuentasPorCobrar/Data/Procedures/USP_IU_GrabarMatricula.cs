@@ -26,13 +26,12 @@ namespace Data.Procedures
 
             try
             {
-                string s_command = @"USP_IU_GrabarMatricula";
+                string s_command = B_AlumnosPregrado ? "USP_IU_GrabarMatriculaPregrado" : "USP_IU_GrabarMatriculaPosgrado";
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
                     parameters = new DynamicParameters();
                     parameters.Add(name: "Tbl_Matricula", value: dataTable.AsTableValuedParameter("dbo.type_dataMatricula"));
-                    parameters.Add(name: "B_AlumnosPregrado", dbType: DbType.Boolean, value: this.B_AlumnosPregrado);
                     parameters.Add(name: "D_FecRegistro", dbType: DbType.DateTime, value: this.D_FecRegistro);
                     parameters.Add(name: "UserID", dbType: DbType.Int32, value: this.UserID);
                     parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);

@@ -18,5 +18,7 @@ namespace Data.Types
         public int? I_CredDesaprob { get; set; }
         public bool B_Success { get; set; }
         public string T_Message { get; set; }
+        public string C_CodCurso { get; set; }
+        public int? I_Vez { get; set; }
     }
 }

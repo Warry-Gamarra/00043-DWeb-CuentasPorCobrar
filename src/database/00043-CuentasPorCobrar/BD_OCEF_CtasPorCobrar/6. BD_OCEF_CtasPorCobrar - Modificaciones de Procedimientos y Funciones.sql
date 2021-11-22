@@ -98,6 +98,7 @@ BEGIN
 			@I_TipoAlumno int,
 			@I_MontoDeuda decimal(15,2),
 			@I_CredDesaprob tinyint,
+			@I_MultiplicMontoCredt int,
 			@N_NroPagos tinyint,
 
 			--Variables para comprobar modificaciones
@@ -119,8 +120,7 @@ BEGIN
 			
 			--4to obtengo la información alumno por alumno e inicializo variables
 			select @I_MatAluID = I_MatAluID, @C_CodRc = C_CodRc, @C_CodAlu = C_CodAlu, @C_EstMat = C_EstMat, @C_CodModIng = C_CodModIng, 
-				@N_Grupo = N_Grupo, @I_CredDesaprob = ISNULL(I_CredDesaprob, 0), 
-				@I_TipoAlumno = (case when B_Ingresante = 0 then @I_AlumnoRegular else @I_AlumnoIngresante end) 
+				@N_Grupo = N_Grupo, @I_TipoAlumno = (case when B_Ingresante = 0 then @I_AlumnoRegular else @I_AlumnoIngresante end) 
 			from @Tmp_MatriculaAlumno 
 			where id = @I_FilaActual
 
@@ -229,11 +229,15 @@ BEGIN
 			if (select count(I_ProcesoID) from #tmp_conceptos_pregrado
 					where I_TipoAlumno = @I_TipoAlumno and B_Calculado = 1 and I_Calculado = @I_CrdtDesaprobados) = 1
 			begin
+				SET @I_CredDesaprob = (SELECT SUM(c.I_CredDesaprob) FROM dbo.TC_MatriculaCurso c WHERE c.I_MatAluID = @I_MatAluID AND c.B_Habilitado = 1 AND c.B_Eliminado = 0)
+
 				if (@I_CredDesaprob > 0)
 				begin
 					set @N_NroPagos = isnull((select top 1 N_NroPagos from #tmp_conceptos_pregrado 
 						where I_TipoAlumno = @I_TipoAlumno and B_Calculado = 1 and I_Calculado = @I_CrdtDesaprobados), 1);
 
+					set @I_MultiplicMontoCredt = (SELECT SUM(c.I_CredDesaprob * (c.I_Vez - 1)) FROM dbo.TC_MatriculaCurso c WHERE c.I_MatAluID = @I_MatAluID AND c.B_Habilitado = 1 AND c.B_Eliminado = 0);				
+				
 					with CTE_Recursivo as
 					(
 						select 1 as num, I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad from #tmp_conceptos_pregrado
@@ -244,7 +248,7 @@ BEGIN
 						where num < @N_NroPagos
 					)
 					insert @Tmp_Procesos(I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad)
-					select I_ProcesoID, I_ConcPagID, cast((M_Monto * @I_CredDesaprob) / @N_NroPagos as decimal(15,2)), 
+					select I_ProcesoID, I_ConcPagID, cast((M_Monto * @I_MultiplicMontoCredt) / @N_NroPagos as decimal(15,2)), 
 						DATEADD(MONTH, num-1, D_FecVencto), I_TipoObligacion, I_Prioridad
 					from CTE_Recursivo
 				end
@@ -2639,6 +2643,403 @@ BEGIN
 	BEGIN CATCH
 		SET @B_Result = 0
 		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10)) 
+	END CATCH
+END
+GO
+
+
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.DOMAINS WHERE DOMAIN_NAME = 'type_dataMatricula') BEGIN
+	IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_IU_GrabarMatricula') BEGIN
+		DROP PROCEDURE [dbo].[USP_IU_GrabarMatricula]
+	END
+
+	IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_IU_GrabarMatriculaPregrado') BEGIN
+		DROP PROCEDURE [dbo].[USP_IU_GrabarMatriculaPregrado]
+	END
+
+	IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_IU_GrabarMatriculaPosgrado')
+		DROP PROCEDURE [dbo].[USP_IU_GrabarMatriculaPosgrado]
+
+	DROP TYPE [dbo].[type_dataMatricula]
+END
+GO
+
+CREATE TYPE [dbo].[type_dataMatricula] AS TABLE(
+	C_CodRC			varchar(3)  NULL,
+	C_CodAlu		varchar(10) NULL,
+	I_Anio			int			NULL,
+	C_Periodo		char(1)		NULL,
+	C_EstMat		varchar(2)  NULL,
+	C_Ciclo			varchar(2)  NULL,
+	B_Ingresante	bit			NULL,
+	I_CredDesaprob  tinyint		NULL,
+	C_CodCurso		varchar(10) NULL,
+	I_Vez			tinyint		NULL
+)
+GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_IU_GrabarMatriculaPregrado')
+	DROP PROCEDURE [dbo].[USP_IU_GrabarMatriculaPregrado]
+GO
+
+  
+CREATE PROCEDURE [dbo].[USP_IU_GrabarMatriculaPregrado]
+(  
+	@Tbl_Matricula [dbo].[type_dataMatricula] READONLY
+	,@D_FecRegistro datetime
+	,@UserID  int
+	,@B_Result  bit    OUTPUT
+	,@T_Message  nvarchar(4000) OUTPUT
+)  
+AS  
+BEGIN
+	SET NOCOUNT ON;
+	BEGIN TRY  
+	BEGIN TRANSACTION  
+    
+		DECLARE @Tmp_Matricula TABLE (
+			id			INT IDENTITY(1, 1),
+			C_CodRC		VARCHAR(3),
+			C_CodAlu	VARCHAR(20),
+			I_Anio		INT,
+			C_Periodo	VARCHAR(50),
+			I_Periodo	INT,
+			C_EstMat	VARCHAR(2),
+			C_Ciclo		VARCHAR(2),
+			B_Ingresante	BIT
+		)
+
+		DECLARE @Tmp_MatriculaCursoResultado TABLE (
+			C_CodRC		VARCHAR(3),
+			C_CodAlu	VARCHAR(20),
+			I_Anio		INT,
+			C_Periodo	VARCHAR(50),
+			C_EstMat	VARCHAR(2),
+			C_Ciclo		VARCHAR(2),
+			B_Ingresante	BIT,
+			I_CredDesaprob	TINYINT,
+			C_CodCurso	VARCHAR(10),
+			I_Vez		TINYINT,
+			B_Success	BIT,
+			T_Message	VARCHAR(250)
+		)
+
+  
+		INSERT @Tmp_Matricula(C_CodRC, C_CodAlu, I_Anio, C_Periodo, I_Periodo, C_EstMat, C_Ciclo, B_Ingresante)
+		SELECT DISTINCT 
+			m.C_CodRC, m.C_CodAlu, m.I_Anio, m.C_Periodo, c.I_OpcionID AS I_Periodo, m.C_EstMat, m.C_Ciclo, m.B_Ingresante
+		FROM @Tbl_Matricula AS m
+		LEFT JOIN dbo.TC_CatalogoOpcion c ON c.I_ParametroID = 5 AND c.T_OpcionCod = m.C_Periodo AND c.B_Eliminado = 0
+		LEFT JOIN BD_UNFV_Repositorio.dbo.VW_Alumnos a ON a.C_CodAlu = m.C_CodAlu and a.C_RcCod = m.C_CodRC AND a.N_Grado = '1'
+
+		INSERT @Tmp_MatriculaCursoResultado(C_CodRC, C_CodAlu, I_Anio, C_Periodo, C_EstMat, C_Ciclo, B_Ingresante,
+			I_CredDesaprob, C_CodCurso, I_Vez)
+		SELECT m.C_CodRC, m.C_CodAlu, m.I_Anio, m.C_Periodo, m.C_EstMat, m.C_Ciclo, m.B_Ingresante,
+			m.I_CredDesaprob, m.C_CodCurso, m.I_Vez
+		FROM @Tbl_Matricula AS m
+  
+		DECLARE @actual INT = 1,
+				@fin	INT = (SELECT COUNT(*) FROM @Tmp_Matricula),
+				@C_CodRC VARCHAR(3),
+				@C_CodAlu VARCHAR(20),
+				@I_Anio INT,
+				@C_Periodo VARCHAR(50),
+				@I_Periodo	INT,
+				@C_EstMat	VARCHAR(2),
+				@C_Ciclo		VARCHAR(2),
+				@B_Ingresante	BIT,
+				---
+				@I_MatAluID INT,
+				@I_ObligacionAluID INT,
+				--
+				@B_ExisteError BIT,
+				@B_Success BIT,
+				@T_MsgError BIT
+
+		WHILE (@actual <= @fin)
+		BEGIN
+			SELECT 
+				@C_CodRC = C_CodRC,
+				@C_CodAlu = C_CodAlu,
+				@I_Anio = I_Anio,
+				@C_Periodo = C_Periodo,
+				@I_Periodo = I_Periodo,
+				@C_EstMat = C_EstMat,
+				@C_Ciclo = C_Ciclo,
+				@B_Ingresante = B_Ingresante
+			FROM @Tmp_Matricula
+			WHERE id = @actual
+
+			SET @B_ExisteError = CASE WHEN @C_CodAlu IS NULL THEN 1 ELSE 0 END
+			
+			SET @T_MsgError = NULL
+
+			IF (@B_ExisteError = 1) BEGIN
+				SET @T_MsgError = 'El Código de Alumno no existe en pregrado.'
+			END ELSE BEGIN
+				SET @B_ExisteError = CASE WHEN @I_Periodo IS NULL THEN 1 ELSE 0 END
+
+				IF (@B_ExisteError = 1) BEGIN
+					SET @T_MsgError = 'El Periodo es incorrecto.'
+				END
+			END
+
+			IF (@B_ExisteError = 0) BEGIN
+				
+				SET @I_MatAluID = (SELECT I_MatAluID FROM dbo.TC_MatriculaAlumno m WHERE m.B_Eliminado = 0 AND C_CodAlu = @C_CodAlu AND C_CodRc = @C_CodRC AND
+					I_Anio = @I_Anio AND I_Periodo = @I_Periodo)
+
+				IF (@I_MatAluID IS NULL)
+				BEGIN
+					INSERT dbo.TC_MatriculaAlumno(C_CodRc, C_CodAlu, I_Anio, I_Periodo, C_EstMat, C_Ciclo, B_Ingresante, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, B_Migrado)
+					VALUES(@C_CodRC, @C_CodAlu, @I_Anio, @I_Periodo, @C_EstMat, @C_Ciclo, @B_Ingresante, 1, 0, @UserID, @D_FecRegistro, 0)
+
+					SET @I_MatAluID = SCOPE_IDENTITY()
+
+					INSERT dbo.TC_MatriculaCurso(I_MatAluID, C_CodCurso, I_Vez, I_CredDesaprob, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
+					SELECT @I_MatAluID, C_CodCurso, I_Vez, I_CredDesaprob, 1, 0, @UserID, @D_FecRegistro 
+					FROM @Tmp_MatriculaCursoResultado
+					WHERE C_CodAlu = @C_CodAlu AND C_CodRC = @C_CodRC AND I_Anio = @I_Anio AND C_Periodo = @C_Periodo
+				END
+				ELSE
+				BEGIN
+					IF NOT EXISTS (SELECT I_ObligacionAluID FROM dbo.TR_ObligacionAluCab
+						WHERE B_Habilitado = 1 AND B_Eliminado = 0 AND I_MatAluID = @I_MatAluID)
+					BEGIN
+						--Actualización data matrícula
+						UPDATE dbo.TC_MatriculaAlumno SET
+							C_EstMat = @C_EstMat,
+							C_Ciclo = @C_Ciclo,
+							B_Ingresante = @B_Ingresante,
+							I_UsuarioMod = @UserID,
+							D_FecMod = @D_FecRegistro
+						WHERE I_MatAluID = @I_MatAluID
+
+						--Deshabilito todos los cursos habilitados
+						UPDATE dbo.TC_MatriculaCurso SET
+							B_Habilitado = 0,
+							I_UsuMod = @UserID,
+							D_FecMod = @D_FecRegistro
+						WHERE I_MatAluID = @I_MatAluID AND B_Eliminado = 0 AND B_Habilitado = 1
+
+						--Habilitado los cursos necesarios
+						UPDATE c SET c.I_CredDesaprob = m.I_CredDesaprob, I_Vez = m.I_Vez, c.B_Habilitado = 1, c.I_UsuMod = @UserID, D_FecMod = @D_FecRegistro 
+						FROM dbo.TC_MatriculaCurso c
+						INNER JOIN @Tmp_MatriculaCursoResultado m ON c.C_CodCurso = m.C_CodCurso
+						WHERE c.I_MatAluID = @I_MatAluID AND c.B_Eliminado = 0 AND
+							m.C_CodAlu = @C_CodAlu AND m.C_CodRC = @C_CodRC AND m.I_Anio = @I_Anio AND m.C_Periodo = @C_Periodo
+
+						--Agrego los cursos restantes
+						INSERT dbo.TC_MatriculaCurso(I_MatAluID, C_CodCurso, I_Vez, I_CredDesaprob, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
+						SELECT @I_MatAluID, m.C_CodCurso, m.I_Vez, m.I_CredDesaprob, 1, 0, @UserID, @D_FecRegistro FROM @Tmp_MatriculaCursoResultado m
+						WHERE m.C_CodAlu = @C_CodAlu AND m.C_CodRC = @C_CodRC AND m.I_Anio = @I_Anio AND m.C_Periodo = @C_Periodo AND
+							NOT EXISTS(SELECT * FROM dbo.TC_MatriculaCurso c WHERE c.B_Eliminado = 0 AND c.I_MatAluID = @I_MatAluID AND c.C_CodCurso = m.C_CodCurso)
+					END
+					ELSE BEGIN
+						IF EXISTS(SELECT cab.I_ObligacionAluID FROM dbo.TR_ObligacionAluCab cab
+							INNER JOIN dbo.TR_ObligacionAluDet det ON det.I_ObligacionAluID = cab.I_ObligacionAluID
+							WHERE det.B_Habilitado = 1 AND det.B_Eliminado = 0 AND det.B_Pagado = 1 AND
+								cab.I_MatAluID = @I_MatAluID AND cab.B_Habilitado = 1 AND cab.B_Eliminado = 0) BEGIN
+
+							SET @T_MsgError = 'El alumno tiene obligaciones pagadas.'
+							SET @B_ExisteError = 0
+
+						END
+						ELSE BEGIN
+							--Actualización data matrícula
+							UPDATE dbo.TC_MatriculaAlumno SET
+								C_EstMat = @C_EstMat,
+								C_Ciclo = @C_Ciclo,
+								B_Ingresante = @B_Ingresante,
+								I_UsuarioMod = @UserID,
+								D_FecMod = @D_FecRegistro
+							WHERE I_MatAluID = @I_MatAluID
+
+							--Deshabilito todos los cursos habilitados
+							UPDATE dbo.TC_MatriculaCurso SET
+								B_Habilitado = 0,
+								I_UsuMod = @UserID,
+								D_FecMod = @D_FecRegistro
+							WHERE I_MatAluID = @I_MatAluID AND B_Eliminado = 0 AND B_Habilitado = 1
+
+							--Habilitado los cursos necesarios
+							UPDATE c SET c.I_CredDesaprob = m.I_CredDesaprob, I_Vez = m.I_Vez, c.B_Habilitado = 1, c.I_UsuMod = @UserID, D_FecMod = @D_FecRegistro 
+							FROM dbo.TC_MatriculaCurso c
+							INNER JOIN @Tmp_MatriculaCursoResultado m ON c.C_CodCurso = m.C_CodCurso
+							WHERE c.I_MatAluID = @I_MatAluID AND c.B_Eliminado = 0 AND
+								m.C_CodAlu = @C_CodAlu AND m.C_CodRC = @C_CodRC AND m.I_Anio = @I_Anio AND m.C_Periodo = @C_Periodo
+
+							--Agrego los cursos restantes
+							INSERT dbo.TC_MatriculaCurso(I_MatAluID, C_CodCurso, I_Vez, I_CredDesaprob, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
+							SELECT @I_MatAluID, m.C_CodCurso, m.I_Vez, m.I_CredDesaprob, 1, 0, @UserID, @D_FecRegistro FROM @Tmp_MatriculaCursoResultado m
+							WHERE m.C_CodAlu = @C_CodAlu AND m.C_CodRC = @C_CodRC AND m.I_Anio = @I_Anio AND m.C_Periodo = @C_Periodo AND
+								NOT EXISTS(SELECT * FROM dbo.TC_MatriculaCurso c WHERE c.B_Eliminado = 0 AND c.I_MatAluID = @I_MatAluID AND c.C_CodCurso = m.C_CodCurso)
+
+							--Elimino las obligaciones antiguas
+							UPDATE det SET det.B_Habilitado = 0, det.B_Eliminado = 1, det.I_UsuarioMod = @UserID, det.D_FecMod = @D_FecRegistro  
+							FROM dbo.TR_ObligacionAluDet det
+							INNER JOIN dbo.TR_ObligacionAluCab cab ON cab.I_ObligacionAluID = det.I_ObligacionAluID AND cab.B_Eliminado = 0
+							WHERE cab.I_MatAluID = @I_MatAluID AND det.B_Eliminado = 0
+
+							UPDATE cab SET cab.B_Habilitado = 0, cab.B_Eliminado = 1, cab.I_UsuarioMod = @UserID, cab.D_FecMod = @D_FecRegistro  
+							FROM dbo.TR_ObligacionAluCab cab
+							WHERE cab.I_MatAluID = @I_MatAluID AND cab.B_Eliminado = 0
+
+						END
+					END
+				END
+			END
+
+			SET @B_Success = CASE WHEN (@B_ExisteError = 1) THEN 0 ELSE 1 END
+
+			UPDATE @Tmp_MatriculaCursoResultado SET B_Success = @B_Success, T_Message = @T_MsgError
+			WHERE C_CodAlu = @C_CodAlu AND C_CodRC = @C_CodRC AND I_Anio = @I_Anio AND C_Periodo = @C_Periodo
+
+			SET @actual = @actual + 1
+		END
+  
+		SELECT * FROM @Tmp_MatriculaCursoResultado
+
+		COMMIT TRANSACTION
+  
+		SET @B_Result = 1  
+		SET @T_Message = 'La importación de datos de alumno finalizó de manera exitosa'  
+    
+	END TRY  
+	BEGIN CATCH  
+		ROLLBACK TRANSACTION  
+		SET @B_Result = 0  
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10))   
+	END CATCH  
+END 
+GO
+ 
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_IU_GrabarMatriculaPosgrado')
+	DROP PROCEDURE [dbo].[USP_IU_GrabarMatriculaPosgrado]
+GO
+
+
+CREATE PROCEDURE [dbo].[USP_IU_GrabarMatriculaPosgrado]
+(  
+  @Tbl_Matricula [dbo].[type_dataMatricula] READONLY
+ ,@D_FecRegistro datetime  
+ ,@UserID  int  
+ ,@B_Result  bit    OUTPUT  
+ ,@T_Message  nvarchar(4000) OUTPUT  
+)  
+AS  
+BEGIN
+	SET NOCOUNT ON;
+
+	BEGIN TRY
+	BEGIN TRANSACTION
+		CREATE TABLE #Tmp_Matricula  
+		(  
+		C_CodRC   VARCHAR(3),
+		C_CodAlu  VARCHAR(20),  
+		I_Anio   INT,  
+		C_Periodo  VARCHAR(50),  
+		I_Periodo  INT,  
+		C_EstMat  VARCHAR(2),  
+		C_Ciclo   VARCHAR(2),  
+		B_Ingresante BIT,  
+		I_CredDesaprob TINYINT  
+		)
+  
+		INSERT #Tmp_Matricula(C_CodRC, C_CodAlu, I_Anio, C_Periodo, I_Periodo, C_EstMat, C_Ciclo, B_Ingresante, I_CredDesaprob)  
+		SELECT m.C_CodRC, m.C_CodAlu, m.I_Anio, m.C_Periodo, c.I_OpcionID AS I_Periodo, m.C_EstMat, m.C_Ciclo, m.B_Ingresante, m.I_CredDesaprob  
+		FROM @Tbl_Matricula AS m  
+		INNER JOIN dbo.TC_CatalogoOpcion c ON c.I_ParametroID = 5 AND c.T_OpcionCod = m.C_Periodo  
+		INNER JOIN BD_UNFV_Repositorio.dbo.VW_Alumnos a ON a.C_CodAlu = m.C_CodAlu and a.C_RcCod = m.C_CodRC  
+		WHERE c.B_Eliminado = 0 AND a.N_Grado IN ('2', '3');   
+  
+		--Update para alumnos sin obligaciones  
+		WITH Tmp_SinObligaciones(I_MatAluID, C_EstMat, C_Ciclo, B_Ingresante, I_CredDesaprob)  
+		AS  
+		(  
+		SELECT mat.I_MatAluID, tmp.C_EstMat, tmp.C_Ciclo, tmp.B_Ingresante, tmp.I_CredDesaprob FROM dbo.TC_MatriculaAlumno mat  
+		LEFT JOIN dbo.TR_ObligacionAluCab obl ON obl.I_MatAluID = mat.I_MatAluID AND obl.B_Eliminado = 0  
+		INNER JOIN #Tmp_Matricula AS tmp ON tmp.C_CodRc = mat.C_CodRc AND tmp.C_CodAlu = mat.C_CodAlu AND tmp.I_Anio = mat.I_Anio AND tmp.I_Periodo = mat.I_Periodo  
+		WHERE mat.B_Eliminado = 0 AND obl.I_MatAluID IS NULL  
+		)  
+		MERGE INTO dbo.TC_MatriculaAlumno AS trg USING Tmp_SinObligaciones AS src ON trg.I_MatAluID = src.I_MatAluID  
+		WHEN MATCHED THEN  
+		UPDATE SET   C_EstMat = src.C_EstMat  
+		, C_Ciclo = src.C_Ciclo  
+		, B_Ingresante = src.B_Ingresante  
+		, I_CredDesaprob = src.I_CredDesaprob  
+		, I_UsuarioMod = @UserID  
+		, D_FecMod = @D_FecRegistro;  
+     
+     
+		--Actualizo información de alumnos que tengan obligaciones generadas pero que NO esten pagas.  
+		UPDATE mat SET  
+		mat.C_EstMat = tmp.C_EstMat, mat.C_Ciclo = tmp.C_Ciclo, mat.B_Ingresante = tmp.B_Ingresante, mat.I_CredDesaprob = tmp.I_CredDesaprob,  
+		mat.I_UsuarioMod = @UserID, D_FecMod = @D_FecRegistro  
+		FROM dbo.TC_MatriculaAlumno mat  
+		INNER JOIN #Tmp_Matricula AS tmp ON tmp.C_CodRc = mat.C_CodRc AND tmp.C_CodAlu = mat.C_CodAlu AND tmp.I_Anio = mat.I_Anio AND tmp.I_Periodo = mat.I_Periodo  
+		WHERE mat.B_Eliminado = 0 AND NOT EXISTS(  
+		SELECT m.I_MatAluID FROM dbo.TC_MatriculaAlumno m  
+		INNER JOIN dbo.TR_ObligacionAluCab obl ON obl.I_MatAluID = m.I_MatAluID AND obl.B_Eliminado = 0 AND obl.B_Pagado = 1  
+		WHERE m.B_Eliminado = 0 AND tmp.C_CodRc = m.C_CodRc AND tmp.C_CodAlu = m.C_CodAlu AND tmp.I_Anio = m.I_Anio AND tmp.I_Periodo = m.I_Periodo  
+		)  
+  
+		--Después elimino dichas obligaciones(en detalle) para que se generen de nuevo.  
+		UPDATE det SET det.B_Habilitado = 0, det.B_Eliminado = 1, det.I_UsuarioMod = @UserID, det.D_FecMod = @D_FecRegistro  
+		FROM #Tmp_Matricula tmp  
+		INNER JOIN dbo.TC_MatriculaAlumno mat ON tmp.C_CodRc = mat.C_CodRc AND tmp.C_CodAlu = mat.C_CodAlu AND tmp.I_Anio = mat.I_Anio AND tmp.I_Periodo = mat.I_Periodo AND mat.B_Eliminado = 0  
+		INNER JOIN dbo.TR_ObligacionAluCab cab ON cab.I_MatAluID = mat.I_MatAluID AND cab.B_Eliminado = 0  
+		INNER JOIN dbo.TR_ObligacionAluDet det ON det.I_ObligacionAluID = cab.I_ObligacionAluID AND det.B_Eliminado = 0  
+		WHERE NOT EXISTS(  
+		SELECT m.I_MatAluID FROM dbo.TC_MatriculaAlumno m  
+		INNER JOIN dbo.TR_ObligacionAluCab obl ON obl.I_MatAluID = m.I_MatAluID AND obl.B_Eliminado = 0 AND obl.B_Pagado = 1  
+		WHERE m.B_Eliminado = 0 AND tmp.C_CodRc = m.C_CodRc AND tmp.C_CodAlu = m.C_CodAlu AND tmp.I_Anio = m.I_Anio AND tmp.I_Periodo = m.I_Periodo  
+		)  
+  
+		--Después elimino dichas obligaciones(en cabecera) para que se generen de nuevo.  
+		UPDATE cab SET cab.B_Habilitado = 0, cab.B_Eliminado = 1, cab.I_UsuarioMod = @UserID, cab.D_FecMod = @D_FecRegistro  
+		FROM #Tmp_Matricula tmp  
+		INNER JOIN dbo.TC_MatriculaAlumno mat ON tmp.C_CodRc = mat.C_CodRc AND tmp.C_CodAlu = mat.C_CodAlu AND tmp.I_Anio = mat.I_Anio AND tmp.I_Periodo = mat.I_Periodo AND mat.B_Eliminado = 0  
+		INNER JOIN dbo.TR_ObligacionAluCab cab ON cab.I_MatAluID = mat.I_MatAluID AND cab.B_Eliminado = 0  
+		WHERE NOT EXISTS(  
+		SELECT m.I_MatAluID FROM dbo.TC_MatriculaAlumno m  
+		INNER JOIN dbo.TR_ObligacionAluCab obl ON obl.I_MatAluID = m.I_MatAluID AND obl.B_Eliminado = 0 AND obl.B_Pagado = 1  
+		WHERE m.B_Eliminado = 0 AND tmp.C_CodRc = m.C_CodRc AND tmp.C_CodAlu = m.C_CodAlu AND tmp.I_Anio = m.I_Anio AND tmp.I_Periodo = m.I_Periodo  
+		)  
+  
+  
+		--Insert para alumnos nuevos  
+		MERGE INTO TC_MatriculaAlumno AS trg USING #Tmp_Matricula AS src  
+		ON trg.C_CodRc = src.C_CodRc AND trg.C_CodAlu = src.C_CodAlu AND trg.I_Anio = src.I_Anio AND trg.I_Periodo = src.I_Periodo AND trg.B_Eliminado = 0  
+		WHEN NOT MATCHED BY TARGET THEN  
+		INSERT (C_CodRc, C_CodAlu, I_Anio, I_Periodo, C_EstMat, C_Ciclo, B_Ingresante, I_CredDesaprob, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, B_Migrado)  
+		VALUES (src.C_CodRc, src.C_CodAlu, src.I_Anio, src.I_Periodo, src.C_EstMat, src.C_Ciclo, src.B_Ingresante, src.I_CredDesaprob, 1, 0, @UserID, @D_FecRegistro, 0);  
+  
+		--Informar relación de alumnos que ya tienen obligaciones pagadas y de alumnos inexistentes.  
+		SELECT DISTINCT tmp.C_CodRC, tmp.C_CodAlu, tmp.I_Anio, tmp.C_Periodo, tmp.C_EstMat, tmp.C_Ciclo, tmp.B_Ingresante, tmp.I_CredDesaprob, 0 as B_Success, 'El alumno tiene obligaciones pagadas.' AS T_Message   
+		FROM #Tmp_Matricula tmp  
+		INNER JOIN dbo.TC_MatriculaAlumno mat ON tmp.C_CodRc = mat.C_CodRc AND tmp.C_CodAlu = mat.C_CodAlu AND tmp.I_Anio = mat.I_Anio AND tmp.I_Periodo = mat.I_Periodo AND mat.B_Eliminado = 0  
+		INNER JOIN dbo.TR_ObligacionAluCab obl ON obl.I_MatAluID = mat.I_MatAluID AND obl.B_Eliminado = 0 AND obl.B_Pagado = 1  
+		UNION  
+		SELECT m.C_CodRC, m.C_CodAlu, m.I_Anio, m.C_Periodo, m.C_EstMat, m.C_Ciclo, m.B_Ingresante, m.I_CredDesaprob, 0 AS B_Success, 'El Código de alumno no existe.' AS T_Message FROM @Tbl_Matricula AS m  
+		LEFT JOIN BD_UNFV_Repositorio.dbo.VW_Alumnos a ON a.C_CodAlu = m.C_CodAlu AND a.C_RcCod = m.C_CodRC  
+		WHERE a.C_CodAlu IS NULL  
+  
+		COMMIT TRANSACTION  
+  
+		SET @B_Result = 1  
+		SET @T_Message = 'La importación de datos de alumno finalizó de manera exitosa'  
+    
+	END TRY
+	BEGIN CATCH  
+		ROLLBACK TRANSACTION  
+		SET @B_Result = 0  
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10))   
 	END CATCH
 END
 GO

@@ -16,5 +16,7 @@ namespace Domain.Entities
         public string C_Ciclo { get; set; }
         public bool? B_Ingresante { get; set; }
         public int? I_CredDesaprob { get; set; }
+        public string C_CodCurso { get; set; }
+        public int? I_Vez { get; set; }
     }
 }
