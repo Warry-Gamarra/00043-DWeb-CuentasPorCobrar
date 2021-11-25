@@ -45,16 +45,34 @@ namespace Domain.Services
             _concepto.I_ConceptoID = concepto.I_ConceptoID;
             _concepto.T_ConceptoDesc = concepto.T_ConceptoDesc;
             _concepto.T_Clasificador = concepto.T_Clasificador;
+            _concepto.T_ClasifCorto = concepto.T_ClasifCorto;
+            _concepto.B_EsObligacion = concepto.B_EsObligacion;
             _concepto.B_EsPagoMatricula = concepto.B_EsPagoMatricula;
             _concepto.B_EsPagoExtmp = concepto.B_EsPagoExtmp;
-            _concepto.B_ConceptoAgrupa = concepto.B_ConceptoAgrupa;
-            _concepto.B_Habilitado = concepto.B_Habilitado;
+
+            _concepto.B_Fraccionable = concepto.B_Fraccionable;
+            _concepto.B_ConceptoGeneral = concepto.B_ConceptoGeneral;
+            _concepto.B_AgrupaConcepto = concepto.B_AgrupaConcepto;
+            _concepto.I_TipoObligacion = concepto.I_TipoObligacion;
+
             _concepto.B_Calculado = concepto.B_Calculado;
             _concepto.I_Calculado = concepto.I_Calculado;
+            _concepto.B_GrupoCodRc = concepto.B_GrupoCodRc;
+            _concepto.I_GrupoCodRc = concepto.I_GrupoCodRc;
+            _concepto.B_ModalidadIngreso = concepto.B_ModalidadIngreso;
+            _concepto.I_ModalidadIngresoID = concepto.I_ModalidadIngresoID;
+
+            _concepto.B_ConceptoAgrupa = concepto.B_ConceptoAgrupa;
+            _concepto.I_ConceptoAgrupaID = concepto.I_ConceptoAgrupaID;
+
+            _concepto.N_NroPagos = concepto.N_NroPagos;
+            _concepto.B_Porcentaje = concepto.B_Porcentaje;
+            _concepto.C_Moneda = concepto.C_Moneda;
             _concepto.I_Monto = concepto.I_Monto;
             _concepto.I_MontoMinimo = concepto.I_MontoMinimo;
+            _concepto.B_Habilitado = concepto.B_Habilitado;
             _concepto.B_Mora = concepto.B_Mora;
-
+            
             switch (saveOption)
             {
                 case SaveOption.Insert:
@@ -251,11 +269,11 @@ namespace Domain.Services
             }
         }
 
-        public List<ConceptoEntity> Listar_Concepto(TipoObligacion tipoObligacion)
+        public List<ConceptoEntity> Listar_Concepto(TipoPago tipoPago)
         {
             try
             {
-                var lista = TC_Concepto.Find(tipoObligacion == TipoObligacion.Matricula ? true : false);
+                var lista = TC_Concepto.Find(tipoPago == TipoPago.Obligacion ? true : false);
 
                 var result = lista.Select(x => new ConceptoEntity()
                 {

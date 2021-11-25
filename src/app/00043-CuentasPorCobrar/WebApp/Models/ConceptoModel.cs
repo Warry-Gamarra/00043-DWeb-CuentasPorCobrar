@@ -39,13 +39,34 @@ namespace WebApp.Models
                 I_ConceptoID = model.Id ?? 0,
                 T_ConceptoDesc = model.NombreConcepto,
                 T_Clasificador = model.Clasificador,
+                T_ClasifCorto = model.T_ClasifCorto,
+                B_EsObligacion = model.B_EsObligacion,
                 B_EsPagoMatricula = model.EsMatricula,
                 B_EsPagoExtmp = model.Extemporaneo,
-                B_ConceptoAgrupa = model.AgupaConceptos,
-                I_Monto = model.Monto,
-                I_MontoMinimo = model.MontoMinimo,
+
+                B_Fraccionable = model.B_Fraccionable,
+                B_ConceptoGeneral = model.B_ConceptoGeneral,
+                B_AgrupaConcepto = model.B_AgrupaConcepto,
+                I_TipoObligacion = model.TipoObligacion,
+
                 B_Calculado = model.Calculado,
                 I_Calculado = model.TipoCalculo,
+                B_GrupoCodRc = model.B_GrupoCodRc,
+                I_GrupoCodRc = model.I_GrupoCodRc,
+                B_ModalidadIngreso = model.B_ModalidadIngreso,
+                I_ModalidadIngresoID = model.I_ModalidadIngresoID,
+
+                B_ConceptoAgrupa = model.AgupaConceptos,
+                I_ConceptoAgrupaID = model.I_ConceptoAgrupaID,
+
+                N_NroPagos = model.N_NroPagos,
+                B_Porcentaje = model.B_Porcentaje,
+                C_Moneda = model.C_Moneda,
+                I_Monto = model.Monto,
+                I_MontoMinimo = model.MontoMinimo,
+                
+                T_DescripcionLarga = model.T_DescripcionLarga,
+                T_Documento = model.T_Documento,
                 B_Mora = model.B_Mora
             };
 
@@ -92,11 +113,11 @@ namespace WebApp.Models
             return result;
         }
 
-        public List<CatalogoConceptosViewModel> Listar_CatalogoConceptos(TipoObligacion tipoObligacion, bool conceptoAgrupa = false)
+        public List<CatalogoConceptosViewModel> Listar_CatalogoConceptos(TipoPago tipoPago)
         {
             List<CatalogoConceptosViewModel> result = new List<CatalogoConceptosViewModel>();
 
-            foreach (var item in conceptoPagoService.Listar_Concepto(tipoObligacion).Where(x => x.B_ConceptoAgrupa == conceptoAgrupa))
+            foreach (var item in conceptoPagoService.Listar_Concepto(tipoPago))
             {
                 result.Add(new CatalogoConceptosViewModel(item));
             }

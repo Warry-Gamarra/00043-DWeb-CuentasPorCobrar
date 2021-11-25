@@ -117,7 +117,7 @@ namespace WebApp.Controllers
 
             var lista = _procesoModel.Listar_Tasas();
 
-            ViewBag.Conceptos = new SelectList(_conceptoModel.Listar_CatalogoConceptos(TipoObligacion.OtrosPagos), "Id", "NombreConcepto");
+            ViewBag.Conceptos = new SelectList(_conceptoModel.Listar_CatalogoConceptos(TipoPago.Tasa), "Id", "NombreConcepto");
             ViewBag.Dependencias = new SelectList(_selectModel.GetDependencias(), "Value", "TextDisplay", _dependenciaUsuarioId);
 
             return View("Tasas", lista);

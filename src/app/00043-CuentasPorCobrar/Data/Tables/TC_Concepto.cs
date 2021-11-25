@@ -154,13 +154,32 @@ namespace Data.Tables
                     parameters.Add(name: "I_ConceptoID", dbType: DbType.Int32, value: this.I_ConceptoID);
                     parameters.Add(name: "T_ConceptoDesc", dbType: DbType.String, size: 250, value: this.T_ConceptoDesc);
                     parameters.Add(name: "T_Clasificador", dbType: DbType.String, size: 50, value: this.T_Clasificador);
-                    parameters.Add(name: "I_Monto", dbType: DbType.Decimal, value: this.I_Monto);
-                    parameters.Add(name: "I_MontoMinimo", dbType: DbType.Decimal, value: this.I_MontoMinimo);
+                    parameters.Add(name: "T_ClasifCorto", dbType: DbType.String, size: 50, value: this.T_ClasifCorto);
+                    parameters.Add(name: "B_EsObligacion", dbType: DbType.Boolean, value: this.B_EsObligacion);
                     parameters.Add(name: "B_EsPagoMatricula", dbType: DbType.Boolean, value: this.B_EsPagoMatricula);
                     parameters.Add(name: "B_EsPagoExtmp", dbType: DbType.Boolean, value: this.B_EsPagoExtmp);
-                    parameters.Add(name: "B_ConceptoAgrupa", dbType: DbType.Boolean, value: this.B_ConceptoAgrupa);
+
+                    parameters.Add(name: "B_Fraccionable", dbType: DbType.Boolean, value: this.B_Fraccionable);
+                    parameters.Add(name: "B_ConceptoGeneral", dbType: DbType.Boolean, value: this.B_ConceptoGeneral);
+                    parameters.Add(name: "B_AgrupaConcepto", dbType: DbType.Boolean, value: this.B_AgrupaConcepto);
+                    parameters.Add(name: "I_TipoObligacion", dbType: DbType.Int32, value: this.I_TipoObligacion);
+
                     parameters.Add(name: "B_Calculado", dbType: DbType.Boolean, value: this.B_Calculado);
                     parameters.Add(name: "I_Calculado", dbType: DbType.Int32, value: this.I_Calculado);
+                    parameters.Add(name: "B_GrupoCodRc", dbType: DbType.Boolean, value: this.B_GrupoCodRc);
+                    parameters.Add(name: "I_GrupoCodRc", dbType: DbType.Int32, value: this.I_GrupoCodRc);
+                    parameters.Add(name: "B_ModalidadIngreso", dbType: DbType.Boolean, value: this.B_ModalidadIngreso);
+                    parameters.Add(name: "I_ModalidadIngresoID", dbType: DbType.Int32, value: this.I_ModalidadIngresoID);
+
+                    parameters.Add(name: "B_ConceptoAgrupa", dbType: DbType.Boolean, value: this.B_ConceptoAgrupa);
+                    parameters.Add(name: "I_ConceptoAgrupaID", dbType: DbType.Int32, value: this.I_ConceptoAgrupaID);
+
+                    parameters.Add(name: "N_NroPagos", dbType: DbType.Int32, value: this.N_NroPagos);
+                    parameters.Add(name: "B_Porcentaje", dbType: DbType.Boolean, value: this.B_Porcentaje);
+                    parameters.Add(name: "C_Moneda", dbType: DbType.String, size: 5, value: this.C_Moneda);
+                    parameters.Add(name: "I_Monto", dbType: DbType.Decimal, value: this.I_Monto);
+                    parameters.Add(name: "I_MontoMinimo", dbType: DbType.Decimal, value: this.I_MontoMinimo);
+
                     parameters.Add(name: "D_FecCre", dbType: DbType.DateTime, value: this.D_FecCre);
                     parameters.Add(name: "CurrentUserId", dbType: DbType.Int32, value: currentUserId);
                     parameters.Add(name: "B_Mora", dbType: DbType.Boolean, value: this.B_Mora);
@@ -195,13 +214,32 @@ namespace Data.Tables
                     parameters.Add(name: "I_ConceptoID", dbType: DbType.Int32, value: this.I_ConceptoID);
                     parameters.Add(name: "T_ConceptoDesc", dbType: DbType.String, size: 250, value: this.T_ConceptoDesc);
                     parameters.Add(name: "T_Clasificador", dbType: DbType.String, size: 50, value: this.T_Clasificador);
-                    parameters.Add(name: "I_Monto", dbType: DbType.Decimal, value: this.I_Monto);
-                    parameters.Add(name: "I_MontoMinimo", dbType: DbType.Decimal, value: this.I_MontoMinimo);
+                    parameters.Add(name: "T_ClasifCorto", dbType: DbType.String, size: 50, value: this.T_ClasifCorto);
+                    parameters.Add(name: "B_EsObligacion", dbType: DbType.Boolean, value: this.B_EsObligacion);
                     parameters.Add(name: "B_EsPagoMatricula", dbType: DbType.Boolean, value: this.B_EsPagoMatricula);
                     parameters.Add(name: "B_EsPagoExtmp", dbType: DbType.Boolean, value: this.B_EsPagoExtmp);
-                    parameters.Add(name: "B_ConceptoAgrupa", dbType: DbType.Boolean, value: this.B_ConceptoAgrupa);
+
+                    parameters.Add(name: "B_Fraccionable", dbType: DbType.Boolean, value: this.B_Fraccionable);
+                    parameters.Add(name: "B_ConceptoGeneral", dbType: DbType.Boolean, value: this.B_ConceptoGeneral);
+                    parameters.Add(name: "B_AgrupaConcepto", dbType: DbType.Boolean, value: this.B_AgrupaConcepto);
+                    parameters.Add(name: "I_TipoObligacion", dbType: DbType.Int32, value: this.I_TipoObligacion);
+
                     parameters.Add(name: "B_Calculado", dbType: DbType.Boolean, value: this.B_Calculado);
                     parameters.Add(name: "I_Calculado", dbType: DbType.Int32, value: this.I_Calculado);
+                    parameters.Add(name: "B_GrupoCodRc", dbType: DbType.Boolean, value: this.B_GrupoCodRc);
+                    parameters.Add(name: "I_GrupoCodRc", dbType: DbType.Int32, value: this.I_GrupoCodRc);
+                    parameters.Add(name: "B_ModalidadIngreso", dbType: DbType.Boolean, value: this.B_ModalidadIngreso);
+                    parameters.Add(name: "I_ModalidadIngresoID", dbType: DbType.Int32, value: this.I_ModalidadIngresoID);
+
+                    parameters.Add(name: "B_ConceptoAgrupa", dbType: DbType.Boolean, value: this.B_ConceptoAgrupa);
+                    parameters.Add(name: "I_ConceptoAgrupaID", dbType: DbType.Int32, value: this.I_ConceptoAgrupaID);
+
+                    parameters.Add(name: "N_NroPagos", dbType: DbType.Int32, value: this.N_NroPagos);
+                    parameters.Add(name: "B_Porcentaje", dbType: DbType.Boolean, value: this.B_Porcentaje);
+                    parameters.Add(name: "C_Moneda", dbType: DbType.String, size: 5, value: this.C_Moneda);
+                    parameters.Add(name: "I_Monto", dbType: DbType.Decimal, value: this.I_Monto);
+                    parameters.Add(name: "I_MontoMinimo", dbType: DbType.Decimal, value: this.I_MontoMinimo);
+
                     parameters.Add(name: "D_FecMod", dbType: DbType.DateTime, value: this.D_FecMod);
                     parameters.Add(name: "CurrentUserId", dbType: DbType.Int32, value: currentUserId);
                     parameters.Add(name: "B_Mora", dbType: DbType.Boolean, value: this.B_Mora);

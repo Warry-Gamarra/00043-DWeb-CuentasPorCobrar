@@ -1,6 +1,4 @@
-﻿
-
-@model WebApp.ViewModels.CatalogoConceptosRegistroViewModel
+﻿@model WebApp.ViewModels.CatalogoConceptosRegistroViewModel
 
 @Scripts.Render("~/bundles/jqueryval")
 
@@ -17,6 +15,18 @@
         <div class="container-fluid">
             <p class="h5 border-bottom mb-3">Datos generales</p>
             @Html.HiddenFor(model => model.Id)
+            @Html.HiddenFor(model => model.B_EsObligacion)
+            @Html.HiddenFor(model => model.B_Fraccionable)
+            @Html.HiddenFor(model => model.B_ConceptoGeneral)
+            @Html.HiddenFor(model => model.B_AgrupaConcepto)
+            @Html.HiddenFor(model => model.TipoObligacion)
+            @Html.HiddenFor(model => model.AgupaConceptos)
+            @Html.HiddenFor(model => model.I_ConceptoAgrupaID)
+            @Html.HiddenFor(model => model.N_NroPagos)
+            @Html.HiddenFor(model => model.B_Porcentaje)
+            @Html.HiddenFor(model => model.C_Moneda)
+            @Html.HiddenFor(model => model.T_DescripcionLarga)
+            @Html.HiddenFor(model => model.T_Documento)
 
             <div class="form-group">
                 @Html.LabelFor(model => model.NombreConcepto, new { @class = "control-label" })
@@ -26,23 +36,39 @@
 
             <div class="form-group">
                 <div class="form-row">
-                    @Html.LabelFor(model => model.I_GrupoCodRc, new { @class = "control-label col-form-label col-md-4" })
+                    @Html.LabelFor(model => model.I_ModalidadIngresoID, new { @class = "control-label col-form-label col-md-4" })
                     <div class="col-md-8">
-                        @Html.DropDownListFor(model => model.I_GrupoCodRc, ViewBag.Lista_Combo_GrupoCodRc as SelectList, "[ SELECCIONAR ]", new { @class = "form-control" })
-                        <p class="text-danger">@Html.ValidationMessageFor(model => model.I_GrupoCodRc)</p>
+                        @Html.DropDownListFor(model => model.I_ModalidadIngresoID, ViewBag.Lista_Combo_CodIngreso as SelectList, "[ SELECCIONAR ]", new { @class = "form-control" })
+                        <p class="text-danger">@Html.ValidationMessageFor(model => model.I_ModalidadIngresoID)</p>
                     </div>
                 </div>
             </div>
 
-            <div class="form-group">
-                <div class="form-row">
-                    @Html.LabelFor(model => model.C_CodRc, new { @class = "control-label col-form-label col-md-4" })
-                    <div class="col-md-8">
-                        @Html.DropDownListFor(model => model.C_CodRc, ViewBag.Lista_Combo_GrupoCodRc as SelectList, "[ SELECCIONAR ]", new { @class = "form-control" })
-                        <p class="text-danger">@Html.ValidationMessageFor(model => model.C_CodRc)</p>
+            @if (Model.B_EsObligacion)
+            {
+                <div class="form-group">
+                    <div class="form-row">
+                        @Html.LabelFor(model => model.I_GrupoCodRc, new { @class = "control-label col-form-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.DropDownListFor(model => model.I_GrupoCodRc, ViewBag.Lista_Combo_GrupoCodRc as SelectList, "[ SELECCIONAR ]", new { @class = "form-control" })
+                            <p class="text-danger">@Html.ValidationMessageFor(model => model.I_GrupoCodRc)</p>
+                        </div>
                     </div>
                 </div>
-            </div>
+            }
+
+            @if (!Model.B_EsObligacion)
+            {
+                <div class="form-group">
+                    <div class="form-row">
+                        @Html.LabelFor(model => model.T_ClasifCorto, new { @class = "control-label col-form-label col-6" })
+                        <div class="col-6">
+                            @Html.TextBoxFor(model => model.T_ClasifCorto, new { @class = "form-control" })
+                        </div>
+                        <p class="text-danger small">@Html.ValidationMessageFor(model => model.T_ClasifCorto)</p>
+                    </div>
+                </div>
+            }
 
             <div class="form-group">
                 <div class="form-row">
@@ -56,15 +82,6 @@
 
             <div class="form-group">
                 <div class="form-row">
-                    @Html.LabelFor(model => model.MontoMinimo, new { @class = "control-label text-sm-right col-form-label col-6" })
-                    <div class="col-6">
-                        @Html.TextBoxFor(model => model.MontoMinimo, new { @class = "form-control text-right" })
-                    </div>
-                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.MontoMinimo)</p>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="form-row">
                     @Html.LabelFor(model => model.Monto, new { @class = "control-label text-sm-right col-form-label col-6" })
                     <div class="col-6">
                         @Html.TextBoxFor(model => model.Monto, new { @class = "form-control text-right" })
@@ -72,51 +89,61 @@
                     <p class="text-danger small">@Html.ValidationMessageFor(model => model.Monto)</p>
                 </div>
             </div>
-            <p class="h5 border-bottom my-3">Otras características</p>
+
             <div class="form-group">
-                <div class="form-check">
-                    @Html.CheckBoxFor(model => model.EsMatricula, new { @class = "form-check-input" })
-                    @Html.LabelFor(model => model.EsMatricula, new { @class = "form-check-label" })
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="form-check">
-                    @Html.CheckBoxFor(model => model.Extemporaneo, new { @class = "form-check-input" })
-                    @Html.LabelFor(model => model.Extemporaneo, new { @class = "form-check-label" })
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="form-check">
-                    @Html.CheckBoxFor(model => model.AgupaConceptos, new { @class = "form-check-input" })
-                    @Html.LabelFor(model => model.AgupaConceptos, new { @class = "form-check-label" })
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="form-check">
-                    @Html.CheckBoxFor(model => model.B_Mora, new { @class = "form-check-input" })
-                    @Html.LabelFor(model => model.B_Mora, new { @class = "form-check-label" })
+                <div class="form-row">
+                    @Html.LabelFor(model => model.MontoMinimo, new { @class = "control-label text-sm-right col-form-label col-6" })
+                    <div class="col-6">
+                        @Html.TextBoxFor(model => model.MontoMinimo, new { @class = "form-control text-right" })
+                    </div>
+                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.MontoMinimo)</p>
                 </div>
             </div>
 
-            <div class="form-group">
-                <div class="form-check">
-                    @Html.CheckBoxFor(model => model.Calculado, new { @class = "form-check-input" })
-                    @Html.LabelFor(model => model.Calculado, new { @class = "form-check-label" })
-                </div>
+            @if (Model.B_EsObligacion)
+            {
+                <p class="h5 border-bottom my-3">Otras características</p>
 
-                <div id="radios_group" class="offset-1 mt-2" style="display: @ViewBag.CalculadoVisible">
-                    <div class="row">
-                        @foreach (var item in (List<WebApp.ViewModels.SelectViewModel>)ViewBag.Lista_Opciones_CampoCalculado)
-                        {
-                            var id = "TipoCalculo_" + item.Value;
-                            <div class="form-check form-check-inline col-5">
-                                @Html.RadioButtonFor(model => model.TipoCalculo, item.Value, new { @id = id, @disabled = "disabled" })
-                                <label class="form-check-label" for="@id">&nbsp;@item.TextDisplay</label>
-                            </div>
-                        }
+                <div class="form-group">
+                    <div class="form-check">
+                        @Html.CheckBoxFor(model => model.EsMatricula, new { @class = "form-check-input" })
+                        @Html.LabelFor(model => model.EsMatricula, new { @class = "form-check-label" })
                     </div>
                 </div>
-            </div>
+                <div class="form-group">
+                    <div class="form-check">
+                        @Html.CheckBoxFor(model => model.Extemporaneo, new { @class = "form-check-input" })
+                        @Html.LabelFor(model => model.Extemporaneo, new { @class = "form-check-label" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-check">
+                        @Html.CheckBoxFor(model => model.B_Mora, new { @class = "form-check-input" })
+                        @Html.LabelFor(model => model.B_Mora, new { @class = "form-check-label" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-check">
+                        @Html.CheckBoxFor(model => model.Calculado, new { @class = "form-check-input" })
+                        @Html.LabelFor(model => model.Calculado, new { @class = "form-check-label" })
+                    </div>
+
+                    <div id="radios_group" class="offset-1 mt-2" style="display: @ViewBag.CalculadoVisible">
+                        <div class="row">
+                            @foreach (var item in (List<WebApp.ViewModels.SelectViewModel>)ViewBag.Lista_Opciones_CampoCalculado)
+                            {
+                                var id = "TipoCalculo_" + item.Value;
+                                <div class="form-check form-check-inline col-5">
+                                    @Html.RadioButtonFor(model => model.TipoCalculo, item.Value, new { @id = id, @disabled = "disabled" })
+                                    <label class="form-check-label" for="@id">&nbsp;@item.TextDisplay</label>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+
+
         </div>
     </div>
 

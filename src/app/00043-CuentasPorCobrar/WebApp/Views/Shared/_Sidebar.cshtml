@@ -60,9 +60,8 @@
                     <ul id="maintenance" class="collapse">
                         <li class="dropdown-header">Plantillas</li>
                         <li><a href="@Url.Action("Index", "CategoriaPago")"><i class="fa fa-fw bi-grid-1x2-fill"></i>&nbsp; Cuotas de pago</a></li>
-                        <li><a href="@Url.Action("Index", "Concepto")"><i class="fa fa-fw bi-ui-checks-grid"></i>&nbsp; Conceptos obligaciones</a></li>
-                        <li><a href="@Url.Action("Index", "CategoriaPago")"><i class="fa fa-fw bi-collection-fill"></i>&nbsp; Grupos de tasas</a></li>
-                        <li><a href="@Url.Action("Index", "Concepto")"><i class="fa fa-fw bi-ui-checks"></i>&nbsp; Conceptos tasas</a></li>
+                        <li><a href="@Url.Action("Index", "Concepto", new { tipo = Domain.Helpers.TipoPago.Obligacion })"><i class="fa fa-fw bi-ui-checks-grid"></i>&nbsp; Conceptos obligaciones</a></li>
+                        <li><a href="@Url.Action("Index", "Concepto", new { tipo = Domain.Helpers.TipoPago.Tasa })"><i class="fa fa-fw bi-ui-checks"></i>&nbsp; Conceptos tasas</a></li>
                         <li class="dropdown-header">Recaudación</li>
                         <li><a href="@Url.Action("Index", "Clasificadores")"><i class="fa fa-fw bi-bar-chart-steps"></i>&nbsp; Clasificadores de ingreso</a></li>
                         <li><a href="@Url.Action("Index", "EntidadRecaudadora")"><i class="fa fa-fw bi-cash-coin"></i>&nbsp; Entidades recaudadoras</a></li>

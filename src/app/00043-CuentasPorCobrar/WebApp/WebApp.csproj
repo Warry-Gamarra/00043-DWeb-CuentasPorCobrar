@@ -514,6 +514,7 @@
     <Compile Include="ViewModels\RolesViewModel.cs" />
     <Compile Include="ViewModels\SelectViewModel.cs" />
     <Compile Include="ViewModels\PagoTasaViewModel.cs" />
+    <Compile Include="ViewModels\TasaViewModel.cs" />
     <Compile Include="ViewModels\UserManualViewModel.cs" />
     <Compile Include="ViewModels\UsersViewModels.cs" />
     <Content Include="Views\EstadosCuenta\_ReportePosgradoPorGradoYConcepto.cshtml" />

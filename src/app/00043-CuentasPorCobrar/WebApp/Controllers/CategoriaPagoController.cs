@@ -106,7 +106,7 @@ namespace WebApp.Controllers
             ViewBag.Title = "Editar plantilla de cuota de pago";
 
             var model = _categoriaPago.GetConceptosCategoria(id);
-            var lstConceptos = _conceptoPago.Listar_CatalogoConceptos(TipoObligacion.Matricula);
+            var lstConceptos = _conceptoPago.Listar_CatalogoConceptos(TipoPago.Obligacion);
 
             ViewBag.Conceptos = new SelectList(lstConceptos, "Id", "NombreConcepto");
             ViewBag.ConceptosJson = new JavaScriptSerializer().Serialize(lstConceptos);

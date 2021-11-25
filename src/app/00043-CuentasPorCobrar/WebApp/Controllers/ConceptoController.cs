@@ -27,24 +27,33 @@ namespace WebApp.Controllers
         }
 
         [Route("mantenimiento/conceptos-de-pago")]
-        public ActionResult Index()
+        public ActionResult Index(TipoPago tipo)
         {
-            ViewBag.Title = "Conceptos de Pago";
+            ViewBag.Title = "Conceptos de Pago para " + (tipo.Equals(TipoPago.Obligacion) ? "Obligaciones" : "Tasas");
 
-            var lista = conceptoModel.Listar_CatalogoConceptos();
+            ViewBag.TipoPago = tipo;
 
+            var lista = conceptoModel.Listar_CatalogoConceptos(tipo);
+            
             return View(lista);
         }
 
         [Route("mantenimiento/conceptos-de-pago/nuevo")]
         [HttpGet]
-        public ActionResult Create()
+        public ActionResult Create(TipoPago tipoPago)
         {
             ViewBag.Title = "Nuevo concepto de pago";
             Cargar_Listas();
             ViewBag.CalculadoVisible = "none";
 
-            return PartialView("_RegistrarConcepto", new CatalogoConceptosRegistroViewModel());
+            var model = new CatalogoConceptosRegistroViewModel()
+            {
+                B_EsObligacion = tipoPago.Equals(TipoPago.Obligacion),
+                TipoObligacion = tipoPago.Equals(TipoPago.Obligacion) ? 9 : 10,
+                N_NroPagos = 1
+            };
+
+            return PartialView("_RegistrarConcepto", model);
         }
 
         [Route("mantenimiento/conceptos-de-pago/editar/{id}")]
@@ -75,6 +84,9 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
+                model.B_ModalidadIngreso = model.I_ModalidadIngresoID.HasValue;
+                model.B_GrupoCodRc = model.I_GrupoCodRc.HasValue;
+
                 result = conceptoModel.Save(model, WebSecurity.CurrentUserId);
             }
             else
@@ -96,23 +108,13 @@ namespace WebApp.Controllers
 
         private void Cargar_Listas()
         {
-            ViewBag.Lista_Combo_ConceptoPago = conceptoModel.Listar_Combo_Concepto();
-
-            ViewBag.Lista_Opciones_TipoAlumno = selectModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.TipoAlumno);
-
-            ViewBag.Lista_Opciones_Grado = selectModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.Grado);
-
             ViewBag.Lista_Opciones_TipoObligacion = selectModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.TipoObligacion);
 
             ViewBag.Lista_Opciones_CampoCalculado = selectModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.CampoCalculado);
 
-            ViewBag.Lista_Anios = procesoModel.Listar_Anios();
-
-            ViewBag.Lista_Combo_Periodo = selectModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.Periodo);
-
             ViewBag.Lista_Combo_GrupoCodRc = new SelectList(selectModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.GrupoCodRc), "Value", "TextDisplay");
 
-            ViewBag.Lista_Combo_CodIngreso = selectModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.CodIngreso);
+            ViewBag.Lista_Combo_CodIngreso = new SelectList(selectModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.CodIngreso), "Value", "TextDisplay");
 
         }
     }

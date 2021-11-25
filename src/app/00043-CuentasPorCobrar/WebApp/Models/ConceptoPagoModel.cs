@@ -32,11 +32,11 @@ namespace WebApp.Models
             return result;
         }
 
-        public List<CatalogoConceptosViewModel> Listar_CatalogoConceptos(TipoObligacion tipoObligacion, bool conceptoAgrupa = false)
+        public List<CatalogoConceptosViewModel> Listar_CatalogoConceptos(TipoPago tipoPago, bool conceptoAgrupa = false)
         {
             List<CatalogoConceptosViewModel> result = new List<CatalogoConceptosViewModel>();
 
-            foreach (var item in conceptoPagoService.Listar_Concepto(tipoObligacion).Where(x => x.B_ConceptoAgrupa == conceptoAgrupa))
+            foreach (var item in conceptoPagoService.Listar_Concepto(tipoPago).Where(x => x.B_ConceptoAgrupa == conceptoAgrupa))
             {
                 result.Add(new CatalogoConceptosViewModel(item));
             }

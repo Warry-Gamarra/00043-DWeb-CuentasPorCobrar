@@ -18,7 +18,7 @@
     <br />
 
     <div class="col-12">
-        <a href="@Url.Action("Create", "Concepto")" class="btn btn-primary pull-right modal-link">
+        <a href="@Url.Action("Create", "Concepto", new { tipoPago = ViewBag.TipoPago })" class="btn btn-primary pull-right modal-link">
             <i class="fa bi-ui-checks-grid"></i> Agregar concepto
         </a>
 

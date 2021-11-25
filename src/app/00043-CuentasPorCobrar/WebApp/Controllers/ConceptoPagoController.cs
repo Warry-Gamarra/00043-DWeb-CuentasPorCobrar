@@ -31,7 +31,7 @@ namespace WebApp.Controllers
         public ActionResult CreateObligacion(int procesoId)
         {
             ViewBag.Title = "Registrar Concepto";
-            ViewBag.Conceptos = new SelectList(_conceptoModel.Listar_CatalogoConceptos(TipoObligacion.Matricula), "Id", "NombreConcepto");
+            ViewBag.Conceptos = new SelectList(_conceptoModel.Listar_CatalogoConceptos(TipoPago.Obligacion), "Id", "NombreConcepto");
 
             var model = new RegistroConceptosProcesoViewModel(procesoId, _conceptoPagoModel)
             {
@@ -56,7 +56,7 @@ namespace WebApp.Controllers
         public ActionResult CreateTasa(int procesoId)
         {
             ViewBag.Title = "Registrar Concepto";
-            ViewBag.Conceptos = new SelectList(_conceptoModel.Listar_CatalogoConceptos(TipoObligacion.OtrosPagos), "Id", "NombreConcepto");
+            ViewBag.Conceptos = new SelectList(_conceptoModel.Listar_CatalogoConceptos(TipoPago.Tasa), "Id", "NombreConcepto");
 
 
             var model = new RegistroConceptosProcesoViewModel(procesoId, _conceptoPagoModel)
