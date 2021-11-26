@@ -1,5 +1,5 @@
 ﻿
-@model WebApp.ViewModels.RegistroConceptosProcesoViewModel
+@model WebApp.ViewModels.RegistrarTasaViewModel
 
 @Scripts.Render("~/bundles/jqueryval")
 
@@ -11,7 +11,7 @@
 <div class="modal-body">
     <div class="container-fluid">
 
-        @if (Model.ConceptoPago.I_ConcPagID.HasValue)
+        @if (Model.I_TasaUnfvID.HasValue)
         {
             <p class="h4 mt-2 border-bottom">Editar Tasa</p>
         }
@@ -52,23 +52,45 @@
 
         <div id="concepto-form" class="container-fluid" style="display:@(Model.MostrarFormulario ? "block" : "none");">
 
-            @using (Ajax.BeginForm("Save", "ConceptoPago", new { area = "" }, new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "div_msg", OnBegin = "Load", OnComplete = "Stop" }))
+            @using (Ajax.BeginForm("Save", "Tasa", new { area = "" }, new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "div_msg", OnBegin = "Load", OnComplete = "Stop" }))
             {
                 @Html.Hidden("Submited", 0)
                 @Html.AntiForgeryToken()
 
                 <div class="form-group form-row">
-                    @Html.HiddenFor(model => model.ConceptoPago.I_ConcPagID)
-                    @Html.HiddenFor(model => model.ConceptoPago.I_ProcesoID)
-                    @Html.HiddenFor(model => model.ConceptoPago.I_ConceptoID)
-                    @Html.HiddenFor(model => model.ConceptoPago.B_AgrupaConcepto)
-                    @Html.HiddenFor(model => model.ConceptoPago.B_ConceptoGeneral)
-                    @Html.HiddenFor(model => model.ConceptoPago.B_Fraccionable)
-                    @Html.LabelFor(model => model.ConceptoPago.I_ConceptoID, new { @class = "control-label col-12" })
+                    @Html.HiddenFor(model => model.I_TasaUnfvID)
+                    @Html.HiddenFor(model => model.I_ConceptoID)
+                    @Html.HiddenFor(model => model.B_Fraccionable)
+                    @Html.HiddenFor(model => model.B_ConceptoGeneral)
+                    @Html.HiddenFor(model => model.B_AgrupaConcepto)
+                    @Html.HiddenFor(model => model.I_AlumnosDestino)
+                    @Html.HiddenFor(model => model.I_GradoDestino)
+                    @Html.HiddenFor(model => model.I_TipoObligacion)
+                    @Html.HiddenFor(model => model.B_Calculado)
+                    @Html.HiddenFor(model => model.I_Calculado)
+                    @Html.HiddenFor(model => model.B_AnioPeriodo)
+                    @Html.HiddenFor(model => model.I_Anio)
+                    @Html.HiddenFor(model => model.I_Periodo)
+                    @Html.HiddenFor(model => model.B_Especialidad)
+                    @Html.HiddenFor(model => model.C_CodRc)
+                    @Html.HiddenFor(model => model.B_Dependencia)
+                    @Html.HiddenFor(model => model.C_DepCod)
+                    @Html.HiddenFor(model => model.B_GrupoCodRc)
+                    @Html.HiddenFor(model => model.I_GrupoCodRc)
+                    @Html.HiddenFor(model => model.B_ModalidadIngreso)
+                    @Html.HiddenFor(model => model.I_ModalidadIngresoID)
+                    @Html.HiddenFor(model => model.B_ConceptoAgrupa)
+                    @Html.HiddenFor(model => model.I_ConceptoAgrupaID)
+                    @Html.HiddenFor(model => model.B_ConceptoAfecta)
+                    @Html.HiddenFor(model => model.I_ConceptoAfectaID)
+                    @Html.HiddenFor(model => model.B_Porcentaje)
+                    @Html.HiddenFor(model => model.C_Moneda)
+                    @Html.HiddenFor(model => model.B_Migrado)
+
+                    @Html.LabelFor(model => model.T_ConceptoPagoDesc, new { @class = "control-label col-12" })
                     <div class="col-10">
-                        @Html.TextBoxFor(model => model.ConceptoPago.T_ConceptoPagoDesc, new { @class = "form-control disabled" })
-                        <p class="text-danger small">@Html.ValidationMessageFor(model => model.ConceptoPago.I_ConceptoID)</p>
-                        <p class="text-danger small">@Html.ValidationMessageFor(model => model.ConceptoPago.T_ConceptoPagoDesc)</p>
+                        @Html.TextBoxFor(model => model.T_ConceptoPagoDesc, new { @class = "form-control disabled" })
+                        <p class="text-danger small">@Html.ValidationMessageFor(model => model.T_ConceptoPagoDesc)</p>
                     </div>
                     <div class="col-2">
                         <button type="button" id="btn-remove" class="btn btn-block btn-outline-danger"><i class="fa fa-trash-o"></i><span class="d-md-inline-block d-none">&nbsp;Borrar</span></button>
@@ -80,41 +102,37 @@
                         <div class="form-row">
                             <div class="col-7">
                                 <div class="form-group">
-                                    @Html.LabelFor(model => model.ConceptoPago.T_Clasificador, new { @class = "control-label" })
-                                    @Html.TextBoxFor(model => model.ConceptoPago.T_Clasificador, new { @class = "form-control" })
-                                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.ConceptoPago.T_Clasificador)</p>
+                                    @Html.LabelFor(model => model.T_Clasificador, new { @class = "control-label" })
+                                    @Html.TextBoxFor(model => model.T_Clasificador, new { @class = "form-control" })
+                                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.T_Clasificador)</p>
                                 </div>
                             </div>
                             <div class="col-5">
                                 <div class="form-group">
-                                    @Html.LabelFor(model => model.ConceptoPago.C_CodTasa, new { @class = "control-label" })
-                                    @Html.TextBoxFor(model => model.ConceptoPago.C_CodTasa, new { @class = "form-control" })
-                                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.ConceptoPago.C_CodTasa)</p>
+                                    @Html.LabelFor(model => model.C_CodTasa, new { @class = "control-label" })
+                                    @Html.TextBoxFor(model => model.C_CodTasa, new { @class = "form-control", @maxlength = "5" })
+                                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.C_CodTasa)</p>
                                 </div>
                             </div>
                         </div>
                         <div class="form-row">
                             <label class="control-label col-sm-4" for="Monto">Monto</label>
                             <div class="col-sm-8">
-                                @Html.TextBoxFor(model => model.ConceptoPago.M_Monto, "{0:f4}", new { @class = "form-control" })
-                                <p class="text-danger small">@Html.ValidationMessageFor(model => model.ConceptoPago.M_Monto)</p>
+                                @Html.TextBoxFor(model => model.M_Monto, "{0:f4}", new { @class = "form-control" })
+                                <p class="text-danger small">@Html.ValidationMessageFor(model => model.M_Monto)</p>
                             </div>
                             <label class="control-label col-md-4" for="Monto_Minimo">Monto Mínimo</label>
                             <div class="col-sm-8">
-                                @Html.TextBoxFor(model => model.ConceptoPago.M_MontoMinimo, "{0:f4}", new { @class = "form-control" })
-                                <p class="text-danger small">@Html.ValidationMessageFor(model => model.ConceptoPago.M_MontoMinimo)</p>
+                                @Html.TextBoxFor(model => model.M_MontoMinimo, "{0:f4}", new { @class = "form-control" })
+                                <p class="text-danger small">@Html.ValidationMessageFor(model => model.M_MontoMinimo)</p>
                             </div>
                         </div>
 
                         <div class="form-group row">
-                            @Html.LabelFor(model => model.ConceptoPago.N_NroPagos, new { @class = "control-label col-md-2" })
-                            <div class="col-md-3">
-                                @Html.TextBoxFor(model => model.ConceptoPago.N_NroPagos, new { @class = "form-control" })
-                                <p class="text-danger">@Html.ValidationMessageFor(model => model.ConceptoPago.N_NroPagos)</p>
-                            </div>
-                            <div class="col-md-3">
-                                @Html.CheckBoxFor(model => model.ConceptoPago.B_Porcentaje)
-                                @Html.LabelFor(model => model.ConceptoPago.B_Porcentaje, new { @class = "form-check-label control-label" })
+                            @Html.LabelFor(model => model.N_NroPagos, new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(model => model.N_NroPagos, new { @class = "form-control" })
+                                <p class="text-danger">@Html.ValidationMessageFor(model => model.N_NroPagos)</p>
                             </div>
                         </div>
                     </div>
@@ -122,13 +140,13 @@
                     <div class="col-lg-6 col-12 border-left">
                         <div class="form-group">
                             <label class="control-label" for="T_DescripcionLarga">Descripción Larga</label>
-                            @Html.TextAreaFor(model => model.ConceptoPago.T_DescripcionLarga, new { @class = "form-control" })
-                            <p class="text-danger small">@Html.ValidationMessageFor(model => model.ConceptoPago.T_DescripcionLarga)</p>
+                            @Html.TextAreaFor(model => model.T_DescripcionLarga, new { @class = "form-control" })
+                            <p class="text-danger small">@Html.ValidationMessageFor(model => model.T_DescripcionLarga)</p>
                         </div>
                         <div class="form-group">
                             <label class="control-label" for="T_Documento">Sustento / Observación</label>
-                            @Html.TextAreaFor(model => model.ConceptoPago.T_Documento, new { @class = "form-control" })
-                            <p class="text-danger small">@Html.ValidationMessageFor(model => model.ConceptoPago.T_Documento)</p>
+                            @Html.TextAreaFor(model => model.T_Documento, new { @class = "form-control" })
+                            <p class="text-danger small">@Html.ValidationMessageFor(model => model.T_Documento)</p>
                         </div>
                     </div>
                 </div>
@@ -148,47 +166,12 @@
 
     $(document).ready(function () {
 
-        $('#btn-return').on('click', function (event) {
-            event.preventDefault();
-
-            let url = $(event.currentTarget).attr("href");
-            loadForm(url, "cargando formulario...")
-        })
-
-        function loadForm(url, message) {
-            $('#load-message').html(message);
-
-            $('#content-body').hide();
-            $('#spin-loader').show();
-
-            let modal = $('#modal-container-lg');
-            setTimeout(function () {
-                modal.find('.modal-content').load(url)
-            }, 600);
-        }
-
         $('.select-filter-modal').select2({
             dropdownParent: $('#modal-container-lg'),
             placeholder: "[ SELECCIONAR ]"
         }).on('hide', function (e) {
             e.stopPropagation();
         });
-
-
-        $('.input-group.date').datepicker({
-            todayBtn: 'linked',
-            language: 'es',
-            format: 'dd/mm/yyyy',
-            autoclose: true,
-            startDate: '-0d',
-            weekStart: 0,
-            orientation: 'bottom auto',
-            calendarWeeks: true,
-        }).on('hide', function (e) {
-            e.stopPropagation();
-        });
-
-        let conceptoSelected = { value: '', text: '' };
 
         $('#btn-agregar').on('click', function (event) {
             event.preventDefault();
@@ -199,7 +182,7 @@
             }
 
             GetDefaultValuesConcepto(selectedValue);
-        })
+        });
 
         function GetDefaultValuesConcepto(value, text) {
 
@@ -214,10 +197,40 @@
                     $('#search-loader').show();
                 },
                 success: function (data) {
-                    DisableSearh(true)
+                    DisableSearh(true);
 
-                    $('#ConceptoPago_I_ConceptoID').val(data['Id']);
-                    $('#ConceptoPago_T_ConceptoPagoDesc').val(data['NombreConcepto']);
+                    $('#I_ConceptoID').val(data['Id']);
+                    $('#T_ConceptoPagoDesc').val(data['NombreConcepto']);
+
+                    $('#B_Fraccionable').val(data['B_Fraccionable']);
+                    $('#B_ConceptoGeneral').val(data['B_ConceptoGeneral']);
+                    $('#B_AgrupaConcepto').val(data['B_AgrupaConcepto']);
+                    $('#I_TipoObligacion').val(data['TipoObligacion']);
+
+                    $('#T_Clasificador').val(data['Clasificador']);
+                    $('#C_CodTasa').val(data['T_ClasifCorto']);
+
+                    $('#B_Calculado').val(data['Calculado']);
+                    $('#I_Calculado').val(data['TipoCalculo']);
+
+                    $('#B_GrupoCodRc').val(data['B_GrupoCodRc']);
+                    $('#I_GrupoCodRc').val(data['I_GrupoCodRc']);
+
+                    $('#B_ModalidadIngreso').val(data['B_ModalidadIngreso']);
+                    $('#I_ModalidadIngresoID').val(data['I_ModalidadIngresoID']);
+
+                    $('#B_ConceptoAgrupa').val(data['AgupaConceptos']);
+                    $('#I_ConceptoAgrupaID').val(data['I_ConceptoAgrupaID']);
+
+                    $('#N_NroPagos').val(data['N_NroPagos']);
+                    $('#B_Porcentaje').val(data['B_Porcentaje']);
+                    $('#C_Moneda').val(data['C_Moneda']);
+                    $('#M_Monto').val(data['Monto']);
+                    $('#M_MontoMinimo').val(data['MontoMinimo']);
+
+                    $('#T_DescripcionLarga').val(data['T_DescripcionLarga']);
+                    $('#T_Documento').val(data['T_Documento']);
+                    $('#B_Migrado').val('False');
 
                     $('#search-container').hide();
                     $('#concepto-form').show();
@@ -230,6 +243,12 @@
                     $('#search-loader').hide();
                 }
             })
+        }
+
+        function DisableSearh(flag) {
+            $('#selectConcepto').val(null).trigger('change');
+            $('#selectConcepto').prop('disabled', flag);
+            $('#btn-agregar').prop('disabled', flag);
         }
 
         $('#btn-remove').on('click', function (event) {
@@ -245,15 +264,6 @@
             }, 500);
 
             DisableSearh(false);
-        })
-
-        function DisableSearh(flag) {
-            $('#selectConcepto').val(null).trigger('change');
-            $('#selectConcepto').prop('disabled', flag);
-            $('#btn-agregar').prop('disabled', flag);
-        }
-
-    })
-
-
+        });
+    });
 </script>

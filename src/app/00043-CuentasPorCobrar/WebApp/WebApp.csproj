@@ -577,19 +577,15 @@
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\CategoriaPago\Index.cshtml" />
     <Content Include="Views\Procesos\Obligaciones.cshtml" />
-    <Content Include="Views\Tasa\_RegistrarProcesoTasa.cshtml" />
     <Content Include="Views\CategoriaPago\_RegistrarCategoria.cshtml" />
     <Content Include="Views\Concepto\_RegistrarConcepto.cshtml" />
     <Content Include="Views\Pagos\ImportarPagoTasas.cshtml" />
     <Content Include="Views\Pagos\ExportarDatosPago.cshtml" />
     <Content Include="Views\EntidadRecaudadora\_CuentasBanco.cshtml" />
     <Content Include="Views\Obligaciones\Generar.cshtml" />
-    <Content Include="Views\ConceptoPago\_RegistrarConceptosPagoTasa.cshtml" />
-    <Content Include="Views\Procesos\_ListadoTasasProcesoGrupos.cshtml" />
     <Content Include="Views\Procesos\_RegistrarProcesoObligacion.cshtml" />
     <Content Include="Views\ConceptoPago\_RegistrarConceptosPagoProceso.cshtml" />
     <Content Include="Views\Procesos\_ListadoConceptosProceso.cshtml" />
-    <Content Include="Views\Procesos\_ListadoTasasProcesoBusqueda.cshtml" />
     <Content Include="Views\Pagos\ImportarPagoObligaciones.cshtml" />
     <Content Include="Views\Pagos\_SeleccionarArchivoTasas.cshtml" />
     <Content Include="Views\Pagos\_ResultadoCargaPago.cshtml" />
@@ -639,6 +635,8 @@
     <Content Include="Views\Pagos\_AsignarPagoObligacion.cshtml" />
     <Content Include="Views\Pagos\_VerPagosObligacion.cshtml" />
     <Content Include="Views\Tasa\Tasas.cshtml" />
+    <Content Include="Views\Tasa\_RegistrarConceptosPagoTasa.cshtml" />
+    <Content Include="Views\Tasa\_MsgRegistrarConceptoTasa.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

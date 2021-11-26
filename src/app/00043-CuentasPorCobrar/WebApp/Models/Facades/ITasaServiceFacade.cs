@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -13,6 +14,10 @@ namespace WebApp.Models.Facades
         IEnumerable<TasaViewModel> listarTodoTasas();
 
         IEnumerable<PagoTasaModel> listarPagoTasas(int? idEntidadFinanciera, int? idCtaDeposito, string codOperacion, DateTime? fechaInicio, DateTime? fechaFinal,
-            string codDepositante);
+            string codDepositante, string nomDepositante);
+
+        Response Grabar_TasaUnfv(RegistrarTasaViewModel model, int currentUserId);
+
+        RegistrarTasaViewModel ObtenerTasaUnfv(int id);
     }
 }

@@ -3183,4 +3183,245 @@ GO
 
 
 
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_GrabarConceptoPago')
+	DROP PROCEDURE [dbo].[USP_I_GrabarConceptoPago]
+GO
 
+CREATE PROCEDURE dbo.USP_I_GrabarConceptoPago
+@I_ProcesoID int,  
+@I_ConceptoID int,  
+@T_ConceptoPagoDesc varchar(250),  
+@B_Fraccionable bit = null,  
+@B_ConceptoGeneral bit = null,  
+@B_AgrupaConcepto bit = null,  
+@I_AlumnosDestino int = null,  
+@I_GradoDestino int = null,  
+@I_TipoObligacion int = null,  
+@T_Clasificador varchar(250) = null,  
+@C_CodTasa varchar(250) = null,  
+@B_Calculado bit = null,  
+@I_Calculado int = null,  
+@B_AnioPeriodo bit = null,  
+@I_Anio int = null,  
+@I_Periodo int = null,  
+@B_Especialidad bit = null,  
+@C_CodRc char(3) = null,  
+@B_Dependencia bit = null,  
+@C_DepCod int = null,  
+@B_GrupoCodRc bit = null,  
+@I_GrupoCodRc int = null,  
+@B_ModalidadIngreso bit = null,  
+@I_ModalidadIngresoID int = null,  
+@B_ConceptoAgrupa bit = null,  
+@I_ConceptoAgrupaID int = null,  
+@B_ConceptoAfecta bit = null,  
+@I_ConceptoAfectaID int = null,  
+@N_NroPagos int = null,  
+@B_Porcentaje bit = null,  
+@M_Monto decimal(10,4) = null,  
+@M_MontoMinimo decimal(10,4) = null,  
+@T_DescripcionLarga varchar(250) = null,  
+@T_Documento varchar(250) = null,  
+@I_UsuarioCre int,  
+@C_Moneda varchar(5) = null,  
+@B_Mora bit = null,  
+@I_ConcPagID int OUTPUT,  
+@B_Result bit OUTPUT,  
+@T_Message nvarchar(4000) OUTPUT  
+AS  
+BEGIN  
+ SET NOCOUNT ON  
+   BEGIN TRY  
+  INSERT dbo.TI_ConceptoPago(I_ProcesoID, I_ConceptoID, T_ConceptoPagoDesc, B_Fraccionable, B_ConceptoGeneral, B_AgrupaConcepto,   
+   I_AlumnosDestino, I_GradoDestino, I_TipoObligacion, T_Clasificador, C_CodTasa, B_Calculado, I_Calculado,   
+   B_AnioPeriodo, I_Anio, I_Periodo, B_Especialidad, C_CodRc, B_Dependencia, C_DepCod, B_GrupoCodRc, I_GrupoCodRc,   
+   B_ModalidadIngreso, I_ModalidadIngresoID, B_ConceptoAgrupa, I_ConceptoAgrupaID, B_ConceptoAfecta, I_ConceptoAfectaID,   
+   N_NroPagos, B_Porcentaje, C_Moneda, M_Monto, M_MontoMinimo, T_DescripcionLarga, T_Documento, B_Migrado, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, B_Mora)  
+    
+  VALUES(@I_ProcesoID, @I_ConceptoID, @T_ConceptoPagoDesc, @B_Fraccionable, @B_ConceptoGeneral, @B_AgrupaConcepto,   
+   @I_AlumnosDestino, @I_GradoDestino, @I_TipoObligacion, @T_Clasificador, @C_CodTasa, @B_Calculado, @I_Calculado,   
+   @B_AnioPeriodo, @I_Anio, @I_Periodo, @B_Especialidad, @C_CodRc, @B_Dependencia, @C_DepCod, @B_GrupoCodRc, @I_GrupoCodRc,  
+   @B_ModalidadIngreso, @I_ModalidadIngresoID, @B_ConceptoAgrupa, @I_ConceptoAgrupaID, @B_ConceptoAfecta, @I_ConceptoAfectaID,   
+   @N_NroPagos, @B_Porcentaje, @C_Moneda, @M_Monto, @M_MontoMinimo, @T_DescripcionLarga, @T_Documento, 0, 1, 0, @I_UsuarioCre, getdate(), @B_Mora)  
+    
+  SET @I_ConcPagID = SCOPE_IDENTITY()  
+  SET @B_Result = 1  
+  SET @T_Message = 'Inserción de datos correcta.'  
+ END TRY  
+ BEGIN CATCH  
+  SET @I_ConcPagID = 0  
+  SET @B_Result = 0  
+  SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10))   
+ END CATCH  
+END
+GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_GrabarTasaUnfv')
+	DROP PROCEDURE [dbo].[USP_I_GrabarTasaUnfv]
+GO
+
+  
+CREATE PROCEDURE dbo.USP_I_GrabarTasaUnfv
+@I_ConceptoID int,
+@T_ConceptoPagoDesc varchar(250),  
+@B_Fraccionable bit = null,  
+@B_ConceptoGeneral bit = null,  
+@B_AgrupaConcepto bit = null,  
+@I_AlumnosDestino int = null,  
+@I_GradoDestino int = null,  
+@I_TipoObligacion int = null,  
+@T_Clasificador varchar(250) = null,  
+@C_CodTasa varchar(250) = null,  
+@B_Calculado bit = null,  
+@I_Calculado int = null,  
+@B_AnioPeriodo bit = null,  
+@I_Anio int = null,  
+@I_Periodo int = null,  
+@B_Especialidad bit = null,  
+@C_CodRc char(3) = null,  
+@B_Dependencia bit = null,  
+@C_DepCod int = null,  
+@B_GrupoCodRc bit = null,  
+@I_GrupoCodRc int = null,  
+@B_ModalidadIngreso bit = null,  
+@I_ModalidadIngresoID int = null,  
+@B_ConceptoAgrupa bit = null,  
+@I_ConceptoAgrupaID int = null,  
+@B_ConceptoAfecta bit = null,  
+@I_ConceptoAfectaID int = null,  
+@N_NroPagos int = null,  
+@B_Porcentaje bit = null,  
+@M_Monto decimal(10,4) = null,  
+@M_MontoMinimo decimal(10,4) = null,  
+@T_DescripcionLarga varchar(250) = null,  
+@T_Documento varchar(250) = null,  
+@I_UsuarioCre int,  
+@C_Moneda varchar(5) = null, 
+@I_TasaUnfv int OUTPUT,  
+@B_Result bit OUTPUT,  
+@T_Message nvarchar(4000) OUTPUT  
+AS  
+BEGIN  
+ SET NOCOUNT ON;
+   BEGIN TRY  
+  INSERT dbo.TI_TasaUnfv(I_ConceptoID, T_ConceptoPagoDesc, B_Fraccionable, B_ConceptoGeneral, B_AgrupaConcepto,   
+   I_AlumnosDestino, I_GradoDestino, I_TipoObligacion, T_Clasificador, C_CodTasa, B_Calculado, I_Calculado,   
+   B_AnioPeriodo, I_Anio, I_Periodo, B_Especialidad, C_CodRc, B_Dependencia, C_DepCod, B_GrupoCodRc, I_GrupoCodRc,   
+   B_ModalidadIngreso, I_ModalidadIngresoID, B_ConceptoAgrupa, I_ConceptoAgrupaID, B_ConceptoAfecta, I_ConceptoAfectaID,   
+   N_NroPagos, B_Porcentaje, C_Moneda, M_Monto, M_MontoMinimo, T_DescripcionLarga, T_Documento, B_Migrado, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)  
+    
+  VALUES(@I_ConceptoID, @T_ConceptoPagoDesc, @B_Fraccionable, @B_ConceptoGeneral, @B_AgrupaConcepto,   
+   @I_AlumnosDestino, @I_GradoDestino, @I_TipoObligacion, @T_Clasificador, @C_CodTasa, @B_Calculado, @I_Calculado,   
+   @B_AnioPeriodo, @I_Anio, @I_Periodo, @B_Especialidad, @C_CodRc, @B_Dependencia, @C_DepCod, @B_GrupoCodRc, @I_GrupoCodRc,  
+   @B_ModalidadIngreso, @I_ModalidadIngresoID, @B_ConceptoAgrupa, @I_ConceptoAgrupaID, @B_ConceptoAfecta, @I_ConceptoAfectaID,   
+   @N_NroPagos, @B_Porcentaje, @C_Moneda, @M_Monto, @M_MontoMinimo, @T_DescripcionLarga, @T_Documento, 0, 1, 0, @I_UsuarioCre, getdate())  
+    
+  SET @I_TasaUnfv = SCOPE_IDENTITY()  
+  SET @B_Result = 1  
+  SET @T_Message = 'Inserción de datos correcta.'  
+ END TRY  
+ BEGIN CATCH  
+  SET @I_TasaUnfv = 0  
+  SET @B_Result = 0  
+  SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10))   
+ END CATCH  
+END
+GO
+
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarTasaUnfv')
+	DROP PROCEDURE [dbo].[USP_U_ActualizarTasaUnfv]
+GO
+
+CREATE PROCEDURE dbo.USP_U_ActualizarTasaUnfv
+@I_TasaUnfvID int,
+@I_ConceptoID int,
+@T_ConceptoPagoDesc varchar(250),  
+@B_Fraccionable bit = null,  
+@B_ConceptoGeneral bit = null,  
+@B_AgrupaConcepto bit = null,  
+@I_AlumnosDestino int = null,  
+@I_GradoDestino int = null,  
+@I_TipoObligacion int = null,  
+@T_Clasificador varchar(250) = null,  
+@C_CodTasa varchar(250) = null,  
+@B_Calculado bit = null,  
+@I_Calculado int = null,  
+@B_AnioPeriodo bit = null,  
+@I_Anio int = null,  
+@I_Periodo int = null,  
+@B_Especialidad bit = null,  
+@C_CodRc char(3) = null,  
+@B_Dependencia bit = null,  
+@C_DepCod int = null,  
+@B_GrupoCodRc bit = null,  
+@I_GrupoCodRc int = null,  
+@B_ModalidadIngreso bit = null,  
+@I_ModalidadIngresoID int = null,  
+@B_ConceptoAgrupa bit = null,  
+@I_ConceptoAgrupaID int = null,  
+@B_ConceptoAfecta bit = null,  
+@I_ConceptoAfectaID int = null,  
+@N_NroPagos int = null,  
+@B_Porcentaje bit = null,
+@C_Moneda varchar(5) = null,  
+@M_Monto decimal(10,4) = null,  
+@M_MontoMinimo decimal(10,4) = null,  
+@T_DescripcionLarga varchar(250) = null,  
+@T_Documento varchar(250) = null,  
+@I_UsuarioMod int,  
+@B_Result bit OUTPUT,  
+@T_Message nvarchar(4000) OUTPUT  
+AS  
+BEGIN  
+	SET NOCOUNT ON;
+	BEGIN TRY  
+		UPDATE dbo.TI_TasaUnfv SET  
+			I_ConceptoID = @I_ConceptoID,  
+			T_ConceptoPagoDesc = @T_ConceptoPagoDesc,  
+			B_Fraccionable = @B_Fraccionable,  
+			B_ConceptoGeneral = @B_ConceptoGeneral,  
+			B_AgrupaConcepto = @B_AgrupaConcepto,  
+			I_AlumnosDestino = @I_AlumnosDestino,  
+			I_GradoDestino = @I_GradoDestino,  
+			I_TipoObligacion = @I_TipoObligacion,  
+			T_Clasificador = @T_Clasificador,  
+			C_CodTasa = @C_CodTasa,  
+			B_Calculado = @B_Calculado,  
+			I_Calculado = @I_Calculado,  
+			B_AnioPeriodo = @B_AnioPeriodo,  
+			I_Anio = @I_Anio,  
+			I_Periodo = @I_Periodo,  
+			B_Especialidad = @B_Especialidad,  
+			C_CodRc = @C_CodRc,  
+			B_Dependencia = @B_Dependencia,  
+			C_DepCod = @C_DepCod,  
+			B_GrupoCodRc = @B_GrupoCodRc,  
+			I_GrupoCodRc = @I_GrupoCodRc,  
+			B_ModalidadIngreso = @B_ModalidadIngreso,  
+			I_ModalidadIngresoID = @I_ModalidadIngresoID,  
+			B_ConceptoAgrupa = @B_ConceptoAgrupa,  
+			I_ConceptoAgrupaID = @I_ConceptoAgrupaID,  
+			B_ConceptoAfecta = @B_ConceptoAfecta,  
+			I_ConceptoAfectaID = @I_ConceptoAfectaID,  
+			N_NroPagos = @N_NroPagos,  
+			B_Porcentaje = @B_Porcentaje,  
+			M_Monto = @M_Monto,  
+			M_MontoMinimo = @M_MontoMinimo,  
+			T_DescripcionLarga = @T_DescripcionLarga,  
+			T_Documento = @T_Documento,
+			I_UsuarioMod = @I_UsuarioMod,  
+			D_FecMod = getdate()
+		WHERE I_TasaUnfvID = @I_TasaUnfvID
+    
+		SET @B_Result = 1  
+		SET @T_Message = 'Actualización de datos correcta.'  
+	END TRY  
+	BEGIN CATCH  
+		SET @B_Result = 0  
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10))   
+	END CATCH
+END
+GO

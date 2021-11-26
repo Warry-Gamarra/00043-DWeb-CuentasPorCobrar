@@ -18,7 +18,7 @@
     <div class="col-12">
         <h3 class="mb-3"><small>@ViewBag.Title</small></h3>
 
-        <a class="btn btn-primary modal-link mb-3 float-right" href="@Url.Action("CreateGrupoTasa", "Tasa", new { procesoId = 0 })">
+        <a class="btn btn-primary modal-link-lg mb-3 float-right" href="@Url.Action("CreateTasa", "Tasa")">
             <i class="fa bi-layers-half">&nbsp;</i> Nueva Tasa
         </a>
 
@@ -29,9 +29,9 @@
                 columns.Add(c => c.T_ConceptoPagoDesc).Titled("Descripción").Filterable(true);
                 columns.Add(c => c.T_clasificador).Titled("Clasificador").Filterable(true);
                 columns.Add(c => c.I_MontoTasa).Css("text-center").Titled("Monto").Filterable(true);
-                columns.Add(c => c.B_Habilitado).Css("text-center").Titled("Estado").Filterable(true);
+                //columns.Add(c => c.B_Habilitado).Css("text-center").Titled("Estado").Filterable(true);
                 columns.Add().SetWidth(250).Css("text-right").Encoded(false).Sanitized(false).
-                RenderValueAs(model => @<a href="@Url.Action("EditCuotaPago", "Procesos", new { id = model.I_TasaUnfvID })" class="modal-link"><i class="fa fa-pencil-square-o" aria-hidden="true">&nbsp;</i><span class="d-none d-md-inline-block">Editar</span></a>);
+                RenderValueAs(model => @<a href="@Url.Action("EditTasa", "Tasa", new { id = model.I_TasaUnfvID })" class="modal-link-lg"><i class="fa fa-pencil-square-o" aria-hidden="true">&nbsp;</i><span class="d-none d-md-inline-block">Editar</span></a>);
                  }).WithPaging(10).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
         </div>
 

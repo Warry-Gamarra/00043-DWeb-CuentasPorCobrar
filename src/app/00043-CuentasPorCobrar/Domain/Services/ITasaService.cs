@@ -15,6 +15,10 @@ namespace Domain.Services
         ImportacionPagoResponse Grabar_Pago_Tasas(List<PagoTasaEntity> dataPagoTasas, string observacion, int currentUserID);
 
         IEnumerable<PagoTasaDTO> Listar_Pago_Tasas(int? idEntidadFinanciera, int? idCtaDeposito, string codOperacion, DateTime? fechaInicio, DateTime? fechaFinal,
-            string codDepositante);
+            string codDepositante, string nomDepositante);
+
+        Response Grabar_TasaUnfv(TasaEntity tasaEntity, SaveOption saveOption);
+
+        TasaEntity ObtenerTasaUnfv(int id);
     }
 }
