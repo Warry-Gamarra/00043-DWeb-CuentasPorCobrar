@@ -13,9 +13,9 @@ namespace Domain.Services.Implementations
 {
     public class TasaService : ITasaService
     {
-        public IEnumerable<TasaDTO> listar_TasasHabilitadas()
+        public IEnumerable<TasaDTO> listar_Tasas()
         {
-            var lista = VW_Tasas.GetHabilitados();
+            var lista = VW_Tasas.GetAll();
 
             IEnumerable<TasaDTO> result = null;
 

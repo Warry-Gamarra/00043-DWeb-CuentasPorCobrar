@@ -19,13 +19,13 @@ namespace Data.Views
         public string T_clasificador { get; set; }
         public bool B_Habilitado { get; set; }
 
-        public static IEnumerable<VW_Tasas> GetHabilitados()
+        public static IEnumerable<VW_Tasas> GetAll()
         {
             IEnumerable<VW_Tasas> result;
 
             try
             {
-                string s_command = "select t.* from dbo.VW_Tasas t where t.B_Habilitado = 1";
+                string s_command = "select t.* from dbo.VW_Tasas t";
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {

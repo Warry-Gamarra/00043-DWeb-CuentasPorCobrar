@@ -51,35 +51,6 @@ namespace WebApp.Controllers
             return PartialView("_RegistrarConceptosPagoProceso", model);
         }
 
-
-        [Route("configuracion/tasas-y-servicios/{procesoId}/agregar-tasa-concepto/")]
-        public ActionResult CreateTasa(int procesoId)
-        {
-            ViewBag.Title = "Registrar Concepto";
-            ViewBag.Conceptos = new SelectList(_conceptoModel.Listar_CatalogoConceptos(TipoPago.Tasa), "Id", "NombreConcepto");
-
-
-            var model = new RegistroConceptosProcesoViewModel(procesoId, _conceptoPagoModel)
-            {
-                MostrarFormulario = true
-            };
-
-            return PartialView("_RegistrarConceptosPagoTasa", model);
-        }
-
-
-        [Route("configuracion/tasas-y-servicios/{procesoId}/editar-tasa-concepto/{id}")]
-        public ActionResult EditTasa(int procesoId, int id)
-        {
-            ViewBag.Title = "Editar Concepto";
-            ViewBag.Conceptos = new SelectList(_conceptoModel.Listar_CatalogoConceptos(), "Id", "NombreConcepto");
-
-            var model = _conceptoPagoModel.ObtenerConceptoPagoProceso(procesoId, id);
-
-            return PartialView("_RegistrarConceptosPagoTasa", model);
-        }
-
-
         public JsonResult ChangeState(int RowID, bool B_habilitado)
         {
             var result = _conceptoPagoModel.ChangeState(RowID, B_habilitado, WebSecurity.CurrentUserId, Url.Action("ChangeState", "ConceptoPago"));
@@ -146,30 +117,6 @@ namespace WebApp.Controllers
                 viewResult.View.Render(viewContext, sw);
                 return sw.GetStringBuilder().ToString();
             }
-        }
-
-        private void Cargar_Listas()
-        {
-            ViewBag.Lista_Combo_ConceptoPago = _conceptoModel.Listar_Combo_Concepto();
-
-            ViewBag.Lista_Opciones_TipoAlumno = _selectModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.TipoAlumno);
-
-            ViewBag.Lista_Opciones_Grado = _selectModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.Grado);
-
-            ViewBag.Lista_Opciones_TipoObligacion = _selectModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.TipoObligacion);
-
-            ViewBag.Lista_Combo_Procesos = _conceptoPagoModel.Listar_Combo_Procesos();
-
-            ViewBag.Lista_Opciones_CampoCalculado = _selectModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.CampoCalculado);
-
-            ViewBag.Lista_Anios = _procesoModel.Listar_Anios();
-
-            ViewBag.Lista_Combo_Periodo = _selectModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.Periodo);
-
-            ViewBag.Lista_Combo_GrupoCodRc = _selectModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.GrupoCodRc);
-
-            ViewBag.Lista_Combo_CodIngreso = _selectModel.Listar_Combo_CatalogoOpcion_X_Parametro(Parametro.CodIngreso);
-
         }
     }
 }

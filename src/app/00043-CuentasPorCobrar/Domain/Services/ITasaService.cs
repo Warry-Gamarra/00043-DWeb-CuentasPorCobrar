@@ -10,7 +10,7 @@ namespace Domain.Services
 {
     public interface ITasaService
     {
-        IEnumerable<TasaDTO> listar_TasasHabilitadas();
+        IEnumerable<TasaDTO> listar_Tasas();
 
         ImportacionPagoResponse Grabar_Pago_Tasas(List<PagoTasaEntity> dataPagoTasas, string observacion, int currentUserID);
 

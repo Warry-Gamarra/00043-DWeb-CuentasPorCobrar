@@ -420,6 +420,7 @@
     <Compile Include="Controllers\ConceptoController.cs" />
     <Compile Include="Controllers\ProcesosController.cs" />
     <Compile Include="Controllers\ServiceController.cs" />
+    <Compile Include="Controllers\TasaController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -576,8 +577,7 @@
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\CategoriaPago\Index.cshtml" />
     <Content Include="Views\Procesos\Obligaciones.cshtml" />
-    <Content Include="Views\Procesos\_RegistrarProcesoTasa.cshtml" />
-    <Content Include="Views\Procesos\Tasas.cshtml" />
+    <Content Include="Views\Tasa\_RegistrarProcesoTasa.cshtml" />
     <Content Include="Views\CategoriaPago\_RegistrarCategoria.cshtml" />
     <Content Include="Views\Concepto\_RegistrarConcepto.cshtml" />
     <Content Include="Views\Pagos\ImportarPagoTasas.cshtml" />
@@ -638,6 +638,7 @@
     <Content Include="Views\Obligaciones\_VerDetalleObligacion.cshtml" />
     <Content Include="Views\Pagos\_AsignarPagoObligacion.cshtml" />
     <Content Include="Views\Pagos\_VerPagosObligacion.cshtml" />
+    <Content Include="Views\Tasa\Tasas.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

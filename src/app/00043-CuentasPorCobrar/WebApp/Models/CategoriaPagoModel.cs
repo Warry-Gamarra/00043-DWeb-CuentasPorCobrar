@@ -34,18 +34,6 @@ namespace WebApp.Models
             return result;
         }
 
-        public List<CategoriaPagoViewModel> Find(TipoObligacion tipoObligacion)
-        {
-            var result = new List<CategoriaPagoViewModel>();
-
-            foreach (var item in _categoriaPago.Find().Where(x => x.EsObligacion == (tipoObligacion == TipoObligacion.Matricula ? true : false)))
-            {
-                result.Add(new CategoriaPagoViewModel(item));
-            }
-
-            return result;
-        }
-
         public CategoriaPagoRegistroViewModel Find(int categoriaPagoID)
         {
             CategoriaPago categoriaPago = _categoriaPago.Find(categoriaPagoID);

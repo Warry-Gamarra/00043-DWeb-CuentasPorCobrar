@@ -1,7 +1,6 @@
-﻿@*@model IEnumerable<WebApp.ViewModels.ConceptoPagoViewModel>*@
-@model IEnumerable<WebApp.ViewModels.ProcesoViewModel>
+﻿@model IEnumerable<WebApp.ViewModels.TasaViewModel>
 
-
+@using GridMvc.Html
 
 <div class="container-fluid">
     <div class="col-12">
@@ -17,90 +16,116 @@
         </section>
     </div>
     <div class="col-12">
-        <div class="row mt-4">
-            <div class="col-lg-3 col-md-4 col-sm-5 col-12">
-                <div class="card">
-                    <div class="card-body bg-light-gray">
-                        <fieldset>
-                            <legend class="h6 text-center text-secondary">Criterios de búsqueda</legend>
-                            @using (Ajax.BeginForm("BuscarTasas", "Procesos", new { area = "" }, new AjaxOptions
-                            {
-                                HttpMethod = "GET",
-                                InsertionMode = InsertionMode.Replace,
-                                UpdateTargetId = "result-content",
-                                OnBegin = "showLoading",
-                                OnComplete = "finalize"
-                            }))
-                            {
-                                <div class="form-row">
-                                    <div class="form-group col-12">
-                                        <label for="inputConcepto">Etiqueta</label>
-                                        @Html.DropDownList("concepto", ViewBag.Conceptos as SelectList, "", new { @class = "select-filter form-control form-sm", id = "inputConcepto" })
+        <h3 class="mb-3"><small>@ViewBag.Title</small></h3>
+
+        <a class="btn btn-primary modal-link mb-3 float-right" href="@Url.Action("CreateGrupoTasa", "Tasa", new { procesoId = 0 })">
+            <i class="fa bi-layers-half">&nbsp;</i> Nueva Tasa
+        </a>
+
+        <div class="table-responsive" style="min-height:300px">
+            @Html.Grid(Model).Columns(columns =>
+            {
+                columns.Add(c => c.C_CodTasa).Css("text-center").Titled("Tasa").Filterable(true);
+                columns.Add(c => c.T_ConceptoPagoDesc).Titled("Descripción").Filterable(true);
+                columns.Add(c => c.T_clasificador).Titled("Clasificador").Filterable(true);
+                columns.Add(c => c.I_MontoTasa).Css("text-center").Titled("Monto").Filterable(true);
+                columns.Add(c => c.B_Habilitado).Css("text-center").Titled("Estado").Filterable(true);
+                columns.Add().SetWidth(250).Css("text-right").Encoded(false).Sanitized(false).
+                RenderValueAs(model => @<a href="@Url.Action("EditCuotaPago", "Procesos", new { id = model.I_TasaUnfvID })" class="modal-link"><i class="fa fa-pencil-square-o" aria-hidden="true">&nbsp;</i><span class="d-none d-md-inline-block">Editar</span></a>);
+                 }).WithPaging(10).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
+        </div>
+
+    </div>
+</div>
+
+@*<div class="container-fluid">
+        <div class="col-12">...</div>
+        <div class="col-12">
+            <div class="row mt-4">
+                <div class="col-lg-3 col-md-4 col-sm-5 col-12">
+                    <div class="card">
+                        <div class="card-body bg-light-gray">
+                            <fieldset>
+                                <legend class="h6 text-center text-secondary">Criterios de búsqueda</legend>
+                                @using (Ajax.BeginForm("BuscarTasas", "Procesos", new { area = "" }, new AjaxOptions
+                                {
+                                    HttpMethod = "GET",
+                                    InsertionMode = InsertionMode.Replace,
+                                    UpdateTargetId = "result-content",
+                                    OnBegin = "showLoading",
+                                    OnComplete = "finalize"
+                                }))
+                                {
+                                    <div class="form-row">
+                                        <div class="form-group col-12">
+                                            <label for="inputConcepto">Etiqueta</label>
+                                            @Html.DropDownList("concepto", ViewBag.Conceptos as SelectList, "", new { @class = "select-filter form-control form-sm", id = "inputConcepto" })
+                                        </div>
+                                        <div class="form-group col-12">
+                                            <label for="inputDependencia">Dependencia</label>
+                                            @Html.DropDownList("dependencia", ViewBag.Dependencias as SelectList, "", new { @class = "select-filter form-control form-sm", id = "inputDependencia" })
+                                        </div>
+                                        <div class="form-group col-12 mb-4">
+                                            <button type="submit" class="btn btn-block btn-secondary mt-4"><i class="fa fa-fw fa-filter">&nbsp;</i> Filtrar</button>
+                                        </div>
                                     </div>
-                                    <div class="form-group col-12">
-                                        <label for="inputDependencia">Dependencia</label>
-                                        @Html.DropDownList("dependencia", ViewBag.Dependencias as SelectList, "", new { @class = "select-filter form-control form-sm", id = "inputDependencia" })
+                                }
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="card mt-4">
+                        <div class="card-body bg-light-gray">
+                            <fieldset class="">
+                                <legend class="h6 text-center text-secondary">Acciones</legend>
+
+                                <a href="@Url.Action("CreateGrupoTasa", "Procesos" )" class="btn btn-block btn-primary modal-link mt-3">
+                                    <i class="fa fa-sitemap"></i> Nuevo Grupo
+                                </a>
+                                <a href="@Url.Action("CreateTasa", "ConceptoPago", new { procesoId = 0 })" class="btn btn-block btn-info modal-link-lg mt-3">
+                                    <i class="fa fa-plus"></i> Nueva Tasa
+                                </a>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-9 col-md-8 col-sm-7 col-12" id="result-content">
+                    <h3 class="mb-3"><small>GRUPOS DE TASAS</small></h3>
+                    <div class="my-4">
+                        <div class="accordion" id="AccordionGrupoTasas">
+                            @foreach (var item in Model)
+                            {
+                                string head_id = "proc_" + item.I_ProcesoID;
+                                string collapse_id = "tasas_proc_" + item.I_ProcesoID;
+
+                                <div class="card">
+                                    <div class="card-header" id="@head_id">
+                                        <span class="h6">@item.T_ProcesoDesc</span>
+                                        <span class="float-right">
+                                            <a href="@Url.Action("VerTasas", "Procesos", new { procesoId = item.I_ProcesoID })" class="show-fees text-primary mx-5" data-toggle="collapse" data-target="#@collapse_id" aria-expanded="true" aria-controls="@collapse_id"><i class="fa fa-list-ul" aria-hidden="true">&nbsp;</i>Mostrar tasas</a>
+                                            <a href="@Url.Action("EditGrupoTasa", "Procesos", new { id = item.I_ProcesoID })" class="modal-link"><i class="fa fa-pencil-square-o" aria-hidden="true">&nbsp;</i>Editar</a>
+                                        </span>
                                     </div>
-                                    <div class="form-group col-12 mb-4">
-                                        <button type="submit" class="btn btn-block btn-secondary mt-4"><i class="fa fa-fw fa-filter">&nbsp;</i> Filtrar</button>
+
+                                    <div id="@collapse_id" class="collapse" aria-labelledby="@head_id" data-parent="#AccordionGrupoTasas">
+                                        <div class="card-body">
+                                        </div>
                                     </div>
                                 </div>
                             }
-                        </fieldset>
-                    </div>
-                </div>
-                <div class="card mt-4">
-                    <div class="card-body bg-light-gray">
-                        <fieldset class="">
-                            <legend class="h6 text-center text-secondary">Acciones</legend>
 
-                            <a href="@Url.Action("CreateGrupoTasa", "Procesos" )" class="btn btn-block btn-primary modal-link mt-3">
-                                <i class="fa fa-sitemap"></i> Nuevo Grupo
-                            </a>
-                            <a href="@Url.Action("CreateTasa", "ConceptoPago", new { procesoId = 0 })" class="btn btn-block btn-info modal-link-lg mt-3">
-                                <i class="fa fa-plus"></i> Nueva Tasa
-                            </a>
-                        </fieldset>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-9 col-md-8 col-sm-7 col-12" id="result-content">
-                <h3 class="mb-3"><small>GRUPOS DE TASAS</small></h3>
-                <div class="my-4">
-                    <div class="accordion" id="AccordionGrupoTasas">
-                        @foreach (var item in Model)
-                        {
-                            string head_id = "proc_" + item.I_ProcesoID;
-                            string collapse_id = "tasas_proc_" + item.I_ProcesoID;
-
-                            <div class="card">
-                                <div class="card-header" id="@head_id">
-                                    <span class="h6">@item.T_ProcesoDesc</span>
-                                    <span class="float-right">
-                                        <a href="@Url.Action("VerTasas", "Procesos", new { procesoId = item.I_ProcesoID })" class="show-fees text-primary mx-5" data-toggle="collapse" data-target="#@collapse_id" aria-expanded="true" aria-controls="@collapse_id"><i class="fa fa-list-ul" aria-hidden="true">&nbsp;</i>Mostrar tasas</a>
-                                        <a href="@Url.Action("EditGrupoTasa", "Procesos", new { id = item.I_ProcesoID })" class="modal-link"><i class="fa fa-pencil-square-o" aria-hidden="true">&nbsp;</i>Editar</a>
-                                    </span>
-                                </div>
-
-                                <div id="@collapse_id" class="collapse" aria-labelledby="@head_id" data-parent="#AccordionGrupoTasas">
-                                    <div class="card-body">
-                                    </div>
-                                </div>
-                            </div>
-                        }
-
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
+    </div>*@
 
 @section Scripts {
 
     @Scripts.Render("~/bundles/jqueryval")
 
-    <script>        
+    <script>
+
         $(document).ready(function () {
             $('#btnsubmit').removeClass('disabled');
         });

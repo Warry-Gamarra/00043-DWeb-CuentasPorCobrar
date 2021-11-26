@@ -3043,3 +3043,144 @@ BEGIN
 	END CATCH
 END
 GO
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_GrabarConcepto')
+	DROP PROCEDURE [dbo].[USP_I_GrabarConcepto]
+GO
+
+
+CREATE PROCEDURE [dbo].[USP_I_GrabarConcepto]
+  @I_ConceptoID  int
+ ,@T_ConceptoDesc varchar(250)
+ ,@T_Clasificador varchar(50)
+ ,@T_ClasifCorto varchar(5)
+ ,@B_EsObligacion bit
+ ,@B_EsPagoMatricula bit
+ ,@B_EsPagoExtmp  bit
+ ,@B_Fraccionable bit
+ ,@B_ConceptoGeneral bit
+ ,@B_AgrupaConcepto bit
+ ,@I_TipoObligacion int
+ ,@B_Calculado  bit  
+ ,@I_Calculado  int  
+ ,@B_GrupoCodRc bit
+ ,@I_GrupoCodRc int
+ ,@B_ModalidadIngreso bit
+ ,@I_ModalidadIngresoID int
+ ,@B_ConceptoAgrupa bit
+ ,@I_ConceptoAgrupaID int
+ ,@N_NroPagos int
+ ,@B_Porcentaje bit
+ ,@C_Moneda varchar(5)
+ ,@I_Monto   decimal(15,2)  
+ ,@I_MontoMinimo  decimal(15,2)  
+ ,@D_FecCre   datetime  
+ ,@CurrentUserId  int  
+ ,@B_Mora   bit = null
+ ,@B_Result bit OUTPUT  
+ ,@T_Message nvarchar(4000) OUTPUT   
+AS  
+BEGIN  
+	SET NOCOUNT ON;
+	BEGIN TRY  
+		INSERT INTO TC_Concepto(T_ConceptoDesc, T_Clasificador, T_ClasifCorto, B_EsObligacion, B_EsPagoMatricula, B_EsPagoExtmp, B_Fraccionable, B_ConceptoGeneral, B_AgrupaConcepto, I_TipoObligacion, 
+			B_Calculado, I_Calculado, B_GrupoCodRc, I_GrupoCodRc, B_ModalidadIngreso, I_ModalidadIngresoID, B_ConceptoAgrupa, I_ConceptoAgrupaID, N_NroPagos, B_Porcentaje, C_Moneda, I_Monto, I_MontoMinimo, 
+			B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, B_Mora)  
+		VALUES (@T_ConceptoDesc, @T_Clasificador, @T_ClasifCorto, @B_EsObligacion, @B_EsPagoMatricula, @B_EsPagoExtmp, @B_Fraccionable, @B_ConceptoGeneral, @B_AgrupaConcepto, @I_TipoObligacion, 
+			@B_Calculado, @I_Calculado, @B_GrupoCodRc, @I_GrupoCodRc, @B_ModalidadIngreso, @I_ModalidadIngresoID, @B_ConceptoAgrupa, @I_ConceptoAgrupaID, @N_NroPagos, @B_Porcentaje, @C_Moneda, @I_Monto, @I_MontoMinimo, 
+			1, 0, @CurrentUserId, @D_FecCre, @B_Mora)  
+  
+		SET @B_Result = 1  
+		SET @T_Message = 'Nuevo registro agregado.'  
+	END TRY  
+	BEGIN CATCH  
+		SET @B_Result = 0  
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10))   
+	END CATCH 
+END  
+GO
+
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarConcepto')
+	DROP PROCEDURE [dbo].[USP_U_ActualizarConcepto]
+GO
+
+  
+CREATE PROCEDURE [dbo].[USP_U_ActualizarConcepto]
+  @I_ConceptoID  int
+ ,@T_ConceptoDesc varchar(250)
+ ,@T_Clasificador varchar(50)
+ ,@T_ClasifCorto varchar(5)
+ ,@B_EsObligacion bit
+ ,@B_EsPagoMatricula bit
+ ,@B_EsPagoExtmp  bit
+ ,@B_Fraccionable bit
+ ,@B_ConceptoGeneral bit
+ ,@B_AgrupaConcepto bit
+ ,@I_TipoObligacion int
+ ,@B_Calculado  bit  
+ ,@I_Calculado  int  
+ ,@B_GrupoCodRc bit
+ ,@I_GrupoCodRc int
+ ,@B_ModalidadIngreso bit
+ ,@I_ModalidadIngresoID int
+ ,@B_ConceptoAgrupa bit
+ ,@I_ConceptoAgrupaID int
+ ,@N_NroPagos int
+ ,@B_Porcentaje bit
+ ,@C_Moneda varchar(5)
+ ,@I_Monto   decimal(15,2)  
+ ,@I_MontoMinimo  decimal(15,2)  
+ ,@D_FecMod   datetime  
+ ,@CurrentUserId  int  
+ ,@B_Mora   bit = null  
+ ,@B_Result bit OUTPUT  
+ ,@T_Message nvarchar(4000) OUTPUT   
+AS  
+BEGIN  
+	SET NOCOUNT ON;
+	BEGIN TRY  
+		UPDATE TC_Concepto SET
+			T_ConceptoDesc = @T_ConceptoDesc,
+			T_Clasificador = @T_Clasificador,
+			T_ClasifCorto = @T_ClasifCorto,
+			B_EsObligacion = @B_EsObligacion,
+			B_EsPagoMatricula = @B_EsPagoMatricula,
+			B_EsPagoExtmp = @B_EsPagoExtmp,
+			B_Fraccionable = @B_Fraccionable,
+			B_ConceptoGeneral = @B_ConceptoGeneral,
+			B_AgrupaConcepto = @B_AgrupaConcepto,
+			I_TipoObligacion = @I_TipoObligacion,
+			B_Calculado = @B_Calculado,
+			I_Calculado = @I_Calculado,
+			B_GrupoCodRc = @B_GrupoCodRc,
+			I_GrupoCodRc = @I_GrupoCodRc,
+			B_ModalidadIngreso = @B_ModalidadIngreso,
+			I_ModalidadIngresoID = @I_ModalidadIngresoID,
+			B_ConceptoAgrupa = @B_ConceptoAgrupa,
+			I_ConceptoAgrupaID = @I_ConceptoAgrupaID,
+			N_NroPagos = @N_NroPagos,
+			B_Porcentaje = @B_Porcentaje,
+			C_Moneda = @C_Moneda,
+			I_Monto = @I_Monto,
+			I_MontoMinimo = @I_MontoMinimo,
+			D_FecMod = @D_FecMod,
+			I_UsuarioMod = @CurrentUserId,
+			B_Mora = @B_Mora
+		WHERE I_ConceptoID = @I_ConceptoID  
+     
+		SET @B_Result = 1  
+		SET @T_Message = 'Actualización de datos correcta'  
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10))
+	END CATCH
+END
+GO
+
+
+
+

@@ -495,7 +495,7 @@ namespace WebApp.Models
 
             if (pagoService.ValidarCodOperacionTasa(model.codigoOperacion, model.idEntidadFinanciera, model.fechaPagoTasa))
             {
-                var tasa = tasaService.listar_TasasHabilitadas().First(x => x.I_TasaUnfvID == model.tasa);
+                var tasa = tasaService.listar_Tasas().First(x => x.I_TasaUnfvID == model.tasa);
 
                 var entity = Mapper.PagoTasaViewModel_To_PagoTasaEntity(model);
 

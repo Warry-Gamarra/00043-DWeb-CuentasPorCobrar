@@ -10,7 +10,7 @@ namespace WebApp.Models.Facades
     {
         IEnumerable<SelectViewModel> listarTasas();
 
-        IEnumerable<TasaViewModel> listarTasas();
+        IEnumerable<TasaViewModel> listarTodoTasas();
 
         IEnumerable<PagoTasaModel> listarPagoTasas(int? idEntidadFinanciera, int? idCtaDeposito, string codOperacion, DateTime? fechaInicio, DateTime? fechaFinal,
             string codDepositante);
