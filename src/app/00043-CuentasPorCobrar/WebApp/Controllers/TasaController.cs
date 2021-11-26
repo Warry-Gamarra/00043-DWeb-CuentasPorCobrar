@@ -109,5 +109,12 @@ namespace WebApp.Controllers
 
             return PartialView("_MsgRegistrarConceptoTasa", result);
         }
+
+        public JsonResult ChangeState(int RowID, bool B_habilitado)
+        {
+            var result = _tasaService.ChangeState(RowID, B_habilitado, WebSecurity.CurrentUserId, Url.Action("ChangeState", "Tasa"));
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
     }
 }

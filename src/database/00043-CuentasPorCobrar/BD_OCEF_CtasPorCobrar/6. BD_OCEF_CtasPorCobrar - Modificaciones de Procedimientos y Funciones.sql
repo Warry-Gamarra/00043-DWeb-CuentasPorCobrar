@@ -3425,3 +3425,37 @@ BEGIN
 	END CATCH
 END
 GO
+
+
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarEstadoTasaUnfv')
+	DROP PROCEDURE [dbo].[USP_U_ActualizarEstadoTasaUnfv]
+GO
+
+  
+CREATE PROCEDURE [dbo].[USP_U_ActualizarEstadoTasaUnfv]
+  @I_TasaUnfvID int  
+ ,@B_Habilitado bit  
+ ,@CurrentUserId int  
+ ,@B_Result bit OUTPUT  
+ ,@T_Message nvarchar(4000) OUTPUT   
+AS  
+BEGIN  
+	SET NOCOUNT ON;
+	BEGIN TRY
+		UPDATE dbo.TI_TasaUnfv SET
+			B_Habilitado = @B_Habilitado,
+			D_FecMod = GETDATE(),
+			I_UsuarioMod = @CurrentUserId
+		WHERE I_TasaUnfvID = @I_TasaUnfvID
+     
+		SET @B_Result = 1  
+		SET @T_Message = 'Actualización de datos correcta'  
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0  
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10))   
+	END CATCH
+END
+GO

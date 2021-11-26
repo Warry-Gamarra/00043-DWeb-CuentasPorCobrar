@@ -20,5 +20,7 @@ namespace Domain.Services
         Response Grabar_TasaUnfv(TasaEntity tasaEntity, SaveOption saveOption);
 
         TasaEntity ObtenerTasaUnfv(int id);
+
+        Response ChangeState(int tasaUnfvId, bool currentState, int currentUserId);
     }
 }

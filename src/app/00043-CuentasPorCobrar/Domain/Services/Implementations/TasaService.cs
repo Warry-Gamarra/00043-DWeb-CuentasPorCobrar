@@ -260,5 +260,16 @@ namespace Domain.Services.Implementations
                 return null;
             }
         }
+
+        public Response ChangeState(int tasaUnfvId, bool currentState, int currentUserId)
+        {
+            var tasa = new TI_TasaUnfv()
+            {
+                I_TasaUnfvID = tasaUnfvId,
+                B_Habilitado = !currentState,
+            };
+            
+            return new Response(tasa.ChangeState(currentUserId));
+        }
     }
 }

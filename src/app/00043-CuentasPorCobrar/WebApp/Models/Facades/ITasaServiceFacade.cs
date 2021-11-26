@@ -19,5 +19,7 @@ namespace WebApp.Models.Facades
         Response Grabar_TasaUnfv(RegistrarTasaViewModel model, int currentUserId);
 
         RegistrarTasaViewModel ObtenerTasaUnfv(int id);
+
+        Response ChangeState(int conceptoId, bool currentState, int currentUserId, string returnUrl);
     }
 }

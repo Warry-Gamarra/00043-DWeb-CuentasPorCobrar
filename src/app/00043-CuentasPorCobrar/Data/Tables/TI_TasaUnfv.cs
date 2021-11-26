@@ -70,6 +70,36 @@ namespace Data.Tables
 
             return result;
         }
+
+        public ResponseData ChangeState(int currentUserId)
+        {
+            ResponseData result = new ResponseData();
+            DynamicParameters parameters = new DynamicParameters();
+
+            try
+            {
+                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
+                {
+                    parameters.Add(name: "I_TasaUnfvID", dbType: DbType.Int32, value: this.I_TasaUnfvID);
+                    parameters.Add(name: "B_Habilitado", dbType: DbType.Boolean, value: this.B_Habilitado);
+                    parameters.Add(name: "CurrentUserId", dbType: DbType.Int32, value: currentUserId);
+
+                    parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);
+                    parameters.Add(name: "T_Message", dbType: DbType.String, size: 4000, direction: ParameterDirection.Output);
+
+                    _dbConnection.Execute("USP_U_ActualizarEstadoTasaUnfv", parameters, commandType: CommandType.StoredProcedure);
+
+                    result.Value = parameters.Get<bool>("B_Result");
+                    result.Message = parameters.Get<string>("T_Message");
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Value = false;
+                result.Message = ex.Message;
+            }
+            return result;
+        }
     }
 }
 

@@ -178,5 +178,14 @@ namespace WebApp.Models.Facades
 
             return result;
         }
+
+        public Response ChangeState(int conceptoId, bool currentState, int currentUserId, string returnUrl)
+        {
+            Response result = tasaService.ChangeState(conceptoId, currentState, currentUserId);
+
+            result.Redirect = returnUrl;
+
+            return result;
+        }
     }
 }

@@ -29,7 +29,14 @@
                 columns.Add(c => c.T_ConceptoPagoDesc).Titled("Descripción").Filterable(true);
                 columns.Add(c => c.T_clasificador).Titled("Clasificador").Filterable(true);
                 columns.Add(c => c.I_MontoTasa).Css("text-center").Titled("Monto").Filterable(true);
-                //columns.Add(c => c.B_Habilitado).Css("text-center").Titled("Estado").Filterable(true);
+                columns.Add(c => c.B_Habilitado).SetWidth(100).Css("text-center").Encoded(false).Sanitized(false)
+                    .RenderValueAs(model => model.B_Habilitado ?
+                        @Html.Raw("<span id=\"td" + @model.I_TasaUnfvID + "\"><button type=\"submit\" class=\"btn btn-xs btn-success\" onclick=\"ChangeStateReloadPage(" + @model.I_TasaUnfvID + ", " + @model.B_Habilitado.ToString().ToLower() + ", '" + @Url.Action("ChangeState", "Tasa") + "');\"><i class=\"fa fa-check-circle-o\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Habilitado</span></button></span>") :
+                        @Html.Raw("<span id=\"td" + @model.I_TasaUnfvID + "\"><button type=\"submit\" class=\"btn btn-xs btn-secondary\" onclick=\"ChangeStateReloadPage(" + @model.I_TasaUnfvID + ", " + @model.B_Habilitado.ToString().ToLower() + ", '" + @Url.Action("ChangeState", "Tasa") + "');\"><i class=\"fa fa-minus-circle\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Deshabilitado</span></button></span>"))
+                    .Filterable(true).SetWidth(160).Titled("Estado");
+
+
+
                 columns.Add().SetWidth(250).Css("text-right").Encoded(false).Sanitized(false).
                 RenderValueAs(model => @<a href="@Url.Action("EditTasa", "Tasa", new { id = model.I_TasaUnfvID })" class="modal-link-lg"><i class="fa fa-pencil-square-o" aria-hidden="true">&nbsp;</i><span class="d-none d-md-inline-block">Editar</span></a>);
                  }).WithPaging(10).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
