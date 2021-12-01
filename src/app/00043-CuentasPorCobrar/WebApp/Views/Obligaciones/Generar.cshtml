@@ -128,10 +128,13 @@
                                             <label for="cmbEspecialidad">Especialidad</label>
                                             <select id="cmbEspecialidad" name="cmbEspecialidad" class="form-control form-control-sm text-uppercase"></select>
                                         </div>
-                                        <div class="form-group col-lg-2 col-md-3 col-12">
-                                            <button type="button" id="btnConsultarObligacionAlumno" class="btn btn-block btn-outline-primary mt-4"><i class="fa fa-fw fa-search-plus"></i> Iniciar consulta</button>
+                                        <div class="form-group col-lg-1 col-md-3 col-12">
+                                            <button type="button" id="btnConsultarObligacionAlumno" class="btn btn-block btn-outline-primary mt-4"><i class="fa fa-fw fa-search-plus"></i> Consultar</button>
                                         </div>
-                                        <div class="form-group col-lg-2 col-sm-3 col-12">
+                                        <div class="form-group col-lg-1 col-md-3 col-12">
+                                            <button type="button" id="btnGenerarObligacionAlumno" class="btn btn-block btn-outline-primary mt-4"><i class="fa fa-fw fa-cogs"></i> Generar</button>
+                                        </div>
+                                        <div class="form-group col-lg-1 col-sm-3 col-12">
                                             <button type="button" id="btnLimpiarConsultaObligaAlumno" class="btn btn-block btn-outline-danger mt-4"><i class="fa fa-fw fa-eraser"></i> Limpiar</button>
                                         </div>
                                     </div>
@@ -317,7 +320,7 @@
             } else if (especialidad === null || especialidad.length === '') {
                 ObtenerEspecialidadesAlumno(codAlu);
             } else {
-                BuscarObligacionesAlumno(anio, periodo, especialidad, codAlu);
+                BuscarObligacionesAlumno(anio, periodo, especialidad, codAlu, true);
             }
         });
 
@@ -387,7 +390,7 @@
                         let periodo = $('#cmbPeriodoIndividual').val();
                         let codAlu = $('#txtCodAlumno').val();
 
-                        BuscarObligacionesAlumno(anio, periodo, item.C_RcCod, codAlu);
+                        BuscarObligacionesAlumno(anio, periodo, item.C_RcCod, codAlu, true);
                     }
                 });
 
@@ -395,7 +398,7 @@
             }
         }
 
-        function BuscarObligacionesAlumno(anio, periodo, codRc, codAlu) {
+        function BuscarObligacionesAlumno(anio, periodo, codRc, codAlu, preguntarGenerarObl) {
             let parametros = {
                 anio: anio,
                 periodo: periodo,
@@ -420,20 +423,22 @@
                         }
 
                         if (data.detalle_pago.length == 0) {
-                            Swal.fire({
-                                title: '',
-                                text: "El alumno no cuenta con obligaciones generadas para este periodo. ¿Desea generar las obligaciones en este momento?.",
-                                icon: MESSAGE_TYPE.WARNING,
-                                showCancelButton: true,
-                                confirmButtonColor: '#3085d6',
-                                cancelButtonColor: '#d33',
-                                confirmButtonText: 'Si, continuar.',
-                                cancelButtonText: 'No, cancelar.'
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    GenerarObligacionesAlumno(anio, periodo, codRc, codAlu);
-                                }
-                            });
+                            if (preguntarGenerarObl) {
+                                Swal.fire({
+                                    title: '',
+                                    text: "El alumno no cuenta con obligaciones generadas para este periodo. ¿Desea generar las obligaciones en este momento?.",
+                                    icon: MESSAGE_TYPE.WARNING,
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'Si, continuar.',
+                                    cancelButtonText: 'No, cancelar.'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        GenerarObligacionesAlumno(anio, periodo, codRc, codAlu);
+                                    }
+                                });
+                            }
                         } else {
                             GenerarTablaDetalle(data.detalle_pago);
                             GenerarTablaCuotas(data.cuotas_pago);
@@ -464,7 +469,7 @@
                 success: function (data) {
                     if (data) {
                         if (data.Value) {
-                            BuscarObligacionesAlumno(anio, periodo, codRc, codAlu);
+                            BuscarObligacionesAlumno(anio, periodo, codRc, codAlu, false);
                         } else {
                             MostrarMensajeObligacionesPorAlumno(data.Message, MESSAGE_TYPE.ERROR);
                         }
@@ -567,7 +572,7 @@
                             let codAlu = $('#txtCodAlumno').val();
                             let codRc = $('#cmbEspecialidad').val();
 
-                            BuscarObligacionesAlumno(anio, periodo, codRc, codAlu);
+                            BuscarObligacionesAlumno(anio, periodo, codRc, codAlu, false);
                         } else {
                             MostrarMensajeObligacionesPorAlumno(data.Message, MESSAGE_TYPE.ERROR);
                         }
@@ -579,5 +584,22 @@
                 }
             });
         }
+
+        $(document).on('click', '#btnGenerarObligacionAlumno', function (e) {
+            let anio = $('#cmbAnioIndividual').val();
+            let periodo = $('#cmbPeriodoIndividual').val();
+            let codAlu = $('#txtCodAlumno').val();
+            let codRc = $('#cmbEspecialidad').val();
+
+            if (codAlu !== null && codAlu.length === 10) {
+                if (codRc !== null && codRc.length === 3) {
+                    GenerarObligacionesAlumno(anio, periodo, codRc, codAlu);
+                } else {
+                    MostrarMensajeObligacionesPorAlumno("Realicé la consulta para obtener la(s) especialidad(es) del alumno.", MESSAGE_TYPE.WARNING);
+                }
+            } else {
+                MostrarMensajeObligacionesPorAlumno("El Código de Alumno es obligatorio.", MESSAGE_TYPE.WARNING);
+            }
+        });
     </script>
 }
