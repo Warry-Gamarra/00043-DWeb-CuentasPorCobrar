@@ -27,5 +27,7 @@ namespace WebApp.Models.Facades
         ObligacionDetalleModel Obtener_DetalleObligacion_X_ID(int idObligacionDet);
 
         Response ActualizarMontoObligaciones(int obligacionAluDetID, decimal monto, int tipoDocumento, string documento, int userID);
+
+        Response AnularObligacion(int obligacionID, int currentUserID);
     }
 }

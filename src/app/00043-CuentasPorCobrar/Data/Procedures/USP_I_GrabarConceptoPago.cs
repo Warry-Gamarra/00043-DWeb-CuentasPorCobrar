@@ -49,6 +49,9 @@ namespace Data.Procedures
         public int I_UsuarioCre { get; set; }
         public string C_Moneda { get; set; }
         public bool B_Mora { get; set; }
+        public int? I_TipoDescuentoID { get; set; }
+        public bool B_EsPagoMatricula { get; set; }
+        public bool B_EsPagoExtmp { get; set; }
 
         public ResponseData Execute()
         {
@@ -98,6 +101,9 @@ namespace Data.Procedures
                     parameters.Add(name: "I_UsuarioCre", dbType: DbType.Int32, value: this.I_UsuarioCre);
                     parameters.Add(name: "C_Moneda", dbType: DbType.String, value: this.C_Moneda);
                     parameters.Add(name: "B_Mora", dbType: DbType.Boolean, value: this.B_Mora);
+                    parameters.Add(name: "I_TipoDescuentoID", dbType: DbType.Int32, value: this.I_TipoDescuentoID);
+                    parameters.Add(name: "B_EsPagoMatricula", dbType: DbType.Boolean, value: this.B_EsPagoMatricula);
+                    parameters.Add(name: "B_EsPagoExtmp", dbType: DbType.Boolean, value: this.B_EsPagoExtmp);
 
                     parameters.Add(name: "I_ConcPagID", dbType: DbType.Int32, direction: ParameterDirection.Output);
                     parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);

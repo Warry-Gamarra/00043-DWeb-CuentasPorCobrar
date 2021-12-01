@@ -225,5 +225,12 @@ namespace Domain.Services.Implementations
 
             return new Response(result);
         }
+
+        public Response AnularObligacion(int obligacionID, int currentUserID)
+        {
+            var result = USP_U_AnularObligacionAlumno.Execute(obligacionID, currentUserID);
+
+            return new Response(result);
+        }
     }
 }

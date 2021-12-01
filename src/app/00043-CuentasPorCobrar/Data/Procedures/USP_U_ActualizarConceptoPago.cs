@@ -43,14 +43,17 @@ namespace Data.Procedures
         public int? I_ConceptoAfectaID { get; set; }
         public int? N_NroPagos { get; set; }
         public bool? B_Porcentaje { get; set; }
+        public string C_Moneda { get; set; }
         public decimal? M_Monto { get; set; }
         public decimal? M_MontoMinimo { get; set; }
         public string T_DescripcionLarga { get; set; }
         public string T_Documento { get; set; }
         public bool B_Habilitado { get; set; }
         public int I_UsuarioMod { get; set; }
-        public string C_Moneda { get; set; }
         public bool B_Mora { get; set; }
+        public int? I_TipoDescuentoID { get; set; }
+        public bool B_EsPagoMatricula { get; set; }
+        public bool B_EsPagoExtmp { get; set; }
 
         public ResponseData Execute()
         {
@@ -102,6 +105,9 @@ namespace Data.Procedures
                     parameters.Add(name: "I_UsuarioMod", dbType: DbType.Int32, value: this.I_UsuarioMod);
                     parameters.Add(name: "C_Moneda", dbType: DbType.String, value: this.C_Moneda);
                     parameters.Add(name: "B_Mora", dbType: DbType.Boolean, value: this.B_Mora);
+                    parameters.Add(name: "I_TipoDescuentoID", dbType: DbType.Int32, value: this.I_TipoDescuentoID);
+                    parameters.Add(name: "B_EsPagoMatricula", dbType: DbType.Boolean, value: this.B_EsPagoMatricula);
+                    parameters.Add(name: "B_EsPagoExtmp", dbType: DbType.Boolean, value: this.B_EsPagoExtmp);
 
                     parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);
                     parameters.Add(name: "T_Message", dbType: DbType.String, size: 4000, direction: ParameterDirection.Output);

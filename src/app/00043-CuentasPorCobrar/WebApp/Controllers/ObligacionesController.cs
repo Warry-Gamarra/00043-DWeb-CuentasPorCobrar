@@ -275,5 +275,14 @@ namespace WebApp.Controllers
 
             return Json(response, JsonRequestBehavior.AllowGet);
         }
+
+        [HttpPost]
+        [HandleJsonExceptionAttribute]
+        public ActionResult AnularCuotaPago(int obligacionID)
+        {
+            var response = obligacionServiceFacade.AnularObligacion(obligacionID, WebSecurity.CurrentUserId);
+
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
     }
 }

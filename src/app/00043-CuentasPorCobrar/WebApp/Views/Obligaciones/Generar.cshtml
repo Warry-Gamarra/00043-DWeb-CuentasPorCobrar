@@ -202,6 +202,7 @@
                                         <th>Fec. Vencimiento</th>
                                         <th>Banco</th>
                                         <th>Cta.Cte.</th>
+                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -529,6 +530,8 @@
                     '<td>' + item.T_FecVencto + '</td>' +
                     '<td></td>' +
                     '<td></td>' +
+                    '<td><button type="button" class="btn btn-link" onclick="AnularObligacion(' + item.I_ObligacionAluID +
+                        ')"><i class="fa fa-trash"></i> Anular</button></td>' +
                     '</tr>';
             });
 
@@ -542,5 +545,39 @@
             GenerarTablaDetalle(null);
             GenerarTablaCuotas(null);
         });
+
+        function AnularObligacion(obligacionID) {
+            let parametros = {
+                obligacionID: obligacionID
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("AnularCuotaPago", "Obligaciones")',
+                data: parametros,
+                dataType: 'json',
+                beforeSend: function () { },
+                success: function (data) {
+                    if (data) {
+                        if (data.Value) {
+                            MostrarMensajeObligacionesPorAlumno(data.Message, MESSAGE_TYPE.SUCCESS);
+
+                            let anio = $('#cmbAnioIndividual').val();
+                            let periodo = $('#cmbPeriodoIndividual').val();
+                            let codAlu = $('#txtCodAlumno').val();
+                            let codRc = $('#cmbEspecialidad').val();
+
+                            BuscarObligacionesAlumno(anio, periodo, codRc, codAlu);
+                        } else {
+                            MostrarMensajeObligacionesPorAlumno(data.Message, MESSAGE_TYPE.ERROR);
+                        }
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    var jsonException = JSON.parse(xhr.responseText);
+                    MostrarMensajeObligacionesPorAlumno(jsonException.Message, MESSAGE_TYPE.ERROR);
+                }
+            });
+        }
     </script>
 }

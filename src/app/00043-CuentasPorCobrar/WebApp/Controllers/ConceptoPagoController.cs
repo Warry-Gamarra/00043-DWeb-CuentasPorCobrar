@@ -31,7 +31,7 @@ namespace WebApp.Controllers
         public ActionResult CreateObligacion(int procesoId)
         {
             ViewBag.Title = "Registrar Concepto";
-            ViewBag.Conceptos = new SelectList(_conceptoModel.Listar_CatalogoConceptos(TipoPago.Obligacion), "Id", "NombreConcepto");
+            ViewBag.Conceptos = new SelectList(_conceptoModel.Listar_CatalogoConceptos(TipoPago.Obligacion, true), "Id", "NombreConcepto");
 
             var model = new RegistroConceptosProcesoViewModel(procesoId, _conceptoPagoModel)
             {

@@ -54,7 +54,7 @@ namespace WebApp.Controllers
         {
             ViewBag.Title = "Registrar Concepto";
 
-            ViewBag.Conceptos = new SelectList(_conceptoModel.Listar_CatalogoConceptos(TipoPago.Tasa), "Id", "NombreConcepto");
+            ViewBag.Conceptos = new SelectList(_conceptoModel.Listar_CatalogoConceptos(TipoPago.Tasa, true), "Id", "NombreConcepto");
 
 
             var model = new RegistrarTasaViewModel()

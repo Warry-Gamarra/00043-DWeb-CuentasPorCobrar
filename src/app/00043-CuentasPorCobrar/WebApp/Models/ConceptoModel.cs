@@ -113,11 +113,18 @@ namespace WebApp.Models
             return result;
         }
 
-        public List<CatalogoConceptosViewModel> Listar_CatalogoConceptos(TipoPago tipoPago)
+        public List<CatalogoConceptosViewModel> Listar_CatalogoConceptos(TipoPago tipoPago, bool soloHabilitados)
         {
             List<CatalogoConceptosViewModel> result = new List<CatalogoConceptosViewModel>();
 
-            foreach (var item in conceptoPagoService.Listar_Concepto(tipoPago))
+            var lista = conceptoPagoService.Listar_Concepto(tipoPago);
+
+            if (soloHabilitados)
+            {
+                lista = lista.Where(x => x.B_Habilitado).ToList();
+            }
+
+            foreach (var item in lista)
             {
                 result.Add(new CatalogoConceptosViewModel(item));
             }

@@ -93,5 +93,9 @@ namespace WebApp.ViewModels
         public string C_Moneda { get; set; }
 
         public bool B_Mora { get; set; }
+
+        public int? I_TipoDescuentoID { get; set; }
+        public bool? B_EsPagoMatricula { get; set; }
+        public bool? B_EsPagoExtmp { get; set; }
     }
 }

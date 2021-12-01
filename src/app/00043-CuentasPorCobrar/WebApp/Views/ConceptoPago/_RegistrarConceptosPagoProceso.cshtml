@@ -22,8 +22,6 @@
                     <button type="button" id="btn-agregar" class="btn btn-sm btn-outline-info"><i class="fa fa-check">&nbsp;</i> Seleccionar</button>
                 </div>
                 <hr />
-
-
             </div>
 
             <div id="search-loader" class="container-fluid" style="display:none;">
@@ -55,45 +53,59 @@
             @Html.Hidden("Submited", 0)
             @Html.AntiForgeryToken()
 
-        <div class="form-group form-row">
-            @Html.HiddenFor(model => model.ConceptoPago.I_ConcPagID)
-            @Html.HiddenFor(model => model.ConceptoPago.I_ProcesoID)
-            @Html.HiddenFor(model => model.ConceptoPago.I_Anio)
-            @Html.HiddenFor(model => model.ConceptoPago.I_Periodo)
-            @Html.HiddenFor(model => model.ConceptoPago.I_GradoDestino)
-            @Html.HiddenFor(model => model.ConceptoPago.I_TipoObligacion)
-            @Html.HiddenFor(model => model.ConceptoPago.I_ConceptoID)
-            @Html.HiddenFor(model => model.ConceptoPago.B_AgrupaConcepto)
-            @Html.HiddenFor(model => model.ConceptoPago.B_ConceptoGeneral)
-            @Html.HiddenFor(model => model.ConceptoPago.B_Fraccionable)
-            @Html.HiddenFor(model => model.ConceptoPago.I_AlumnosDestino)
-            @Html.HiddenFor(model => model.ConceptoPago.B_Calculado)
-            @Html.HiddenFor(model => model.ConceptoPago.I_Calculado)
-            @Html.HiddenFor(model => model.ConceptoPago.B_ConceptoAgrupa)
+            <div class="form-group form-row">
+                @Html.HiddenFor(model => model.ConceptoPago.I_ConcPagID)
+                @Html.HiddenFor(model => model.ConceptoPago.I_ConceptoID)
+                @Html.HiddenFor(model => model.ConceptoPago.I_ProcesoID)
+
+                @Html.HiddenFor(model => model.ConceptoPago.B_Fraccionable)
+                @Html.HiddenFor(model => model.ConceptoPago.B_ConceptoGeneral)
+                @Html.HiddenFor(model => model.ConceptoPago.B_AgrupaConcepto)
+                @Html.HiddenFor(model => model.ConceptoPago.I_AlumnosDestino)
+                @Html.HiddenFor(model => model.ConceptoPago.I_GradoDestino)
+                @Html.HiddenFor(model => model.ConceptoPago.I_TipoObligacion)
+                @Html.HiddenFor(model => model.ConceptoPago.T_ClasifCorto)
+
+                @Html.HiddenFor(model => model.ConceptoPago.B_Calculado)
+                @Html.HiddenFor(model => model.ConceptoPago.I_Calculado)
+
+                @Html.HiddenFor(model => model.ConceptoPago.B_AnioPeriodo)
+                @Html.HiddenFor(model => model.ConceptoPago.I_Anio)
+                @Html.HiddenFor(model => model.ConceptoPago.I_Periodo)
+                @Html.HiddenFor(model => model.ConceptoPago.B_Especialidad)
+                @Html.HiddenFor(model => model.ConceptoPago.C_CodRc)
+                @Html.HiddenFor(model => model.ConceptoPago.B_Dependencia)
+                @Html.HiddenFor(model => model.ConceptoPago.C_DepCod)
+                @Html.HiddenFor(model => model.ConceptoPago.B_GrupoCodRc)
+                @Html.HiddenFor(model => model.ConceptoPago.I_GrupoCodRc)
+                @Html.HiddenFor(model => model.ConceptoPago.B_ModalidadIngreso)
+                @Html.HiddenFor(model => model.ConceptoPago.I_ModalidadIngresoID)
+                @Html.HiddenFor(model => model.ConceptoPago.B_ConceptoAgrupa)
+                @Html.HiddenFor(model => model.ConceptoPago.I_ConceptoAgrupaID)
+                @Html.HiddenFor(model => model.ConceptoPago.B_ConceptoAfecta)
+                @Html.HiddenFor(model => model.ConceptoPago.I_ConceptoAfectaID)
 
 
-            @Html.HiddenFor(model => model.ConceptoPago.T_ClasifCorto)
-            @Html.HiddenFor(model => model.ConceptoPago.B_GrupoCodRc)
-            @Html.HiddenFor(model => model.ConceptoPago.B_ModalidadIngreso)
-            @Html.HiddenFor(model => model.ConceptoPago.I_ModalidadIngresoID)
-            @Html.HiddenFor(model => model.ConceptoPago.I_ConceptoAgrupaID)
-            @Html.HiddenFor(model => model.ConceptoPago.C_Moneda)
-            @Html.HiddenFor(model => model.ConceptoPago.B_Porcentaje)
-            @Html.HiddenFor(model => model.ConceptoPago.B_Mora)
+                @Html.HiddenFor(model => model.ConceptoPago.B_Porcentaje)
+                @Html.HiddenFor(model => model.ConceptoPago.C_Moneda)
+                @Html.HiddenFor(model => model.ConceptoPago.B_Mora)
+                @Html.HiddenFor(model => model.ConceptoPago.I_TipoDescuentoID)
+                @Html.HiddenFor(model => model.ConceptoPago.B_EsPagoMatricula)
+                @Html.HiddenFor(model => model.ConceptoPago.B_EsPagoExtmp)
 
-            @Html.LabelFor(model => model.ConceptoPago.I_ConceptoID, new { @class = "control-label col-12" })
-            <div class="col-10">
-                @Html.TextBoxFor(model => model.ConceptoPago.T_ConceptoPagoDesc, new { @class = "form-control disabled" })
-                <p class="text-danger small">@Html.ValidationMessageFor(model => model.ConceptoPago.I_ConceptoID)</p>
-                <p class="text-danger small">@Html.ValidationMessageFor(model => model.ConceptoPago.T_ConceptoPagoDesc)</p>
+                @Html.LabelFor(model => model.ConceptoPago.I_ConceptoID, new { @class = "control-label col-12" })
+                <div class="col-10">
+                    @Html.TextBoxFor(model => model.ConceptoPago.T_ConceptoPagoDesc, new { @class = "form-control disabled" })
+                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.ConceptoPago.I_ConceptoID)</p>
+                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.ConceptoPago.T_ConceptoPagoDesc)</p>
+                </div>
+                <div class="col-2">
+                    @if (!Model.ConceptoPago.I_ConcPagID.HasValue)
+                    {
+                        <button type="button" id="btn-remove" class="btn btn-block btn-outline-danger"><i class="fa fa-trash-o"></i><span class="d-md-inline-block d-none">&nbsp;Borrar</span></button>
+                    }
+                </div>
             </div>
-            <div class="col-2">
-                @if (!Model.ConceptoPago.I_ConcPagID.HasValue)
-                {
-                    <button type="button" id="btn-remove" class="btn btn-block btn-outline-danger"><i class="fa fa-trash-o"></i><span class="d-md-inline-block d-none">&nbsp;Borrar</span></button>
-                }
-            </div>
-        </div>
 
             <div class="row">
                 <div class="col-lg-6 col-12">
@@ -240,24 +252,30 @@
                     $('#ConceptoPago_I_ConceptoID').val(data['Id']);
                     $('#ConceptoPago_T_ConceptoPagoDesc').val(data['NombreConcepto']);
                     $('#ConceptoPago_T_Clasificador').val(data['Clasificador']);
-                    $('#ConceptoPago_M_Monto').val(data['Monto']);
-                    $('#ConceptoPago_M_MontoMinimo').val(data['MontoMinimo']);
-                    $('#ConceptoPago_B_ConceptoAgrupa').val(data['AgupaConceptos']);
-                    $('#ConceptoPago_I_TipoObligacion').val(data['TipoObligacion']);
-                    $('#ConceptoPago_B_Calculado').val(data['Calculado']);
-                    $('#ConceptoPago_I_Calculado').val(data['TipoCalculo']);
-
                     $('#ConceptoPago_T_ClasifCorto').val(data['T_ClasifCorto']);
+                    $('#ConceptoPago_B_EsPagoMatricula').val(data['EsMatricula']);
+                    $('#ConceptoPago_B_EsPagoExtmp').val(data['Extemporaneo']);
+
                     $('#ConceptoPago_B_Fraccionable').val(data['B_Fraccionable']);
                     $('#ConceptoPago_B_ConceptoGeneral').val(data['B_ConceptoGeneral']);
                     $('#ConceptoPago_B_AgrupaConcepto').val(data['B_AgrupaConcepto']);
+                    $('#ConceptoPago_I_TipoObligacion').val(data['TipoObligacion']);
+
+                    $('#ConceptoPago_B_Calculado').val(data['Calculado']);
+                    $('#ConceptoPago_I_Calculado').val(data['TipoCalculo']);
                     $('#ConceptoPago_B_GrupoCodRc').val(data['B_GrupoCodRc']);
+                    $('#ConceptoPago_I_GrupoCodRc').val(data['I_GrupoCodRc']);
                     $('#ConceptoPago_B_ModalidadIngreso').val(data['B_ModalidadIngreso']);
                     $('#ConceptoPago_I_ModalidadIngresoID').val(data['I_ModalidadIngresoID']);
+                    $('#ConceptoPago_B_ConceptoAgrupa').val(data['AgupaConceptos']);
                     $('#ConceptoPago_I_ConceptoAgrupaID').val(data['I_ConceptoAgrupaID']);
+
                     $('#ConceptoPago_N_NroPagos').val(data['N_NroPagos']);
                     $('#ConceptoPago_B_Porcentaje').val(data['B_Porcentaje']);
                     $('#ConceptoPago_C_Moneda').val(data['C_Moneda']);
+                    $('#ConceptoPago_M_Monto').val(data['Monto']);
+                    $('#ConceptoPago_M_MontoMinimo').val(data['MontoMinimo']);
+                    
                     $('#ConceptoPago_T_DescripcionLarga').val(data['T_DescripcionLarga']);
                     $('#ConceptoPago_T_Documento').val(data['T_Documento']);
                     $('#ConceptoPago_B_Mora').val(data['B_Mora']);

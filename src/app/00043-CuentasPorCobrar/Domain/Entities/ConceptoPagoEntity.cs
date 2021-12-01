@@ -39,6 +39,7 @@ namespace Domain.Entities
         public int? I_ConceptoAfectaID { get; set; }
         public int? N_NroPagos { get; set; }
         public bool? B_Porcentaje { get; set; }
+        public string C_Moneda { get; set; }
         public decimal? M_Monto { get; set; }
         public decimal? M_MontoMinimo { get; set; }
         public string T_DescripcionLarga { get; set; }
@@ -47,6 +48,8 @@ namespace Domain.Entities
         public bool B_Habilitado { get; set; }
         public int? I_UsuarioCre { get; set; }
         public int? I_UsuarioMod { get; set; }
-        public string C_Moneda { get; set; }
+        public int? I_TipoDescuentoID { get; set; }
+        public bool B_EsPagoMatricula { get; set; }
+        public bool B_EsPagoExtmp { get; set; }
     }
 }

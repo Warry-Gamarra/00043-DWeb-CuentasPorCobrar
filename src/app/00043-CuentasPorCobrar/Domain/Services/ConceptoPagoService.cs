@@ -70,7 +70,6 @@ namespace Domain.Services
             _concepto.C_Moneda = concepto.C_Moneda;
             _concepto.I_Monto = concepto.I_Monto;
             _concepto.I_MontoMinimo = concepto.I_MontoMinimo;
-            _concepto.B_Habilitado = concepto.B_Habilitado;
             _concepto.B_Mora = concepto.B_Mora;
             
             switch (saveOption)
@@ -367,13 +366,16 @@ namespace Domain.Services
                         I_ConceptoAfectaID = conceptoPago.I_ConceptoAfectaID,
                         N_NroPagos = conceptoPago.N_NroPagos,
                         B_Porcentaje = conceptoPago.B_Porcentaje,
+                        C_Moneda = conceptoPago.C_Moneda,
                         M_Monto = conceptoPago.M_Monto,
                         M_MontoMinimo = conceptoPago.M_MontoMinimo,
                         T_DescripcionLarga = conceptoPago.T_DescripcionLarga,
                         T_Documento = conceptoPago.T_Documento,
-                        I_UsuarioCre = conceptoPago.I_UsuarioCre.GetValueOrDefault(),
-                        C_Moneda = conceptoPago.C_Moneda,
-                        B_Mora = conceptoPago.B_Mora.GetValueOrDefault()
+                        I_UsuarioCre = conceptoPago.I_UsuarioCre.GetValueOrDefault(),                        
+                        B_Mora = conceptoPago.B_Mora.GetValueOrDefault(),
+                        I_TipoDescuentoID = conceptoPago.I_TipoDescuentoID,
+                        B_EsPagoMatricula = conceptoPago.B_EsPagoMatricula,
+                        B_EsPagoExtmp = conceptoPago.B_EsPagoExtmp
                     };
 
                     result = grabarConceptoPago.Execute();
@@ -414,14 +416,17 @@ namespace Domain.Services
                         I_ConceptoAfectaID = conceptoPago.I_ConceptoAfectaID,
                         N_NroPagos = conceptoPago.N_NroPagos,
                         B_Porcentaje = conceptoPago.B_Porcentaje,
+                        C_Moneda = conceptoPago.C_Moneda,
                         M_Monto = conceptoPago.M_Monto,
                         M_MontoMinimo = conceptoPago.M_MontoMinimo,
                         T_DescripcionLarga = conceptoPago.T_DescripcionLarga,
                         T_Documento = conceptoPago.T_Documento,
                         B_Habilitado = conceptoPago.B_Habilitado,
                         I_UsuarioMod = conceptoPago.I_UsuarioMod.GetValueOrDefault(),
-                        C_Moneda = conceptoPago.C_Moneda,
-                        B_Mora = conceptoPago.B_Mora.GetValueOrDefault()
+                        B_Mora = conceptoPago.B_Mora.GetValueOrDefault(),
+                        I_TipoDescuentoID = conceptoPago.I_TipoDescuentoID,
+                        B_EsPagoMatricula = conceptoPago.B_EsPagoMatricula,
+                        B_EsPagoExtmp = conceptoPago.B_EsPagoExtmp
                     };
 
                     result = actualizarConceptoPago.Execute();

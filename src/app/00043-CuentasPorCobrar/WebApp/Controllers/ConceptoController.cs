@@ -33,7 +33,7 @@ namespace WebApp.Controllers
 
             ViewBag.TipoPago = tipo;
 
-            var lista = conceptoModel.Listar_CatalogoConceptos(tipo);
+            var lista = conceptoModel.Listar_CatalogoConceptos(tipo, false);
             
             return View(lista);
         }

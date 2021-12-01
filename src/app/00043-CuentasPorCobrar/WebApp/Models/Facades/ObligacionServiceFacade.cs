@@ -307,5 +307,10 @@ namespace WebApp.Models.Facades
 
             return result;
         }
+
+        public Response AnularObligacion(int obligacionID, int currentUserID)
+        {
+            return _obligacionService.AnularObligacion(obligacionID, currentUserID);
+        }
     }
 }
