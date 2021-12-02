@@ -456,8 +456,6 @@ namespace WebApp.Models
                 {
                     var entity = Mapper.PagoObligacionViewModel_To_PagoObligacionEntity(model);
 
-                    entity.I_MontoPago = obligacionAluCab.I_MontoOblig.Value;
-
                     entity.I_ProcesoID = obligacionAluCab.I_ProcesoID.Value;
 
                     entity.D_FecVencto = obligacionAluCab.D_FecVencto.Value;
@@ -502,8 +500,6 @@ namespace WebApp.Models
                 entity.C_CodTasa = tasa.C_CodTasa;
 
                 entity.T_TasaDesc = tasa.T_ConceptoPagoDesc;
-
-                entity.I_MontoPago = tasa.I_MontoTasa;
 
                 entity.B_Correcto = true;
 

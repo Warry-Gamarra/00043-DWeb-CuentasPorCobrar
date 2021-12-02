@@ -11,5 +11,10 @@
     <div class="text-center alert alert-@Model.Color"><i class="fa @Model.Icon">&nbsp;</i>@Html.Raw(Model.Message)</div>
 </div>
 
-<button type="button" class="btn btn-secondary  pull-right" data-dismiss="modal" id="btn_cerrar"><i class="fa fa-sign-out">&nbsp;</i>Cancelar</button>
+<button type="button" class="btn btn-secondary  pull-right" data-dismiss="modal" id="btn_cerrar"><i class="fa fa-sign-out">&nbsp;</i>Cerrar</button>
 
+<script>
+    $(".modal").on('hide.bs.modal', function () {
+        location.reload();
+    })
+</script>

@@ -56,6 +56,10 @@ namespace WebApp.ViewModels
 
         public string observacion { get; set; }
 
+        [Required(ErrorMessage = "Este campo es obligatorio.")]
+        [Display(Name = "Monto")]
+        public decimal I_MontoPago { get; set; }
+
         public PagoTasaViewModel()
         {
             cantidad = 1;

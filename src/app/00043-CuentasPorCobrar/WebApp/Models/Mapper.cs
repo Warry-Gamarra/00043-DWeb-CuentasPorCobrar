@@ -320,7 +320,9 @@ namespace WebApp.Models
                 C_CodRc = model.codRc,
                 C_Moneda = model.moneda,
                 I_EntidadFinanID = model.idEntidadFinanciera,
-                I_CtaDepositoID = model.idCtaDeposito
+                I_CtaDepositoID = model.idCtaDeposito,
+                I_MontoPago = model.I_MontoPago,
+                I_InteresMora = model.I_InteresMora
             };
 
             return result;
@@ -386,7 +388,7 @@ namespace WebApp.Models
                 D_FecPago = model.fechaPagoTasa,
                 I_Cantidad = model.cantidad,
                 C_Moneda = model.moneda,
-                I_MontoPago = 0,
+                I_MontoPago = model.I_MontoPago,
                 I_InteresMora = 0,
                 T_LugarPago = model.lugarPago,
                 T_InformacionAdicional = null

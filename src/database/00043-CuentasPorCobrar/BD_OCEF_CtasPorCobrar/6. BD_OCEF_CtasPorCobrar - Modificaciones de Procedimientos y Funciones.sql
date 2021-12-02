@@ -2,6 +2,24 @@ USE BD_OCEF_CtasPorCobrar
 GO
 
 
+CREATE TABLE dbo.TC_MatriculaCurso
+(
+	I_MatCursoID int IDENTITY(1, 1),
+	I_MatAluID int,
+	C_CodCurso VARCHAR(10),
+	I_CredDesaprob int,
+	I_Vez	int,
+	B_Habilitado bit,
+	B_Eliminado bit,
+	I_UsuarioCre int,
+	D_FecCre datetime,
+	I_UsuMod int,
+	D_FecMod datetime,
+	CONSTRAINT PK_MatriculaCurso PRIMARY KEY (I_MatCursoID),
+	CONSTRAINT FK_MatriculaAlumno_MatriculaCurso FOREIGN KEY (I_MatAluID) REFERENCES TC_MatriculaAlumno(I_MatAluID)
+)
+GO
+
 
 IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'USP_IU_GenerarObligacionesPregrado_X_Ciclo' AND ROUTINE_TYPE = 'PROCEDURE')
 	DROP PROCEDURE [dbo].[USP_IU_GenerarObligacionesPregrado_X_Ciclo]
@@ -2576,7 +2594,6 @@ BEGIN
 	--@I_TipoDocumento = 1,
 	--@T_DescDocumento = 'r.r. xxxx-2-21 del 01/01/2025',
 	--@CurrentUserId = 1,
-	--@CurrentDate = '20210701',
 	--@B_Result = @B_Result output,
 	--@T_Message = @T_Message output
 
