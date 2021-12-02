@@ -21,5 +21,9 @@ namespace WebApp.Models.Facades
         RegistrarTasaViewModel ObtenerTasaUnfv(int id);
 
         Response ChangeState(int conceptoId, bool currentState, int currentUserId, string returnUrl);
+
+        int[] ObtenerCtaDepositoIDs(int tasaUnfvID);
+
+        int[] ObtenerServicioIDs(int tasaUnfvID);
     }
 }

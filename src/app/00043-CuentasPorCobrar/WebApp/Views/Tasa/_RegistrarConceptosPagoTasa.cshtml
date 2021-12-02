@@ -1,6 +1,4 @@
-﻿
-@model WebApp.ViewModels.RegistrarTasaViewModel
-
+﻿@model WebApp.ViewModels.RegistrarTasaViewModel
 @Scripts.Render("~/bundles/jqueryval")
 
 
@@ -92,9 +90,12 @@
                         @Html.TextBoxFor(model => model.T_ConceptoPagoDesc, new { @class = "form-control disabled" })
                         <p class="text-danger small">@Html.ValidationMessageFor(model => model.T_ConceptoPagoDesc)</p>
                     </div>
-                    <div class="col-2">
-                        <button type="button" id="btn-remove" class="btn btn-block btn-outline-danger"><i class="fa fa-trash-o"></i><span class="d-md-inline-block d-none">&nbsp;Borrar</span></button>
-                    </div>
+                    @if (Model.PermitirCambiarTasa)
+                    {
+                        <div class="col-2">
+                            <button type="button" id="btn-remove" class="btn btn-block btn-outline-danger"><i class="fa fa-trash-o"></i><span class="d-md-inline-block d-none">&nbsp;Borrar</span></button>
+                        </div>
+                    }
                 </div>
 
                 <div class="row">
@@ -150,6 +151,23 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="row">
+                    @Html.LabelFor(model => model.CtaDepositoID, new { @class = "control-label col-sm-4" })
+                    <div class="col-sm-8">
+                        @Html.ListBoxFor(model => model.CtaDepositoID, ViewBag.CtasDeposito as SelectList, new { @class = "select-multiple form-control text-uppercase", multiple = "true" })
+                        <p class="text-danger small">@Html.ValidationMessageFor(model => model.CtaDepositoID)</p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    @Html.LabelFor(model => model.servicioID, new { @class = "control-label col-sm-4" })
+                    <div class="col-sm-8">
+                        @Html.ListBoxFor(model => model.servicioID, ViewBag.CodServicioBcoComercioTasas as SelectList, new { @class = "select-multiple form-control text-uppercase", multiple = "true" })
+                        <p class="text-danger small">@Html.ValidationMessageFor(model => model.servicioID)</p>
+                    </div>
+                </div>
+
                 <div class="row d-flex justify-content-center">
                     <button type="submit" class="btn btn-primary center" id="btnsubmit"><i class="fa fa-save"></i>&nbsp;Guardar</button>
                 </div>
@@ -165,6 +183,13 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
+
+        $('.select-multiple').select2({
+            dropdownParent: $('#modal-container-lg'),
+            placeholder: "[ SELECCIONAR ]"
+        }).on('closing', function (e) {
+            e.stopPropagation();
+        });
 
         $('.select-filter-modal').select2({
             dropdownParent: $('#modal-container-lg'),

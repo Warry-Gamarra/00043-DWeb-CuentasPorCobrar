@@ -101,6 +101,7 @@
     <Compile Include="Entities\PagoPregradoDTO.cs" />
     <Compile Include="Entities\PagoPorFacultadYFechaDTO.cs" />
     <Compile Include="Entities\SeccionArchivo.cs" />
+    <Compile Include="Entities\ServicioBcoComercioDto.cs" />
     <Compile Include="Entities\TasaDTO.cs" />
     <Compile Include="Entities\TasaEntity.cs" />
     <Compile Include="Helpers\Catalogo.cs" />
@@ -124,9 +125,11 @@
     <Compile Include="Entities\HelperResources.cs" />
     <Compile Include="Entities\CatalogoOpcionEntity.cs" />
     <Compile Include="Entities\CategoriaPago.cs" />
+    <Compile Include="Services\Implementations\IServicioBcoComercioService.cs" />
     <Compile Include="Services\Implementations\PagoService.cs" />
     <Compile Include="Services\Implementations\ReporteGeneralService.cs" />
     <Compile Include="Services\Implementations\ReportePosgradoService.cs" />
+    <Compile Include="Services\Implementations\ServicioBcoComercioService.cs" />
     <Compile Include="Services\Implementations\TasaService.cs" />
     <Compile Include="Services\IPagoService.cs" />
     <Compile Include="Services\IReporteGeneralService.cs" />

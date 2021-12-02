@@ -72,8 +72,39 @@ namespace WebApp.Models.Facades
         public Response Grabar_TasaUnfv(RegistrarTasaViewModel model, int currentUserId)
         {
             TasaEntity tasaEntity;
+            Response result;
 
             var saveOption = (!model.I_TasaUnfvID.HasValue) ? SaveOption.Insert : SaveOption.Update;
+
+            var lista = tasaService.listar_Tasas();
+
+            if (saveOption.Equals(SaveOption.Insert))
+            {
+                if (lista.FirstOrDefault(t => t.B_Habilitado && t.C_CodTasa == model.C_CodTasa) != null)
+                {
+                    result = new Response()
+                    {
+                        Value = false,
+                        Message = "El Código de Tasa se encuentra duplicado."
+                    };
+
+                    return result.Error(false);
+                }
+            }
+            else if(saveOption.Equals(SaveOption.Update))
+            {
+                if (lista.FirstOrDefault(t => t.B_Habilitado && t.C_CodTasa == model.C_CodTasa && t.I_TasaUnfvID != model.I_TasaUnfvID) != null)
+                {
+                    result = new Response()
+                    {
+                        Value = false,
+                        Message = "El Código de Tasa se encuentra duplicado."
+                    };
+
+                    return result.Error(false);
+                }
+            } 
+
 
             tasaEntity = new TasaEntity()
             {
@@ -117,8 +148,8 @@ namespace WebApp.Models.Facades
                 I_UsuarioMod = currentUserId
             };
 
-            var result = tasaService.Grabar_TasaUnfv(tasaEntity, saveOption);
-
+            result = tasaService.Grabar_TasaUnfv(tasaEntity, saveOption, model.CtaDepositoID, model.servicioID);
+        
             if (result.Value)
             {
                 result.Success(false);
@@ -186,6 +217,16 @@ namespace WebApp.Models.Facades
             result.Redirect = returnUrl;
 
             return result;
+        }
+
+        public int[] ObtenerCtaDepositoIDs(int tasaUnfvID)
+        {
+            return tasaService.ObtenerCtaDepositoIDs(tasaUnfvID);
+        }
+
+        public int[] ObtenerServicioIDs(int tasaUnfvID)
+        {
+            return tasaService.ObtenerServicioIDs(tasaUnfvID);
         }
     }
 }

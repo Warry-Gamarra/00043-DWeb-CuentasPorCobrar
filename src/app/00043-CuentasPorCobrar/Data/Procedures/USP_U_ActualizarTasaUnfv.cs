@@ -49,7 +49,7 @@ namespace Data.Procedures
         public string T_Documento { get; set; }
         public int I_UsuarioMod { get; set; }
 
-        public ResponseData Execute()
+        public static ResponseData Execute(USP_U_ActualizarTasaUnfv tasa)
         {
             ResponseData result = new ResponseData();
             DynamicParameters parameters = new DynamicParameters();
@@ -60,49 +60,49 @@ namespace Data.Procedures
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    parameters.Add(name: "I_TasaUnfvID", dbType: DbType.Int32, value: this.I_TasaUnfvID);
-                    parameters.Add(name: "I_ConceptoID", dbType: DbType.Int32, value: this.I_ConceptoID);
-                    parameters.Add(name: "T_ConceptoPagoDesc", dbType: DbType.String, size: 250, value: this.T_ConceptoPagoDesc);
-                    parameters.Add(name: "B_Fraccionable", dbType: DbType.Boolean, value: this.B_Fraccionable);
-                    parameters.Add(name: "B_ConceptoGeneral", dbType: DbType.Boolean, value: this.B_ConceptoGeneral);
-                    parameters.Add(name: "B_AgrupaConcepto", dbType: DbType.Boolean, value: this.B_AgrupaConcepto);
-                    parameters.Add(name: "I_AlumnosDestino", dbType: DbType.Int32, value: this.I_AlumnosDestino);
-                    parameters.Add(name: "I_GradoDestino", dbType: DbType.Int32, value: this.I_GradoDestino);
-                    parameters.Add(name: "I_TipoObligacion", dbType: DbType.Int32, value: this.I_TipoObligacion);
-                    parameters.Add(name: "T_Clasificador", dbType: DbType.String, value: this.T_Clasificador);
-                    parameters.Add(name: "C_CodTasa", dbType: DbType.String, value: this.C_CodTasa);
-                    parameters.Add(name: "B_Calculado", dbType: DbType.Boolean, value: this.B_Calculado);
-                    parameters.Add(name: "I_Calculado", dbType: DbType.Int32, value: this.I_Calculado);
-                    parameters.Add(name: "B_AnioPeriodo", dbType: DbType.Boolean, value: this.B_AnioPeriodo);
-                    parameters.Add(name: "I_Anio", dbType: DbType.Int32, value: this.I_Anio);
-                    parameters.Add(name: "I_Periodo", dbType: DbType.Int32, value: this.I_Periodo);
-                    parameters.Add(name: "B_Especialidad", dbType: DbType.Boolean, value: this.B_Especialidad);
-                    parameters.Add(name: "C_CodRc", dbType: DbType.String, value: this.C_CodRc, size: 3);
-                    parameters.Add(name: "B_Dependencia", dbType: DbType.Boolean, value: this.B_Dependencia);
-                    parameters.Add(name: "C_DepCod", dbType: DbType.Int32, value: this.C_DepCod);
-                    parameters.Add(name: "B_GrupoCodRc", dbType: DbType.Boolean, value: this.B_GrupoCodRc);
-                    parameters.Add(name: "I_GrupoCodRc", dbType: DbType.Int32, value: this.I_GrupoCodRc);
-                    parameters.Add(name: "B_ModalidadIngreso", dbType: DbType.Boolean, value: this.B_ModalidadIngreso);
-                    parameters.Add(name: "I_ModalidadIngresoID", dbType: DbType.Int32, value: this.I_ModalidadIngresoID);
-                    parameters.Add(name: "B_ConceptoAgrupa", dbType: DbType.Boolean, value: this.B_ConceptoAgrupa);
-                    parameters.Add(name: "I_ConceptoAgrupaID", dbType: DbType.Int32, value: this.I_ConceptoAgrupaID);
-                    parameters.Add(name: "B_ConceptoAfecta", dbType: DbType.Boolean, value: this.B_ConceptoAfecta);
-                    parameters.Add(name: "I_ConceptoAfectaID", dbType: DbType.Int32, value: this.I_ConceptoAfectaID);
-                    parameters.Add(name: "N_NroPagos", dbType: DbType.Int32, value: this.N_NroPagos);
-                    parameters.Add(name: "B_Porcentaje", dbType: DbType.Boolean, value: this.B_Porcentaje);
-                    parameters.Add(name: "C_Moneda", dbType: DbType.String, value: this.C_Moneda);
-                    parameters.Add(name: "M_Monto", dbType: DbType.Decimal, value: this.M_Monto);
-                    parameters.Add(name: "M_MontoMinimo", dbType: DbType.Decimal, value: this.M_MontoMinimo);
-                    parameters.Add(name: "T_DescripcionLarga", dbType: DbType.String, value: this.T_DescripcionLarga);
-                    parameters.Add(name: "T_Documento", dbType: DbType.String, value: this.T_Documento);
-                    parameters.Add(name: "I_UsuarioMod", dbType: DbType.Int32, value: this.I_UsuarioMod);
+                    parameters.Add(name: "I_TasaUnfvID", dbType: DbType.Int32, value: tasa.I_TasaUnfvID);
+                    parameters.Add(name: "I_ConceptoID", dbType: DbType.Int32, value: tasa.I_ConceptoID);
+                    parameters.Add(name: "T_ConceptoPagoDesc", dbType: DbType.String, size: 250, value: tasa.T_ConceptoPagoDesc);
+                    parameters.Add(name: "B_Fraccionable", dbType: DbType.Boolean, value: tasa.B_Fraccionable);
+                    parameters.Add(name: "B_ConceptoGeneral", dbType: DbType.Boolean, value: tasa.B_ConceptoGeneral);
+                    parameters.Add(name: "B_AgrupaConcepto", dbType: DbType.Boolean, value: tasa.B_AgrupaConcepto);
+                    parameters.Add(name: "I_AlumnosDestino", dbType: DbType.Int32, value: tasa.I_AlumnosDestino);
+                    parameters.Add(name: "I_GradoDestino", dbType: DbType.Int32, value: tasa.I_GradoDestino);
+                    parameters.Add(name: "I_TipoObligacion", dbType: DbType.Int32, value: tasa.I_TipoObligacion);
+                    parameters.Add(name: "T_Clasificador", dbType: DbType.String, value: tasa.T_Clasificador);
+                    parameters.Add(name: "C_CodTasa", dbType: DbType.String, value: tasa.C_CodTasa);
+                    parameters.Add(name: "B_Calculado", dbType: DbType.Boolean, value: tasa.B_Calculado);
+                    parameters.Add(name: "I_Calculado", dbType: DbType.Int32, value: tasa.I_Calculado);
+                    parameters.Add(name: "B_AnioPeriodo", dbType: DbType.Boolean, value: tasa.B_AnioPeriodo);
+                    parameters.Add(name: "I_Anio", dbType: DbType.Int32, value: tasa.I_Anio);
+                    parameters.Add(name: "I_Periodo", dbType: DbType.Int32, value: tasa.I_Periodo);
+                    parameters.Add(name: "B_Especialidad", dbType: DbType.Boolean, value: tasa.B_Especialidad);
+                    parameters.Add(name: "C_CodRc", dbType: DbType.String, value: tasa.C_CodRc, size: 3);
+                    parameters.Add(name: "B_Dependencia", dbType: DbType.Boolean, value: tasa.B_Dependencia);
+                    parameters.Add(name: "C_DepCod", dbType: DbType.Int32, value: tasa.C_DepCod);
+                    parameters.Add(name: "B_GrupoCodRc", dbType: DbType.Boolean, value: tasa.B_GrupoCodRc);
+                    parameters.Add(name: "I_GrupoCodRc", dbType: DbType.Int32, value: tasa.I_GrupoCodRc);
+                    parameters.Add(name: "B_ModalidadIngreso", dbType: DbType.Boolean, value: tasa.B_ModalidadIngreso);
+                    parameters.Add(name: "I_ModalidadIngresoID", dbType: DbType.Int32, value: tasa.I_ModalidadIngresoID);
+                    parameters.Add(name: "B_ConceptoAgrupa", dbType: DbType.Boolean, value: tasa.B_ConceptoAgrupa);
+                    parameters.Add(name: "I_ConceptoAgrupaID", dbType: DbType.Int32, value: tasa.I_ConceptoAgrupaID);
+                    parameters.Add(name: "B_ConceptoAfecta", dbType: DbType.Boolean, value: tasa.B_ConceptoAfecta);
+                    parameters.Add(name: "I_ConceptoAfectaID", dbType: DbType.Int32, value: tasa.I_ConceptoAfectaID);
+                    parameters.Add(name: "N_NroPagos", dbType: DbType.Int32, value: tasa.N_NroPagos);
+                    parameters.Add(name: "B_Porcentaje", dbType: DbType.Boolean, value: tasa.B_Porcentaje);
+                    parameters.Add(name: "C_Moneda", dbType: DbType.String, value: tasa.C_Moneda);
+                    parameters.Add(name: "M_Monto", dbType: DbType.Decimal, value: tasa.M_Monto);
+                    parameters.Add(name: "M_MontoMinimo", dbType: DbType.Decimal, value: tasa.M_MontoMinimo);
+                    parameters.Add(name: "T_DescripcionLarga", dbType: DbType.String, value: tasa.T_DescripcionLarga);
+                    parameters.Add(name: "T_Documento", dbType: DbType.String, value: tasa.T_Documento);
+                    parameters.Add(name: "I_UsuarioMod", dbType: DbType.Int32, value: tasa.I_UsuarioMod);
 
                     parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);
                     parameters.Add(name: "T_Message", dbType: DbType.String, size: 4000, direction: ParameterDirection.Output);
 
                     _dbConnection.Execute(s_command, parameters, commandType: CommandType.StoredProcedure);
 
-                    result.CurrentID = I_TasaUnfvID.ToString();
+                    result.CurrentID = tasa.I_TasaUnfvID.ToString();
                     result.Value = parameters.Get<bool>("B_Result");
                     result.Message = parameters.Get<string>("T_Message");
                 }

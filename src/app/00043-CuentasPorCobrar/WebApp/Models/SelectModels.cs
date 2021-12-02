@@ -1,6 +1,7 @@
 ﻿using Domain.Entities;
 using Domain.Helpers;
 using Domain.Services;
+using Domain.Services.Implementations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,7 @@ namespace WebApp.Models
         private readonly EntidadRecaudadora _entidadFinanciera;
         private readonly IClasificadorEquivalencia _clasificadorEquivalencia;
         private ICuentaDeposito _cuentaDeposito;
+        IServicioBcoComercioService servicioBcoComercioService;
 
         public SelectModel()
         {
@@ -26,6 +28,7 @@ namespace WebApp.Models
             _entidadFinanciera = new EntidadRecaudadora();
             _clasificadorEquivalencia = new ClasificadorEquivalencia();
             _cuentaDeposito = new CuentaDeposito();
+            servicioBcoComercioService = new ServicioBcoComercioService();
         }
 
         public List<SelectViewModel> GetRoles()
@@ -188,6 +191,18 @@ namespace WebApp.Models
             }
 
             return result;
+        }
+
+        public List<SelectViewModel> GetServiciosBcoComercioTasas()
+        {
+            var lista = servicioBcoComercioService.listaServiciosBcoComercioTasa();
+
+            var result = lista.Select(x => new SelectViewModel() {
+                Value = x.I_ServicioID.ToString(),
+                TextDisplay = String.Format("\"{0}\" - {1}", x.C_CodServicio, x.T_DescServ)
+            });
+
+            return result.ToList();
         }
     }
 }
