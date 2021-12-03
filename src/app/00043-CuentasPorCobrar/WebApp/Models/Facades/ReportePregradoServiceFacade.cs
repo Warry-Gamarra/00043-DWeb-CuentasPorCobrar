@@ -127,9 +127,10 @@ namespace WebApp.Models.Facades
         }
 
         public IEnumerable<EstadoObligacionViewModel> EstadoObligacionAlumnos(int anio, int? periodo, string codFac, string codEsc, string codRc, 
-            bool? esIngresante, bool? estaPagado, bool? obligacionGenerada, DateTime? fechaInicio, DateTime? fechaFin)
+            bool? esIngresante, bool? estaPagado, bool? obligacionGenerada, DateTime? fechaInicio, DateTime? fechaFin, string codAlu)
         {
-            var lista = reporteService.EstadoObligacionAlumnos(anio, periodo, codFac, codEsc, codRc, esIngresante, estaPagado, obligacionGenerada, fechaInicio, fechaFin);
+            var lista = reporteService.EstadoObligacionAlumnos(anio, periodo, codFac, codEsc, codRc, esIngresante, estaPagado, obligacionGenerada, 
+                fechaInicio, fechaFin, codAlu);
 
             var result = lista.Select(x => Mapper.EstadoObligacionDTO_To_EstadoObligacionViewModel(x));
 

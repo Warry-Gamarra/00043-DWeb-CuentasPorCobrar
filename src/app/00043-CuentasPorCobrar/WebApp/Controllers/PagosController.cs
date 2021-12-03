@@ -59,6 +59,12 @@ namespace WebApp.Controllers
         [Route("operaciones/generar-archivos-pago")]
         public ActionResult ExportarDatosPago()
         {
+            var model = new FiltroEnvioObligacionesViewModel()
+            {
+                I_Anio = DateTime.Now.Year,
+                E_TipoEstudio = TipoEstudio.Pregrado
+            };
+
             ViewBag.Title = "Generar archivos de pago";
 
             ViewBag.Anios = generalServiceFacade.Listar_Anios();
@@ -69,18 +75,11 @@ namespace WebApp.Controllers
 
             ViewBag.Dependencias = programasClientFacade.GetFacultades(TipoEstudio.Pregrado);
 
-            ViewBag.EntidadesFinancieras = new List<SelectViewModel>();
-
-            var model = new FiltroEnvioObligacionesViewModel()
-            {
-                I_Anio = DateTime.Now.Year,
-                I_Periodo = 15,
-                E_TipoEstudio = TipoEstudio.Pregrado,
-                T_Dependencia = ""
-            };
+            ViewBag.EntidadesFinancieras = new SelectList(selectModels.GetEntidadesFinancieras(), "Value", "TextDisplay", model.I_EntidadFinanciera);
 
             return View(model);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("operaciones/generar-archivos-pago")]
@@ -104,9 +103,9 @@ namespace WebApp.Controllers
 
                 ViewBag.TipoEstudios = generalServiceFacade.Listar_TipoEstudios();
 
-                ViewBag.Dependencias = programasClientFacade.GetFacultades(model.E_TipoEstudio);
+                ViewBag.Dependencias = model.E_TipoEstudio.HasValue ? programasClientFacade.GetFacultades(model.E_TipoEstudio.Value) : new List<SelectViewModel>();
 
-                ViewBag.EntidadesFinancieras = new List<SelectViewModel>();
+                ViewBag.EntidadesFinancieras = new SelectList(selectModels.GetEntidadesFinancieras(), "Value", "TextDisplay", model.I_EntidadFinanciera);
 
                 ModelState.AddModelError("", ex.Message);
 

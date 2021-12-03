@@ -20,7 +20,7 @@ namespace WebApp.ViewModels
 
         [Required]
         [Display(Name = "Tipo de estudio")]
-        public TipoEstudio E_TipoEstudio { get; set; }
+        public TipoEstudio? E_TipoEstudio { get; set; }
 
         [Display(Name = "Facultad/Posgrado")]
         public string T_Dependencia { get; set; }

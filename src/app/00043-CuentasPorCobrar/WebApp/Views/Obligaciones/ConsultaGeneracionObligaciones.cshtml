@@ -103,6 +103,7 @@
                        columns.Add(c => c.T_EsIngresante).Titled("Tipo alumno").Filterable(true);
                        columns.Add(c => c.T_ProcesoDesc).Titled("Cuota").Filterable(true).Css("text-center");
                        columns.Add(c => c.I_MontoOblig).Titled("Monto Obl.").Filterable(true).Css("text-center");
+                       columns.Add(c => c.T_FecVencto).Titled("Fec.Vcto").Filterable(true).Css("text-center");
                        columns.Add(c => c.T_Pagado).Titled("Estado").Filterable(true).Css("text-center");
                        columns.Add().SetWidth(125).Css("text-center").Encoded(false).Sanitized(false).RenderValueAs(model =>
                            model.B_Pagado.HasValue ? (model.B_Pagado.Value ? "" : "<a href=\""+ Url.Action("AsignarPagoObligacion", "Pagos", new { obligacionID = model.I_ObligacionAluID }) +

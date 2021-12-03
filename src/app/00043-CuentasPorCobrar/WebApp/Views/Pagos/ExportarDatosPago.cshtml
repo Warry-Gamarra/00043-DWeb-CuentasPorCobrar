@@ -33,9 +33,13 @@
                         <form id="frmExportarPago" action="@Url.Action("GenerarArchivosBancos", "Pagos")" method="POST">
                             @Html.AntiForgeryToken()
                             <div class="form-row">
+                                <div class="form-group col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12">
+                                    <label for="I_EntidadFinanciera">Banco</label>
+                                    @Html.DropDownListFor(model => model.I_EntidadFinanciera, ViewBag.EntidadesFinancieras as SelectList, null, new { @class = "form-control form-control-sm text-uppercase" })
+                                </div>
                                 <div class="form-group col-xl-1 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <label for="E_TipoEstudio">Tipo de estudio</label>
-                                    @Html.DropDownListFor(model => model.E_TipoEstudio, new SelectList(ViewBag.TipoEstudios, "Value", "TextDisplay"), null, new { @class = "form-control form-control-sm text-uppercase" })
+                                    @Html.DropDownListFor(model => model.E_TipoEstudio, new SelectList(ViewBag.TipoEstudios, "Value", "TextDisplay"), "TODOS", new { @class = "form-control form-control-sm text-uppercase" })
                                 </div>
                                 <div class="form-group col-xl-1 col-lg-4 col-md-4 col-sm-4 col-6">
                                     <label for="I_Anio">Año</label>
@@ -43,15 +47,11 @@
                                 </div>
                                 <div class="form-group col-xl-1 col-lg-4 col-md-4 col-sm-4 col-6">
                                     <label for="I_Periodo">Periodo</label>
-                                    @Html.DropDownListFor(model => model.I_Periodo, new SelectList(ViewBag.Periodos, "Value", "TextDisplay"), "[ TODOS ]", new { @class = "form-control form-control-sm text-uppercase" })
+                                    @Html.DropDownListFor(model => model.I_Periodo, new SelectList(ViewBag.Periodos, "Value", "TextDisplay"), "TODOS", new { @class = "form-control form-control-sm text-uppercase" })
                                 </div>
                                 <div class="form-group col-xl-3 col-lg-8 col-md-8 col-sm-12 col-12">
                                     <label for="T_Dependencia">Facultades/Posgrado</label>
                                     @Html.DropDownListFor(model => model.T_Dependencia, new SelectList(ViewBag.Dependencias, "Value", "TextDisplay"), "TODOS", new { @class = "form-control form-control-sm text-uppercase" })
-                                </div>
-                                <div class="form-group col-xl-2 col-lg-4 col-md-4 col-sm-12 col-12">
-                                    <label for="I_EntidadFinanciera">Banco</label>
-                                    @Html.DropDownListFor(model => model.I_EntidadFinanciera, new SelectList(ViewBag.EntidadesFinancieras, "Value", "TextDisplay"), null, new { @class = "form-control form-control-sm text-uppercase" })
                                 </div>
                             </div>
                             <div class="form-row">
@@ -77,77 +77,34 @@
 
 @section Scripts {
     <script>
-        function CargarEntidadesFinanciera(anio, periodo, tipoEstudio) {
-            let cmbEntidadFinanciera = $('#I_EntidadFinanciera');
+        const BANCO = {
+            COMERCIO: 1,
+            BCP: 2
+        };
 
-            $.ajax({
-                type: 'GET',
-                url: ('/api/Service/GetCtasDepositoPorPeriodo?anio=' + anio + '&periodo=' + periodo + '&tipoEstudio=' + tipoEstudio),
-                dataType: 'json',
-                beforeSend: function () {
-                    cmbEntidadFinanciera.html('');
-                },
-                success: function (data) {
-                    if (data && data.length > 0) {
-                        let html = '';
+        $("#frmExportarPago").on("change", "#I_EntidadFinanciera", function (e) {
+            let idBanco = $(this).val();
 
-                        $.each(data, function (i, item) {
-                            html += '<option value="' + item.Value + '">' + item.TextDisplay + '</option>'
-                        });
+            let html = '';
 
-                        cmbEntidadFinanciera.html(html);
-                    }
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                }
-            });
-        }
+            cmbTipoEstudio = $('#frmExportarPago #E_TipoEstudio');
 
-        function CargarDependencias(tipoEstudio) {
-            let cmbDependencia = $('#T_Dependencia');
+            cmbTipoEstudio.html('');
 
-            let parametros = {
-                tipoEstudio: tipoEstudio
-            };
+            if (idBanco == BANCO.COMERCIO) {
+                html += '<option value="Pregrado" selected="selected">Pregrado</option>'
+                html += '<option value="Posgrado">Posgrado</option>'
+            } else if (idBanco == BANCO.BCP) {
+                html += '<option value="" selected="selected">TODOS</option>'
+                html += '<option value="Pregrado">Pregrado</option>'
+                html += '<option value="Posgrado">Posgrado</option>'
 
-            $.ajax({
-                type: 'GET',
-                url: ('@Url.Action("GetFacultades", "Service", new { httproute = "ActionApi" })'),
-                data: parametros,
-                dataType: 'json',
-                beforeSend: function () {
-                    cmbDependencia.html('');
-                },
-                success: function (data) {
-                    if (data && data.length > 0) {
-                        let html = '<option value="">TODOS</option>';
+                $('#frmExportarPago #I_Periodo').val('');
+            }
 
-                        $.each(data, function (i, item) {
-                            html += '<option value="' + item.Value + '">' + item.TextDisplay + '</option>'
-                        });
+            cmbTipoEstudio.html(html);
 
-                        cmbDependencia.html(html);
-                    }
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                }
-            });
-        }
-
-        $("#frmExportarPago").on("change", "#I_Anio", function (e) {
-            let anio = $(this).val();
-            let periodo = $('#I_Periodo').val();
-            let tipoEstudio = $('#E_TipoEstudio').val();
-
-            CargarEntidadesFinanciera(anio, periodo, tipoEstudio);
-        });
-
-        $("#frmExportarPago").on("change", "#I_Periodo", function (e) {
-            let anio = $('#I_Anio').val();
-            let periodo = $(this).val();
-            let tipoEstudio = $('#E_TipoEstudio').val();
-
-            CargarEntidadesFinanciera(anio, periodo, tipoEstudio);
+            CargarDependencias(cmbTipoEstudio.val());
         });
 
         $("#frmExportarPago").on("change", "#E_TipoEstudio", function (e) {
@@ -156,16 +113,43 @@
             let tipoEstudio = $(this).val();
 
             CargarDependencias(tipoEstudio);
-            CargarEntidadesFinanciera(anio, periodo, tipoEstudio);
         });
 
-        $(document).ready(function () {
-            let anio = $('#I_Anio').val();
-            let periodo = $('#I_Periodo').val();
-            let tipoEstudio = $('#E_TipoEstudio').val();
+        function CargarDependencias(tipoEstudio) {
+            let cmbDependencia = $('#T_Dependencia');
 
-            CargarEntidadesFinanciera(anio, periodo, tipoEstudio);
-        });
+            let html = '<option value="">TODOS</option>';
+
+            cmbDependencia.html('');
+
+            if (tipoEstudio !== "") {
+                let parametros = {
+                    tipoEstudio: tipoEstudio
+                };
+
+                $.ajax({
+                    type: 'GET',
+                    url: ('@Url.Action("GetFacultades", "Service", new { httproute = "ActionApi" })'),
+                    data: parametros,
+                    dataType: 'json',
+                    beforeSend: function () {
+                    },
+                    success: function (data) {
+                        if (data && data.length > 0) {
+                            $.each(data, function (i, item) {
+                                html += '<option value="' + item.Value + '">' + item.TextDisplay + '</option>'
+                            });
+
+                            cmbDependencia.html(html);
+                        }
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                    }
+                });
+            } else {
+                cmbDependencia.html(html);
+            }
+        }
     </script>
 }
 

@@ -151,42 +151,34 @@ namespace Data.Views
             {
                 codPosgrado = String.IsNullOrEmpty(codPosgrado) ? null : codPosgrado;
 
-                //string s_command = @"SELECT * FROM dbo.VW_CuotasPago_General c 
-                //    WHERE c.I_Anio <= @I_Anio AND c.C_Nivel IN ('2', '3') AND
-                //        c.C_CodEsc = ISNULL(@C_CodEsc, c.C_CodEsc)";
-
-                string s_command = @"SELECT * FROM dbo.VW_CuotasPago_General c 
-                WHERE c.I_Anio <= @I_Anio AND c.C_Nivel IN ('2', '3') AND
-                    c.C_CodEsc = ISNULL(@C_CodEsc, c.C_CodEsc) AND c.B_Pagado = 0 AND c.I_Prioridad = 2 AND
-                	EXISTS(select mat.C_CodAlu, mat.C_CodRc from dbo.TR_ObligacionAluCab cab 
-                inner join dbo.TC_MatriculaAlumno mat on mat.I_MatAluID = cab.I_MatAluID and mat.B_Habilitado = 1 and mat.B_Eliminado = 0
-                where cab.B_Pagado = 1 and cab.B_Habilitado = 1 and cab.B_Eliminado = 0 and cab.I_ProcesoID in (499, 500, 508, 510) AND mat.C_CodAlu = c.C_CodAlu AND mat.C_CodRc = c.C_RcCod)";
-
-                //                string s_command = @"SELECT * FROM dbo.VW_CuotasPago_General c 
-                //WHERE c.I_Anio <= @I_Anio AND c.C_Nivel IN ('2', '3') AND c.C_CodEsc = ISNULL(@C_CodEsc, c.C_CodEsc) AND c.B_Pagado = 0 AND 
-                //	(
-                //		(
-                //			EXISTS(select mat.C_CodAlu, mat.C_CodRc from dbo.TR_ObligacionAluCab cab 
-                //				inner join dbo.TC_MatriculaAlumno mat on mat.I_MatAluID = cab.I_MatAluID and mat.B_Habilitado = 1 and mat.B_Eliminado = 0
-                //				where cab.B_Pagado = 1 and cab.B_Habilitado = 1 and cab.B_Eliminado = 0 and cab.I_ProcesoID in (499, 500, 508, 510) AND mat.C_CodAlu = c.C_CodAlu AND mat.C_CodRc = c.C_RcCod) 
-                //			AND
-                //			c.I_Prioridad = 2
-                //		)
-                //	OR
-                //		(
-                //			c.C_CodAlu IN ('2021008358',
-                //			'2021008367',
-                //			'2021008376',
-                //			'2021008385',
-                //			'2021008394',
-                //			'2021008402',
-                //			'2021008411',
-                //			'2021008429',
-                //			'2021005385',
-                //			'2018039469',
-                //			'2016320933')
-                //		)
-                //	)";
+                string s_command = @"SELECT * FROM dbo.VW_CuotasPago_General mat
+                    WHERE 
+	                    mat.I_Anio = @I_Anio AND
+	                    mat.C_Nivel IN ('2', '3') AND
+	                    mat.C_CodEsc = ISNULL(@C_CodEsc, mat.C_CodEsc) AND
+	                    mat.B_Pagado = 0 AND
+	                    mat.I_Prioridad = 1 AND
+	                    DATEDIFF(DAY, GETDATE(), mat.D_FecVencto) >= 0
+                    UNION
+                    SELECT * FROM dbo.VW_CuotasPago_General pen
+                    WHERE 
+	                    pen.I_Anio = @I_Anio AND 
+	                    pen.C_Nivel IN ('2', '3') AND
+	                    pen.C_CodEsc = ISNULL(@C_CodEsc, pen.C_CodEsc) AND
+	                    pen.B_Pagado = 0 AND
+	                    pen.I_Prioridad = 2 AND
+	                    EXISTS (
+		                    SELECT mat2.I_ObligacionAluID FROM dbo.VW_CuotasPago_General mat2 
+		                    WHERE 
+			                    mat2.I_MatAluID = pen.I_MatAluID AND 
+			                    mat2.I_Anio = pen.I_Anio AND 
+			                    mat2.I_Periodo = pen.I_Periodo AND
+			                    mat2.I_Prioridad = 1 AND
+			                    (
+				                    (DATEDIFF(DAY, GETDATE(), mat2.D_FecVencto) >= 0 AND mat2.B_Pagado = 0) OR
+				                    (mat2.B_Pagado = 1)
+			                    )
+                        )";
 
                 var parameters = new { I_Anio = anio, C_CodEsc = codPosgrado };
 

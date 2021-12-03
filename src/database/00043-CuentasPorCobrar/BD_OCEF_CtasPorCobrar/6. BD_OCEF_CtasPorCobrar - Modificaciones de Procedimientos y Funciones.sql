@@ -20,6 +20,9 @@ CREATE TABLE dbo.TC_MatriculaCurso
 )
 GO
 
+UPDATE dbo.TC_CatalogoOpcion set T_OpcionDesc = 'Pago desenlazado de una obligación' where I_OpcionID = 137
+GO
+
 
 IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'USP_IU_GenerarObligacionesPregrado_X_Ciclo' AND ROUTINE_TYPE = 'PROCEDURE')
 	DROP PROCEDURE [dbo].[USP_IU_GenerarObligacionesPregrado_X_Ciclo]
@@ -1517,8 +1520,8 @@ CREATE PROCEDURE [dbo].[USP_S_ListadoEstadoObligaciones]
 @B_Pagado BIT = NULL,
 @F_FecIni DATE = NULL,
 @F_FecFin DATE = NULL,
-@B_MontoPagadoDiff BIT = null--,
---@I_CtaDeposito
+@B_MontoPagadoDiff BIT = null,
+@C_CodAlu VARCHAR(10) = NULL
 AS
 BEGIN
 	SET NOCOUNT ON;
@@ -1548,6 +1551,7 @@ BEGIN
 		LEFT JOIN dbo.TRI_PagoProcesadoUnfv pagpro ON pagpro.I_ObligacionAluDetID = det.I_ObligacionAluDetID AND pagpro.B_Anulado = 0
 		LEFT JOIN dbo.TR_PagoBanco pagban ON pagban.I_PagoBancoID = pagpro.I_PagoBancoID AND pagban.B_Anulado = 0
 		WHERE mat.B_Habilitado = 1 and mat.I_Anio = @I_Anio
+			' + CASE WHEN @C_CodAlu IS NULL THEN '' ELSE ' and mat.C_CodAlu = @C_CodAlu ' END + '
 			' + CASE WHEN @B_EsPregrado = 1 THEN 'and mat.N_Grado = @Pregrado' ELSE 'and mat.N_Grado IN (@Maestria, @Doctorado)' END + '
 			' + CASE WHEN @I_Periodo IS NULL THEN '' ELSE 'and mat.I_Periodo = @I_Periodo' END + '
 			' + CASE WHEN @C_CodFac IS NULL THEN '' ELSE 'and mat.C_CodFac = @C_CodFac' END + '
@@ -1565,7 +1569,8 @@ BEGIN
 		ORDER BY mat.T_FacDesc, mat.T_DenomProg, mat.T_ApePaterno, mat.T_ApeMaterno';
 	
 	SET @ParmDefinition = N'@Pregrado CHAR(1), @Maestria CHAR(1), @Doctorado CHAR(1), @I_Anio INT, @I_Periodo INT = NULL, 
-		@C_CodFac VARCHAR(2), @C_CodEsc VARCHAR(2), @C_RcCod VARCHAR(3) = NULL , @B_Ingresante BIT = NULL, @B_Pagado BIT = NULL, @F_FecIni DATE = NULL, @F_FecFin DATE = NULL';  
+		@C_CodFac VARCHAR(2), @C_CodEsc VARCHAR(2), @C_RcCod VARCHAR(3) = NULL , @B_Ingresante BIT = NULL, @B_Pagado BIT = NULL, @F_FecIni DATE = NULL, @F_FecFin DATE = NULL,
+		@C_CodAlu VARCHAR(10)';  
 	
 	EXECUTE sp_executesql @SQLString, @ParmDefinition, 
 		@Pregrado = @Pregrado,
@@ -1579,7 +1584,8 @@ BEGIN
 		@B_Ingresante = @B_Ingresante,
 		@B_Pagado = @B_Pagado,
 		@F_FecIni = @F_FecIni,
-		@F_FecFin = @F_FecFin
+		@F_FecFin = @F_FecFin,
+		@C_CodAlu = @C_CodAlu
 /*
 EXEC USP_S_ListadoEstadoObligaciones
 @B_EsPregrado = 1,
@@ -1587,13 +1593,14 @@ EXEC USP_S_ListadoEstadoObligaciones
 @I_Periodo = NULL,
 @C_CodFac = NULL,
 @C_CodEsc = NULL,
-@C_RcCod = '064',
+@C_RcCod = NULL,
 @B_Ingresante = NULL,
-@B_ObligacionGenerada = 1,
+@B_ObligacionGenerada = NULL,
 @B_Pagado = NULL,
 @F_FecIni = NULL,
 @F_FecFin = NULL,
-@B_MontoPagadoDiff = 1
+@B_MontoPagadoDiff = NULL,
+@C_CodAlu = '2016000457'
 GO
 */
 END
@@ -2645,12 +2652,10 @@ BEGIN
 			UPDATE det SET det.D_FecVencto = @D_FecVencto, I_UsuarioMod = @I_UsuarioMod, D_FecMod = @CurrentDate 
 			FROM dbo.TR_ObligacionAluCab cab
 			INNER JOIN dbo.TR_ObligacionAluDet det ON det.I_ObligacionAluID = cab.I_ObligacionAluID AND det.B_Habilitado = 1 AND det.B_Eliminado = 0
-			--INNER JOIN dbo.TC_Proceso pro ON pro.I_ProcesoID = cab.I_ProcesoID
 			WHERE cab.B_Habilitado = 1 AND cab.B_Eliminado = 0 AND cab.B_Pagado = 0 AND det.B_Pagado = 0 AND cab.I_ProcesoID = @I_ProcesoID
 
 			UPDATE cab SET cab.D_FecVencto = @D_FecVencto, I_UsuarioMod = @I_UsuarioMod, D_FecMod = @CurrentDate
 			FROM dbo.TR_ObligacionAluCab cab
-			--INNER JOIN dbo.TC_Proceso pro ON pro.I_ProcesoID = cab.I_ProcesoID
 			WHERE cab.B_Habilitado = 1 AND cab.B_Eliminado = 0 AND cab.B_Pagado = 0 AND cab.I_ProcesoID = @I_ProcesoID
 		END
 
@@ -2726,7 +2731,8 @@ BEGIN
 			I_Periodo	INT,
 			C_EstMat	VARCHAR(2),
 			C_Ciclo		VARCHAR(2),
-			B_Ingresante	BIT
+			B_Ingresante	BIT,
+			B_ExisteAlumno	BIT
 		)
 
 		DECLARE @Tmp_MatriculaCursoResultado TABLE (
@@ -2745,9 +2751,10 @@ BEGIN
 		)
 
   
-		INSERT @Tmp_Matricula(C_CodRC, C_CodAlu, I_Anio, C_Periodo, I_Periodo, C_EstMat, C_Ciclo, B_Ingresante)
+		INSERT @Tmp_Matricula(C_CodRC, C_CodAlu, I_Anio, C_Periodo, I_Periodo, C_EstMat, C_Ciclo, B_Ingresante, B_ExisteAlumno)
 		SELECT DISTINCT 
-			m.C_CodRC, m.C_CodAlu, m.I_Anio, m.C_Periodo, c.I_OpcionID AS I_Periodo, m.C_EstMat, m.C_Ciclo, m.B_Ingresante
+			m.C_CodRC, m.C_CodAlu, m.I_Anio, m.C_Periodo, c.I_OpcionID AS I_Periodo, m.C_EstMat, m.C_Ciclo, m.B_Ingresante,
+			CASE WHEN a.C_CodAlu IS NULL THEN 0 ELSE 1 END
 		FROM @Tbl_Matricula AS m
 		LEFT JOIN dbo.TC_CatalogoOpcion c ON c.I_ParametroID = 5 AND c.T_OpcionCod = m.C_Periodo AND c.B_Eliminado = 0
 		LEFT JOIN BD_UNFV_Repositorio.dbo.VW_Alumnos a ON a.C_CodAlu = m.C_CodAlu and a.C_RcCod = m.C_CodRC AND a.N_Grado = '1'
@@ -2768,13 +2775,14 @@ BEGIN
 				@C_EstMat	VARCHAR(2),
 				@C_Ciclo		VARCHAR(2),
 				@B_Ingresante	BIT,
+				@B_ExisteAlumno BIT,
 				---
 				@I_MatAluID INT,
 				@I_ObligacionAluID INT,
 				--
 				@B_ExisteError BIT,
 				@B_Success BIT,
-				@T_MsgError BIT
+				@T_MsgError VARCHAR(250)
 
 		WHILE (@actual <= @fin)
 		BEGIN
@@ -2786,11 +2794,12 @@ BEGIN
 				@I_Periodo = I_Periodo,
 				@C_EstMat = C_EstMat,
 				@C_Ciclo = C_Ciclo,
-				@B_Ingresante = B_Ingresante
+				@B_Ingresante = B_Ingresante,
+				@B_ExisteAlumno = B_ExisteAlumno
 			FROM @Tmp_Matricula
 			WHERE id = @actual
 
-			SET @B_ExisteError = CASE WHEN @C_CodAlu IS NULL THEN 1 ELSE 0 END
+			SET @B_ExisteError = CASE WHEN @B_ExisteAlumno = 0 THEN 1 ELSE 0 END
 			
 			SET @T_MsgError = NULL
 

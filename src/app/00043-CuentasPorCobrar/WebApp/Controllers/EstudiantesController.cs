@@ -219,18 +219,15 @@ namespace WebApp.Controllers
                 {
                     case TipoEstudio.Pregrado:
                         model.resultado = reportePregradoServiceFacade.EstadoObligacionAlumnos(
-                            model.anio.Value, model.periodo, model.codFac, model.codEsc, model.codRc, model.esIngresante, model.estaPagado, model.obligacionGenerada, model.fechaInicio, model.fechaFin);
+                            model.anio.Value, model.periodo, model.codFac, model.codEsc, model.codRc, model.esIngresante, 
+                            model.estaPagado, model.obligacionGenerada, model.fechaInicio, model.fechaFin, model.codAlumno);
                         break;
 
                     case TipoEstudio.Posgrado:
                         model.resultado = reportePosgradoServiceFacade.EstadoObligacionAlumnos(
-                            model.anio.Value, model.periodo, model.codFac, model.codEsc, model.codRc, model.esIngresante, model.estaPagado, model.obligacionGenerada, model.fechaInicio, model.fechaFin);
+                            model.anio.Value, model.periodo, model.codFac, model.codEsc, model.codRc, model.esIngresante, 
+                            model.estaPagado, model.obligacionGenerada, model.fechaInicio, model.fechaFin, model.codAlumno);
                         break;
-                }
-
-                if (!String.IsNullOrEmpty(model.codAlumno) && !String.IsNullOrWhiteSpace(model.codAlumno))
-                {
-                    model.resultado = model.resultado.Where(m => m.C_CodAlu.Equals(model.codAlumno));
                 }
             }
 
@@ -262,18 +259,15 @@ namespace WebApp.Controllers
             {
                 case TipoEstudio.Pregrado:
                     model.resultado = reportePregradoServiceFacade.EstadoObligacionAlumnos(
-                        model.anio.Value, model.periodo, model.codFac, model.codEsc, model.codRc, model.esIngresante, model.estaPagado, model.obligacionGenerada, model.fechaInicio, model.fechaFin);
+                        model.anio.Value, model.periodo, model.codFac, model.codEsc, model.codRc, model.esIngresante, 
+                        model.estaPagado, model.obligacionGenerada, model.fechaInicio, model.fechaFin, model.codAlumno);
                     break;
 
                 case TipoEstudio.Posgrado:
                     model.resultado = reportePosgradoServiceFacade.EstadoObligacionAlumnos(
-                        model.anio.Value, model.periodo, model.codFac, model.codEsc, model.codRc, model.esIngresante, model.estaPagado, model.obligacionGenerada, model.fechaInicio, model.fechaFin);
+                        model.anio.Value, model.periodo, model.codFac, model.codEsc, model.codRc, model.esIngresante, 
+                        model.estaPagado, model.obligacionGenerada, model.fechaInicio, model.fechaFin, model.codAlumno);
                     break;
-            }
-
-            if (!String.IsNullOrEmpty(model.codAlumno) && !String.IsNullOrWhiteSpace(model.codAlumno))
-            {
-                model.resultado = model.resultado.Where(m => m.C_CodAlu.Equals(model.codAlumno));
             }
 
             using (var workbook = new XLWorkbook())

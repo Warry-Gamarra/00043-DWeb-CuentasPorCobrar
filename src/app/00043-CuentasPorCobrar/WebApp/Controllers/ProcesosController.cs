@@ -96,7 +96,7 @@ namespace WebApp.Controllers
                 ViewBag.CodBcoComercio = listaCategoriaPago.First(x => x.Id == model.CategoriaId.Value).CodBcoComercio;
             }
 
-            ViewBag.MostrarOpcionEdicionObl = true;
+            ViewBag.MostrarOpcionEdicionObl = (model.PrioridadId == 1);
 
             return PartialView("_RegistrarProcesoObligacion", model);
         }

@@ -21,25 +21,37 @@ namespace WebApp.Models
             fechaTransmision = DateTime.Now;
         }
 
-        public MemoryStream GenerarInformacionObligaciones(int anio, int? periodo, TipoEstudio tipoEstudio, string dependencia)
+        public MemoryStream GenerarInformacionObligaciones(int anio, int? periodo, TipoEstudio? tipoEstudio, string dependencia)
         {
-            var cuotas_pago = _obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(anio, periodo, TipoEstudio.Pregrado, dependencia).Where(x => !x.B_Pagado).ToList();
+            IEnumerable<CuotaPagoModel> cuotas_pago;
 
-            //if (tipoEstudio == TipoEstudio.Pregrado)
-            //{
-            //    cuotas_pago = cuotas_pago.Where(x => !(x.I_MontoOblig.Value == 125)).ToList();//EXCLUIR A LOS INGRESANTES POR CEPREVI(PROVISIONAL)
-            //}
+            IEnumerable<CtaDepoProcesoModel> cuentas_bcp;
 
-            var cuotas_pago2 = _obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(anio, periodo, TipoEstudio.Posgrado, dependencia).Where(x => !x.B_Pagado).ToList();
+            if (tipoEstudio == null)
+            {
+                var cuotas_pregrado = _obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(anio, periodo, TipoEstudio.Pregrado, dependencia).Where(x => !x.B_Pagado);
 
-            cuotas_pago.AddRange(cuotas_pago2);
+                var cuotas_posgrado = _obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(anio, periodo, TipoEstudio.Posgrado, dependencia).Where(x => !x.B_Pagado);
 
-            if (cuotas_pago.Count == 0)
+                cuotas_pago = cuotas_pregrado.Concat(cuotas_posgrado);
+
+                var cuentas_pregrado = _obligacionServiceFacade.Obtener_CtaDeposito_X_Periodo(anio, periodo, TipoEstudio.Pregrado).Where(x => x.I_EntidadFinanID == Bancos.BCP_ID);
+
+                var cuentas_posgrado = _obligacionServiceFacade.Obtener_CtaDeposito_X_Periodo(anio, periodo, TipoEstudio.Posgrado).Where(x => x.I_EntidadFinanID == Bancos.BCP_ID);
+
+                cuentas_bcp = cuentas_pregrado.Concat(cuentas_posgrado);
+            }
+            else
+            {
+                cuotas_pago = _obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(anio, periodo, tipoEstudio.Value, dependencia).Where(x => !x.B_Pagado);
+
+                cuentas_bcp = _obligacionServiceFacade.Obtener_CtaDeposito_X_Periodo(anio, periodo, tipoEstudio.Value).Where(x => x.I_EntidadFinanID == Bancos.BCP_ID);
+            }
+
+            if (cuotas_pago.Count() == 0)
             {
                 throw new Exception("No hay registros.");
             }
-
-            var cuentas_bcp = _obligacionServiceFacade.Obtener_CtaDeposito_X_Periodo(anio, periodo, tipoEstudio).Where(x => x.I_EntidadFinanID == Bancos.BCP_ID);
 
             if (cuentas_bcp.GroupBy(x => x.C_NumeroCuenta).Count() > 1)
             {
@@ -58,7 +70,7 @@ namespace WebApp.Models
             string numeroCuentaEmpresa = cuentas_bcp_split[1].Substring(0, 7);
             string tipoValidacion = "C";
             string nombreEmpresa = "UNIVERSIDAD NACIONAL FEDERICO VILLARREAL";
-            int cantidadRegistros = cuotas_pago.Count;
+            int cantidadRegistros = cuotas_pago.Count();
             int montoTotal = (int)(cuotas_pago.Sum(c => c.I_MontoOblig - c.I_MontoPagadoActual) * 100);
             string tipoArchivoActualizacion = "R";
             string codigoServicio = "000000";
@@ -91,8 +103,7 @@ namespace WebApp.Models
                 int montoCupon = (int)((item.I_MontoOblig - item.I_MontoPagadoActual) * 100);
                 string informacionRetorno = item.C_CodRc + item.I_ProcesoID.ToString("D6") + montoCupon.ToString("D15");
                 int montoMora = 0;
-                int montoMinimo = (item.C_CodRc == "064") ? 4000 : montoCupon;//MONTO DE 40 PARA LOS DE CONTABILIDAD (PROVISIONAL)
-                //int montoMinimo = montoCupon;
+                int montoMinimo = (item.I_Anio == 2021 && item.C_CodRc == "064") ? 4000 : montoCupon;
                 string tipoRegistroActualizacion = "A";//M, E
                 string nroDocumentoPago = item.I_NroOrden.ToString("D20");
                 string nroDocumentoIdentidad = "";

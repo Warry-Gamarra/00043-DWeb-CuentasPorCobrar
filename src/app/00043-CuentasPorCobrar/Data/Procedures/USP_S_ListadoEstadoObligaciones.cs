@@ -86,6 +86,7 @@ namespace Data.Procedures
                     parameters.Add(name: "F_FecIni", dbType: DbType.Date, value: pr.F_FecIni);
                     parameters.Add(name: "F_FecFin", dbType: DbType.Date, value: pr.F_FecFin);
                     parameters.Add(name: "B_MontoPagadoDiff", dbType: DbType.Boolean, value: pr.B_MontoPagadoDiff);
+                    parameters.Add(name: "C_CodAlu", dbType: DbType.String, value: pr.C_CodAlu);
 
                     result = _dbConnection.Query<USP_S_ListadoEstadoObligaciones>(s_command, parameters, commandType: CommandType.StoredProcedure);
                 }
@@ -113,5 +114,6 @@ namespace Data.Procedures
         public DateTime? F_FecIni { get; set; }
         public DateTime? F_FecFin { get; set; }
         public bool? B_MontoPagadoDiff { get; set; }
+        public string C_CodAlu { get; set; }
     }
 }
