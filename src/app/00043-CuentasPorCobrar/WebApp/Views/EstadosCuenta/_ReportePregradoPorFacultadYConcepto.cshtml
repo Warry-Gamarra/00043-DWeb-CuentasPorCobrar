@@ -18,27 +18,57 @@
     </div>
 </div>
 
+@{
+    var agrupaClasif = Model.listaPagos.GroupBy(x => new { x.C_CodClasificador, x.C_CodFac });
+    int inicio;
+}
+
 <div class="table-responsive">
     <table class="table table-bordered table-hover table-sm" id="tbl_pagos">
         <thead>
             <tr class="thead-light">
                 <th class="text-center">Facultad</th>
-                <th class="text-center">Concepto</th>
+                <th class="text-center">Cod.Clasificador</th>
                 <th class="text-center">Clasificador</th>
+                <th class="text-center">Concepto</th>
                 <th class="text-center">Monto (S/)</th>
+                <th class="text-center">Total (S/)</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.listaPagos)
+            @foreach (var grupoClasif in agrupaClasif)
             {
-                <tr>
-                    <td>@item.T_FacDesc</td>
-                    <td>@item.T_ConceptoPagoDesc</td>
-                    <td class="text-center">@item.C_CodClasificador</td>
-                    <td class="text-right">@item.T_MontoTotal</td>
-                </tr>
+                inicio = 0;
+                foreach (var item in grupoClasif)
+                {
+                    inicio++;
+                    <tr>
+                        @if (inicio == 1)
+                        {
+                            <td rowspan="@grupoClasif.Count()">
+                                @item.T_FacDesc
+                            </td>
+                            <td class="text-center" rowspan="@grupoClasif.Count()">
+                                @item.C_CodClasificador
+                            </td>
+                            <td rowspan="@grupoClasif.Count()">
+                                @item.T_ClasificadorDesc
+                            </td>
+                        }
+                        <td>@item.T_ConceptoPagoDesc</td>
+                        <td class="text-right">@item.T_MontoTotal</td>
+                        @if (inicio == 1)
+                        {
+                            <td class="text-right" rowspan="@grupoClasif.Count()">
+                                @grupoClasif.Sum(x => x.I_MontoTotal).ToString(Domain.Helpers.FormatosDecimal.BASIC_DECIMAL)
+                            </td>
+                        }
+                    </tr>
+                }
             }
             <tr>
+                <th></th>
+                <th></th>
                 <th></th>
                 <th></th>
                 <th class="text-right">Total (S/)</th>

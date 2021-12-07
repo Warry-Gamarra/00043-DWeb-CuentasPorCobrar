@@ -30,5 +30,6 @@ namespace Data.Types
         public string T_ErrorMessage { get; set; }
         public string T_InformacionAdicional { get; set; }
         public string T_ProcesoDesc { get; set; }
+        public int I_CondicionPagoID { get; set; }
     }
 }

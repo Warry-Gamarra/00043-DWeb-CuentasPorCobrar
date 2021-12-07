@@ -11,6 +11,7 @@ using WebMatrix.WebData;
 
 namespace WebApp.Controllers
 {
+    [Authorize]
     public class TasaController : Controller
     {
         private int? _dependenciaUsuarioId;

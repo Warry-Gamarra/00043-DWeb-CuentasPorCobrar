@@ -211,5 +211,18 @@ namespace Domain.Services.Implementations
 
             return new Response(result);
         }
+
+        public IEnumerable<PagoObligacionDetalleDTO> ObtenerPagoObligacionDetalle(int idObligacionDet)
+        {
+            var lista = PagoObligacionDetalle.FindByObligacionDetId(idObligacionDet);
+
+            var result = lista.Select(x => new PagoObligacionDetalleDTO() {
+                C_CodOperacion = x.C_CodOperacion,
+                D_FecPago = x.D_FecPago,
+                T_LugarPago = x.T_LugarPago
+            });
+
+            return result;
+        }
     }
 }

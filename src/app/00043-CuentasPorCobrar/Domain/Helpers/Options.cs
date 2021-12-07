@@ -55,4 +55,10 @@ namespace Domain.Helpers
         Pregrado,
         Posgrado
     }
+
+    public enum CondicionPago
+    {
+        Correcto = 131,
+        Extorno = 132
+    }
 }

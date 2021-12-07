@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Data.Views;
+using Domain.Entities;
 using Domain.Helpers;
 using System;
 using System.Collections.Generic;
@@ -26,5 +27,6 @@ namespace Domain.Services
         PagoBancoObligacionDTO ObtenerPagoBanco(int idPagoBanco);
         Response AsignarPagoObligacion(int obligacionID, int pagoBancoID, int UserID, string motivoCoreccion);
         Response DesenlazarPagoObligacion(int pagoBancoID, int UserID, string motivoCoreccion);
+        IEnumerable<PagoObligacionDetalleDTO> ObtenerPagoObligacionDetalle(int idObligacionDet);
     }
 }

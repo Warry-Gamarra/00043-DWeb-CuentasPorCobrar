@@ -84,6 +84,7 @@
     <Compile Include="Entities\DevolucionPago.cs" />
     <Compile Include="Entities\EstadoObligacionDTO.cs" />
     <Compile Include="Entities\PagoBancoObligacionDTO.cs" />
+    <Compile Include="Entities\PagoObligacionDetalleDTO.cs" />
     <Compile Include="Entities\PagoTasaDTO.cs" />
     <Compile Include="Entities\PagoTasaObsEntity.cs" />
     <Compile Include="Entities\PagoTasaEntity.cs" />

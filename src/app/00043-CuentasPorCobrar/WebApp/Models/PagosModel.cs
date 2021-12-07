@@ -197,6 +197,7 @@ namespace WebApp.Models
                 var pagoEntity = new PagoObligacionEntity()
                 {
                     B_Correcto = true,
+                    I_CondicionPagoID = (int)CondicionPago.Correcto,
                     T_ErrorMessage = String.Empty
                 };
 
@@ -299,11 +300,14 @@ namespace WebApp.Models
 
                 if (pagoEntity.B_Correcto && pagoEntity.I_EntidadFinanID.Equals(Bancos.BCP_ID) && pagoEntity.C_Extorno.Equals(ConstantesBCP.CodExtorno))
                 {
-                    pagoEntity.B_Correcto = false;
+                    pagoEntity.B_Correcto = true;
+                    pagoEntity.I_CondicionPagoID = (int)CondicionPago.Extorno;
                     pagoEntity.T_ErrorMessage = "Pago extornado";
                 }
 
                 pagoEntity.T_InformacionAdicional = line.Substring(columnas["T_InformacionAdicional"].Inicial - 1, columnas["T_InformacionAdicional"].Final - columnas["T_InformacionAdicional"].Inicial + 1);
+
+                pagoEntity.I_CondicionPagoID = pagoEntity.B_Correcto ? pagoEntity.I_CondicionPagoID : 0;
 
                 result.Add(pagoEntity);
             }
@@ -461,6 +465,8 @@ namespace WebApp.Models
                     entity.D_FecVencto = obligacionAluCab.D_FecVencto.Value;
 
                     entity.B_Correcto = true;
+
+                    entity.I_CondicionPagoID = (int)CondicionPago.Correcto;
 
                     lista.Add(entity);
 
@@ -803,6 +809,11 @@ namespace WebApp.Models
             }
 
             return result;
+        }
+
+        public IEnumerable<PagoObligacionDetalleDTO> ObtenerPagoObligacionDetalle(int idObligacionDet)
+        {
+            return pagoService.ObtenerPagoObligacionDetalle(idObligacionDet);
         }
     }
 }

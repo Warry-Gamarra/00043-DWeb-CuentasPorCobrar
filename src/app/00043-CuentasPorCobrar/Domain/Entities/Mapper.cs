@@ -254,6 +254,8 @@ namespace Domain.Entities
             dataTable.Columns.Add("I_CtaDepositoID").AllowDBNull = true;
             dataTable.Columns.Add("T_InformacionAdicional").AllowDBNull = true;
             dataTable.Columns.Add("T_ProcesoDesc").AllowDBNull = true;
+            dataTable.Columns.Add("I_CondicionPagoID");
+            dataTable.Columns.Add("T_Observacion").AllowDBNull = true; ;
 
             dataPagoObligaciones.ForEach(x => dataTable.Rows.Add(
                 x.C_CodOperacion,
@@ -272,7 +274,9 @@ namespace Domain.Entities
                 x.I_EntidadFinanID,
                 x.I_CtaDepositoID,
                 x.T_InformacionAdicional,
-                x.T_ProcesoDesc
+                x.T_ProcesoDesc,
+                x.I_CondicionPagoID,
+                x.T_ErrorMessage
             ));
 
             return dataTable;
@@ -369,6 +373,7 @@ namespace Domain.Entities
             {
                 I_ConceptoID = sp.I_ConceptoID,
                 C_CodClasificador = sp.C_CodClasificador,
+                T_ClasificadorDesc = sp.T_ClasificadorDesc,
                 T_ConceptoPagoDesc = sp.T_ConceptoPagoDesc,
                 I_MontoTotal = sp.I_MontoTotal
             };
@@ -384,6 +389,7 @@ namespace Domain.Entities
                 C_CodFac = sp.C_CodFac,
                 I_ConceptoID = sp.I_ConceptoID,
                 C_CodClasificador = sp.C_CodClasificador,
+                T_ClasificadorDesc = sp.T_ClasificadorDesc,
                 T_ConceptoPagoDesc = sp.T_ConceptoPagoDesc,
                 I_Cantidad = sp.I_Cantidad,
                 I_MontoTotal = sp.I_MontoTotal
@@ -447,6 +453,7 @@ namespace Domain.Entities
             {
                 I_ConceptoID = sp.I_ConceptoID,
                 C_CodClasificador = sp.C_CodClasificador,
+                T_ClasificadorDesc = sp.T_ClasificadorDesc,
                 T_ConceptoPagoDesc = sp.T_ConceptoPagoDesc,
                 I_MontoTotal = sp.I_MontoTotal
             };
@@ -462,6 +469,7 @@ namespace Domain.Entities
                 C_CodEsc = sp.C_CodEsc,
                 I_ConceptoID = sp.I_ConceptoID,
                 C_CodClasificador = sp.C_CodClasificador,
+                T_ClasificadorDesc = sp.T_ClasificadorDesc,
                 T_ConceptoPagoDesc = sp.T_ConceptoPagoDesc,
                 I_Cantidad = sp.I_Cantidad,
                 I_MontoTotal = sp.I_MontoTotal

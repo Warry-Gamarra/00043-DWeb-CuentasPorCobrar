@@ -25,6 +25,7 @@ namespace Domain.Entities
     {
         public int I_ConceptoID { get; set; }
         public string C_CodClasificador { get; set; }
+        public string T_ClasificadorDesc { get; set; }
         public string T_ConceptoPagoDesc { get; set; }
         public decimal I_MontoTotal { get; set; }
         public string T_MontoTotal
@@ -42,6 +43,7 @@ namespace Domain.Entities
         public string C_CodEsc { get; set; }
         public int I_ConceptoID { get; set; }
         public string C_CodClasificador { get; set; }
+        public string T_ClasificadorDesc { get; set; }
         public string T_ConceptoPagoDesc { get; set; }
         public int I_Cantidad { get; set; }
         public decimal I_MontoTotal { get; set; }

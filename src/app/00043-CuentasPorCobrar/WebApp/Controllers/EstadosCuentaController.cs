@@ -583,10 +583,9 @@ namespace WebApp.Controllers
             var worksheet = workbook.Worksheets.Add("ReportePregrado");
 
             worksheet.Column("A").Width = 14;
-
-            worksheet.Column("B").Width = 60;
-
-            worksheet.Column("C").Width = 14;
+            worksheet.Column("B").Width = 30;
+            worksheet.Column("C").Width = 60;
+            worksheet.Columns("D:E").Width = 14;
 
             var titleCell = worksheet.Cell(1, 1);
 
@@ -596,7 +595,7 @@ namespace WebApp.Controllers
 
             titleCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
 
-            worksheet.Range(titleCell, worksheet.Cell(1, 3)).Merge(true);
+            worksheet.Range(titleCell, worksheet.Cell(1, 5)).Merge(true);
 
             var subTitleCell = worksheet.Cell(2, 1);
 
@@ -606,7 +605,7 @@ namespace WebApp.Controllers
 
             subTitleCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
 
-            worksheet.Range(subTitleCell, worksheet.Cell(2, 3)).Merge(true);
+            worksheet.Range(subTitleCell, worksheet.Cell(2, 5)).Merge(true);
 
             var bankNameCell = worksheet.Cell(4, 1);
 
@@ -616,13 +615,13 @@ namespace WebApp.Controllers
 
             ctaDepositoCell.Value = String.IsNullOrEmpty(reporte.numeroCuenta) ? "" : "Número Cuenta: " + reporte.numeroCuenta;
 
-            var dateCell = worksheet.Cell(4, 3);
+            var dateCell = worksheet.Cell(4, 5);
 
             dateCell.Value = "Fecha consulta: " + reporte.FechaActual;
 
             dateCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
 
-            var timeCell = worksheet.Cell(5, 3);
+            var timeCell = worksheet.Cell(5, 5);
 
             timeCell.Value = "Hora consulta: " + reporte.HoraActual;
 
@@ -630,27 +629,53 @@ namespace WebApp.Controllers
 
             var currentRow = 7;
 
-            worksheet.Cell(currentRow, 1).Value = "Clasificador";
-            worksheet.Cell(currentRow, 2).Value = "Concepto";
-            worksheet.Cell(currentRow, 3).Value = "Monto (S/)";
+            worksheet.Cell(currentRow, 1).Value = "Cod.Clasificador";
+            worksheet.Cell(currentRow, 2).Value = "Clasificador";
+            worksheet.Cell(currentRow, 3).Value = "Concepto";
+            worksheet.Cell(currentRow, 4).Value = "Monto (S/)";
+            worksheet.Cell(currentRow, 5).Value = "Total (S/)";
 
             currentRow++;
 
             var inicial = currentRow;
+            int i;
 
-            foreach (var item in reporte.listaPagos)
+            foreach (var grupoClasif in reporte.listaPagos.GroupBy(x => x.C_CodClasificador))
             {
-                worksheet.Cell(currentRow, 1).SetValue<string>(item.C_CodClasificador);
-                worksheet.Cell(currentRow, 2).SetValue<string>(item.T_ConceptoPagoDesc);
-                worksheet.Cell(currentRow, 3).SetValue<decimal>(item.I_MontoTotal);
+                i = 1;
 
-                currentRow++;
+                foreach (var item in grupoClasif)
+                {
+                    if (i == 1)
+                    {
+                        worksheet.Cell(currentRow, 1).SetValue<string>(item.C_CodClasificador);
+                        worksheet.Cell(currentRow, 1).Style.Alignment.SetVertical(XLAlignmentVerticalValues.Top);
+                        worksheet.Range(worksheet.Cell(currentRow, 1), worksheet.Cell(currentRow + grupoClasif.Count() - 1, 1)).Merge();
+
+                        worksheet.Cell(currentRow, 2).SetValue<string>(item.T_ClasificadorDesc);
+                        worksheet.Cell(currentRow, 2).Style.Alignment.SetVertical(XLAlignmentVerticalValues.Top);
+                        worksheet.Range(worksheet.Cell(currentRow, 2), worksheet.Cell(currentRow + grupoClasif.Count() - 1, 2)).Merge();
+                    }
+                    
+                    worksheet.Cell(currentRow, 3).SetValue<string>(item.T_ConceptoPagoDesc);
+                    worksheet.Cell(currentRow, 4).SetValue<decimal>(item.I_MontoTotal);
+
+                    if (i == 1)
+                    {
+                        worksheet.Cell(currentRow, 5).SetValue<decimal>(grupoClasif.Sum(x => x.I_MontoTotal));
+                        worksheet.Cell(currentRow, 5).Style.Alignment.SetVertical(XLAlignmentVerticalValues.Top);
+                        worksheet.Range(worksheet.Cell(currentRow, 5), worksheet.Cell(currentRow + grupoClasif.Count() - 1, 5)).Merge();
+                    }
+                    
+                    currentRow++;
+                    i++;
+                }
             }
 
-            worksheet.Cell(currentRow, 2).Value = "Total (S/)";
-            worksheet.Cell(currentRow, 3).SetValue<decimal>(reporte.MontoTotal);
+            worksheet.Cell(currentRow, 4).Value = "Total (S/)";
+            worksheet.Cell(currentRow, 5).SetValue<decimal>(reporte.MontoTotal);
 
-            worksheet.Range(worksheet.Cell(inicial, 3), worksheet.Cell(currentRow, 3)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
+            worksheet.Range(worksheet.Cell(inicial, 4), worksheet.Cell(currentRow, 5)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
 
             return workbook;
         }
@@ -665,9 +690,11 @@ namespace WebApp.Controllers
 
             worksheet.Column("B").Width = 14;
 
-            worksheet.Column("C").Width = 60;
+            worksheet.Column("C").Width = 30;
 
-            worksheet.Column("D").Width = 14;
+            worksheet.Column("D").Width = 60;
+
+            worksheet.Columns("E:F").Width = 14;
 
             var titleCell = worksheet.Cell(1, 1);
 
@@ -677,7 +704,7 @@ namespace WebApp.Controllers
 
             titleCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
 
-            worksheet.Range(titleCell, worksheet.Cell(1, 4)).Merge(true);
+            worksheet.Range(titleCell, worksheet.Cell(1, 6)).Merge(true);
 
             var subTitleCell = worksheet.Cell(2, 1);
 
@@ -687,9 +714,9 @@ namespace WebApp.Controllers
 
             subTitleCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
 
-            worksheet.Range(subTitleCell, worksheet.Cell(2, 4)).Merge(true);
+            worksheet.Range(subTitleCell, worksheet.Cell(2, 6)).Merge(true);
 
-            var dateCell = worksheet.Cell(4, 4);
+            var dateCell = worksheet.Cell(4, 6);
 
             dateCell.Value = "Fecha consulta: " + reporte.FechaActual;
 
@@ -703,7 +730,7 @@ namespace WebApp.Controllers
 
             ctaDepositoCell.Value = String.IsNullOrEmpty(reporte.numeroCuenta) ? "" : "Número Cuenta: " + reporte.numeroCuenta;
 
-            var timeCell = worksheet.Cell(5, 4);
+            var timeCell = worksheet.Cell(5, 6);
 
             timeCell.Value = "Hora consulta: " + reporte.HoraActual;
 
@@ -712,28 +739,56 @@ namespace WebApp.Controllers
             var currentRow = 7;
 
             worksheet.Cell(currentRow, 1).Value = "Facultad";
-            worksheet.Cell(currentRow, 2).Value = "Clasificador";
-            worksheet.Cell(currentRow, 3).Value = "Concepto";
-            worksheet.Cell(currentRow, 4).Value = "Monto (S/)";
+            worksheet.Cell(currentRow, 2).Value = "Cod.Clasificador";
+            worksheet.Cell(currentRow, 3).Value = "Clasificador";
+            worksheet.Cell(currentRow, 4).Value = "Concepto";
+            worksheet.Cell(currentRow, 5).Value = "Monto (S/)";
+            worksheet.Cell(currentRow, 6).Value = "Total (S/)";
 
             currentRow++;
 
             var inicial = currentRow;
+            int i;
 
-            foreach (var item in reporte.listaPagos)
+            foreach (var grupoClasif in reporte.listaPagos.GroupBy(x => new { x.C_CodClasificador, x.C_CodFac }))
             {
-                worksheet.Cell(currentRow, 1).SetValue<string>(item.T_FacDesc);
-                worksheet.Cell(currentRow, 2).SetValue<string>(item.C_CodClasificador);
-                worksheet.Cell(currentRow, 3).SetValue<string>(item.T_ConceptoPagoDesc);
-                worksheet.Cell(currentRow, 4).SetValue<decimal>(item.I_MontoTotal);
+                i = 1;
+                foreach (var item in grupoClasif)
+                {
+                    if (i == 1)
+                    {
+                        worksheet.Cell(currentRow, 1).SetValue<string>(item.T_FacDesc);
+                        worksheet.Cell(currentRow, 1).Style.Alignment.SetVertical(XLAlignmentVerticalValues.Top);
+                        worksheet.Range(worksheet.Cell(currentRow, 1), worksheet.Cell(currentRow + grupoClasif.Count() - 1, 1)).Merge();
 
-                currentRow++;
+                        worksheet.Cell(currentRow, 2).SetValue<string>(item.C_CodClasificador);
+                        worksheet.Cell(currentRow, 2).Style.Alignment.SetVertical(XLAlignmentVerticalValues.Top);
+                        worksheet.Range(worksheet.Cell(currentRow, 2), worksheet.Cell(currentRow + grupoClasif.Count() - 1, 2)).Merge();
+
+                        worksheet.Cell(currentRow, 3).SetValue<string>(item.T_ClasificadorDesc);
+                        worksheet.Cell(currentRow, 3).Style.Alignment.SetVertical(XLAlignmentVerticalValues.Top);
+                        worksheet.Range(worksheet.Cell(currentRow, 3), worksheet.Cell(currentRow + grupoClasif.Count() - 1, 3)).Merge();
+                    }
+                    
+                    worksheet.Cell(currentRow, 4).SetValue<string>(item.T_ConceptoPagoDesc);
+                    worksheet.Cell(currentRow, 5).SetValue<decimal>(item.I_MontoTotal);
+
+                    if (i == 1)
+                    {
+                        worksheet.Cell(currentRow, 6).SetValue<decimal>(grupoClasif.Sum(x => x.I_MontoTotal));
+                        worksheet.Cell(currentRow, 6).Style.Alignment.SetVertical(XLAlignmentVerticalValues.Top);
+                        worksheet.Range(worksheet.Cell(currentRow, 6), worksheet.Cell(currentRow + grupoClasif.Count() - 1, 6)).Merge();
+                    }
+
+                    currentRow++;
+                    i++;
+                }
             }
 
-            worksheet.Cell(currentRow, 3).Value = "Total (S/)";
-            worksheet.Cell(currentRow, 4).SetValue<decimal>(reporte.MontoTotal);
+            worksheet.Cell(currentRow, 5).Value = "Total (S/)";
+            worksheet.Cell(currentRow, 6).SetValue<decimal>(reporte.MontoTotal);
 
-            worksheet.Range(worksheet.Cell(inicial, 4), worksheet.Cell(currentRow, 4)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
+            worksheet.Range(worksheet.Cell(inicial, 5), worksheet.Cell(currentRow, 6)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
 
             return workbook;
         }
@@ -744,13 +799,13 @@ namespace WebApp.Controllers
 
             var worksheet = workbook.Worksheets.Add("ReportePregrado");
 
-            worksheet.Column("A").Width = 60;
+            worksheet.Column("A").Width = 14;
 
-            worksheet.Column("B").Width = 14;
+            worksheet.Column("B").Width = 30;
 
-            worksheet.Column("C").Width = 14;
+            worksheet.Column("C").Width = 60;
 
-            worksheet.Column("D").Width = 14;
+            worksheet.Columns("D:F").Width = 14;
 
             var titleCell = worksheet.Cell(1, 1);
 
@@ -760,7 +815,7 @@ namespace WebApp.Controllers
 
             titleCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
 
-            worksheet.Range(titleCell, worksheet.Cell(1, 4)).Merge(true);
+            worksheet.Range(titleCell, worksheet.Cell(1, 5)).Merge(true);
 
             var subTitleCell = worksheet.Cell(2, 1);
 
@@ -770,13 +825,13 @@ namespace WebApp.Controllers
 
             subTitleCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
 
-            worksheet.Range(subTitleCell, worksheet.Cell(2, 4)).Merge(true);
+            worksheet.Range(subTitleCell, worksheet.Cell(2, 5)).Merge(true);
 
             var facultadCell = worksheet.Cell(4, 1);
 
             facultadCell.Value = "Facultad: " + reporte.Facultad.ToUpper();
 
-            var dateCell = worksheet.Cell(4, 4);
+            var dateCell = worksheet.Cell(4, 6);
 
             dateCell.Value = "Fecha consulta: " + reporte.FechaActual;
 
@@ -786,7 +841,7 @@ namespace WebApp.Controllers
 
             bankNameCell.Value = String.IsNullOrEmpty(reporte.nombreEntidadFinanc) ? "" : "Entidad Financiera: " + reporte.nombreEntidadFinanc;
 
-            var timeCell = worksheet.Cell(5, 4);
+            var timeCell = worksheet.Cell(5, 6);
 
             timeCell.Value = "Hora consulta: " + reporte.HoraActual;
 
@@ -798,29 +853,54 @@ namespace WebApp.Controllers
 
             var currentRow = String.IsNullOrEmpty(reporte.numeroCuenta) ? 7 : 8;
 
-            worksheet.Cell(currentRow, 1).Value = "Concepto";
+            worksheet.Cell(currentRow, 1).Value = "Cod.Clasificador";
             worksheet.Cell(currentRow, 2).Value = "Clasificador";
-            worksheet.Cell(currentRow, 3).Value = "Cantidad";
-            worksheet.Cell(currentRow, 4).Value = "Monto (S/)";
+            worksheet.Cell(currentRow, 3).Value = "Concepto";
+            worksheet.Cell(currentRow, 4).Value = "Cantidad";
+            worksheet.Cell(currentRow, 5).Value = "Monto (S/)";
+            worksheet.Cell(currentRow, 6).Value = "Total (S/)";
 
             currentRow++;
 
             var inicial = currentRow;
+            int i;
 
-            foreach (var item in reporte.listaPagos)
+            foreach (var grupoClasif in reporte.listaPagos.GroupBy(x => new { x.C_CodClasificador }))
             {
-                worksheet.Cell(currentRow, 1).SetValue<string>(item.T_ConceptoPagoDesc);
-                worksheet.Cell(currentRow, 2).SetValue<string>(item.C_CodClasificador);
-                worksheet.Cell(currentRow, 3).SetValue<int>(item.I_Cantidad);
-                worksheet.Cell(currentRow, 4).SetValue<decimal>(item.I_MontoTotal);
+                i = 1;
+                foreach (var item in grupoClasif)
+                {
+                    if (i == 1)
+                    {
+                        worksheet.Cell(currentRow, 1).SetValue<string>(item.C_CodClasificador);
+                        worksheet.Cell(currentRow, 1).Style.Alignment.SetVertical(XLAlignmentVerticalValues.Top);
+                        worksheet.Range(worksheet.Cell(currentRow, 1), worksheet.Cell(currentRow + grupoClasif.Count() - 1, 1)).Merge();
 
-                currentRow++;
+                        worksheet.Cell(currentRow, 2).SetValue<string>(item.T_ClasificadorDesc);
+                        worksheet.Cell(currentRow, 2).Style.Alignment.SetVertical(XLAlignmentVerticalValues.Top);
+                        worksheet.Range(worksheet.Cell(currentRow, 2), worksheet.Cell(currentRow + grupoClasif.Count() - 1, 2)).Merge();
+                    }
+
+                    worksheet.Cell(currentRow, 3).SetValue<string>(item.T_ConceptoPagoDesc);                    
+                    worksheet.Cell(currentRow, 4).SetValue<int>(item.I_Cantidad);
+                    worksheet.Cell(currentRow, 5).SetValue<decimal>(item.I_MontoTotal);
+
+                    if (i == 1)
+                    {
+                        worksheet.Cell(currentRow, 6).SetValue<decimal>(grupoClasif.Sum(x => x.I_MontoTotal));
+                        worksheet.Cell(currentRow, 6).Style.Alignment.SetVertical(XLAlignmentVerticalValues.Top);
+                        worksheet.Range(worksheet.Cell(currentRow, 6), worksheet.Cell(currentRow + grupoClasif.Count() - 1, 6)).Merge();
+                    }
+
+                    currentRow++;
+                    i++;
+                }
             }
 
-            worksheet.Cell(currentRow, 3).Value = "Total (S/)";
-            worksheet.Cell(currentRow, 4).SetValue<decimal>(reporte.MontoTotal);
+            worksheet.Cell(currentRow, 5).Value = "Total (S/)";
+            worksheet.Cell(currentRow, 6).SetValue<decimal>(reporte.MontoTotal);
 
-            worksheet.Range(worksheet.Cell(inicial, 4), worksheet.Cell(currentRow, 4)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
+            worksheet.Range(worksheet.Cell(inicial, 5), worksheet.Cell(currentRow, 6)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
 
             return workbook;
         }
@@ -982,10 +1062,9 @@ namespace WebApp.Controllers
             var worksheet = workbook.Worksheets.Add("ReportePosgrado");
 
             worksheet.Column("A").Width = 14;
-
-            worksheet.Column("B").Width = 60;
-
-            worksheet.Column("C").Width = 14;
+            worksheet.Column("B").Width = 30;
+            worksheet.Column("C").Width = 60;
+            worksheet.Columns("D:E").Width = 14;
 
             var titleCell = worksheet.Cell(1, 1);
 
@@ -1015,13 +1094,13 @@ namespace WebApp.Controllers
 
             ctaDepositoCell.Value = String.IsNullOrEmpty(reporte.numeroCuenta) ? "" : "Número Cuenta: " + reporte.numeroCuenta;
 
-            var dateCell = worksheet.Cell(4, 3);
+            var dateCell = worksheet.Cell(4, 5);
 
             dateCell.Value = "Fecha consulta: " + reporte.FechaActual;
 
             dateCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
 
-            var timeCell = worksheet.Cell(5, 3);
+            var timeCell = worksheet.Cell(5, 5);
 
             timeCell.Value = "Hora consulta: " + reporte.HoraActual;
 
@@ -1029,27 +1108,52 @@ namespace WebApp.Controllers
 
             var currentRow = 7;
 
-            worksheet.Cell(currentRow, 1).Value = "Clasificador";
-            worksheet.Cell(currentRow, 2).Value = "Concepto";
-            worksheet.Cell(currentRow, 3).Value = "Monto (S/)";
+            worksheet.Cell(currentRow, 1).Value = "Cod.Clasificador";
+            worksheet.Cell(currentRow, 2).Value = "Clasificador";
+            worksheet.Cell(currentRow, 3).Value = "Concepto";
+            worksheet.Cell(currentRow, 4).Value = "Monto (S/)";
+            worksheet.Cell(currentRow, 5).Value = "Total (S/)";
 
             currentRow++;
 
             var inicial = currentRow;
+            int i;
 
-            foreach (var item in reporte.listaPagos)
+            foreach (var grupoClasif in reporte.listaPagos.GroupBy(x => x.C_CodClasificador))
             {
-                worksheet.Cell(currentRow, 1).SetValue<string>(item.C_CodClasificador);
-                worksheet.Cell(currentRow, 2).SetValue<string>(item.T_ConceptoPagoDesc);
-                worksheet.Cell(currentRow, 3).SetValue<decimal>(item.I_MontoTotal);
+                i = 1;
+                foreach (var item in grupoClasif)
+                {
+                    if (i == 1)
+                    {
+                        worksheet.Cell(currentRow, 1).SetValue<string>(item.C_CodClasificador);
+                        worksheet.Cell(currentRow, 1).Style.Alignment.SetVertical(XLAlignmentVerticalValues.Top);
+                        worksheet.Range(worksheet.Cell(currentRow, 1), worksheet.Cell(currentRow + grupoClasif.Count() - 1, 1)).Merge();
 
-                currentRow++;
+                        worksheet.Cell(currentRow, 2).SetValue<string>(item.T_ClasificadorDesc);
+                        worksheet.Cell(currentRow, 2).Style.Alignment.SetVertical(XLAlignmentVerticalValues.Top);
+                        worksheet.Range(worksheet.Cell(currentRow, 2), worksheet.Cell(currentRow + grupoClasif.Count() - 1, 2)).Merge();
+                    }
+                    
+                    worksheet.Cell(currentRow, 3).SetValue<string>(item.T_ConceptoPagoDesc);
+                    worksheet.Cell(currentRow, 4).SetValue<decimal>(item.I_MontoTotal);
+
+                    if (i == 1)
+                    {
+                        worksheet.Cell(currentRow, 5).SetValue<decimal>(grupoClasif.Sum(x => x.I_MontoTotal));
+                        worksheet.Cell(currentRow, 5).Style.Alignment.SetVertical(XLAlignmentVerticalValues.Top);
+                        worksheet.Range(worksheet.Cell(currentRow, 5), worksheet.Cell(currentRow + grupoClasif.Count() - 1, 5)).Merge();
+                    }
+
+                    currentRow++;
+                    i++;
+                }
             }
 
-            worksheet.Cell(currentRow, 2).Value = "Total (S/)";
-            worksheet.Cell(currentRow, 3).SetValue<decimal>(reporte.MontoTotal);
+            worksheet.Cell(currentRow, 4).Value = "Total (S/)";
+            worksheet.Cell(currentRow, 5).SetValue<decimal>(reporte.MontoTotal);
 
-            worksheet.Range(worksheet.Cell(inicial, 3), worksheet.Cell(currentRow, 3)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
+            worksheet.Range(worksheet.Cell(inicial, 4), worksheet.Cell(currentRow, 5)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
 
             return workbook;
         }
@@ -1060,13 +1164,10 @@ namespace WebApp.Controllers
 
             var worksheet = workbook.Worksheets.Add("ReportePosgrado");
 
-            worksheet.Column("A").Width = 14;
-
-            worksheet.Column("B").Width = 14;
-
-            worksheet.Column("C").Width = 60;
-
-            worksheet.Column("D").Width = 14;
+            worksheet.Columns("A:B").Width = 14;
+            worksheet.Column("C").Width = 30;
+            worksheet.Column("D").Width = 60;
+            worksheet.Columns("E:F").Width = 14;
 
             var titleCell = worksheet.Cell(1, 1);
 
@@ -1088,7 +1189,7 @@ namespace WebApp.Controllers
 
             worksheet.Range(subTitleCell, worksheet.Cell(2, 4)).Merge(true);
 
-            var dateCell = worksheet.Cell(4, 4);
+            var dateCell = worksheet.Cell(4, 6);
 
             dateCell.Value = "Fecha consulta: " + reporte.FechaActual;
 
@@ -1102,7 +1203,7 @@ namespace WebApp.Controllers
             
             ctaDepositoCell.Value = String.IsNullOrEmpty(reporte.numeroCuenta) ? "" : "Número Cuenta: " + reporte.numeroCuenta;
 
-            var timeCell = worksheet.Cell(5, 4);
+            var timeCell = worksheet.Cell(5, 6);
 
             timeCell.Value = "Hora consulta: " + reporte.HoraActual;
 
@@ -1111,28 +1212,56 @@ namespace WebApp.Controllers
             var currentRow = 7;
 
             worksheet.Cell(currentRow, 1).Value = "Grado";
-            worksheet.Cell(currentRow, 2).Value = "Clasificador";
-            worksheet.Cell(currentRow, 3).Value = "Concepto";
-            worksheet.Cell(currentRow, 4).Value = "Monto (S/)";
+            worksheet.Cell(currentRow, 2).Value = "Cod.Clasificador";
+            worksheet.Cell(currentRow, 3).Value = "Clasificador";
+            worksheet.Cell(currentRow, 4).Value = "Concepto";
+            worksheet.Cell(currentRow, 5).Value = "Monto (S/)";
+            worksheet.Cell(currentRow, 6).Value = "Total (S/)";
 
             currentRow++;
 
             var inicial = currentRow;
+            int i;
 
-            foreach (var item in reporte.listaPagos)
+            foreach (var grupoClasif in reporte.listaPagos.GroupBy(x => new { x.C_CodClasificador, x.C_CodEsc }))
             {
-                worksheet.Cell(currentRow, 1).SetValue<string>(item.T_EscDesc);
-                worksheet.Cell(currentRow, 2).SetValue<string>(item.C_CodClasificador);
-                worksheet.Cell(currentRow, 3).SetValue<string>(item.T_ConceptoPagoDesc);
-                worksheet.Cell(currentRow, 4).SetValue<decimal>(item.I_MontoTotal);
+                i = 1;
+                foreach (var item in grupoClasif)
+                {
+                    if (i == 1)
+                    {
+                        worksheet.Cell(currentRow, 1).SetValue<string>(item.T_EscDesc);
+                        worksheet.Cell(currentRow, 1).Style.Alignment.SetVertical(XLAlignmentVerticalValues.Top);
+                        worksheet.Range(worksheet.Cell(currentRow, 1), worksheet.Cell(currentRow + grupoClasif.Count() - 1, 1)).Merge();
 
-                currentRow++;
+                        worksheet.Cell(currentRow, 2).SetValue<string>(item.C_CodClasificador);
+                        worksheet.Cell(currentRow, 2).Style.Alignment.SetVertical(XLAlignmentVerticalValues.Top);
+                        worksheet.Range(worksheet.Cell(currentRow, 2), worksheet.Cell(currentRow + grupoClasif.Count() - 1, 2)).Merge();
+
+                        worksheet.Cell(currentRow, 3).SetValue<string>(item.T_ClasificadorDesc);
+                        worksheet.Cell(currentRow, 3).Style.Alignment.SetVertical(XLAlignmentVerticalValues.Top);
+                        worksheet.Range(worksheet.Cell(currentRow, 3), worksheet.Cell(currentRow + grupoClasif.Count() - 1, 3)).Merge();
+                    }
+                    
+                    worksheet.Cell(currentRow, 4).SetValue<string>(item.T_ConceptoPagoDesc);
+                    worksheet.Cell(currentRow, 5).SetValue<decimal>(item.I_MontoTotal);
+
+                    if (i == 1)
+                    {
+                        worksheet.Cell(currentRow, 6).SetValue<decimal>(grupoClasif.Sum(x => x.I_MontoTotal));
+                        worksheet.Cell(currentRow, 6).Style.Alignment.SetVertical(XLAlignmentVerticalValues.Top);
+                        worksheet.Range(worksheet.Cell(currentRow, 6), worksheet.Cell(currentRow + grupoClasif.Count() - 1, 6)).Merge();
+                    }
+
+                    currentRow++;
+                    i++;
+                }
             }
 
-            worksheet.Cell(currentRow, 3).Value = "Total (S/)";
-            worksheet.Cell(currentRow, 4).SetValue<decimal>(reporte.MontoTotal);
+            worksheet.Cell(currentRow, 5).Value = "Total (S/)";
+            worksheet.Cell(currentRow, 6).SetValue<decimal>(reporte.MontoTotal);
 
-            worksheet.Range(worksheet.Cell(inicial, 4), worksheet.Cell(currentRow, 4)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
+            worksheet.Range(worksheet.Cell(inicial, 5), worksheet.Cell(currentRow, 6)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
 
             return workbook;
         }
@@ -1143,13 +1272,10 @@ namespace WebApp.Controllers
 
             var worksheet = workbook.Worksheets.Add("ReportePosgrado");
 
-            worksheet.Column("A").Width = 60;
-
-            worksheet.Column("B").Width = 14;
-
-            worksheet.Column("C").Width = 14;
-
-            worksheet.Column("D").Width = 14;
+            worksheet.Column("A").Width = 14;
+            worksheet.Column("B").Width = 30;
+            worksheet.Column("C").Width = 60;
+            worksheet.Columns("D:F").Width = 14;
 
             var titleCell = worksheet.Cell(1, 1);
 
@@ -1175,7 +1301,7 @@ namespace WebApp.Controllers
 
             gradoDescripCell.Value = "Grado: " + reporte.Grado.ToUpper();
 
-            var dateCell = worksheet.Cell(4, 4);
+            var dateCell = worksheet.Cell(4, 6);
 
             dateCell.Value = "Fecha consulta: " + reporte.FechaActual;
 
@@ -1185,7 +1311,7 @@ namespace WebApp.Controllers
 
             bankNameCell.Value = String.IsNullOrEmpty(reporte.nombreEntidadFinanc) ? "" : "Entidad Financiera: " + reporte.nombreEntidadFinanc;
 
-            var timeCell = worksheet.Cell(5, 4);
+            var timeCell = worksheet.Cell(5, 6);
 
             timeCell.Value = "Hora consulta: " + reporte.HoraActual;
 
@@ -1197,23 +1323,48 @@ namespace WebApp.Controllers
 
             var currentRow = String.IsNullOrEmpty(reporte.numeroCuenta) ? 7 : 8;
 
-            worksheet.Cell(currentRow, 1).Value = "Concepto";
+            worksheet.Cell(currentRow, 1).Value = "Cod.Clasificador";
             worksheet.Cell(currentRow, 2).Value = "Clasificador";
-            worksheet.Cell(currentRow, 3).Value = "Cantidad";
-            worksheet.Cell(currentRow, 4).Value = "Monto (S/)";
+            worksheet.Cell(currentRow, 3).Value = "Concepto";
+            worksheet.Cell(currentRow, 4).Value = "Cantidad";
+            worksheet.Cell(currentRow, 5).Value = "Monto (S/)";
+            worksheet.Cell(currentRow, 6).Value = "Total (S/)";
 
             currentRow++;
 
             var inicial = currentRow;
+            int i;
 
-            foreach (var item in reporte.listaPagos)
+            foreach (var grupoClasif in reporte.listaPagos.GroupBy(x => new { x.C_CodClasificador }))
             {
-                worksheet.Cell(currentRow, 1).SetValue<string>(item.T_ConceptoPagoDesc);
-                worksheet.Cell(currentRow, 2).SetValue<string>(item.C_CodClasificador);
-                worksheet.Cell(currentRow, 3).SetValue<int>(item.I_Cantidad);
-                worksheet.Cell(currentRow, 4).SetValue<decimal>(item.I_MontoTotal);
+                i = 1;
+                foreach (var item in grupoClasif)
+                {
+                    if (i == 1)
+                    {
+                        worksheet.Cell(currentRow, 1).SetValue<string>(item.C_CodClasificador);
+                        worksheet.Cell(currentRow, 1).Style.Alignment.SetVertical(XLAlignmentVerticalValues.Top);
+                        worksheet.Range(worksheet.Cell(currentRow, 1), worksheet.Cell(currentRow + grupoClasif.Count() - 1, 1)).Merge();
 
-                currentRow++;
+                        worksheet.Cell(currentRow, 2).SetValue<string>(item.T_ClasificadorDesc);
+                        worksheet.Cell(currentRow, 2).Style.Alignment.SetVertical(XLAlignmentVerticalValues.Top);
+                        worksheet.Range(worksheet.Cell(currentRow, 2), worksheet.Cell(currentRow + grupoClasif.Count() - 1, 2)).Merge();
+                    }
+
+                    worksheet.Cell(currentRow, 3).SetValue<string>(item.T_ConceptoPagoDesc);
+                    worksheet.Cell(currentRow, 4).SetValue<int>(item.I_Cantidad);
+                    worksheet.Cell(currentRow, 5).SetValue<decimal>(item.I_MontoTotal);
+
+                    if (i == 1)
+                    {
+                        worksheet.Cell(currentRow, 6).SetValue<decimal>(grupoClasif.Sum(x => x.I_MontoTotal));
+                        worksheet.Cell(currentRow, 6).Style.Alignment.SetVertical(XLAlignmentVerticalValues.Top);
+                        worksheet.Range(worksheet.Cell(currentRow, 6), worksheet.Cell(currentRow + grupoClasif.Count() - 1, 6)).Merge();
+                    }
+
+                    currentRow++;
+                    i++;
+                }
             }
 
             worksheet.Cell(currentRow, 3).Value = "Total (S/)";

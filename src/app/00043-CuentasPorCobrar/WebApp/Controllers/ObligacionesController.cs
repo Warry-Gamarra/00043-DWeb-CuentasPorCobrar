@@ -25,7 +25,7 @@ namespace WebApp.Controllers
         IReportePregradoServiceFacade reportePregradoServiceFacade;
         IReportePosgradoServiceFacade reportePosgradoServiceFacade;
         SelectModel selectModels;
-
+        PagosModel pagosModel;
         public ObligacionesController()
         {
             generalServiceFacade = new GeneralServiceFacade();
@@ -39,6 +39,7 @@ namespace WebApp.Controllers
             reportePosgradoServiceFacade = new ReportePosgradoServiceFacade();
 
             selectModels = new SelectModel();
+            pagosModel = new PagosModel();
         }
 
         public ActionResult Generar(int? cmbAnioGrupal, int? cmbPeriodoGrupal, string cmbDependencia, TipoEstudio cmbTipoEstudio = TipoEstudio.Pregrado)
@@ -150,8 +151,18 @@ namespace WebApp.Controllers
 
             var cuotas_pago = obligacionServiceFacade.Obtener_CuotasPago(anio, periodo, codAlu, codRc);
 
+            cuotas_pago.ForEach(x => {
+                var pago = pagosModel.ListarPagosBancoPorObligacion(x.I_ObligacionAluID).OrderByDescending(p => p.D_FecPago).FirstOrDefault();
+                x.T_Banco = (pago == null) ? "" : pago.T_EntidadDesc;
+                x.T_CtaDeposito = (pago == null) ? "" : pago.C_NumeroCuenta;
+            });
+                
             detalle_pago.ForEach(d => {
                 d.I_NroOrden = cuotas_pago.Find(c => c.I_ObligacionAluID == d.I_ObligacionAluID).I_NroOrden;
+                var pago = pagosModel.ObtenerPagoObligacionDetalle(d.I_ObligacionAluDetID).OrderByDescending(p => p.D_FecPago).FirstOrDefault();
+                d.T_NroRecibo = (pago == null) ? "" : pago.C_CodOperacion;
+                d.D_FecPago = (pago == null) ? "" : (pago.D_FecPago.HasValue ? pago.D_FecPago.Value.ToString(FormatosDateTime.BASIC_DATETIME) : "");
+                d.T_LugarPago = (pago == null) ? "" : pago.T_LugarPago;
             });
 
             return Json(new { alumno = alumno, detalle_pago = detalle_pago, cuotas_pago = cuotas_pago }, JsonRequestBehavior.AllowGet);

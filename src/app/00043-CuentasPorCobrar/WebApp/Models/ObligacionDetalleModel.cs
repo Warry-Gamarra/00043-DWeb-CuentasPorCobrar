@@ -113,5 +113,11 @@ namespace WebApp.Models
         public int? I_TipoDocumento { get; set; }
 
         public string T_DescDocumento { get; set; }
+
+        public string T_NroRecibo { get; set; }
+
+        public string D_FecPago { get; set; }
+
+        public string T_LugarPago { get; set; }
     }
 }

@@ -116,6 +116,7 @@
     <Compile Include="Types\DataPagoObligacionesResult.cs" />
     <Compile Include="Types\DataPagoTasasResult.cs" />
     <Compile Include="Types\MultaNoVotarResult.cs" />
+    <Compile Include="Views\PagoObligacionDetalle.cs" />
     <Compile Include="Views\VW_DevolucionPago.cs" />
     <Compile Include="Views\VW_CtaDepositoProceso.cs" />
     <Compile Include="Views\VW_MatriculaAlumno.cs" />

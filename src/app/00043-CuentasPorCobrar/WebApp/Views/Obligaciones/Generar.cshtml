@@ -511,9 +511,9 @@
                         '<td>' + item.T_FecVencto + '</td>' +
                         '<td>' + item.T_TipoObligacion + '</td>' +
                         '<td>' + item.T_Pagado + '</td>' +
-                        '<td></td>' +
-                        '<td></td>' +
-                        '<td></td>' +
+                        '<td>' + item.T_NroRecibo + '</td>' +
+                        '<td>' + item.D_FecPago + '</td>' +
+                        '<td>' + item.T_LugarPago + '</td>' +
                         '</tr>';
                 });
 
@@ -533,8 +533,8 @@
                     '<td>' + item.T_NroOrden + '</td>' +
                     '<td>' + item.T_MontoOblig + '</td>' +
                     '<td>' + item.T_FecVencto + '</td>' +
-                    '<td></td>' +
-                    '<td></td>' +
+                    '<td>' + item.T_Banco + '</td>' +
+                    '<td>' + item.T_CtaDeposito + '</td>' +
                     '<td><button type="button" class="btn btn-link" onclick="AnularObligacion(' + item.I_ObligacionAluID +
                         ')"><i class="fa fa-trash"></i> Anular</button></td>' +
                     '</tr>';

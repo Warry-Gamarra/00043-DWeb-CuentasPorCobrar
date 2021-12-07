@@ -111,5 +111,9 @@ namespace WebApp.Models
         public string T_FacDesc { get; set; }
 
         public string T_DenomProg { get; set; }
+
+        public string T_Banco { get; set; }
+
+        public string T_CtaDeposito { get; set; }
     }
 }
