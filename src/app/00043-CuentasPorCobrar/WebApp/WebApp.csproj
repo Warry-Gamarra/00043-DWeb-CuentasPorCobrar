@@ -428,6 +428,7 @@
     <Compile Include="Models\AccountModel.cs" />
     <Compile Include="Models\AlumnosSinVotoExcelSource.cs" />
     <Compile Include="Models\AlumnosSinVotoSourceFactory.cs" />
+    <Compile Include="Models\AppConfiguration.cs" />
     <Compile Include="Models\CategoriaPagoModel.cs" />
     <Compile Include="Models\ConceptoModel.cs" />
     <Compile Include="Models\Facades\IReporteGeneralServiceFacade.cs" />

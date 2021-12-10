@@ -173,7 +173,8 @@ namespace WebApp.Controllers
         [HttpPost]
         public ActionResult CargarArchivoPago(HttpPostedFileBase file, CargarArchivoViewModel model)
         {
-            var result = pagosModel.CargarArchivoPagos(Server.MapPath("~/Upload/Pagos/"), file, model, WebSecurity.CurrentUserId);
+            var directorioCarga = AppConfiguration.DirectorioCarga() + "Pagos/";
+            var result = pagosModel.CargarArchivoPagos(Server.MapPath(directorioCarga), file, model, WebSecurity.CurrentUserId);
 
             switch (model.TipoArchivo)
             {
