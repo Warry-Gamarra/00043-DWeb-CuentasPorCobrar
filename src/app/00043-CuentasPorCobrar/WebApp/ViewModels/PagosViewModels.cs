@@ -37,7 +37,7 @@ namespace WebApp.ViewModels
 
         public DatosPagoViewModel(PagoEntity pagoEntity)
         {
-            this.PagoId = pagoEntity.PagoProcesId;
+            this.PagoId = pagoEntity.PagoBancoId;
             this.CodOperacion = pagoEntity.CodOperacion;
             this.EntidadRecaudadoraId = pagoEntity.EntidadRecaudaID;
             this.EntidadRecaudadora = pagoEntity.EntidadRecaudaDesc;

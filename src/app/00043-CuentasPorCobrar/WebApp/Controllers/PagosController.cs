@@ -530,12 +530,13 @@ namespace WebApp.Controllers
 
             ViewBag.EntidadesFinancieras = new SelectList(ListaEntidadesFinancieras(), "Value", "TextDisplay");
             ViewBag.TipoEstudios = new SelectList(generalServiceFacade.Listar_TipoEstudios(), "Value", "TextDisplay");
+            ViewBag.TipoPago = new SelectList(generalServiceFacade.Listar_TiposPago(), "Value", "TextDisplay");
 
             return View();
         }
 
         [HttpPost]
-        public ActionResult ExportarRecaudacionTemporalPost(int cboEntFinan, TipoEstudio? cboTipoEst, string fechaDesde, string fechaHasta)
+        public ActionResult ExportarRecaudacionTemporalPost(int cboEntFinan, TipoEstudio? cboTipoEst, TipoPago cboTipoPago, string fechaDesde, string fechaHasta)
         {
             DateTime fecDesde = DateTime.Parse(fechaDesde);
             DateTime fecHasta = DateTime.Parse(fechaHasta);
@@ -544,7 +545,7 @@ namespace WebApp.Controllers
 
             try
             {
-                MemoryStream memoryStream = pagosModel.ExportarInformacionTemporalPagos(cboEntFinan, fecDesde, fecHasta, cboTipoEst);
+                MemoryStream memoryStream = pagosModel.ExportarInformacionTemporalPagos(cboEntFinan, fecDesde, fecHasta, cboTipoEst, cboTipoPago);
                 return File(memoryStream, "text/plain", $"Recaudacion{nombreEntidad}{tipoEstudio}_de_{fecDesde.ToString("yyyyMMdd")}_a_{fecHasta.ToString("yyyyMMdd")}.txt");
             }
             catch (Exception ex)

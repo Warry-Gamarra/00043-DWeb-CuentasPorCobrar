@@ -638,6 +638,7 @@
     <Content Include="Views\Tasa\Tasas.cshtml" />
     <Content Include="Views\Tasa\_RegistrarConceptosPagoTasa.cshtml" />
     <Content Include="Views\Tasa\_MsgRegistrarConceptoTasa.cshtml" />
+    <Content Include="Views\Devoluciones\_RegistroDevolucionPago.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

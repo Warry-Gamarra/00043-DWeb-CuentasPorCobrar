@@ -144,20 +144,27 @@ namespace Domain.Services.Implementations
             return result;
         }
 
-        public List<PagoEntity> ListarPagosRegistrados(DateTime? fecIni, DateTime? fecFin, TipoEstudio? tipoEstudio, int? entRecaudaId)
+        public List<PagoEntity> ListarPagosRegistrados(DateTime? fecIni, DateTime? fecFin, TipoEstudio? tipoEstudio, int? entRecaudaId, TipoPago? tipoPago)
         {
             List<PagoEntity> result = new List<PagoEntity>();
             IEnumerable<VW_Pagos> data; 
             fecIni = fecIni ?? DateTime.ParseExact("19010101", "yyyyMMdd", CultureInfo.InvariantCulture);
             fecFin = fecFin ?? DateTime.Now.AddDays(1);
 
+            bool esObligacion = false;
+
+            if (tipoPago.HasValue)
+            {
+                esObligacion = TipoPago.Obligacion == tipoPago.Value ? true : false;
+            }
+  
             switch (tipoEstudio)
             {
                 case TipoEstudio.Pregrado:
-                    data = VW_Pagos.FindPregrado(entRecaudaId, null, fecIni.Value, fecFin.Value);
+                    data = VW_Pagos.FindPregrado(entRecaudaId, null, esObligacion, fecIni.Value, fecFin.Value);
                     break;
                 case TipoEstudio.Posgrado:
-                    data = VW_Pagos.FindPosgrado(entRecaudaId, null, fecIni.Value, fecFin.Value);
+                    data = VW_Pagos.FindPosgrado(entRecaudaId, null, esObligacion, fecIni.Value, fecFin.Value);
                     break;
                 default:
                     data = VW_Pagos.Find(entRecaudaId, null, fecIni.Value, fecFin.Value);

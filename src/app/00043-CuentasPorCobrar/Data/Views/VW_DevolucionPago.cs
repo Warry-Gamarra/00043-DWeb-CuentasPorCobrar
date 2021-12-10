@@ -15,6 +15,7 @@ namespace Data.Views
         public int I_DevolucionPagoID { get; set; }
         public int I_PagoProcesID { get; set; }
         public decimal I_MontoPagoDev { get; set; }
+        public decimal I_MontoPagado { get; set; }
         public DateTime? D_FecDevAprob { get; set; }
         public DateTime? D_FecDevPago { get; set; }
         public DateTime? D_FecProc { get; set; }

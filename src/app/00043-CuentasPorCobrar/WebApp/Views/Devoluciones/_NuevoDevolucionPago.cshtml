@@ -8,48 +8,40 @@
 </div>
 <div class="modal-body">
     <div class="container-fluid mt-2">
-        <fieldset class="mb-3">
+        <fieldset class="mb-3" id="frm_busqueda">
             <legend class="h5 border-bottom">Búsqueda de pagos</legend>
-            <form class="form-group form-row">
-                <div class="col-md-5 my-2">
-                    @Html.Label("EntidadRecaudadora", new { @class = "control-label", @for= "EntidadRecaudadora" })
-                    @Html.DropDownList("EntidadRecaudadora", ViewBag.EntidadRecaudadora as SelectList, "[ SELECIONAR ]", new { @class = "form-control form-control-sm" })
-                </div>
-                <div class="col-md-4 my-2">
-                    @Html.Label("ReferenciaPago", new { @class = "control-label", @for = "ReferenciaPago" })
-                    @Html.TextBox("ReferenciaPago", null, new { @type = "search", @class = "form-control form-control-sm text-uppercase" })
-                </div>
-
-                <div class="col-md-3 my-2">
-                    <label class="control-label d-none d-md-block">&nbsp;</label>
-                    <button class="btn btn-sm btn-info btn-block pull-right mb-2" type="button" id="btn-pago-search"><i class="fa fa-search">&nbsp;</i>Buscar</button>
+            <form id="frm-pago-search">
+                <div class="form-row">
+                    <div class="form-group col-md-7">
+                        @Html.Label("Entidad recaudadora", new { @class = "control-label", @for = "entidadRecaudadora" })
+                        @Html.DropDownList("entidadRecaudadora", ViewBag.EntidadRecaudadora as SelectList, "[ SELECIONAR ]", new { @class = "form-control" })
+                    </div>
+                    <div class="form-group col-md-5">
+                        @Html.Label("Referencia de pago", new { @class = "control-label", @for = "referenciaPago" })
+                        @Html.TextBox("referenciaPago", null, new { @type = "search", @class = "form-control text-uppercase" })
+                    </div>
+                    <div class="form-group col-12 pt-3 text-center">
+                        <button class="btn btn-info px-5" type="submit" id="btn-pago-search">
+                            <span id="icon_loading" class="spinner-border spinner-border-sm" style="display:none;" role="status" aria-hidden="true"></span>
+                            <i id="icon_search" class="fa fa-search">&nbsp;</i><span id="txt_msg">Buscar</span>
+                        </button>
+                    </div>
                 </div>
             </form>
         </fieldset>
 
         <div id="busqueda_pago">
-            
-        </div>
-        <div id="loader" class="container-fluid" style="display:none;">
-            <div class="d-flex justify-content-center">
-                <div class="spinner-border my-4 text-info" role="status" style="height: 3rem; width:3rem;">
-                    <span class="sr-only">Buscando pagos...</span>
-                </div>
-            </div>
-            <div class="d-flex justify-content-center">
-                <span id="load-message" class="h5">Buscando pagos...</span>
-            </div>
-        </div>
 
+        </div>
     </div>
 </div>
 
 <script>
 
-    $('#btn-pago-search').on('click', function (event) {
+    $('#frm-pago-search').on('submit', function (event) {
         event.preventDefault();
-        const entidadId = $('#EntidadRecaudadora').val();
-        const codreferencia = $('#ReferenciaPago').val();
+        const entidadId = $('#entidadRecaudadora').val();
+        const codreferencia = $('#referenciaPago').val();
 
         toastr.options.positionClass = 'toast-top-center';
 
@@ -80,19 +72,26 @@
             cache: false,
             beforeSend: function () {
                 $('#busqueda_pago').hide();
-                $('#loader').show();
+                $('#txt_msg').text('Buscando...');
+                $('#icon_search').hide();
+                $('#icon_loading').show();
             },
             success: function (data) {
+                $('#referenciaPago').text('');
+                $('#frm_busqueda').hide();
+                $('.modal.show .modal-dialog').addClass('modal-lg');
                 $('#busqueda_pago').html(data);
                 $('#busqueda_pago').show();
-                $('#btnsubmit').show();
+
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 toastr.options.positionClass = 'toast-bottom-right';
                 toastr.error(jqXHR.responseText);
             },
             complete: function () {
-                $('#loader').hide();
+                $('#icon_loading').hide();
+                $('#icon_search').show();
+                $('#txt_msg').text('Buscar');
             }
         });
     })

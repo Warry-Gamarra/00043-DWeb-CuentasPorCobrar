@@ -34,6 +34,17 @@ namespace WebApp.Models
             return new RegistrarDevolucionPagoViewModel(_devolucionPago.Find(devolucionId));
         }
 
+        public List<RegistrarDevolucionPagoViewModel> Find(int entidadId, string codOperacion)
+        {
+            var result = new List<RegistrarDevolucionPagoViewModel>();
+
+            foreach (var item in _devolucionPago.Find().Where(x => x.EntidadRecaudadoraId == entidadId && x.ReferenciaPago == codOperacion))
+            {
+                result.Add(new RegistrarDevolucionPagoViewModel(item));
+            }
+            return result;
+        }
+
         public Response AnularDevolucion(int devolucionPagoId, int currentUserId)
         {
             Response result = _devolucionPago.AnularDevolucion(devolucionPagoId, currentUserId);
@@ -53,6 +64,7 @@ namespace WebApp.Models
                 FecAprueba = model.FecAprueba,
                 FecDevuelve = model.FecDevuelve,
                 FecPagoRef = model.DatosPago.FecPago,
+                Comentario = model.Comentario,
             };
 
             

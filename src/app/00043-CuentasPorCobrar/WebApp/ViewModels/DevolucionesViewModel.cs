@@ -30,6 +30,7 @@ namespace WebApp.ViewModels
             this.MontoDevolucion = devolucionPago.MontoDevolucion;
             this.FecAprobacion = devolucionPago.FecAprueba;
             this.FecDevuelve = devolucionPago.FecDevuelve;
+            this.Anulado = devolucionPago.Anulado;
         }
     }
 
@@ -75,6 +76,7 @@ namespace WebApp.ViewModels
             this.EntidadRecaudadora = devolucionPago.EntidadRecaudadoraId;
             this.ReferenciaPago = devolucionPago.ReferenciaPago;
             this.MontoDevolucion = devolucionPago.MontoDevolucion;
+            this.MontoDescuento = devolucionPago.MontoPagado - devolucionPago.MontoDevolucion;
             this.FecAprueba = devolucionPago.FecAprueba;
             this.FecDevuelve = devolucionPago.FecDevuelve;
             this.Comentario = devolucionPago.Comentario;
@@ -84,7 +86,8 @@ namespace WebApp.ViewModels
                 FecPago = devolucionPago.FecPagoRef,
                 EntidadRecaudadoraId = devolucionPago.EntidadRecaudadoraId,
                 EntidadRecaudadora = devolucionPago.EntidadRecaudadoraDesc,
-                Concepto = devolucionPago.ConceptoPago
+                Concepto = devolucionPago.ConceptoPago,
+                MontoPago = devolucionPago.MontoPagado
             };
         }
 

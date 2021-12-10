@@ -75,7 +75,8 @@ namespace Domain.Entities
             this.Anio = tabla.I_Anio.ToString();
             this.Periodo = tabla.C_Periodo;
             this.CodRc = tabla.C_RcCod;
-            this.CodAlumno = tabla.C_CodAlu; 
+            this.CodAlumno = tabla.C_CodAlu;
+            this.ConceptoPagoDesc = tabla.T_Concepto;
         }
     }
 }
