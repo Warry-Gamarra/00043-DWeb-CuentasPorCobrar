@@ -109,5 +109,22 @@ namespace WebApp.Models.Facades
             return lista;
 
         }
+
+        public IEnumerable<SelectViewModel> Listar_TiposPago()
+        {
+            var lista = new List<SelectViewModel>();
+
+            lista = Enum.GetValues(typeof(TipoPago)).Cast<TipoPago>().Select(x =>
+                    new SelectViewModel()
+                    {
+                        Value = x.ToString(),
+                        TextDisplay = x.ToString()
+                    }               
+                ).ToList();
+
+            return lista;
+
+        }
+
     }
 }

@@ -76,17 +76,17 @@ namespace Data.Views
             return result;
         }
 
-        public static VW_Pagos Find(int pagoProcesID)
+        public static VW_Pagos Find(int pagoBancoID)
         {
             VW_Pagos result = new VW_Pagos();
 
             try
             {
-                string s_command = @"SELECT P.* FROM dbo.VW_Pagos P WHERE I_PagoProcesID = @I_PagoProcesID;";
+                string s_command = @"SELECT P.* FROM dbo.VW_Pagos P WHERE I_PagoBancoID = @I_PagoBancoID;";
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    result = _dbConnection.QuerySingleOrDefault<VW_Pagos>(s_command, new { I_PagoProcesID = pagoProcesID }, commandType: System.Data.CommandType.Text);
+                    result = _dbConnection.QuerySingleOrDefault<VW_Pagos>(s_command, new { I_PagoBancoID = pagoBancoID }, commandType: System.Data.CommandType.Text);
                 }
             }
             catch (Exception ex)
@@ -135,7 +135,7 @@ namespace Data.Views
             return result;
         }
 
-        public static IEnumerable<VW_Pagos> FindPregrado(int? entRecaudaId, int? dependenciaId, DateTime fecIni, DateTime fecFin)
+        public static IEnumerable<VW_Pagos> FindPregrado(int? entRecaudaId, int? dependenciaId, bool esObligacion, DateTime fecIni, DateTime fecFin)
         {
             IEnumerable<VW_Pagos> result;
 
@@ -149,6 +149,16 @@ namespace Data.Views
 
                 if (entRecaudaId.HasValue)
                     s_command += " AND I_EntidadFinanID = @I_EntidadFinanID ";
+
+
+                if (esObligacion)
+                {
+                    s_command += " AND B_EsObligacion = 1 ";
+                }
+                else
+                {
+                    s_command += " AND B_EsObligacion = 0 ";
+                }
 
                 s_command += ";";
 
@@ -172,7 +182,7 @@ namespace Data.Views
             return result;
         }
 
-        public static IEnumerable<VW_Pagos> FindPosgrado(int? entRecaudaId, int? dependenciaId, DateTime fecIni, DateTime fecFin)
+        public static IEnumerable<VW_Pagos> FindPosgrado(int? entRecaudaId, int? dependenciaId, bool esObligacion, DateTime fecIni, DateTime fecFin)
         {
             IEnumerable<VW_Pagos> result;
 
@@ -186,6 +196,15 @@ namespace Data.Views
 
                 if (entRecaudaId.HasValue)
                     s_command += " AND I_EntidadFinanID = @I_EntidadFinanID ";
+
+                if (esObligacion)
+                {
+                    s_command += " AND B_EsObligacion = 1 ";
+                }
+                else
+                {
+                    s_command += " AND B_EsObligacion = 0 ";
+                }
 
                 s_command += ";";
 

@@ -14,7 +14,7 @@
     </div>
 
     <div class="mt-5">
-        <div class="col-md-8 col-12 offset-md-2">
+        <div class="col-md-10 col-12 offset-md-1">
             <div class="card">
                 <div class="card-body bg-light-gray">
                     <div class="card-title">
@@ -23,13 +23,17 @@
                     @using (Html.BeginForm("ExportarRecaudacionTemporalPost", "Pagos", FormMethod.Post))
                     {
                         <div class="row mt-3">
-                            <div class="form-group col-lg-4 col-md-6 col-sm-12 col-12">
+                            <div class="form-group col-lg-3 col-md-6 col-sm-12 col-12">
                                 <label for="cboEntFinan" class="control-label">Entidad recaudadora origen</label>
                                 @Html.DropDownList("cboEntFinan", ViewBag.EntidadesFinancieras as SelectList, "SELECCIONAR", new { @class = "form-control form-control-sm text-uppercase", @required = "required" })
                             </div>
-                            <div class="form-group col-lg-4 col-md-6 col-sm-12 col-12">
+                            <div class="form-group col-lg-3 col-md-6 col-sm-12 col-12">
                                 <label for="cboTipoEst" class="control-label">Tipo de estudio</label>
                                 @Html.DropDownList("cboTipoEst", ViewBag.TipoEstudios as SelectList, "TODOS", new { @class = "form-control form-control-sm text-uppercase" })
+                            </div>
+                            <div class="form-group col-lg-2 col-md-6 col-sm-12 col-12">
+                                <label for="cboTipoPago" class="control-label">Tipo de pago</label>
+                                @Html.DropDownList("cboTipoPago", ViewBag.TipoPago as SelectList, new { @class = "form-control form-control-sm text-uppercase" })
                             </div>
                             <div class="form-group col-lg-4 col-md-6 col-sm-12 col-12">
                                 <div id="datepicker">
