@@ -101,7 +101,7 @@ namespace WebApp.Models
                 C_CodTasa = model.C_CodTasa,
                 B_Calculado = (!model.I_Calculado.HasValue || model.I_Calculado.Value == 0) ? false : true,
                 I_Calculado = model.I_Calculado,
-                B_AnioPeriodo = model.B_AnioPeriodo,
+                B_AnioPeriodo = (model.I_Anio.HasValue && model.I_Periodo.HasValue) ? true : false,
                 I_Anio = model.I_Anio,
                 I_Periodo = model.I_Periodo,
                 B_Especialidad = model.C_CodRc.HasValue,

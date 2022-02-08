@@ -756,10 +756,11 @@ namespace WebApp.Models
             return memoryStream;
         }
 
-        public IEnumerable<PagoBancoObligacionViewModel> ListarPagoBancoObligacion(int? idEntidadFinanciera, int? ctdDeposito, string codOperacion, string codDepositante, DateTime? fechaInicio, DateTime? fechaFinal,
-            int? condicion)
+        public IEnumerable<PagoBancoObligacionViewModel> ListarPagoBancoObligacion(ConsultaPagosBancoObligacionesViewModel parametro)
         {
-            var lista = pagoService.ListarPagosBanco(idEntidadFinanciera, ctdDeposito, codOperacion, codDepositante, fechaInicio, fechaFinal, condicion);
+            var lista = pagoService.ListarPagosBanco(parametro.banco, parametro.ctaDeposito, parametro.codOperacion, 
+                parametro.codAlumno, parametro.fechaInicio, parametro.fechaFin, parametro.condicion,
+                parametro.nomAlumno, parametro.apePaternoAlumno, parametro.apeMaternoAlumno);
 
             var result = lista.Select(x => Mapper.PagoBancoObligacionDTO_ToPagoBancoObligacionViewModel(x));
 

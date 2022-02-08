@@ -15,6 +15,12 @@ namespace WebApp.ViewModels
 
         public string codAlumno { get; set; }
 
+        public string nomAlumno { get; set; }
+
+        public string apePaternoAlumno { get; set; }
+
+        public string apeMaternoAlumno { get; set; }
+
         public int? banco { get; set; }
 
         public int? ctaDeposito { get; set; }

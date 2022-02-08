@@ -91,7 +91,8 @@ namespace Domain.Services.Implementations
         }
 
         public IEnumerable<EstadoObligacionDTO> EstadoObligacionAlumnos(int anio, int? periodo, string codFac, string codEsc, string codRc, 
-            bool? esIngresante, bool? estaPagado, bool? obligacionGenerada, DateTime? fechaInicio, DateTime? fechaFin, string codAlu)
+            bool? esIngresante, bool? estaPagado, bool? obligacionGenerada, DateTime? fechaInicio, DateTime? fechaFin, string codAlu,
+            string nomAlu, string apePaternoAlumno, string apeMaternoAlumno)
         {
             var pr = new USP_S_ListadoEstadoObligaciones_Parameters()
             {
@@ -106,7 +107,10 @@ namespace Domain.Services.Implementations
                 B_ObligacionGenerada = obligacionGenerada,
                 F_FecIni = fechaInicio,
                 F_FecFin = fechaFin,
-                C_CodAlu = codAlu
+                C_CodAlu = codAlu,
+                T_NomAlu = nomAlu,
+                T_ApePaternoAlu = apePaternoAlumno,
+                T_ApeMaternoAlu = apeMaternoAlumno
             };
 
             var lista = USP_S_ListadoEstadoObligaciones.Execute(pr);

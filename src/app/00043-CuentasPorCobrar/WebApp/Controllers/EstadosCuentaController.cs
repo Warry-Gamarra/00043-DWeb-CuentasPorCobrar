@@ -1380,8 +1380,7 @@ namespace WebApp.Controllers
         {
             if (model.buscar)
             {
-                model.resultado = pagoModel.ListarPagoBancoObligacion(model.banco, model.ctaDeposito, model.codOperacion, model.codAlumno,
-                model.fechaInicio, model.fechaFin, model.condicion);
+                model.resultado = pagoModel.ListarPagoBancoObligacion(model);
             }
             
             ViewBag.Title = "Consulta de Ingresos de Pago de Obligaciones";
@@ -1399,8 +1398,7 @@ namespace WebApp.Controllers
         [Route("consulta/ingresos-de-obligaciones/descarga")]
         public ActionResult ListarPagosBancoObligacionesDescargaExcel(ConsultaPagosBancoObligacionesViewModel model)
         {
-            model.resultado = pagoModel.ListarPagoBancoObligacion(model.banco, model.ctaDeposito, model.codOperacion, model.codAlumno,
-                model.fechaInicio, model.fechaFin, model.condicion);
+            model.resultado = pagoModel.ListarPagoBancoObligacion(model);
 
             using (var workbook = new XLWorkbook())
             {

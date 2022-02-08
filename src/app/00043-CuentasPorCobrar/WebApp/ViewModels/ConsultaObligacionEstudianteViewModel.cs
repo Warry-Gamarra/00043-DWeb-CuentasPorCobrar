@@ -21,6 +21,12 @@ namespace WebApp.ViewModels
 
         public string codAlumno { get; set; }
 
+        public string nomAlumno { get; set; }
+
+        public string apePaternoAlumno { get; set; }
+
+        public string apeMaternoAlumno { get; set; }
+
         public bool? esIngresante { get; set; }
 
         public bool? estaPagado { get; set; }

@@ -218,15 +218,11 @@ namespace WebApp.Controllers
                 switch (model.tipoEstudio)
                 {
                     case TipoEstudio.Pregrado:
-                        model.resultado = reportePregradoServiceFacade.EstadoObligacionAlumnos(
-                            model.anio.Value, model.periodo, model.codFac, model.codEsc, model.codRc, model.esIngresante, 
-                            model.estaPagado, model.obligacionGenerada, model.fechaInicio, model.fechaFin, model.codAlumno);
+                        model.resultado = reportePregradoServiceFacade.EstadoObligacionAlumnos(model);
                         break;
 
                     case TipoEstudio.Posgrado:
-                        model.resultado = reportePosgradoServiceFacade.EstadoObligacionAlumnos(
-                            model.anio.Value, model.periodo, model.codFac, model.codEsc, model.codRc, model.esIngresante, 
-                            model.estaPagado, model.obligacionGenerada, model.fechaInicio, model.fechaFin, model.codAlumno);
+                        model.resultado = reportePosgradoServiceFacade.EstadoObligacionAlumnos(model);
                         break;
                 }
             }
@@ -258,15 +254,11 @@ namespace WebApp.Controllers
             switch (model.tipoEstudio)
             {
                 case TipoEstudio.Pregrado:
-                    model.resultado = reportePregradoServiceFacade.EstadoObligacionAlumnos(
-                        model.anio.Value, model.periodo, model.codFac, model.codEsc, model.codRc, model.esIngresante, 
-                        model.estaPagado, model.obligacionGenerada, model.fechaInicio, model.fechaFin, model.codAlumno);
+                    model.resultado = reportePregradoServiceFacade.EstadoObligacionAlumnos(model);
                     break;
 
                 case TipoEstudio.Posgrado:
-                    model.resultado = reportePosgradoServiceFacade.EstadoObligacionAlumnos(
-                        model.anio.Value, model.periodo, model.codFac, model.codEsc, model.codRc, model.esIngresante, 
-                        model.estaPagado, model.obligacionGenerada, model.fechaInicio, model.fechaFin, model.codAlumno);
+                    model.resultado = reportePosgradoServiceFacade.EstadoObligacionAlumnos(model);
                     break;
             }
 

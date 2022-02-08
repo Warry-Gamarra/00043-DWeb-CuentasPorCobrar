@@ -565,9 +565,14 @@ namespace WebApp.Controllers
 
             if (!obligacion.B_Pagado)
             {
-                ViewBag.Pagos = pagosModel.ListarPagoBancoObligacion(null, null, null, obligacion.C_CodAlu, null, null, null)
-                .Where(x => x.I_CondicionPagoID != (int)CatalogoTipoPago.Correcto && x.I_CondicionPagoID != (int)CatalogoTipoPago.Extorno)
-                .OrderBy(x => x.D_FecPago);
+                var parametroBusqueda = new ConsultaPagosBancoObligacionesViewModel()
+                {
+                    codAlumno = obligacion.C_CodAlu
+                };
+
+                ViewBag.Pagos = pagosModel.ListarPagoBancoObligacion(parametroBusqueda)
+                    .Where(x => x.I_CondicionPagoID != (int)CatalogoTipoPago.Correcto && x.I_CondicionPagoID != (int)CatalogoTipoPago.Extorno)
+                    .OrderBy(x => x.D_FecPago);
             }
             
             return PartialView("_AsignarPagoObligacion");

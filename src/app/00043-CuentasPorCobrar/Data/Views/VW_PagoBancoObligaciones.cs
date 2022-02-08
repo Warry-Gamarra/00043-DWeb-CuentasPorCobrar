@@ -115,7 +115,7 @@ namespace Data.Views
         }
 
         public static IEnumerable<VW_PagoBancoObligaciones> GetAll(int? idEntidadFinanciera, int? ctdDeposito, string codOperacion, string codDepositante, DateTime? fechaInicio, DateTime? fechaFinal,
-            int? condicion)
+            int? condicion, string nomAlumno, string apellidoPaterno, string apellidoMaterno)
         {
             string s_command, filters;
             IEnumerable<VW_PagoBancoObligaciones> result;
@@ -176,6 +176,27 @@ namespace Data.Views
                     filters = filters + (filters.Length == 0 ? "WHERE " : "AND ") + "b.I_CondicionPagoID = @I_CondicionPagoID ";
 
                     parameters.Add(name: "I_CondicionPagoID", dbType: DbType.Int32, value: condicion);
+                }
+
+                if (!String.IsNullOrWhiteSpace(nomAlumno))
+                {
+                    filters = filters + (filters.Length == 0 ? "WHERE " : "AND ") + "ISNULL(b.T_Nombre, b.T_NomDepositante) LIKE @T_Nombre + '%' ";
+
+                    parameters.Add(name: "T_Nombre", dbType: DbType.String, value: nomAlumno);
+                }
+
+                if (!String.IsNullOrWhiteSpace(apellidoPaterno))
+                {
+                    filters = filters + (filters.Length == 0 ? "WHERE " : "AND ") + "ISNULL(b.T_ApePaterno, b.T_NomDepositante) LIKE @T_ApePaterno + '%' ";
+
+                    parameters.Add(name: "T_ApePaterno", dbType: DbType.String, value: apellidoPaterno);
+                }
+
+                if (!String.IsNullOrWhiteSpace(apellidoMaterno))
+                {
+                    filters = filters + (filters.Length == 0 ? "WHERE " : "AND ") + "ISNULL(b.T_ApeMaterno, b.T_NomDepositante) LIKE @T_ApeMaterno + '%' ";
+
+                    parameters.Add(name: "T_ApeMaterno", dbType: DbType.String, value: apellidoMaterno);
                 }
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))

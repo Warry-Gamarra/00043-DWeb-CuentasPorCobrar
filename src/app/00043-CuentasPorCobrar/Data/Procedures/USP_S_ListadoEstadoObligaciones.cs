@@ -87,6 +87,9 @@ namespace Data.Procedures
                     parameters.Add(name: "F_FecFin", dbType: DbType.Date, value: pr.F_FecFin);
                     parameters.Add(name: "B_MontoPagadoDiff", dbType: DbType.Boolean, value: pr.B_MontoPagadoDiff);
                     parameters.Add(name: "C_CodAlu", dbType: DbType.String, value: pr.C_CodAlu);
+                    parameters.Add(name: "T_NomAlu", dbType: DbType.String, value: pr.T_NomAlu);
+                    parameters.Add(name: "T_ApePaternoAlu", dbType: DbType.String, value: pr.T_ApePaternoAlu);
+                    parameters.Add(name: "T_ApeMaternoAlu", dbType: DbType.String, value: pr.T_ApeMaternoAlu);
 
                     result = _dbConnection.Query<USP_S_ListadoEstadoObligaciones>(s_command, parameters, commandType: CommandType.StoredProcedure);
                 }
@@ -115,5 +118,8 @@ namespace Data.Procedures
         public DateTime? F_FecFin { get; set; }
         public bool? B_MontoPagadoDiff { get; set; }
         public string C_CodAlu { get; set; }
+        public string T_NomAlu { get; set; }
+        public string T_ApePaternoAlu { get; set; }
+        public string T_ApeMaternoAlu { get; set; }
     }
 }
