@@ -391,7 +391,8 @@ namespace WebApp.Models
                 I_MontoPago = model.I_MontoPago,
                 I_InteresMora = 0,
                 T_LugarPago = model.lugarPago,
-                T_InformacionAdicional = null
+                T_InformacionAdicional = null,
+                C_CodigoInterno = model.C_CodigoInterno
             };
 
             return result;

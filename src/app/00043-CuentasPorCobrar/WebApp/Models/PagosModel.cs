@@ -198,7 +198,8 @@ namespace WebApp.Models
                 {
                     B_Correcto = true,
                     I_CondicionPagoID = (int)CondicionPago.Correcto,
-                    T_ErrorMessage = String.Empty
+                    T_ErrorMessage = String.Empty,
+                    I_EntidadFinanID = entFinanId
                 };
 
                 pagoEntity.C_CodOperacion = line.Substring(columnas["C_CodOperacion"].Inicial - 1, columnas["C_CodOperacion"].Final - columnas["C_CodOperacion"].Inicial + 1).Trim();
@@ -234,6 +235,15 @@ namespace WebApp.Models
                 }
 
                 pagoEntity.C_Moneda = line.Substring(columnas["C_Moneda"].Inicial - 1, columnas["C_Moneda"].Final - columnas["C_Moneda"].Inicial + 1).Trim();
+
+                if (pagoEntity.I_EntidadFinanID.Equals(Bancos.BCP_ID))
+                {
+                    pagoEntity.C_Moneda = (pagoEntity.C_Moneda == "0") ? "PEN" : "USD";
+                }
+                else if (pagoEntity.I_EntidadFinanID.Equals(Bancos.BANCO_COMERCIO_ID))
+                {
+                    pagoEntity.C_Moneda = (pagoEntity.C_Moneda == "01") ? "PEN" : "USD";
+                }
 
                 string sInteresMora = line.Substring(columnas["I_InteresMora"].Inicial - 1, columnas["I_MontoPago"].Final - columnas["I_MontoPago"].Inicial + 1);
 
@@ -294,8 +304,6 @@ namespace WebApp.Models
                     pagoEntity.T_ErrorMessage = ex.Message;
                 }
 
-                pagoEntity.I_EntidadFinanID = entFinanId;
-
                 pagoEntity.C_Extorno = line.Substring(columnas["C_Extorno"].Inicial - 1, columnas["C_Extorno"].Final - columnas["C_Extorno"].Inicial + 1).Trim();
 
                 if (pagoEntity.B_Correcto && pagoEntity.I_EntidadFinanID.Equals(Bancos.BCP_ID) && pagoEntity.C_Extorno.Equals(ConstantesBCP.CodExtorno))
@@ -353,7 +361,8 @@ namespace WebApp.Models
                 var pagoEntity = new PagoTasaEntity()
                 {
                     B_Correcto = true,
-                    T_ErrorMessage = String.Empty
+                    T_ErrorMessage = String.Empty,
+                    I_EntidadFinanID = entFinanId
                 };
 
                 pagoEntity.C_CodDepositante = line.Substring(columnas["C_CodDepositante"].Inicial - 1, columnas["C_CodDepositante"].Final - columnas["C_CodDepositante"].Inicial + 1).Trim();
@@ -369,8 +378,6 @@ namespace WebApp.Models
                 pagoEntity.C_CodOperacion = line.Substring(columnas["C_CodOperacion"].Inicial - 1, columnas["C_CodOperacion"].Final - columnas["C_CodOperacion"].Inicial + 1).Trim();
 
                 pagoEntity.T_Referencia = line.Substring(columnas["T_Referencia"].Inicial - 1, columnas["T_Referencia"].Final - columnas["T_Referencia"].Inicial + 1).Trim();
-
-                pagoEntity.I_EntidadFinanID = entFinanId;
 
                 string sFechaPago = line.Substring(columnas["D_FecPago"].Inicial - 1, columnas["D_FecPago"].Final - columnas["D_FecPago"].Inicial + 1);
 
@@ -400,6 +407,15 @@ namespace WebApp.Models
 
                 pagoEntity.C_Moneda = line.Substring(columnas["C_Moneda"].Inicial - 1, columnas["C_Moneda"].Final - columnas["C_Moneda"].Inicial + 1).Trim();
 
+                if (pagoEntity.I_EntidadFinanID.Equals(Bancos.BCP_ID))
+                {
+                    pagoEntity.C_Moneda = (pagoEntity.C_Moneda == "0") ? "PEN" : "USD";
+                }
+                else if (pagoEntity.I_EntidadFinanID.Equals(Bancos.BANCO_COMERCIO_ID))
+                {
+                    pagoEntity.C_Moneda = (pagoEntity.C_Moneda == "01") ? "PEN" : "USD";
+                }
+
                 string sInteresMora = line.Substring(columnas["I_InteresMora"].Inicial - 1, columnas["I_MontoPago"].Final - columnas["I_MontoPago"].Inicial + 1);
 
                 try
@@ -427,6 +443,8 @@ namespace WebApp.Models
                 pagoEntity.T_LugarPago = line.Substring(columnas["T_LugarPago"].Inicial - 1, columnas["T_LugarPago"].Final - columnas["T_LugarPago"].Inicial + 1).Trim();
 
                 pagoEntity.T_InformacionAdicional = line.Substring(columnas["T_InformacionAdicional"].Inicial - 1, columnas["T_InformacionAdicional"].Final - columnas["T_InformacionAdicional"].Inicial + 1).Trim();
+
+                pagoEntity.C_CodigoInterno = line.Substring(columnas["C_CodigoInterno"].Inicial - 1, columnas["C_CodigoInterno"].Final - columnas["C_CodigoInterno"].Inicial + 1).Trim();
 
                 result.Add(pagoEntity);
             }

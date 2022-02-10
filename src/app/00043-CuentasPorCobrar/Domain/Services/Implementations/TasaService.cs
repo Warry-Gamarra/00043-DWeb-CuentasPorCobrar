@@ -63,7 +63,8 @@ namespace Domain.Services.Implementations
                         T_LugarPago = x.T_LugarPago,
                         T_InformacionAdicional = x.T_InformacionAdicional,
                         B_Success = false,
-                        T_ErrorMessage = x.T_ErrorMessage
+                        T_ErrorMessage = x.T_ErrorMessage,
+                        C_CodigoInterno = x.C_CodigoInterno
                     });
 
                 spResult.AddRange(pagosObservados);

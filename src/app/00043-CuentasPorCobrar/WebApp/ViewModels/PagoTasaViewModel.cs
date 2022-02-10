@@ -60,6 +60,8 @@ namespace WebApp.ViewModels
         [Display(Name = "Monto")]
         public decimal I_MontoPago { get; set; }
 
+        public string C_CodigoInterno { get; set; }
+
         public PagoTasaViewModel()
         {
             cantidad = 1;

@@ -598,6 +598,7 @@ namespace Domain.Entities
             dataTable.Columns.Add("I_InteresMora");
             dataTable.Columns.Add("T_LugarPago");
             dataTable.Columns.Add("T_InformacionAdicional");
+            dataTable.Columns.Add("C_CodigoInterno");
 
             dataPagoTasas.ForEach(x => dataTable.Rows.Add(
                 x.C_CodDepositante,
@@ -615,7 +616,8 @@ namespace Domain.Entities
                 x.I_MontoPago,
                 x.I_InteresMora,
                 x.T_LugarPago,
-                x.T_InformacionAdicional
+                x.T_InformacionAdicional,
+                x.C_CodigoInterno
             ));
 
             return dataTable;

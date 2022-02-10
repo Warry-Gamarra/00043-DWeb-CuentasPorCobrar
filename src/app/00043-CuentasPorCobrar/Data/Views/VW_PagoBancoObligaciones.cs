@@ -199,6 +199,11 @@ namespace Data.Views
                     parameters.Add(name: "T_ApeMaterno", dbType: DbType.String, value: apellidoMaterno);
                 }
 
+                if (filters.Length > 0)
+                {
+                    filters = filters + " COLLATE Modern_Spanish_CI_AI";
+                }
+
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
                     result = _dbConnection.Query<VW_PagoBancoObligaciones>(s_command + filters, parameters, commandType: CommandType.Text);

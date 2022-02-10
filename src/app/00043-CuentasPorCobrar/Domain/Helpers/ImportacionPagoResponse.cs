@@ -79,7 +79,8 @@ namespace Domain.Helpers
                 T_LugarPago = x.T_LugarPago,
                 T_InformacionAdicional = x.T_InformacionAdicional,
                 B_Success = x.B_Success,
-                T_ErrorMessage = x.T_ErrorMessage
+                T_ErrorMessage = x.T_ErrorMessage,
+                C_CodigoInterno = x.C_CodigoInterno
             });
 
             var errors = ListaResultadosTasas.Where(x => !x.B_Success).Count();

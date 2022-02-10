@@ -91,6 +91,14 @@
             </div>
 
             <div class="form-group form-row">
+                <label for="C_CodigoInterno" class="control-label col-form-label col-md-3 col-sm-4 col-12">Código interno (BCP)</label>
+                <div class="col-md-9 col-sm-10 col-12">
+                    @Html.TextBoxFor(m => m.C_CodigoInterno, new { @class = "form-control", @maxlength = "250" })
+                    <p class="text-danger small">@Html.ValidationMessageFor(m => m.C_CodigoInterno)</p>
+                </div>
+            </div>
+
+            <div class="form-group form-row">
                 <label for="EntidadFinanciera" class="control-label col-form-label col-md-3 col-sm-4 col-12">Entidad financiera</label>
                 <div class="col-md-9 col-sm-10 col-12">
                     @Html.DropDownListFor(model => model.idEntidadFinanciera, ViewBag.EntidadesFinancieras as SelectList, "[ SELECCIONAR ]", new { @class = "form-control" })
@@ -209,6 +217,9 @@
         $('#form-tasas-manual #horas').val(0);
         $('#form-tasas-manual #minutos').val(0);
         $('#form-tasas-manual #lugarPago').val('');
+
+        $('#form-tasas-manual #I_MontoPago').val(0);
+        $('#form-tasas-manual #C_CodigoInterno').val('');
 
         $('#form-tasas-manual #div_footer #div_msg').remove();
         $('.field-validation-error').html('').addClass('field-validation-valid').removeClass('field-validation-error');

@@ -82,7 +82,6 @@
                 $('#icon-submit').removeClass('fa-cloud-upload').addClass('fa-spin fa-cog');
             },
             success: function (result) {
-                debugger;
                 let alert = result.Success ? 'success' : 'danger';
 
                 $('.modal-footer').html(
@@ -93,7 +92,6 @@
                     '<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>');
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                debugger;
                 toastr.error(errorThrown);
                 $('#icon-submit').addClass('fa-cloud-upload').removeClass('fa-spin fa-cog');
             }

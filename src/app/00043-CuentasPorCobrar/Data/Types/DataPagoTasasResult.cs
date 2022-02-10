@@ -27,5 +27,6 @@ namespace Data.Types
         public string T_InformacionAdicional { get; set; }
         public bool B_Success { get; set; }
         public string T_ErrorMessage { get; set; }
+        public string C_CodigoInterno { get; set; }
     }
 }

@@ -176,6 +176,10 @@ namespace WebApp.Controllers
             var directorioCarga = AppConfiguration.DirectorioCarga() + "Pagos/";
             var result = pagosModel.CargarArchivoPagos(Server.MapPath(directorioCarga), file, model, WebSecurity.CurrentUserId);
 
+            string nombreBanco = entidadRecaudadora.Find(model.EntidadRecaudadora).NombreEntidad;
+
+            Session["BANCO_PAGO"] = nombreBanco;
+
             switch (model.TipoArchivo)
             {
                 case TipoPago.Obligacion:
@@ -200,43 +204,47 @@ namespace WebApp.Controllers
                 var worksheet = workbook.Worksheets.Add("PagoObligaciones");
                 var currentRow = 1;
 
-                worksheet.Cell(currentRow, 1).Value = "CodOperacion";
-                worksheet.Cell(currentRow, 2).Value = "CodAlumno";
-                worksheet.Cell(currentRow, 3).Value = "NomAlumno";
-                worksheet.Cell(currentRow, 4).Value = "CuotaPago";
-                worksheet.Cell(currentRow, 5).Value = "FechaVcto";
-                worksheet.Cell(currentRow, 6).Value = "FechaPago";
-                worksheet.Cell(currentRow, 7).Value = "Cantidad";
-                worksheet.Cell(currentRow, 8).Value = "Moneda";
-                worksheet.Cell(currentRow, 9).Value = "MontoPago";
-                worksheet.Cell(currentRow, 10).Value = "InteresMoratorio";
-                worksheet.Cell(currentRow, 11).Value = "LugarPago";
-                worksheet.Cell(currentRow, 12).Value = "InformacionAdicional";
-                worksheet.Cell(currentRow, 13).Value = "Estado";
-                worksheet.Cell(currentRow, 14).Value = "Mensaje";
+                string nomBanco = Session["BANCO_PAGO"].ToString();
+
+                worksheet.Cell(currentRow, 1).Value = "Banco";
+                worksheet.Cell(currentRow, 2).Value = "CodOperacion";
+                worksheet.Cell(currentRow, 3).Value = "CodAlumno";
+                worksheet.Cell(currentRow, 4).Value = "NomAlumno";
+                worksheet.Cell(currentRow, 5).Value = "CuotaPago";
+                worksheet.Cell(currentRow, 6).Value = "FechaVcto";
+                worksheet.Cell(currentRow, 7).Value = "FechaPago";
+                worksheet.Cell(currentRow, 8).Value = "Cantidad";
+                worksheet.Cell(currentRow, 9).Value = "Moneda";
+                worksheet.Cell(currentRow, 10).Value = "MontoPago";
+                worksheet.Cell(currentRow, 11).Value = "InteresMoratorio";
+                worksheet.Cell(currentRow, 12).Value = "LugarPago";
+                worksheet.Cell(currentRow, 13).Value = "InformacionAdicional";
+                worksheet.Cell(currentRow, 14).Value = "Estado";
+                worksheet.Cell(currentRow, 15).Value = "Mensaje";
 
                 var resultados = (IEnumerable<Domain.Entities.PagoObligacionObsEntity>)Session["PAGO_OBLIG_RESULT"];
 
                 foreach (var item in resultados.OrderBy(x => x.D_FecPago))
                 {
                     currentRow++;
-                    worksheet.Cell(currentRow, 1).SetValue<string>(item.C_CodOperacion);
-                    worksheet.Cell(currentRow, 2).SetValue<string>(item.C_CodDepositante);
-                    worksheet.Cell(currentRow, 3).SetValue<string>(item.T_NomDepositante);
-                    worksheet.Cell(currentRow, 4).SetValue<string>(item.T_ProcesoDesc);
-                    worksheet.Cell(currentRow, 5).SetValue<string>(item.D_FecVencto.ToString(FormatosDateTime.BASIC_DATE));
-                    worksheet.Cell(currentRow, 6).SetValue<string>(item.D_FecPago.ToString(FormatosDateTime.BASIC_DATETIME));
-                    worksheet.Cell(currentRow, 7).SetValue<string>(item.I_Cantidad.ToString());
-                    worksheet.Cell(currentRow, 8).SetValue<string>(item.C_Moneda);
-                    worksheet.Cell(currentRow, 9).SetValue<decimal?>(item.I_MontoPago);
-                    worksheet.Cell(currentRow, 10).SetValue<decimal?>(item.I_InteresMora);
-                    worksheet.Cell(currentRow, 11).SetValue<string>(item.T_LugarPago);
-                    worksheet.Cell(currentRow, 12).SetValue<string>(item.T_InformacionAdicional);
-                    worksheet.Cell(currentRow, 13).SetValue<string>(item.B_Success ? "Correcto" : "Observado");
-                    worksheet.Cell(currentRow, 14).SetValue<string>(item.T_ErrorMessage);
+                    worksheet.Cell(currentRow, 1).SetValue<string>(nomBanco);
+                    worksheet.Cell(currentRow, 2).SetValue<string>(item.C_CodOperacion);
+                    worksheet.Cell(currentRow, 3).SetValue<string>(item.C_CodDepositante);
+                    worksheet.Cell(currentRow, 4).SetValue<string>(item.T_NomDepositante);
+                    worksheet.Cell(currentRow, 5).SetValue<string>(item.T_ProcesoDesc);
+                    worksheet.Cell(currentRow, 6).SetValue<string>(item.D_FecVencto.ToString(FormatosDateTime.BASIC_DATE));
+                    worksheet.Cell(currentRow, 7).SetValue<string>(item.D_FecPago.ToString(FormatosDateTime.BASIC_DATETIME));
+                    worksheet.Cell(currentRow, 8).SetValue<string>(item.I_Cantidad.ToString());
+                    worksheet.Cell(currentRow, 9).SetValue<string>(item.C_Moneda);
+                    worksheet.Cell(currentRow, 10).SetValue<decimal?>(item.I_MontoPago);
+                    worksheet.Cell(currentRow, 11).SetValue<decimal?>(item.I_InteresMora);
+                    worksheet.Cell(currentRow, 12).SetValue<string>(item.T_LugarPago);
+                    worksheet.Cell(currentRow, 13).SetValue<string>(item.T_InformacionAdicional);
+                    worksheet.Cell(currentRow, 14).SetValue<string>(item.B_Success ? "Correcto" : "Observado");
+                    worksheet.Cell(currentRow, 15).SetValue<string>(item.T_ErrorMessage);
                 }
 
-                worksheet.Range(worksheet.Cell(2, 9), worksheet.Cell(currentRow, 10)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
+                worksheet.Range(worksheet.Cell(2, 10), worksheet.Cell(currentRow, 11)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
 
                 using (var stream = new MemoryStream())
                 {
@@ -259,45 +267,51 @@ namespace WebApp.Controllers
                 var worksheet = workbook.Worksheets.Add("PagoTasas");
                 var currentRow = 1;
 
-                worksheet.Cell(currentRow, 1).Value = "CodDepositante";
-                worksheet.Cell(currentRow, 2).Value = "NomDepositante";
-                worksheet.Cell(currentRow, 3).Value = "CodTasa";
-                worksheet.Cell(currentRow, 4).Value = "TasaDesc";
-                worksheet.Cell(currentRow, 5).Value = "CodOperacion";
-                worksheet.Cell(currentRow, 6).Value = "Referencia";
-                worksheet.Cell(currentRow, 7).Value = "FechaPago";
-                worksheet.Cell(currentRow, 8).Value = "Cantidad";
-                worksheet.Cell(currentRow, 9).Value = "Moneda";
-                worksheet.Cell(currentRow, 10).Value = "MontoPago";
-                worksheet.Cell(currentRow, 11).Value = "Recargo";
-                worksheet.Cell(currentRow, 12).Value = "LugarPago";
-                worksheet.Cell(currentRow, 13).Value = "InformacionAdicional";
-                worksheet.Cell(currentRow, 14).Value = "Estado";
-                worksheet.Cell(currentRow, 15).Value = "Mensaje";
+                string nomBanco = Session["BANCO_PAGO"].ToString();
+
+                worksheet.Cell(currentRow, 1).Value = "Banco";
+                worksheet.Cell(currentRow, 2).Value = "CodDepositante";
+                worksheet.Cell(currentRow, 3).Value = "NomDepositante";
+                worksheet.Cell(currentRow, 4).Value = "CodTasa";
+                worksheet.Cell(currentRow, 5).Value = "TasaDesc";
+                worksheet.Cell(currentRow, 6).Value = "CodOperacion";
+                worksheet.Cell(currentRow, 7).Value = "Referencia";
+                worksheet.Cell(currentRow, 8).Value = "CodigoInterno (BCP)";
+                worksheet.Cell(currentRow, 9).Value = "FechaPago";
+                worksheet.Cell(currentRow, 10).Value = "Cantidad";
+                worksheet.Cell(currentRow, 11).Value = "Moneda";
+                worksheet.Cell(currentRow, 12).Value = "MontoPago";
+                worksheet.Cell(currentRow, 13).Value = "Recargo";
+                worksheet.Cell(currentRow, 14).Value = "LugarPago";
+                worksheet.Cell(currentRow, 15).Value = "InformacionAdicional";
+                worksheet.Cell(currentRow, 16).Value = "Estado";
+                worksheet.Cell(currentRow, 17).Value = "Mensaje";
 
                 var resultados = (IEnumerable<Domain.Entities.PagoTasaObsEntity>)Session["PAGO_TASA_RESULT"];
 
                 foreach (var item in resultados.OrderBy(x => x.D_FecPago))
                 {
                     currentRow++;
-                    worksheet.Cell(currentRow, 1).SetValue<string>(item.C_CodDepositante);
-                    worksheet.Cell(currentRow, 2).SetValue<string>(item.T_NomDepositante);
-                    worksheet.Cell(currentRow, 3).SetValue<string>(item.C_CodTasa);
-                    worksheet.Cell(currentRow, 4).SetValue<string>(item.T_TasaDesc);
-                    worksheet.Cell(currentRow, 5).SetValue<string>(item.C_CodOperacion);
-                    worksheet.Cell(currentRow, 6).SetValue<string>(item.C_Referencia);
-                    worksheet.Cell(currentRow, 7).SetValue<string>(item.D_FecPago.ToString(FormatosDateTime.BASIC_DATETIME));
-                    worksheet.Cell(currentRow, 8).SetValue<string>(item.I_Cantidad.ToString());
-                    worksheet.Cell(currentRow, 9).SetValue<string>(item.C_Moneda);
-                    worksheet.Cell(currentRow, 10).SetValue<decimal?>(item.I_MontoPago);
-                    worksheet.Cell(currentRow, 11).SetValue<decimal?>(item.I_InteresMora);
-                    worksheet.Cell(currentRow, 12).SetValue<string>(item.T_LugarPago);
-                    worksheet.Cell(currentRow, 13).SetValue<string>(item.T_InformacionAdicional);
-                    worksheet.Cell(currentRow, 14).SetValue<string>(item.B_Success ? "Correcto" : "Observado");
-                    worksheet.Cell(currentRow, 15).SetValue<string>(item.T_ErrorMessage);
+                    worksheet.Cell(currentRow, 1).SetValue<string>(nomBanco);
+                    worksheet.Cell(currentRow, 2).SetValue<string>(item.C_CodDepositante);
+                    worksheet.Cell(currentRow, 3).SetValue<string>(item.T_NomDepositante);
+                    worksheet.Cell(currentRow, 4).SetValue<string>(item.C_CodTasa);
+                    worksheet.Cell(currentRow, 5).SetValue<string>(item.T_TasaDesc);
+                    worksheet.Cell(currentRow, 6).SetValue<string>(item.C_CodOperacion);
+                    worksheet.Cell(currentRow, 7).SetValue<string>(item.C_Referencia);
+                    worksheet.Cell(currentRow, 8).SetValue<string>(item.C_CodigoInterno);
+                    worksheet.Cell(currentRow, 9).SetValue<string>(item.D_FecPago.ToString(FormatosDateTime.BASIC_DATETIME));
+                    worksheet.Cell(currentRow, 10).SetValue<string>(item.I_Cantidad.ToString());
+                    worksheet.Cell(currentRow, 11).SetValue<string>(item.C_Moneda);
+                    worksheet.Cell(currentRow, 12).SetValue<decimal?>(item.I_MontoPago);
+                    worksheet.Cell(currentRow, 13).SetValue<decimal?>(item.I_InteresMora);
+                    worksheet.Cell(currentRow, 14).SetValue<string>(item.T_LugarPago);
+                    worksheet.Cell(currentRow, 15).SetValue<string>(item.T_InformacionAdicional);
+                    worksheet.Cell(currentRow, 16).SetValue<string>(item.B_Success ? "Correcto" : "Observado");
+                    worksheet.Cell(currentRow, 17).SetValue<string>(item.T_ErrorMessage);
                 }
 
-                worksheet.Range(worksheet.Cell(2, 10), worksheet.Cell(currentRow, 11)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
+                worksheet.Range(worksheet.Cell(2, 12), worksheet.Cell(currentRow, 13)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
 
                 using (var stream = new MemoryStream())
                 {

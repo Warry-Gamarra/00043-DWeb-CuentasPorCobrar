@@ -33,6 +33,8 @@ namespace WebApp.Controllers
 
             if (model.buscar)
             {
+                model.fechaHasta = String.IsNullOrEmpty(model.fechaHasta) ? model.fechaHasta : (model.fechaHasta + " 23:59:59");
+
                 model.resultado = tasaService.listarPagoTasas(model.entidadFinanciera, model.idCtaDeposito, model.codOperacion, model.fechaInicio, model.fechaFin,
                     model.codDepositante, model.nomDepositante);
             }
@@ -50,6 +52,8 @@ namespace WebApp.Controllers
         {
             if (model.buscar)
             {
+                model.fechaHasta = String.IsNullOrEmpty(model.fechaHasta) ? model.fechaHasta : (model.fechaHasta + " 23:59:59");
+
                 model.resultado = tasaService.listarPagoTasas(model.entidadFinanciera, model.idCtaDeposito, model.codOperacion, model.fechaInicio, model.fechaFin,
                     model.codDepositante, model.nomDepositante);
             }
