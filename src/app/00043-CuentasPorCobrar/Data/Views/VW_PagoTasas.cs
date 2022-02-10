@@ -46,8 +46,10 @@ namespace Data.Views
 
         public DateTime D_FecCre { get; set; }
 
+        public string C_CodigoInterno { get; set; }
+
         public static IEnumerable<VW_PagoTasas> GetAll(int? idEntidadFinanciera, int? idCtaDeposito, string codOperacion, DateTime? fechaInicio, DateTime? fechaFinal,
-                string codDepositante, string nomDepositante)
+                string codDepositante, string nomDepositante, string codInterno)
         {
             string s_command, filters;
             IEnumerable<VW_PagoTasas> result;
@@ -108,6 +110,13 @@ namespace Data.Views
                     filters = filters + (filters.Length == 0 ? "WHERE " : "AND ") + "DATEDIFF(DAY, t.D_FecPago, @D_FechaFin) >= 0";
 
                     parameters.Add(name: "D_FechaFin", dbType: DbType.DateTime, value: fechaFinal.Value);
+                }
+
+                if (!String.IsNullOrWhiteSpace(codInterno))
+                {
+                    filters = filters + (filters.Length == 0 ? "WHERE " : "AND ") + "t.C_CodigoInterno = @C_CodigoInterno ";
+
+                    parameters.Add(name: "C_CodigoInterno", dbType: DbType.String, value: codInterno);
                 }
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))

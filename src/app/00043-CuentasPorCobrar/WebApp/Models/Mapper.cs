@@ -418,7 +418,8 @@ namespace WebApp.Models
                 D_FecPago = dto.D_FecPago,
                 I_MontoPagado = dto.I_MontoPagado,
                 I_InteresMoratorio = dto.I_InteresMoratorio,
-                D_FecCre = dto.D_FecCre
+                D_FecCre = dto.D_FecCre,
+                C_CodigoInterno = dto.C_CodigoInterno
             };
 
             return model;

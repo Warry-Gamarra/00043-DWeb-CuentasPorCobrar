@@ -59,10 +59,10 @@ namespace WebApp.Models.Facades
             return result;
         }
 
-        public IEnumerable<PagoTasaModel> listarPagoTasas(int? idEntidadFinanciera, int? idCtaDeposito, string codOperacion, DateTime? fechaInicio, DateTime? fechaFinal,
-            string codDepositante, string nomDepositante)
+        public IEnumerable<PagoTasaModel> listarPagoTasas(ConsultaPagoTasasViewModel model)
         {
-            var lista = tasaService.Listar_Pago_Tasas(idEntidadFinanciera, idCtaDeposito, codOperacion, fechaInicio, fechaFinal, codDepositante, nomDepositante);
+            var lista = tasaService.Listar_Pago_Tasas(model.entidadFinanciera, model.idCtaDeposito, model.codOperacion,
+                model.fechaInicio, model.fechaFin, model.codDepositante, model.nomDepositante, model.codInterno);
 
             var result = lista.Select(x => Mapper.PagoTasaDTO_To_PagoTasaModel(x));
 

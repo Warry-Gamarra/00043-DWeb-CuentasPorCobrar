@@ -29,6 +29,8 @@ namespace WebApp.Models
 
         public string C_CodOperacion { get; set; }
 
+        public string C_CodigoInterno { get; set; }
+
         public string C_CodDepositante { get; set; }
 
         public string T_NomDepositante { get; set; }

@@ -84,9 +84,10 @@ namespace Domain.Services.Implementations
         }
 
         public IEnumerable<PagoTasaDTO> Listar_Pago_Tasas(int? idEntidadFinanciera, int? idCtaDeposito, string codOperacion, DateTime? fechaInicio, DateTime? fechaFinal,
-            string codDepositante, string nomDepositante)
+            string codDepositante, string nomDepositante, string codInterno)
         {
-            var pagoTasas = VW_PagoTasas.GetAll(idEntidadFinanciera, idCtaDeposito, codOperacion, fechaInicio, fechaFinal, codDepositante, nomDepositante);
+            var pagoTasas = VW_PagoTasas.GetAll(idEntidadFinanciera, idCtaDeposito, codOperacion, fechaInicio, fechaFinal, 
+                codDepositante, nomDepositante, codInterno);
 
             var result = pagoTasas.Select(x => Mapper.VW_PagoTasas_To_PagoTasaDTO(x));
 

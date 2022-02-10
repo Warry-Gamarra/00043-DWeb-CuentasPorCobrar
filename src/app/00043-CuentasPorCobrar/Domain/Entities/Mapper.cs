@@ -643,7 +643,8 @@ namespace Domain.Entities
                 D_FecPago = vw.D_FecPago,
                 I_MontoPagado = vw.I_MontoPagado,
                 I_InteresMoratorio = vw.I_InteresMoratorio,
-                D_FecCre = vw.D_FecCre
+                D_FecCre = vw.D_FecCre,
+                C_CodigoInterno = vw.C_CodigoInterno
             };
 
             return dto;

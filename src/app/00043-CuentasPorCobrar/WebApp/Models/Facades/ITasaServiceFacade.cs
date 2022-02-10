@@ -13,8 +13,7 @@ namespace WebApp.Models.Facades
 
         IEnumerable<TasaViewModel> listarTodoTasas();
 
-        IEnumerable<PagoTasaModel> listarPagoTasas(int? idEntidadFinanciera, int? idCtaDeposito, string codOperacion, DateTime? fechaInicio, DateTime? fechaFinal,
-            string codDepositante, string nomDepositante);
+        IEnumerable<PagoTasaModel> listarPagoTasas(ConsultaPagoTasasViewModel model);
 
         Response Grabar_TasaUnfv(RegistrarTasaViewModel model, int currentUserId);
 

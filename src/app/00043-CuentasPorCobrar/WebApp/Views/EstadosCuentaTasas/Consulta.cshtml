@@ -53,6 +53,11 @@
                                 </div>
 
                                 <div class="form-group col-xl-2 col-lg-6 col-md-5 col-sm-12 col-12">
+                                    <label for="codInterno">Cod. interno</label>
+                                    @Html.TextBoxFor(model => model.codInterno, new { @class = "form-control form-control-sm" })
+                                </div>
+
+                                <div class="form-group col-xl-2 col-lg-6 col-md-5 col-sm-12 col-12">
                                     <label for="codDepositante">Cod. depositante</label>
                                     @Html.TextBoxFor(model => model.codDepositante, new { @class = "form-control form-control-sm" })
                                 </div>
@@ -106,6 +111,7 @@
 
                         @Html.Grid(Model.resultado).Columns(columns => {
                             columns.Add(c => c.C_CodOperacion).Titled("Cod.Operación").Css("text-center");
+                            columns.Add(c => c.C_CodigoInterno).Titled("Cod.Interno (BCP)").Css("text-center");
                             columns.Add(c => c.C_CodDepositante).Titled("Cod.Depositante").Filterable(true);
                             columns.Add(c => c.T_NomDepositante).Titled("Nom.Depositante").Filterable(true);
                             columns.Add(c => c.C_CodTasa).Titled("Tasa").Css("text-center");

@@ -41,5 +41,7 @@ namespace Domain.Entities
         public decimal I_InteresMoratorio { get; set; }
 
         public DateTime D_FecCre { get; set; }
+
+        public string C_CodigoInterno { get; set; }
     }
 }
