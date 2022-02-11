@@ -157,7 +157,8 @@ namespace Domain.Services.Implementations
                         T_ErrorMessage = x.T_ErrorMessage,
                         T_InformacionAdicional = x.T_InformacionAdicional,
                         D_FecVencto = x.D_FecVencto,
-                        T_ProcesoDesc = x.T_ProcesoDesc
+                        T_ProcesoDesc = x.T_ProcesoDesc,
+                        C_CodigoInterno = x.C_CodigoInterno
                     });
 
                 spResult.AddRange(pagosObservados);

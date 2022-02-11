@@ -255,8 +255,9 @@ namespace Domain.Entities
             dataTable.Columns.Add("T_InformacionAdicional").AllowDBNull = true;
             dataTable.Columns.Add("T_ProcesoDesc").AllowDBNull = true;
             dataTable.Columns.Add("I_CondicionPagoID");
-            dataTable.Columns.Add("T_Observacion").AllowDBNull = true; ;
-
+            dataTable.Columns.Add("T_Observacion").AllowDBNull = true;
+            dataTable.Columns.Add("C_CodigoInterno");
+            
             dataPagoObligaciones.ForEach(x => dataTable.Rows.Add(
                 x.C_CodOperacion,
                 x.T_NomDepositante,
@@ -276,7 +277,8 @@ namespace Domain.Entities
                 x.T_InformacionAdicional,
                 x.T_ProcesoDesc,
                 x.I_CondicionPagoID,
-                x.T_ErrorMessage
+                x.T_ErrorMessage,
+                x.C_CodigoInterno
             ));
 
             return dataTable;
@@ -677,7 +679,8 @@ namespace Domain.Entities
                 I_CondicionPagoID = vw.I_CondicionPagoID,
                 T_Condicion = vw.T_Condicion,
                 I_MontoProcesado = vw.I_MontoProcesado,
-                T_MotivoCoreccion = vw.T_MotivoCoreccion
+                T_MotivoCoreccion = vw.T_MotivoCoreccion,
+                C_CodigoInterno = vw.C_CodigoInterno
             };
 
             return dto;

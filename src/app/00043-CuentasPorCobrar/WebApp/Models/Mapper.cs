@@ -452,7 +452,8 @@ namespace WebApp.Models
                 I_CondicionPagoID = dto.I_CondicionPagoID,
                 T_Condicion = dto.T_Condicion,
                 I_MontoProcesado = dto.I_MontoProcesado,
-                T_MotivoCoreccion = dto.T_MotivoCoreccion
+                T_MotivoCoreccion = dto.T_MotivoCoreccion,
+                C_CodigoInterno = dto.C_CodigoInterno
             };
 
             return model;

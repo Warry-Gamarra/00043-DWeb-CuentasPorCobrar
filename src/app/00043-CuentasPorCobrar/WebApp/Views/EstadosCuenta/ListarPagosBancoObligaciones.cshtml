@@ -57,6 +57,10 @@
                                     <label for="codOperacion">Cod Operación</label>
                                     @Html.TextBoxFor(model => model.codOperacion, new { @class = "form-control form-control-sm" })
                                 </div>
+                                <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
+                                    <label for="codInterno">Cod Interno (BCP)</label>
+                                    @Html.TextBoxFor(model => model.codInterno, new { @class = "form-control form-control-sm" })
+                                </div>
                                 <div class="form-group col-lg-2 col-md-2 col-sm-4 col-6">
                                     <label for="banco">Entidad Financiera</label>
                                     @Html.DropDownListFor(model => model.banco, ViewBag.EntidadesFinancieras as SelectList, "TODOS",
@@ -120,6 +124,7 @@
                         columns.Add(c => c.T_EntidadDesc).Titled("Banco");
                         columns.Add(c => c.C_NumeroCuenta).Titled("Cta.Deposito").Filterable(true).Css("text-center");
                         columns.Add(c => c.C_CodOperacion).Titled("Cod.Operación").Css("text-center");
+                        columns.Add(c => c.C_CodigoInterno).Titled("Cod.Interno (BCP)").Css("text-center");
                         columns.Add(c => c.C_CodDepositante).Titled("Cod.Depositante").Filterable(true).Css("text-center");
                         columns.Add(c => c.T_DatosDepositante).Titled("Depositante").Filterable(true);
                         columns.Add(c => c.D_FecPago).Titled("Fecha Pago").Filterable(true).Css("text-center");

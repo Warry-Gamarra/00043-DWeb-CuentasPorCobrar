@@ -114,7 +114,7 @@ namespace Data.Views
 
                 if (!String.IsNullOrWhiteSpace(codInterno))
                 {
-                    filters = filters + (filters.Length == 0 ? "WHERE " : "AND ") + "t.C_CodigoInterno = @C_CodigoInterno ";
+                    filters = filters + (filters.Length == 0 ? "WHERE " : "AND ") + "t.C_CodigoInterno LIKE '%' + @C_CodigoInterno ";
 
                     parameters.Add(name: "C_CodigoInterno", dbType: DbType.String, value: codInterno);
                 }

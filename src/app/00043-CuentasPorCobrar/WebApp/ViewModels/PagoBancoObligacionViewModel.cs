@@ -112,5 +112,7 @@ namespace WebApp.ViewModels
         public decimal I_MontoProcesado { get; set; }
 
         public string T_MotivoCoreccion { get; set; }
+
+        public string C_CodigoInterno { get; set; }
     }
 }

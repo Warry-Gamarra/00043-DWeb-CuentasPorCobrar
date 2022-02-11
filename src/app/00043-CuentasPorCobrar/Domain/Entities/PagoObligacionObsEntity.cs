@@ -30,5 +30,6 @@ namespace Domain.Entities
         public string T_ErrorMessage { get; set; }
         public string T_InformacionAdicional { get; set; }
         public string T_ProcesoDesc { get; set; }
+        public string C_CodigoInterno { get; set; }
     }
 }

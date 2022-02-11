@@ -60,6 +60,8 @@ namespace Data.Views
 
         public string T_MotivoCoreccion { get; set; }
 
+        public string C_CodigoInterno { get; set; }
+
         public static VW_PagoBancoObligaciones FindByID(int idPagoBanco)
         {
             string s_command;
@@ -115,7 +117,7 @@ namespace Data.Views
         }
 
         public static IEnumerable<VW_PagoBancoObligaciones> GetAll(int? idEntidadFinanciera, int? ctdDeposito, string codOperacion, string codDepositante, DateTime? fechaInicio, DateTime? fechaFinal,
-            int? condicion, string nomAlumno, string apellidoPaterno, string apellidoMaterno)
+            int? condicion, string nomAlumno, string apellidoPaterno, string apellidoMaterno, string codigoInterno)
         {
             string s_command, filters;
             IEnumerable<VW_PagoBancoObligaciones> result;
@@ -197,6 +199,13 @@ namespace Data.Views
                     filters = filters + (filters.Length == 0 ? "WHERE " : "AND ") + "ISNULL(b.T_ApeMaterno, b.T_NomDepositante) LIKE @T_ApeMaterno + '%' ";
 
                     parameters.Add(name: "T_ApeMaterno", dbType: DbType.String, value: apellidoMaterno);
+                }
+
+                if (!String.IsNullOrWhiteSpace(codigoInterno))
+                {
+                    filters = filters + (filters.Length == 0 ? "WHERE " : "AND ") + "b.C_CodigoInterno LIKE '%' + @C_CodigoInterno ";
+
+                    parameters.Add(name: "C_CodigoInterno", dbType: DbType.String, value: codigoInterno);
                 }
 
                 if (filters.Length > 0)

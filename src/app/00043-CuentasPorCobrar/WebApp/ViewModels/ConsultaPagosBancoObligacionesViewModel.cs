@@ -13,6 +13,8 @@ namespace WebApp.ViewModels
 
         public string codOperacion { get; set; }
 
+        public string codInterno { get; set; }
+
         public string codAlumno { get; set; }
 
         public string nomAlumno { get; set; }

@@ -313,9 +313,11 @@ namespace WebApp.Models
                     pagoEntity.T_ErrorMessage = "Pago extornado";
                 }
 
-                pagoEntity.T_InformacionAdicional = line.Substring(columnas["T_InformacionAdicional"].Inicial - 1, columnas["T_InformacionAdicional"].Final - columnas["T_InformacionAdicional"].Inicial + 1);
+                pagoEntity.T_InformacionAdicional = line.Substring(columnas["T_InformacionAdicional"].Inicial - 1, columnas["T_InformacionAdicional"].Final - columnas["T_InformacionAdicional"].Inicial + 1).Trim();
 
                 pagoEntity.I_CondicionPagoID = pagoEntity.B_Correcto ? pagoEntity.I_CondicionPagoID : 0;
+
+                pagoEntity.C_CodigoInterno = line.Substring(columnas["C_CodigoInterno"].Inicial - 1, columnas["C_CodigoInterno"].Final - columnas["C_CodigoInterno"].Inicial + 1).Trim();
 
                 result.Add(pagoEntity);
             }
@@ -778,7 +780,7 @@ namespace WebApp.Models
         {
             var lista = pagoService.ListarPagosBanco(parametro.banco, parametro.ctaDeposito, parametro.codOperacion, 
                 parametro.codAlumno, parametro.fechaInicio, parametro.fechaFin, parametro.condicion,
-                parametro.nomAlumno, parametro.apePaternoAlumno, parametro.apeMaternoAlumno);
+                parametro.nomAlumno, parametro.apePaternoAlumno, parametro.apeMaternoAlumno, parametro.codInterno);
 
             var result = lista.Select(x => Mapper.PagoBancoObligacionDTO_ToPagoBancoObligacionViewModel(x));
 
