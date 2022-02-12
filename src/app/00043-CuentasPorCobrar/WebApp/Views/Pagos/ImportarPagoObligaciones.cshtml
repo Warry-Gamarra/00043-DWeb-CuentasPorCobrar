@@ -23,19 +23,19 @@
             <h1 class="">@ViewBag.Title <small></small></h1>
         </section>
     </div>
-    <div class="mt-4">
-        <div class="col-12">
-            <p>
-                <a href="@Url.Action("RegistrarPagoObligacion", "Pagos", new { area = ""})" class="btn btn-primary px-5 modal-link-lg float-right"><i class="fa fa-edit">&nbsp;</i> Registro manual</a>
-            </p>
-            <p>
-                <a href="@Url.Action("SeleccionarArchivoObligaciones", "Pagos", new { area = ""})" class="btn btn-primary px-5 modal-link-lg float-right"><i class="fa fa-paperclip">&nbsp;</i> Adjuntar archivo</a>
-            </p>
-            
-            
-            <p class="h5 text-secondary">Recepción de información enviada por el BANCO</p>
-        </div>
+
+
+    <div class="col-12 my-4">
+        <p class="h5 text-secondary">Recepción de información enviada por el BANCO</p>
+        <a href="@Url.Action("SeleccionarArchivoObligaciones","Pagos", new { area = "" })" class="btn btn-primary px-5 modal-link-lg">
+            <i class="fa fa-paperclip">&nbsp;</i> Adjuntar archivo
+        </a>
+
+        <a href="@Url.Action("RegistrarPagoObligacion","Pagos", new { area = "", tipo = "tasas" })" class="btn btn-primary px-5 modal-link-lg">
+            <i class="fa fa-edit">&nbsp;</i> Registro manual
+        </a>
     </div>
+
     <div class="mt-5">
         <div class="col-12">
             <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
@@ -45,6 +45,7 @@
                     </a>
                 </li>
             </ul>
+            
             <div class="tab-content" id="pills-tabContent">
                 <div class="tab-pane fade show active" id="pills-files" role="tabpanel" aria-labelledby="pills-files-tab">
                     <div class="col-12 my-4">
@@ -56,8 +57,6 @@
                                         <th>Entidad recaudadora</th>
                                         <th>Tipo archivo</th>
                                         <th class="text-center">Fecha carga</th>
-                                        @*<th class="text-center">Tamaño</th>
-                                        <th></th>*@
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -68,17 +67,13 @@
                                             <td>@item.EntidadRecaudadora</td>
                                             <td>@item.TipoArchivo</td>
                                             <td>@item.FecCarga</td>
-                                            @*<td>@item.FileSize</td>
-                                            <td>
-                                                <a href="@item.UrlFile"><i class="fa fa-download">&nbsp;</i>Descargar</a>
-                                            </td>*@
                                         </tr>
                                     }
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                </div>                
+                </div>
             </div>
         </div>
     </div>

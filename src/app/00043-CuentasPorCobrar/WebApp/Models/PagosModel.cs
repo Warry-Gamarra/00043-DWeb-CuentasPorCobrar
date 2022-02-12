@@ -49,6 +49,8 @@ namespace WebApp.Models
             string fileName = "";
             string filePathSaved = "";
             int cantFilasReg = 0;
+            var tipoArchivo = TipoArchivoEntFinan.Recaudacion_Obligaciones;
+
             try
             {
                 fileName = GenerarNombreArchivo(model.EntidadRecaudadora, file);
@@ -83,17 +85,19 @@ namespace WebApp.Models
                         else
                             response = new ImportacionPagoResponse() { Message = "No se encontró una estructura de columnas configuradas para el archivo." };
 
+                        tipoArchivo = TipoArchivoEntFinan.Recaudacion_Tasas;
+
                         break;
 
                     default:
                         response = new ImportacionPagoResponse() { Message = "No se reconoce el tipo de archivo." };
+
                         break;
                 }
 
                 if (response.Success)
                 {
-                    GrabarHistorialCargaArchivo(cantFilasReg, fileName, filePathSaved, currentUserId,
-                        model.EntidadRecaudadora, (int)TipoArchivoEntFinan.Recaudacion_Obligaciones);
+                    GrabarHistorialCargaArchivo(cantFilasReg, fileName, filePathSaved, currentUserId,model.EntidadRecaudadora, (int)tipoArchivo);
                     ResponseModel.Success(response);
                 }
                 else
@@ -635,9 +639,9 @@ namespace WebApp.Models
             return result;
         }
 
-        public IEnumerable<ArchivoImportadoViewModel> ListarArchivosCargados()
+        public IEnumerable<ArchivoImportadoViewModel> ListarArchivosCargados(TipoArchivoEntFinan tipoArchivo)
         {
-            var lista = pagoService.ListarArchivosImportados(TipoArchivoEntFinan.Recaudacion_Obligaciones);
+            var lista = pagoService.ListarArchivosImportados(tipoArchivo);
 
             var result = lista.Select(x => Mapper.ArchivoImportadoDTO_To_ArchivoImportadoViewModel(x));
 

@@ -131,7 +131,7 @@ namespace WebApp.Controllers
         {
             ViewBag.Title = "Cargar pagos de obligaciones";
 
-            var model = pagosModel.ListarArchivosCargados();
+            var model = pagosModel.ListarArchivosCargados(TipoArchivoEntFinan.Recaudacion_Obligaciones);
 
             return View(model);
         }
@@ -153,7 +153,9 @@ namespace WebApp.Controllers
         public ActionResult ImportarPagoTasas()
         {
             ViewBag.Title = "Cargar pagos de tasas";
-            var model = new List<ArchivoImportadoViewModel>();
+
+            var model = pagosModel.ListarArchivosCargados(TipoArchivoEntFinan.Recaudacion_Tasas);
+
             return View(model);
         }
 
@@ -174,6 +176,7 @@ namespace WebApp.Controllers
         public ActionResult CargarArchivoPago(HttpPostedFileBase file, CargarArchivoViewModel model)
         {
             var directorioCarga = AppConfiguration.DirectorioCarga() + "Pagos/";
+
             var result = pagosModel.CargarArchivoPagos(Server.MapPath(directorioCarga), file, model, WebSecurity.CurrentUserId);
 
             string nombreBanco = entidadRecaudadora.Find(model.EntidadRecaudadora).NombreEntidad;
