@@ -303,5 +303,31 @@
             $('#' + div + ' #loading').css('display', 'none');
             $('#' + div + ' #loading h6').html('');
         }
+
+        function actualizarMontosCabecera(idObligacion, cabMontoObligacion, cabMontoPagado) {
+            let montoObligacion = "0.00";
+            let montoPagado = "0.00";
+
+            $.ajax({
+                type: 'GET',
+                url: ('@Url.Action("GetCuotaPago", "Service", new { httproute = "ActionApi" })/' + idObligacion),
+                dataType: 'json',
+                beforeSend: function () {
+                },
+                success: function (data) {
+                    if (data !== null) {
+                        montoObligacion = data.T_MontoOblig;
+                        montoPagado = data.T_MontoPagadoActual;
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                },
+                complete: function () {
+                    cabMontoObligacion.html(montoObligacion);
+
+                    cabMontoPagado.html(montoPagado);
+                }
+            });
+        }
     </script>
 }

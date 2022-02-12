@@ -70,7 +70,7 @@ namespace WebApp.Controllers
             }
             string codBanco = categoriaPagoModel.Find(id).CodBcoComercio;
             List<SelectGroupViewModel> lista = procesoModel.Listar_Combo_CtaDepositoHabilitadas(id);
-            
+
             return new { CodBanco = codBanco, CuentasDeposito = lista };
         }
 
@@ -100,7 +100,8 @@ namespace WebApp.Controllers
             var entidades = ctasDeposito.GroupBy(x => x.I_EntidadFinanID);
 
             var result = entidades.Select(
-                x => new SelectViewModel() {
+                x => new SelectViewModel()
+                {
                     Value = x.Key.ToString(),
                     TextDisplay = x.First().T_EntidadDesc
                 });
@@ -141,7 +142,8 @@ namespace WebApp.Controllers
 
             var result = _cuentaDeposito.Find()
                 .Where(x => x.I_EntidadFinanId == id)
-                .Select(x => new SelectViewModel() {
+                .Select(x => new SelectViewModel()
+                {
                     Value = x.I_CtaDepID.ToString(),
                     TextDisplay = x.C_NumeroCuenta
                 });
@@ -188,7 +190,7 @@ namespace WebApp.Controllers
                 codAlumno = codAlumno
             };
 
-            return  pagoModel.ListarPagoBancoObligacion(parametro)
+            return pagoModel.ListarPagoBancoObligacion(parametro)
                 .Where(x => x.I_CondicionPagoID != (int)CatalogoTipoPago.Correcto && x.I_CondicionPagoID != (int)CatalogoTipoPago.Extorno)
                 .OrderBy(x => x.T_DatosDepositante);
         }
@@ -203,6 +205,14 @@ namespace WebApp.Controllers
         public List<ObligacionDetalleModel> GetDetalleObligacion(int id)
         {
             return _obligacionServiceFacade.Obtener_DetalleObligacion_X_Obligacion(id);
+        }
+
+        // GET: api/service/GetCuotaPago/id
+        public CuotaPagoModel GetCuotaPago(int id)
+        {
+            var obligacion = _obligacionServiceFacade.Obtener_CuotaPago(id);
+
+            return obligacion;
         }
     }
 }

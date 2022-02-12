@@ -10,7 +10,7 @@
     <button type="button" class="close closeModal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 </div>
 
-<div class="modal-body">
+<div class="modal-body" id="cabeceraObligacion">
     <dl class="row">
         <dt class="col-sm-3">Alumno</dt>
         <dd class="col-sm-9">@obligacion.T_NombresCompletos</dd>
@@ -25,13 +25,13 @@
         <dd class="col-sm-9">@obligacion.T_ProcesoDesc</dd>
 
         <dt class="col-sm-3">Monto</dt>
-        <dd class="col-sm-9">@obligacion.T_MontoOblig</dd>
+        <dd class="col-sm-9" id="montoObligacion">@obligacion.T_MontoOblig</dd>
 
         <dt class="col-sm-3">Vencimiento</dt>
         <dd class="col-sm-9">@obligacion.T_FecVencto</dd>
 
         <dt class="col-sm-3">Pagado a la fecha</dt>
-        <dd class="col-sm-9">@obligacion.T_MontoPagadoActual</dd>
+        <dd class="col-sm-9" id="montoPagado">@obligacion.T_MontoPagadoActual</dd>
     </dl>
 </div>
 
@@ -83,7 +83,9 @@
 <script type="text/javascript">
     $(document).on('click', '#tblPagos .btnDesenlazarPago', function (e) {
         let idPagoBanco = $(this).data('id-pago-banco');
-
+        let idObligacion = @obligacion.I_ObligacionAluID;
+        let filaActual = $(this).parents('tr');
+        
         Swal.fire({
             title: '',
             text: "¿Está seguro de desenlazar este pago a la obligación actual?.",
@@ -119,6 +121,13 @@
 
                             if (data.Value) {
                                 icon = MESSAGE_TYPE.SUCCESS;
+
+                                filaActual.remove();
+
+                                let cabMontoObligacion = $('#cabeceraObligacion #montoObligacion');
+                                let cabMontoPagado = $('#cabeceraObligacion #montoPagado');
+
+                                actualizarMontosCabecera(idObligacion, cabMontoObligacion, cabMontoPagado);
                             }
 
                             Swal.fire({

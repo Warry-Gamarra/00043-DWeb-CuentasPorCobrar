@@ -26,13 +26,13 @@
         <dd class="col-sm-9">@obligacion.T_ProcesoDesc</dd>
 
         <dt class="col-sm-3">Monto</dt>
-        <dd class="col-sm-9" id="montoOblig">@obligacion.T_MontoOblig</dd>
+        <dd class="col-sm-9" id="montoObligacion">@obligacion.T_MontoOblig</dd>
 
         <dt class="col-sm-3">Vencimiento</dt>
         <dd class="col-sm-9">@obligacion.T_FecVencto</dd>
 
         <dt class="col-sm-3">Pagado a la fecha</dt>
-        <dd class="col-sm-9">@obligacion.T_MontoPagadoActual</dd>
+        <dd class="col-sm-9" id="montoPagado">@obligacion.T_MontoPagadoActual</dd>
     </dl>
 </div>
 
@@ -229,8 +229,6 @@
             success: function (data) {
 
                 if (data !== null) {
-
-                    let montoObligacion = 0;
                     let html = '';
 
                     $.each(data, function (i, item) {
@@ -243,13 +241,14 @@
                             '<td>' + (item.B_Pagado ? '' : '<button class="btn btn-success btn-sm btEditarObligacion" data-id-obligacion-detalle="' + item.I_ObligacionAluDetID + '">' +
                             'Editar</button>') + '</td>' +
                             '</tr>';
-
-                        montoObligacion += item.I_Monto;
                     });
 
                     tablaDet.html(html);
 
-                    $('#cabeceraObligacion #montoOblig').html(parseFloat(montoObligacion).toFixed(2));
+                    let cabMontoObligacion = $('#cabeceraObligacion #montoObligacion');
+                    let cabMontoPagado = $('#cabeceraObligacion #montoPagado');
+                    let idObligacion = @obligacion.I_ObligacionAluID;
+                    actualizarMontosCabecera(idObligacion, cabMontoObligacion, cabMontoPagado);
                 }
             },
             error: function (xhr, ajaxOptions, thrownError) {
@@ -260,3 +259,4 @@
         });
     }
 </script>
+
