@@ -125,11 +125,12 @@ namespace Domain.Entities
             _userRepository.T_CorreoUsuario = user.Person.correo;
             _userRepository.D_FecAlta = DateTime.Now;
             _userRepository.RoleId = user.Rol.Id;
+            _userRepository.RoleName = _roleRepository.Find().SingleOrDefault(x => x.RoleId == user.Rol.Id).RoleName;
 
             switch (saveOption)
             {
                 case SaveOption.Insert:
-                    return CreateAccount(_userRepository, user.Rol.Id);
+                    return CreateAccount(_userRepository);
                 case SaveOption.Update:
                     return UpdateAccount(_userRepository);
             }
@@ -137,7 +138,7 @@ namespace Domain.Entities
         }
 
 
-        private Response CreateAccount(VW_Usuario user, int roleId)
+        private Response CreateAccount(VW_Usuario user)
         {
             if (_userRepository.Find(user.UserName) != null)
             {
@@ -160,10 +161,10 @@ namespace Domain.Entities
                     B_Habilitado = true,
                     B_Eliminado = false
                 });
-            string roleName = _roleRepository.Find().SingleOrDefault(x => x.RoleId == roleId).RoleName;
-            if (!Roles.IsUserInRole(user.UserName, roleName))
+
+            if (!Roles.IsUserInRole(user.UserName, user.RoleName))
             {
-                Roles.AddUserToRole(user.UserName, roleName);
+                Roles.AddUserToRole(user.UserName, user.RoleName);
             }
 
             _userRepository.UserId = _userRepository.Find(user.UserName).UserId;
@@ -179,7 +180,7 @@ namespace Domain.Entities
             else
             {
                 ((SimpleMembershipProvider)Membership.Provider).DeleteAccount(user.UserName);
-                Roles.RemoveUserFromRole(user.UserName, roleName);
+                Roles.RemoveUserFromRole(user.UserName, user.RoleName);
                 ((SimpleMembershipProvider)Membership.Provider).DeleteUser(user.UserName, true);
 
                 result.Value = false;
@@ -190,6 +191,12 @@ namespace Domain.Entities
 
         private Response UpdateAccount(VW_Usuario user)
         {
+            var currentRoles = Roles.GetRolesForUser(user.UserName).ToArray();
+
+            Roles.RemoveUserFromRoles(user.UserName, currentRoles);
+
+            Roles.AddUserToRole(user.UserName, user.RoleName);
+
             if (user.I_DatosUsuarioID == 0 || !user.I_DatosUsuarioID.HasValue)
             {
                 return new Response(_userRepository.Insert());
