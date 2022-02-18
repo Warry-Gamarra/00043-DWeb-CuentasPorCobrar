@@ -93,7 +93,7 @@ namespace Data.Views
 
                 if (!String.IsNullOrWhiteSpace(nomDepositante))
                 {
-                    filters = filters + (filters.Length == 0 ? "WHERE " : "AND ") + "t.T_NomDepositante LIKE '%' + @T_NomDepositante + '%' ";
+                    filters = filters + (filters.Length == 0 ? "WHERE " : "AND ") + "t.T_NomDepositante LIKE '%' + @T_NomDepositante + '%' COLLATE Modern_Spanish_CI_AI ";
 
                     parameters.Add(name: "T_NomDepositante", dbType: DbType.String, value: nomDepositante);
                 }

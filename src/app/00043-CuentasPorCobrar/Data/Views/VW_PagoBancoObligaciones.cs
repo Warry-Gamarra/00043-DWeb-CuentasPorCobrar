@@ -182,21 +182,21 @@ namespace Data.Views
 
                 if (!String.IsNullOrWhiteSpace(nomAlumno))
                 {
-                    filters = filters + (filters.Length == 0 ? "WHERE " : "AND ") + "ISNULL(b.T_Nombre, b.T_NomDepositante) LIKE @T_Nombre + '%' ";
+                    filters = filters + (filters.Length == 0 ? "WHERE " : "AND ") + "ISNULL(b.T_Nombre, b.T_NomDepositante) LIKE @T_Nombre + '%' COLLATE Modern_Spanish_CI_AI ";
 
                     parameters.Add(name: "T_Nombre", dbType: DbType.String, value: nomAlumno);
                 }
 
                 if (!String.IsNullOrWhiteSpace(apellidoPaterno))
                 {
-                    filters = filters + (filters.Length == 0 ? "WHERE " : "AND ") + "ISNULL(b.T_ApePaterno, b.T_NomDepositante) LIKE @T_ApePaterno + '%' ";
+                    filters = filters + (filters.Length == 0 ? "WHERE " : "AND ") + "ISNULL(b.T_ApePaterno, b.T_NomDepositante) LIKE @T_ApePaterno + '%' COLLATE Modern_Spanish_CI_AI ";
 
                     parameters.Add(name: "T_ApePaterno", dbType: DbType.String, value: apellidoPaterno);
                 }
 
                 if (!String.IsNullOrWhiteSpace(apellidoMaterno))
                 {
-                    filters = filters + (filters.Length == 0 ? "WHERE " : "AND ") + "ISNULL(b.T_ApeMaterno, b.T_NomDepositante) LIKE @T_ApeMaterno + '%' ";
+                    filters = filters + (filters.Length == 0 ? "WHERE " : "AND ") + "ISNULL(b.T_ApeMaterno, b.T_NomDepositante) LIKE @T_ApeMaterno + '%' COLLATE Modern_Spanish_CI_AI ";
 
                     parameters.Add(name: "T_ApeMaterno", dbType: DbType.String, value: apellidoMaterno);
                 }
@@ -206,11 +206,6 @@ namespace Data.Views
                     filters = filters + (filters.Length == 0 ? "WHERE " : "AND ") + "b.C_CodigoInterno LIKE '%' + @C_CodigoInterno ";
 
                     parameters.Add(name: "C_CodigoInterno", dbType: DbType.String, value: codigoInterno);
-                }
-
-                if (filters.Length > 0)
-                {
-                    filters = filters + " COLLATE Modern_Spanish_CI_AI";
                 }
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
