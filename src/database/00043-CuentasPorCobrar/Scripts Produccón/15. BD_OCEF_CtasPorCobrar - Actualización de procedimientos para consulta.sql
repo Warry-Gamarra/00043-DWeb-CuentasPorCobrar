@@ -2,7 +2,6 @@ USE BD_OCEF_CtasPorCobrar
 GO
 
 
-
 IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_PagoBancoObligaciones')
 	DROP VIEW [dbo].[VW_PagoBancoObligaciones]
 GO
