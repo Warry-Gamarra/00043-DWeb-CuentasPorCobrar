@@ -64,6 +64,8 @@ namespace Data.Views
 
         public string C_CodigoInterno { get; set; }
 
+        public string T_ProcesoDesc { get; set; }
+
         public static VW_PagoBancoObligaciones FindByID(int idPagoBanco)
         {
             string s_command;

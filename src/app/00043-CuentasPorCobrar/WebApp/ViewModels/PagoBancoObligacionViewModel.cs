@@ -116,5 +116,7 @@ namespace WebApp.ViewModels
         public string T_MotivoCoreccion { get; set; }
 
         public string C_CodigoInterno { get; set; }
+
+        public string T_ProcesoDesc { get; set; }
     }
 }

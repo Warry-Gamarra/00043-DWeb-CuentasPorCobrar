@@ -276,22 +276,22 @@ namespace WebApp.Controllers
                 var currentRow = 1;
 
                 #region Header
-                worksheet.Cell(currentRow, 1).Value = "CodAlumno";
-                worksheet.Cell(currentRow, 2).Value = "NomAlumno";
+                worksheet.Cell(currentRow, 1).Value = "Cod.Alumno";
+                worksheet.Cell(currentRow, 2).Value = "Nom.Alumno";
                 worksheet.Cell(currentRow, 3).Value = "CodRc";
                 worksheet.Cell(currentRow, 4).Value = "Facultad";                
                 worksheet.Cell(currentRow, 5).Value = "Especialidad";
-                worksheet.Cell(currentRow, 6).Value = "TipoAlumno";
+                worksheet.Cell(currentRow, 6).Value = "Tipo Alumno";
                 worksheet.Cell(currentRow, 7).Value = "Año";
                 worksheet.Cell(currentRow, 8).Value = "Periodo";
-                worksheet.Cell(currentRow, 9).Value = "CuotaPago";
-                worksheet.Cell(currentRow, 10).Value = "MontoOblig";
-                worksheet.Cell(currentRow, 11).Value = "FechaVencto";
+                worksheet.Cell(currentRow, 9).Value = "Cuota Pago";
+                worksheet.Cell(currentRow, 10).Value = "Monto Oblig";
+                worksheet.Cell(currentRow, 11).Value = "Fec.Vencto";
                 worksheet.Cell(currentRow, 12).Value = "Estado";
-                worksheet.Cell(currentRow, 13).Value = "MontoPagado";
-                worksheet.Cell(currentRow, 14).Value = "FechaPagos";
-                worksheet.Cell(currentRow, 15).Value = "FechaCreación";
-                worksheet.Cell(currentRow, 16).Value = "UltimaModificación";
+                worksheet.Cell(currentRow, 13).Value = "Monto Pagado";
+                worksheet.Cell(currentRow, 14).Value = "Fecha Pago";
+                worksheet.Cell(currentRow, 15).Value = "Fec.Creación";
+                worksheet.Cell(currentRow, 16).Value = "Ultima Modificación";
                 #endregion
 
                 #region Body

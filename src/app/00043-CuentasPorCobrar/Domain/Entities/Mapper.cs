@@ -682,7 +682,8 @@ namespace Domain.Entities
                 T_Condicion = vw.T_Condicion,
                 I_MontoProcesado = vw.I_MontoProcesado,
                 T_MotivoCoreccion = vw.T_MotivoCoreccion,
-                C_CodigoInterno = vw.C_CodigoInterno
+                C_CodigoInterno = vw.C_CodigoInterno,
+                T_ProcesoDesc = vw.T_ProcesoDesc
             };
 
             return dto;

@@ -12,19 +12,21 @@ AS
  SELECT b.I_PagoBancoID, e.I_EntidadFinanID, e.T_EntidadDesc, cd.I_CtaDepositoID, cd.C_NumeroCuenta, b.C_CodOperacion, b.C_CodDepositante,   
   c.I_ObligacionAluID, m.I_MatAluID, m.C_CodAlu, b.T_NomDepositante, m.T_Nombre, m.T_ApePaterno, m.T_ApeMaterno, m.N_Grado,
   b.D_FecPago, b.I_MontoPago, b.I_InteresMora, b.T_LugarPago, b.D_FecCre, b.I_CondicionPagoID, cn.T_OpcionDesc AS T_Condicion, b.T_Observacion,   
-  b.T_MotivoCoreccion, ISNULL(SUM(p.I_MontoPagado), 0) AS I_MontoProcesado, b.C_CodigoInterno
+  b.T_MotivoCoreccion, ISNULL(SUM(p.I_MontoPagado), 0) AS I_MontoProcesado, b.C_CodigoInterno, pro.T_ProcesoDesc
  FROM TR_PagoBanco b  
  LEFT JOIN dbo.TRI_PagoProcesadoUnfv p ON p.I_PagoBancoID = b.I_PagoBancoID AND p.B_Anulado = 0  
  LEFT JOIN dbo.TR_ObligacionAluDet d ON d.I_ObligacionAluDetID = p.I_ObligacionAluDetID AND d.B_Habilitado = 1 AND d.B_Eliminado = 0  
  LEFT JOIN dbo.TR_ObligacionAluCab c ON c.I_ObligacionAluID = d.I_ObligacionAluID AND c.B_Habilitado = 1 AND c.B_Eliminado = 0  
  LEFT JOIN dbo.VW_MatriculaAlumno m ON m.I_MatAluID = c.I_MatAluID  
+ LEFT JOIN dbo.TC_Proceso pro ON pro.I_ProcesoID = c.I_ProcesoID
  INNER JOIN dbo.TC_EntidadFinanciera e ON e.I_EntidadFinanID = b.I_EntidadFinanID  
  INNER JOIN dbo.TC_CuentaDeposito cd ON cd.I_CtaDepositoID = b.I_CtaDepositoID  
  INNER JOIN dbo.TC_CatalogoOpcion cn ON cn.I_OpcionID = b.I_CondicionPagoID  
  WHERE b.I_TipoPagoID = 133 AND b.B_Anulado = 0  
  GROUP BY b.I_PagoBancoID, e.I_EntidadFinanID, cd.I_CtaDepositoID, cd.C_NumeroCuenta, e.T_EntidadDesc, b.C_CodOperacion, b.C_CodDepositante, 
 	c.I_ObligacionAluID, m.I_MatAluID, m.C_CodAlu, b.T_NomDepositante, m.T_Nombre, m.T_ApePaterno, m.T_ApeMaterno, m.N_Grado,
-	b.D_FecPago, b.I_MontoPago, b.I_InteresMora, b.T_LugarPago, b.D_FecCre, b.I_CondicionPagoID, cn.T_OpcionDesc, b.T_Observacion, b.T_MotivoCoreccion, b.C_CodigoInterno
+	b.D_FecPago, b.I_MontoPago, b.I_InteresMora, b.T_LugarPago, b.D_FecCre, b.I_CondicionPagoID, cn.T_OpcionDesc, b.T_Observacion, b.T_MotivoCoreccion, 
+	b.C_CodigoInterno, pro.T_ProcesoDesc
 GO
 
 
@@ -157,15 +159,3 @@ GO
 */  
 END
 GO
-
-
-select d.I_ObligacionAluID, d.I_ObligacionAluDetID from dbo.TR_ObligacionAluDet d
-inner join dbo.TRI_PagoProcesadoUnfv pr on pr.I_ObligacionAluDetID = d.I_ObligacionAluDetID and pr.B_Anulado = 0
-where d.B_Habilitado = 1 and d.B_Eliminado = 0 and d.I_Monto = 80 and d.B_Pagado = 1
-group by d.I_ObligacionAluID, d.I_ObligacionAluDetID having count(*) > 1
-order by d.I_ObligacionAluID
-
-
-select * from dbo.VW_CuotasPago_General where I_ObligacionAluID = 82
-select * from dbo.TR_PagoBanco where C_CodDepositante = '2020001261'
-select * from dbo.VW_DetalleObligaciones where I_ObligacionAluID = 33015
