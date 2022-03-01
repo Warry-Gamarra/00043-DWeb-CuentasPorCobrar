@@ -36,6 +36,8 @@ namespace Domain.Entities
 
         public string T_ApeMaterno { get; set; }
 
+        public string N_Grado { get; set; }
+
         public DateTime? D_FecPago { get; set; }
 
         public decimal I_MontoPago { get; set; }

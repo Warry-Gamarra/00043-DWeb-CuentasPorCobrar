@@ -1392,6 +1392,8 @@ namespace WebApp.Controllers
 
             ViewBag.CondicionesPago = new SelectList(selectModels.GetCondicionesPago(), "Value", "TextDisplay", model.condicion);
 
+            ViewBag.TipoEstudios = new SelectList(generalServiceFacade.Listar_TipoEstudios(), "Value", "TextDisplay", model.tipoEstudio);
+
             return View(model);
         }
 

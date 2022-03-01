@@ -55,6 +55,8 @@ namespace WebApp.ViewModels
             }
         }
 
+        public TipoEstudio? tipoEstudio { get; set; }
+
         public IEnumerable<PagoBancoObligacionViewModel> resultado;
 
         public ConsultaPagosBancoObligacionesViewModel()

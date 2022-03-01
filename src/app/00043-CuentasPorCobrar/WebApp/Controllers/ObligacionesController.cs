@@ -288,7 +288,29 @@ namespace WebApp.Controllers
         [HandleJsonExceptionAttribute]
         public ActionResult AnularCuotaPago(int obligacionID)
         {
-            var response = obligacionServiceFacade.AnularObligacion(obligacionID, WebSecurity.CurrentUserId);
+            Response response = new Response()
+            {
+                Value = false
+            };
+
+            var cuotaPago = obligacionServiceFacade.Obtener_CuotaPago(obligacionID);
+
+            if (cuotaPago == null)
+            {
+                response.Message = "La cuota seleccionada no existe.";
+            }
+            else if (cuotaPago.B_Pagado)
+            {
+                response.Message = "No se puede anular el registro porque esta cuota ya ha sido pagada.";
+            }
+            else if (cuotaPago.I_MontoPagadoActual > 0)
+            {
+                response.Message = "No se puede anular el registro porque esta cuota tiene un pago incompleto";
+            }
+            else
+            {
+                response = obligacionServiceFacade.AnularObligacion(obligacionID, WebSecurity.CurrentUserId);
+            }
 
             return Json(response, JsonRequestBehavior.AllowGet);
         }

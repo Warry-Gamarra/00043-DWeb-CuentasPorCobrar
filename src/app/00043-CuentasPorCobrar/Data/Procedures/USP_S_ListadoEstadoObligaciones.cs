@@ -60,6 +60,8 @@ namespace Data.Procedures
 
         public DateTime? D_FecMod { get; set; }
 
+        public string T_FecPagos { get; set; }
+
         public static IEnumerable<USP_S_ListadoEstadoObligaciones> Execute(USP_S_ListadoEstadoObligaciones_Parameters pr)
         {
             IEnumerable<USP_S_ListadoEstadoObligaciones> result;

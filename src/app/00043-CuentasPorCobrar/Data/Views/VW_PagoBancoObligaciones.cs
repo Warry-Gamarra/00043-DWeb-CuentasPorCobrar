@@ -40,6 +40,8 @@ namespace Data.Views
 
         public string T_ApeMaterno { get; set; }
 
+        public string N_Grado { get; set; }
+
         public DateTime? D_FecPago { get; set; }
 
         public decimal I_MontoPago { get; set; }
@@ -117,7 +119,7 @@ namespace Data.Views
         }
 
         public static IEnumerable<VW_PagoBancoObligaciones> GetAll(int? idEntidadFinanciera, int? ctdDeposito, string codOperacion, string codDepositante, DateTime? fechaInicio, DateTime? fechaFinal,
-            int? condicion, string nomAlumno, string apellidoPaterno, string apellidoMaterno, string codigoInterno)
+            int? condicion, string nomAlumno, string apellidoPaterno, string apellidoMaterno, string codigoInterno, bool? esPregrado)
         {
             string s_command, filters;
             IEnumerable<VW_PagoBancoObligaciones> result;
@@ -206,6 +208,11 @@ namespace Data.Views
                     filters = filters + (filters.Length == 0 ? "WHERE " : "AND ") + "b.C_CodigoInterno LIKE '%' + @C_CodigoInterno ";
 
                     parameters.Add(name: "C_CodigoInterno", dbType: DbType.String, value: codigoInterno);
+                }
+
+                if (esPregrado.HasValue)
+                {
+                    filters = filters + (filters.Length == 0 ? "WHERE " : "AND ") + "b.N_Grado " + (esPregrado.Value ? "= '1' " : "IN ('2', '3') ");
                 }
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))

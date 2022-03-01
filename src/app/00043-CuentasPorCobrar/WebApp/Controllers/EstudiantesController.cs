@@ -271,8 +271,7 @@ namespace WebApp.Controllers
                 worksheet.Column("C").Width = 14;
                 worksheet.Columns("D:E").Width = 30;
                 worksheet.Columns("F:M").Width = 14;
-                worksheet.Column("N").Width = 15;
-                worksheet.Column("O").Width = 15;
+                worksheet.Columns("N:P").Width = 15;
 
                 var currentRow = 1;
 
@@ -290,8 +289,9 @@ namespace WebApp.Controllers
                 worksheet.Cell(currentRow, 11).Value = "FechaVencto";
                 worksheet.Cell(currentRow, 12).Value = "Estado";
                 worksheet.Cell(currentRow, 13).Value = "MontoPagado";
-                worksheet.Cell(currentRow, 14).Value = "FechaCreación";
-                worksheet.Cell(currentRow, 15).Value = "UltimaModificación";
+                worksheet.Cell(currentRow, 14).Value = "FechaPagos";
+                worksheet.Cell(currentRow, 15).Value = "FechaCreación";
+                worksheet.Cell(currentRow, 16).Value = "UltimaModificación";
                 #endregion
 
                 #region Body
@@ -311,8 +311,9 @@ namespace WebApp.Controllers
                     worksheet.Cell(currentRow, 11).SetValue<string>(item.T_FecVencto);
                     worksheet.Cell(currentRow, 12).SetValue<string>(item.T_Pagado);
                     worksheet.Cell(currentRow, 13).SetValue<decimal?>(item.I_MontoPagadoActual);
-                    worksheet.Cell(currentRow, 14).SetValue<DateTime>(item.D_FecCre);
-                    worksheet.Cell(currentRow, 15).SetValue<DateTime?>(item.D_FecMod);
+                    worksheet.Cell(currentRow, 14).SetValue<string>(item.T_FecPagos);
+                    worksheet.Cell(currentRow, 15).SetValue<DateTime>(item.D_FecCre);
+                    worksheet.Cell(currentRow, 16).SetValue<DateTime?>(item.D_FecMod);
                 }
                 #endregion
 

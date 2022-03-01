@@ -369,7 +369,8 @@ namespace WebApp.Models
                 B_Pagado = dto.B_Pagado,
                 I_MontoPagadoActual = dto.I_MontoPagadoActual,
                 D_FecCre = dto.D_FecCre,
-                D_FecMod = dto.D_FecMod
+                D_FecMod = dto.D_FecMod,
+                T_FecPagos = dto.T_FecPagos
             };
 
             return result;
@@ -443,6 +444,7 @@ namespace WebApp.Models
                 T_Nombre = dto.T_Nombre,
                 T_ApePaterno = dto.T_ApePaterno,
                 T_ApeMaterno = dto.T_ApeMaterno,
+                N_Grado = dto.N_Grado,
                 D_FecPago = dto.D_FecPago,
                 I_MontoPago = dto.I_MontoPago,
                 I_InteresMora = dto.I_InteresMora,

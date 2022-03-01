@@ -64,7 +64,7 @@ namespace WebApp.Models
             #endregion
 
             #region Detalle
-            foreach (var item in cuotas_pago)
+            foreach (var item in cuotas_pago.OrderBy(c => c.T_ApePaterno).ThenBy(c => c.T_ApeMaterno))
             {
                 string identificadorRegistroDetalle = "D";
                 string codigoServicio = "0" + item.C_CodServicio;

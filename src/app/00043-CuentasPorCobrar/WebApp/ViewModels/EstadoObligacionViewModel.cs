@@ -117,5 +117,7 @@ namespace WebApp.ViewModels
         public DateTime D_FecCre { get; set; }
 
         public DateTime? D_FecMod { get; set; }
+
+        public string T_FecPagos { get; set; }
     }
 }

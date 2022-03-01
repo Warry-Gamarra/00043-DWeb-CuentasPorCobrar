@@ -784,7 +784,7 @@ namespace WebApp.Models
         {
             var lista = pagoService.ListarPagosBanco(parametro.banco, parametro.ctaDeposito, parametro.codOperacion, 
                 parametro.codAlumno, parametro.fechaInicio, parametro.fechaFin, parametro.condicion,
-                parametro.nomAlumno, parametro.apePaternoAlumno, parametro.apeMaternoAlumno, parametro.codInterno);
+                parametro.nomAlumno, parametro.apePaternoAlumno, parametro.apeMaternoAlumno, parametro.codInterno, parametro.tipoEstudio);
 
             var result = lista.Select(x => Mapper.PagoBancoObligacionDTO_ToPagoBancoObligacionViewModel(x));
 

@@ -575,7 +575,8 @@ namespace Domain.Entities
                 B_Pagado = sp.B_Pagado,
                 I_MontoPagadoActual = sp.I_MontoPagadoActual,
                 D_FecCre = sp.D_FecCre,
-                D_FecMod = sp.D_FecMod
+                D_FecMod = sp.D_FecMod,
+                T_FecPagos = sp.T_FecPagos
             };
 
             return result;
@@ -670,6 +671,7 @@ namespace Domain.Entities
                 T_Nombre = vw.T_Nombre,
                 T_ApePaterno = vw.T_ApePaterno,
                 T_ApeMaterno = vw.T_ApeMaterno,
+                N_Grado = vw.N_Grado,
                 D_FecPago = vw.D_FecPago,
                 I_MontoPago = vw.I_MontoPago,
                 I_InteresMora = vw.I_InteresMora,

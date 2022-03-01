@@ -22,7 +22,7 @@ namespace Domain.Services
         List<PagoEntity> BuscarPagoRegistrado(int entRecaudaId, string codOperacion);
         IEnumerable<ArchivoImportadoDTO> ListarArchivosImportados(TipoArchivoEntFinan tipoArchivo);
         IEnumerable<PagoBancoObligacionDTO> ListarPagosBanco(int? idEntidadFinanciera, int? ctdDeposito, string codOperacion, string codDepositante, DateTime? fechaInicio, DateTime? fechaFinal,
-            int? condicion, string nomAlumno, string apellidoPaterno, string apellidoMaterno, string codigoInterno);
+            int? condicion, string nomAlumno, string apellidoPaterno, string apellidoMaterno, string codigoInterno, TipoEstudio? tipoEstudio);
         IEnumerable<PagoBancoObligacionDTO> ListarPagosBancoPorObligacion(int idObligacion);
         PagoBancoObligacionDTO ObtenerPagoBanco(int idPagoBanco);
         Response AsignarPagoObligacion(int obligacionID, int pagoBancoID, int UserID, string motivoCoreccion);

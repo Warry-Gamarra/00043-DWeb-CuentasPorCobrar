@@ -36,6 +36,8 @@ namespace WebApp.ViewModels
 
         public string T_ApeMaterno { get; set; }
 
+        public string N_Grado { get; set; }
+
         public string T_CodDepositante
         {
             get
