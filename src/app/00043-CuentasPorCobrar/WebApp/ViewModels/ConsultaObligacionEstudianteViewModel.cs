@@ -61,6 +61,8 @@ namespace WebApp.ViewModels
             }
         }
 
+        public int? dependencia { get; set; }
+
         public IEnumerable<EstadoObligacionViewModel> resultado;
 
         public ConsultaObligacionEstudianteViewModel()

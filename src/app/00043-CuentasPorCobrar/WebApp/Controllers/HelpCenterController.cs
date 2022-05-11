@@ -34,7 +34,7 @@ namespace WebApp.Controllers
         }
 
 
-        [Authorize(Roles = "Administrador")]
+        [Authorize(Roles = RoleNames.ADMINISTRADOR)]
         [Route("mantenimiento/ayuda/manuales-listado")]
         public ActionResult Manage()
         {
@@ -44,7 +44,7 @@ namespace WebApp.Controllers
         }
 
 
-        [Authorize(Roles = "Administrador")]
+        [Authorize(Roles = RoleNames.ADMINISTRADOR)]
         [Route("mantenimiento/ayuda/manuales/nuevo")]
         public ActionResult Create()
         {
@@ -54,7 +54,7 @@ namespace WebApp.Controllers
         }
 
 
-        [Authorize(Roles = "Administrador")]
+        [Authorize(Roles = RoleNames.ADMINISTRADOR)]
         [Route("mantenimiento/ayuda/manuales/editar/{id}")]
         public ActionResult Edit(int id)
         {
@@ -74,7 +74,7 @@ namespace WebApp.Controllers
 
 
         [HttpPost]
-        [Authorize(Roles = "Administrador")]
+        [Authorize(Roles = RoleNames.ADMINISTRADOR)]
         public ActionResult Save(UserManualViewModel model)
         {
             var result = new Response();

@@ -43,4 +43,23 @@ namespace Domain.Helpers
             return pagado.HasValue ? (pagado.Value ? "Pagado" : "Pendiente") : "";
         }
     }
+
+    public static class RoleNames
+    {
+        public const string ADMINISTRADOR = "Administrador";
+
+        public const string CONSULTA = "Consulta";
+
+        public const string CONTABILIDAD = "Contabilidad";
+
+        public const string TESORERIA = "Tesorería";
+
+        public const string DEPENDENCIA = "Dependencia";
+    }
+
+    public static class DependenciaEUPG
+    {
+        public const int ID = 14;
+    }
+
 }

@@ -27,9 +27,16 @@ namespace WebApp.Models.Facades
             return result;
         }
 
-        public IEnumerable<SelectViewModel> Listar_TipoEstudios()
+        public IEnumerable<SelectViewModel> Listar_TipoEstudios(int? DependenciaID)
         {
-            var lista = generalService.Listar_TipoEstudios();
+            IEnumerable<TipoEstudio> lista;
+
+            if (!DependenciaID.HasValue)
+                lista = generalService.Listar_TipoEstudios();
+            else if (DependenciaID == DependenciaEUPG.ID)
+                lista = generalService.Listar_TipoEstudios().Where(x => x.Equals(TipoEstudio.Posgrado));
+            else
+                lista = generalService.Listar_TipoEstudios().Where(x => x.Equals(TipoEstudio.Pregrado));
 
             var result = lista.Select(x => new SelectViewModel() { Value = x.ToString(), TextDisplay = x.ToString() });
 

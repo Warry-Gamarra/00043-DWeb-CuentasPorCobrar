@@ -65,7 +65,7 @@ namespace WebApp.Models.Facades
             return result;
         }
 
-        public IEnumerable<SelectViewModel> GetDependencias(TipoEstudio tipoEstudio)
+        public IEnumerable<SelectViewModel> GetDependencias(TipoEstudio tipoEstudio, int? dependenciaID)
         {
             IEnumerable<FacultadModel> facultades;
             IEnumerable<SelectViewModel> result;
@@ -77,9 +77,14 @@ namespace WebApp.Models.Facades
                     case TipoEstudio.Pregrado:
                         string[] excluidos = { "CA", "CI", "CP", "CV", "EP" };
 
-                        facultades = programasClient.GetFacultades();
+                        facultades = programasClient.GetFacultades().Where(f => !excluidos.Contains(f.CodFac));
 
-                        result = facultades.Where(f => !excluidos.Contains(f.CodFac)).Select(x => new SelectViewModel()
+                        if (dependenciaID.HasValue)
+                        {
+                            facultades = facultades.Where(f => f.DependenciaID.Equals(dependenciaID.Value));
+                        }
+
+                        result = facultades.Select(x => new SelectViewModel()
                         {
                             Value = x.CodFac,
                             TextDisplay = x.FacDesc

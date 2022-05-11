@@ -10,7 +10,7 @@ using WebMatrix.WebData;
 
 namespace WebApp.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = RoleNames.ADMINISTRADOR)]
     [Route("mantenimiento/usuarios/{action}")]
     public class UsersController : Controller
     {

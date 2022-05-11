@@ -18,6 +18,7 @@ namespace WebApi.Models
                 CodFac = facultadDTO.CodFac,
                 FacDesc = facultadDTO.FacDesc,
                 FacAbrev = facultadDTO.FacAbrev,
+                DependenciaID = facultadDTO.DependenciaID,
                 Habilitado = facultadDTO.Habilitado
             };
 

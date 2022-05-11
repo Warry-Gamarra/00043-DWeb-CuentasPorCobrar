@@ -10,7 +10,7 @@ namespace WebApp.Models.Facades
     {
         IEnumerable<SelectViewModel> Listar_Anios();
 
-        IEnumerable<SelectViewModel> Listar_TipoEstudios();
+        IEnumerable<SelectViewModel> Listar_TipoEstudios(int? DependenciaID);
 
         IEnumerable<SelectViewModel> Listar_Horas();
 

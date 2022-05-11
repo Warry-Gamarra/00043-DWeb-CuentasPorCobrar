@@ -125,6 +125,7 @@ namespace Domain.Entities
                 CodFac = facultad.C_CodFac,
                 FacDesc = facultad.T_FacDesc,
                 FacAbrev = facultad.T_FacAbrev,
+                DependenciaID = facultad.I_DependenciaID,
                 Habilitado = facultad.B_Habilitado
             };
 

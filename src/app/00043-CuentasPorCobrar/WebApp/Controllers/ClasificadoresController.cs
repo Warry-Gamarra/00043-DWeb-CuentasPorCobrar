@@ -10,7 +10,7 @@ using WebMatrix.WebData;
 
 namespace WebApp.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = RoleNames.ADMINISTRADOR)]
     public class ClasificadoresController : Controller
     {
         private readonly ClasificadorModel _clasificador;

@@ -10,7 +10,7 @@ using WebMatrix.WebData;
 
 namespace WebApp.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = RoleNames.ADMINISTRADOR)]
     public class CuentaDepositoController : Controller
     {
         public readonly CuentaDepositoModel _cuentaDeposito;

@@ -11,7 +11,7 @@ using System.IO;
 
 namespace WebApp.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
     [Route("mantenimiento/conceptos-de-pago/{action}")]
     public class ConceptoController : Controller
     {

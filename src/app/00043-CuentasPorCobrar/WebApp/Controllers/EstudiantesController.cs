@@ -13,7 +13,7 @@ using WebMatrix.WebData;
 
 namespace WebApp.Controllers
 {
-    [Authorize(Roles = "Administrador, Consulta, Tesorería")]
+    [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONSULTA + ", " + RoleNames.DEPENDENCIA + ", " + RoleNames.TESORERIA)]
     public class EstudiantesController : Controller
     {
         private readonly EstudianteModel _seleccionarArchivoModel;
@@ -26,6 +26,8 @@ namespace WebApp.Controllers
         IReportePregradoServiceFacade reportePregradoServiceFacade;
         IReportePosgradoServiceFacade reportePosgradoServiceFacade;
 
+        UsersModel usersModel;
+
         public EstudiantesController()
         {
             _seleccionarArchivoModel = new EstudianteModel();
@@ -36,9 +38,11 @@ namespace WebApp.Controllers
 
             reportePregradoServiceFacade = new ReportePregradoServiceFacade();
             reportePosgradoServiceFacade = new ReportePosgradoServiceFacade();
+
+            usersModel = new UsersModel();
         }
 
-        [Authorize(Roles = "Administrador, Tesorería")]
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
         [Route("operaciones/cargar-estudiantes")]
         public ActionResult Index()
         {
@@ -47,7 +51,7 @@ namespace WebApp.Controllers
             return View();
         }
 
-        [Authorize(Roles = "Administrador, Tesorería")]
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
         [Route("operaciones/cargar-aptos-pregrado")]
         public ActionResult CargarArchivoMatriculaPregrado()
         {
@@ -55,7 +59,7 @@ namespace WebApp.Controllers
             return PartialView("_SeleccionarArchivo", model);
         }
 
-        [Authorize(Roles = "Administrador, Tesorería")]
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
         [Route("operaciones/cargar-aptos-posgrado")]
         public ActionResult CargarArchivoMatriculaPosgrado()
         {
@@ -64,7 +68,7 @@ namespace WebApp.Controllers
         }
 
 
-        [Authorize(Roles = "Administrador")]
+        [Authorize(Roles = RoleNames.ADMINISTRADOR)]
         [Route("operaciones/cargar-multas-pregrado")]
         public ActionResult CargarArchivoMultaPregrado()
         {
@@ -72,7 +76,7 @@ namespace WebApp.Controllers
             return PartialView("_SeleccionarArchivo", model);
         }
 
-        [Authorize(Roles = "Administrador, Tesorería")]
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
         [HttpPost]
         public ActionResult CargarArchivoMatricula(HttpPostedFileBase file, TipoAlumno tipoAlumno)
         {
@@ -86,7 +90,7 @@ namespace WebApp.Controllers
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 
-        [Authorize(Roles = "Administrador, Tesorería")]
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
         public ActionResult DescargarRegistrosObservados()
         {
             if (Session["MATRICULA_RESPONSE"] == null || Session["MATRICULA_RESPONSE_TIPO_ALUMNO"] == null)
@@ -154,7 +158,7 @@ namespace WebApp.Controllers
             }
         }
 
-        [Authorize(Roles = "Administrador, Tesorería")]
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
         [HttpPost]
         public ActionResult CargarArchivoMulta(HttpPostedFileBase file, TipoAlumno tipoAlumno)
         {
@@ -167,7 +171,7 @@ namespace WebApp.Controllers
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 
-        [Authorize(Roles = "Administrador, Tesorería")]
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
         public ActionResult DescargarMultasSinRegistrar()
         {
             if (Session["MULTAS_SIN_REGISTRAR_RESPONSE"] == null)
@@ -211,7 +215,22 @@ namespace WebApp.Controllers
         [Route("consulta/estudiantes")]
         public ActionResult Consulta(ConsultaObligacionEstudianteViewModel model)
         {
-            ViewBag.Title = "Consulta de Estudiantes";
+            var userId = usersModel.Find()
+                .Where(u => u.UserName.Equals(User.Identity.Name, StringComparison.InvariantCultureIgnoreCase))
+                .First().UserId;
+
+            var user = usersModel.Find(userId.Value);
+
+            if (user.RoleName.Equals(RoleNames.DEPENDENCIA) || user.RoleName.Equals(RoleNames.CONSULTA))
+            {
+                model.dependencia = user.DependenciaId;
+
+                model.tipoEstudio = (model.dependencia == DependenciaEUPG.ID) ? TipoEstudio.Posgrado : TipoEstudio.Pregrado;
+            }
+
+            var listaDependencias = programasClientFacade.GetDependencias(model.tipoEstudio, model.dependencia);
+
+            model.codFac = (user.RoleName.Equals(RoleNames.DEPENDENCIA) || user.RoleName.Equals(RoleNames.CONSULTA)) ? listaDependencias.First().Value : model.codFac;
 
             if (model.anio.HasValue)
             {
@@ -227,10 +246,12 @@ namespace WebApp.Controllers
                 }
             }
 
+            ViewBag.Title = "Consulta de Estudiantes";
+
             ViewBag.Anios = new SelectList(generalServiceFacade.Listar_Anios(), "Value", "TextDisplay", model.anio.HasValue ? model.anio.Value : DateTime.Now.Year);
             ViewBag.Periodos = new SelectList(catalogoServiceFacade.Listar_Periodos(), "Value", "TextDisplay", model.periodo);
-            ViewBag.TipoEstudios = new SelectList(generalServiceFacade.Listar_TipoEstudios(), "Value", "TextDisplay", model.tipoEstudio);
-            ViewBag.Dependencias = new SelectList(programasClientFacade.GetDependencias(model.tipoEstudio), "Value", "TextDisplay", model.codFac);
+            ViewBag.TipoEstudios = new SelectList(generalServiceFacade.Listar_TipoEstudios(model.dependencia), "Value", "TextDisplay", model.tipoEstudio);
+            ViewBag.Dependencias = new SelectList(listaDependencias, "Value", "TextDisplay", model.codFac);
             ViewBag.Escuelas = new SelectList(programasClientFacade.GetEscuelas(model.codFac), "Value", "TextDisplay", model.codEsc);
             ViewBag.Especialidades = new SelectList(programasClientFacade.GetEspecialidades(model.codFac, model.codEsc), "Value", "TextDisplay", model.codRc);
 
@@ -238,7 +259,7 @@ namespace WebApp.Controllers
             ViewBag.ExistenciaObligaciones = new SelectList(generalServiceFacade.Listar_CondicionExistenciaObligaciones(), "Value", "TextDisplay", model.obligacionGenerada);
             ViewBag.EstadoPagoObligaciones = new SelectList(generalServiceFacade.Listar_CondicionPagoObligacion(), "Value", "TextDisplay", model.estaPagado);
 
-            ViewBag.FiltroDependencias = (model.tipoEstudio == TipoEstudio.Posgrado) ? null : "TODOS";
+            ViewBag.FiltroDependencias = (model.tipoEstudio == TipoEstudio.Posgrado || model.dependencia.HasValue) ? null : "TODOS";
 
             return View("Consulta", model);
         }
@@ -249,6 +270,19 @@ namespace WebApp.Controllers
             if (!model.anio.HasValue)
             {
                 return RedirectToAction("Consulta", "Estudiantes");
+            }
+
+            var userId = usersModel.Find()
+                .Where(u => u.UserName.Equals(User.Identity.Name, StringComparison.InvariantCultureIgnoreCase))
+                .First().UserId;
+
+            var user = usersModel.Find(userId.Value);
+
+            if (user.RoleName.Equals(RoleNames.DEPENDENCIA) || user.RoleName.Equals(RoleNames.CONSULTA))
+            {
+                model.dependencia = user.DependenciaId;
+
+                model.tipoEstudio = (model.dependencia == DependenciaEUPG.ID) ? TipoEstudio.Posgrado : TipoEstudio.Pregrado;
             }
 
             switch (model.tipoEstudio)

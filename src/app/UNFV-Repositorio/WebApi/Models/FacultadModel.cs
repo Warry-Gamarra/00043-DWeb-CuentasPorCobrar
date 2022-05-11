@@ -10,6 +10,7 @@ namespace WebApi.Models
         public string CodFac { get; set; }
         public string FacDesc { get; set; }
         public string FacAbrev { get; set; }
+        public int? DependenciaID { get; set; }
         public bool Habilitado { get; set; }
     }
 }

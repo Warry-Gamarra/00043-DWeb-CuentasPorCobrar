@@ -1,8 +1,9 @@
-﻿
+﻿@using Domain.Helpers;
+
 <div class="main-sidebar">
     <ul class="nav side-nav">
         <li class="nav-item"><a href="@Url.Action("Index", "Home")" class="nav-link"><i class="fa fa-fw fa-home"></i> Dashboard</a></li>
-        @if (User.IsInRole("Administrador") || User.IsInRole("Consulta") || User.IsInRole("Tesorería"))
+        @if (User.IsInRole(RoleNames.ADMINISTRADOR) || User.IsInRole(RoleNames.CONSULTA) || User.IsInRole(RoleNames.DEPENDENCIA) || User.IsInRole(RoleNames.TESORERIA))
         {
             <li class="nav-item">
                 <a href="javascript:;" class="nav-link" data-toggle="collapse" data-target="#inquiries">
@@ -19,12 +20,15 @@
                     <li><a href="@Url.Action("ResumenAnualObligacionesPorDia", "EstadosCuenta")"><i class="fa fa-bank"></i>&nbsp; Resumen Ingresos de Obligaciones</a></li>
                     @*<li><a href="@Url.Action("ResumenAnualObligacionesPorClasificadores", "EstadosCuenta")"><i class="fa fa-fw fa-tasks"></i>&nbsp; Resumen Clasificadores (Obligaciones)</a></li>
                     <li><a href="@Url.Action("ResumenAnualObligacionesPorDependencias", "EstadosCuenta")"><i class="fa fa-fw fa-tasks"></i>&nbsp; Resumen Dependencias (Obligaciones)</a></li>*@
-                    <li><a href="@Url.Action("Consulta", "EstadosCuentaTasas")"><i class="fa bi-person-lines-fill"></i>&nbsp; Consulta pago tasas</a></li>
+                    @if (User.IsInRole(RoleNames.ADMINISTRADOR) || User.IsInRole(RoleNames.CONSULTA) || User.IsInRole(RoleNames.TESORERIA))
+                    {
+                        <li><a href="@Url.Action("Consulta", "EstadosCuentaTasas")"><i class="fa bi-person-lines-fill"></i>&nbsp; Consulta pago tasas</a></li>
+                    }
                 </ul>
             </li>
         }
 
-        @if (User.IsInRole("Administrador") || User.IsInRole("Tesorería"))
+        @if (User.IsInRole(RoleNames.ADMINISTRADOR) || User.IsInRole(RoleNames.TESORERIA))
         {
             <li class="nav-item">
                 <a href="javascript:;" class="nav-link" data-toggle="collapse" data-target="#operations">
@@ -53,36 +57,33 @@
                 </ul>
             </li>
 
-            if (User.IsInRole("Administrador") || User.IsInRole("Tesorería"))
-            {
+            <li class="nav-item">
+                <a href="javascript:;" class="nav-link" data-toggle="collapse" data-target="#maintenance">
+                    <i class="fa fa-fw bi-tools"></i> Mantenimiento<span class="pull-right"><i class="fa fa-fw fa-caret-down"></i></span>
+                </a>
+                <ul id="maintenance" class="collapse">
+                    <li class="dropdown-header">Plantillas</li>
+                    <li><a href="@Url.Action("Index", "CategoriaPago")"><i class="fa fa-fw bi-grid-1x2-fill"></i>&nbsp; Cuotas de pago</a></li>
+                    <li><a href="@Url.Action("Index", "Concepto", new { tipo = Domain.Helpers.TipoPago.Obligacion })"><i class="fa fa-fw bi-ui-checks-grid"></i>&nbsp; Conceptos obligaciones</a></li>
+                    <li><a href="@Url.Action("Index", "Concepto", new { tipo = Domain.Helpers.TipoPago.Tasa })"><i class="fa fa-fw bi-ui-checks"></i>&nbsp; Conceptos tasas</a></li>
+                        
+                    @if (User.IsInRole(RoleNames.ADMINISTRADOR))
+                    {
+                        <li class="dropdown-header">Recaudación</li>
+                        <li><a href="@Url.Action("Index", "Clasificadores")"><i class="fa fa-fw bi-bar-chart-steps"></i>&nbsp; Clasificadores de ingreso</a></li>
+                        <li><a href="@Url.Action("Index", "EntidadRecaudadora")"><i class="fa fa-fw bi-cash-coin"></i>&nbsp; Entidades recaudadoras</a></li>
+                        <li><a href="@Url.Action("Index", "CuentaDeposito")"><i class="fa fa-fw fa-credit-card"></i>&nbsp; Números de cuenta</a></li>
+                        <li><a href="@Url.Action("Index", "EstructuraArchivo")"><i class="fa fa-fw fa-copy"></i>&nbsp; Archivos de intercambio</a></li>
 
-                <li class="nav-item">
-                    <a href="javascript:;" class="nav-link" data-toggle="collapse" data-target="#maintenance">
-                        <i class="fa fa-fw bi-tools"></i> Mantenimiento<span class="pull-right"><i class="fa fa-fw fa-caret-down"></i></span>
-                    </a>
-                    <ul id="maintenance" class="collapse">
-                        <li class="dropdown-header">Plantillas</li>
-                        <li><a href="@Url.Action("Index", "CategoriaPago")"><i class="fa fa-fw bi-grid-1x2-fill"></i>&nbsp; Cuotas de pago</a></li>
-                        <li><a href="@Url.Action("Index", "Concepto", new { tipo = Domain.Helpers.TipoPago.Obligacion })"><i class="fa fa-fw bi-ui-checks-grid"></i>&nbsp; Conceptos obligaciones</a></li>
-                        <li><a href="@Url.Action("Index", "Concepto", new { tipo = Domain.Helpers.TipoPago.Tasa })"><i class="fa fa-fw bi-ui-checks"></i>&nbsp; Conceptos tasas</a></li>
-                        @if (User.IsInRole("Administrador"))
-                        {
-                            <li class="dropdown-header">Recaudación</li>
-                            <li><a href="@Url.Action("Index", "Clasificadores")"><i class="fa fa-fw bi-bar-chart-steps"></i>&nbsp; Clasificadores de ingreso</a></li>
-                            <li><a href="@Url.Action("Index", "EntidadRecaudadora")"><i class="fa fa-fw bi-cash-coin"></i>&nbsp; Entidades recaudadoras</a></li>
-                            <li><a href="@Url.Action("Index", "CuentaDeposito")"><i class="fa fa-fw fa-credit-card"></i>&nbsp; Números de cuenta</a></li>
-                            <li><a href="@Url.Action("Index", "EstructuraArchivo")"><i class="fa fa-fw fa-copy"></i>&nbsp; Archivos de intercambio</a></li>
-
-                            <li class="dropdown-header">Aplicación</li>
-                            <li><a href="@Url.Action("Index", "Correo")"><i class="fa fa-fw fa-envelope"></i>&nbsp; Correo de aplicación </a></li>
-                            <li><a href="@Url.Action("Index", "Dependencia")"><i class="fa fa-fw bi-building"></i>&nbsp; Dependencias</a></li>
-                            <li><a href="@Url.Action("Index", "Users")"><i class="fa fa-fw fa-users"></i>&nbsp; Usuarios </a></li>
-                            <li><a href="@Url.Action("CamposTabla", "EstructuraArchivo")"><i class="fa fa-fw fa-columns"></i>&nbsp; Campos de tabla</a></li>
-                            <li><a href="@Url.Action("Manage", "HelpCenter")"><i class="fa fa-fw fa-bookmark"></i>&nbsp; Documentación </a></li>
-                        }
-                    </ul>
-                </li>
-            }
+                        <li class="dropdown-header">Aplicación</li>
+                        <li><a href="@Url.Action("Index", "Correo")"><i class="fa fa-fw fa-envelope"></i>&nbsp; Correo de aplicación </a></li>
+                        <li><a href="@Url.Action("Index", "Dependencia")"><i class="fa fa-fw bi-building"></i>&nbsp; Dependencias</a></li>
+                        <li><a href="@Url.Action("Index", "Users")"><i class="fa fa-fw fa-users"></i>&nbsp; Usuarios </a></li>
+                        <li><a href="@Url.Action("CamposTabla", "EstructuraArchivo")"><i class="fa fa-fw fa-columns"></i>&nbsp; Campos de tabla</a></li>
+                        <li><a href="@Url.Action("Manage", "HelpCenter")"><i class="fa fa-fw fa-bookmark"></i>&nbsp; Documentación </a></li>
+                    }
+                </ul>
+            </li>
         }
         <li class="nav-item">
             <a href="javascript:;" class="nav-link" data-toggle="collapse" data-target="#help">
@@ -102,7 +103,7 @@
                 <i class="fa fa-3x fa-home"></i><br />Dashboard
             </a>
         </li>
-        @if (User.IsInRole("Administrador") || User.IsInRole("Consulta"))
+        @if (User.IsInRole(RoleNames.ADMINISTRADOR) || User.IsInRole(RoleNames.CONSULTA) || User.IsInRole(RoleNames.DEPENDENCIA) || User.IsInRole(RoleNames.TESORERIA))
         {
             <li class="nav-item">
                 <a href="javascript:;" class="nav-link" data-toggle="collapse" title="Consultas" data-target="#inquiries">
@@ -111,7 +112,7 @@
             </li>
         }
 
-        @if (User.IsInRole("Administrador"))
+        @if (User.IsInRole(RoleNames.ADMINISTRADOR) || User.IsInRole(RoleNames.TESORERIA))
         {
             <li class="nav-item">
                 <a href="javascript:;" class="nav-link" data-toggle="collapse" title="Operaciones" data-target="#operations">
@@ -136,4 +137,3 @@
         </li>
     </ul>
 </div>
-

@@ -14,7 +14,7 @@ using WebApp.ViewModels;
 namespace WebApp.Controllers
 {
     [Authorize]
-    [Authorize(Roles = "Administrador, Consulta, Tesorería")]
+    [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONSULTA + ", " + RoleNames.DEPENDENCIA + ", " + RoleNames.TESORERIA)]
     public class EstadosCuentaController : Controller
     {
         IReportePregradoServiceFacade reportePregradoServiceFacade;
@@ -47,7 +47,7 @@ namespace WebApp.Controllers
         [Route("consultas/reporte-pago-de-obligaciones")]
         public ActionResult ReportesPagoObligaciones(ReportePagosObligacionesViewModel model)
         {
-            ViewBag.TipoEstudios = new SelectList(generalServiceFacade.Listar_TipoEstudios(), "Value", "TextDisplay", model.tipoEstudio);
+            ViewBag.TipoEstudios = new SelectList(generalServiceFacade.Listar_TipoEstudios(null), "Value", "TextDisplay", model.tipoEstudio);
 
             ViewBag.Dependencias = new SelectList(programasClientFacade.GetFacultades(model.tipoEstudio), "Value", "TextDisplay", model.dependencia);
 
@@ -105,7 +105,6 @@ namespace WebApp.Controllers
             }
         }
 
-
         [Route("consultas/resumen-anual-obligaciones-por-clasificadores")]
         public ActionResult ResumenAnualObligacionesPorClasificadores(int anio = 0, TipoEstudio tipoEstudio = TipoEstudio.Pregrado, int? entidadFinanID = null, int? ctaDepositoID = null)
         {
@@ -129,7 +128,7 @@ namespace WebApp.Controllers
 
             ViewBag.Anios = new SelectList(generalServiceFacade.Listar_Anios(), "Value", "TextDisplay", anio);
 
-            ViewBag.TipoEstudios = new SelectList(generalServiceFacade.Listar_TipoEstudios(), "Value", "TextDisplay", tipoEstudio);
+            ViewBag.TipoEstudios = new SelectList(generalServiceFacade.Listar_TipoEstudios(null), "Value", "TextDisplay", tipoEstudio);
 
             ViewBag.EntidadesFinancieras = new SelectList(selectModels.GetEntidadesFinancieras(), "Value", "TextDisplay", entidadFinanID);
 
@@ -291,7 +290,7 @@ namespace WebApp.Controllers
 
             ViewBag.Anios = new SelectList(generalServiceFacade.Listar_Anios(), "Value", "TextDisplay", anio);
 
-            ViewBag.TipoEstudios = new SelectList(generalServiceFacade.Listar_TipoEstudios(), "Value", "TextDisplay", tipoEstudio);
+            ViewBag.TipoEstudios = new SelectList(generalServiceFacade.Listar_TipoEstudios(null), "Value", "TextDisplay", tipoEstudio);
 
             ViewBag.EntidadesFinancieras = new SelectList(selectModels.GetEntidadesFinancieras(), "Value", "TextDisplay", entidadFinanID);
 
@@ -1392,7 +1391,7 @@ namespace WebApp.Controllers
 
             ViewBag.CondicionesPago = new SelectList(selectModels.GetCondicionesPago(), "Value", "TextDisplay", model.condicion);
 
-            ViewBag.TipoEstudios = new SelectList(generalServiceFacade.Listar_TipoEstudios(), "Value", "TextDisplay", model.tipoEstudio);
+            ViewBag.TipoEstudios = new SelectList(generalServiceFacade.Listar_TipoEstudios(null), "Value", "TextDisplay", model.tipoEstudio);
 
             return View(model);
         }

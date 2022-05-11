@@ -13,7 +13,7 @@ using WebApp.ViewModels;
 namespace WebApp.Controllers
 {
     [Authorize]
-    [Authorize(Roles = "Administrador, Consulta, Tesorería")]
+    [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONSULTA + ", " + RoleNames.TESORERIA)]
     public class EstadosCuentaTasasController : Controller
     {
         ITasaServiceFacade tasaService;
@@ -25,7 +25,6 @@ namespace WebApp.Controllers
             selectModels = new SelectModel();
         }
         
-
         [Route("consulta/tasas")]
         public ActionResult Consulta(ConsultaPagoTasasViewModel model)
         {

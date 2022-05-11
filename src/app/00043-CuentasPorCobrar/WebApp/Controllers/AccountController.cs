@@ -259,7 +259,7 @@ namespace WebApp.Controllers
 
 
 
-        [Authorize(Roles = "Administrador")]
+        [Authorize(Roles = RoleNames.ADMINISTRADOR)]
         [Route("seguridad/reiniciar-password")]
         public ActionResult AdminResetPassword(int id)
         {
@@ -269,7 +269,7 @@ namespace WebApp.Controllers
 
 
         [HttpPost]
-        [Authorize(Roles = "Administrador")]
+        [Authorize(Roles = RoleNames.ADMINISTRADOR)]
         public ActionResult GrabarAdminResetPassword(UserViewModel model, int rbtnTipReset, string NewPass, bool chkSendMail)
         {
             var result = new Response();

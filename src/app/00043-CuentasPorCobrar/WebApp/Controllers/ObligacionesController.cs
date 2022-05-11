@@ -13,7 +13,7 @@ using WebMatrix.WebData;
 
 namespace WebApp.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
     public class ObligacionesController : Controller
     {
         IGeneralServiceFacade generalServiceFacade;
@@ -50,7 +50,7 @@ namespace WebApp.Controllers
 
             ViewBag.Periodos = catalogoServiceFacade.Listar_Periodos();
 
-            ViewBag.TipoEstudios = generalServiceFacade.Listar_TipoEstudios();
+            ViewBag.TipoEstudios = generalServiceFacade.Listar_TipoEstudios(null);
 
             IEnumerable<CuotaPagoModel> cuotas_pago;
 
@@ -216,8 +216,8 @@ namespace WebApp.Controllers
 
             ViewBag.Anios = new SelectList(generalServiceFacade.Listar_Anios(), "Value", "TextDisplay", model.anio.HasValue ? model.anio.Value : DateTime.Now.Year);
             ViewBag.Periodos = new SelectList(catalogoServiceFacade.Listar_Periodos(), "Value", "TextDisplay", model.periodo);
-            ViewBag.TipoEstudios = new SelectList(generalServiceFacade.Listar_TipoEstudios(), "Value", "TextDisplay", model.tipoEstudio);
-            ViewBag.Dependencias = new SelectList(programasClientFacade.GetDependencias(model.tipoEstudio), "Value", "TextDisplay", model.codFac);
+            ViewBag.TipoEstudios = new SelectList(generalServiceFacade.Listar_TipoEstudios(null), "Value", "TextDisplay", model.tipoEstudio);
+            ViewBag.Dependencias = new SelectList(programasClientFacade.GetDependencias(model.tipoEstudio, null), "Value", "TextDisplay", model.codFac);
             ViewBag.Escuelas = new SelectList(programasClientFacade.GetEscuelas(model.codFac), "Value", "TextDisplay", model.codEsc);
             ViewBag.Especialidades = new SelectList(programasClientFacade.GetEspecialidades(model.codFac, model.codEsc), "Value", "TextDisplay", model.codRc);
             ViewBag.TipoAlumno = new SelectList(generalServiceFacade.Listar_TipoAlumno(), "Value", "TextDisplay", model.esIngresante);

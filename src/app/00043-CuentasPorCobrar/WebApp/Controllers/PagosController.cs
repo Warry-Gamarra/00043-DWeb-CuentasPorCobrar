@@ -15,7 +15,7 @@ using System.Net;
 
 namespace WebApp.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
     public class PagosController : Controller
     {
         private readonly IGeneralServiceFacade generalServiceFacade;
@@ -71,7 +71,7 @@ namespace WebApp.Controllers
 
             ViewBag.Periodos = catalogoServiceFacade.Listar_Periodos();
 
-            ViewBag.TipoEstudios = generalServiceFacade.Listar_TipoEstudios();
+            ViewBag.TipoEstudios = generalServiceFacade.Listar_TipoEstudios(null);
 
             ViewBag.Dependencias = programasClientFacade.GetFacultades(TipoEstudio.Pregrado);
 
@@ -101,7 +101,7 @@ namespace WebApp.Controllers
 
                 ViewBag.Periodos = catalogoServiceFacade.Listar_Periodos();
 
-                ViewBag.TipoEstudios = generalServiceFacade.Listar_TipoEstudios();
+                ViewBag.TipoEstudios = generalServiceFacade.Listar_TipoEstudios(null);
 
                 ViewBag.Dependencias = model.E_TipoEstudio.HasValue ? programasClientFacade.GetFacultades(model.E_TipoEstudio.Value) : new List<SelectViewModel>();
 
@@ -548,7 +548,7 @@ namespace WebApp.Controllers
             ViewBag.Title = "Exportar recaudación para el Temporal de Pagos";
 
             ViewBag.EntidadesFinancieras = new SelectList(ListaEntidadesFinancieras(), "Value", "TextDisplay");
-            ViewBag.TipoEstudios = new SelectList(generalServiceFacade.Listar_TipoEstudios(), "Value", "TextDisplay");
+            ViewBag.TipoEstudios = new SelectList(generalServiceFacade.Listar_TipoEstudios(null), "Value", "TextDisplay");
             ViewBag.TipoPago = new SelectList(generalServiceFacade.Listar_TiposPago(), "Value", "TextDisplay");
 
             return View();

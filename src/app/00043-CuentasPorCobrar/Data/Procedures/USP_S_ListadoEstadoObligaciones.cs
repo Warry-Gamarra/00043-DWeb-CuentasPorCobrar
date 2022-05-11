@@ -92,6 +92,7 @@ namespace Data.Procedures
                     parameters.Add(name: "T_NomAlu", dbType: DbType.String, value: pr.T_NomAlu);
                     parameters.Add(name: "T_ApePaternoAlu", dbType: DbType.String, value: pr.T_ApePaternoAlu);
                     parameters.Add(name: "T_ApeMaternoAlu", dbType: DbType.String, value: pr.T_ApeMaternoAlu);
+                    parameters.Add(name: "I_DependenciaID", dbType: DbType.Int32, value: pr.I_DependenciaID);
 
                     result = _dbConnection.Query<USP_S_ListadoEstadoObligaciones>(s_command, parameters, commandType: CommandType.StoredProcedure);
                 }
@@ -123,5 +124,6 @@ namespace Data.Procedures
         public string T_NomAlu { get; set; }
         public string T_ApePaternoAlu { get; set; }
         public string T_ApeMaternoAlu { get; set; }
+        public int? I_DependenciaID { get; set; }
     }
 }

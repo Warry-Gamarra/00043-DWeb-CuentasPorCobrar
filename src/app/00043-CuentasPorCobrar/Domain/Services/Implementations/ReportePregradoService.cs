@@ -94,7 +94,7 @@ namespace Domain.Services.Implementations
 
         public IEnumerable<EstadoObligacionDTO> EstadoObligacionAlumnos(int anio, int? periodo, string codFac, string codEsc, string codRc, 
             bool? esIngresante, bool? estaPagado, bool? obligacionGenerada, DateTime? fechaInicio, DateTime? fechaFin, string codAlu, 
-            string nomAlu, string apePaternoAlumno, string apeMaternoAlumno)
+            string nomAlu, string apePaternoAlumno, string apeMaternoAlumno, int? dependenciaID)
         {
             var pr = new USP_S_ListadoEstadoObligaciones_Parameters()
             {
@@ -112,7 +112,8 @@ namespace Domain.Services.Implementations
                 C_CodAlu = codAlu,
                 T_NomAlu = nomAlu,
                 T_ApePaternoAlu = apePaternoAlumno,
-                T_ApeMaternoAlu = apeMaternoAlumno
+                T_ApeMaternoAlu = apeMaternoAlumno,
+                I_DependenciaID = dependenciaID
             };
 
             var lista = USP_S_ListadoEstadoObligaciones.Execute(pr);
