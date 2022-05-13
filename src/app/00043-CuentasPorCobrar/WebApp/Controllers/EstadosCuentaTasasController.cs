@@ -24,7 +24,7 @@ namespace WebApp.Controllers
             tasaService = new TasaServiceFacade();
             selectModels = new SelectModel();
         }
-        
+                
         [Route("consulta/tasas")]
         public ActionResult Consulta(ConsultaPagoTasasViewModel model)
         {

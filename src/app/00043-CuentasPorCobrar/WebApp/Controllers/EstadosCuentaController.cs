@@ -25,6 +25,8 @@ namespace WebApp.Controllers
         PagosModel pagoModel;
         IReporteGeneralServiceFacade reporteGeneralServiceFacade;
 
+        UsersModel usersModel;
+
         public EstadosCuentaController()
         {
             reportePregradoServiceFacade = new ReportePregradoServiceFacade();
@@ -34,6 +36,7 @@ namespace WebApp.Controllers
             selectModels = new SelectModel();
             pagoModel = new PagosModel();
             reporteGeneralServiceFacade = new ReporteGeneralServiceFacade();
+            usersModel = new UsersModel();
         }
 
         // GET: EstadosCuenta
@@ -47,16 +50,37 @@ namespace WebApp.Controllers
         [Route("consultas/reporte-pago-de-obligaciones")]
         public ActionResult ReportesPagoObligaciones(ReportePagosObligacionesViewModel model)
         {
-            ViewBag.TipoEstudios = new SelectList(generalServiceFacade.Listar_TipoEstudios(null), "Value", "TextDisplay", model.tipoEstudio);
+            var userId = usersModel.Find()
+                .Where(u => u.UserName.Equals(User.Identity.Name, StringComparison.InvariantCultureIgnoreCase))
+                .First().UserId;
 
-            ViewBag.Dependencias = new SelectList(programasClientFacade.GetFacultades(model.tipoEstudio), "Value", "TextDisplay", model.dependencia);
+            var user = usersModel.Find(userId.Value);
+
+            if (user.RoleName.Equals(RoleNames.DEPENDENCIA) || user.RoleName.Equals(RoleNames.CONSULTA))
+            {
+                model.idDependencia = user.DependenciaId;
+
+                model.tipoEstudio = (model.idDependencia == DependenciaEUPG.ID) ? TipoEstudio.Posgrado : TipoEstudio.Pregrado;
+            }
+
+            ViewBag.TipoEstudios = new SelectList(generalServiceFacade.Listar_TipoEstudios(model.idDependencia), "Value", "TextDisplay", model.tipoEstudio);
+
+            ViewBag.TipoReportes = new SelectList(generalServiceFacade.Listar_TipoReporteObligaciones(model.idDependencia), "Value", "TextDisplay", model.tipoReporte);
+
+            IEnumerable<SelectViewModel> listaDependencias = programasClientFacade.GetFacultades(model.tipoEstudio, model.idDependencia);
+
+            ViewBag.Dependencias = new SelectList(listaDependencias, "Value", "TextDisplay", model.dependencia);
 
             ViewBag.EntidadesFinancieras = new SelectList(selectModels.GetEntidadesFinancieras(), "Value", "TextDisplay", model.idEntidadFinanciera);
 
             ViewBag.CtaDeposito = new SelectList(
                 model.idEntidadFinanciera.HasValue ? selectModels.GetCtasDeposito(model.idEntidadFinanciera.Value) : new List<SelectViewModel>(), "Value", "TextDisplay", model.ctaDeposito);
 
-            ViewBag.TipoReportes = new SelectList(generalServiceFacade.Listar_TipoReporteObligaciones(), "Value", "TextDisplay", model.tipoReporte);
+            ViewBag.LabelReporte = model.idDependencia.HasValue ? null : "SELECCIONAR";
+
+            ViewBag.LabelDependencias = model.idDependencia.HasValue ? null : "TODOS";
+
+            ViewBag.DependenciaDefault = model.idDependencia.HasValue ? listaDependencias.First().Value : "";
 
             if (model.tipoEstudio == TipoEstudio.Pregrado)
             {
@@ -78,6 +102,19 @@ namespace WebApp.Controllers
         [Route("consultas/reporte-pago-de-obligaciones/descarga")]
         public ActionResult DescargaReportesPagoObligaciones(ReportePagosObligacionesViewModel model)
         {
+            var userId = usersModel.Find()
+                .Where(u => u.UserName.Equals(User.Identity.Name, StringComparison.InvariantCultureIgnoreCase))
+                .First().UserId;
+
+            var user = usersModel.Find(userId.Value);
+
+            if (user.RoleName.Equals(RoleNames.DEPENDENCIA) || user.RoleName.Equals(RoleNames.CONSULTA))
+            {
+                model.idDependencia = user.DependenciaId;
+
+                model.tipoEstudio = (model.idDependencia == DependenciaEUPG.ID) ? TipoEstudio.Posgrado : TipoEstudio.Pregrado;
+            }
+
             Tuple<string, XLWorkbook> reporte;
 
             switch (model.tipoEstudio)
@@ -1374,6 +1411,7 @@ namespace WebApp.Controllers
             return workbook;
         }
 
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONSULTA + ", " + RoleNames.TESORERIA)]
         [Route("consulta/ingresos-de-obligaciones")]
         public ActionResult ListarPagosBancoObligaciones(ConsultaPagosBancoObligacionesViewModel model)
         {
@@ -1396,6 +1434,7 @@ namespace WebApp.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONSULTA + ", " + RoleNames.TESORERIA)]
         [Route("consulta/ingresos-de-obligaciones/descarga")]
         public ActionResult ListarPagosBancoObligacionesDescargaExcel(ConsultaPagosBancoObligacionesViewModel model)
         {

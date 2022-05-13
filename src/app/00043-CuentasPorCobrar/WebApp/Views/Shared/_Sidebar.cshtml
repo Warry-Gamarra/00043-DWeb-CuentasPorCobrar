@@ -15,13 +15,19 @@
                     @*<li><a href="@Url.Action("Index", "Deudas")"><i class="fa fa-fw bi-receipt-cutoff"></i>&nbsp; Deudas registradas</a></li>*@
                     @*<li><a href="@Url.Action("Generar", "Obligaciones")"><i class="fa fa-fw fa-th-large"></i>&nbsp; Consolidado por clasificador</a></li>*@
                     <li><a href="@Url.Action("Consulta", "Estudiantes")"><i class="fa bi-person-lines-fill"></i>&nbsp; Consulta estudiantes</a></li>
-                    <li><a href="@Url.Action("ListarPagosBancoObligaciones", "EstadosCuenta")"><i class="fa fa-bank"></i>&nbsp; Consulta Ingresos de Obligaciones</a></li>
-                    <li><a href="@Url.Action("ReportesPagoObligaciones", "EstadosCuenta")"><i class="fa fa-fw fa-tasks"></i>&nbsp; Reporte Pago de Obligaciones</a></li>
-                    <li><a href="@Url.Action("ResumenAnualObligacionesPorDia", "EstadosCuenta")"><i class="fa fa-bank"></i>&nbsp; Resumen Ingresos de Obligaciones</a></li>
-                    @*<li><a href="@Url.Action("ResumenAnualObligacionesPorClasificadores", "EstadosCuenta")"><i class="fa fa-fw fa-tasks"></i>&nbsp; Resumen Clasificadores (Obligaciones)</a></li>
-                    <li><a href="@Url.Action("ResumenAnualObligacionesPorDependencias", "EstadosCuenta")"><i class="fa fa-fw fa-tasks"></i>&nbsp; Resumen Dependencias (Obligaciones)</a></li>*@
+
                     @if (User.IsInRole(RoleNames.ADMINISTRADOR) || User.IsInRole(RoleNames.CONSULTA) || User.IsInRole(RoleNames.TESORERIA))
                     {
+                        <li><a href="@Url.Action("ListarPagosBancoObligaciones", "EstadosCuenta")"><i class="fa fa-bank"></i>&nbsp; Consulta Ingresos de Obligaciones</a></li>
+                    }
+
+                    <li><a href="@Url.Action("ReportesPagoObligaciones", "EstadosCuenta")"><i class="fa fa-fw fa-tasks"></i>&nbsp; Reporte Pago de Obligaciones</a></li>
+                    @*<li><a href="@Url.Action("ResumenAnualObligacionesPorClasificadores", "EstadosCuenta")"><i class="fa fa-fw fa-tasks"></i>&nbsp; Resumen Clasificadores (Obligaciones)</a></li>
+                    <li><a href="@Url.Action("ResumenAnualObligacionesPorDependencias", "EstadosCuenta")"><i class="fa fa-fw fa-tasks"></i>&nbsp; Resumen Dependencias (Obligaciones)</a></li>*@
+
+                    @if (User.IsInRole(RoleNames.ADMINISTRADOR) || User.IsInRole(RoleNames.CONSULTA) || User.IsInRole(RoleNames.TESORERIA))
+                    {
+                        <li><a href="@Url.Action("ResumenAnualObligacionesPorDia", "EstadosCuenta")"><i class="fa fa-bank"></i>&nbsp; Resumen Ingresos de Obligaciones</a></li>
                         <li><a href="@Url.Action("Consulta", "EstadosCuentaTasas")"><i class="fa bi-person-lines-fill"></i>&nbsp; Consulta pago tasas</a></li>
                     }
                 </ul>

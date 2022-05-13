@@ -60,7 +60,7 @@ namespace WebApp.Controllers
                 ViewBag.DefaultPeriodo = "15";
                 ViewBag.DefaultTipoEstudio = cmbTipoEstudio;
                 ViewBag.DefaultDependencia = "";
-                ViewBag.Dependencias = programasClientFacade.GetFacultades(cmbTipoEstudio);
+                ViewBag.Dependencias = programasClientFacade.GetFacultades(cmbTipoEstudio, null);
 
                 if (cmbAnioGrupal.HasValue && cmbPeriodoGrupal.HasValue)
                     cuotas_pago = obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(cmbAnioGrupal.Value, cmbPeriodoGrupal.Value, cmbTipoEstudio, cmbDependencia);
@@ -75,7 +75,7 @@ namespace WebApp.Controllers
                 ViewBag.DefaultPeriodo = TempData["periodo"];
                 ViewBag.DefaultTipoEstudio = TempData["tipoEstudio"];
                 ViewBag.DefaultDependencia = TempData["dependencia"];
-                ViewBag.Dependencias = programasClientFacade.GetFacultades((TipoEstudio)TempData["tipoEstudio"]);
+                ViewBag.Dependencias = programasClientFacade.GetFacultades((TipoEstudio)TempData["tipoEstudio"], null);
                 ViewBag.Success = result.Value;
                 ViewBag.Message = result.Message;
 

@@ -44,11 +44,11 @@
                                 </div>
                                 <div class="form-group col-xl-2 col-lg-6 col-md-6 col-sm-12 col-12">
                                     <label for="tipoReporte">Reporte</label>
-                                    @Html.DropDownListFor(model => model.tipoReporte, ViewBag.TipoReportes as SelectList, "SELECCIONAR", new { @class = "form-control form-control-sm text-uppercase", @required = "required" })
+                                    @Html.DropDownListFor(model => model.tipoReporte, ViewBag.TipoReportes as SelectList, (string)ViewBag.LabelReporte, new { @class = "form-control form-control-sm text-uppercase", @required = "required" })
                                 </div>
                                 <div class="form-group col-xl-2 col-lg-6 col-md-6 col-sm-12 col-12">
                                     <label for="dependencia">Facultad / Posgrado</label>
-                                    @Html.DropDownListFor(model => model.dependencia, ViewBag.Dependencias as SelectList, "TODOS", new { @class = "form-control form-control-sm text-uppercase", @disabled = "disabled" })
+                                    @Html.DropDownListFor(model => model.dependencia, ViewBag.Dependencias as SelectList, (string)ViewBag.LabelDependencias, new { @class = "form-control form-control-sm text-uppercase", @disabled = "disabled" })
                                 </div>
                                 <div class="form-group col-xl-2 col-lg-6 col-md-6 col-sm-12 col-12">
                                     <label for="idEntidadFinanciera">Entidad Financiera</label>
@@ -189,7 +189,8 @@
             if (this.value === REPORTE_FACULTAD) {
                 cmbDependencia.prop('disabled', false);
             } else {
-                cmbDependencia.val('');
+                debugger;
+                cmbDependencia.val('@ViewBag.DependenciaDefault');
                 cmbDependencia.prop('disabled', true);
             }
         });

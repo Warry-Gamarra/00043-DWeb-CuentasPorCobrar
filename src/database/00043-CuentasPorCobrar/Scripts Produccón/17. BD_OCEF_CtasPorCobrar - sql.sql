@@ -1,3 +1,14 @@
+use BD_UNFV_Repositorio
+go
+
+select * from dbo.TC_DependenciaUnfv d
+inner join dbo.TC_Facultad f on f.I_DependenciaID = d.I_DependenciaID
+order by f.T_FacDesc
+
+select * from dbo.TC_Facultad
+
+
+
 use BD_OCEF_CtasPorCobrar
 go
 
@@ -7,6 +18,11 @@ select * from dbo.TC_Usuario where UserId = 6
 
 select * from dbo.webpages_UsersInRoles where UserId = 6
 
+select * from BD_UNFV_Repositorio.dbo.TC_Facultad
+select * from BD_UNFV_Repositorio.dbo.TC_Escuela
+select * from BD_UNFV_Repositorio.dbo.TC_Especialidad
+select * from BD_UNFV_Repositorio.dbo.TI_CarreraProfesional
+select * from BD_UNFV_Repositorio.dbo.TC_ProgramaUnfv
 select * from dbo.TC_DependenciaUNFV
 
 

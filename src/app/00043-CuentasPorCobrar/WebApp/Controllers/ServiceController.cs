@@ -154,7 +154,7 @@ namespace WebApp.Controllers
         // GET: api/service/GetFacultades?tipoEstudio=TipoEstudio
         public IEnumerable<SelectViewModel> GetFacultades(TipoEstudio tipoEstudio)
         {
-            return programasClientFacade.GetFacultades(tipoEstudio);
+            return programasClientFacade.GetFacultades(tipoEstudio, null);
         }
 
         // GET: api/service/GetDependencias?tipoEstudio=TipoEstudio

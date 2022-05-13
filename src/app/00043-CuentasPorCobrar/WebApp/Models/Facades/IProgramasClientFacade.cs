@@ -10,7 +10,7 @@ namespace WebApp.Models.Facades
 {
     public interface IProgramasClientFacade
     {
-        IEnumerable<SelectViewModel> GetFacultades(TipoEstudio tipoEstudio);
+        IEnumerable<SelectViewModel> GetFacultades(TipoEstudio tipoEstudio, int? dependenciaID);
 
         IEnumerable<SelectViewModel> GetDependencias(TipoEstudio tipoEstudio, int? dependenciaID);
 

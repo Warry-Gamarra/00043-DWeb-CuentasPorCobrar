@@ -16,7 +16,7 @@ namespace WebApp.Models.Facades
 
         IEnumerable<SelectViewModel> Listar_Minutos();
 
-        IEnumerable<SelectViewModel> Listar_TipoReporteObligaciones();
+        IEnumerable<SelectViewModel> Listar_TipoReporteObligaciones(int? DependenciaID);
 
         IEnumerable<SelectViewModel> Listar_TipoAlumno();
 

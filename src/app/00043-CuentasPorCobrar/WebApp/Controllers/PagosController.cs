@@ -73,7 +73,7 @@ namespace WebApp.Controllers
 
             ViewBag.TipoEstudios = generalServiceFacade.Listar_TipoEstudios(null);
 
-            ViewBag.Dependencias = programasClientFacade.GetFacultades(TipoEstudio.Pregrado);
+            ViewBag.Dependencias = programasClientFacade.GetFacultades(TipoEstudio.Pregrado, null);
 
             ViewBag.EntidadesFinancieras = new SelectList(selectModels.GetEntidadesFinancieras(), "Value", "TextDisplay", model.I_EntidadFinanciera);
 
@@ -103,7 +103,7 @@ namespace WebApp.Controllers
 
                 ViewBag.TipoEstudios = generalServiceFacade.Listar_TipoEstudios(null);
 
-                ViewBag.Dependencias = model.E_TipoEstudio.HasValue ? programasClientFacade.GetFacultades(model.E_TipoEstudio.Value) : new List<SelectViewModel>();
+                ViewBag.Dependencias = model.E_TipoEstudio.HasValue ? programasClientFacade.GetFacultades(model.E_TipoEstudio.Value, null) : new List<SelectViewModel>();
 
                 ViewBag.EntidadesFinancieras = new SelectList(selectModels.GetEntidadesFinancieras(), "Value", "TextDisplay", model.I_EntidadFinanciera);
 

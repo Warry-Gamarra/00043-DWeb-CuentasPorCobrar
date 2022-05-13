@@ -69,16 +69,23 @@ namespace WebApp.Models.Facades
             return result;
         }
 
-        public IEnumerable<SelectViewModel> Listar_TipoReporteObligaciones()
+        public IEnumerable<SelectViewModel> Listar_TipoReporteObligaciones(int? DependenciaID)
         {
-            var lista = Reportes.Listar().Select(
+            var lista = Reportes.Listar();
+
+            if (DependenciaID.HasValue)
+            {
+                lista = lista.Where(x => x.Key == Reportes.REPORTE_FACULTAD).ToDictionary(x => x.Key, x=> x.Value);
+            }
+
+            var result = lista.Select(
                 x => new SelectViewModel()
                 {
                     Value = x.Key,
                     TextDisplay = x.Value
                 });
 
-            return lista;
+            return result;
         }
 
         public IEnumerable<SelectViewModel> Listar_TipoAlumno()
