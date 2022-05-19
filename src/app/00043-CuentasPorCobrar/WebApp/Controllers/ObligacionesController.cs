@@ -26,6 +26,7 @@ namespace WebApp.Controllers
         IReportePosgradoServiceFacade reportePosgradoServiceFacade;
         SelectModel selectModels;
         PagosModel pagosModel;
+
         public ObligacionesController()
         {
             generalServiceFacade = new GeneralServiceFacade();

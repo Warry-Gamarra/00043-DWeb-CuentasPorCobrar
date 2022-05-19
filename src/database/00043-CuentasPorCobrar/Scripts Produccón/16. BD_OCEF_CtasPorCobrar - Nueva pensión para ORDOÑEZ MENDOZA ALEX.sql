@@ -8,7 +8,7 @@ DECLARE @I_ObligacionAluID INT,
 		@I_MontoOblig INT = 970,
 		@D_FecVencto DATE = '20220531',
 		@D_FecCre DATE = GETDATE(),
-		@I_UsuarioCre INT = 1,
+		@I_UsuarioCre INT = 1
 
 
 

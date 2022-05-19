@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -67,7 +68,7 @@ namespace WebApp.Models
         {
             get
             {
-                return B_Pagado ? "Pagd." : "Pendt.";
+                return B_Pagado ? "Pagado" : "Pendiente";
             }
         }
 
@@ -77,7 +78,7 @@ namespace WebApp.Models
         {
             get
             {
-                return D_FecVencto.ToString("dd/MM/yyyy");
+                return D_FecVencto.ToString(FormatosDateTime.BASIC_DATE);
             }
         }
 

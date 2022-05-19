@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="ObligacionAlumnoDS" targetNamespace="http://tempuri.org/ObligacionAlumnoDS.xsd" xmlns:mstns="http://tempuri.org/ObligacionAlumnoDS.xsd" xmlns="http://tempuri.org/ObligacionAlumnoDS.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="ObligacionAlumnoDS" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="ObligacionAlumnoDS" msprop:Generator_UserDSName="ObligacionAlumnoDS">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="ObligacionAlumnoDT" msprop:Generator_TableClassName="ObligacionAlumnoDTDataTable" msprop:Generator_TableVarName="tableObligacionAlumnoDT" msprop:Generator_TablePropName="ObligacionAlumnoDT" msprop:Generator_RowDeletingName="ObligacionAlumnoDTRowDeleting" msprop:Generator_RowChangingName="ObligacionAlumnoDTRowChanging" msprop:Generator_RowEvHandlerName="ObligacionAlumnoDTRowChangeEventHandler" msprop:Generator_RowDeletedName="ObligacionAlumnoDTRowDeleted" msprop:Generator_UserTableName="ObligacionAlumnoDT" msprop:Generator_RowChangedName="ObligacionAlumnoDTRowChanged" msprop:Generator_RowEvArgName="ObligacionAlumnoDTRowChangeEvent" msprop:Generator_RowClassName="ObligacionAlumnoDTRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="T_ConceptoDesc" msprop:Generator_ColumnVarNameInTable="columnT_ConceptoDesc" msprop:Generator_ColumnPropNameInRow="T_ConceptoDesc" msprop:Generator_ColumnPropNameInTable="T_ConceptoDescColumn" msprop:Generator_UserColumnName="T_ConceptoDesc" type="xs:string" minOccurs="0" />
+              <xs:element name="T_NroOrden" msprop:Generator_ColumnVarNameInTable="columnT_NroOrden" msprop:Generator_ColumnPropNameInRow="T_NroOrden" msprop:Generator_ColumnPropNameInTable="T_NroOrdenColumn" msprop:Generator_UserColumnName="T_NroOrden" type="xs:string" minOccurs="0" />
+              <xs:element name="T_ProcesoDesc" msprop:Generator_ColumnVarNameInTable="columnT_ProcesoDesc" msprop:Generator_ColumnPropNameInRow="T_ProcesoDesc" msprop:Generator_ColumnPropNameInTable="T_ProcesoDescColumn" msprop:Generator_UserColumnName="T_ProcesoDesc" type="xs:string" minOccurs="0" />
+              <xs:element name="I_Monto" msprop:Generator_ColumnVarNameInTable="columnI_Monto" msprop:Generator_ColumnPropNameInRow="I_Monto" msprop:Generator_ColumnPropNameInTable="I_MontoColumn" msprop:Generator_UserColumnName="I_Monto" type="xs:string" minOccurs="0" />
+              <xs:element name="T_FecVencto" msprop:Generator_ColumnVarNameInTable="columnT_FecVencto" msprop:Generator_ColumnPropNameInRow="T_FecVencto" msprop:Generator_ColumnPropNameInTable="T_FecVenctoColumn" msprop:Generator_UserColumnName="T_FecVencto" type="xs:string" minOccurs="0" />
+              <xs:element name="T_TipoObligacion" msprop:Generator_ColumnVarNameInTable="columnT_TipoObligacion" msprop:Generator_ColumnPropNameInRow="T_TipoObligacion" msprop:Generator_ColumnPropNameInTable="T_TipoObligacionColumn" msprop:Generator_UserColumnName="T_TipoObligacion" type="xs:string" minOccurs="0" />
+              <xs:element name="T_Pagado" msprop:Generator_ColumnVarNameInTable="columnT_Pagado" msprop:Generator_ColumnPropNameInRow="T_Pagado" msprop:Generator_ColumnPropNameInTable="T_PagadoColumn" msprop:Generator_UserColumnName="T_Pagado" type="xs:string" minOccurs="0" />
+              <xs:element name="T_NroRecibo" msprop:Generator_ColumnVarNameInTable="columnT_NroRecibo" msprop:Generator_ColumnPropNameInRow="T_NroRecibo" msprop:Generator_ColumnPropNameInTable="T_NroReciboColumn" msprop:Generator_UserColumnName="T_NroRecibo" type="xs:string" minOccurs="0" />
+              <xs:element name="T_FecPago" msprop:Generator_ColumnVarNameInTable="columnT_FecPago" msprop:Generator_ColumnPropNameInRow="T_FecPago" msprop:Generator_ColumnPropNameInTable="T_FecPagoColumn" msprop:Generator_UserColumnName="T_FecPago" type="xs:string" minOccurs="0" />
+              <xs:element name="T_LugarPago" msprop:Generator_ColumnVarNameInTable="columnT_LugarPago" msprop:Generator_ColumnPropNameInRow="T_LugarPago" msprop:Generator_ColumnPropNameInTable="T_LugarPagoColumn" msprop:Generator_UserColumnName="T_LugarPago" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
