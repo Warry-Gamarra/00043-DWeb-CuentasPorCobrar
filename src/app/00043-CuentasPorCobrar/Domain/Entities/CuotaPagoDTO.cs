@@ -12,6 +12,8 @@ namespace Domain.Entities
 
         public int I_ObligacionAluID { get; set; }
 
+        public int I_MatAluID { get; set; }
+
         public int I_ProcesoID { get; set; }
 
         public string N_CodBanco { get; set; }
@@ -53,6 +55,8 @@ namespace Domain.Entities
         public decimal? I_MontoOblig { get; set; }
         
         public decimal I_MontoPagadoActual { get; set; }
+
+        public decimal I_MontoPagadoSinMora { get; set; }
 
         public bool B_Pagado { get; set; }
 

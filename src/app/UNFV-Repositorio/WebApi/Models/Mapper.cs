@@ -118,7 +118,10 @@ namespace WebApi.Models
                 C_RcCod = alumnoDTO.C_RcCod,
                 C_CodEsp = alumnoDTO.C_CodEsp,
                 C_CodEsc = alumnoDTO.C_CodEsc,
+                T_EscDesc = alumnoDTO.T_EscDesc,
                 C_CodFac = alumnoDTO.C_CodFac,
+                T_FacDesc = alumnoDTO.T_FacDesc,
+                C_CodProg = alumnoDTO.C_CodProg,
                 T_DenomProg = alumnoDTO.T_DenomProg,
                 C_CodModIng = alumnoDTO.C_CodModIng,
                 T_ModIngDesc = alumnoDTO.T_ModIngDesc,
@@ -127,7 +130,8 @@ namespace WebApi.Models
                 N_Grupo = alumnoDTO.N_Grupo,
                 C_AnioIngreso = alumnoDTO.C_AnioIngreso,
                 I_IdPlan = alumnoDTO.I_IdPlan,
-                B_Habilitado = alumnoDTO.B_Habilitado
+                B_Habilitado = alumnoDTO.B_Habilitado,
+                I_DependenciaID = alumnoDTO.I_DependenciaID
             };
 
             return alumnoModel;

@@ -18,6 +18,8 @@ namespace WebApp.Models
             }
         }
 
+        public int I_MatAluID { get; set; }
+
         public int I_ObligacionAluID { get; set; }
 
         public int I_ProcesoID { get; set; }
@@ -94,13 +96,23 @@ namespace WebApp.Models
             }
         }
 
+        public decimal I_MontoPagadoSinMora { get; set; }
+
+        public string T_MontoPagadoSinMora
+        {
+            get
+            {
+                return I_MontoPagadoSinMora.ToString(FormatosDecimal.BASIC_DECIMAL);
+            }
+        }
+
         public bool B_Pagado { get; set; }
 
         public string T_Pagado
         {
             get
             {
-                return B_Pagado ? "Pagd." : "Pendt.";
+                return B_Pagado ? "Pagado" : "Pendiente";
             }
         }
 

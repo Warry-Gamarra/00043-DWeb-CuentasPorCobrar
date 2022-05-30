@@ -103,7 +103,10 @@ namespace Domain.Entities
                 C_RcCod = alumno.C_RcCod,
                 C_CodEsp = alumno.C_CodEsp,
                 C_CodEsc = alumno.C_CodEsc,
+                T_EscDesc = alumno.T_EscDesc,
                 C_CodFac = alumno.C_CodFac,
+                T_FacDesc = alumno.T_FacDesc,
+                C_CodProg = alumno.C_CodProg,
                 T_DenomProg = alumno.T_DenomProg,
                 C_CodModIng = alumno.C_CodModIng,
                 T_ModIngDesc = alumno.T_ModIngDesc,
@@ -112,7 +115,8 @@ namespace Domain.Entities
                 N_Grupo = alumno.N_Grupo,
                 C_AnioIngreso = alumno.C_AnioIngreso,
                 I_IdPlan = alumno.I_IdPlan,
-                B_Habilitado = alumno.B_Habilitado
+                B_Habilitado = alumno.B_Habilitado,
+                I_DependenciaID = alumno.I_DependenciaID
             };
 
             return alumnoDTO;

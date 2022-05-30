@@ -134,6 +134,7 @@ namespace Domain.Entities
                 T_ApeMaterno = detalleObligaciones.T_ApeMaterno ?? "",
                 I_Anio = detalleObligaciones.I_Anio,
                 I_Periodo = detalleObligaciones.I_Periodo,
+                C_CodModIng = detalleObligaciones.C_CodModIng,
                 C_Periodo = detalleObligaciones.C_Periodo,
                 T_Periodo = detalleObligaciones.T_Periodo,
                 T_ProcesoDesc = detalleObligaciones.T_ProcesoDesc,
@@ -151,6 +152,7 @@ namespace Domain.Entities
                 I_TipoAlumno = detalleObligaciones.I_TipoAlumno,
                 C_TipoAlumno = detalleObligaciones.C_TipoAlumno,
                 T_TipoAlumno = detalleObligaciones.T_TipoAlumno,
+                B_Mora = detalleObligaciones.B_Mora,
                 I_TipoDocumento = detalleObligaciones.I_TipoDocumento,
                 T_DescDocumento = detalleObligaciones.T_DescDocumento
             };
@@ -164,6 +166,7 @@ namespace Domain.Entities
             {
                 I_NroOrden = cuotaPago.I_NroOrden,
                 I_ObligacionAluID = cuotaPago.I_ObligacionAluID,
+                I_MatAluID = cuotaPago.I_MatAluID,
                 I_ProcesoID = cuotaPago.I_ProcesoID,
                 N_CodBanco = cuotaPago.N_CodBanco ?? "",
                 C_CodAlu = cuotaPago.C_CodAlu,
@@ -185,6 +188,7 @@ namespace Domain.Entities
                 C_TipoAlumno = cuotaPago.C_TipoAlumno,
                 I_MontoOblig = cuotaPago.I_MontoOblig,
                 I_MontoPagadoActual = cuotaPago.I_MontoPagadoActual,
+                I_MontoPagadoSinMora = cuotaPago.I_MontoPagadoSinMora,
                 B_Pagado = cuotaPago.B_Pagado,
                 D_FecCre = cuotaPago.D_FecCre,
                 C_CodServicio = cuotaPago.C_CodServicio,

@@ -42,6 +42,8 @@ namespace WebApp.Models
 
         public int I_Periodo { get; set; }
 
+        public string C_CodModIng { get; set; }
+
         public string C_Periodo { get; set; }
 
         public string T_Periodo { get; set; }
@@ -120,5 +122,7 @@ namespace WebApp.Models
         public string D_FecPago { get; set; }
 
         public string T_LugarPago { get; set; }
+
+        public bool B_Mora { get; set; }
     }
 }

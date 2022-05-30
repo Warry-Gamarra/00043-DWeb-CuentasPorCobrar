@@ -34,7 +34,13 @@ namespace WebApi.Models
 
         public string C_CodEsc { get; set; }
 
+        public string T_EscDesc { get; set; }
+
         public string C_CodFac { get; set; }
+
+        public string T_FacDesc { get; set; }
+
+        public string C_CodProg { get; set; }
 
         public string T_DenomProg { get; set; }
 
@@ -53,5 +59,7 @@ namespace WebApi.Models
         public int? I_IdPlan { get; set; }
 
         public bool B_Habilitado { get; set; }
+
+        public int? I_DependenciaID { get; set; }
     }
 }

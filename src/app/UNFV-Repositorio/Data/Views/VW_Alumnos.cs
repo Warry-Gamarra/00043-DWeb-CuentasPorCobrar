@@ -38,7 +38,13 @@ namespace Data.Views
 
         public string C_CodEsc { get; set; }
 
+        public string T_EscDesc { get; set; }
+
         public string C_CodFac { get; set; }
+
+        public string T_FacDesc { get; set; }
+
+        public string C_CodProg { get; set; }
 
         public string T_DenomProg { get; set; }
 
@@ -59,6 +65,8 @@ namespace Data.Views
         public bool B_Habilitado { get; set; }
 
         public bool B_Eliminado { get; set; }
+
+        public int? I_DependenciaID { get; set; }
 
         public static IEnumerable<VW_Alumnos> GetAll()
         {

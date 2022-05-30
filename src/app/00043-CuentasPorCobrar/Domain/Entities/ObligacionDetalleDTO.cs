@@ -32,6 +32,8 @@ namespace Domain.Entities
 
         public int I_Periodo { get; set; }
 
+        public string C_CodModIng { get; set; }
+
         public string C_Periodo { get; set; }
 
         public string T_Periodo { get; set; }
@@ -65,6 +67,8 @@ namespace Domain.Entities
         public string C_TipoAlumno { get; set; }
 
         public string T_TipoAlumno { get; set; }
+
+        public bool B_Mora { get; set; }
 
         public int? I_TipoDocumento { get; set; }
 

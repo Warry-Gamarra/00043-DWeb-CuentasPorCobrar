@@ -40,6 +40,7 @@ namespace WebApp.Models
                 T_ApeMaterno = obligacionDetalleDTO.T_ApeMaterno,
                 I_Anio = obligacionDetalleDTO.I_Anio,
                 I_Periodo = obligacionDetalleDTO.I_Periodo,
+                C_CodModIng = obligacionDetalleDTO.C_CodModIng,
                 C_Periodo = obligacionDetalleDTO.C_Periodo,
                 T_Periodo = obligacionDetalleDTO.T_Periodo,
                 T_ProcesoDesc = obligacionDetalleDTO.T_ProcesoDesc,
@@ -58,7 +59,8 @@ namespace WebApp.Models
                 C_TipoAlumno = obligacionDetalleDTO.C_TipoAlumno,
                 T_TipoAlumno = obligacionDetalleDTO.T_TipoAlumno,
                 I_TipoDocumento = obligacionDetalleDTO.I_TipoDocumento,
-                T_DescDocumento = obligacionDetalleDTO.T_DescDocumento
+                T_DescDocumento = obligacionDetalleDTO.T_DescDocumento,
+                B_Mora = obligacionDetalleDTO.B_Mora
             };
 
             return obligacionDetalleModel;
@@ -70,6 +72,7 @@ namespace WebApp.Models
             {
                 I_NroOrden = cuotaPagoDTO.I_NroOrden,
                 I_ObligacionAluID = cuotaPagoDTO.I_ObligacionAluID,
+                I_MatAluID = cuotaPagoDTO.I_MatAluID,
                 I_ProcesoID = cuotaPagoDTO.I_ProcesoID,
                 N_CodBanco = cuotaPagoDTO.N_CodBanco,
                 C_CodAlu = cuotaPagoDTO.C_CodAlu,
@@ -91,6 +94,7 @@ namespace WebApp.Models
                 C_TipoAlumno = cuotaPagoDTO.C_TipoAlumno,
                 I_MontoOblig = cuotaPagoDTO.I_MontoOblig,
                 I_MontoPagadoActual = cuotaPagoDTO.I_MontoPagadoActual,
+                I_MontoPagadoSinMora = cuotaPagoDTO.I_MontoPagadoSinMora,
                 B_Pagado = cuotaPagoDTO.B_Pagado,
                 D_FecCre = cuotaPagoDTO.D_FecCre,
                 C_CodServicio = cuotaPagoDTO.C_CodServicio,

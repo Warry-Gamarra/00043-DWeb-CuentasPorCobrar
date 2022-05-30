@@ -24,7 +24,9 @@ namespace WebApp.Models.DataSets {
     [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.DataSet")]
     public partial class ObligacionAlumnoDS : global::System.Data.DataSet {
         
-        private ObligacionAlumnoDTDataTable tableObligacionAlumnoDT;
+        private DetalleObligacionAlumnoDTDataTable tableDetalleObligacionAlumnoDT;
+        
+        private CabeceraObligacionAlumnoDTDataTable tableCabeceraObligacionAlumnoDT;
         
         private global::System.Data.SchemaSerializationMode _schemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
         
@@ -54,8 +56,11 @@ namespace WebApp.Models.DataSets {
             if ((this.DetermineSchemaSerializationMode(info, context) == global::System.Data.SchemaSerializationMode.IncludeSchema)) {
                 global::System.Data.DataSet ds = new global::System.Data.DataSet();
                 ds.ReadXmlSchema(new global::System.Xml.XmlTextReader(new global::System.IO.StringReader(strSchema)));
-                if ((ds.Tables["ObligacionAlumnoDT"] != null)) {
-                    base.Tables.Add(new ObligacionAlumnoDTDataTable(ds.Tables["ObligacionAlumnoDT"]));
+                if ((ds.Tables["DetalleObligacionAlumnoDT"] != null)) {
+                    base.Tables.Add(new DetalleObligacionAlumnoDTDataTable(ds.Tables["DetalleObligacionAlumnoDT"]));
+                }
+                if ((ds.Tables["CabeceraObligacionAlumnoDT"] != null)) {
+                    base.Tables.Add(new CabeceraObligacionAlumnoDTDataTable(ds.Tables["CabeceraObligacionAlumnoDT"]));
                 }
                 this.DataSetName = ds.DataSetName;
                 this.Prefix = ds.Prefix;
@@ -79,9 +84,19 @@ namespace WebApp.Models.DataSets {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         [global::System.ComponentModel.Browsable(false)]
         [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
-        public ObligacionAlumnoDTDataTable ObligacionAlumnoDT {
+        public DetalleObligacionAlumnoDTDataTable DetalleObligacionAlumnoDT {
             get {
-                return this.tableObligacionAlumnoDT;
+                return this.tableDetalleObligacionAlumnoDT;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.ComponentModel.Browsable(false)]
+        [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
+        public CabeceraObligacionAlumnoDTDataTable CabeceraObligacionAlumnoDT {
+            get {
+                return this.tableCabeceraObligacionAlumnoDT;
             }
         }
         
@@ -152,8 +167,11 @@ namespace WebApp.Models.DataSets {
                 this.Reset();
                 global::System.Data.DataSet ds = new global::System.Data.DataSet();
                 ds.ReadXml(reader);
-                if ((ds.Tables["ObligacionAlumnoDT"] != null)) {
-                    base.Tables.Add(new ObligacionAlumnoDTDataTable(ds.Tables["ObligacionAlumnoDT"]));
+                if ((ds.Tables["DetalleObligacionAlumnoDT"] != null)) {
+                    base.Tables.Add(new DetalleObligacionAlumnoDTDataTable(ds.Tables["DetalleObligacionAlumnoDT"]));
+                }
+                if ((ds.Tables["CabeceraObligacionAlumnoDT"] != null)) {
+                    base.Tables.Add(new CabeceraObligacionAlumnoDTDataTable(ds.Tables["CabeceraObligacionAlumnoDT"]));
                 }
                 this.DataSetName = ds.DataSetName;
                 this.Prefix = ds.Prefix;
@@ -188,10 +206,16 @@ namespace WebApp.Models.DataSets {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         internal void InitVars(bool initTable) {
-            this.tableObligacionAlumnoDT = ((ObligacionAlumnoDTDataTable)(base.Tables["ObligacionAlumnoDT"]));
+            this.tableDetalleObligacionAlumnoDT = ((DetalleObligacionAlumnoDTDataTable)(base.Tables["DetalleObligacionAlumnoDT"]));
             if ((initTable == true)) {
-                if ((this.tableObligacionAlumnoDT != null)) {
-                    this.tableObligacionAlumnoDT.InitVars();
+                if ((this.tableDetalleObligacionAlumnoDT != null)) {
+                    this.tableDetalleObligacionAlumnoDT.InitVars();
+                }
+            }
+            this.tableCabeceraObligacionAlumnoDT = ((CabeceraObligacionAlumnoDTDataTable)(base.Tables["CabeceraObligacionAlumnoDT"]));
+            if ((initTable == true)) {
+                if ((this.tableCabeceraObligacionAlumnoDT != null)) {
+                    this.tableCabeceraObligacionAlumnoDT.InitVars();
                 }
             }
         }
@@ -204,13 +228,21 @@ namespace WebApp.Models.DataSets {
             this.Namespace = "http://tempuri.org/ObligacionAlumnoDS.xsd";
             this.EnforceConstraints = true;
             this.SchemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
-            this.tableObligacionAlumnoDT = new ObligacionAlumnoDTDataTable();
-            base.Tables.Add(this.tableObligacionAlumnoDT);
+            this.tableDetalleObligacionAlumnoDT = new DetalleObligacionAlumnoDTDataTable();
+            base.Tables.Add(this.tableDetalleObligacionAlumnoDT);
+            this.tableCabeceraObligacionAlumnoDT = new CabeceraObligacionAlumnoDTDataTable();
+            base.Tables.Add(this.tableCabeceraObligacionAlumnoDT);
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-        private bool ShouldSerializeObligacionAlumnoDT() {
+        private bool ShouldSerializeDetalleObligacionAlumnoDT() {
+            return false;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        private bool ShouldSerializeCabeceraObligacionAlumnoDT() {
             return false;
         }
         
@@ -270,14 +302,17 @@ namespace WebApp.Models.DataSets {
         }
         
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-        public delegate void ObligacionAlumnoDTRowChangeEventHandler(object sender, ObligacionAlumnoDTRowChangeEvent e);
+        public delegate void DetalleObligacionAlumnoDTRowChangeEventHandler(object sender, DetalleObligacionAlumnoDTRowChangeEvent e);
+        
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        public delegate void CabeceraObligacionAlumnoDTRowChangeEventHandler(object sender, CabeceraObligacionAlumnoDTRowChangeEvent e);
         
         /// <summary>
         ///Represents the strongly named DataTable class.
         ///</summary>
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class ObligacionAlumnoDTDataTable : global::System.Data.TypedTableBase<ObligacionAlumnoDTRow> {
+        public partial class DetalleObligacionAlumnoDTDataTable : global::System.Data.TypedTableBase<DetalleObligacionAlumnoDTRow> {
             
             private global::System.Data.DataColumn columnT_ConceptoDesc;
             
@@ -299,10 +334,12 @@ namespace WebApp.Models.DataSets {
             
             private global::System.Data.DataColumn columnT_LugarPago;
             
+            private global::System.Data.DataColumn columnT_Monto;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public ObligacionAlumnoDTDataTable() {
-                this.TableName = "ObligacionAlumnoDT";
+            public DetalleObligacionAlumnoDTDataTable() {
+                this.TableName = "DetalleObligacionAlumnoDT";
                 this.BeginInit();
                 this.InitClass();
                 this.EndInit();
@@ -310,7 +347,7 @@ namespace WebApp.Models.DataSets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            internal ObligacionAlumnoDTDataTable(global::System.Data.DataTable table) {
+            internal DetalleObligacionAlumnoDTDataTable(global::System.Data.DataTable table) {
                 this.TableName = table.TableName;
                 if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
                     this.CaseSensitive = table.CaseSensitive;
@@ -327,7 +364,7 @@ namespace WebApp.Models.DataSets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            protected ObligacionAlumnoDTDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+            protected DetalleObligacionAlumnoDTDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
                     base(info, context) {
                 this.InitVars();
             }
@@ -414,6 +451,14 @@ namespace WebApp.Models.DataSets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public global::System.Data.DataColumn T_MontoColumn {
+                get {
+                    return this.columnT_Monto;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -423,34 +468,34 @@ namespace WebApp.Models.DataSets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public ObligacionAlumnoDTRow this[int index] {
+            public DetalleObligacionAlumnoDTRow this[int index] {
                 get {
-                    return ((ObligacionAlumnoDTRow)(this.Rows[index]));
+                    return ((DetalleObligacionAlumnoDTRow)(this.Rows[index]));
                 }
             }
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public event ObligacionAlumnoDTRowChangeEventHandler ObligacionAlumnoDTRowChanging;
+            public event DetalleObligacionAlumnoDTRowChangeEventHandler DetalleObligacionAlumnoDTRowChanging;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public event ObligacionAlumnoDTRowChangeEventHandler ObligacionAlumnoDTRowChanged;
+            public event DetalleObligacionAlumnoDTRowChangeEventHandler DetalleObligacionAlumnoDTRowChanged;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public event ObligacionAlumnoDTRowChangeEventHandler ObligacionAlumnoDTRowDeleting;
+            public event DetalleObligacionAlumnoDTRowChangeEventHandler DetalleObligacionAlumnoDTRowDeleting;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public event ObligacionAlumnoDTRowChangeEventHandler ObligacionAlumnoDTRowDeleted;
+            public event DetalleObligacionAlumnoDTRowChangeEventHandler DetalleObligacionAlumnoDTRowDeleted;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void AddObligacionAlumnoDTRow(ObligacionAlumnoDTRow row) {
+            public void AddDetalleObligacionAlumnoDTRow(DetalleObligacionAlumnoDTRow row) {
                 this.Rows.Add(row);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public ObligacionAlumnoDTRow AddObligacionAlumnoDTRow(string T_ConceptoDesc, string T_NroOrden, string T_ProcesoDesc, string I_Monto, string T_FecVencto, string T_TipoObligacion, string T_Pagado, string T_NroRecibo, string T_FecPago, string T_LugarPago) {
-                ObligacionAlumnoDTRow rowObligacionAlumnoDTRow = ((ObligacionAlumnoDTRow)(this.NewRow()));
+            public DetalleObligacionAlumnoDTRow AddDetalleObligacionAlumnoDTRow(string T_ConceptoDesc, string T_NroOrden, string T_ProcesoDesc, decimal I_Monto, string T_FecVencto, string T_TipoObligacion, string T_Pagado, string T_NroRecibo, string T_FecPago, string T_LugarPago, string T_Monto) {
+                DetalleObligacionAlumnoDTRow rowDetalleObligacionAlumnoDTRow = ((DetalleObligacionAlumnoDTRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         T_ConceptoDesc,
                         T_NroOrden,
@@ -461,16 +506,17 @@ namespace WebApp.Models.DataSets {
                         T_Pagado,
                         T_NroRecibo,
                         T_FecPago,
-                        T_LugarPago};
-                rowObligacionAlumnoDTRow.ItemArray = columnValuesArray;
-                this.Rows.Add(rowObligacionAlumnoDTRow);
-                return rowObligacionAlumnoDTRow;
+                        T_LugarPago,
+                        T_Monto};
+                rowDetalleObligacionAlumnoDTRow.ItemArray = columnValuesArray;
+                this.Rows.Add(rowDetalleObligacionAlumnoDTRow);
+                return rowDetalleObligacionAlumnoDTRow;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public override global::System.Data.DataTable Clone() {
-                ObligacionAlumnoDTDataTable cln = ((ObligacionAlumnoDTDataTable)(base.Clone()));
+                DetalleObligacionAlumnoDTDataTable cln = ((DetalleObligacionAlumnoDTDataTable)(base.Clone()));
                 cln.InitVars();
                 return cln;
             }
@@ -478,7 +524,7 @@ namespace WebApp.Models.DataSets {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             protected override global::System.Data.DataTable CreateInstance() {
-                return new ObligacionAlumnoDTDataTable();
+                return new DetalleObligacionAlumnoDTDataTable();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -494,6 +540,7 @@ namespace WebApp.Models.DataSets {
                 this.columnT_NroRecibo = base.Columns["T_NroRecibo"];
                 this.columnT_FecPago = base.Columns["T_FecPago"];
                 this.columnT_LugarPago = base.Columns["T_LugarPago"];
+                this.columnT_Monto = base.Columns["T_Monto"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -505,7 +552,7 @@ namespace WebApp.Models.DataSets {
                 base.Columns.Add(this.columnT_NroOrden);
                 this.columnT_ProcesoDesc = new global::System.Data.DataColumn("T_ProcesoDesc", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnT_ProcesoDesc);
-                this.columnI_Monto = new global::System.Data.DataColumn("I_Monto", typeof(string), null, global::System.Data.MappingType.Element);
+                this.columnI_Monto = new global::System.Data.DataColumn("I_Monto", typeof(decimal), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnI_Monto);
                 this.columnT_FecVencto = new global::System.Data.DataColumn("T_FecVencto", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnT_FecVencto);
@@ -519,32 +566,34 @@ namespace WebApp.Models.DataSets {
                 base.Columns.Add(this.columnT_FecPago);
                 this.columnT_LugarPago = new global::System.Data.DataColumn("T_LugarPago", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnT_LugarPago);
+                this.columnT_Monto = new global::System.Data.DataColumn("T_Monto", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnT_Monto);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public ObligacionAlumnoDTRow NewObligacionAlumnoDTRow() {
-                return ((ObligacionAlumnoDTRow)(this.NewRow()));
+            public DetalleObligacionAlumnoDTRow NewDetalleObligacionAlumnoDTRow() {
+                return ((DetalleObligacionAlumnoDTRow)(this.NewRow()));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
-                return new ObligacionAlumnoDTRow(builder);
+                return new DetalleObligacionAlumnoDTRow(builder);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             protected override global::System.Type GetRowType() {
-                return typeof(ObligacionAlumnoDTRow);
+                return typeof(DetalleObligacionAlumnoDTRow);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanged(e);
-                if ((this.ObligacionAlumnoDTRowChanged != null)) {
-                    this.ObligacionAlumnoDTRowChanged(this, new ObligacionAlumnoDTRowChangeEvent(((ObligacionAlumnoDTRow)(e.Row)), e.Action));
+                if ((this.DetalleObligacionAlumnoDTRowChanged != null)) {
+                    this.DetalleObligacionAlumnoDTRowChanged(this, new DetalleObligacionAlumnoDTRowChangeEvent(((DetalleObligacionAlumnoDTRow)(e.Row)), e.Action));
                 }
             }
             
@@ -552,8 +601,8 @@ namespace WebApp.Models.DataSets {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanging(e);
-                if ((this.ObligacionAlumnoDTRowChanging != null)) {
-                    this.ObligacionAlumnoDTRowChanging(this, new ObligacionAlumnoDTRowChangeEvent(((ObligacionAlumnoDTRow)(e.Row)), e.Action));
+                if ((this.DetalleObligacionAlumnoDTRowChanging != null)) {
+                    this.DetalleObligacionAlumnoDTRowChanging(this, new DetalleObligacionAlumnoDTRowChangeEvent(((DetalleObligacionAlumnoDTRow)(e.Row)), e.Action));
                 }
             }
             
@@ -561,8 +610,8 @@ namespace WebApp.Models.DataSets {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleted(e);
-                if ((this.ObligacionAlumnoDTRowDeleted != null)) {
-                    this.ObligacionAlumnoDTRowDeleted(this, new ObligacionAlumnoDTRowChangeEvent(((ObligacionAlumnoDTRow)(e.Row)), e.Action));
+                if ((this.DetalleObligacionAlumnoDTRowDeleted != null)) {
+                    this.DetalleObligacionAlumnoDTRowDeleted(this, new DetalleObligacionAlumnoDTRowChangeEvent(((DetalleObligacionAlumnoDTRow)(e.Row)), e.Action));
                 }
             }
             
@@ -570,14 +619,14 @@ namespace WebApp.Models.DataSets {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleting(e);
-                if ((this.ObligacionAlumnoDTRowDeleting != null)) {
-                    this.ObligacionAlumnoDTRowDeleting(this, new ObligacionAlumnoDTRowChangeEvent(((ObligacionAlumnoDTRow)(e.Row)), e.Action));
+                if ((this.DetalleObligacionAlumnoDTRowDeleting != null)) {
+                    this.DetalleObligacionAlumnoDTRowDeleting(this, new DetalleObligacionAlumnoDTRowChangeEvent(((DetalleObligacionAlumnoDTRow)(e.Row)), e.Action));
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void RemoveObligacionAlumnoDTRow(ObligacionAlumnoDTRow row) {
+            public void RemoveDetalleObligacionAlumnoDTRow(DetalleObligacionAlumnoDTRow row) {
                 this.Rows.Remove(row);
             }
             
@@ -604,7 +653,352 @@ namespace WebApp.Models.DataSets {
                 type.Attributes.Add(attribute1);
                 global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
                 attribute2.Name = "tableTypeName";
-                attribute2.FixedValue = "ObligacionAlumnoDTDataTable";
+                attribute2.FixedValue = "DetalleObligacionAlumnoDTDataTable";
+                type.Attributes.Add(attribute2);
+                type.Particle = sequence;
+                global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
+                if (xs.Contains(dsSchema.TargetNamespace)) {
+                    global::System.IO.MemoryStream s1 = new global::System.IO.MemoryStream();
+                    global::System.IO.MemoryStream s2 = new global::System.IO.MemoryStream();
+                    try {
+                        global::System.Xml.Schema.XmlSchema schema = null;
+                        dsSchema.Write(s1);
+                        for (global::System.Collections.IEnumerator schemas = xs.Schemas(dsSchema.TargetNamespace).GetEnumerator(); schemas.MoveNext(); ) {
+                            schema = ((global::System.Xml.Schema.XmlSchema)(schemas.Current));
+                            s2.SetLength(0);
+                            schema.Write(s2);
+                            if ((s1.Length == s2.Length)) {
+                                s1.Position = 0;
+                                s2.Position = 0;
+                                for (; ((s1.Position != s1.Length) 
+                                            && (s1.ReadByte() == s2.ReadByte())); ) {
+                                    ;
+                                }
+                                if ((s1.Position == s1.Length)) {
+                                    return type;
+                                }
+                            }
+                        }
+                    }
+                    finally {
+                        if ((s1 != null)) {
+                            s1.Close();
+                        }
+                        if ((s2 != null)) {
+                            s2.Close();
+                        }
+                    }
+                }
+                xs.Add(dsSchema);
+                return type;
+            }
+        }
+        
+        /// <summary>
+        ///Represents the strongly named DataTable class.
+        ///</summary>
+        [global::System.Serializable()]
+        [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
+        public partial class CabeceraObligacionAlumnoDTDataTable : global::System.Data.TypedTableBase<CabeceraObligacionAlumnoDTRow> {
+            
+            private global::System.Data.DataColumn columnI_MontoOblig;
+            
+            private global::System.Data.DataColumn columnB_Pagado;
+            
+            private global::System.Data.DataColumn columnT_Pagado;
+            
+            private global::System.Data.DataColumn columnI_MontoPagadoActual;
+            
+            private global::System.Data.DataColumn columnT_FecVencto;
+            
+            private global::System.Data.DataColumn columnT_NroOrden;
+            
+            private global::System.Data.DataColumn columnT_MontoOblig;
+            
+            private global::System.Data.DataColumn columnT_MontoPagadoActual;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public CabeceraObligacionAlumnoDTDataTable() {
+                this.TableName = "CabeceraObligacionAlumnoDT";
+                this.BeginInit();
+                this.InitClass();
+                this.EndInit();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            internal CabeceraObligacionAlumnoDTDataTable(global::System.Data.DataTable table) {
+                this.TableName = table.TableName;
+                if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
+                    this.CaseSensitive = table.CaseSensitive;
+                }
+                if ((table.Locale.ToString() != table.DataSet.Locale.ToString())) {
+                    this.Locale = table.Locale;
+                }
+                if ((table.Namespace != table.DataSet.Namespace)) {
+                    this.Namespace = table.Namespace;
+                }
+                this.Prefix = table.Prefix;
+                this.MinimumCapacity = table.MinimumCapacity;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            protected CabeceraObligacionAlumnoDTDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+                    base(info, context) {
+                this.InitVars();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public global::System.Data.DataColumn I_MontoObligColumn {
+                get {
+                    return this.columnI_MontoOblig;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public global::System.Data.DataColumn B_PagadoColumn {
+                get {
+                    return this.columnB_Pagado;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public global::System.Data.DataColumn T_PagadoColumn {
+                get {
+                    return this.columnT_Pagado;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public global::System.Data.DataColumn I_MontoPagadoActualColumn {
+                get {
+                    return this.columnI_MontoPagadoActual;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public global::System.Data.DataColumn T_FecVenctoColumn {
+                get {
+                    return this.columnT_FecVencto;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public global::System.Data.DataColumn T_NroOrdenColumn {
+                get {
+                    return this.columnT_NroOrden;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public global::System.Data.DataColumn T_MontoObligColumn {
+                get {
+                    return this.columnT_MontoOblig;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public global::System.Data.DataColumn T_MontoPagadoActualColumn {
+                get {
+                    return this.columnT_MontoPagadoActual;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            [global::System.ComponentModel.Browsable(false)]
+            public int Count {
+                get {
+                    return this.Rows.Count;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public CabeceraObligacionAlumnoDTRow this[int index] {
+                get {
+                    return ((CabeceraObligacionAlumnoDTRow)(this.Rows[index]));
+                }
+            }
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public event CabeceraObligacionAlumnoDTRowChangeEventHandler CabeceraObligacionAlumnoDTRowChanging;
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public event CabeceraObligacionAlumnoDTRowChangeEventHandler CabeceraObligacionAlumnoDTRowChanged;
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public event CabeceraObligacionAlumnoDTRowChangeEventHandler CabeceraObligacionAlumnoDTRowDeleting;
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public event CabeceraObligacionAlumnoDTRowChangeEventHandler CabeceraObligacionAlumnoDTRowDeleted;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public void AddCabeceraObligacionAlumnoDTRow(CabeceraObligacionAlumnoDTRow row) {
+                this.Rows.Add(row);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public CabeceraObligacionAlumnoDTRow AddCabeceraObligacionAlumnoDTRow(decimal I_MontoOblig, bool B_Pagado, string T_Pagado, decimal I_MontoPagadoActual, string T_FecVencto, string T_NroOrden, string T_MontoOblig, string T_MontoPagadoActual) {
+                CabeceraObligacionAlumnoDTRow rowCabeceraObligacionAlumnoDTRow = ((CabeceraObligacionAlumnoDTRow)(this.NewRow()));
+                object[] columnValuesArray = new object[] {
+                        I_MontoOblig,
+                        B_Pagado,
+                        T_Pagado,
+                        I_MontoPagadoActual,
+                        T_FecVencto,
+                        T_NroOrden,
+                        T_MontoOblig,
+                        T_MontoPagadoActual};
+                rowCabeceraObligacionAlumnoDTRow.ItemArray = columnValuesArray;
+                this.Rows.Add(rowCabeceraObligacionAlumnoDTRow);
+                return rowCabeceraObligacionAlumnoDTRow;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public override global::System.Data.DataTable Clone() {
+                CabeceraObligacionAlumnoDTDataTable cln = ((CabeceraObligacionAlumnoDTDataTable)(base.Clone()));
+                cln.InitVars();
+                return cln;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            protected override global::System.Data.DataTable CreateInstance() {
+                return new CabeceraObligacionAlumnoDTDataTable();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            internal void InitVars() {
+                this.columnI_MontoOblig = base.Columns["I_MontoOblig"];
+                this.columnB_Pagado = base.Columns["B_Pagado"];
+                this.columnT_Pagado = base.Columns["T_Pagado"];
+                this.columnI_MontoPagadoActual = base.Columns["I_MontoPagadoActual"];
+                this.columnT_FecVencto = base.Columns["T_FecVencto"];
+                this.columnT_NroOrden = base.Columns["T_NroOrden"];
+                this.columnT_MontoOblig = base.Columns["T_MontoOblig"];
+                this.columnT_MontoPagadoActual = base.Columns["T_MontoPagadoActual"];
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            private void InitClass() {
+                this.columnI_MontoOblig = new global::System.Data.DataColumn("I_MontoOblig", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnI_MontoOblig);
+                this.columnB_Pagado = new global::System.Data.DataColumn("B_Pagado", typeof(bool), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnB_Pagado);
+                this.columnT_Pagado = new global::System.Data.DataColumn("T_Pagado", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnT_Pagado);
+                this.columnI_MontoPagadoActual = new global::System.Data.DataColumn("I_MontoPagadoActual", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnI_MontoPagadoActual);
+                this.columnT_FecVencto = new global::System.Data.DataColumn("T_FecVencto", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnT_FecVencto);
+                this.columnT_NroOrden = new global::System.Data.DataColumn("T_NroOrden", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnT_NroOrden);
+                this.columnT_MontoOblig = new global::System.Data.DataColumn("T_MontoOblig", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnT_MontoOblig);
+                this.columnT_MontoPagadoActual = new global::System.Data.DataColumn("T_MontoPagadoActual", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnT_MontoPagadoActual);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public CabeceraObligacionAlumnoDTRow NewCabeceraObligacionAlumnoDTRow() {
+                return ((CabeceraObligacionAlumnoDTRow)(this.NewRow()));
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
+                return new CabeceraObligacionAlumnoDTRow(builder);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            protected override global::System.Type GetRowType() {
+                return typeof(CabeceraObligacionAlumnoDTRow);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowChanged(e);
+                if ((this.CabeceraObligacionAlumnoDTRowChanged != null)) {
+                    this.CabeceraObligacionAlumnoDTRowChanged(this, new CabeceraObligacionAlumnoDTRowChangeEvent(((CabeceraObligacionAlumnoDTRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowChanging(e);
+                if ((this.CabeceraObligacionAlumnoDTRowChanging != null)) {
+                    this.CabeceraObligacionAlumnoDTRowChanging(this, new CabeceraObligacionAlumnoDTRowChangeEvent(((CabeceraObligacionAlumnoDTRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowDeleted(e);
+                if ((this.CabeceraObligacionAlumnoDTRowDeleted != null)) {
+                    this.CabeceraObligacionAlumnoDTRowDeleted(this, new CabeceraObligacionAlumnoDTRowChangeEvent(((CabeceraObligacionAlumnoDTRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowDeleting(e);
+                if ((this.CabeceraObligacionAlumnoDTRowDeleting != null)) {
+                    this.CabeceraObligacionAlumnoDTRowDeleting(this, new CabeceraObligacionAlumnoDTRowChangeEvent(((CabeceraObligacionAlumnoDTRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public void RemoveCabeceraObligacionAlumnoDTRow(CabeceraObligacionAlumnoDTRow row) {
+                this.Rows.Remove(row);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
+                global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
+                global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
+                ObligacionAlumnoDS ds = new ObligacionAlumnoDS();
+                global::System.Xml.Schema.XmlSchemaAny any1 = new global::System.Xml.Schema.XmlSchemaAny();
+                any1.Namespace = "http://www.w3.org/2001/XMLSchema";
+                any1.MinOccurs = new decimal(0);
+                any1.MaxOccurs = decimal.MaxValue;
+                any1.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
+                sequence.Items.Add(any1);
+                global::System.Xml.Schema.XmlSchemaAny any2 = new global::System.Xml.Schema.XmlSchemaAny();
+                any2.Namespace = "urn:schemas-microsoft-com:xml-diffgram-v1";
+                any2.MinOccurs = new decimal(1);
+                any2.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
+                sequence.Items.Add(any2);
+                global::System.Xml.Schema.XmlSchemaAttribute attribute1 = new global::System.Xml.Schema.XmlSchemaAttribute();
+                attribute1.Name = "namespace";
+                attribute1.FixedValue = ds.Namespace;
+                type.Attributes.Add(attribute1);
+                global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
+                attribute2.Name = "tableTypeName";
+                attribute2.FixedValue = "CabeceraObligacionAlumnoDTDataTable";
                 type.Attributes.Add(attribute2);
                 type.Particle = sequence;
                 global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
@@ -648,15 +1042,15 @@ namespace WebApp.Models.DataSets {
         /// <summary>
         ///Represents strongly named DataRow class.
         ///</summary>
-        public partial class ObligacionAlumnoDTRow : global::System.Data.DataRow {
+        public partial class DetalleObligacionAlumnoDTRow : global::System.Data.DataRow {
             
-            private ObligacionAlumnoDTDataTable tableObligacionAlumnoDT;
+            private DetalleObligacionAlumnoDTDataTable tableDetalleObligacionAlumnoDT;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            internal ObligacionAlumnoDTRow(global::System.Data.DataRowBuilder rb) : 
+            internal DetalleObligacionAlumnoDTRow(global::System.Data.DataRowBuilder rb) : 
                     base(rb) {
-                this.tableObligacionAlumnoDT = ((ObligacionAlumnoDTDataTable)(this.Table));
+                this.tableDetalleObligacionAlumnoDT = ((DetalleObligacionAlumnoDTDataTable)(this.Table));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -664,15 +1058,15 @@ namespace WebApp.Models.DataSets {
             public string T_ConceptoDesc {
                 get {
                     try {
-                        return ((string)(this[this.tableObligacionAlumnoDT.T_ConceptoDescColumn]));
+                        return ((string)(this[this.tableDetalleObligacionAlumnoDT.T_ConceptoDescColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("El valor de la columna \'T_ConceptoDesc\' de la tabla \'ObligacionAlumnoDT\' es DBNul" +
-                                "l.", e);
+                        throw new global::System.Data.StrongTypingException("El valor de la columna \'T_ConceptoDesc\' de la tabla \'DetalleObligacionAlumnoDT\' e" +
+                                "s DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableObligacionAlumnoDT.T_ConceptoDescColumn] = value;
+                    this[this.tableDetalleObligacionAlumnoDT.T_ConceptoDescColumn] = value;
                 }
             }
             
@@ -681,14 +1075,15 @@ namespace WebApp.Models.DataSets {
             public string T_NroOrden {
                 get {
                     try {
-                        return ((string)(this[this.tableObligacionAlumnoDT.T_NroOrdenColumn]));
+                        return ((string)(this[this.tableDetalleObligacionAlumnoDT.T_NroOrdenColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("El valor de la columna \'T_NroOrden\' de la tabla \'ObligacionAlumnoDT\' es DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("El valor de la columna \'T_NroOrden\' de la tabla \'DetalleObligacionAlumnoDT\' es DB" +
+                                "Null.", e);
                     }
                 }
                 set {
-                    this[this.tableObligacionAlumnoDT.T_NroOrdenColumn] = value;
+                    this[this.tableDetalleObligacionAlumnoDT.T_NroOrdenColumn] = value;
                 }
             }
             
@@ -697,31 +1092,32 @@ namespace WebApp.Models.DataSets {
             public string T_ProcesoDesc {
                 get {
                     try {
-                        return ((string)(this[this.tableObligacionAlumnoDT.T_ProcesoDescColumn]));
+                        return ((string)(this[this.tableDetalleObligacionAlumnoDT.T_ProcesoDescColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("El valor de la columna \'T_ProcesoDesc\' de la tabla \'ObligacionAlumnoDT\' es DBNull" +
-                                ".", e);
+                        throw new global::System.Data.StrongTypingException("El valor de la columna \'T_ProcesoDesc\' de la tabla \'DetalleObligacionAlumnoDT\' es" +
+                                " DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableObligacionAlumnoDT.T_ProcesoDescColumn] = value;
+                    this[this.tableDetalleObligacionAlumnoDT.T_ProcesoDescColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public string I_Monto {
+            public decimal I_Monto {
                 get {
                     try {
-                        return ((string)(this[this.tableObligacionAlumnoDT.I_MontoColumn]));
+                        return ((decimal)(this[this.tableDetalleObligacionAlumnoDT.I_MontoColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("El valor de la columna \'I_Monto\' de la tabla \'ObligacionAlumnoDT\' es DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("El valor de la columna \'I_Monto\' de la tabla \'DetalleObligacionAlumnoDT\' es DBNul" +
+                                "l.", e);
                     }
                 }
                 set {
-                    this[this.tableObligacionAlumnoDT.I_MontoColumn] = value;
+                    this[this.tableDetalleObligacionAlumnoDT.I_MontoColumn] = value;
                 }
             }
             
@@ -730,14 +1126,15 @@ namespace WebApp.Models.DataSets {
             public string T_FecVencto {
                 get {
                     try {
-                        return ((string)(this[this.tableObligacionAlumnoDT.T_FecVenctoColumn]));
+                        return ((string)(this[this.tableDetalleObligacionAlumnoDT.T_FecVenctoColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("El valor de la columna \'T_FecVencto\' de la tabla \'ObligacionAlumnoDT\' es DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("El valor de la columna \'T_FecVencto\' de la tabla \'DetalleObligacionAlumnoDT\' es D" +
+                                "BNull.", e);
                     }
                 }
                 set {
-                    this[this.tableObligacionAlumnoDT.T_FecVenctoColumn] = value;
+                    this[this.tableDetalleObligacionAlumnoDT.T_FecVenctoColumn] = value;
                 }
             }
             
@@ -746,15 +1143,15 @@ namespace WebApp.Models.DataSets {
             public string T_TipoObligacion {
                 get {
                     try {
-                        return ((string)(this[this.tableObligacionAlumnoDT.T_TipoObligacionColumn]));
+                        return ((string)(this[this.tableDetalleObligacionAlumnoDT.T_TipoObligacionColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("El valor de la columna \'T_TipoObligacion\' de la tabla \'ObligacionAlumnoDT\' es DBN" +
-                                "ull.", e);
+                        throw new global::System.Data.StrongTypingException("El valor de la columna \'T_TipoObligacion\' de la tabla \'DetalleObligacionAlumnoDT\'" +
+                                " es DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableObligacionAlumnoDT.T_TipoObligacionColumn] = value;
+                    this[this.tableDetalleObligacionAlumnoDT.T_TipoObligacionColumn] = value;
                 }
             }
             
@@ -763,14 +1160,15 @@ namespace WebApp.Models.DataSets {
             public string T_Pagado {
                 get {
                     try {
-                        return ((string)(this[this.tableObligacionAlumnoDT.T_PagadoColumn]));
+                        return ((string)(this[this.tableDetalleObligacionAlumnoDT.T_PagadoColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("El valor de la columna \'T_Pagado\' de la tabla \'ObligacionAlumnoDT\' es DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("El valor de la columna \'T_Pagado\' de la tabla \'DetalleObligacionAlumnoDT\' es DBNu" +
+                                "ll.", e);
                     }
                 }
                 set {
-                    this[this.tableObligacionAlumnoDT.T_PagadoColumn] = value;
+                    this[this.tableDetalleObligacionAlumnoDT.T_PagadoColumn] = value;
                 }
             }
             
@@ -779,14 +1177,15 @@ namespace WebApp.Models.DataSets {
             public string T_NroRecibo {
                 get {
                     try {
-                        return ((string)(this[this.tableObligacionAlumnoDT.T_NroReciboColumn]));
+                        return ((string)(this[this.tableDetalleObligacionAlumnoDT.T_NroReciboColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("El valor de la columna \'T_NroRecibo\' de la tabla \'ObligacionAlumnoDT\' es DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("El valor de la columna \'T_NroRecibo\' de la tabla \'DetalleObligacionAlumnoDT\' es D" +
+                                "BNull.", e);
                     }
                 }
                 set {
-                    this[this.tableObligacionAlumnoDT.T_NroReciboColumn] = value;
+                    this[this.tableDetalleObligacionAlumnoDT.T_NroReciboColumn] = value;
                 }
             }
             
@@ -795,14 +1194,15 @@ namespace WebApp.Models.DataSets {
             public string T_FecPago {
                 get {
                     try {
-                        return ((string)(this[this.tableObligacionAlumnoDT.T_FecPagoColumn]));
+                        return ((string)(this[this.tableDetalleObligacionAlumnoDT.T_FecPagoColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("El valor de la columna \'T_FecPago\' de la tabla \'ObligacionAlumnoDT\' es DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("El valor de la columna \'T_FecPago\' de la tabla \'DetalleObligacionAlumnoDT\' es DBN" +
+                                "ull.", e);
                     }
                 }
                 set {
-                    this[this.tableObligacionAlumnoDT.T_FecPagoColumn] = value;
+                    this[this.tableDetalleObligacionAlumnoDT.T_FecPagoColumn] = value;
                 }
             }
             
@@ -811,135 +1211,412 @@ namespace WebApp.Models.DataSets {
             public string T_LugarPago {
                 get {
                     try {
-                        return ((string)(this[this.tableObligacionAlumnoDT.T_LugarPagoColumn]));
+                        return ((string)(this[this.tableDetalleObligacionAlumnoDT.T_LugarPagoColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("El valor de la columna \'T_LugarPago\' de la tabla \'ObligacionAlumnoDT\' es DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("El valor de la columna \'T_LugarPago\' de la tabla \'DetalleObligacionAlumnoDT\' es D" +
+                                "BNull.", e);
                     }
                 }
                 set {
-                    this[this.tableObligacionAlumnoDT.T_LugarPagoColumn] = value;
+                    this[this.tableDetalleObligacionAlumnoDT.T_LugarPagoColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public string T_Monto {
+                get {
+                    try {
+                        return ((string)(this[this.tableDetalleObligacionAlumnoDT.T_MontoColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("El valor de la columna \'T_Monto\' de la tabla \'DetalleObligacionAlumnoDT\' es DBNul" +
+                                "l.", e);
+                    }
+                }
+                set {
+                    this[this.tableDetalleObligacionAlumnoDT.T_MontoColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public bool IsT_ConceptoDescNull() {
-                return this.IsNull(this.tableObligacionAlumnoDT.T_ConceptoDescColumn);
+                return this.IsNull(this.tableDetalleObligacionAlumnoDT.T_ConceptoDescColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public void SetT_ConceptoDescNull() {
-                this[this.tableObligacionAlumnoDT.T_ConceptoDescColumn] = global::System.Convert.DBNull;
+                this[this.tableDetalleObligacionAlumnoDT.T_ConceptoDescColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public bool IsT_NroOrdenNull() {
-                return this.IsNull(this.tableObligacionAlumnoDT.T_NroOrdenColumn);
+                return this.IsNull(this.tableDetalleObligacionAlumnoDT.T_NroOrdenColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public void SetT_NroOrdenNull() {
-                this[this.tableObligacionAlumnoDT.T_NroOrdenColumn] = global::System.Convert.DBNull;
+                this[this.tableDetalleObligacionAlumnoDT.T_NroOrdenColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public bool IsT_ProcesoDescNull() {
-                return this.IsNull(this.tableObligacionAlumnoDT.T_ProcesoDescColumn);
+                return this.IsNull(this.tableDetalleObligacionAlumnoDT.T_ProcesoDescColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public void SetT_ProcesoDescNull() {
-                this[this.tableObligacionAlumnoDT.T_ProcesoDescColumn] = global::System.Convert.DBNull;
+                this[this.tableDetalleObligacionAlumnoDT.T_ProcesoDescColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public bool IsI_MontoNull() {
-                return this.IsNull(this.tableObligacionAlumnoDT.I_MontoColumn);
+                return this.IsNull(this.tableDetalleObligacionAlumnoDT.I_MontoColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public void SetI_MontoNull() {
-                this[this.tableObligacionAlumnoDT.I_MontoColumn] = global::System.Convert.DBNull;
+                this[this.tableDetalleObligacionAlumnoDT.I_MontoColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public bool IsT_FecVenctoNull() {
-                return this.IsNull(this.tableObligacionAlumnoDT.T_FecVenctoColumn);
+                return this.IsNull(this.tableDetalleObligacionAlumnoDT.T_FecVenctoColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public void SetT_FecVenctoNull() {
-                this[this.tableObligacionAlumnoDT.T_FecVenctoColumn] = global::System.Convert.DBNull;
+                this[this.tableDetalleObligacionAlumnoDT.T_FecVenctoColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public bool IsT_TipoObligacionNull() {
-                return this.IsNull(this.tableObligacionAlumnoDT.T_TipoObligacionColumn);
+                return this.IsNull(this.tableDetalleObligacionAlumnoDT.T_TipoObligacionColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public void SetT_TipoObligacionNull() {
-                this[this.tableObligacionAlumnoDT.T_TipoObligacionColumn] = global::System.Convert.DBNull;
+                this[this.tableDetalleObligacionAlumnoDT.T_TipoObligacionColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public bool IsT_PagadoNull() {
-                return this.IsNull(this.tableObligacionAlumnoDT.T_PagadoColumn);
+                return this.IsNull(this.tableDetalleObligacionAlumnoDT.T_PagadoColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public void SetT_PagadoNull() {
-                this[this.tableObligacionAlumnoDT.T_PagadoColumn] = global::System.Convert.DBNull;
+                this[this.tableDetalleObligacionAlumnoDT.T_PagadoColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public bool IsT_NroReciboNull() {
-                return this.IsNull(this.tableObligacionAlumnoDT.T_NroReciboColumn);
+                return this.IsNull(this.tableDetalleObligacionAlumnoDT.T_NroReciboColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public void SetT_NroReciboNull() {
-                this[this.tableObligacionAlumnoDT.T_NroReciboColumn] = global::System.Convert.DBNull;
+                this[this.tableDetalleObligacionAlumnoDT.T_NroReciboColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public bool IsT_FecPagoNull() {
-                return this.IsNull(this.tableObligacionAlumnoDT.T_FecPagoColumn);
+                return this.IsNull(this.tableDetalleObligacionAlumnoDT.T_FecPagoColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public void SetT_FecPagoNull() {
-                this[this.tableObligacionAlumnoDT.T_FecPagoColumn] = global::System.Convert.DBNull;
+                this[this.tableDetalleObligacionAlumnoDT.T_FecPagoColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public bool IsT_LugarPagoNull() {
-                return this.IsNull(this.tableObligacionAlumnoDT.T_LugarPagoColumn);
+                return this.IsNull(this.tableDetalleObligacionAlumnoDT.T_LugarPagoColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public void SetT_LugarPagoNull() {
-                this[this.tableObligacionAlumnoDT.T_LugarPagoColumn] = global::System.Convert.DBNull;
+                this[this.tableDetalleObligacionAlumnoDT.T_LugarPagoColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public bool IsT_MontoNull() {
+                return this.IsNull(this.tableDetalleObligacionAlumnoDT.T_MontoColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public void SetT_MontoNull() {
+                this[this.tableDetalleObligacionAlumnoDT.T_MontoColumn] = global::System.Convert.DBNull;
+            }
+        }
+        
+        /// <summary>
+        ///Represents strongly named DataRow class.
+        ///</summary>
+        public partial class CabeceraObligacionAlumnoDTRow : global::System.Data.DataRow {
+            
+            private CabeceraObligacionAlumnoDTDataTable tableCabeceraObligacionAlumnoDT;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            internal CabeceraObligacionAlumnoDTRow(global::System.Data.DataRowBuilder rb) : 
+                    base(rb) {
+                this.tableCabeceraObligacionAlumnoDT = ((CabeceraObligacionAlumnoDTDataTable)(this.Table));
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public decimal I_MontoOblig {
+                get {
+                    try {
+                        return ((decimal)(this[this.tableCabeceraObligacionAlumnoDT.I_MontoObligColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("El valor de la columna \'I_MontoOblig\' de la tabla \'CabeceraObligacionAlumnoDT\' es" +
+                                " DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableCabeceraObligacionAlumnoDT.I_MontoObligColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public bool B_Pagado {
+                get {
+                    try {
+                        return ((bool)(this[this.tableCabeceraObligacionAlumnoDT.B_PagadoColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("El valor de la columna \'B_Pagado\' de la tabla \'CabeceraObligacionAlumnoDT\' es DBN" +
+                                "ull.", e);
+                    }
+                }
+                set {
+                    this[this.tableCabeceraObligacionAlumnoDT.B_PagadoColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public string T_Pagado {
+                get {
+                    try {
+                        return ((string)(this[this.tableCabeceraObligacionAlumnoDT.T_PagadoColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("El valor de la columna \'T_Pagado\' de la tabla \'CabeceraObligacionAlumnoDT\' es DBN" +
+                                "ull.", e);
+                    }
+                }
+                set {
+                    this[this.tableCabeceraObligacionAlumnoDT.T_PagadoColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public decimal I_MontoPagadoActual {
+                get {
+                    try {
+                        return ((decimal)(this[this.tableCabeceraObligacionAlumnoDT.I_MontoPagadoActualColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("El valor de la columna \'I_MontoPagadoActual\' de la tabla \'CabeceraObligacionAlumn" +
+                                "oDT\' es DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableCabeceraObligacionAlumnoDT.I_MontoPagadoActualColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public string T_FecVencto {
+                get {
+                    try {
+                        return ((string)(this[this.tableCabeceraObligacionAlumnoDT.T_FecVenctoColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("El valor de la columna \'T_FecVencto\' de la tabla \'CabeceraObligacionAlumnoDT\' es " +
+                                "DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableCabeceraObligacionAlumnoDT.T_FecVenctoColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public string T_NroOrden {
+                get {
+                    try {
+                        return ((string)(this[this.tableCabeceraObligacionAlumnoDT.T_NroOrdenColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("El valor de la columna \'T_NroOrden\' de la tabla \'CabeceraObligacionAlumnoDT\' es D" +
+                                "BNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableCabeceraObligacionAlumnoDT.T_NroOrdenColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public string T_MontoOblig {
+                get {
+                    try {
+                        return ((string)(this[this.tableCabeceraObligacionAlumnoDT.T_MontoObligColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("El valor de la columna \'T_MontoOblig\' de la tabla \'CabeceraObligacionAlumnoDT\' es" +
+                                " DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableCabeceraObligacionAlumnoDT.T_MontoObligColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public string T_MontoPagadoActual {
+                get {
+                    try {
+                        return ((string)(this[this.tableCabeceraObligacionAlumnoDT.T_MontoPagadoActualColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("El valor de la columna \'T_MontoPagadoActual\' de la tabla \'CabeceraObligacionAlumn" +
+                                "oDT\' es DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableCabeceraObligacionAlumnoDT.T_MontoPagadoActualColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public bool IsI_MontoObligNull() {
+                return this.IsNull(this.tableCabeceraObligacionAlumnoDT.I_MontoObligColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public void SetI_MontoObligNull() {
+                this[this.tableCabeceraObligacionAlumnoDT.I_MontoObligColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public bool IsB_PagadoNull() {
+                return this.IsNull(this.tableCabeceraObligacionAlumnoDT.B_PagadoColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public void SetB_PagadoNull() {
+                this[this.tableCabeceraObligacionAlumnoDT.B_PagadoColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public bool IsT_PagadoNull() {
+                return this.IsNull(this.tableCabeceraObligacionAlumnoDT.T_PagadoColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public void SetT_PagadoNull() {
+                this[this.tableCabeceraObligacionAlumnoDT.T_PagadoColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public bool IsI_MontoPagadoActualNull() {
+                return this.IsNull(this.tableCabeceraObligacionAlumnoDT.I_MontoPagadoActualColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public void SetI_MontoPagadoActualNull() {
+                this[this.tableCabeceraObligacionAlumnoDT.I_MontoPagadoActualColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public bool IsT_FecVenctoNull() {
+                return this.IsNull(this.tableCabeceraObligacionAlumnoDT.T_FecVenctoColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public void SetT_FecVenctoNull() {
+                this[this.tableCabeceraObligacionAlumnoDT.T_FecVenctoColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public bool IsT_NroOrdenNull() {
+                return this.IsNull(this.tableCabeceraObligacionAlumnoDT.T_NroOrdenColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public void SetT_NroOrdenNull() {
+                this[this.tableCabeceraObligacionAlumnoDT.T_NroOrdenColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public bool IsT_MontoObligNull() {
+                return this.IsNull(this.tableCabeceraObligacionAlumnoDT.T_MontoObligColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public void SetT_MontoObligNull() {
+                this[this.tableCabeceraObligacionAlumnoDT.T_MontoObligColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public bool IsT_MontoPagadoActualNull() {
+                return this.IsNull(this.tableCabeceraObligacionAlumnoDT.T_MontoPagadoActualColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public void SetT_MontoPagadoActualNull() {
+                this[this.tableCabeceraObligacionAlumnoDT.T_MontoPagadoActualColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -947,22 +1624,56 @@ namespace WebApp.Models.DataSets {
         ///Row event argument class
         ///</summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-        public class ObligacionAlumnoDTRowChangeEvent : global::System.EventArgs {
+        public class DetalleObligacionAlumnoDTRowChangeEvent : global::System.EventArgs {
             
-            private ObligacionAlumnoDTRow eventRow;
+            private DetalleObligacionAlumnoDTRow eventRow;
             
             private global::System.Data.DataRowAction eventAction;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public ObligacionAlumnoDTRowChangeEvent(ObligacionAlumnoDTRow row, global::System.Data.DataRowAction action) {
+            public DetalleObligacionAlumnoDTRowChangeEvent(DetalleObligacionAlumnoDTRow row, global::System.Data.DataRowAction action) {
                 this.eventRow = row;
                 this.eventAction = action;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public ObligacionAlumnoDTRow Row {
+            public DetalleObligacionAlumnoDTRow Row {
+                get {
+                    return this.eventRow;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public global::System.Data.DataRowAction Action {
+                get {
+                    return this.eventAction;
+                }
+            }
+        }
+        
+        /// <summary>
+        ///Row event argument class
+        ///</summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        public class CabeceraObligacionAlumnoDTRowChangeEvent : global::System.EventArgs {
+            
+            private CabeceraObligacionAlumnoDTRow eventRow;
+            
+            private global::System.Data.DataRowAction eventAction;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public CabeceraObligacionAlumnoDTRowChangeEvent(CabeceraObligacionAlumnoDTRow row, global::System.Data.DataRowAction action) {
+                this.eventRow = row;
+                this.eventAction = action;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public CabeceraObligacionAlumnoDTRow Row {
                 get {
                     return this.eventRow;
                 }

@@ -5,7 +5,7 @@ using System.Web;
 
 namespace WebApp.Models.ReportModels
 {
-    public class ObligacionAlumnoRptModel
+    public class DetObligacionAlumnoRptModel
     {
         public string T_ConceptoDesc { get; set; }
 
@@ -13,7 +13,9 @@ namespace WebApp.Models.ReportModels
 
         public string T_ProcesoDesc { get; set; }
 
-        public string I_Monto { get; set; }
+        public decimal I_Monto { get; set; }
+
+        public string T_Monto { get; set; }
 
         public string T_FecVencto { get; set; }
 
