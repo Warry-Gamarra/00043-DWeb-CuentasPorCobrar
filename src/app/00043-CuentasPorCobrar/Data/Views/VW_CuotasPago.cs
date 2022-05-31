@@ -166,7 +166,7 @@ namespace Data.Views
                     UNION
                     SELECT * FROM dbo.VW_CuotasPago_General pen
                     WHERE 
-	                    pen.I_Anio = @I_Anio AND 
+	                    pen.I_Anio <= @I_Anio AND 
 	                    pen.C_Nivel IN ('2', '3') AND
 	                    pen.C_CodEsc = ISNULL(@C_CodEsc, pen.C_CodEsc) AND
 	                    pen.B_Pagado = 0 AND
