@@ -40,6 +40,8 @@ namespace Domain.Entities
 
         public int I_Anio { get; set; }
 
+        public int I_Periodo { get; set; }
+
         public string T_Periodo { get; set; }
 
         public string T_ProcesoDesc { get; set; }

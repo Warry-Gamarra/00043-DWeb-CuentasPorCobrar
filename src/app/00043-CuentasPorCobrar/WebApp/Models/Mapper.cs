@@ -366,6 +366,7 @@ namespace WebApp.Models
                 B_Ingresante = dto.B_Ingresante,
                 I_CredDesaprob = dto.I_CredDesaprob,
                 I_Anio = dto.I_Anio,
+                I_Periodo = dto.I_Periodo,
                 T_Periodo = dto.T_Periodo,
                 T_ProcesoDesc = dto.T_ProcesoDesc,
                 I_MontoOblig = dto.I_MontoOblig,

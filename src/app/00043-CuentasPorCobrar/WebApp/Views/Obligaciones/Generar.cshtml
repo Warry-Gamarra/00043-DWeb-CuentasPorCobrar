@@ -147,7 +147,7 @@
                                 <div class="d-flex text-muted pt-3">
                                     <div class="pb-3 mb-0 lh-sm border-bottom w-100">
                                         <div class="d-flex justify-content-between">
-                                            <strong class="text-gray-dark">Nombres y apellidos</strong>
+                                            <strong class="text-gray-dark">Apellidos y nombres</strong>
                                         </div>
                                         <span class="d-block text-uppercase" id="nombresCompletosAlumno"></span>
                                     </div>
@@ -212,6 +212,8 @@
                             </table>
 
                         </div>
+
+                        <div class="table-responsive mt-4 col-md-2" id="areaImpresion"></div>
                     </div>
                 </div>
             </div>
@@ -227,7 +229,7 @@
             </div>
             <div class="modal-body">
                 <div class="d-flex align-items-center">
-                    <strong> Generando obligaciones...</strong>
+                    <strong></strong>
                     <div class="spinner-border ml-auto text-primary" role="status" aria-hidden="true"></div>
                 </div>
             </div>
@@ -286,7 +288,7 @@
         });
 
         $("#frmGenerarOblig").on("click", "#btnGenerarOblig", function (e) {
-            $(this).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Generando obligaciones . . .');
+            $('#modalEspera .modal-body strong').html('Generando obligaciones . . .');
             AbrirModalEsperaGeneracionOblig();
             LimpiarMensajeGenerarOblig();
             $("#frmGenerarOblig").prop("method", "POST");
@@ -294,7 +296,7 @@
         });
 
         $("#frmGenerarOblig").on("click", "#btnConsultaOblig", function (e) {
-            $(this).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Realizando consulta . . .');
+            $('#modalEspera .modal-body strong').html('Realizando consulta . . .');
             AbrirModalEsperaGeneracionOblig();
             LimpiarMensajeGenerarOblig();
             $("#frmGenerarOblig").prop("method", "GET");
@@ -363,6 +365,7 @@
                     QuitarDatosAlumno();
                     GenerarTablaDetalle(null);
                     GenerarTablaCuotas(null);
+                    OcultarBotonImpresion();
                 },
                 success: function (data) {
                     llenarComboEspecialidades(data);
@@ -415,6 +418,7 @@
                     QuitarDatosAlumno();
                     GenerarTablaDetalle(null);
                     GenerarTablaCuotas(null);
+                    OcultarBotonImpresion();
                 },
                 success: function (data) {
                     if (data) {
@@ -442,6 +446,7 @@
                         } else {
                             GenerarTablaDetalle(data.detalle_pago);
                             GenerarTablaCuotas(data.cuotas_pago);
+                            GenerarBotonImpresion(anio, periodo, codRc, codAlu);
                         }
                     }
                 },
@@ -483,7 +488,7 @@
         }
 
         function MostrarDatosAlumno(alumno) {
-            $('#nombresCompletosAlumno').html(alumno.T_Nombre + ' ' + alumno.T_ApePaterno + ' ' + alumno.T_ApeMaterno);
+            $('#nombresCompletosAlumno').html(alumno.T_ApePaterno + ' ' + alumno.T_ApeMaterno + ' ' + alumno.T_Nombre);
             $('#documentoIdentidadAlumno').html(alumno.C_NumDNI);
             $('#modalidadIngresoAlumno').html(alumno.T_ModIngDesc);
         }
@@ -541,6 +546,19 @@
             });
 
             tblCuotasPago.html(rows);
+        }
+
+        function GenerarBotonImpresion(anio, periodo, codRc, codAlu) {
+            let printDiv = $('#areaImpresion');
+
+            let parametros = "?anio=" + anio + "&periodo=" + periodo + "&codalu=" + codAlu + "&codrc=" + codRc;
+
+            printDiv.html('<a href="@Url.Action("ReporteObligaciones", "Reportes")' + parametros + '" target="_blank" id="btnImprimirConstancia" class="btn btn-block btn-primary">' +
+                '<i class="fa fa-fw fa-search-plus"></i> Imprimir</a>');
+        }
+
+        function OcultarBotonImpresion() {
+            $('#areaImpresion').html('');
         }
 
         $(document).on('click', '#btnLimpiarConsultaObligaAlumno', function (e) {

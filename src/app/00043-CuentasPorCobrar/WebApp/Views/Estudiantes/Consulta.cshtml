@@ -149,10 +149,12 @@
                         columns.Add(c => c.I_Anio).Titled("Año");
                         columns.Add(c => c.T_Periodo).Titled("Periodo");
                         columns.Add(c => c.C_CodAlu).Titled("Código alumno");
-                        columns.Add(c => c.T_ApellidosNombres).Titled("Apellidos y nombres").Filterable(true);
+                        columns.Add(c => c.T_ApellidosNombres).Titled("Apellidos y nombres");
                         columns.Add(c => c.T_DenomProg).Titled("Especialidad").Filterable(true);
                         columns.Add(c => c.T_EsIngresante).Titled("Tipo alumno").Filterable(true);
-                        columns.Add(c => c.T_ProcesoDesc).Titled("Cuota").Filterable(true).Css("text-center");
+                        columns.Add().Titled("Cuota").Encoded(false).Sanitized(false).RenderValueAs(model =>
+                           "<a href=\"" + Url.Action("ReporteObligaciones", "Reportes", new { anio = model.I_Anio, periodo = model.I_Periodo, codalu = model.C_CodAlu, codrc = model.C_RcCod }) +
+                           "\" target=\"_blank\">" + model.T_ProcesoDesc + "</a>");
                         columns.Add(c => c.I_MontoOblig).Titled("Monto Obl.").Filterable(true).Css("text-center");
                         columns.Add(c => c.T_FecVencto).Titled("Fec.Vcto.").Filterable(true).Css("text-center");
                         columns.Add(c => c.T_FecPagos).Titled("Fec.Pago").Filterable(true).Css("text-center");

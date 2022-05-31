@@ -134,7 +134,7 @@
                             {
                                 var id = "TipoCalculo_" + item.Value;
                                 <div class="form-check form-check-inline col-5">
-                                    @Html.RadioButtonFor(model => model.TipoCalculo, item.Value, new { @id = id, @disabled = "disabled" })
+                                    @Html.RadioButtonFor(model => model.TipoCalculo, item.Value, new { @id = id })
                                     <label class="form-check-label" for="@id">&nbsp;@item.TextDisplay</label>
                                 </div>
                             }
@@ -142,8 +142,6 @@
                     </div>
                 </div>
             }
-
-
         </div>
     </div>
 

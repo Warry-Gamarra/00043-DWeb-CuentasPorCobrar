@@ -25,33 +25,26 @@ namespace WebApp.Controllers
             pagosModel = new PagosModel();
         }
 
-        public ActionResult Index()
+        [Route("obligaciones/reporte-obligacion-alumno")]
+        public ActionResult ReporteObligaciones(int anio, int periodo, string codalu, string codrc)
         {
-            string codRc = "D07";
-            string codAlu = "2015317031";
-            int anio = 2021;
-            int periodo = 20;
-
-
             string docType = "pdf";
 
-            string outputFileName = "Relación de obligaciones";
+            string reportName = "RptObligacionesPorPeriodo";
 
             string dataSet1 = "CabeceraObligacionAlumnoDSet";
 
             string dataSet2 = "DetalleObligacionAlumnoDSet";
 
-            string rptName = "RptObligacionesPorPeriodo";
-
             var alumnoObligacionAlumnoDSet = new List<CabObligacionAlumnoRptModel>();
 
             var detalleObligacionAlumnoDSet = new List<DetObligacionAlumnoRptModel>();
 
-            var alumno = alumnosClientFacade.GetByID(codRc, codAlu);
+            var alumno = alumnosClientFacade.GetByID(codrc, codalu);
 
-            var cuotas_pago = obligacionServiceFacade.Obtener_CuotasPago(anio, periodo, codAlu, codRc);
+            var cuotas_pago = obligacionServiceFacade.Obtener_CuotasPago(anio, periodo, codalu, codrc);
 
-            var detalle_pago = obligacionServiceFacade.Obtener_DetallePago(anio, periodo, codAlu, codRc);
+            var detalle_pago = obligacionServiceFacade.Obtener_DetallePago(anio, periodo, codalu, codrc);
 
             cuotas_pago.ForEach(c => {
                 alumnoObligacionAlumnoDSet.Add(new CabObligacionAlumnoRptModel()
@@ -95,13 +88,11 @@ namespace WebApp.Controllers
                 }
             });
             
-            var dataSets = new Dictionary<string, Object>();
+            var reportDataSets = new Dictionary<string, Object>();
 
-            dataSets.Add(dataSet1, alumnoObligacionAlumnoDSet);
+            reportDataSets.Add(dataSet1, alumnoObligacionAlumnoDSet);
 
-            dataSets.Add(dataSet2, detalleObligacionAlumnoDSet);
-
-            TempData["dataSets"] = dataSets;
+            reportDataSets.Add(dataSet2, detalleObligacionAlumnoDSet);
 
             var parameterList = new List<ReportParameter>();
 
@@ -151,57 +142,51 @@ namespace WebApp.Controllers
                 parameterList.Add(new ReportParameter(numeroCuota, ""));
             }
 
-            TempData["parameters"] = parameterList;
-
-            return RedirectToAction("ReportExport", "Reportes", new { docType = docType, rptName = rptName, outputFileName = outputFileName });
+            return ReportExport(docType, reportName, reportDataSets, parameterList);
         }
 
-        public ActionResult ReportExport(string docType, string rptName, string outputFileName, string subRptName)
+        private FileContentResult ReportExport(string docType, string reportName, Dictionary<string, Object> reportDataSets, IEnumerable<ReportParameter> parameters)
         {
-            LocalReport lr = new LocalReport();
+            string reportPath = Path.Combine(Server.MapPath("~/ReportesRDLC"), reportName + ".rdlc");
 
-            lr.EnableExternalImages = true;
-
-            string path = Path.Combine(Server.MapPath("~/ReportesRDLC"), rptName + ".rdlc");
-
-            if (System.IO.File.Exists(path))
+            if (!System.IO.File.Exists(reportPath))
             {
-                lr.ReportPath = path;
-            }
-            else
-            {
-                return new HttpNotFoundResult();
+                throw new FileNotFoundException();    
             }
 
-            var rptDataSet = TempData["dataSets"] as Dictionary<string, Object>;
-
-            foreach (var item in rptDataSet)
+            var localReport = new LocalReport()
             {
-                var rd = new ReportDataSource(item.Key, item.Value);
+                ReportPath = reportPath,
+                EnableExternalImages = true
+            };
 
-                lr.DataSources.Add(rd);
+            if (reportDataSets != null && reportDataSets.Count() > 0)
+            {
+                foreach (var item in reportDataSets)
+                {
+                    localReport.DataSources.Add(new ReportDataSource(item.Key, item.Value));
+                }
             }
 
-            var parameters = TempData["parameters"] as List<ReportParameter>;
-
-            lr.SetParameters(parameters);
+            if (parameters != null && parameters.Count() > 0)
+            {
+                localReport.SetParameters(parameters);
+            }
 
             string reportType = docType;
             string mimeType;
             string encoding;
             string fileNameExtension;
 
-            string deviceInfo = "";
-
             Warning[] warnings;
             string[] streams;
             byte[] renderedBytes;
 
-            renderedBytes = lr.Render(reportType, deviceInfo, out mimeType, out encoding, out fileNameExtension, out streams, out warnings);
+            renderedBytes = localReport.Render(reportType, null, out mimeType, out encoding, out fileNameExtension, out streams, out warnings);
 
             string extension = (docType == "excel") ? "xls" : "pdf";
-
-            return File(renderedBytes, mimeType, outputFileName + "." + extension);
+            
+            return File(renderedBytes, mimeType);
         }
     }
 }

@@ -66,6 +66,7 @@ BEGIN
   mat.T_Nombre, mat.T_ApePaterno, mat.T_ApeMaterno,   
   mat.N_Grado, mat.C_CodFac, mat.T_FacDesc, mat.C_CodEsc, mat.T_EscDesc, mat.T_DenomProg, mat.B_Ingresante, mat.I_CredDesaprob,  
   mat.I_Anio,   
+  mat.I_Periodo,  
   mat.T_Periodo,  
   ISNULL(pro.T_ProcesoDesc, '''') AS T_ProcesoDesc,  
   cab.I_MontoOblig,  
@@ -107,15 +108,13 @@ BEGIN
    ' + CASE WHEN @I_DependenciaID IS NULL THEN '' ELSE 'and mat.I_DependenciaID = @I_DependenciaID' END + '  
   GROUP BY mat.I_MatAluID, cab.I_ObligacionAluID, mat.C_CodAlu, mat.C_RcCod, mat.T_Nombre, mat.T_ApePaterno, mat.T_ApeMaterno,   
    mat.N_Grado, mat.C_CodFac, mat.T_FacDesc, mat.C_CodEsc, mat.T_EscDesc, mat.T_DenomProg, mat.B_Ingresante, mat.I_CredDesaprob,  
-   mat.I_Anio, mat.T_Periodo, pro.T_ProcesoDesc, cab.I_MontoOblig, cab.D_FecVencto, cab.B_Pagado, cab.D_FecCre, cab.D_FecMod  
+   mat.I_Anio, mat.I_Periodo, mat.T_Periodo, pro.T_ProcesoDesc, cab.I_MontoOblig, cab.D_FecVencto, cab.B_Pagado, cab.D_FecCre, cab.D_FecMod  
   ' + CASE WHEN @B_MontoPagadoDiff IS NULL OR @B_MontoPagadoDiff = 0 THEN '' ELSE 'HAVING NOT cab.I_MontoOblig = SUM(pagpro.I_MontoPagado)' END + '  
   ORDER BY mat.T_FacDesc, mat.T_DenomProg, mat.T_ApePaterno, mat.T_ApeMaterno';  
    
  SET @ParmDefinition = N'@Pregrado CHAR(1), @Maestria CHAR(1), @Doctorado CHAR(1), @I_Anio INT, @I_Periodo INT = NULL,   
   @C_CodFac VARCHAR(2), @C_CodEsc VARCHAR(2), @C_RcCod VARCHAR(3) = NULL , @B_Ingresante BIT = NULL, @B_Pagado BIT = NULL, @F_FecIni DATE = NULL, @F_FecFin DATE = NULL,  
   @C_CodAlu VARCHAR(10), @T_NomAlu VARCHAR(50), @T_ApePaternoAlu VARCHAR(50), @T_ApeMaternoAlu VARCHAR(50), @I_DependenciaID INT = NULL';
-
-print @SQLString
 
  EXECUTE sp_executesql @SQLString, @ParmDefinition,   
   @Pregrado = @Pregrado,  
@@ -225,11 +224,3 @@ AS
 	INNER JOIN dbo.TC_CatalogoOpcion niv ON niv.I_OpcionID = cat.I_Nivel  
 	INNER JOIN dbo.TC_CatalogoOpcion tipal ON tipal.I_OpcionID = cat.I_TipoAlumno
 GO
-
-SELECT * FROM dbo.VW_DetalleObligaciones d
-WHERE d.I_Anio = 2021 AND d.I_Periodo = 19 AND d.C_CodAlu = '2015317031' AND d.C_RcCod = 'D07'
-ORDER BY d.I_Anio, d.I_Periodo, d.D_FecVencto, d.C_CodAlu, d.C_RcCod, d.I_Prioridad
-
-
-SELECT * FROM dbo.VW_CuotasPago_X_Ciclo c
-WHERE c.I_Anio = 2021 AND c.I_Periodo = 19 AND c.C_CodAlu = '2015317031' AND c.C_RcCod = 'D07'

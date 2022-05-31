@@ -572,6 +572,7 @@ namespace Domain.Entities
                 B_Ingresante = sp.B_Ingresante,
                 I_CredDesaprob = sp.I_CredDesaprob,
                 I_Anio = sp.I_Anio,
+                I_Periodo = sp.I_Periodo,
                 T_Periodo = sp.T_Periodo,
                 T_ProcesoDesc = sp.T_ProcesoDesc,
                 I_MontoOblig = sp.I_MontoOblig,
