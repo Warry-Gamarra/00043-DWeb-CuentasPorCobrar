@@ -140,7 +140,7 @@
                 <label for="fechaPago" class="control-label col-form-label col-md-3 col-sm-4 col-12">
                     Fecha de pago
                 </label>
-                <div class="col-md-5 col-sm-10 col-12">
+                <div class="col-md-3 col-sm-10 col-12">
                     <div class="input-group date">
                         @Html.TextBoxFor(m => m.fechaPago, "{0:dd/MM/yyyy}", new { @class = "form-control", @readonly = "readonly" })
                         <div class="input-group-append">
@@ -154,6 +154,9 @@
                 </div>
                 <div class="col-md-2 col-sm-4 col-12">
                     @Html.DropDownListFor(model => model.minutos, ViewBag.Minutos as SelectList, new { @class = "form-control" })
+                </div>
+                <div class="col-md-2 col-sm-4 col-12">
+                    @Html.DropDownListFor(model => model.segundos, ViewBag.Minutos as SelectList, new { @class = "form-control" })
                 </div>
             </div>
 

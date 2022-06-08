@@ -118,5 +118,23 @@ namespace WebApp.ViewModels
         public string C_CodigoInterno { get; set; }
 
         public string T_ProcesoDesc { get; set; }
+
+        public string T_ProcesoDescFecVcto
+        {
+            get
+            {
+                return D_FecVencto.HasValue ? String.Format("{0} (F.Vcto. {1})", T_ProcesoDesc, T_FecVencto) : T_ProcesoDesc;
+            }
+        }
+
+        public DateTime? D_FecVencto { get; set; }
+
+        public string T_FecVencto
+        {
+            get
+            {
+                return D_FecVencto.HasValue ? D_FecVencto.Value.ToString(FormatosDateTime.BASIC_DATE) : "";
+            }
+        }
     }
 }

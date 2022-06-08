@@ -1447,10 +1447,10 @@ namespace WebApp.Controllers
                 worksheet.Column("A").Width = 30;
                 worksheet.Columns("B:D").Width  = 16;
                 worksheet.Column("E").Width = 25;
-                worksheet.Column("F").Width = 16;
-                worksheet.Column("G").Width = 30;
-                worksheet.Columns("H:L").Width = 16;
-                worksheet.Column("M").Width = 30;
+                worksheet.Columns("F:G").Width = 16;
+                worksheet.Column("H").Width = 30;
+                worksheet.Columns("I:M").Width = 16;
+                worksheet.Column("N").Width = 30;
 
                 var currentRow = 1;
 
@@ -1460,14 +1460,15 @@ namespace WebApp.Controllers
                 worksheet.Cell(currentRow, 3).Value = "Cod.Operación";
                 worksheet.Cell(currentRow, 4).Value = "Cod.Interno (BCP)";
                 worksheet.Cell(currentRow, 5).Value = "Cuota Pago";
-                worksheet.Cell(currentRow, 6).Value = "Cod.Depositante";
-                worksheet.Cell(currentRow, 7).Value = "Depositante";
-                worksheet.Cell(currentRow, 8).Value = "Fecha Pago";
-                worksheet.Cell(currentRow, 9).Value = "Monto Pagado";
-                worksheet.Cell(currentRow, 10).Value = "Lugar";
-                worksheet.Cell(currentRow, 11).Value = "Fec.Reg.Sistema";
-                worksheet.Cell(currentRow, 12).Value = "Condición";
-                worksheet.Cell(currentRow, 13).Value = "Observación";
+                worksheet.Cell(currentRow, 6).Value = "Fecha Vcto";
+                worksheet.Cell(currentRow, 7).Value = "Cod.Depositante";
+                worksheet.Cell(currentRow, 8).Value = "Depositante";
+                worksheet.Cell(currentRow, 9).Value = "Fecha Pago";
+                worksheet.Cell(currentRow, 10).Value = "Monto Pagado";
+                worksheet.Cell(currentRow, 11).Value = "Lugar";
+                worksheet.Cell(currentRow, 12).Value = "Fec.Reg.Sistema";
+                worksheet.Cell(currentRow, 13).Value = "Condición";
+                worksheet.Cell(currentRow, 14).Value = "Observación";
                 #endregion
 
                 #region Body
@@ -1479,18 +1480,19 @@ namespace WebApp.Controllers
                     worksheet.Cell(currentRow, 3).SetValue<string>(item.C_CodOperacion);
                     worksheet.Cell(currentRow, 4).SetValue<string>(item.C_CodigoInterno);
                     worksheet.Cell(currentRow, 5).SetValue<string>(item.T_ProcesoDesc);
-                    worksheet.Cell(currentRow, 6).SetValue<string>(item.C_CodDepositante);
-                    worksheet.Cell(currentRow, 7).SetValue<string>(item.T_DatosDepositante);
-                    worksheet.Cell(currentRow, 8).SetValue<DateTime?>(item.D_FecPago);
-                    worksheet.Cell(currentRow, 9).SetValue<decimal>(item.I_MontoPago);
-                    worksheet.Cell(currentRow, 10).SetValue<string>(item.T_LugarPago);
-                    worksheet.Cell(currentRow, 11).SetValue<DateTime>(item.D_FecCre);
-                    worksheet.Cell(currentRow, 12).SetValue<string>(item.T_Condicion);
-                    worksheet.Cell(currentRow, 13).SetValue<string>(item.T_Observacion);
+                    worksheet.Cell(currentRow, 6).SetValue<string>(item.T_FecVencto);
+                    worksheet.Cell(currentRow, 7).SetValue<string>(item.C_CodDepositante);
+                    worksheet.Cell(currentRow, 8).SetValue<string>(item.T_DatosDepositante);
+                    worksheet.Cell(currentRow, 9).SetValue<DateTime?>(item.D_FecPago);
+                    worksheet.Cell(currentRow, 10).SetValue<decimal>(item.I_MontoPago);
+                    worksheet.Cell(currentRow, 11).SetValue<string>(item.T_LugarPago);
+                    worksheet.Cell(currentRow, 12).SetValue<DateTime>(item.D_FecCre);
+                    worksheet.Cell(currentRow, 13).SetValue<string>(item.T_Condicion);
+                    worksheet.Cell(currentRow, 14).SetValue<string>(item.T_Observacion);
                 }
                 #endregion
 
-                worksheet.Range(worksheet.Cell(2, 9), worksheet.Cell(currentRow, 9)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
+                worksheet.Range(worksheet.Cell(2, 10), worksheet.Cell(currentRow, 10)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
 
                 using (var stream = new MemoryStream())
                 {

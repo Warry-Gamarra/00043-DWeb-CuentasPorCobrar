@@ -61,5 +61,7 @@ namespace Domain.Entities
         public string C_CodigoInterno { get; set; }
 
         public string T_ProcesoDesc { get; set; }
+
+        public DateTime? D_FecVencto { get; set; }
     }
 }

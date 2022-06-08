@@ -480,11 +480,13 @@ namespace WebApp.Models
                     return response;
                 }
 
-                if (pagoService.ValidarCodOperacionObligacion(model.codigoOperacion, model.codigoAlumno, model.idEntidadFinanciera, model.fechaPagoObl))
+                if (pagoService.ValidarCodOperacionObligacion(model.codigoOperacion, model.codigoAlumno, model.idEntidadFinanciera, model.fechaPagoObl, obligacionAluCab.I_ProcesoID.Value, obligacionAluCab.D_FecVencto.Value))
                 {
                     var entity = Mapper.PagoObligacionViewModel_To_PagoObligacionEntity(model);
 
                     entity.I_ProcesoID = obligacionAluCab.I_ProcesoID.Value;
+
+                    entity.T_ProcesoDesc = procesoService.Obtener_Proceso(entity.I_ProcesoID).T_ProcesoDesc;
 
                     entity.D_FecVencto = obligacionAluCab.D_FecVencto.Value;
 

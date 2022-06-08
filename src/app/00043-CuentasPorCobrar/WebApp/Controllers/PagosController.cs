@@ -223,8 +223,8 @@ namespace WebApp.Controllers
                 worksheet.Cell(currentRow, 12).Value = "InteresMoratorio";
                 worksheet.Cell(currentRow, 13).Value = "LugarPago";
                 worksheet.Cell(currentRow, 14).Value = "InformacionAdicional";
-                worksheet.Cell(currentRow, 15).Value = "Estado";
-                worksheet.Cell(currentRow, 16).Value = "Mensaje";
+                worksheet.Cell(currentRow, 15).Value = "Registrado";
+                worksheet.Cell(currentRow, 16).Value = "Estado";
 
                 var resultados = (IEnumerable<Domain.Entities.PagoObligacionObsEntity>)Session["PAGO_OBLIG_RESULT"];
 
@@ -245,7 +245,7 @@ namespace WebApp.Controllers
                     worksheet.Cell(currentRow, 12).SetValue<decimal?>(item.I_InteresMora);
                     worksheet.Cell(currentRow, 13).SetValue<string>(item.T_LugarPago);
                     worksheet.Cell(currentRow, 14).SetValue<string>(item.T_InformacionAdicional);
-                    worksheet.Cell(currentRow, 15).SetValue<string>(item.B_Success ? "Correcto" : "Observado");
+                    worksheet.Cell(currentRow, 15).SetValue<string>(item.B_Success ? "Sí" : "No");
                     worksheet.Cell(currentRow, 16).SetValue<string>(item.T_ErrorMessage);
                 }
 
@@ -289,8 +289,8 @@ namespace WebApp.Controllers
                 worksheet.Cell(currentRow, 13).Value = "Recargo";
                 worksheet.Cell(currentRow, 14).Value = "LugarPago";
                 worksheet.Cell(currentRow, 15).Value = "InformacionAdicional";
-                worksheet.Cell(currentRow, 16).Value = "Estado";
-                worksheet.Cell(currentRow, 17).Value = "Mensaje";
+                worksheet.Cell(currentRow, 16).Value = "Registrado";
+                worksheet.Cell(currentRow, 17).Value = "Estado";
 
                 var resultados = (IEnumerable<Domain.Entities.PagoTasaObsEntity>)Session["PAGO_TASA_RESULT"];
 
@@ -312,7 +312,7 @@ namespace WebApp.Controllers
                     worksheet.Cell(currentRow, 13).SetValue<decimal?>(item.I_InteresMora);
                     worksheet.Cell(currentRow, 14).SetValue<string>(item.T_LugarPago);
                     worksheet.Cell(currentRow, 15).SetValue<string>(item.T_InformacionAdicional);
-                    worksheet.Cell(currentRow, 16).SetValue<string>(item.B_Success ? "Correcto" : "Observado");
+                    worksheet.Cell(currentRow, 16).SetValue<string>(item.B_Success ? "Sí" : "No");
                     worksheet.Cell(currentRow, 17).SetValue<string>(item.T_ErrorMessage);
                 }
 

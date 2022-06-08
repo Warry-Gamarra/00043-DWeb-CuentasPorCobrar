@@ -66,6 +66,8 @@ namespace Data.Views
 
         public string T_ProcesoDesc { get; set; }
 
+        public DateTime? D_FecVencto { get; set; }
+
         public static VW_PagoBancoObligaciones FindByID(int idPagoBanco)
         {
             string s_command;

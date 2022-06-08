@@ -59,6 +59,9 @@ namespace Domain.Helpers
     public enum CondicionPago
     {
         Correcto = 131,
-        Extorno = 132
+        Extorno = 132,
+        DoblePago = 135,
+        ObligacionNoExiste = 136,
+        PagoDesenlazado = 137
     }
 }

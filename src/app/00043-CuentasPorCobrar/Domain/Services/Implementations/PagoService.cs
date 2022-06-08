@@ -56,7 +56,8 @@ namespace Domain.Services.Implementations
         }
 
 
-        public bool ValidarCodOperacionObligacion(string C_CodOperacion, string C_CodDepositante, int I_EntidadFinanID, DateTime? D_FecPago)
+        public bool ValidarCodOperacionObligacion(string C_CodOperacion, string C_CodDepositante, int I_EntidadFinanID, DateTime? D_FecPago,
+            int? I_ProcesoIDArchivo, DateTime? D_FecVenctoArchivo)
         {
             var spParams = new USP_S_ValidarCodOperacionObligacion()
             {
@@ -65,6 +66,19 @@ namespace Domain.Services.Implementations
                 I_EntidadFinanID = I_EntidadFinanID,
                 D_FecPago = D_FecPago
             };
+
+            if (I_EntidadFinanID == Bancos.BCP_ID)
+            {
+                if (I_ProcesoIDArchivo.HasValue && D_FecVenctoArchivo.HasValue)
+                {
+                    spParams.I_ProcesoIDArchivo = I_ProcesoIDArchivo;
+                    spParams.D_FecVenctoArchivo = D_FecVenctoArchivo;
+                }
+                else
+                {
+                    throw new Exception("Ocurrió un error al validar el Código de Operación.");
+                }
+            }
 
             return USP_S_ValidarCodOperacionObligacion.Execute(spParams);
         }

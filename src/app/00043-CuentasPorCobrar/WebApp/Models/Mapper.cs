@@ -461,7 +461,8 @@ namespace WebApp.Models
                 I_MontoProcesado = dto.I_MontoProcesado,
                 T_MotivoCoreccion = dto.T_MotivoCoreccion,
                 C_CodigoInterno = dto.C_CodigoInterno,
-                T_ProcesoDesc = dto.T_ProcesoDesc
+                T_ProcesoDesc = dto.T_ProcesoDesc,
+                D_FecVencto = dto.D_FecVencto
             };
 
             return model;

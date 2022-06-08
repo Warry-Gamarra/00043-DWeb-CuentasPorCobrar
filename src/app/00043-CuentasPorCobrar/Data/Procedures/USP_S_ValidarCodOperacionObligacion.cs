@@ -16,7 +16,9 @@ namespace Data.Procedures
         public string C_CodDepositante { get; set; }
         public int I_EntidadFinanID { get; set; }
         public DateTime? D_FecPago { get; set; }
-        
+        public int? I_ProcesoIDArchivo { get; set; }
+        public DateTime? D_FecVenctoArchivo { get; set; }
+
         public static bool Execute(USP_S_ValidarCodOperacionObligacion spParam)
         {
             DynamicParameters parameters = new DynamicParameters();
@@ -31,6 +33,8 @@ namespace Data.Procedures
                     parameters.Add(name: "C_CodDepositante", dbType: DbType.String, value: spParam.C_CodDepositante);
                     parameters.Add(name: "I_EntidadFinanID", dbType: DbType.Int16, value: spParam.I_EntidadFinanID);
                     parameters.Add(name: "D_FecPago", dbType: DbType.DateTime, value: spParam.D_FecPago);
+                    parameters.Add(name: "I_ProcesoIDArchivo", dbType: DbType.Int16, value: spParam.I_ProcesoIDArchivo);
+                    parameters.Add(name: "D_FecVenctoArchivo", dbType: DbType.Date, value: spParam.D_FecVenctoArchivo);
                     parameters.Add(name: "B_Correct", dbType: DbType.Boolean, direction: ParameterDirection.Output);
 
                     _dbConnection.Execute(s_command, parameters, commandType: CommandType.StoredProcedure);

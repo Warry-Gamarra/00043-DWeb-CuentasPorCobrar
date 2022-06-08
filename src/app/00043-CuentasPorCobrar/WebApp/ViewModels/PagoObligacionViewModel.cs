@@ -46,13 +46,15 @@ namespace WebApp.ViewModels
         {
             get
             {
-                return DateTime.ParseExact(fechaPago, FormatosDateTime.BASIC_DATE, CultureInfo.InvariantCulture).AddHours(horas).AddMinutes(minutos);
+                return DateTime.ParseExact(fechaPago, FormatosDateTime.BASIC_DATE, CultureInfo.InvariantCulture).AddHours(horas).AddMinutes(minutos).AddSeconds(segundos);
             }
         }
 
         public int horas { get; set; }
 
         public int minutos { get; set; }
+
+        public int segundos { get; set; }
 
         [Required(ErrorMessage = "Este campo es obligatorio.")]
         public string lugarPago { get; set; }
