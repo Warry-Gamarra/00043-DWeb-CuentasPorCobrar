@@ -221,11 +221,15 @@ namespace WebApp.Controllers
 
             var user = usersModel.Find(userId.Value);
 
+            bool mostrarReporteObligaciones = true;
+
             if (user.RoleName.Equals(RoleNames.DEPENDENCIA) || user.RoleName.Equals(RoleNames.CONSULTA))
             {
                 model.dependencia = user.DependenciaId;
 
                 model.tipoEstudio = (model.dependencia == DependenciaEUPG.ID) ? TipoEstudio.Posgrado : TipoEstudio.Pregrado;
+
+                mostrarReporteObligaciones = false;
             }
 
             var listaDependencias = programasClientFacade.GetDependencias(model.tipoEstudio, model.dependencia);
@@ -260,6 +264,7 @@ namespace WebApp.Controllers
             ViewBag.EstadoPagoObligaciones = new SelectList(generalServiceFacade.Listar_CondicionPagoObligacion(), "Value", "TextDisplay", model.estaPagado);
 
             ViewBag.FiltroDependencias = (model.tipoEstudio == TipoEstudio.Posgrado || model.dependencia.HasValue) ? null : "TODOS";
+            ViewBag.MostrarReporteObligaciones = mostrarReporteObligaciones;
 
             return View("Consulta", model);
         }
@@ -344,9 +349,9 @@ namespace WebApp.Controllers
                     worksheet.Cell(currentRow, 10).SetValue<decimal?>(item.I_MontoOblig);
                     worksheet.Cell(currentRow, 11).SetValue<string>(item.T_FecVencto);
                     worksheet.Cell(currentRow, 12).SetValue<string>(item.T_Pagado);
-                    worksheet.Cell(currentRow, 13).SetValue<decimal?>(item.I_MontoPagadoActual);
+                    worksheet.Cell(currentRow, 13).SetValue<decimal?>(item.I_MontoOblig == null ? null : item.I_MontoPagadoActual);
                     worksheet.Cell(currentRow, 14).SetValue<string>(item.T_FecPagos);
-                    worksheet.Cell(currentRow, 15).SetValue<DateTime>(item.D_FecCre);
+                    worksheet.Cell(currentRow, 15).SetValue<DateTime?>(item.D_FecCre);
                     worksheet.Cell(currentRow, 16).SetValue<DateTime?>(item.D_FecMod);
                 }
                 #endregion

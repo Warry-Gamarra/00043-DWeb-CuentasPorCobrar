@@ -401,8 +401,6 @@
     <Content Include="Assets\grid-mvc\js\gridmvc.lang.fr.js" />
     <Content Include="Assets\grid-mvc\js\gridmvc.lang.ru.js" />
     <Content Include="Assets\grid-mvc\js\gridmvc.min.js" />
-    <Content Include="SqlServerTypes\x64\SqlServerSpatial110.dll" />
-    <Content Include="SqlServerTypes\x86\SqlServerSpatial110.dll" />
     <Content Include="Views\Estudiantes\_SeleccionarArchivo.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>

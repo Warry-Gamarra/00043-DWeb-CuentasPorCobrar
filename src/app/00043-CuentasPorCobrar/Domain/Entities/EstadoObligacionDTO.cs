@@ -54,7 +54,7 @@ namespace Domain.Entities
 
         public decimal? I_MontoPagadoActual { get; set; }
 
-        public DateTime D_FecCre { get; set; }
+        public DateTime? D_FecCre { get; set; }
 
         public DateTime? D_FecMod { get; set; }
 

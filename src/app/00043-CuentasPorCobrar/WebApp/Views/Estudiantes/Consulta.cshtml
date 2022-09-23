@@ -34,7 +34,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body bg-light-gray">
-                        <form name="frmConsultaEstudianteMatricula" id="frmConsultaEstudianteMatricula" method="get" action="/">
+                        <form name="frmConsultaEstudianteMatricula" id="frmConsultaEstudianteMatricula" method="get" action="@Url.Action("Consulta", "Estudiantes")">
                             <div class="form-row">
                                 <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
                                     <label for="anio">Año</label>
@@ -131,7 +131,7 @@
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-lg-2 col-md-3 col-12">
-                                    <button type="button" id="btnConsultarEstudiante" class="btn btn-block btn-outline-primary mt-4"><i class="fa fa-fw fa-search-plus"></i> Buscar</button>
+                                    <button type="submit" id="btnConsultarEstudiante" class="btn btn-block btn-outline-primary mt-4"><i class="fa fa-fw fa-search-plus"></i> Buscar</button>
                                 </div>
                             </div>
                         </form>
@@ -153,8 +153,8 @@
                         columns.Add(c => c.T_DenomProg).Titled("Especialidad").Filterable(true);
                         columns.Add(c => c.T_EsIngresante).Titled("Tipo alumno").Filterable(true);
                         columns.Add().Titled("Cuota").Encoded(false).Sanitized(false).RenderValueAs(model =>
-                           "<a href=\"" + Url.Action("ReporteObligaciones", "Reportes", new { anio = model.I_Anio, periodo = model.I_Periodo, codalu = model.C_CodAlu, codrc = model.C_RcCod }) +
-                           "\" target=\"_blank\">" + model.T_ProcesoDesc + "</a>");
+                           ViewBag.MostrarReporteObligaciones ? ("<a href=\"" + Url.Action("ReporteObligaciones", "Reportes", new { anio = model.I_Anio, periodo = model.I_Periodo, codalu = model.C_CodAlu, codrc = model.C_RcCod }) +
+                           "\" target=\"_blank\">" + model.T_ProcesoDesc + "</a>") : model.T_ProcesoDesc);
                         columns.Add(c => c.I_MontoOblig).Titled("Monto Obl.").Filterable(true).Css("text-center");
                         columns.Add(c => c.T_FecVencto).Titled("Fec.Vcto.").Filterable(true).Css("text-center");
                         columns.Add(c => c.T_FecPagos).Titled("Fec.Pago").Filterable(true).Css("text-center");

@@ -29,9 +29,11 @@ namespace WebApp.Models
 
             if (tipoEstudio == null)
             {
-                var cuotas_pregrado = _obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(anio, periodo, TipoEstudio.Pregrado, dependencia).Where(x => !x.B_Pagado);
+                var cuotas_pregrado = _obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(anio, periodo, TipoEstudio.Pregrado, dependencia).
+                    Where(x => !x.B_Pagado && x.I_MontoOblig > 0);
 
-                var cuotas_posgrado = _obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(anio, periodo, TipoEstudio.Posgrado, dependencia).Where(x => !x.B_Pagado);
+                var cuotas_posgrado = _obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(anio, periodo, TipoEstudio.Posgrado, dependencia).
+                    Where(x => !x.B_Pagado && x.I_MontoOblig > 0);
 
                 cuotas_pago = cuotas_pregrado.Concat(cuotas_posgrado);
 
@@ -43,7 +45,8 @@ namespace WebApp.Models
             }
             else
             {
-                cuotas_pago = _obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(anio, periodo, tipoEstudio.Value, dependencia).Where(x => !x.B_Pagado);
+                cuotas_pago = _obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(anio, periodo, tipoEstudio.Value, dependencia).
+                    Where(x => !x.B_Pagado && x.I_MontoOblig > 0);
 
                 cuentas_bcp = _obligacionServiceFacade.Obtener_CtaDeposito_X_Periodo(anio, periodo, tipoEstudio.Value).Where(x => x.I_EntidadFinanID == Bancos.BCP_ID);
             }

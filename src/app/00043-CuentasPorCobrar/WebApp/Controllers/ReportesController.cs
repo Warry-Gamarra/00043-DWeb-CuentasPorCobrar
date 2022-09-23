@@ -25,6 +25,7 @@ namespace WebApp.Controllers
             pagosModel = new PagosModel();
         }
 
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONTABILIDAD + ", " + RoleNames.TESORERIA)]
         [Route("obligaciones/reporte-obligacion-alumno")]
         public ActionResult ReporteObligaciones(int anio, int periodo, string codalu, string codrc)
         {
@@ -128,7 +129,7 @@ namespace WebApp.Controllers
             {
                 var numeroCuota = "T_Cuota" + i.ToString();
 
-                var seccionMontoObligacion = "10,000.00" + (item.B_Pagado ? String.Format(" ({0})", item.T_Pagado) : "");
+                var seccionMontoObligacion = item.T_MontoOblig + (item.B_Pagado ? String.Format(" ({0})", item.T_Pagado) : "");
 
                 parameterList.Add(new ReportParameter(numeroCuota, String.Format("{0}\n{1}\n{2}", item.T_FecVencto, seccionMontoObligacion, item.T_NroOrden)));
                 
