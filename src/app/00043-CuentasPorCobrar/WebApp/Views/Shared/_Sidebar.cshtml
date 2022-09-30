@@ -28,6 +28,7 @@
                     @if (User.IsInRole(RoleNames.ADMINISTRADOR) || User.IsInRole(RoleNames.CONSULTA) || User.IsInRole(RoleNames.TESORERIA))
                     {
                         <li><a href="@Url.Action("ResumenAnualObligacionesPorDia", "EstadosCuenta")"><i class="fa fa-bank"></i>&nbsp; Resumen Ingresos de Obligaciones</a></li>
+                        <li><a href="@Url.Action("CantidadDePagosPorDia", "EstadosCuenta")"><i class="fa fa-fw fa-tasks"></i>&nbsp; Cantidad de pagos por día</a></li>
                         <li><a href="@Url.Action("Consulta", "EstadosCuentaTasas")"><i class="fa bi-person-lines-fill"></i>&nbsp; Consulta pago tasas</a></li>
                     }
                 </ul>

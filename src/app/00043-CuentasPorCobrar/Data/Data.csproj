@@ -74,6 +74,7 @@
     <Compile Include="Procedures\USP_I_GrabarPagoObligaciones.cs" />
     <Compile Include="Procedures\USP_I_GrabarPagoTasas.cs" />
     <Compile Include="Procedures\USP_I_GrabarTasaUnfv.cs" />
+    <Compile Include="Procedures\USP_S_CantidadDePagosRegistrados_X_Dia.cs" />
     <Compile Include="Procedures\USP_S_ListadoEstadoObligaciones.cs" />
     <Compile Include="Procedures\USP_IU_RelacionarPagoConObligacion.cs" />
     <Compile Include="Procedures\USP_S_ResumenAnualPagoDeObligaciones_X_Clasificadores.cs" />

@@ -30,5 +30,16 @@ namespace WebApp.Models.Facades
 
             return result;
         }
+
+        public ReporteCantidadDePagosRegistrados_X_Dia ReporteCantidadDePagosRegistrados_X_Dia(int anio, int tipoPago, int? entidadFinanID, int? ctaDepositoID, int? condicionPagoID)
+        {
+            var lista = reporteGeneralService.CantidadDePagosRegistrados_X_Dia(anio, tipoPago, entidadFinanID, ctaDepositoID, condicionPagoID);
+
+            string nombreEntidadFinanc = entidadFinanID.HasValue ? entidadRecaudadoraService.Find(entidadFinanID.Value).Nombre : null;
+
+            var result = new ReporteCantidadDePagosRegistrados_X_Dia(anio, nombreEntidadFinanc, null, lista);
+
+            return result;
+        }
     }
 }

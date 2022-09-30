@@ -191,7 +191,7 @@ namespace WebApp.Controllers
             };
 
             return pagoModel.ListarPagoBancoObligacion(parametro)
-                .Where(x => x.I_CondicionPagoID != (int)CatalogoTipoPago.Correcto && x.I_CondicionPagoID != (int)CatalogoTipoPago.Extorno)
+                .Where(x => x.I_CondicionPagoID != (int)CondicionPago.Correcto && x.I_CondicionPagoID != (int)CondicionPago.Extorno)
                 .OrderBy(x => x.T_DatosDepositante);
         }
 

@@ -590,7 +590,7 @@ namespace WebApp.Controllers
                 };
 
                 ViewBag.Pagos = pagosModel.ListarPagoBancoObligacion(parametroBusqueda)
-                    .Where(x => x.I_CondicionPagoID != (int)CatalogoTipoPago.Correcto && x.I_CondicionPagoID != (int)CatalogoTipoPago.Extorno)
+                    .Where(x => x.I_CondicionPagoID != (int)CondicionPago.Correcto && x.I_CondicionPagoID != (int)CondicionPago.Extorno)
                     .OrderBy(x => x.D_FecPago);
             }
             
@@ -623,7 +623,7 @@ namespace WebApp.Controllers
                     Message = "La obligación ya tiene un pago asignado."
                 };
             }
-            else if (pago.I_CondicionPagoID == (int)CatalogoTipoPago.Correcto)
+            else if (pago.I_CondicionPagoID == (int)CondicionPago.Correcto)
             {
                 response = new Response()
                 {
@@ -631,7 +631,7 @@ namespace WebApp.Controllers
                     Message = "El pago ya ha sido asignado a una obligación."
                 };
             }
-            else if (pago.I_CondicionPagoID == (int)CatalogoTipoPago.Extorno)
+            else if (pago.I_CondicionPagoID == (int)CondicionPago.Extorno)
             {
                 response = new Response()
                 {
@@ -678,7 +678,7 @@ namespace WebApp.Controllers
                     Message = "El pago seleccionado no existe."
                 };
             }
-            else if (pago.I_CondicionPagoID != (int)CatalogoTipoPago.Correcto)
+            else if (pago.I_CondicionPagoID != (int)CondicionPago.Correcto)
             {
                 response = new Response()
                 {

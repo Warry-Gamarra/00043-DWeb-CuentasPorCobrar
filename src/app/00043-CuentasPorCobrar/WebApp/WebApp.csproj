@@ -491,6 +491,7 @@
     <Compile Include="ViewModels\EstadoObligacionViewModel.cs" />
     <Compile Include="ViewModels\ConsultaObligacionEstudianteViewModel.cs" />
     <Compile Include="ViewModels\PagoBancoObligacionViewModel.cs" />
+    <Compile Include="ViewModels\ReporteCantidadDePagosRegistrados_X_Dia.cs" />
     <Compile Include="ViewModels\ReporteResumenAnualPagoObligaciones_X_Dia.cs" />
     <Compile Include="ViewModels\ReporteResumenAnualPagoObligaciones_X_Dependencias.cs" />
     <Compile Include="ViewModels\ReporteResumenAnualPagoObligaciones_X_Clasificadores.cs" />
@@ -551,6 +552,7 @@
     <Content Include="Models\DataSets\ObligacionAlumnoDS.xss">
       <DependentUpon>ObligacionAlumnoDS.xsd</DependentUpon>
     </Content>
+    <Content Include="Views\EstadosCuenta\CantidadDePagosPorDia.cshtml" />
     <None Include="Views\EstadosCuenta\_ReportePregradoPorFacultadYConcepto.cshtml" />
   </ItemGroup>
   <ItemGroup>

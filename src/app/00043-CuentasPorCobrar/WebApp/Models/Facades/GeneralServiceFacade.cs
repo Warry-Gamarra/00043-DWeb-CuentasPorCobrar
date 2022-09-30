@@ -139,6 +139,5 @@ namespace WebApp.Models.Facades
             return lista;
 
         }
-
     }
 }

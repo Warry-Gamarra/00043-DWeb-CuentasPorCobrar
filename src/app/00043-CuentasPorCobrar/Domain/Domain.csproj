@@ -79,6 +79,7 @@
     <Compile Include="Entities\ArchivoImportadoDTO.cs" />
     <Compile Include="Entities\ArchivoIntercambio.cs" />
     <Compile Include="Entities\CampoTablaPago.cs" />
+    <Compile Include="Entities\CantidadDePagosRegistrados_X_DiaDTO.cs" />
     <Compile Include="Entities\ClasificadorEquivalencia.cs" />
     <Compile Include="Entities\ColumnaSeccion.cs" />
     <Compile Include="Entities\DevolucionPago.cs" />
@@ -105,7 +106,6 @@
     <Compile Include="Entities\ServicioBcoComercioDto.cs" />
     <Compile Include="Entities\TasaDTO.cs" />
     <Compile Include="Entities\TasaEntity.cs" />
-    <Compile Include="Helpers\Catalogo.cs" />
     <Compile Include="Helpers\Constantes.cs" />
     <Compile Include="Helpers\ImportacionPagoResponse.cs" />
     <Compile Include="Helpers\MultaNoVotarResponse.cs" />

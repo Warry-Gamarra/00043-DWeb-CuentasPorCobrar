@@ -716,5 +716,27 @@ namespace Domain.Entities
 
             return result;
         }
+
+        public static CantidadDePagosRegistrados_X_DiaDTO USP_S_CantidadDePagosRegistrados_X_Dia_To_CantidadDePagosRegistrados_X_DiaDTO(USP_S_CantidadDePagosRegistrados_X_Dia sp)
+        {
+            var result = new CantidadDePagosRegistrados_X_DiaDTO()
+            {
+                I_Dia = sp.I_Dia,
+                Enero = sp.Enero,
+                Febrero = sp.Febrero,
+                Marzo = sp.Marzo,
+                Abril = sp.Abril,
+                Mayo = sp.Mayo,
+                Junio = sp.Junio,
+                Julio = sp.Julio,
+                Agosto = sp.Agosto,
+                Setiembre = sp.Setiembre,
+                Octubre = sp.Octubre,
+                Noviembre = sp.Noviembre,
+                Diciembre = sp.Diciembre
+            };
+
+            return result;
+        }
     }
 }

@@ -24,7 +24,7 @@ namespace WebApp.Controllers
         SelectModel selectModels;
         PagosModel pagoModel;
         IReporteGeneralServiceFacade reporteGeneralServiceFacade;
-
+        ICatalogoServiceFacade catalogoServiceFacade;
         UsersModel usersModel;
 
         public EstadosCuentaController()
@@ -36,6 +36,7 @@ namespace WebApp.Controllers
             selectModels = new SelectModel();
             pagoModel = new PagosModel();
             reporteGeneralServiceFacade = new ReporteGeneralServiceFacade();
+            catalogoServiceFacade = new CatalogoServiceFacade();
             usersModel = new UsersModel();
         }
 
@@ -1629,6 +1630,136 @@ namespace WebApp.Controllers
                     var content = stream.ToArray();
 
                     string nombreArchivo = "Resumen Ingresos por día  al " + DateTime.Now.ToString(FormatosDateTime.BASIC_DATE2) + ".xlsx";
+
+                    return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", nombreArchivo);
+                }
+            }
+        }
+
+        [Route("consultas/pagos-por-dia")]
+        public ActionResult CantidadDePagosPorDia(int? anio, int? tipoPago, int? entidadFinanID, int? ctaDepositoID, int? condicion)
+        {
+            anio = anio.HasValue ? anio : DateTime.Now.Year;
+
+            tipoPago = tipoPago ?? int.Parse(catalogoServiceFacade.Listar_TipoPagos().First().Value);
+
+            var model = reporteGeneralServiceFacade.ReporteCantidadDePagosRegistrados_X_Dia(anio.Value, tipoPago.Value, entidadFinanID, ctaDepositoID, condicion);
+
+            ViewBag.Anios = new SelectList(generalServiceFacade.Listar_Anios(), "Value", "TextDisplay", anio);
+
+            ViewBag.TipoPagos = new SelectList(catalogoServiceFacade.Listar_TipoPagos(), "Value", "TextDisplay", anio);
+
+            ViewBag.EntidadesFinancieras = new SelectList(selectModels.GetEntidadesFinancieras(), "Value", "TextDisplay", entidadFinanID);
+
+            ViewBag.CtaDeposito = new SelectList(
+                entidadFinanID.HasValue ? selectModels.GetCtasDeposito(entidadFinanID.Value) : new List<SelectViewModel>(), "Value", "TextDisplay", ctaDepositoID);
+
+            ViewBag.CondicionesPago = new SelectList(selectModels.GetCondicionesPago(), "Value", "TextDisplay", condicion);
+
+            ViewBag.Title = "Cantidad de Pagos por Día";
+
+            return View(model);
+        }
+
+        [Route("consultas/pagos-por-dia/descarga")]
+        public ActionResult DescargaCantidadDePagosPorDia(int anio, int tipoPago, int? entidadFinanID, int? ctaDepositoID, int? condicion)
+        {
+            var model = reporteGeneralServiceFacade.ReporteCantidadDePagosRegistrados_X_Dia(anio, tipoPago, entidadFinanID, ctaDepositoID, condicion);
+
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.Worksheets.Add("IngresosDiarios");
+
+                worksheet.Column("A").Width = 14;
+
+                worksheet.Columns("B:M").Width = 14;
+
+                var titleCell = worksheet.Cell(1, 1);
+
+                titleCell.Value = "CANTIDAD DE PAGOS POR DÍA AL AÑO " + model.anio;
+
+                titleCell.RichText.SetBold(true);
+
+                titleCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+
+                worksheet.Range(titleCell, worksheet.Cell(1, 13)).Merge(true);
+
+                var bankNameCell = worksheet.Cell(3, 1);
+
+                bankNameCell.Value = String.IsNullOrEmpty(model.nombreEntidadFinanc) ? "" : "Entidad Financiera: " + model.nombreEntidadFinanc;
+
+                var dateCell = worksheet.Cell(3, 13);
+
+                dateCell.Value = "Fecha consulta: " + model.FechaActual;
+
+                dateCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
+
+                var timeCell = worksheet.Cell(4, 13);
+
+                timeCell.Value = "Hora consulta: " + model.HoraActual;
+
+                timeCell.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
+
+                var currentRow = 6;
+
+                worksheet.Cell(currentRow, 1).Value = "Día";
+                worksheet.Cell(currentRow, 2).Value = "Enero";
+                worksheet.Cell(currentRow, 3).Value = "Febrero";
+                worksheet.Cell(currentRow, 4).Value = "Marzo";
+                worksheet.Cell(currentRow, 5).Value = "Abril";
+                worksheet.Cell(currentRow, 6).Value = "Mayo";
+                worksheet.Cell(currentRow, 7).Value = "Junio";
+                worksheet.Cell(currentRow, 8).Value = "Julio";
+                worksheet.Cell(currentRow, 9).Value = "Agosto";
+                worksheet.Cell(currentRow, 10).Value = "Setiembre";
+                worksheet.Cell(currentRow, 11).Value = "Octubre";
+                worksheet.Cell(currentRow, 12).Value = "Noviembre";
+                worksheet.Cell(currentRow, 13).Value = "Diciembre";
+
+                currentRow++;
+
+                var inicial = currentRow;
+
+                foreach (var item in model.resumen_x_dia)
+                {
+                    worksheet.Cell(currentRow, 1).SetValue<string>(item.I_Dia.ToString());
+                    worksheet.Cell(currentRow, 2).SetValue<int>(item.Enero);
+                    worksheet.Cell(currentRow, 3).SetValue<int>(item.Febrero);
+                    worksheet.Cell(currentRow, 4).SetValue<int>(item.Marzo);
+                    worksheet.Cell(currentRow, 5).SetValue<int>(item.Abril);
+                    worksheet.Cell(currentRow, 6).SetValue<int>(item.Mayo);
+                    worksheet.Cell(currentRow, 7).SetValue<int>(item.Junio);
+                    worksheet.Cell(currentRow, 8).SetValue<int>(item.Julio);
+                    worksheet.Cell(currentRow, 9).SetValue<int>(item.Agosto);
+                    worksheet.Cell(currentRow, 10).SetValue<int>(item.Setiembre);
+                    worksheet.Cell(currentRow, 11).SetValue<int>(item.Octubre);
+                    worksheet.Cell(currentRow, 12).SetValue<int>(item.Noviembre);
+                    worksheet.Cell(currentRow, 13).SetValue<int>(item.Diciembre);
+
+                    currentRow++;
+                }
+
+                worksheet.Cell(currentRow, 1).Value = "Cantidad";
+                worksheet.Cell(currentRow, 2).SetValue<int>(model.TotalEnero);
+                worksheet.Cell(currentRow, 3).SetValue<int>(model.TotalFebrero);
+                worksheet.Cell(currentRow, 4).SetValue<int>(model.TotalMarzo);
+                worksheet.Cell(currentRow, 5).SetValue<int>(model.TotalAbril);
+                worksheet.Cell(currentRow, 6).SetValue<int>(model.TotalMayo);
+                worksheet.Cell(currentRow, 7).SetValue<int>(model.TotalJunio);
+                worksheet.Cell(currentRow, 8).SetValue<int>(model.TotalJulio);
+                worksheet.Cell(currentRow, 9).SetValue<int>(model.TotalAgosto);
+                worksheet.Cell(currentRow, 10).SetValue<int>(model.TotalSetiembre);
+                worksheet.Cell(currentRow, 11).SetValue<int>(model.TotalOctubre);
+                worksheet.Cell(currentRow, 12).SetValue<int>(model.TotalNoviembre);
+                worksheet.Cell(currentRow, 13).SetValue<int>(model.TotalDiciembre);
+
+                using (var stream = new MemoryStream())
+                {
+                    workbook.SaveAs(stream);
+
+                    var content = stream.ToArray();
+
+                    string nombreArchivo = "Cantidad de Pagos por día  al " + DateTime.Now.ToString(FormatosDateTime.BASIC_DATE2) + ".xlsx";
 
                     return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", nombreArchivo);
                 }

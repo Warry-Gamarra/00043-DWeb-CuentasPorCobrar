@@ -34,7 +34,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body bg-light-gray">
-                        <form name="frmConsultaTasas" id="frmConsultaTasas" method="get" action="/">
+                        <form name="frmConsultaTasas" id="frmConsultaTasas" method="get" action="@Url.Action("Consulta", "EstadosCuentaTasas")">
                             <div class="form-row">
                                 @Html.Hidden("buscar", true)
                                 <div class="form-group col-xl-2 col-lg-6 col-md-5 col-sm-12 col-12">
@@ -95,7 +95,7 @@
                                 </div>
 
                                 <div class="form-group col-xl-2 col-lg-2 col-md-3 col-12">
-                                    <button type="button" id="btnConsultaTasas" class="btn btn-block btn-outline-primary mt-4"><i class="fa fa-fw fa-search-plus"></i> Iniciar consulta</button>
+                                    <button type="submit" id="btnConsultaTasas" class="btn btn-block btn-outline-primary mt-4"><i class="fa fa-fw fa-search-plus"></i> Iniciar consulta</button>
                                 </div>
                             </div>
                         </form>

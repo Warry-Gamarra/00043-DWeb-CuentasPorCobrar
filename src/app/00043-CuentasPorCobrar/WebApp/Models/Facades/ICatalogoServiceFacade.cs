@@ -11,5 +11,7 @@ namespace WebApp.Models.Facades
         IEnumerable<SelectViewModel> Listar_Grados();
 
         IEnumerable<SelectViewModel> Listar_Periodos();
+
+        IEnumerable<SelectViewModel> Listar_TipoPagos();
     }
 }

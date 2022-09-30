@@ -35,7 +35,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body bg-light-gray">
-                        <form name="frmConsultaPagosBancoObligaciones" id="frmConsultaPagosBancoObligaciones" method="get" action="/">
+                        <form name="frmConsultaPagosBancoObligaciones" id="frmConsultaPagosBancoObligaciones" method="get" action="@Url.Action("ListarPagosBancoObligaciones", "EstadosCuenta")">
                             <div class="form-row">
                                 <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
                                     <label for="tipoEstudio">Tipo de estudio</label>
@@ -110,7 +110,7 @@
 
                                 <div class="form-group col-lg-2 col-md-3 col-12">
                                     @Html.Hidden("buscar", true)
-                                    <button type="button" id="btnConsultar" class="btn btn-block btn-outline-primary mt-4"><i class="fa fa-fw fa-search-plus"></i> Iniciar consulta</button>
+                                    <button type="submit" id="btnConsultar" class="btn btn-block btn-outline-primary mt-4"><i class="fa fa-fw fa-search-plus"></i> Iniciar consulta</button>
                                 </div>
                             </div>
                         </form>

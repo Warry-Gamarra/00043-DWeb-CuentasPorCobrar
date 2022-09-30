@@ -34,5 +34,14 @@ namespace WebApp.Models.Facades
 
             return result;
         }
+
+        public IEnumerable<SelectViewModel> Listar_TipoPagos()
+        {
+            var lista = catalogoService.Listar_Catalogo(Domain.Helpers.Parametro.TipoPago);
+
+            var result = lista.Select(x => Mapper.CatalogoOpcionEntity_To_SelectViewModel(x)).ToList();
+
+            return result;
+        }
     }
 }
