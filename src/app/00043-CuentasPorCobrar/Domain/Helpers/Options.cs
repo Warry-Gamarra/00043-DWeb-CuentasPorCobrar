@@ -64,4 +64,11 @@ namespace Domain.Helpers
         ObligacionNoExiste = 136,
         PagoDesenlazado = 137
     }
+
+    public enum Periodos
+    {
+        Anual = 15,
+        Semestral1 = 19,
+        Semestral2 = 20
+    }
 }

@@ -68,7 +68,7 @@ namespace WebApp.Controllers
         }
 
 
-        [Authorize(Roles = RoleNames.ADMINISTRADOR)]
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
         [Route("operaciones/cargar-multas-pregrado")]
         public ActionResult CargarArchivoMultaPregrado()
         {
@@ -90,6 +90,7 @@ namespace WebApp.Controllers
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 
+        [Route("operaciones/cargar-aptos/resultado")]
         [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
         public ActionResult DescargarRegistrosObservados()
         {
@@ -171,6 +172,7 @@ namespace WebApp.Controllers
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 
+        [Route("operaciones/cargar-multas-pregrado/resultado")]
         [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
         public ActionResult DescargarMultasSinRegistrar()
         {

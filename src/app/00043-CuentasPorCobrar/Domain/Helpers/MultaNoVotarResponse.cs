@@ -24,7 +24,7 @@ namespace Domain.Helpers
 
             if (MultasSinRegistrar.Count > 0)
                 Message = Message + " Se ha encontrado: " + MultasSinRegistrar.Count.ToString() +
-                    " observacion(es). Haga <a href='/Estudiantes/DescargarMultasSinRegistrar'>click aquí</a> para descargar la lista de observaciones.";
+                    " observacion(es). Haga <a href='cargar-multas-pregrado/resultado'>click aquí</a> para descargar la lista de observaciones.";
         }
 
         public bool Success { get; set; }

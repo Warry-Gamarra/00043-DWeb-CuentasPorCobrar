@@ -139,5 +139,17 @@ namespace WebApp.Models.Facades
             return lista;
 
         }
+
+        public IEnumerable<SelectViewModel> Listar_CondicionAlumnoObligacion()
+        {
+            var lista = new List<SelectViewModel>();
+
+            lista.Add(new SelectViewModel() { Value = true.ToString(), TextDisplay = "Sin obligaciones" });
+
+            lista.Add(new SelectViewModel() { Value = false.ToString(), TextDisplay = "En general" });
+
+            return lista;
+
+        }
     }
 }

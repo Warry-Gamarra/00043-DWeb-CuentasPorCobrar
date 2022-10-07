@@ -11,9 +11,9 @@ namespace Domain.Services
 {
     public interface IObligacionService
     {
-        Response Generar_Obligaciones_Pregrado(int anio, int periodo, string codFacultad, int currentUserID);
+        Response Generar_Obligaciones_Pregrado(int anio, int periodo, string codFacultad, bool? B_Ingresante, bool B_AlumnosSinObligaciones, int currentUserID);
 
-        Response Generar_Obligaciones_Posgrado(int anio, int periodo, string codGrado, int currentUserID);
+        Response Generar_Obligaciones_Posgrado(int anio, int periodo, string codGrado, bool? B_Ingresante, bool B_AlumnosSinObligaciones, int currentUserID);
 
         Response Generar_ObligacionesPregrado_PorAlumno(int anio, int periodo, string codAlu, string codRc, int currentUserID);
 

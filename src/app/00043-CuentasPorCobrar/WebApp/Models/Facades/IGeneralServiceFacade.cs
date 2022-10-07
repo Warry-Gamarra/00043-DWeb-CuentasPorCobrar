@@ -25,5 +25,7 @@ namespace WebApp.Models.Facades
         IEnumerable<SelectViewModel> Listar_CondicionPagoObligacion();
 
         IEnumerable<SelectViewModel> Listar_TiposPago();
+
+        IEnumerable<SelectViewModel> Listar_CondicionAlumnoObligacion();
     }
 }

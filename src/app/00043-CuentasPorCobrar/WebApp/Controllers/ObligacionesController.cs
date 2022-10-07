@@ -1,9 +1,11 @@
-﻿using Domain.Helpers;
+﻿using DocumentFormat.OpenXml.EMMA;
+using Domain.Helpers;
 using Domain.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using WebApp.Models;
@@ -43,28 +45,30 @@ namespace WebApp.Controllers
             pagosModel = new PagosModel();
         }
 
-        public ActionResult Generar(int? cmbAnioGrupal, int? cmbPeriodoGrupal, string cmbDependencia, TipoEstudio cmbTipoEstudio = TipoEstudio.Pregrado)
+        public ActionResult Generar(int? anio, int? periodo, string dependencia, bool? esIngresante, bool? sinObligaciones, TipoEstudio tipoEstudio = TipoEstudio.Pregrado)
         {
-            ViewBag.Title = "Generar Obligaciones";
+            int defaultAño, defaultPeriodo;
 
-            ViewBag.Anios = generalServiceFacade.Listar_Anios();
+            TipoEstudio defaultTipoEstudio;
+            
+            bool? defaultEsIngresante, defaultSinObligaciones;
 
-            ViewBag.Periodos = catalogoServiceFacade.Listar_Periodos();
-
-            ViewBag.TipoEstudios = generalServiceFacade.Listar_TipoEstudios(null);
+            string deFaultDependencia;
 
             IEnumerable<CuotaPagoModel> cuotas_pago;
 
             if (TempData["result"] == null)
             {
-                ViewBag.CurrentYear = DateTime.Now.Year;
-                ViewBag.DefaultPeriodo = "15";
-                ViewBag.DefaultTipoEstudio = cmbTipoEstudio;
-                ViewBag.DefaultDependencia = "";
-                ViewBag.Dependencias = programasClientFacade.GetFacultades(cmbTipoEstudio, null);
+                defaultAño = anio ?? DateTime.Now.Year;
+                defaultPeriodo = periodo ?? (int)Periodos.Anual;
+                defaultTipoEstudio = tipoEstudio;
+                deFaultDependencia = dependencia ?? "";
+                defaultEsIngresante = esIngresante;
+                defaultSinObligaciones = sinObligaciones ?? true;
 
-                if (cmbAnioGrupal.HasValue && cmbPeriodoGrupal.HasValue)
-                    cuotas_pago = obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(cmbAnioGrupal.Value, cmbPeriodoGrupal.Value, cmbTipoEstudio, cmbDependencia);
+                if (anio.HasValue && periodo.HasValue)
+                    cuotas_pago = obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(
+                        defaultAño, defaultPeriodo, defaultTipoEstudio, deFaultDependencia);
                 else
                     cuotas_pago = new List<CuotaPagoModel>();
             }
@@ -72,22 +76,38 @@ namespace WebApp.Controllers
             {
                 var result = (Response)TempData["result"];
 
-                ViewBag.CurrentYear = TempData["anio"];
-                ViewBag.DefaultPeriodo = TempData["periodo"];
-                ViewBag.DefaultTipoEstudio = TempData["tipoEstudio"];
-                ViewBag.DefaultDependencia = TempData["dependencia"];
-                ViewBag.Dependencias = programasClientFacade.GetFacultades((TipoEstudio)TempData["tipoEstudio"], null);
+                defaultAño = (int)TempData["anio"];
+                defaultPeriodo = (int)TempData["periodo"];
+                defaultTipoEstudio = (TipoEstudio)TempData["tipoEstudio"];
+                deFaultDependencia = (string)TempData["dependencia"];
+                defaultEsIngresante = (bool?)TempData["esIngresante"];
+                defaultSinObligaciones = (bool)TempData["sinObligaciones"];
+
                 ViewBag.Success = result.Value;
                 ViewBag.Message = result.Message;
 
                 cuotas_pago = new List<CuotaPagoModel>();
             }
 
+            ViewBag.Title = "Generar Obligaciones";
+
+            ViewBag.Anios = new SelectList(generalServiceFacade.Listar_Anios(), "Value", "TextDisplay", defaultAño);
+
+            ViewBag.Periodos = new SelectList(catalogoServiceFacade.Listar_Periodos(), "Value", "TextDisplay", defaultPeriodo);
+
+            ViewBag.TipoEstudios = new SelectList(generalServiceFacade.Listar_TipoEstudios(null), "Value", "TextDisplay", defaultTipoEstudio);
+
+            ViewBag.Dependencias = new SelectList(programasClientFacade.GetFacultades(defaultTipoEstudio, null), "Value", "TextDisplay", deFaultDependencia);
+
+            ViewBag.TipoAlumno = new SelectList(generalServiceFacade.Listar_TipoAlumno(), "Value", "TextDisplay", defaultEsIngresante);
+
+            ViewBag.TieneObligacion = new SelectList(generalServiceFacade.Listar_CondicionAlumnoObligacion(), "Value", "TextDisplay", defaultSinObligaciones);
+
             return View(cuotas_pago);
         }
 
         [HttpPost]
-        public ActionResult Generar(int cmbAnioGrupal, int cmbPeriodoGrupal, TipoEstudio cmbTipoEstudio, string cmbDependencia)
+        public ActionResult Generar(int anio, int periodo, TipoEstudio tipoEstudio, string dependencia, bool? esIngresante, bool sinObligaciones)
         {
             Response result;
             int currentUserID;
@@ -96,7 +116,7 @@ namespace WebApp.Controllers
             {
                 currentUserID = WebSecurity.CurrentUserId;
 
-                result = obligacionServiceFacade.Generar_Obligaciones(cmbAnioGrupal, cmbPeriodoGrupal, cmbTipoEstudio, cmbDependencia, currentUserID);
+                result = obligacionServiceFacade.Generar_Obligaciones(anio, periodo, tipoEstudio, dependencia, esIngresante, sinObligaciones, currentUserID);
             }
             catch (Exception ex)
             {
@@ -108,10 +128,12 @@ namespace WebApp.Controllers
             }
             
             TempData["result"] = result;
-            TempData["anio"] = cmbAnioGrupal;
-            TempData["periodo"] = cmbPeriodoGrupal;
-            TempData["tipoEstudio"] = cmbTipoEstudio;
-            TempData["dependencia"] = cmbDependencia;
+            TempData["anio"] = anio;
+            TempData["periodo"] = periodo;
+            TempData["tipoEstudio"] = tipoEstudio;
+            TempData["dependencia"] = dependencia;
+            TempData["esIngresante"] = esIngresante; 
+            TempData["sinObligaciones"] = sinObligaciones;
 
             return RedirectToAction("Generar", "Obligaciones");
         }

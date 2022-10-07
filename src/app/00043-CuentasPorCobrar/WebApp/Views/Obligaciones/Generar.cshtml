@@ -36,34 +36,46 @@
                             <div class="card-body bg-light-gray">
                                 <form id="frmGenerarOblig" action="@Url.Action("Generar", "Obligaciones")" method="GET">
                                     <div class="form-row">
-                                        <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
-                                            <label for="cmbAnioGrupal">Año</label>
-                                            @Html.DropDownList("cmbAnioGrupal", new SelectList(ViewBag.Anios, "Value", "TextDisplay", ViewBag.CurrentYear), new { @class = "form-control form-control-sm" })
-                                        </div>
-                                        <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
-                                            <label for="cmbPeriodoGrupal">Periodo</label>
-                                            @Html.DropDownList("cmbPeriodoGrupal", new SelectList(ViewBag.Periodos, "Value", "TextDisplay", ViewBag.DefaultPeriodo), null, new { @class = "form-control form-control-sm text-uppercase" })
+                                        <div class="form-group col-lg-1 col-md-4 col-12">
+                                            <label for="anio">Año</label>
+                                            @Html.DropDownList("anio", ViewBag.Anios as SelectList, new { @class = "form-control form-control-sm" })
                                         </div>
 
-                                        <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
-                                            <label for="cmbTipoEstudio">Tipo de estudio</label>
-                                            @Html.DropDownList("cmbTipoEstudio", new SelectList(ViewBag.TipoEstudios, "Value", "TextDisplay", ViewBag.DefaultTipoEstudio), null, new { @class = "form-control form-control-sm text-uppercase" })
+                                        <div class="form-group col-lg-2 col-md-4 col-12">
+                                            <label for="periodo">Periodo</label>
+                                            @Html.DropDownList("periodo", ViewBag.Periodos as SelectList, new { @class = "form-control form-control-sm text-uppercase" })
                                         </div>
 
-                                        <div class="form-group col-lg-3 col-md-5 col-sm-12 col-12">
-                                            <label for="cmbDependencia">Facultades/Posgrado</label>
-                                            @Html.DropDownList("cmbDependencia", new SelectList(ViewBag.Dependencias, "Value", "TextDisplay", ViewBag.DefaultDependencia), "TODOS", new { @class = "form-control form-control-sm text-uppercase" })
+                                        <div class="form-group col-lg-2 col-md-4 col-12">
+                                            <label for="tipoEstudio">Tipo de estudio</label>
+                                            @Html.DropDownList("tipoEstudio", ViewBag.TipoEstudios as SelectList, new { @class = "form-control form-control-sm text-uppercase" })
                                         </div>
 
-                                        <div class="form-group col-lg-2 col-sm-3 col-12">
+                                        <div class="form-group col-lg-3 col-md-12 col-12">
+                                            <label for="dependencia">Facultades/Posgrado</label>
+                                            @Html.DropDownList("dependencia", ViewBag.Dependencias as SelectList, "TODOS", new { @class = "form-control form-control-sm text-uppercase" })
+                                        </div>
+
+                                        <div class="form-group col-lg-2 col-md-6 col-12">
+                                            <label for="esIngresante">Tipo de alumnos</label>
+                                            @Html.DropDownList("esIngresante", ViewBag.TipoAlumno as SelectList, "TODOS", new { @class = "form-control form-control-sm text-uppercase" })
+                                        </div>
+
+                                        <div class="form-group col-lg-2 col-md-6 col-12">
+                                            <label for="sinObligaciones">A alumnos</label>
+                                            @Html.DropDownList("sinObligaciones", ViewBag.TieneObligacion as SelectList, new { @class = "form-control form-control-sm text-uppercase" })
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-lg-2 col-6">
                                             <button id="btnGenerarOblig" type="button" class="btn btn-block btn-outline-primary mt-4">
-                                                <i class="fa fa-fw fa-cogs"></i> Generar obligaciones
+                                                <i class="fa fa-fw fa-cogs"></i> Generar
                                             </button>
                                         </div>
 
-                                        <div class="form-group col-lg-2 col-sm-3 col-12">
-                                            <button id="btnConsultaOblig" type="button" id="btnConsultarEstudiante" class="btn btn-block btn-outline-primary mt-4">
-                                                <i class="fa fa-fw fa-search-plus"></i> Iniciar consulta
+                                        <div class="form-group col-lg-2 col-6">
+                                            <button id="btnConsultaOblig" type="button" class="btn btn-block btn-outline-primary mt-4">
+                                                <i class="fa fa-fw fa-search-plus"></i> Consultar
                                             </button>
                                         </div>
                                     </div>
@@ -112,22 +124,23 @@
                             <div class="card-body bg-light-gray">
                                 <form>
                                     <div class="form-row">
-                                        <div class="form-group col-lg-1 col-md-2 col-6">
+                                        <div class="form-group col-lg-1 col-md-4 col-6">
                                             <label for="cmbAnioIndividual">Año</label>
-                                            @Html.DropDownList("cmbAnioIndividual", new SelectList(ViewBag.Anios, "Value", "TextDisplay", DateTime.Now.Year), new { @class = "form-control form-control-sm" })
+                                            @Html.DropDownList("cmbAnioIndividual", ViewBag.Anios as SelectList, new { @class = "form-control form-control-sm" })
                                         </div>
-                                        <div class="form-group col-lg-1 col-md-2 col-6 ">
+                                        <div class="form-group col-lg-2 col-md-4 col-6 ">
                                             <label for="cmbPeriodoIndividual">Periodo</label>
-                                            @Html.DropDownList("cmbPeriodoIndividual", new SelectList(ViewBag.Periodos, "Value", "TextDisplay", "15"), null, new { @class = "form-control form-control-sm text-uppercase" })
+                                            @Html.DropDownList("cmbPeriodoIndividual", ViewBag.Periodos as SelectList, null, new { @class = "form-control form-control-sm text-uppercase" })
                                         </div>
-                                        <div class="form-group col-lg-1 col-md-2 col-6">
+                                        <div class="form-group col-lg-2 col-md-4 col-12">
                                             <label for="txtCodAlumno">Código de alumno</label>
                                             @Html.TextBox("txtCodAlumno", null, new { @class = "form-control form-control-sm" })
                                         </div>
-                                        <div class="form-group col-lg-3 col-md-5 col-12">
+                                        <div class="form-group col-lg-3 col-md-12 col-12">
                                             <label for="cmbEspecialidad">Especialidad</label>
                                             <select id="cmbEspecialidad" name="cmbEspecialidad" class="form-control form-control-sm text-uppercase"></select>
                                         </div>
+                                    
                                         <div class="form-group col-lg-1 col-md-3 col-12">
                                             <button type="button" id="btnConsultarObligacionAlumno" class="btn btn-block btn-outline-primary mt-4"><i class="fa fa-fw fa-search-plus"></i> Consultar</button>
                                         </div>
@@ -246,14 +259,14 @@
             ERROR: 'error'
         };
 
-        $("#frmGenerarOblig").on("change", "#cmbTipoEstudio", function (e) {
+        $("#frmGenerarOblig").on("change", "#tipoEstudio", function (e) {
             let tipoEstudio = $(this).val();
 
             CargarDependencias(tipoEstudio);
         });
 
         function CargarDependencias(tipoEstudio) {
-            let cmbDependencia = $('#cmbDependencia');
+            let cmbDependencia = $('#dependencia');
 
             let parametros = {
                 tipoEstudio: tipoEstudio

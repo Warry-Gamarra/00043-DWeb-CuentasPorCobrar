@@ -17,6 +17,8 @@ namespace Data.Procedures
         public string C_CodEsc { get; set; }
         public string C_CodAlu { get; set; }
         public string C_CodRc { get; set; }
+        public bool? B_Ingresante { get; set; }
+        public bool B_AlumnosSinObligaciones { get; set; }
         public int I_UsuarioCre { get; set; }
 
         public ResponseData Execute()
@@ -35,6 +37,8 @@ namespace Data.Procedures
                     parameters.Add(name: "C_CodEsc", dbType: DbType.String, value: this.C_CodEsc);
                     parameters.Add(name: "C_CodAlu", dbType: DbType.String, value: this.C_CodAlu);
                     parameters.Add(name: "C_CodRc", dbType: DbType.String, value: this.C_CodRc);
+                    parameters.Add(name: "B_Ingresante", dbType: DbType.Boolean, value: this.B_Ingresante);
+                    parameters.Add(name: "B_AlumnosSinObligaciones", dbType: DbType.Boolean, value: this.B_AlumnosSinObligaciones);
                     parameters.Add(name: "I_UsuarioCre", dbType: DbType.Int32, value: this.I_UsuarioCre);
                     parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);
                     parameters.Add(name: "T_Message", dbType: DbType.String, size: 4000, direction: ParameterDirection.Output);
