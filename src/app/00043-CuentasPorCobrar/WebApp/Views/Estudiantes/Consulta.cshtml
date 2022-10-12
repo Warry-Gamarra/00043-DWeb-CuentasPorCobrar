@@ -36,76 +36,75 @@
                     <div class="card-body bg-light-gray">
                         <form name="frmConsultaEstudianteMatricula" id="frmConsultaEstudianteMatricula" method="get" action="@Url.Action("Consulta", "Estudiantes")">
                             <div class="form-row">
-                                <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
+                                <div class="form-group col-lg-2 col-md-4 col-6">
                                     <label for="anio">Año</label>
                                     @Html.DropDownListFor(model => model.anio, ViewBag.Anios as SelectList, new { @class = "form-control form-control-sm" })
                                 </div>
 
-                                <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
+                                <div class="form-group col-lg-2 col-md-4 col-6">
                                     <label for="periodo">Periodo</label>
                                     @Html.DropDownListFor(model => model.periodo, ViewBag.Periodos as SelectList, "TODOS", new { @class = "form-control form-control-sm text-uppercase" })
                                 </div>
 
-                                <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
+                                <div class="form-group col-lg-2 col-md-4 col-6">
                                     <label for="tipoEstudio">Tipo de estudio</label>
                                     @Html.DropDownListFor(model => model.tipoEstudio, ViewBag.TipoEstudios as SelectList, new { @class = "form-control form-control-sm text-uppercase" })
                                 </div>
 
-                                <div class="form-group col-lg-3 col-md-5 col-sm-12 col-12">
-                                    <label for="codFac">Dependencia</label>
-                                    @Html.DropDownListFor(model => model.codFac, ViewBag.Dependencias as SelectList, (string)ViewBag.FiltroDependencias, new { @class = "form-control form-control-sm text-uppercase" })
-                                </div>
-
-                                <div class="form-group col-lg-3 col-md-5 col-sm-12 col-12">
-                                    <label for="codEsc">Escuela</label>
-                                    @Html.DropDownListFor(model => model.codEsc, ViewBag.Escuelas as SelectList, "TODOS", new { @class = "form-control form-control-sm text-uppercase" })
-                                </div>
-
-                                <div class="form-group col-lg-3 col-md-5 col-sm-12 col-12">
-                                    <label for="codRc">Especialidad</label>
-                                    @Html.DropDownListFor(model => model.codRc, ViewBag.Especialidades as SelectList, "TODOS", new { @class = "form-control form-control-sm text-uppercase" })
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
-                                    <label for="esIngresante">Tipo de alumnos</label>
+                                <div class="form-group col-lg-2 col-md-4 col-6">
+                                    <label for="esIngresante">Tipo de alumno</label>
                                     @Html.DropDownListFor(model => model.esIngresante, ViewBag.TipoAlumno as SelectList, "TODOS", new { @class = "form-control form-control-sm text-uppercase" })
                                 </div>
 
-                                <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
+                                <div class="form-group col-lg-2 col-md-4 col-6">
                                     <label for="obligacionGenerada">Obligaciones</label>
                                     @Html.DropDownListFor(model => model.obligacionGenerada, ViewBag.ExistenciaObligaciones as SelectList, "TODOS", new { @class = "form-control form-control-sm text-uppercase" })
                                 </div>
 
-                                <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
+                                <div class="form-group col-lg-2 col-md-4 col-6">
                                     <label for="estaPagado">Estado de pago</label>
                                     @Html.DropDownListFor(model => model.estaPagado, ViewBag.EstadoPagoObligaciones as SelectList, "TODOS", new { @class = "form-control form-control-sm text-uppercase" })
                                 </div>
 
-                                <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
+                                <div class="form-group col-lg-4 col-md-6 col-12">
+                                    <label for="codFac">Dependencia</label>
+                                    @Html.DropDownListFor(model => model.codFac, ViewBag.Dependencias as SelectList, (string)ViewBag.FiltroDependencias, new { @class = "form-control form-control-sm text-uppercase" })
+                                </div>
+
+                                <div class="form-group col-lg-4 col-md-6 col-12">
+                                    <label for="codEsc">Escuela</label>
+                                    @Html.DropDownListFor(model => model.codEsc, ViewBag.Escuelas as SelectList, "TODOS", new { @class = "form-control form-control-sm text-uppercase" })
+                                </div>
+
+                                <div class="form-group col-lg-4 col-12">
+                                    <label for="codRc">Especialidad</label>
+                                    @Html.DropDownListFor(model => model.codRc, ViewBag.Especialidades as SelectList, "TODOS", new { @class = "form-control form-control-sm text-uppercase" })
+                                </div>
+
+                                <div class="form-group col-lg-2 col-md-3 col-6">
                                     <label for="codAlumno">Cod. alumno</label>
                                     @Html.TextBoxFor(model => model.codAlumno, new { @class = "form-control form-control-sm" })
                                 </div>
 
-                                <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
+                                <div class="form-group col-lg-2 col-md-3 col-6">
                                     <label for="nomAlumno">Nombre alumno</label>
                                     @Html.TextBoxFor(model => model.nomAlumno, new { @class = "form-control form-control-sm" })
                                 </div>
 
-                                <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
+                                <div class="form-group col-lg-2 col-md-3 col-6">
                                     <label for="apePaternoAlumno">Apellido paterno</label>
                                     @Html.TextBoxFor(model => model.apePaternoAlumno, new { @class = "form-control form-control-sm" })
                                 </div>
 
-                                <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
+                                <div class="form-group col-lg-2 col-md-3 col-6">
                                     <label for="apeMaternoAlumno">Apellido materno</label>
                                     @Html.TextBoxFor(model => model.apeMaternoAlumno, new { @class = "form-control form-control-sm" })
                                 </div>
 
-                                <div class="form-group col-xl-4 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <div class="form-group col-lg-4 col-12">
                                     <div id="datepicker">
                                         <div class="input-daterange">
-                                            <div class="form-group col-lg-6 col-md-6 col-sm-12 col-12" style="padding-left: 0px;">
+                                            <div class="form-group col-md-6 col-12" style="padding-left: 0px;">
                                                 <label for="fechaDesde">Pagos desde</label>
                                                 <div class="input-group">
                                                     @Html.TextBoxFor(model => model.fechaDesde, "{0:dd/MM/yyyy}",
@@ -115,7 +114,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group col-lg-6 col-md-6 col-sm-12 col-12" style="padding-left: 0px;">
+                                            <div class="form-group col-md-6 col-12" style="padding-left: 0px;">
                                                 <label for="fechaHasta">Pagos hasta</label>
                                                 <div class="input-group">
                                                     @Html.TextBoxFor(model => model.fechaHasta, "{0:dd/MM/yyyy}",
@@ -128,10 +127,8 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group col-lg-2 col-md-3 col-12">
-                                    <button type="submit" id="btnConsultarEstudiante" class="btn btn-block btn-outline-primary mt-4"><i class="fa fa-fw fa-search-plus"></i> Buscar</button>
+                                <div class="form-group col-lg-3 col-6">
+                                    <button type="submit" id="btnConsultarEstudiante" class="btn btn-block btn-outline-primary mt-4"><i class="fa fa-fw fa-search-plus"></i> Iniciar consulta</button>
                                 </div>
                             </div>
                         </form>

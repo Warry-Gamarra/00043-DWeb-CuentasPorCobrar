@@ -37,68 +37,67 @@
                         @using (Html.BeginForm("ConsultaGeneracionObligaciones", "Obligaciones", FormMethod.Get, new { id = "formConsultaObligaciones" }))
                         {
                             <div class="form-row">
-                                <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
+                                <div class="form-group col-lg-2 col-md-4 col-6">
                                     <label for="anio">Año</label>
                                     @Html.DropDownListFor(model => model.anio, ViewBag.Anios as SelectList, new { @class = "form-control form-control-sm" })
                                 </div>
 
-                                <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
+                                <div class="form-group col-lg-2 col-md-4 col-6">
                                     <label for="periodo">Periodo</label>
                                     @Html.DropDownListFor(model => model.periodo, ViewBag.Periodos as SelectList, "TODOS", new { @class = "form-control form-control-sm text-uppercase" })
                                 </div>
 
-                                <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
+                                <div class="form-group col-lg-2 col-md-4 col-12">
                                     <label for="tipoEstudio">Tipo de estudio</label>
                                     @Html.DropDownListFor(model => model.tipoEstudio, ViewBag.TipoEstudios as SelectList, new { @class = "form-control form-control-sm text-uppercase" })
                                 </div>
 
-                                <div class="form-group col-lg-3 col-md-5 col-sm-12 col-12">
+                                <div class="form-group col-lg-3 col-md-6 col-12">
                                     <label for="codFac">Dependencia</label>
                                     @Html.DropDownListFor(model => model.codFac, ViewBag.Dependencias as SelectList, (string)ViewBag.FiltroDependencias, new { @class = "form-control form-control-sm text-uppercase" })
                                 </div>
 
-                                <div class="form-group col-lg-3 col-md-5 col-sm-12 col-12">
+                                <div class="form-group col-lg-3 col-md-6 col-12">
                                     <label for="codEsc">Escuela</label>
                                     @Html.DropDownListFor(model => model.codEsc, ViewBag.Escuelas as SelectList, "TODOS", new { @class = "form-control form-control-sm text-uppercase" })
                                 </div>
 
-                                <div class="form-group col-lg-3 col-md-5 col-sm-12 col-12">
+                                <div class="form-group col-lg-3 col-md-6 col-12">
                                     <label for="codRc">Especialidad</label>
                                     @Html.DropDownListFor(model => model.codRc, ViewBag.Especialidades as SelectList, "TODOS", new { @class = "form-control form-control-sm text-uppercase" })
                                 </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
+
+                                <div class="form-group col-lg-2 col-md-6 col-6">
                                     <label for="esIngresante">Tipo de alumnos</label>
                                     @Html.DropDownListFor(model => model.esIngresante, ViewBag.TipoAlumno as SelectList, "TODOS", new { @class = "form-control form-control-sm text-uppercase" })
                                 </div>
 
-                                <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
+                                <div class="form-group col-lg-3 col-md-6 col-6">
                                     <label for="estaPagado">Estado de pago</label>
                                     @Html.DropDownListFor(model => model.estaPagado, ViewBag.EstadoPagoObligaciones as SelectList, "TODOS", new { @class = "form-control form-control-sm text-uppercase" })
                                 </div>
 
-                                <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
+                                <div class="form-group col-lg-2 col-md-6 col-6">
                                     <label for="codAlumno">Código de alumno</label>
                                     @Html.TextBoxFor(model => model.codAlumno, new { @class = "form-control form-control-sm" })
                                 </div>
 
-                                <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
+                                <div class="form-group col-lg-2 col-md-4 col-6">
                                     <label for="nomAlumno">Nombre alumno</label>
                                     @Html.TextBoxFor(model => model.nomAlumno, new { @class = "form-control form-control-sm" })
                                 </div>
 
-                                <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
+                                <div class="form-group col-lg-2 col-md-4 col-6">
                                     <label for="apePaternoAlumno">Apellido paterno</label>
                                     @Html.TextBoxFor(model => model.apePaternoAlumno, new { @class = "form-control form-control-sm" })
                                 </div>
 
-                                <div class="form-group col-lg-1 col-md-2 col-sm-4 col-6">
+                                <div class="form-group col-lg-2 col-md-4 col-6">
                                     <label for="apeMaternoAlumno">Apellido materno</label>
                                     @Html.TextBoxFor(model => model.apeMaternoAlumno, new { @class = "form-control form-control-sm" })
                                 </div>
 
-                                <div class="form-group col-lg-2 col-md-3 col-12">
+                                <div class="form-group col-lg-2 col-6">
                                     <button type="submit" class="btn btn-block btn-outline-primary mt-4"><i class="fa fa-fw fa-search-plus"></i> Buscar</button>
                                 </div>
                             </div>

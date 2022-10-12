@@ -981,65 +981,65 @@ GO
 
 
 
-CREATE PROCEDURE [dbo].[USP_I_GrabarAlumnoMultaNoVotar]  
-(  
-  @Tbl_AlumnosMultaNoVotar [dbo].[type_dataAlumnoMultaNoVotar] READONLY  
- ,@D_FecRegistro datetime  
- ,@UserID  int  
- ,@B_Result  bit    OUTPUT  
- ,@T_Message  nvarchar(4000) OUTPUT  
-)  
-AS  
-BEGIN  
- SET NOCOUNT ON  
- BEGIN TRY  
-   BEGIN TRANSACTION  
+--CREATE PROCEDURE [dbo].[USP_I_GrabarAlumnoMultaNoVotar]  
+--(  
+--  @Tbl_AlumnosMultaNoVotar [dbo].[type_dataAlumnoMultaNoVotar] READONLY  
+-- ,@D_FecRegistro datetime  
+-- ,@UserID  int  
+-- ,@B_Result  bit    OUTPUT  
+-- ,@T_Message  nvarchar(4000) OUTPUT  
+--)  
+--AS  
+--BEGIN  
+-- SET NOCOUNT ON  
+-- BEGIN TRY  
+--   BEGIN TRANSACTION  
        
-   CREATE TABLE #Tmp_AlumnoMultaNoVotar  
-   (  
-    C_CodRC   VARCHAR(3),  
-    C_CodAlu  VARCHAR(20),  
-    I_Anio   INT,  
-    C_Periodo  VARCHAR(50),  
-    I_Periodo  INT  
-   )  
+--   CREATE TABLE #Tmp_AlumnoMultaNoVotar  
+--   (  
+--    C_CodRC   VARCHAR(3),  
+--    C_CodAlu  VARCHAR(20),  
+--    I_Anio   INT,  
+--    C_Periodo  VARCHAR(50),  
+--    I_Periodo  INT  
+--   )  
   
      
-   INSERT #Tmp_AlumnoMultaNoVotar(C_CodRC, C_CodAlu, I_Anio, C_Periodo, I_Periodo)  
-   SELECT am.C_CodRC, am.C_CodAlu, am.I_Anio, am.C_Periodo, c.I_OpcionID AS I_Periodo  
-   FROM @Tbl_AlumnosMultaNoVotar AS am  
-   INNER JOIN dbo.TC_CatalogoOpcion c ON c.I_ParametroID = 5 AND c.T_OpcionCod = am.C_Periodo  
-   INNER JOIN BD_UNFV_Repositorio.dbo.VW_Alumnos a ON a.C_CodAlu = am.C_CodAlu and a.C_RcCod = am.C_CodRC  
-   WHERE c.B_Eliminado = 0 AND a.N_Grado = '1';  
+--   INSERT #Tmp_AlumnoMultaNoVotar(C_CodRC, C_CodAlu, I_Anio, C_Periodo, I_Periodo)  
+--   SELECT am.C_CodRC, am.C_CodAlu, am.I_Anio, am.C_Periodo, c.I_OpcionID AS I_Periodo  
+--   FROM @Tbl_AlumnosMultaNoVotar AS am  
+--   INNER JOIN dbo.TC_CatalogoOpcion c ON c.I_ParametroID = 5 AND c.T_OpcionCod = am.C_Periodo  
+--   INNER JOIN BD_UNFV_Repositorio.dbo.VW_Alumnos a ON a.C_CodAlu = am.C_CodAlu and a.C_RcCod = am.C_CodRC  
+--   WHERE c.B_Eliminado = 0 AND a.N_Grado = '1';  
      
-   --Insert para alumnos nuevos  
-   MERGE INTO TC_AlumnoMultaNoVotar AS trg USING #Tmp_AlumnoMultaNoVotar AS src  
-   ON trg.C_CodRc = src.C_CodRc AND trg.C_CodAlu = src.C_CodAlu AND trg.I_Anio = src.I_Anio AND trg.I_Periodo = src.I_Periodo AND trg.B_Eliminado = 0  
-   WHEN NOT MATCHED BY TARGET THEN  
-    INSERT (C_CodRc, C_CodAlu, I_Anio, I_Periodo, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)  
-     VALUES (src.C_CodRc, src.C_CodAlu, src.I_Anio, src.I_Periodo, 1, 0, @UserID, @D_FecRegistro);  
+--   --Insert para alumnos nuevos  
+--   MERGE INTO TC_AlumnoMultaNoVotar AS trg USING #Tmp_AlumnoMultaNoVotar AS src  
+--   ON trg.C_CodRc = src.C_CodRc AND trg.C_CodAlu = src.C_CodAlu AND trg.I_Anio = src.I_Anio AND trg.I_Periodo = src.I_Periodo AND trg.B_Eliminado = 0  
+--   WHEN NOT MATCHED BY TARGET THEN  
+--    INSERT (C_CodRc, C_CodAlu, I_Anio, I_Periodo, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)  
+--     VALUES (src.C_CodRc, src.C_CodAlu, src.I_Anio, src.I_Periodo, 1, 0, @UserID, @D_FecRegistro);  
   
-   --Informar los alumnos que ya tienen obligaciones (pagadas y sin pagar).  
-   (SELECT am.C_CodRC, am.C_CodAlu, am.I_Anio, am.C_Periodo, 0 AS B_Success, 'El Alumno no existe en pregrado.' AS T_Message  
-   FROM @Tbl_AlumnosMultaNoVotar AS am  
-   LEFT JOIN BD_UNFV_Repositorio.dbo.VW_Alumnos a ON a.C_CodAlu = am.C_CodAlu and a.C_RcCod = am.C_CodRC AND a.N_Grado = '1'  
-   WHERE a.C_CodAlu IS NULL)  
-   UNION  
-   (SELECT am.C_CodRC, am.C_CodAlu, am.I_Anio, am.C_Periodo, 0 AS B_Success, 'El campo Periodo es incorrecto.' AS T_Message  
-   FROM @Tbl_AlumnosMultaNoVotar AS am  
-   LEFT JOIN dbo.TC_CatalogoOpcion c ON c.I_ParametroID = 5 AND c.T_OpcionCod = am.C_Periodo AND c.B_Eliminado = 0  
-   WHERE c.I_OpcionID IS NULL)  
+--   --Informar los alumnos que ya tienen obligaciones (pagadas y sin pagar).  
+--   (SELECT am.C_CodRC, am.C_CodAlu, am.I_Anio, am.C_Periodo, 0 AS B_Success, 'El Alumno no existe en pregrado.' AS T_Message  
+--   FROM @Tbl_AlumnosMultaNoVotar AS am  
+--   LEFT JOIN BD_UNFV_Repositorio.dbo.VW_Alumnos a ON a.C_CodAlu = am.C_CodAlu and a.C_RcCod = am.C_CodRC AND a.N_Grado = '1'  
+--   WHERE a.C_CodAlu IS NULL)  
+--   UNION  
+--   (SELECT am.C_CodRC, am.C_CodAlu, am.I_Anio, am.C_Periodo, 0 AS B_Success, 'El campo Periodo es incorrecto.' AS T_Message  
+--   FROM @Tbl_AlumnosMultaNoVotar AS am  
+--   LEFT JOIN dbo.TC_CatalogoOpcion c ON c.I_ParametroID = 5 AND c.T_OpcionCod = am.C_Periodo AND c.B_Eliminado = 0  
+--   WHERE c.I_OpcionID IS NULL)  
   
   
-   COMMIT TRANSACTION  
+--   COMMIT TRANSACTION  
   
-   SET @B_Result = 1  
-   SET @T_Message = 'El registro de los alumnos que no votaron finalizó de manera exitosa'  
+--   SET @B_Result = 1  
+--   SET @T_Message = 'El registro de los alumnos que no votaron finalizó de manera exitosa'  
     
- END TRY  
- BEGIN CATCH  
-  ROLLBACK TRANSACTION  
-  SET @B_Result = 0  
-  SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10))   
- END CATCH  
-END  
+-- END TRY  
+-- BEGIN CATCH  
+--  ROLLBACK TRANSACTION  
+--  SET @B_Result = 0  
+--  SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10))   
+-- END CATCH  
+--END  

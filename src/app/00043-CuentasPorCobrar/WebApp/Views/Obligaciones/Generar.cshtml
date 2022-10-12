@@ -65,8 +65,6 @@
                                             <label for="sinObligaciones">A alumnos</label>
                                             @Html.DropDownList("sinObligaciones", ViewBag.TieneObligacion as SelectList, new { @class = "form-control form-control-sm text-uppercase" })
                                         </div>
-                                    </div>
-                                    <div class="form-row">
                                         <div class="form-group col-lg-2 col-6">
                                             <button id="btnGenerarOblig" type="button" class="btn btn-block btn-outline-primary mt-4">
                                                 <i class="fa fa-fw fa-cogs"></i> Generar
@@ -124,7 +122,7 @@
                             <div class="card-body bg-light-gray">
                                 <form>
                                     <div class="form-row">
-                                        <div class="form-group col-lg-1 col-md-4 col-6">
+                                        <div class="form-group col-lg-2 col-md-4 col-6">
                                             <label for="cmbAnioIndividual">Año</label>
                                             @Html.DropDownList("cmbAnioIndividual", ViewBag.Anios as SelectList, new { @class = "form-control form-control-sm" })
                                         </div>
@@ -140,14 +138,15 @@
                                             <label for="cmbEspecialidad">Especialidad</label>
                                             <select id="cmbEspecialidad" name="cmbEspecialidad" class="form-control form-control-sm text-uppercase"></select>
                                         </div>
-                                    
-                                        <div class="form-group col-lg-1 col-md-3 col-12">
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-lg-2 col-md-3 col-12">
                                             <button type="button" id="btnConsultarObligacionAlumno" class="btn btn-block btn-outline-primary mt-4"><i class="fa fa-fw fa-search-plus"></i> Consultar</button>
                                         </div>
-                                        <div class="form-group col-lg-1 col-md-3 col-12">
+                                        <div class="form-group col-lg-2 col-md-3 col-12">
                                             <button type="button" id="btnGenerarObligacionAlumno" class="btn btn-block btn-outline-primary mt-4"><i class="fa fa-fw fa-cogs"></i> Generar</button>
                                         </div>
-                                        <div class="form-group col-lg-1 col-sm-3 col-12">
+                                        <div class="form-group col-lg-2 col-sm-3 col-12">
                                             <button type="button" id="btnLimpiarConsultaObligaAlumno" class="btn btn-block btn-outline-danger mt-4"><i class="fa fa-fw fa-eraser"></i> Limpiar</button>
                                         </div>
                                     </div>
