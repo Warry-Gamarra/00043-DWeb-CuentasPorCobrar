@@ -309,30 +309,62 @@ namespace WebApp.Controllers
 
         [HttpPost]
         [HandleJsonExceptionAttribute]
-        public ActionResult AnularCuotaPago(int obligacionID)
+        public ActionResult AnularCuotaPago(int[] obligaciones)
         {
             Response response = new Response()
             {
                 Value = false
             };
 
-            var cuotaPago = obligacionServiceFacade.Obtener_CuotaPago(obligacionID);
-
-            if (cuotaPago == null)
+            if (obligaciones == null || obligaciones.Length == 0)
             {
-                response.Message = "La cuota seleccionada no existe.";
-            }
-            else if (cuotaPago.B_Pagado)
-            {
-                response.Message = "No se puede anular el registro porque esta cuota ya ha sido pagada.";
-            }
-            else if (cuotaPago.I_MontoPagadoActual > 0)
-            {
-                response.Message = "No se puede anular el registro porque esta cuota tiene un pago incompleto";
+                response.Message = "Debe seleccionar al menos una cuota de pago.";
             }
             else
             {
-                response = obligacionServiceFacade.AnularObligacion(obligacionID, WebSecurity.CurrentUserId);
+                int cantErrores = 0;
+
+                foreach (var idObligacion in obligaciones)
+                {
+                    var cuotaPago = obligacionServiceFacade.Obtener_CuotaPago(idObligacion);
+
+                    if (cuotaPago == null)
+                    {
+                        response.Message = "La cuota seleccionada no existe.";
+
+                        cantErrores++;
+                    }
+                    else if (cuotaPago.B_Pagado)
+                    {
+                        response.Message = "No se puede anular el registro porque esta cuota ya ha sido pagada.";
+
+                        cantErrores++;
+                    }
+                    else if (cuotaPago.I_MontoPagadoActual > 0)
+                    {
+                        response.Message = "No se puede anular el registro porque esta cuota tiene un pago incompleto";
+
+                        cantErrores++;
+                    }
+                    else
+                    {
+                        response = obligacionServiceFacade.AnularObligacion(idObligacion, WebSecurity.CurrentUserId);
+                    }
+                }
+
+                if (obligaciones.Length > 1)
+                {
+                    if (cantErrores > 0)
+                    {
+                        response.Message = "No se logró anular " + cantErrores + " cuota(s) de pago.";
+                    }
+                    else
+                    {
+                        response.Message = "Obligaciones anuladas correctamente.";
+                    }
+
+                    response.Value = !(obligaciones.Length == cantErrores);
+                }
             }
 
             return Json(response, JsonRequestBehavior.AllowGet);

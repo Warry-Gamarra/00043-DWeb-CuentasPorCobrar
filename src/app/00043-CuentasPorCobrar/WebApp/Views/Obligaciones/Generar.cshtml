@@ -539,12 +539,28 @@
         }
 
         function GenerarTablaCuotas(cuotas_pago) {
+            let tblHeader = $('#tblCuotasPago').find('tr > th:nth-child(7)');
+
+            if (cuotas_pago !== null && cuotas_pago.length > 1) {
+                tblHeader.html('<button type="button" class="btn btn-link" onclick="ConfirmarAnulacionGrupal();" style="padding: 0px;"><i class="fa fa-trash"></i> Anular seleccionados</button>');
+            } else {
+                tblHeader.html('');
+            }
+
             let tblCuotasPago = $('#tblCuotasPago').find('tbody');
             let rows = '';
 
             tblCuotasPago.html('');
 
             $.each(cuotas_pago, function (i, item) {
+                let paramCuota = item.T_ProcesoDesc + ' (' + item.T_NroOrden + ')';
+                let paramMonto = item.T_MontoOblig;
+                let paramFecVcto = item.T_FecVencto;
+                let paramObligacionID = item.I_ObligacionAluID;
+                let chkAnular = '<input type="checkbox" name="chkAnularObl" value="' + item.I_ObligacionAluID + '" />';
+                let btnAnular = '<button type="button" class="btn btn-link" onclick="ConfirmarAnulacionIndividual(\'' +
+                    paramCuota + '\', \'' + paramMonto + '\', \'' + paramFecVcto + '\', ' + paramObligacionID + ')"><i class="fa fa-trash"></i> Anular</button>';
+
                 rows += '<tr>' +
                     '<td>' + item.T_ProcesoDesc + '</td>' +
                     '<td>' + item.T_NroOrden + '</td>' +
@@ -552,8 +568,7 @@
                     '<td>' + item.T_FecVencto + '</td>' +
                     '<td>' + item.T_Banco + '</td>' +
                     '<td>' + item.T_CtaDeposito + '</td>' +
-                    '<td><button type="button" class="btn btn-link" onclick="AnularObligacion(' + item.I_ObligacionAluID +
-                        ')"><i class="fa fa-trash"></i> Anular</button></td>' +
+                    '<td>' + ((item.B_Pagado) ? '' : (btnAnular + ' ' + chkAnular)) + '</td>' +
                     '</tr>';
             });
 
@@ -581,38 +596,94 @@
             GenerarTablaCuotas(null);
         });
 
-        function AnularObligacion(obligacionID) {
-            let parametros = {
-                obligacionID: obligacionID
-            };
+        function ConfirmarAnulacionIndividual(cuota, monto, fechVcto, obligacionID) {
+            Swal.fire({
+                title: '',
+                html: "¿Desea anular la cuota <b>" + cuota + "</b> de <b>S/" + monto + "</b> con fecha de vencimiento <b>" + fechVcto + "</b>?.",
+                icon: MESSAGE_TYPE.WARNING,
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si, continuar.',
+                cancelButtonText: 'No, cancelar.'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let obligaciones = [obligacionID];
 
-            $.ajax({
-                type: 'POST',
-                url: '@Url.Action("AnularCuotaPago", "Obligaciones")',
-                data: parametros,
-                dataType: 'json',
-                beforeSend: function () { },
-                success: function (data) {
-                    if (data) {
-                        if (data.Value) {
-                            MostrarMensajeObligacionesPorAlumno(data.Message, MESSAGE_TYPE.SUCCESS);
-
-                            let anio = $('#cmbAnioIndividual').val();
-                            let periodo = $('#cmbPeriodoIndividual').val();
-                            let codAlu = $('#txtCodAlumno').val();
-                            let codRc = $('#cmbEspecialidad').val();
-
-                            BuscarObligacionesAlumno(anio, periodo, codRc, codAlu, false);
-                        } else {
-                            MostrarMensajeObligacionesPorAlumno(data.Message, MESSAGE_TYPE.ERROR);
-                        }
-                    }
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    var jsonException = JSON.parse(xhr.responseText);
-                    MostrarMensajeObligacionesPorAlumno(jsonException.Message, MESSAGE_TYPE.ERROR);
+                    AnularObligacion(obligaciones);
                 }
             });
+        }
+
+        function ConfirmarAnulacionGrupal() {
+            let obligaciones = [];
+
+            $("input:checkbox[name=chkAnularObl]:checked").each(function () {
+                obligaciones.push(this.value);
+            });
+
+            if (obligaciones.length > 0) {
+                Swal.fire({
+                    title: '',
+                    html: "¿Desea anular las cuotas seleccionadas?.",
+                    icon: MESSAGE_TYPE.WARNING,
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Si, continuar.',
+                    cancelButtonText: 'No, cancelar.'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        AnularObligacion(obligaciones);
+                    }
+                });
+            } else {
+                MostrarMensajeObligacionesPorAlumno("Debe seleccionar al menos una cuota de pago.", MESSAGE_TYPE.ERROR);
+            }
+        }
+
+        function AnularObligacion(obligaciones) {
+            if (obligaciones === null || obligaciones.length === 0) {
+                MostrarMensajeObligacionesPorAlumno("Debe seleccionar al menos una cuota de pago.", MESSAGE_TYPE.ERROR);
+            } else {
+                let parametros = {
+                    obligaciones: obligaciones
+                };
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("AnularCuotaPago", "Obligaciones")',
+                    data: parametros,
+                    dataType: 'json',
+                    beforeSend: function () {
+                        $('#modalEspera .modal-body strong').html('Espere un momento . . .');
+                        AbrirModalEsperaGeneracionOblig();
+                    },
+                    success: function (data) {
+                        if (data) {
+                            if (data.Value) {
+                                MostrarMensajeObligacionesPorAlumno(data.Message, MESSAGE_TYPE.SUCCESS);
+
+                                let anio = $('#cmbAnioIndividual').val();
+                                let periodo = $('#cmbPeriodoIndividual').val();
+                                let codAlu = $('#txtCodAlumno').val();
+                                let codRc = $('#cmbEspecialidad').val();
+
+                                BuscarObligacionesAlumno(anio, periodo, codRc, codAlu, false);
+                            } else {
+                                MostrarMensajeObligacionesPorAlumno(data.Message, MESSAGE_TYPE.ERROR);
+                            }
+                        }
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        var jsonException = JSON.parse(xhr.responseText);
+                        MostrarMensajeObligacionesPorAlumno(jsonException.Message, MESSAGE_TYPE.ERROR);
+                    },
+                    complete: function () {
+                        $('#modalEspera').modal('hide');
+                    }
+                });
+            }
         }
 
         $(document).on('click', '#btnGenerarObligacionAlumno', function (e) {
