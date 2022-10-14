@@ -55,7 +55,7 @@ namespace WebApp.Controllers
 
             string deFaultDependencia;
 
-            IEnumerable<CuotaPagoModel> cuotas_pago;
+            IEnumerable<EstadoObligacionViewModel> cuotas_pago;
 
             if (TempData["result"] == null)
             {
@@ -67,10 +67,38 @@ namespace WebApp.Controllers
                 defaultSinObligaciones = sinObligaciones ?? true;
 
                 if (anio.HasValue && periodo.HasValue)
-                    cuotas_pago = obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(
-                        defaultAño, defaultPeriodo, defaultTipoEstudio, deFaultDependencia);
+                {
+                    var model = new ConsultaObligacionEstudianteViewModel()
+                    {
+                        anio = defaultAño,
+                        periodo = defaultPeriodo,
+                        esIngresante = defaultEsIngresante
+                    };
+
+                    if (defaultSinObligaciones.Value)
+                    {
+                        model.obligacionGenerada = false;
+                    }                        
+
+                    switch (defaultTipoEstudio)
+                    {
+                        case TipoEstudio.Pregrado:
+                            model.codFac = dependencia == "" ? null : dependencia;
+                            cuotas_pago = reportePregradoServiceFacade.EstadoObligacionAlumnos(model);
+                            break;
+
+                        case TipoEstudio.Posgrado:
+                            model.codEsc = dependencia == "" ? null : dependencia;
+                            cuotas_pago = reportePosgradoServiceFacade.EstadoObligacionAlumnos(model);
+                            break;
+                        default:
+                            cuotas_pago = new List<EstadoObligacionViewModel>();
+                            break;
+
+                    }
+                }
                 else
-                    cuotas_pago = new List<CuotaPagoModel>();
+                    cuotas_pago = new List<EstadoObligacionViewModel>();
             }
             else
             {
@@ -86,7 +114,7 @@ namespace WebApp.Controllers
                 ViewBag.Success = result.Value;
                 ViewBag.Message = result.Message;
 
-                cuotas_pago = new List<CuotaPagoModel>();
+                cuotas_pago = new List<EstadoObligacionViewModel>();
             }
 
             ViewBag.Title = "Generar Obligaciones";

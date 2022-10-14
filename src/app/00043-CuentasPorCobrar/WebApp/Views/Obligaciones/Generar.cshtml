@@ -1,4 +1,4 @@
-﻿@model IEnumerable<WebApp.Models.CuotaPagoModel>
+﻿@model IEnumerable<WebApp.ViewModels.EstadoObligacionViewModel>
 @using GridMvc.Html
 
 <div class="container-fluid">
@@ -106,7 +106,7 @@
                                 columns.Add(c => c.I_Anio).Titled("Año").Filterable(true);
                                 columns.Add(c => c.T_Periodo).Titled("Periodo").Filterable(true);
                                 columns.Add(c => c.C_CodAlu).Titled("Código alumno").Filterable(true);
-                                columns.Add(c => c.T_NombresCompletos).Titled("Nombres y apellidos").Filterable(true);
+                                columns.Add(c => c.T_ApellidosNombres).Titled("Nombres y apellidos").Filterable(true);
                                 columns.Add(c => c.T_FacDesc).Titled("Facultad").Filterable(true);
                                 columns.Add(c => c.T_DenomProg).Titled("Especialidad").Filterable(true);
                                 columns.Add(c => c.T_ProcesoDesc).Titled("Cuota").Filterable(true);
@@ -542,7 +542,11 @@
             let tblHeader = $('#tblCuotasPago').find('tr > th:nth-child(7)');
 
             if (cuotas_pago !== null && cuotas_pago.length > 1) {
-                tblHeader.html('<button type="button" class="btn btn-link" onclick="ConfirmarAnulacionGrupal();" style="padding: 0px;"><i class="fa fa-trash"></i> Anular seleccionados</button>');
+                let habilitados = cuotas_pago.filter((v) => v.B_Pagado);
+
+                if (habilitados.length !== cuotas_pago.length) {
+                    tblHeader.html('<button type="button" class="btn btn-link" onclick="ConfirmarAnulacionGrupal();" style="padding: 0px;"><i class="fa fa-trash"></i> Anular seleccionados</button>');
+                }
             } else {
                 tblHeader.html('');
             }
