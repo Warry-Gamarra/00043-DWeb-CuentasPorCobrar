@@ -27,5 +27,9 @@ namespace Domain.Services
         List<CtaDepoProcesoEntity> Obtener_CtasDepoProceso(int I_ProcesoID);
 
         List<CtaDepoProceso> Obtener_CtasDepo_X_Proceso(int I_ProcesoID);
+
+        IEnumerable<DateTime> Listar_FechaVencimientoObligacion(int I_ProcesoID);
+
+        Response Actualizar_FechaVctoObligacion(DateTime newFechaVcto, DateTime oldFechaVcto, int idProceso, int currentUserId);
     }
 }

@@ -453,6 +453,7 @@
     <Compile Include="Models\Facades\ReporteGeneralServiceFacade.cs" />
     <Compile Include="Models\ReportModels\CabObligacionAlumnoRptModel.cs" />
     <Compile Include="Models\ReportModels\DetObligacionAlumnoRptModel.cs" />
+    <Compile Include="ViewModels\FechaVctoObligacionViewModel.cs" />
     <Compile Include="ViewModels\ConsultaPagosBancoObligacionesViewModel.cs" />
     <Compile Include="Models\CtaDepoProcesoModel.cs" />
     <Compile Include="Models\CuotaPagoModel.cs" />
@@ -672,6 +673,7 @@
     <Content Include="Views\Tasa\_RegistrarConceptosPagoTasa.cshtml" />
     <Content Include="Views\Tasa\_MsgRegistrarConceptoTasa.cshtml" />
     <Content Include="Views\Devoluciones\_RegistroDevolucionPago.cshtml" />
+    <Content Include="Views\Procesos\_EditFechaVencPension.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

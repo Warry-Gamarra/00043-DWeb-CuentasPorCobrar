@@ -1,7 +1,9 @@
-﻿using Domain.Helpers;
+﻿using DocumentFormat.OpenXml.EMMA;
+using Domain.Helpers;
 using Domain.Services;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -141,6 +143,35 @@ namespace WebApp.Controllers
             var model = _procesoModel.ObtenerConceptosProceso(procesoId);
 
             return PartialView("_ListadoConceptosProceso", model);
+        }
+
+        [Route("configuracion/cuotas-de-pago-y-conceptos/{id}/obtener-fecha-vencimiento")]
+        public ActionResult EditFechaVencPension(int id)
+        {
+            ViewBag.Title = "Actualizar fecha de vencimiento";
+
+            ViewBag.ProcesoID = id;
+
+            var model = _procesoModel.Listar_FechaVencimientoObligacion(id);
+
+            return PartialView("_EditFechaVencPension", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [HandleJsonExceptionAttribute]
+        public ActionResult SaveFechaVencimiento(string newFechaVcto, string oldFechaVcto, int idProceso)
+        {
+            Response response;
+
+            DateTime newFechVcto = DateTime.ParseExact(newFechaVcto, FormatosDateTime.BASIC_DATE, CultureInfo.InvariantCulture);
+
+            DateTime oldFechVcto = DateTime.ParseExact(oldFechaVcto, FormatosDateTime.BASIC_DATE, CultureInfo.InvariantCulture);
+
+            response = _procesoModel.Actualizar_FechaVctoObligacion(newFechVcto, oldFechVcto, idProceso, WebSecurity.CurrentUserId);
+
+
+            return Json(response, JsonRequestBehavior.AllowGet);
         }
     }
 }

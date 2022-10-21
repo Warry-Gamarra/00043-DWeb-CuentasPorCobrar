@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using WebApp.ViewModels;
+using WebGrease.Css.Extensions;
 
 namespace WebApp.Models
 {
@@ -127,7 +128,8 @@ namespace WebApp.Models
                     T_Periodo = x.T_PeriodoDesc,
                     I_Anio = x.I_Anio,
                     D_FecVencto = x.D_FecVencto,
-                    I_Prioridad = x.I_Prioridad
+                    I_Prioridad = x.I_Prioridad,
+                    C_Nivel = x.C_Nivel
                 }).ToList();
             }
 
@@ -335,6 +337,22 @@ namespace WebApp.Models
             }
 
             return lista;
+        }
+
+        public IEnumerable<FechaVctoObligacionViewModel> Listar_FechaVencimientoObligacion(int I_ProcesoID)
+        {
+            var lista = _procesoService.Listar_FechaVencimientoObligacion(I_ProcesoID);
+
+            var result = lista.Select(d => new FechaVctoObligacionViewModel(d));
+
+            return result;
+        }
+
+        public Response Actualizar_FechaVctoObligacion(DateTime newFechaVcto, DateTime oldFechaVcto, int idProceso, int currentUserId)
+        {
+            var result = _procesoService.Actualizar_FechaVctoObligacion(newFechaVcto, oldFechaVcto, idProceso, currentUserId);
+
+            return result;
         }
     }
 }

@@ -980,6 +980,67 @@ GO
 
 
 
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_ObtenerFechaVencimientoObligacion')
+	DROP PROCEDURE [dbo].[USP_S_ObtenerFechaVencimientoObligacion]
+GO
+
+CREATE PROCEDURE [dbo].[USP_S_ObtenerFechaVencimientoObligacion]
+@I_ProcesoID INT
+AS
+BEGIN
+	SET NOCOUNT ON;
+	
+	SELECT DISTINCT c.D_FecVencto FROM dbo.TR_ObligacionAluCab c
+	WHERE c.B_Habilitado = 1 AND c.B_Eliminado = 0 AND c.I_ProcesoID = @I_ProcesoID AND c.B_Pagado = 0
+	ORDER BY c.D_FecVencto
+
+--EXEC USP_S_ObtenerFechaVencimientoObligacion @I_ProcesoID = 526
+END
+GO
+
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarFechaVencimientoObligaciones')
+	DROP PROCEDURE [dbo].[USP_U_ActualizarFechaVencimientoObligaciones]
+GO
+
+CREATE PROCEDURE [dbo].[USP_U_ActualizarFechaVencimientoObligaciones]
+@D_NewFecVencto DATE,
+@D_OldFecVencto DATE,
+@I_ProcesoID INT,
+@I_UsuarioMod INT,
+@B_Result BIT OUTPUT,
+@T_Message VARCHAR(255) OUTPUT
+AS
+BEGIN
+	SET NOCOUNT ON;
+	
+	BEGIN TRAN
+	BEGIN TRY
+		UPDATE c SET c.D_FecVencto = @D_NewFecVencto FROM dbo.TR_ObligacionAluCab c 
+		WHERE c.B_Habilitado = 1 AND c.B_Eliminado = 0 AND c.I_ProcesoID  = @I_ProcesoID AND
+			DATEDIFF(DAY, c.D_FecVencto, @D_OldFecVencto) = 0
+
+		UPDATE d SET d.D_FecVencto = @D_NewFecVencto FROM dbo.TR_ObligacionAluCab c
+		INNER JOIN dbo.TR_ObligacionAluDet d ON d.I_ObligacionAluID = c.I_ObligacionAluID AND c.B_Habilitado = 1 AND c.B_Eliminado = 0
+		WHERE d.B_Habilitado = 1 AND d.B_Eliminado = 0 AND c.I_ProcesoID = @I_ProcesoID AND 
+			DATEDIFF(DAY, d.D_FecVencto, @D_OldFecVencto) = 0
+
+		COMMIT TRAN
+
+		SET @B_Result = 1
+		SET @T_Message = 'Actualización correcta'
+	END TRY
+	BEGIN CATCH
+		ROLLBACK TRAN
+		SET @B_Result = 0
+		SET @T_Message = ERROR_MESSAGE()
+	END CATCH
+END
+GO
+
+
+
 
 --CREATE PROCEDURE [dbo].[USP_I_GrabarAlumnoMultaNoVotar]  
 --(  
@@ -1043,3 +1104,7 @@ GO
 --  SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10))   
 -- END CATCH  
 --END  
+
+
+
+

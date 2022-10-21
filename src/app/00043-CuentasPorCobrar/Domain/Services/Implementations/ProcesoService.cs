@@ -252,5 +252,27 @@ namespace Domain.Services.Implementations
                 return null;
             }
         }
+
+        public IEnumerable<DateTime> Listar_FechaVencimientoObligacion(int I_ProcesoID)
+        {
+            return USP_S_ObtenerFechaVencimientoObligacion.Execute(I_ProcesoID);
+        }
+
+        public Response Actualizar_FechaVctoObligacion(DateTime newFechaVcto, DateTime oldFechaVcto, int idProceso, int currentUserId)
+        {
+            ResponseData result;
+
+            var sp = new USP_U_ActualizarFechaVencimientoObligaciones()
+            {
+                D_NewFecVencto = newFechaVcto,
+                D_OldFecVencto = oldFechaVcto,
+                I_ProcesoID = idProceso,
+                I_UsuarioMod = currentUserId
+            };
+
+            result = sp.Execute();
+
+            return new Response(result);
+        }
     }
 }
