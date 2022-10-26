@@ -27,5 +27,6 @@ namespace Domain.Entities
         public bool B_Correcto { get; set; }
         public string T_ErrorMessage { get; set; }
         public string C_CodigoInterno { get; set; }
+        public string T_SourceFileName { get; set; }
     }
 }

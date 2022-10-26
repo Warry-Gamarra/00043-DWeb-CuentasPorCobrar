@@ -30,5 +30,6 @@ namespace Domain.Entities
         public string T_ProcesoDesc { get; set; }
         public int I_CondicionPagoID { get; set; }
         public string C_CodigoInterno { get; set; }
+        public string T_SourceFileName { get; set; }
     }
 }

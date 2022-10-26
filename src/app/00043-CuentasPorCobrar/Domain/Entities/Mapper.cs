@@ -261,7 +261,8 @@ namespace Domain.Entities
             dataTable.Columns.Add("I_CondicionPagoID");
             dataTable.Columns.Add("T_Observacion").AllowDBNull = true;
             dataTable.Columns.Add("C_CodigoInterno");
-            
+            dataTable.Columns.Add("T_SourceFileName");
+
             dataPagoObligaciones.ForEach(x => dataTable.Rows.Add(
                 x.C_CodOperacion,
                 x.T_NomDepositante,
@@ -282,7 +283,8 @@ namespace Domain.Entities
                 x.T_ProcesoDesc,
                 x.I_CondicionPagoID,
                 x.T_ErrorMessage,
-                x.C_CodigoInterno
+                x.C_CodigoInterno,
+                x.T_SourceFileName
             ));
 
             return dataTable;
@@ -607,6 +609,7 @@ namespace Domain.Entities
             dataTable.Columns.Add("T_LugarPago");
             dataTable.Columns.Add("T_InformacionAdicional");
             dataTable.Columns.Add("C_CodigoInterno");
+            dataTable.Columns.Add("T_SourceFileName");
 
             dataPagoTasas.ForEach(x => dataTable.Rows.Add(
                 x.C_CodDepositante,
@@ -625,7 +628,8 @@ namespace Domain.Entities
                 x.I_InteresMora,
                 x.T_LugarPago,
                 x.T_InformacionAdicional,
-                x.C_CodigoInterno
+                x.C_CodigoInterno,
+                x.T_SourceFileName
             ));
 
             return dataTable;

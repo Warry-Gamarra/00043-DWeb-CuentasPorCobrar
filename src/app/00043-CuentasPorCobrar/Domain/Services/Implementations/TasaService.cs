@@ -64,7 +64,8 @@ namespace Domain.Services.Implementations
                         T_InformacionAdicional = x.T_InformacionAdicional,
                         B_Success = false,
                         T_ErrorMessage = x.T_ErrorMessage,
-                        C_CodigoInterno = x.C_CodigoInterno
+                        C_CodigoInterno = x.C_CodigoInterno,
+                        T_SourceFileName = x.T_SourceFileName
                     });
 
                 spResult.AddRange(pagosObservados);

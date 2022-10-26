@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using DocumentFormat.OpenXml.Wordprocessing;
+using Domain.Entities;
 using Domain.Helpers;
 using Domain.Services;
 using Domain.Services.Implementations;
@@ -47,6 +48,7 @@ namespace WebApp.Models
 
             ImportacionPagoResponse response;
             string fileName = "";
+            string sourceFileName = "";
             string filePathSaved = "";
             int cantFilasReg = 0;
             var tipoArchivo = TipoArchivoEntFinan.Recaudacion_Obligaciones;
@@ -54,12 +56,13 @@ namespace WebApp.Models
             try
             {
                 fileName = GenerarNombreArchivo(model.EntidadRecaudadora, file);
+                sourceFileName = Path.GetFileNameWithoutExtension(file.FileName);
                 filePathSaved = GuardarArchivoPagoEnHost(serverPath, fileName, model.TipoArchivo, file);
 
                 switch (model.TipoArchivo)
                 {
                     case TipoPago.Obligacion:
-                        List<PagoObligacionEntity> lstPagoObligaciones = LeerDetalleArchivoPagoObligaciones(filePathSaved, model.EntidadRecaudadora);
+                        List<PagoObligacionEntity> lstPagoObligaciones = LeerDetalleArchivoPagoObligaciones(filePathSaved, sourceFileName, model.EntidadRecaudadora);
 
                         if (lstPagoObligaciones != null)
                         {
@@ -74,7 +77,7 @@ namespace WebApp.Models
 
                     case TipoPago.Tasa:
 
-                        List<PagoTasaEntity> lstPagoTasas = LeerDetalleArchivoPagoTasas(filePathSaved, model.EntidadRecaudadora);
+                        List<PagoTasaEntity> lstPagoTasas = LeerDetalleArchivoPagoTasas(filePathSaved, sourceFileName, model.EntidadRecaudadora);
 
                         if (lstPagoTasas != null)
                         {
@@ -161,7 +164,7 @@ namespace WebApp.Models
         }
 
 
-        private List<PagoObligacionEntity> LeerDetalleArchivoPagoObligaciones(string filePath, int entFinanId)
+        private List<PagoObligacionEntity> LeerDetalleArchivoPagoObligaciones(string filePath, string sourceFileName, int entFinanId)
         {
             string fileLine;
             List<string> linesFile = new List<string>();
@@ -203,7 +206,8 @@ namespace WebApp.Models
                     B_Correcto = true,
                     I_CondicionPagoID = (int)CondicionPago.Correcto,
                     T_ErrorMessage = String.Empty,
-                    I_EntidadFinanID = entFinanId
+                    I_EntidadFinanID = entFinanId,
+                    T_SourceFileName = sourceFileName
                 };
 
                 pagoEntity.C_CodOperacion = line.Substring(columnas["C_CodOperacion"].Inicial - 1, columnas["C_CodOperacion"].Final - columnas["C_CodOperacion"].Inicial + 1).Trim();
@@ -329,7 +333,7 @@ namespace WebApp.Models
             return result;
         }
 
-        private List<PagoTasaEntity> LeerDetalleArchivoPagoTasas(string filePath, int entFinanId)
+        private List<PagoTasaEntity> LeerDetalleArchivoPagoTasas(string filePath, string sourceFileName, int entFinanId)
         {
             string fileLine;
             List<string> linesFile = new List<string>();
@@ -368,7 +372,8 @@ namespace WebApp.Models
                 {
                     B_Correcto = true,
                     T_ErrorMessage = String.Empty,
-                    I_EntidadFinanID = entFinanId
+                    I_EntidadFinanID = entFinanId,
+                    T_SourceFileName = sourceFileName
                 };
 
                 pagoEntity.C_CodDepositante = line.Substring(columnas["C_CodDepositante"].Inicial - 1, columnas["C_CodDepositante"].Final - columnas["C_CodDepositante"].Inicial + 1).Trim();

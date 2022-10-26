@@ -162,7 +162,8 @@ namespace Domain.Services.Implementations
                         T_InformacionAdicional = x.T_InformacionAdicional,
                         D_FecVencto = x.D_FecVencto,
                         T_ProcesoDesc = x.T_ProcesoDesc,
-                        C_CodigoInterno = x.C_CodigoInterno
+                        C_CodigoInterno = x.C_CodigoInterno,
+                        T_SourceFileName = x.T_SourceFileName
                     });
 
                 spResult.AddRange(pagosObservados);

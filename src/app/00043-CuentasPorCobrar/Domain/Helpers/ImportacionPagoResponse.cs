@@ -47,7 +47,8 @@ namespace Domain.Helpers
                 T_InformacionAdicional = x.T_InformacionAdicional,
                 D_FecVencto = x.D_FecVencto,
                 T_ProcesoDesc = x.T_ProcesoDesc,
-                C_CodigoInterno = x.C_CodigoInterno
+                C_CodigoInterno = x.C_CodigoInterno,
+                T_SourceFileName = x.T_SourceFileName
             });
 
             var errors = ListaResultadosOblig.Where(x => !x.B_Success).Count();
@@ -81,7 +82,8 @@ namespace Domain.Helpers
                 T_InformacionAdicional = x.T_InformacionAdicional,
                 B_Success = x.B_Success,
                 T_ErrorMessage = x.T_ErrorMessage,
-                C_CodigoInterno = x.C_CodigoInterno
+                C_CodigoInterno = x.C_CodigoInterno,
+                T_SourceFileName = x.T_SourceFileName
             });
 
             var errors = ListaResultadosTasas.Where(x => !x.B_Success).Count();

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,5 +29,6 @@ namespace Data.Types
         public bool B_Success { get; set; }
         public string T_ErrorMessage { get; set; }
         public string C_CodigoInterno { get; set; }
+        public string T_SourceFileName { get; set; }
     }
 }
