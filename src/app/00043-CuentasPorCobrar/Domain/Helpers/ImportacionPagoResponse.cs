@@ -17,10 +17,11 @@ namespace Domain.Helpers
         public string Color { get; set; }
         public string Display { get; set; }
 
-        public IEnumerable<PagoObligacionObsEntity> ListaResultadosOblig { get; }
-        public IEnumerable<PagoTasaObsEntity> ListaResultadosTasas { get; }
+        public IEnumerable<PagoObligacionObsEntity> ListaResultadosOblig { get; set; }
+        public IEnumerable<PagoTasaObsEntity> ListaResultadosTasas { get; set; }
 
-        public ImportacionPagoResponse() { }
+        public ImportacionPagoResponse() {
+        }
 
         public ImportacionPagoResponse(IEnumerable<DataPagoObligacionesResult> spResult)
         {
@@ -51,12 +52,21 @@ namespace Domain.Helpers
                 T_SourceFileName = x.T_SourceFileName
             });
 
-            var errors = ListaResultadosOblig.Where(x => !x.B_Success).Count();
+            setMessage(TipoPago.Obligacion);
+        }
 
-            Success = errors == ListaResultadosOblig.Count() ? false : true;
+        public void AgregarObligacionesObservadas(IEnumerable<PagoObligacionObsEntity> listaResultadosOblig)
+        {
+            if (ListaResultadosOblig == null)
+            {
+                ListaResultadosOblig = listaResultadosOblig;
+            }
+            else
+            {
+                ListaResultadosOblig = ListaResultadosOblig.Concat(listaResultadosOblig);
+            }
 
-            Message = String.Format("Se han analizado \"{0}\" pago(s). Se han registrado \"{1}\" pago(s).",
-                spResult.Count(), spResult.Count() - errors);
+            setMessage(TipoPago.Obligacion);
         }
 
         public ImportacionPagoResponse(IEnumerable<DataPagoTasasResult> spResult)
@@ -86,12 +96,52 @@ namespace Domain.Helpers
                 T_SourceFileName = x.T_SourceFileName
             });
 
-            var errors = ListaResultadosTasas.Where(x => !x.B_Success).Count();
+            setMessage(TipoPago.Tasa);
+        }
 
-            Success = errors == ListaResultadosTasas.Count() ? false : true;
+        public void AgregarTasasObservadas(IEnumerable<PagoTasaObsEntity> listaResultadosTasas)
+        {
+            if (ListaResultadosTasas == null)
+            {
+                ListaResultadosTasas = listaResultadosTasas;
+            }
+            else
+            {
+                ListaResultadosTasas = ListaResultadosTasas.Concat(listaResultadosTasas);
+            }
 
-            Message = String.Format("Se han analizado \"{0}\" pago(s). Se han registrado \"{1}\" pago(s).",
-                spResult.Count(), spResult.Count() - errors);
+            setMessage(TipoPago.Tasa);
+        }
+
+        private void setMessage(TipoPago tipoPago)
+        {
+            if (tipoPago.Equals(TipoPago.Obligacion)) {
+                if (ListaResultadosOblig != null)
+                {
+                    var total_registros = ListaResultadosOblig.Count();
+
+                    var cantidad_errores = ListaResultadosOblig.Where(x => !x.B_Success).Count();
+
+                    Success = (cantidad_errores == total_registros) ? false : true;
+
+                    Message = String.Format("Se han analizado \"{0}\" pago(s). Se han registrado \"{1}\" pago(s).",
+                        total_registros, total_registros - cantidad_errores);
+                }
+            }
+
+            if (tipoPago.Equals(TipoPago.Tasa)) {
+                if (ListaResultadosTasas != null)
+                {
+                    var total_registros = ListaResultadosTasas.Count();
+
+                    var cantidad_errores = ListaResultadosTasas.Where(x => !x.B_Success).Count();
+
+                    Success = (cantidad_errores == total_registros) ? false : true;
+
+                    Message = String.Format("Se han analizado \"{0}\" pago(s). Se han registrado \"{1}\" pago(s).",
+                        total_registros, total_registros - cantidad_errores);
+                }
+            }
         }
     }
 }

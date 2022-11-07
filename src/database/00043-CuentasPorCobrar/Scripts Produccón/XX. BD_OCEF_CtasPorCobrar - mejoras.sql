@@ -160,7 +160,7 @@ AS
 BEGIN  
  SET NOCOUNT ON;  
   
- --1ro Obtener los conceptos según año y periodo  
+ --1ro Obtener los conceptos segÃºn aÃ±o y periodo  
  declare @N_GradoBachiller char(1) = '1'  
   
  select p.I_ProcesoID, p.D_FecVencto, cp.T_CatPagoDesc, conpag.I_ConcPagID, con.T_ConceptoDesc, cp.I_TipoAlumno, conpag.M_Monto, conpag.M_MontoMinimo, conpag.I_TipoObligacion,  
@@ -177,7 +177,7 @@ BEGIN
   conpag.B_Habilitado = 1 and conpag.B_Eliminado = 0 and ISNULL(conpag.B_Mora, 0) = 0 and  
   cp.B_Obligacion = 1 and p.I_Anio = @I_Anio and p.I_Periodo = @I_Periodo and cp.I_Nivel = (select I_OpcionID from dbo.TC_CatalogoOpcion where I_ParametroID = 2 and T_OpcionCod = @N_GradoBachiller)  
   
- --2do Obtengo la relación de alumnos  
+ --2do Obtengo la relaciÃ³n de alumnos  
 	CREATE TABLE #Tmp_MatriculaAlumno (
 		id int identity(1,1), 
 		I_MatAluID int, 
@@ -240,7 +240,7 @@ BEGIN
    @I_AlumnoRegular int = (select I_OpcionID from dbo.TC_CatalogoOpcion where I_ParametroID = 1 and T_OpcionCod = '1'),  
    @I_AlumnoIngresante int = (select I_OpcionID from dbo.TC_CatalogoOpcion where I_ParametroID = 1 and T_OpcionCod = '2'),  
      
-   --Tipo obligación  
+   --Tipo obligaciÃ³n  
    @I_Matricula int = (select I_OpcionID from dbo.TC_CatalogoOpcion where I_ParametroID = 3 and T_OpcionCod = '1'),  
    @I_OtrosPagos int = (select I_OpcionID from dbo.TC_CatalogoOpcion where I_ParametroID = 3 and T_OpcionCod = '0'),  
   
@@ -279,7 +279,7 @@ BEGIN
   begin tran  
   begin try  
      
-   --4to obtengo la información alumno por alumno e inicializo variables  
+   --4to obtengo la informaciÃ³n alumno por alumno e inicializo variables  
    select @I_MatAluID = I_MatAluID, @C_CodRc = C_CodRc, @C_CodAlu = C_CodAlu, @C_EstMat = C_EstMat, @C_CodModIng = C_CodModIng,   
     @N_Grupo = N_Grupo, @I_TipoAlumno = (case when B_Ingresante = 0 then @I_AlumnoRegular else @I_AlumnoIngresante end)   
    from #Tmp_MatriculaAlumno   
@@ -287,7 +287,7 @@ BEGIN
   
    delete @Tmp_Procesos  
   
-   --Pagos de Matrícula  
+   --Pagos de MatrÃ­cula  
    if (select count(I_ProcesoID) from #tmp_conceptos_pregrado  
     where I_TipoAlumno = @I_TipoAlumno and I_TipoObligacion = @I_Matricula and   
     B_EsPagoMatricula = 1 and C_CodModIng = @C_CodModIng) = 1  
@@ -310,7 +310,7 @@ BEGIN
     end   
    end  
   
-   --Pagos generales de matrícula  
+   --Pagos generales de matrÃ­cula  
    insert @Tmp_Procesos(I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad)  
    select I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad from #tmp_conceptos_pregrado  
    where I_TipoAlumno = @I_TipoAlumno and I_TipoObligacion = @I_Matricula and  
@@ -342,7 +342,7 @@ BEGIN
     end  
    end  
   
-   --Pagos extemoráneos  
+   --Pagos extemorÃ¡neos  
    if (select count(I_ProcesoID) from #tmp_conceptos_pregrado  
     where I_TipoAlumno = @I_TipoAlumno and I_TipoObligacion = @I_Matricula and   
      B_EsPagoMatricula = 0 and B_EsPagoExtmp = 1 and  
@@ -415,7 +415,7 @@ BEGIN
     end  
    end  
   
-   --Monto de Pensión de enseñanza  
+   --Monto de PensiÃ³n de enseÃ±anza  
    if (select count(I_ProcesoID) from #tmp_conceptos_pregrado  
     where I_TipoAlumno = @I_TipoAlumno and B_Calculado = 1 and I_Calculado = @I_Pensiones and C_CodModIng = @C_CodModIng) = 1  
    begin  
@@ -437,7 +437,7 @@ BEGIN
     from CTE_Recursivo  
    end  
   
-   --Grabando pago de matrícula  
+   --Grabando pago de matrÃ­cula  
    set @I_ProcesoID = 0  
   
    if exists(select p.I_ProcesoID from @Tmp_Procesos p where p.I_Prioridad = 1)  
@@ -518,7 +518,7 @@ BEGIN
     end  
     else  
     begin  
-     --Edición de obligaciones  
+     --EdiciÃ³n de obligaciones  
   
      if exists(select id from @Tmp_grupo_otros_pagos) begin  
       delete @Tmp_grupo_otros_pagos  
@@ -583,7 +583,7 @@ BEGIN
  end  
   
  set @B_Result = 1  
- set @T_Message = 'El proceso finalizó correctamente.'  
+ set @T_Message = 'El proceso finalizÃ³ correctamente.'  
 /*  
   
 declare @B_Result bit,  
@@ -622,7 +622,7 @@ BEGIN
  declare @N_GradoMaestria char(1) = '2'  
  declare @N_Doctorado char(1) = '3'  
     
- --1ro Obtener los conceptos según año y periodo  
+ --1ro Obtener los conceptos segÃºn ano y periodo  
  select p.I_ProcesoID, p.D_FecVencto, cp.T_CatPagoDesc, conpag.I_ConcPagID, con.T_ConceptoDesc, cp.I_TipoAlumno, conpag.M_Monto, conpag.M_MontoMinimo, conpag.I_TipoObligacion,  
  ISNULL(conpag.B_Calculado, 0) AS B_Calculado, conpag.I_Calculado, ISNULL(conpag.B_GrupoCodRc, 0) AS B_GrupoCodRc,  conpag.I_GrupoCodRc, conpag.B_ModalidadIngreso, moding.T_OpcionCod AS C_CodModIng,   
  ISNULL(conpag.B_EsPagoMatricula, 0) AS B_EsPagoMatricula, ISNULL(conpag.B_EsPagoExtmp, 0) AS B_EsPagoExtmp, conpag.N_NroPagos, cp.I_Prioridad, cp.I_Nivel, niv.T_OpcionCod as C_Nivel  
@@ -639,7 +639,7 @@ BEGIN
   cp.B_Obligacion = 1 and p.I_Anio = @I_Anio and p.I_Periodo = @I_Periodo and cp.I_Nivel in (select I_OpcionID from dbo.TC_CatalogoOpcion where I_ParametroID = 2 and T_OpcionCod IN (@N_GradoMaestria, @N_Doctorado))  
   --cp.B_Obligacion = 1 and p.I_Anio = 2021 and p.I_Periodo = 19 and cp.I_Nivel in (select I_OpcionID from dbo.TC_CatalogoOpcion where I_ParametroID = 2 and T_OpcionCod IN ('2', '3'))  
   
- --2do Obtengo la relación de alumnos  
+ --2do Obtengo la relaciÃ³n de alumnos  
 	CREATE TABLE #Tmp_MatriculaAlumno (
 		id int identity(1,1), 
 		I_MatAluID int, 
@@ -706,7 +706,7 @@ BEGIN
    @I_AlumnoIngresante int = (select I_OpcionID from dbo.TC_CatalogoOpcion where I_ParametroID = 1 and T_OpcionCod = '2'),  
   
   
-   --Tipo obligación  
+   --Tipo obligaciÃ³n  
    @I_Matricula int = (select I_OpcionID from dbo.TC_CatalogoOpcion where I_ParametroID = 3 and T_OpcionCod = '1'),  
    @I_OtrosPagos int = (select I_OpcionID from dbo.TC_CatalogoOpcion where I_ParametroID = 3 and T_OpcionCod = '0'),  
   
@@ -744,7 +744,7 @@ BEGIN
  while (@I_FilaActual <= @I_CantRegistros) begin  
   begin tran  
   begin try  
-   --4to obtengo la información alumno por alumno e inicializo variables  
+   --4to obtengo la informaciÃ³n alumno por alumno e inicializo variables  
    select @I_MatAluID= I_MatAluID, @C_CodRc = C_CodRc, @C_CodAlu = C_CodAlu, @C_EstMat = C_EstMat, @C_CodModIng = C_CodModIng,   
     @N_Grupo = N_Grupo, @I_CredDesaprob = ISNULL(I_CredDesaprob, 0), @N_Grado = N_Grado,  
     @I_TipoAlumno = (case when B_Ingresante = 0 then @I_AlumnoRegular else @I_AlumnoIngresante end)   
@@ -753,7 +753,7 @@ BEGIN
   
    delete @Tmp_Procesos  
   
-   --Pagos de Matrícula  
+   --Pagos de MatrÃ­cula  
    if (select count(I_ProcesoID) from #tmp_conceptos_posgrado  
     where I_TipoAlumno = @I_TipoAlumno and I_TipoObligacion = @I_Matricula and   
     B_EsPagoMatricula = 1 and C_CodModIng = @C_CodModIng and C_Nivel = @N_Grado) = 1  
@@ -776,13 +776,13 @@ BEGIN
     end   
    end  
   
-   --Pagos generales de matrícula  
+   --Pagos generales de matrÃ­cula  
    insert @Tmp_Procesos(I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad)  
    select I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad from #tmp_conceptos_posgrado  
    where I_TipoAlumno = @I_TipoAlumno and I_TipoObligacion = @I_Matricula and  
     B_EsPagoMatricula = 0 and B_Calculado = 0 and B_GrupoCodRc = 0 and B_EsPagoExtmp = 0 and C_Nivel = @N_Grado  
   
-   --Pagos extemoráneos  
+   --Pagos extemorÃ¡neos  
    if (select count(I_ProcesoID) from #tmp_conceptos_posgrado  
     where I_TipoAlumno = @I_TipoAlumno and I_TipoObligacion = @I_Matricula and   
      B_EsPagoMatricula = 0 and B_EsPagoExtmp = 1 and C_Nivel = @N_Grado and  
@@ -795,7 +795,7 @@ BEGIN
      datediff(day, @D_CurrentDate, D_FecVencto) < 0  
    end  
      
-   --Monto de Pensión de enseñanza  
+   --Monto de PensiÃ³n de ensenanza  
    if (select count(I_ProcesoID) from #tmp_conceptos_posgrado  
     where I_TipoAlumno = @I_TipoAlumno and B_Calculado = 1 and I_Calculado = @I_Pensiones and C_Nivel = @N_Grado) = 1  
    begin  
@@ -817,7 +817,7 @@ BEGIN
     from CTE_Recursivo  
    end  
   
-   --Grabando pago de matrícula  
+   --Grabando pago de matrÃ­cula  
    set @I_ProcesoID = 0  
   
    if exists(select p.I_ProcesoID from @Tmp_Procesos p where p.I_Prioridad = 1)  
@@ -898,7 +898,7 @@ BEGIN
     end  
     else  
     begin  
-     --Edición de obligaciones  
+     --EdiciÃ³n de obligaciones  
   
      if exists(select id from @Tmp_grupo_otros_pagos) begin  
       delete @Tmp_grupo_otros_pagos  
@@ -963,7 +963,7 @@ BEGIN
  end  
   
  set @B_Result = 1  
- set @T_Message = 'El proceso finalizó correctamente.'  
+ set @T_Message = 'El proceso finalizÃ³ correctamente.'  
 /*  
 declare @B_Result bit,  
   @T_Message nvarchar(4000)  
@@ -1029,7 +1029,7 @@ BEGIN
 		COMMIT TRAN
 
 		SET @B_Result = 1
-		SET @T_Message = 'Actualización correcta'
+		SET @T_Message = 'ActualizaciÃ³n correcta'
 	END TRY
 	BEGIN CATCH
 		ROLLBACK TRAN
@@ -1194,8 +1194,8 @@ BEGIN
 		--Constantes    
 		@CondicionCorrecto int = 131,--PAGO CORRECTO    
 		@CondicionExtorno int = 132,--PAGO EXTORNADO
-		@CondicionDoblePago int = 135,--DOBLE PAGO A UNA MISMA OBLIGACIÓN
-		@CondicionNoExisteOblg int = 136,--PAGO A UNA OBLIGACIÓN INEXISTENTE
+		@CondicionDoblePago int = 135,--DOBLE PAGO A UNA MISMA OBLIGACIÃ“N
+		@CondicionNoExisteOblg int = 136,--PAGO A UNA OBLIGACIÃ“N INEXISTENTE
 		@PagoTipoObligacion int = 133--OBLIGACION    
     
 	WHILE (@I_FilaActual <= @I_CantRegistros) BEGIN    
@@ -1234,7 +1234,7 @@ BEGIN
     
 		IF NOT(@I_CondicionPagoID IN (@CondicionExtorno, @CondicionNoExisteOblg)) AND (@B_ObligPagada = 1) BEGIN	
 			SET @I_CondicionPagoID = @CondicionDoblePago
-			SET @T_Observacion = 'Esta obligación ya ha sido pagada con anterioridad.'
+			SET @T_Observacion = 'Esta obligaciÃ³n ya ha sido pagada con anterioridad.'
 		END
     
 		IF  (@B_ExisteError = 0) BEGIN
@@ -1252,7 +1252,7 @@ BEGIN
         
 				UPDATE @Tmp_PagoObligacion SET 
 					B_Success = 0, 
-					T_ErrorMessage = 'El código de operación "' + @C_CodOperacion + '" se encuentra duplicado en el sistema.'
+					T_ErrorMessage = 'El cÃ³digo de operaciÃ³n "' + @C_CodOperacion + '" se encuentra duplicado en el sistema.'
 				WHERE id = @I_FilaActual
 			END
 		END
@@ -1264,7 +1264,7 @@ BEGIN
         
 			UPDATE @Tmp_PagoObligacion SET 
 				B_Success = 0,
-				T_ErrorMessage = 'No existe un concepto para guardar el Interés moratorio.'
+				T_ErrorMessage = 'No existe un concepto para guardar el InterÃ©s moratorio.'
 			WHERE id = @I_FilaActual
 		END
           
@@ -1279,7 +1279,7 @@ BEGIN
         
 				UPDATE @Tmp_PagoObligacion SET 
 					B_Success = 0, 
-					T_ErrorMessage = 'No existe una Cuenta asignada para registrar la obligación.' 
+					T_ErrorMessage = 'No existe una Cuenta asignada para registrar la obligaciÃ³n.' 
 				WHERE id = @I_FilaActual
 			END
 		END
@@ -1534,7 +1534,7 @@ BEGIN
   
   IF (@I_TasaUnfvID IS NULL) BEGIN  
    SET @B_ExisteError = 1  
-   UPDATE @Tmp_PagoTasas SET B_Success = 0, T_ErrorMessage = 'No existe el código de tasa.' WHERE id = @I_FilaActual  
+   UPDATE @Tmp_PagoTasas SET B_Success = 0, T_ErrorMessage = 'No existe el cÃ³digo de tasa.' WHERE id = @I_FilaActual  
   END  
   
   IF (@B_ExisteError = 0 AND @I_CtaDepositoID IS NULL) BEGIN  
@@ -1548,7 +1548,7 @@ BEGIN
    IF NOT (@B_CodOpeCorrecto = 1) BEGIN  
     SET @B_ExisteError = 1  
       
-    UPDATE @Tmp_PagoTasas SET B_Success = 0, T_ErrorMessage = 'El código de operación "' + @C_CodOperacion + '" se encuentra duplicado en el sistema.' WHERE id = @I_FilaActual  
+    UPDATE @Tmp_PagoTasas SET B_Success = 0, T_ErrorMessage = 'El cÃ³digo de operaciÃ³n "' + @C_CodOperacion + '" se encuentra duplicado en el sistema.' WHERE id = @I_FilaActual  
    END  
   END  
   
@@ -1653,7 +1653,7 @@ GO
 --   COMMIT TRANSACTION  
   
 --   SET @B_Result = 1  
---   SET @T_Message = 'El registro de los alumnos que no votaron finalizó de manera exitosa'  
+--   SET @T_Message = 'El registro de los alumnos que no votaron finalizÃ³ de manera exitosa'  
     
 -- END TRY  
 -- BEGIN CATCH  

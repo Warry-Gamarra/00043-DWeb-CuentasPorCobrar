@@ -181,41 +181,46 @@ namespace WebApp.Controllers
 
             string nombreBanco = entidadRecaudadora.Find(model.EntidadRecaudadora).NombreEntidad;
 
-            ImportacionPagoResponse result = new ImportacionPagoResponse();
-
-            IEnumerable<PagoObligacionObsEntity> obligacionesResult = new List<PagoObligacionObsEntity>();
-
-            IEnumerable<PagoTasaObsEntity> tasasResult = new List<PagoTasaObsEntity>();
+            ImportacionPagoResponse generalResult = new ImportacionPagoResponse();
 
             foreach (var item in file)
             {
-                result = pagosModel.CargarArchivoPagos(Server.MapPath(directorioCarga), item, model, WebSecurity.CurrentUserId);
+                var result = pagosModel.CargarArchivoPagos(Server.MapPath(directorioCarga), item, model, WebSecurity.CurrentUserId);
 
                 switch (model.TipoArchivo)
                 {
                     case TipoPago.Obligacion:
-                        obligacionesResult = obligacionesResult.Concat(result.ListaResultadosOblig);
+                        generalResult.AgregarObligacionesObservadas(result.ListaResultadosOblig);
                         break;
 
                     case TipoPago.Tasa:
-                        tasasResult = tasasResult.Concat(result.ListaResultadosTasas);
+                        generalResult.AgregarTasasObservadas(result.ListaResultadosTasas);
                         break;
                 }
+            }
+            
+            if (generalResult.Success)
+            {
+                WebApp.Models.ResponseModel.Success(generalResult);
+            }
+            else
+            {
+                WebApp.Models.ResponseModel.Error(generalResult);
             }
 
             switch (model.TipoArchivo)
             {
                 case TipoPago.Obligacion:
-                    Session["PAGO_OBLIG_RESULT"] = obligacionesResult;
+                    Session["PAGO_OBLIG_RESULT"] = generalResult.ListaResultadosOblig;
                     break;
                 case TipoPago.Tasa:
-                    Session["PAGO_TASA_RESULT"] = tasasResult;
+                    Session["PAGO_TASA_RESULT"] = generalResult.ListaResultadosTasas;
                     break;
             }
 
             Session["BANCO_PAGO"] = nombreBanco;
 
-            return Json(result, JsonRequestBehavior.AllowGet);
+            return Json(generalResult, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]
@@ -233,7 +238,7 @@ namespace WebApp.Controllers
 
                 worksheet.Cell(currentRow, 1).Value = "Archivo";
                 worksheet.Cell(currentRow, 2).Value = "Banco";
-                worksheet.Cell(currentRow, 3).Value = "CodOperacion";
+                worksheet.Cell(currentRow, 3).Value = "CodOperaciÓn";
                 worksheet.Cell(currentRow, 4).Value = "CodInterno";
                 worksheet.Cell(currentRow, 5).Value = "CodAlumno";
                 worksheet.Cell(currentRow, 6).Value = "NomAlumno";
