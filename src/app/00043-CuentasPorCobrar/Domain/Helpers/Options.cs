@@ -62,7 +62,8 @@ namespace Domain.Helpers
         Extorno = 132,
         DoblePago = 135,
         ObligacionNoExiste = 136,
-        PagoDesenlazado = 137
+        PagoDesenlazado = 137,
+        NoCampoMora = 142
     }
 
     public enum Periodos
