@@ -278,7 +278,7 @@ namespace WebApp.Controllers
                     worksheet.Cell(currentRow, 17).SetValue<string>(item.T_ErrorMessage);
                 }
 
-                worksheet.Range(worksheet.Cell(3, 12), worksheet.Cell(currentRow, 13)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
+                worksheet.Range(worksheet.Cell(2, 12), worksheet.Cell(currentRow, 13)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
 
                 using (var stream = new MemoryStream())
                 {
@@ -347,7 +347,7 @@ namespace WebApp.Controllers
                     worksheet.Cell(currentRow, 18).SetValue<string>(item.T_ErrorMessage);
                 }
 
-                worksheet.Range(worksheet.Cell(3, 13), worksheet.Cell(currentRow, 14)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
+                worksheet.Range(worksheet.Cell(2, 13), worksheet.Cell(currentRow, 14)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
 
                 using (var stream = new MemoryStream())
                 {

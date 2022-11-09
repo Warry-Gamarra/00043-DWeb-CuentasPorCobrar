@@ -1903,4 +1903,12 @@ GO
 
 
 
+SELECT * FROM dbo.TC_TipoArchivo WHERE I_TipoArchivoID = 4
+
+SELECT * FROM dbo.TI_TipoArchivo_EntidadFinanciera WHERE I_EntidadFinanID = 2 AND I_TipoArchivoID = 4
+
+SELECT * FROM dbo.TC_SeccionArchivo WHERE I_TipArchivoEntFinanID = 4
+
+SELECT * FROM dbo.TC_ColumnaSeccion WHERE I_SecArchivoID = 4
+
 

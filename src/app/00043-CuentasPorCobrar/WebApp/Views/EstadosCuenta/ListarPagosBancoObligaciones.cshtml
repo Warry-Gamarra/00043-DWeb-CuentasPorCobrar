@@ -132,6 +132,7 @@
                         columns.Add(c => c.T_DatosDepositante).Titled("Depositante").Filterable(true);
                         columns.Add(c => c.D_FecPago).Titled("Fecha Pago").Filterable(true).Css("text-center").SetWidth(90);
                         columns.Add(c => c.I_MontoPago).Titled("Monto Pagado").Filterable(true).Css("text-center");
+                        columns.Add(c => c.I_InteresMora).Titled("Mora").Filterable(true).Css("text-center");
                         columns.Add(c => c.D_FecCre).Titled("Fec.Reg.Sistema").Filterable(true).Css("text-center").SetWidth(90);
                         columns.Add(c => c.T_Condicion).Titled("Condición");
                     }).WithPaging(12).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
