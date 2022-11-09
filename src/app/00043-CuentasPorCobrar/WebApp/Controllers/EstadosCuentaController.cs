@@ -48,6 +48,7 @@ namespace WebApp.Controllers
             return View();
         }
 
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONSULTA + ", " + RoleNames.TESORERIA + ", " + RoleNames.DEPENDENCIA)]
         [Route("consultas/reporte-pago-de-obligaciones")]
         public ActionResult ReportesPagoObligaciones(ReportePagosObligacionesViewModel model)
         {
@@ -57,7 +58,7 @@ namespace WebApp.Controllers
 
             var user = usersModel.Find(userId.Value);
 
-            if (user.RoleName.Equals(RoleNames.DEPENDENCIA) || user.RoleName.Equals(RoleNames.CONSULTA))
+            if (user.RoleName.Equals(RoleNames.DEPENDENCIA))
             {
                 model.idDependencia = user.DependenciaId;
 
@@ -79,7 +80,7 @@ namespace WebApp.Controllers
 
             ViewBag.LabelReporte = model.idDependencia.HasValue ? null : "SELECCIONAR";
 
-            ViewBag.LabelDependencias = model.idDependencia.HasValue ? null : "TODOS";
+            ViewBag.LabelDependencias = (model.idDependencia.HasValue && model.idDependencia != DependenciaEUPG.ID) ? null : "TODOS";
 
             ViewBag.DependenciaDefault = model.idDependencia.HasValue ? listaDependencias.First().Value : "";
 
@@ -109,7 +110,7 @@ namespace WebApp.Controllers
 
             var user = usersModel.Find(userId.Value);
 
-            if (user.RoleName.Equals(RoleNames.DEPENDENCIA) || user.RoleName.Equals(RoleNames.CONSULTA))
+            if (user.RoleName.Equals(RoleNames.DEPENDENCIA))
             {
                 model.idDependencia = user.DependenciaId;
 
@@ -1507,6 +1508,7 @@ namespace WebApp.Controllers
             }
         }
 
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONSULTA + ", " + RoleNames.TESORERIA)]
         [Route("consultas/resumen-obligaciones-por-dia")]
         public ActionResult ResumenAnualObligacionesPorDia(int? anio, int? entidadFinanID, int? ctaDepositoID, int? condicion)
         {
@@ -1638,6 +1640,7 @@ namespace WebApp.Controllers
             }
         }
 
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONSULTA + ", " + RoleNames.TESORERIA)]
         [Route("consultas/pagos-por-dia")]
         public ActionResult CantidadDePagosPorDia(int? anio, int? tipoPago, int? entidadFinanID, int? ctaDepositoID, int? condicion)
         {

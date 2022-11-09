@@ -24,7 +24,8 @@ namespace WebApp.Controllers
             tasaService = new TasaServiceFacade();
             selectModels = new SelectModel();
         }
-                
+
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONSULTA + ", " + RoleNames.TESORERIA)]
         [Route("consulta/tasas")]
         public ActionResult Consulta(ConsultaPagoTasasViewModel model)
         {

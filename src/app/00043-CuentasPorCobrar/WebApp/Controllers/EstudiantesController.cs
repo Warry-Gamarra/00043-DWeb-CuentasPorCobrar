@@ -214,6 +214,7 @@ namespace WebApp.Controllers
             }
         }
 
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONSULTA + ", " + RoleNames.TESORERIA + ", " + RoleNames.DEPENDENCIA)]
         [Route("consulta/estudiantes")]
         public ActionResult Consulta(ConsultaObligacionEstudianteViewModel model)
         {
@@ -225,7 +226,7 @@ namespace WebApp.Controllers
 
             bool mostrarReporteObligaciones = true;
 
-            if (user.RoleName.Equals(RoleNames.DEPENDENCIA) || user.RoleName.Equals(RoleNames.CONSULTA))
+            if (user.RoleName.Equals(RoleNames.DEPENDENCIA))
             {
                 model.dependencia = user.DependenciaId;
 
@@ -236,7 +237,7 @@ namespace WebApp.Controllers
 
             var listaDependencias = programasClientFacade.GetDependencias(model.tipoEstudio, model.dependencia);
 
-            model.codFac = (user.RoleName.Equals(RoleNames.DEPENDENCIA) || user.RoleName.Equals(RoleNames.CONSULTA)) ? listaDependencias.First().Value : model.codFac;
+            model.codFac = (user.RoleName.Equals(RoleNames.DEPENDENCIA)) ? listaDependencias.First().Value : model.codFac;
 
             if (model.anio.HasValue)
             {
@@ -285,7 +286,7 @@ namespace WebApp.Controllers
 
             var user = usersModel.Find(userId.Value);
 
-            if (user.RoleName.Equals(RoleNames.DEPENDENCIA) || user.RoleName.Equals(RoleNames.CONSULTA))
+            if (user.RoleName.Equals(RoleNames.DEPENDENCIA))
             {
                 model.dependencia = user.DependenciaId;
 

@@ -88,7 +88,14 @@ namespace WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                result = _usersModel.Save(model, WebSecurity.CurrentUserId, Url.Action("Login", "Account", null, "http"));
+                if (model.RoleId == 5 && !model.DependenciaId.HasValue)
+                {
+                    ResponseModel.Error(result, "Debe seleccionar una dependencia");
+                }
+                else
+                {
+                    result = _usersModel.Save(model, WebSecurity.CurrentUserId, Url.Action("Login", "Account", null, "http"));
+                }
             }
             else
             {

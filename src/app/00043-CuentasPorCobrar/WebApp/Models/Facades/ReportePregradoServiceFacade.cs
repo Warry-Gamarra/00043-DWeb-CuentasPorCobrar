@@ -55,7 +55,7 @@ namespace WebApp.Models.Facades
             {
                 FechaInicio = fechaInicio.ToString(FormatosDateTime.BASIC_DATE),
                 FechaFin = fechaFin.ToString(FormatosDateTime.BASIC_DATE),
-                Titulo = "Reporte de Pagos por Conceptos",
+                Titulo = "Reporte de Pago por Conceptos",
                 nombreEntidadFinanc = nombreEntidadFinanc,
                 numeroCuenta = numeroCuenta
             };
@@ -96,7 +96,7 @@ namespace WebApp.Models.Facades
                 Facultad = pagos.Count() > 0 ? pagos.FirstOrDefault().T_FacDesc : "",
                 FechaInicio = fechaInicio.ToString(FormatosDateTime.BASIC_DATE),
                 FechaFin = fechaFin.ToString(FormatosDateTime.BASIC_DATE),
-                Titulo = "Reporte de Pagos Conceptos por Facultad",
+                Titulo = "Reporte de Pago de Conceptos por Facultad",
                 nombreEntidadFinanc = nombreEntidadFinanc,
                 numeroCuenta = numeroCuenta
             };
