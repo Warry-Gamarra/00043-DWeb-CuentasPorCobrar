@@ -81,8 +81,11 @@ namespace WebApp.Models
 
                         if (lstPagoTasas != null)
                         {
-                            response = tasaService.Grabar_Pago_Tasas(lstPagoTasas, model.Observacion, currentUserId);
+                            //response = tasaService.Grabar_Pago_Tasas(lstPagoTasas, model.Observacion, currentUserId);
+                            response = new ImportacionPagoResponse();
 
+                            response.ListaResultadosTasas = new List<PagoTasaObsEntity>();
+                            
                             cantFilasReg = lstPagoTasas.Count();
                         }
                         else
