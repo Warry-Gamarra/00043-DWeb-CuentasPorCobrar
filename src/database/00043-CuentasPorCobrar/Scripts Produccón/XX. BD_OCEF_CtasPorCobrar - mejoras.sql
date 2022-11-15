@@ -1,5 +1,73 @@
 USE BD_OCEF_CtasPorCobrar
 GO
+select * from dbo.TC_CuentaDeposito
+
+SELECT * FROM dbo.TC_TipoArchivo WHERE I_TipoArchivoID = 4
+
+SELECT * FROM dbo.TI_TipoArchivo_EntidadFinanciera WHERE I_EntidadFinanID = 2 AND I_TipoArchivoID = 4
+
+SELECT * FROM dbo.TC_SeccionArchivo WHERE I_TipArchivoEntFinanID = 4
+
+SELECT * FROM dbo.TC_ColumnaSeccion WHERE I_SecArchivoID = 4 ORDER BY I_ColSecID
+
+SELECT I_ColumnaFin - I_ColumnaInicio + 1 as cantidad_caracteres,* FROM dbo.TC_ColumnaSeccion WHERE I_CampoPagoID IN (25,26)
+
+BEGIN TRAN
+BEGIN TRY
+	--C_CodDepositante
+	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 14, I_ColumnaFin = 27, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 38
+
+	--T_NomDepositante
+	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 1, I_ColumnaFin = 0, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 39
+
+	--C_CodTasa
+	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 28, I_ColumnaFin = 32, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 34
+
+	--T_TasaDesc
+	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 1, I_ColumnaFin = 0, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 35
+
+	--C_CodOperacion
+	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 125, I_ColumnaFin = 130, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 45
+
+	--T_Referencia
+	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 131, I_ColumnaFin = 152, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 46
+
+	--D_FecPago
+	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 58, I_ColumnaFin = 65, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 36
+
+	--D_HoraPago
+	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 169, I_ColumnaFin = 174, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 37
+
+	--I_InteresMora
+	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 1, I_ColumnaFin = 0, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 42
+
+	--I_MontoPago
+	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 74, I_ColumnaFin = 88, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 41
+
+	--T_LugarPago
+	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 153, I_ColumnaFin = 156, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 43
+
+	--T_InformacionAdicional
+	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 28, I_ColumnaFin = 57, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 40
+
+	--C_CodigoInterno
+	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 66, I_ColumnaFin = 73, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 66
+	COMMIT TRAN
+END TRY
+BEGIN CATCH
+	ROLLBACK TRAN
+END CATCH
+GO
+
+SELECT * FROM dbo.TC_Concepto
+
+SELECT * FROM dbo.TI_TasaUnfv
+
+SELECT * FROM dbo.TI_TasaUnfv_CtaDepoServicio
+
+SELECT * FROM dbo.TI_CtaDepo_Servicio
+
+SELECT * FROM dbo.TC_Servicios
 
 --CREATE PROCEDURE [dbo].[USP_I_GrabarAlumnoMultaNoVotar]  
 --(  
@@ -66,60 +134,3 @@ GO
 
 
 
-SELECT * FROM dbo.TC_TipoArchivo WHERE I_TipoArchivoID = 4
-
-SELECT * FROM dbo.TI_TipoArchivo_EntidadFinanciera WHERE I_EntidadFinanID = 2 AND I_TipoArchivoID = 4
-
-SELECT * FROM dbo.TC_SeccionArchivo WHERE I_TipArchivoEntFinanID = 4
-
-SELECT * FROM dbo.TC_ColumnaSeccion WHERE I_SecArchivoID = 4 ORDER BY I_ColSecID
-
-BEGIN TRAN
-BEGIN TRY
-	--C_CodDepositante
-	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 14, I_ColumnaFin = 27, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 38
-
-	--T_NomDepositante
-	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 1, I_ColumnaFin = 0, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 39
-
-	--C_CodTasa
-	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 1, I_ColumnaFin = 0, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 34
-
-	--T_TasaDesc
-	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 1, I_ColumnaFin = 0, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 35
-
-	--C_CodOperacion
-	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 125, I_ColumnaFin = 130, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 45
-
-	--T_Referencia
-	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 131, I_ColumnaFin = 152, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 46
-
-	--D_FecPago
-	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 58, I_ColumnaFin = 65, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 36
-
-	--D_HoraPago
-	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 169, I_ColumnaFin = 174, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 37
-
-	--I_InteresMora
-	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 1, I_ColumnaFin = 0, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 42
-
-	--I_MontoPago
-	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 74, I_ColumnaFin = 88, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 41
-
-	--T_LugarPago
-	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 153, I_ColumnaFin = 156, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 43
-
-	--T_InformacionAdicional
-	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 28, I_ColumnaFin = 57, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 40
-
-	--C_CodigoInterno
-	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 196, I_ColumnaFin = 250, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 66
-	COMMIT TRAN
-END TRY
-BEGIN CATCH
-	ROLLBACK TRAN
-END CATCH
-GO
-
-
---SELECT * FROM dbo.TR_PagoBanco WHERE I_TipoPagoID = 134 AND B_Anulado = 0 AND I_EntidadFinanID = 2

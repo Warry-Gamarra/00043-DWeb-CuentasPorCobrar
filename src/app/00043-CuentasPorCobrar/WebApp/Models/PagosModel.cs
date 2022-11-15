@@ -81,11 +81,8 @@ namespace WebApp.Models
 
                         if (lstPagoTasas != null)
                         {
-                            //response = tasaService.Grabar_Pago_Tasas(lstPagoTasas, model.Observacion, currentUserId);
-                            response = new ImportacionPagoResponse();
-
-                            response.ListaResultadosTasas = new List<PagoTasaObsEntity>();
-                            
+                            response = tasaService.Grabar_Pago_Tasas(lstPagoTasas, model.Observacion, currentUserId);
+                                                        
                             cantFilasReg = lstPagoTasas.Count();
                         }
                         else
@@ -256,7 +253,7 @@ namespace WebApp.Models
                     pagoEntity.C_Moneda = (pagoEntity.C_Moneda == "01") ? "PEN" : "USD";
                 }
 
-                string sInteresMora = line.Substring(columnas["I_InteresMora"].Inicial - 1, columnas["I_MontoPago"].Final - columnas["I_MontoPago"].Inicial + 1);
+                string sInteresMora = line.Substring(columnas["I_InteresMora"].Inicial - 1, columnas["I_InteresMora"].Final - columnas["I_InteresMora"].Inicial + 1);
 
                 try
                 {
@@ -430,7 +427,7 @@ namespace WebApp.Models
                     pagoEntity.C_Moneda = (pagoEntity.C_Moneda == "01") ? "PEN" : "USD";
                 }
 
-                string sInteresMora = line.Substring(columnas["I_InteresMora"].Inicial - 1, columnas["I_MontoPago"].Final - columnas["I_MontoPago"].Inicial + 1);
+                string sInteresMora = line.Substring(columnas["I_InteresMora"].Inicial - 1, columnas["I_InteresMora"].Final - columnas["I_InteresMora"].Inicial + 1);
 
                 try
                 {
