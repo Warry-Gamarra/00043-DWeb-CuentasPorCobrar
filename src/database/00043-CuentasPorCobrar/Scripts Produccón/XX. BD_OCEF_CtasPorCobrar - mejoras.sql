@@ -1,18 +1,17 @@
 USE BD_OCEF_CtasPorCobrar
 GO
 
---SELECT * FROM dbo.TC_ColumnaSeccion WHERE I_SecArchivoID = 4 ORDER BY I_ColSecID
-
+--ACTUALIZACIÓN DEL ARCHIVO DE RESULTADO DEL BCP
 BEGIN TRAN
 BEGIN TRY
 	--C_CodDepositante
-	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 14, I_ColumnaFin = 27, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 38
+	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 19, I_ColumnaFin = 27, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 38
 
 	--T_NomDepositante
 	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 1, I_ColumnaFin = 0, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 39
 
 	--C_CodTasa
-	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 28, I_ColumnaFin = 32, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 34
+	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 14, I_ColumnaFin = 18, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 34
 
 	--T_TasaDesc
 	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 1, I_ColumnaFin = 0, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 35
@@ -178,5 +177,3 @@ AS
   
 )  
 GO
-
-SELECT * FROM TR_DevolucionPago
