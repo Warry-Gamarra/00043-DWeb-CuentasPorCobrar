@@ -13,27 +13,23 @@ namespace Data.Views
     public class VW_DevolucionPago
     {
         public int I_DevolucionPagoID { get; set; }
-        public int I_PagoProcesID { get; set; }
         public decimal I_MontoPagoDev { get; set; }
-        public decimal I_MontoPagado { get; set; }
         public DateTime? D_FecDevAprob { get; set; }
         public DateTime? D_FecDevPago { get; set; }
         public DateTime? D_FecProc { get; set; }
         public string T_Comentario { get; set; }
-        public int? I_UsuarioCre { get; set; }
-        public DateTime? D_FecCre { get; set; }
+        public int I_UsuarioCre { get; set; }
+        public DateTime D_FecCre { get; set; }
         public int? I_UsuarioMod { get; set; }
         public DateTime? D_FecMod { get; set; }
-        public bool B_Anulado { get; set; }
-        public int N_NroSIAF { get; set; }
+        public int I_PagoBancoID { get; set; }
+        public decimal I_MontoPago { get; set; }
         public int I_EntidadFinanID { get; set; }
         public string C_CodOperacion { get; set; }
-        public string C_Referencia { get; set; }
+        public string C_ReferenciaBCP { get; set; }
         public DateTime D_FecPago { get; set; }
         public string T_EntidadDesc { get; set; }
-        public string C_CodClasificador { get; set; }
         public string T_ConceptoPagoDesc { get; set; }
-
 
         public static IEnumerable<VW_DevolucionPago> Find()
         {

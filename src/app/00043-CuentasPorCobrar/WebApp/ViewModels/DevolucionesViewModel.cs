@@ -4,33 +4,35 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using WebApp.Controllers;
 
 namespace WebApp.ViewModels
 {
     public class DevolucionesViewModel
     {
         public int? DevolucionId { get; set; }
-        public string NroRecibo { get; set; }
+        public string CodOperacionPago { get; set; }
+        public string ReferenciaBCP { get; set; }
         public string EntidadRecaudadora { get; set; }
         public DateTime? FecAprobacion { get; set; }
         public DateTime? FecDevuelve { get; set; }
         public decimal MontoPago { get; set; }
         public decimal MontoDevolucion { get; set; }
         public string Concepto { get; set; }
-        public bool Anulado { get; set; }
 
         public DevolucionesViewModel() { }
 
         public DevolucionesViewModel(DevolucionPago devolucionPago)
         {
             this.DevolucionId = devolucionPago.DevolucionId;
+            this.CodOperacionPago = devolucionPago.CodOperacionPago;
+            this.ReferenciaBCP = devolucionPago.ReferenciaBCP;
             this.EntidadRecaudadora = devolucionPago.EntidadRecaudadoraDesc;
-            this.Concepto = devolucionPago.ConceptoPago;
-            this.NroRecibo = devolucionPago.ReferenciaPago;
-            this.MontoDevolucion = devolucionPago.MontoDevolucion;
             this.FecAprobacion = devolucionPago.FecAprueba;
             this.FecDevuelve = devolucionPago.FecDevuelve;
-            this.Anulado = devolucionPago.Anulado;
+            this.MontoPago = devolucionPago.MontoPagado;
+            this.MontoDevolucion = devolucionPago.MontoDevolucion;
+            this.Concepto = devolucionPago.ConceptoPago;
         }
     }
 
@@ -42,10 +44,9 @@ namespace WebApp.ViewModels
         public int EntidadRecaudadora { get; set; }
 
         [Display(Name = "Referencia de pago")]
-        public string ReferenciaPago { get; set; }
+        public string CodOperacionPago { get; set; }
 
         public DatosPagoViewModel DatosPago { get; set; }
-
 
         [Display(Name = "Total descuentos")]
         [Required]
@@ -74,7 +75,7 @@ namespace WebApp.ViewModels
         {
             this.DevolucionId = devolucionPago.DevolucionId;
             this.EntidadRecaudadora = devolucionPago.EntidadRecaudadoraId;
-            this.ReferenciaPago = devolucionPago.ReferenciaPago;
+            this.CodOperacionPago = devolucionPago.CodOperacionPago;
             this.MontoDevolucion = devolucionPago.MontoDevolucion;
             this.MontoDescuento = devolucionPago.MontoPagado - devolucionPago.MontoDevolucion;
             this.FecAprueba = devolucionPago.FecAprueba;

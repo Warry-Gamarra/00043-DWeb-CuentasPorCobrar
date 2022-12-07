@@ -16,18 +16,15 @@ namespace Domain.Entities
         public int EntidadRecaudadoraId { get; set; }
         public string EntidadRecaudadoraDesc { get; set; }
         public int PagoReferenciaId { get; set; }
-        public string ReferenciaPago { get; set; }
+        public string CodOperacionPago { get; set; }
+        public string ReferenciaBCP { get; set; }
         public string ConceptoPago { get; set; }
-        public string Clasificador { get; set; }
         public DateTime FecPagoRef { get; set; }
         public decimal MontoDevolucion { get; set; }
         public decimal MontoPagado { get; set; }
         public DateTime? FecAprueba { get; set; }
         public DateTime? FecDevuelve { get; set; }
-        public string NroSIAF { get; set; }
         public string Comentario { get; set; }
-        public bool Anulado { get; set; }
-
 
         private readonly TR_DevolucionPago _devolucionPagoRepository;
 
@@ -39,19 +36,18 @@ namespace Domain.Entities
         public DevolucionPago(VW_DevolucionPago table)
         {
             this.DevolucionId = table.I_DevolucionPagoID;
-            this.PagoReferenciaId = table.I_PagoProcesID;
-            this.ReferenciaPago = table.C_CodOperacion;
-            this.Clasificador = table.C_CodClasificador;
+            this.PagoReferenciaId = table.I_PagoBancoID;
+            this.CodOperacionPago = table.C_CodOperacion;
+            this.ReferenciaBCP = table.C_ReferenciaBCP;
             this.ConceptoPago = table.T_ConceptoPagoDesc;
             this.MontoDevolucion = table.I_MontoPagoDev;
-            this.MontoPagado = table.I_MontoPagado;
+            this.MontoPagado = table.I_MontoPago;
             this.FecAprueba = table.D_FecDevAprob.Value;
             this.FecDevuelve = table.D_FecDevPago;
             this.FecPagoRef = table.D_FecProc.Value;
             this.Comentario = table.T_Comentario;
             this.EntidadRecaudadoraDesc = table.T_EntidadDesc;
             this.EntidadRecaudadoraId = table.I_EntidadFinanID;
-            this.Anulado = table.B_Anulado;
         }
 
 

@@ -38,7 +38,7 @@ namespace WebApp.Models
         {
             var result = new List<RegistrarDevolucionPagoViewModel>();
 
-            foreach (var item in _devolucionPago.Find().Where(x => x.EntidadRecaudadoraId == entidadId && x.ReferenciaPago == codOperacion))
+            foreach (var item in _devolucionPago.Find().Where(x => x.EntidadRecaudadoraId == entidadId && x.CodOperacionPago == codOperacion))
             {
                 result.Add(new RegistrarDevolucionPagoViewModel(item));
             }
