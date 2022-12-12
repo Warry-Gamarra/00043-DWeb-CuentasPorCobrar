@@ -29,5 +29,6 @@ namespace Domain.Entities
         public string T_ErrorMessage { get; set; }
         public string C_CodigoInterno { get; set; }
         public string T_SourceFileName { get; set; }
+        public string C_Extorno { get; set; }
     }
 }

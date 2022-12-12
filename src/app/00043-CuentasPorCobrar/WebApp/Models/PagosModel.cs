@@ -457,6 +457,8 @@ namespace WebApp.Models
 
                 pagoEntity.C_CodigoInterno = line.Substring(columnas["C_CodigoInterno"].Inicial - 1, columnas["C_CodigoInterno"].Final - columnas["C_CodigoInterno"].Inicial + 1).Trim();
 
+                pagoEntity.C_Extorno = line.Substring(columnas["C_Extorno"].Inicial - 1, columnas["C_Extorno"].Final - columnas["C_Extorno"].Inicial + 1).Trim();
+
                 result.Add(pagoEntity);
             }
 

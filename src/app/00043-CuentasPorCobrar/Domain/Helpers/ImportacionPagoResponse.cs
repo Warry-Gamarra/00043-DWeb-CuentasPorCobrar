@@ -93,7 +93,8 @@ namespace Domain.Helpers
                 B_Success = x.B_Success,
                 T_ErrorMessage = x.T_ErrorMessage,
                 C_CodigoInterno = x.C_CodigoInterno,
-                T_SourceFileName = x.T_SourceFileName
+                T_SourceFileName = x.T_SourceFileName,
+                C_Extorno = x.C_Extorno
             });
 
             setMessage(TipoPago.Tasa);

@@ -610,6 +610,7 @@ namespace Domain.Entities
             dataTable.Columns.Add("T_InformacionAdicional");
             dataTable.Columns.Add("C_CodigoInterno");
             dataTable.Columns.Add("T_SourceFileName");
+            dataTable.Columns.Add("C_Extorno");
 
             dataPagoTasas.ForEach(x => dataTable.Rows.Add(
                 x.C_CodDepositante,
@@ -629,7 +630,8 @@ namespace Domain.Entities
                 x.T_LugarPago,
                 x.T_InformacionAdicional,
                 x.C_CodigoInterno,
-                x.T_SourceFileName
+                x.T_SourceFileName,
+                x.C_Extorno
             ));
 
             return dataTable;

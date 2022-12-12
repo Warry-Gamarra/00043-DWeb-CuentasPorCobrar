@@ -1,53 +1,68 @@
 USE BD_OCEF_CtasPorCobrar
 GO
 
---ACTUALIZACIÓN DEL ARCHIVO DE RESULTADO DEL BCP
-BEGIN TRAN
-BEGIN TRY
-	--C_CodDepositante
-	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 19, I_ColumnaFin = 27, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 38
 
-	--T_NomDepositante
-	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 1, I_ColumnaFin = 0, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 39
 
-	--C_CodTasa
-	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 14, I_ColumnaFin = 18, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 34
-
-	--T_TasaDesc
-	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 1, I_ColumnaFin = 0, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 35
-
-	--C_CodOperacion
-	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 125, I_ColumnaFin = 130, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 45
-
-	--T_Referencia
-	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 131, I_ColumnaFin = 152, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 46
-
-	--D_FecPago
-	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 58, I_ColumnaFin = 65, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 36
-
-	--D_HoraPago
-	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 169, I_ColumnaFin = 174, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 37
-
-	--I_InteresMora
-	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 1, I_ColumnaFin = 0, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 42
-
-	--I_MontoPago
-	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 74, I_ColumnaFin = 88, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 41
-
-	--T_LugarPago
-	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 153, I_ColumnaFin = 156, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 43
-
-	--T_InformacionAdicional
-	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 28, I_ColumnaFin = 57, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 40
-
-	--C_CodigoInterno
-	UPDATE dbo.TC_ColumnaSeccion SET I_ColumnaInicio = 66, I_ColumnaFin = 73, I_UsuarioMod = 1, D_FecMod = GETDATE() WHERE I_ColSecID = 66
-	COMMIT TRAN
-END TRY
-BEGIN CATCH
-	ROLLBACK TRAN
-END CATCH
+--REGISTRO DE TASAS
+SET IDENTITY_INSERT dbo.TC_Servicios ON
 GO
+INSERT dbo.TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) VALUES(24, '046', 'UNFV ADMISION 2017', 1, 0, 1, GETDATE())
+GO
+INSERT dbo.TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) VALUES(25, '047', 'UNFV ADMISION 2018', 1, 0, 1, GETDATE())
+GO
+SET IDENTITY_INSERT dbo.TC_Servicios OFF
+GO
+DBCC CHECKIDENT ('dbo.TC_Servicios', RESEED, 25);  
+GO  
+
+INSERT dbo.TI_CtaDepo_Servicio(I_CtaDepositoID, I_ServicioID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) VALUES(2, 5, 1, 0, 1, GETDATE())
+INSERT dbo.TI_CtaDepo_Servicio(I_CtaDepositoID, I_ServicioID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) VALUES(7, 6, 1, 0, 1, GETDATE())
+INSERT dbo.TI_CtaDepo_Servicio(I_CtaDepositoID, I_ServicioID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) VALUES(1, 7, 1, 0, 1, GETDATE())
+INSERT dbo.TI_CtaDepo_Servicio(I_CtaDepositoID, I_ServicioID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) VALUES(4, 8, 1, 0, 1, GETDATE())
+INSERT dbo.TI_CtaDepo_Servicio(I_CtaDepositoID, I_ServicioID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) VALUES(5, 10, 1, 0, 1, GETDATE())
+INSERT dbo.TI_CtaDepo_Servicio(I_CtaDepositoID, I_ServicioID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) VALUES(3, 11, 1, 0, 1, GETDATE())
+INSERT dbo.TI_CtaDepo_Servicio(I_CtaDepositoID, I_ServicioID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) VALUES(2, 14, 1, 0, 1, GETDATE())
+INSERT dbo.TI_CtaDepo_Servicio(I_CtaDepositoID, I_ServicioID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) VALUES(4, 25, 1, 0, 1, GETDATE())
+INSERT dbo.TI_CtaDepo_Servicio(I_CtaDepositoID, I_ServicioID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) VALUES(1, 21, 1, 0, 1, GETDATE())
+INSERT dbo.TI_CtaDepo_Servicio(I_CtaDepositoID, I_ServicioID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) VALUES(4, 24, 1, 0, 1, GETDATE())
+GO
+
+SELECT cds.I_CtaDepoServicioID, s.C_CodServicio, s.T_DescServ, cd.C_NumeroCuenta FROM TI_CtaDepo_Servicio cds
+INNER JOIN TC_Servicios s ON s.I_ServicioID = cds.I_ServicioID
+INNER JOIN TC_CuentaDeposito cd ON cd.I_CtaDepositoID = cds.I_CtaDepositoID
+WHERE cd.I_EntidadFinanID = 1
+ORDER BY s.C_CodServicio
+
+
+
+SELECT * FROM dbo.TC_Concepto where I_ConceptoID = 11
+
+INSERT dbo.TC_Concepto (T_ConceptoDesc, T_ClasifCorto, B_EsObligacion, B_EsPagoMatricula, B_EsPagoExtmp, B_Fraccionable, B_ConceptoGeneral, B_AgrupaConcepto, I_TipoObligacion, B_Calculado, I_Calculado, B_GrupoCodRc, B_ModalidadIngreso, B_ConceptoAgrupa, N_NroPagos, B_Porcentaje, C_Moneda, I_Monto, I_MontoMinimo, B_Mora, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
+VALUES ('', '', 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 1, 0, 'PEN', 00.00, 00.00, 0, 1, 0, 1, GETDATE())
+
+SELECT * FROM dbo.TI_TasaUnfv where C_CodTasa = '80043'
+
+INSERT dbo.TI_TasaUnfv(I_ConceptoID, T_ConceptoPagoDesc, B_Fraccionable, B_ConceptoGeneral, B_AgrupaConcepto, I_TipoObligacion, C_CodTasa, B_Calculado, I_Calculado, B_AnioPeriodo, B_Especialidad, B_Dependencia, B_GrupoCodRc, B_ModalidadIngreso, B_ConceptoAgrupa, B_ConceptoAfecta, N_NroPagos, B_Porcentaje, C_Moneda, M_Monto, M_MontoMinimo, B_Migrado, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
+VALUES(@I_ConceptoID, @T_ConceptoPagoDesc, 0, 0, 0, 10, @C_CodTasa, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 'PEN', @M_Monto, @M_Monto, 0, 1, 0, 1, GETDATE())
+
+SELECT * FROM dbo.TI_TasaUnfv_CtaDepoServicio where I_TasaUnfvID = 23
+
+INSERT dbo.TI_TasaUnfv_CtaDepoServicio(I_CtaDepoServicioID, I_TasaUnfvID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
+VALUES(@I_CtaDepoServicioID, @I_TasaUnfvID, 1, 0, 1, GETDATE())
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -64,83 +79,6 @@ GO
 ALTER TABLE dbo.TR_DevolucionPago ADD CONSTRAINT FK_PagoBanco_DevolucionPago 
 FOREIGN KEY (I_PagoBancoID) REFERENCES TR_PagoBanco(I_PagoBancoID)
 GO
-
-
-
-IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_GrabarAlumnoMultaNoVotar')
-	DROP PROCEDURE [dbo].[USP_I_GrabarAlumnoMultaNoVotar]
-GO
-
-CREATE PROCEDURE [dbo].[USP_I_GrabarAlumnoMultaNoVotar]
-(  
-  @Tbl_AlumnosMultaNoVotar [dbo].[type_dataAlumnoMultaNoVotar] READONLY  
- ,@D_FecRegistro datetime  
- ,@UserID  int  
- ,@B_Result  bit    OUTPUT  
- ,@T_Message  nvarchar(4000) OUTPUT  
-)  
-AS  
-BEGIN  
- SET NOCOUNT ON  
- BEGIN TRY  
-   BEGIN TRANSACTION  
-       
-   CREATE TABLE #Tmp_AlumnoMultaNoVotar  
-   (  
-	C_CodRC   VARCHAR(3),  
-	C_CodAlu  VARCHAR(20),  
-	I_Anio   INT,  
-	C_Periodo  VARCHAR(50),  
-	I_Periodo  INT  
-   )  
-  
-     
-   INSERT #Tmp_AlumnoMultaNoVotar(C_CodRC, C_CodAlu, I_Anio, C_Periodo, I_Periodo)  
-   SELECT am.C_CodRC, am.C_CodAlu, am.I_Anio, am.C_Periodo, c.I_OpcionID AS I_Periodo  
-   FROM @Tbl_AlumnosMultaNoVotar AS am  
-   INNER JOIN dbo.TC_CatalogoOpcion c ON c.I_ParametroID = 5 AND c.T_OpcionCod = am.C_Periodo  
-   INNER JOIN BD_UNFV_Repositorio.dbo.VW_Alumnos a ON a.C_CodAlu = am.C_CodAlu and a.C_RcCod = am.C_CodRC  
-   WHERE c.B_Eliminado = 0 AND a.N_Grado = '1';  
-     
-   --Insert para alumnos nuevos
-   MERGE INTO TC_AlumnoMultaNoVotar AS trg USING #Tmp_AlumnoMultaNoVotar AS src  
-   ON trg.C_CodRc = src.C_CodRc AND trg.C_CodAlu = src.C_CodAlu AND trg.I_Anio = src.I_Anio AND trg.I_Periodo = src.I_Periodo AND trg.B_Eliminado = 0  
-   WHEN NOT MATCHED BY TARGET THEN  
-    INSERT (C_CodRc, C_CodAlu, I_Anio, I_Periodo, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)  
-     VALUES (src.C_CodRc, src.C_CodAlu, src.I_Anio, src.I_Periodo, 1, 0, @UserID, @D_FecRegistro);  
-  
-   --Informar de error en los datos.  
-   (SELECT am.C_CodRC, am.C_CodAlu, am.I_Anio, am.C_Periodo, 0 AS B_Success, 'El Alumno no existe en pregrado.' AS T_Message  
-   FROM @Tbl_AlumnosMultaNoVotar AS am  
-   LEFT JOIN BD_UNFV_Repositorio.dbo.VW_Alumnos a ON a.C_CodAlu = am.C_CodAlu and a.C_RcCod = am.C_CodRC AND a.N_Grado = '1'  
-   WHERE a.C_CodAlu IS NULL)  
-   UNION  
-   (SELECT am.C_CodRC, am.C_CodAlu, am.I_Anio, am.C_Periodo, 0 AS B_Success, 'El campo Periodo es incorrecto.' AS T_Message  
-   FROM @Tbl_AlumnosMultaNoVotar AS am  
-   LEFT JOIN dbo.TC_CatalogoOpcion c ON c.I_ParametroID = 5 AND c.T_OpcionCod = am.C_Periodo AND c.B_Eliminado = 0  
-   WHERE c.I_OpcionID IS NULL)
-   UNION
-   SELECT mu.C_CodRC, mu.C_CodAlu, mu.I_Anio, mu.C_Periodo, 0 AS B_Success, 'El alumno ya tiene una obligación. Deberá generar la obligación nuevamente.' AS T_Message  
-   FROM #Tmp_AlumnoMultaNoVotar AS mu  
-   INNER JOIN dbo.TC_MatriculaAlumno m ON m.C_CodAlu = mu.C_CodAlu AND m.C_CodRc = mu.C_CodRC AND m.I_Anio = mu.I_Anio AND m.I_Periodo = mu.I_Periodo AND 
-		m.B_Habilitado = 1 AND m.B_Eliminado = 0
-   INNER JOIN dbo.TR_ObligacionAluCab c ON c.I_MatAluID = m.I_MatAluID AND c.B_Habilitado = 1 AND c.B_Eliminado = 0
-  
-   COMMIT TRANSACTION  
-  
-   SET @B_Result = 1  
-   SET @T_Message = 'El registro de los alumnos que no votaron finalizó de manera exitosa'  
-    
- END TRY  
- BEGIN CATCH  
-  ROLLBACK TRANSACTION  
-  SET @B_Result = 0  
-  SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10))   
- END CATCH  
-END  
-GO
-
-
 
 IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_DevolucionPago')
 	DROP VIEW [dbo].[VW_DevolucionPago]
