@@ -271,9 +271,13 @@ BEGIN
 		 B_PagoDemas, D_FecCre, I_UsuarioCre, B_Anulado, I_CtaDepositoID)  
 		VALUES(@I_PagoBancoID, @I_TasaUnfvID, @I_MontoPago, @I_SaldoAPagar, @I_PagoDemas,   
 		 @B_PagoDemas, @D_FecRegistro, @UserID, 0, @I_CtaDepositoID)  
-	END
 
-    UPDATE @Tmp_PagoTasas SET B_Success = 1, T_ErrorMessage = 'Registro correcto.' WHERE id = @I_FilaActual  
+		 UPDATE @Tmp_PagoTasas SET B_Success = 1, T_ErrorMessage = 'Registro correcto.' WHERE id = @I_FilaActual  
+	END
+	ELSE BEGIN 
+		UPDATE @Tmp_PagoTasas SET B_Success = 1, T_ErrorMessage = 'Registro correcto (Extorno).' WHERE id = @I_FilaActual  
+	END
+	
   
     COMMIT TRANSACTION  
    END TRY  
