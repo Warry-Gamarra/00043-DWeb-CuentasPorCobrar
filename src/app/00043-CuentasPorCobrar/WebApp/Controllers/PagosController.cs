@@ -678,7 +678,7 @@ namespace WebApp.Controllers
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult VerPagosObligacion(int obligacionID)
+        public ActionResult VerPagosObligacion(int obligacionID, bool soloLectura = false)
         {
             var obligacion = obligacionServiceFacade.Obtener_CuotaPago(obligacionID);
 
@@ -689,6 +689,8 @@ namespace WebApp.Controllers
             ViewBag.CuotaPago = obligacion;
 
             ViewBag.Pagos = pagosDetalle;
+
+            ViewBag.SoloLectura = soloLectura;
 
             return PartialView("_VerPagosObligacion");
         }

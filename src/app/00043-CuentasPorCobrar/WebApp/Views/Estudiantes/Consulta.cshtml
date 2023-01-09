@@ -143,20 +143,22 @@
                     }
 
                     @Html.Grid(Model.resultado).Columns(columns => {
-                        columns.Add(c => c.I_Anio).Titled("Año");
-                        columns.Add(c => c.T_Periodo).Titled("Periodo");
-                        columns.Add(c => c.C_CodAlu).Titled("Código alumno");
-                        columns.Add(c => c.T_ApellidosNombres).Titled("Apellidos y nombres");
-                        columns.Add(c => c.T_DenomProg).Titled("Especialidad").Filterable(true);
-                        columns.Add(c => c.T_EsIngresante).Titled("Tipo alumno").Filterable(true);
-                        columns.Add().Titled("Cuota").Encoded(false).Sanitized(false).RenderValueAs(model =>
-                           ViewBag.MostrarReporteObligaciones ? ("<a href=\"" + Url.Action("ReporteObligaciones", "Reportes", new { anio = model.I_Anio, periodo = model.I_Periodo, codalu = model.C_CodAlu, codrc = model.C_RcCod }) +
-                           "\" target=\"_blank\">" + model.T_ProcesoDesc + "</a>") : model.T_ProcesoDesc);
-                        columns.Add(c => c.I_MontoOblig).Titled("Monto Obl.").Filterable(true).Css("text-center");
-                        columns.Add(c => c.T_FecVencto).Titled("Fec.Vcto.").Filterable(true).Css("text-center");
-                        columns.Add(c => c.T_FecPagos).Titled("Fec.Pago").Filterable(true).Css("text-center");
-                        columns.Add(c => c.T_Pagado).Titled("Estado").Filterable(true).Css("text-center");
-                    }).WithPaging(12).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
+                   columns.Add(c => c.I_Anio).Titled("Año");
+                   columns.Add(c => c.T_Periodo).Titled("Periodo");
+                   columns.Add(c => c.C_CodAlu).Titled("Código alumno");
+                   columns.Add(c => c.T_ApellidosNombres).Titled("Apellidos y nombres");
+                   columns.Add(c => c.T_DenomProg).Titled("Especialidad").Filterable(true);
+                   columns.Add(c => c.T_EsIngresante).Titled("Tipo alumno").Filterable(true);
+                   columns.Add().Titled("Cuota").Encoded(false).Sanitized(false).RenderValueAs(model =>
+                      ViewBag.MostrarReporteObligaciones ? ("<a href=\"" + Url.Action("ReporteObligaciones", "Reportes", new { anio = model.I_Anio, periodo = model.I_Periodo, codalu = model.C_CodAlu, codrc = model.C_RcCod }) +
+                      "\" target=\"_blank\">" + model.T_ProcesoDesc + "</a>") : model.T_ProcesoDesc);
+                   columns.Add(c => c.I_MontoOblig).Titled("Monto Obl.").Filterable(true).Css("text-center");
+                   columns.Add(c => c.T_FecVencto).Titled("Fec.Vcto.").Filterable(true).Css("text-center");
+                   columns.Add(c => c.T_FecPagos).Titled("Fec.Pago").Filterable(true).Css("text-center");
+                   columns.Add().Titled("Estado").Encoded(false).Sanitized(false).RenderValueAs(model =>
+                       model.B_Pagado.HasValue ? ( model.B_Pagado.Value ? "<a href=\"" + Url.Action("VerPagosObligacion", "Pagos", new { obligacionID = model.I_ObligacionAluID, soloLectura = true }) +
+                       "\" class=\"modal-link-lg\"> Pagado</a>" : "Pendiente") : "");
+               }).WithPaging(12).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
                 </div>
             </div>
         </div>
@@ -206,6 +208,14 @@
         $(document).on("click", "#btnExcelDownload", function (e) {
             document.forms.frmConsultaEstudianteMatricula.action = "@Url.Action("DescargaConsulta", "Estudiantes")";
             document.forms.frmConsultaEstudianteMatricula.submit();
+        });
+
+        $(document).on("click", ".modal-header .closeModal", function (e) {
+            window.location.reload();
+        });
+
+        $(document).on("click", ".modal-footer .closeModal", function (e) {
+            window.location.reload();
         });
 
         function CargarDependencias(tipoEstudio) {

@@ -3,6 +3,7 @@
 @{
     var obligacion = (WebApp.Models.CuotaPagoModel)ViewBag.CuotaPago;
     var detallePagos = (IEnumerable<WebApp.ViewModels.PagoBancoObligacionViewModel>)ViewBag.Pagos;
+    var soloLectura = (bool)ViewBag.SoloLectura;
 }
 
 <div class="modal-header bg-dark-gray" style="border-radius: .2rem .2rem 0px 0px">
@@ -45,7 +46,9 @@
                 <th>Monto</th>
                 <th>Mora</th>
                 <th>Comentarios</th>
-                <th></th>
+                @if (!soloLectura) {
+                    <th></th>
+                }
             </tr>
         </thead>
         <tbody>
@@ -60,9 +63,12 @@
                         <td>@item.T_MontoPago</td>
                         <td>@item.T_InteresMora</td>
                         <td>@item.T_MotivoCoreccion</td>
-                        <td>
-                            <button class="btn btn-success btn-sm btnDesenlazarPago" data-id-pago-banco="@item.I_PagoBancoID">Quitar</button>
-                        </td>
+                        @if (!soloLectura) 
+                        {
+                            <td>
+                                <button class="btn btn-success btn-sm btnDesenlazarPago" data-id-pago-banco="@item.I_PagoBancoID">Quitar</button>
+                            </td>
+                        }
                     </tr>
                 }
             }
