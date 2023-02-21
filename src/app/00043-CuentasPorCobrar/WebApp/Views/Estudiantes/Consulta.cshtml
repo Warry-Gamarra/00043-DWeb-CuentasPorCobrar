@@ -156,8 +156,8 @@
                    columns.Add(c => c.T_FecVencto).Titled("Fec.Vcto.").Filterable(true).Css("text-center");
                    columns.Add(c => c.T_FecPagos).Titled("Fec.Pago").Filterable(true).Css("text-center");
                    columns.Add().Titled("Estado").Encoded(false).Sanitized(false).RenderValueAs(model =>
-                       model.B_Pagado.HasValue ? ( model.B_Pagado.Value ? "<a href=\"" + Url.Action("VerPagosObligacion", "Pagos", new { obligacionID = model.I_ObligacionAluID, soloLectura = true }) +
-                       "\" class=\"modal-link-lg\"> Pagado</a>" : "Pendiente") : "");
+                       model.B_Pagado.HasValue ? ("<a href=\"" + Url.Action("VerPagosObligacion", "Pagos", new { obligacionID = model.I_ObligacionAluID, soloLectura = true }) +
+                       "\" class=\"modal-link-lg\"> " + (model.B_Pagado.Value ? "Pagado" : "Pendiente") + "</a>") : "");
                }).WithPaging(12).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
                 </div>
             </div>
