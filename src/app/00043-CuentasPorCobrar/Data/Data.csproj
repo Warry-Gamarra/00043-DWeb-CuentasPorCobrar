@@ -96,6 +96,7 @@
     <Compile Include="Procedures\USP_S_DocumentacionUsuarioRoles.cs" />
     <Compile Include="Procedures\USP_S_Procesos.cs" />
     <Compile Include="Procedures\USP_U_ActualizarMontoObligaciones.cs" />
+    <Compile Include="Procedures\USP_U_ActualizarPagoTasa.cs" />
     <Compile Include="Procedures\USP_U_ActualizarProceso.cs" />
     <Compile Include="Procedures\USP_U_ActualizarCtaDeposito_Proceso.cs" />
     <Compile Include="Procedures\USP_U_ActualizarTasaUnfv.cs" />

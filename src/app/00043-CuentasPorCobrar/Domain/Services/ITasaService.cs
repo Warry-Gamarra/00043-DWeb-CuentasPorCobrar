@@ -17,6 +17,8 @@ namespace Domain.Services
         IEnumerable<PagoTasaDTO> Listar_Pago_Tasas(int? idEntidadFinanciera, int? idCtaDeposito, string codOperacion, DateTime? fechaInicio, DateTime? fechaFinal,
             string codDepositante, string nomDepositante, string codInterno);
 
+        PagoTasaDTO ObtenerPagoTasa(int I_PagoBancoID);
+
         Response Grabar_TasaUnfv(TasaEntity tasaEntity, SaveOption saveOption, int[] ctasDeposito, int[] codServicioBcoComercioTasas);
 
         TasaEntity ObtenerTasaUnfv(int id);

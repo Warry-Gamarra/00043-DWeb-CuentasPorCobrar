@@ -96,6 +96,18 @@ namespace Domain.Services.Implementations
             return result;
         }
 
+        public PagoTasaDTO ObtenerPagoTasa(int I_PagoBancoID)
+        {
+            var vw = VW_PagoTasas.FindByID(I_PagoBancoID);
+
+            if (vw != null)
+            {
+                return Mapper.VW_PagoTasas_To_PagoTasaDTO(vw);
+            }
+
+            return null;
+        }
+
         public Response Grabar_TasaUnfv(TasaEntity tasaEntity, SaveOption saveOption, int[] ctasDeposito, int[] codServicioBcoComercioTasas)
         {
             ResponseData result;

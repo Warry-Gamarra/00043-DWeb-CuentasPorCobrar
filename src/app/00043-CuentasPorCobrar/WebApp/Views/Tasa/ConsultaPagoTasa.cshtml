@@ -1,0 +1,180 @@
+﻿@model WebApp.ViewModels.ConsultaPagoTasasViewModel
+@using GridMvc.Html
+@Scripts.Render("~/bundles/jqueryval")
+
+<style>
+    .input-daterange {
+        display: flex !important;
+    }
+
+    @@media (max-width: 768px) {
+        .input-daterange {
+            display: block !important;
+        }
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="col-12">
+        <section class="content-header">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb float-right small d-none d-sm-inline-flex">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")"><i class="fa fa-home">&nbsp;</i>Inicio</a></li>
+                    <li class="breadcrumb-item"><span><i class="fa fa-refresh">&nbsp;</i>Operaciones </span></li>
+                    <li class="breadcrumb-item active"><span><i class="fa bi-person-lines-fill">&nbsp;</i>@ViewBag.Title </span></li>
+                </ol>
+            </nav>
+            <h1 class="">@ViewBag.Title <small></small></h1>
+        </section>
+    </div>
+    <br />
+
+    <div class="col-12 mt-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body bg-light-gray">
+                        <form name="frmConsultaTasas" id="frmConsultaTasas" method="get" action="@Url.Action("ConsultaPagoTasa", "Tasa")">
+                            <div class="form-row">
+                                @Html.Hidden("buscar", true)
+                                <div class="form-group col-lg-3 col-md-3 col-6">
+                                    <label for="entidadFinanciera">Entidad Financiera</label>
+                                    @Html.DropDownListFor(model => model.entidadFinanciera, ViewBag.EntidadesFinancieras as SelectList, "TODOS", new { @class = "form-control form-control-sm text-uppercase" })
+                                </div>
+                                <div class="form-group col-lg-3 col-md-3 col-6">
+                                    <label for="idCtaDeposito">Cta. Deposito</label>
+                                    @Html.DropDownListFor(model => model.idCtaDeposito, ViewBag.CtaDeposito as SelectList, "TODOS", new { @class = "form-control form-control-sm text-uppercase" })
+                                </div>
+                                <div class="form-group col-lg-3 col-md-3 col-6">
+                                    <label for="codOperacion">Cod. de operación</label>
+                                    @Html.TextBoxFor(model => model.codOperacion, new { @class = "form-control form-control-sm" })
+                                </div>
+                                <div class="form-group col-lg-3 col-md-3 col-6">
+                                    <label for="codInterno">Cod. interno (BCP)</label>
+                                    @Html.TextBoxFor(model => model.codInterno, new { @class = "form-control form-control-sm" })
+                                </div>
+                                <div class="form-group col-lg-2 col-md-4 col-6">
+                                    <label for="codDepositante">Cod. depositante</label>
+                                    @Html.TextBoxFor(model => model.codDepositante, new { @class = "form-control form-control-sm" })
+                                </div>
+                                <div class="form-group col-lg-4 col-md-8 col-6">
+                                    <label for="nomDepositante">Nom. Depositante</label>
+                                    @Html.TextBoxFor(model => model.nomDepositante, new { @class = "form-control form-control-sm" })
+                                </div>
+                                <div class="form-group col-lg-6 col-12">
+                                    <div id="datepicker">
+                                        <div class="input-daterange">
+                                            <div class="form-group col-md-6 col-12" style="padding-left: 0px;">
+                                                <label for="fechaDesde">Pagos desde</label>
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(model => model.fechaDesde, "{0:dd/MM/yyyy}",
+                                                        new { @class = "form-control form-control-sm", @placeholder = "Fecha inicio", @readonly = "readonly" })
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text"><i class="fa fa-calendar-o"></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-6 col-12" style="padding-left: 0px;">
+                                                <label for="fechaHasta">Pagos hasta</label>
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(model => model.fechaHasta, "{0:dd/MM/yyyy}",
+                                                        new { @class = "form-control form-control-sm", @placeholder = "Fecha final", @readonly = "readonly" })
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text"><i class="fa fa-calendar-o"></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-3 col-6">
+                                    <button type="submit" id="btnConsultaTasas" class="btn btn-block btn-outline-primary mt-4"><i class="fa fa-fw fa-search-plus"></i> Iniciar consulta</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="table-responsive mt-4">
+                    <p class="h5">Relación de pagos</p>
+
+                    @Html.Grid(Model.resultado).Columns(columns =>
+                    {
+                        columns.Add(c => c.C_CodOperacion).Titled("Cod.Operación").Css("text-center");
+                        columns.Add(c => c.C_CodigoInterno).Titled("Cod.Interno (BCP)").Css("text-center");
+                        columns.Add(c => c.C_CodDepositante).Titled("Cod.Depositante").Filterable(true);
+                        columns.Add(c => c.T_NomDepositante).Titled("Nom.Depositante").Filterable(true);
+                        columns.Add(c => c.C_CodTasa).Titled("Tasa").Css("text-center");
+                        columns.Add(c => c.T_ConceptoPagoDesc).Titled("Concepto");
+                        columns.Add(c => c.D_FecPago).Titled("Fec.Pago").Css("text-center");
+                        columns.Add(c => c.M_Monto).Titled("Monto Tasa").Filterable(true).Css("text-center");
+                        columns.Add(c => c.T_EntidadDesc).Titled("Banco");
+                        columns.Add(c => c.C_NumeroCuenta).Titled("Cta.Deposito").Css("text-center");
+                        columns.Add(c => c.I_MontoTotalPagado).Titled("Monto Pagado").Filterable(true).Css("text-center");
+                        columns.Add().SetWidth(250).Encoded(false).Sanitized(false).RenderValueAs(model => @<a href="@Url.Action("EditarPagoTasa", "Tasa", new { id = model.I_PagoBancoID })" class="modal-link-lg"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> <span class="d-none d-md-inline-block">Editar</span></a>);
+                    }).WithPaging(12).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $('#datepicker .input-daterange').datepicker({
+            todayBtn: 'linked',
+            language: 'es',
+            format: 'dd/mm/yyyy',
+            autoclose: true,
+            weekStart: 0,
+            clearBtn: true
+        }).on('hide', function (e) {
+            e.stopPropagation();
+        });
+
+        $('#datepicker .input-daterange #fechaDesde').datepicker('update', "@Model.fechaDesde");
+        $('#datepicker .input-daterange #fechaHasta').datepicker('update', "@Model.fechaHasta");
+
+        $(document).on("click", "#btnConsultaTasas", function (e) {
+            document.forms.frmConsultaTasas.action = "@Url.Action("ConsultaPagoTasa", "Tasa")";
+            document.forms.frmConsultaTasas.submit();
+        });
+
+        $(document).on('change', '#frmConsultaTasas #entidadFinanciera', function (e) {
+            let idEntidadFinanc = this.value;
+
+            ObtenerCtasDeposito(idEntidadFinanc);
+        });
+
+        function ObtenerCtasDeposito(idEntidadFinanc) {
+            let cmbCtasDeposito = $('#frmConsultaTasas #idCtaDeposito');
+
+            if (idEntidadFinanc !== undefined && idEntidadFinanc !== null && !isNaN(idEntidadFinanc) && idEntidadFinanc > 0) {
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetCtasDepositoPorBco", "Service", new { httproute = "ActionApi" })' + '/' + idEntidadFinanc,
+                    dataType: 'json',
+                    beforeSend: function () {
+                        cmbCtasDeposito.empty();
+                    },
+                    success: function (data) {
+                        if (data) {
+                            let html = '<option>TODOS</option>';
+
+                            $.each(data, function (i, item) {
+                                html += '<option value="' + item.Value + '">' + item.TextDisplay + '</option>';
+                            });
+
+                            cmbCtasDeposito.html(html);
+                        }
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        var jsonException = JSON.parse(xhr.responseText);
+                    }
+                });
+            } else {
+                cmbCtasDeposito.empty();
+            }
+        }
+    </script>
+}

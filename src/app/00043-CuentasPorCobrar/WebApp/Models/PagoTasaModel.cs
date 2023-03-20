@@ -7,6 +7,10 @@ namespace WebApp.Models
 {
     public class PagoTasaModel
     {
+        public int I_PagoBancoID { get; set; }
+
+        public int I_TasaUnfvID { get; set; }
+
         public int I_EntidadFinanID { get; set; }
 
         public string T_EntidadDesc { get; set; }

@@ -449,6 +449,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ObligacionAlumnoDS.xsd</DependentUpon>
     </Compile>
+    <Compile Include="Models\EditarPagoTasa.cs" />
     <Compile Include="Models\Facades\IReporteGeneralServiceFacade.cs" />
     <Compile Include="Models\Facades\ReporteGeneralServiceFacade.cs" />
     <Compile Include="Models\ReportModels\CabObligacionAlumnoRptModel.cs" />
@@ -674,6 +675,9 @@
     <Content Include="Views\Tasa\_MsgRegistrarConceptoTasa.cshtml" />
     <Content Include="Views\Devoluciones\_RegistroDevolucionPago.cshtml" />
     <Content Include="Views\Procesos\_EditFechaVencPension.cshtml" />
+    <Content Include="Views\Tasa\ConsultaPagoTasa.cshtml" />
+    <Content Include="Views\Tasa\_DetallePagoTasa.cshtml" />
+    <Content Include="Views\Tasa\_MsgGuardarPagoTasa.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

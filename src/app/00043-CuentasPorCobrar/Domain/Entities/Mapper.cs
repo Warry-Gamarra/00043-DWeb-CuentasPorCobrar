@@ -641,6 +641,8 @@ namespace Domain.Entities
         {
             var dto = new PagoTasaDTO()
             {
+                I_PagoBancoID = vw.I_PagoBancoID,
+                I_TasaUnfvID = vw.I_TasaUnfvID,
                 I_EntidadFinanID = vw.I_EntidadFinanID,
                 T_EntidadDesc = vw.T_EntidadDesc,
                 I_CtaDepositoID = vw.I_CtaDepositoID,

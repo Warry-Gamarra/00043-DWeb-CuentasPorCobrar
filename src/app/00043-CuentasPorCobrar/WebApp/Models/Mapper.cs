@@ -409,6 +409,8 @@ namespace WebApp.Models
         {
             var model = new PagoTasaModel()
             {
+                I_PagoBancoID = dto.I_PagoBancoID,
+                I_TasaUnfvID = dto.I_TasaUnfvID,
                 I_EntidadFinanID = dto.I_EntidadFinanID,
                 T_EntidadDesc = dto.T_EntidadDesc,
                 I_CtaDepositoID = dto.I_CtaDepositoID,

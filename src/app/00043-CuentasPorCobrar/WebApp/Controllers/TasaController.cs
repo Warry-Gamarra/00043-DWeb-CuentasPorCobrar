@@ -1,4 +1,5 @@
 ﻿using Domain.Helpers;
+using Domain.Services.Implementations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,7 @@ namespace WebApp.Controllers
         private SelectModel _selectModel;
         private ConceptoModel _conceptoModel;
         private CuentaDepositoModel _cuentasDeposito;
+        PagosModel _pagosModel;
 
         public ITasaServiceFacade _tasaService;
 
@@ -26,9 +28,10 @@ namespace WebApp.Controllers
             _selectModel = new SelectModel();
             _conceptoModel = new ConceptoModel();
             _cuentasDeposito = new CuentaDepositoModel();
+            _pagosModel = new PagosModel();
 
             _tasaService = new TasaServiceFacade();
-
+            
             if (WebSecurity.IsAuthenticated)
             {
                 _dependenciaUsuarioId = new UsersModel().Find(WebSecurity.CurrentUserId).DependenciaId;
@@ -144,6 +147,61 @@ namespace WebApp.Controllers
             var result = _tasaService.ChangeState(RowID, B_habilitado, WebSecurity.CurrentUserId, Url.Action("ChangeState", "Tasa"));
 
             return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult ConsultaPagoTasa(ConsultaPagoTasasViewModel model)
+        {
+            ViewBag.Title = "Consulta de Pago de Tasas";
+
+            if (model.buscar)
+            {
+                model.fechaHasta = String.IsNullOrEmpty(model.fechaHasta) ? model.fechaHasta : (model.fechaHasta + " 23:59:59");
+
+                model.resultado = _tasaService.listarPagoTasas(model);
+            }
+
+            ViewBag.EntidadesFinancieras = new SelectList(_selectModel.GetEntidadesFinancieras(), "Value", "TextDisplay", model.entidadFinanciera);
+
+            ViewBag.CtaDeposito = new SelectList(
+                model.entidadFinanciera.HasValue ? _selectModel.GetCtasDeposito(model.entidadFinanciera.Value) : new List<SelectViewModel>(), "Value", "TextDisplay", model.idCtaDeposito);
+
+            return View(model);
+        }
+
+        public ActionResult EditarPagoTasa(int id)
+        {
+            ViewBag.Title = "Información del Pago";
+
+            ViewBag.Tasas = new SelectList(_tasaService.listarTasas(), "Value", "TextDisplay");
+
+            var pago = _tasaService.ObtenerPagoTasa(id);
+
+            var model = new EditarPagoTasa()
+            {
+                I_PagoBancoID = pago.I_PagoBancoID,
+                I_TasaUnfvID = pago.I_TasaUnfvID,
+                I_NuevaTasaUnfvID = pago.I_TasaUnfvID,
+                C_CodTasa = pago.C_CodTasa,
+                T_ConceptoPagoDesc = pago.T_ConceptoPagoDesc,
+                M_Monto = pago.M_Monto ?? 0,
+                C_CodOperacion = pago.C_CodOperacion,
+                C_CodigoInterno = pago.C_CodigoInterno,
+                C_CodDepositante = pago.C_CodDepositante,
+                T_NomDepositante = pago.T_NomDepositante,
+                T_EntidadDesc = pago.T_EntidadDesc,
+                C_NumeroCuenta = pago.C_NumeroCuenta,
+                T_FecPago = pago.D_FecPago.ToString(FormatosDateTime.BASIC_DATETIME),
+                I_MontoTotalPagado = pago.I_MontoTotalPagado
+            };
+
+            return PartialView("_DetallePagoTasa", model);
+        }
+
+        public ActionResult GuardarPagoTasa(EditarPagoTasa model)
+        {
+            var result = _pagosModel.ActualizarPagoTasa(model.I_PagoBancoID, model.C_CodDepositante, model.I_NuevaTasaUnfvID ?? model.I_TasaUnfvID, WebSecurity.CurrentUserId);
+
+            return PartialView("_MsgGuardarPagoTasa", result);
         }
     }
 }

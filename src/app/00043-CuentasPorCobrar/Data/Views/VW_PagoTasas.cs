@@ -12,6 +12,10 @@ namespace Data.Views
 {
     public class VW_PagoTasas
     {
+        public int I_PagoBancoID { get; set; }
+
+        public int I_TasaUnfvID { get; set; }
+
         public int I_EntidadFinanID { get; set; }
 
         public string T_EntidadDesc { get; set; }
@@ -122,6 +126,33 @@ namespace Data.Views
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
                     result = _dbConnection.Query<VW_PagoTasas>(s_command + filters, parameters, commandType: CommandType.Text);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
+
+        public static VW_PagoTasas FindByID(int I_PagoBancoID)
+        {
+            string s_command;
+            VW_PagoTasas result;
+            DynamicParameters parameters;
+
+            try
+            {
+                s_command = "SELECT t.* FROM dbo.VW_PagoTasas t WHERE t.I_PagoBancoID = @I_PagoBancoID";
+
+                parameters = new DynamicParameters();
+
+                parameters.Add(name: "I_PagoBancoID", dbType: DbType.Int32, value: I_PagoBancoID);
+                
+                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
+                {
+                    result = _dbConnection.QueryFirstOrDefault<VW_PagoTasas>(s_command, parameters, commandType: CommandType.Text);
                 }
             }
             catch (Exception ex)

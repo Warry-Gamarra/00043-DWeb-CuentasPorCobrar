@@ -15,6 +15,8 @@ namespace WebApp.Models.Facades
 
         IEnumerable<PagoTasaModel> listarPagoTasas(ConsultaPagoTasasViewModel model);
 
+        PagoTasaModel ObtenerPagoTasa(int I_PagoBancoID);
+
         Response Grabar_TasaUnfv(RegistrarTasaViewModel model, int currentUserId);
 
         RegistrarTasaViewModel ObtenerTasaUnfv(int id);

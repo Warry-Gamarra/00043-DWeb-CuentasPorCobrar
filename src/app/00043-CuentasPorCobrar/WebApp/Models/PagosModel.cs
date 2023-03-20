@@ -852,5 +852,21 @@ namespace WebApp.Models
         {
             return pagoService.ObtenerPagoObligacionDetalle(idObligacionDet);
         }
+
+        public Response ActualizarPagoTasa(int I_PagoBancoID, string C_CodDepositante, int I_TasaUnfvId, int I_CurrentUserID)
+        {
+            Response result = pagoService.ActualizarPagoTasa(I_PagoBancoID, C_CodDepositante, I_TasaUnfvId, I_CurrentUserID);
+
+            if (result.Value)
+            {
+                result.Success(false);
+            }
+            else
+            {
+                result.Error(false);
+            }
+
+            return result;
+        }
     }
 }

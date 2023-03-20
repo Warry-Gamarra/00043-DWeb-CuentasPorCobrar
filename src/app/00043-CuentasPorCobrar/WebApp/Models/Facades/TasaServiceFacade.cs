@@ -69,6 +69,18 @@ namespace WebApp.Models.Facades
             return result;
         }
 
+        public PagoTasaModel ObtenerPagoTasa(int I_PagoBancoID)
+        {
+            var dto = tasaService.ObtenerPagoTasa(I_PagoBancoID);
+
+            if (dto != null)
+            {
+                return Mapper.PagoTasaDTO_To_PagoTasaModel(dto);
+            }
+
+            return null;
+        }
+
         public Response Grabar_TasaUnfv(RegistrarTasaViewModel model, int currentUserId)
         {
             TasaEntity tasaEntity;
