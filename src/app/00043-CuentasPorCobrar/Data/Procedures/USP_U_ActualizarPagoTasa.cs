@@ -15,6 +15,7 @@ namespace Data.Procedures
         public int I_PagoBancoID { get; set; }
         public string C_CodDepositante { get; set; }
         public int I_TasaUnfvId { get; set; }
+        public string T_Observacion { get; set; }
         public int I_CurrentUserID { get; set; }
 
         public ResponseData Execute()
@@ -31,6 +32,7 @@ namespace Data.Procedures
                     parameters.Add(name: "I_PagoBancoID", dbType: DbType.Int32, value: this.I_PagoBancoID);
                     parameters.Add(name: "C_CodDepositante", dbType: DbType.String, value: this.C_CodDepositante);
                     parameters.Add(name: "I_TasaUnfvId", dbType: DbType.Int32, value: this.I_TasaUnfvId);
+                    parameters.Add(name: "T_Observacion", dbType: DbType.String, value: this.T_Observacion);
                     parameters.Add(name: "I_CurrentUserID", dbType: DbType.Int32, value: this.I_CurrentUserID);
                     
                     parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);

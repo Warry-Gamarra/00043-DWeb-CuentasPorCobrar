@@ -52,6 +52,8 @@ namespace Data.Views
 
         public string C_CodigoInterno { get; set; }
 
+        public string T_Observacion { get; set; }
+
         public static IEnumerable<VW_PagoTasas> GetAll(int? idEntidadFinanciera, int? idCtaDeposito, string codOperacion, DateTime? fechaInicio, DateTime? fechaFinal,
                 string codDepositante, string nomDepositante, string codInterno)
         {

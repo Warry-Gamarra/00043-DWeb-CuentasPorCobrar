@@ -53,6 +53,12 @@
                     @Html.DropDownListFor(model => model.I_NuevaTasaUnfvID, ViewBag.Tasas as SelectList, "", new { @class = "select-filter form-control" })
                 </div>
             </div>
+            <div class="col-12">
+                <div class="form-group">
+                    <label class="control-label" for="T_Observacion">Observación</label>
+                    @Html.TextAreaFor(model => model.T_Observacion, new { @class = "form-control", @maxlength = "250"})
+                </div>
+            </div>
         </div>
 
         <hr />

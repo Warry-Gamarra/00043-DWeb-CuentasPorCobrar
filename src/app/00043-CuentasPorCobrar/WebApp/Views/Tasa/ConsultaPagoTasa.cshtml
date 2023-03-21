@@ -111,7 +111,7 @@
                         columns.Add(c => c.T_EntidadDesc).Titled("Banco");
                         columns.Add(c => c.C_NumeroCuenta).Titled("Cta.Deposito").Css("text-center");
                         columns.Add(c => c.I_MontoTotalPagado).Titled("Monto Pagado").Filterable(true).Css("text-center");
-                        columns.Add().SetWidth(250).Encoded(false).Sanitized(false).RenderValueAs(model => @<a href="@Url.Action("EditarPagoTasa", "Tasa", new { id = model.I_PagoBancoID })" class="modal-link-lg"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> <span class="d-none d-md-inline-block">Editar</span></a>);
+                        columns.Add().SetWidth(100).Encoded(false).Sanitized(false).RenderValueAs(model => @<a href="@Url.Action("EditarPagoTasa", "Tasa", new { id = model.I_PagoBancoID })" class="modal-link-lg"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> <span class="d-none d-md-inline-block">Editar</span></a>);
                     }).WithPaging(12).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
                 </div>
             </div>

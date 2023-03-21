@@ -34,5 +34,7 @@ namespace WebApp.Models
         public string T_FecPago { get; set; }
 
         public decimal I_MontoTotalPagado { get; set; }
+
+        public string T_Observacion { get; set; }
     }
 }

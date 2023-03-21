@@ -254,13 +254,14 @@ namespace Domain.Services.Implementations
             return result;
         }
 
-        public Response ActualizarPagoTasa(int I_PagoBancoID, string C_CodDepositante, int I_TasaUnfvId, int I_CurrentUserID)
+        public Response ActualizarPagoTasa(int I_PagoBancoID, string C_CodDepositante, int I_TasaUnfvId, string T_Observacion, int I_CurrentUserID)
         {
             var usp = new USP_U_ActualizarPagoTasa()
             {
                 I_PagoBancoID = I_PagoBancoID,
                 C_CodDepositante = C_CodDepositante,                
                 I_TasaUnfvId = I_TasaUnfvId,
+                T_Observacion = T_Observacion,
                 I_CurrentUserID = I_CurrentUserID
             };
 

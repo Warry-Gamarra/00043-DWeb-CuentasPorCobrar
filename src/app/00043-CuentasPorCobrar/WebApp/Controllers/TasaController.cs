@@ -151,7 +151,7 @@ namespace WebApp.Controllers
 
         public ActionResult ConsultaPagoTasa(ConsultaPagoTasasViewModel model)
         {
-            ViewBag.Title = "Consulta de Pago de Tasas";
+            ViewBag.Title = "Gestión Pago de Tasas";
 
             if (model.buscar)
             {
@@ -191,7 +191,8 @@ namespace WebApp.Controllers
                 T_EntidadDesc = pago.T_EntidadDesc,
                 C_NumeroCuenta = pago.C_NumeroCuenta,
                 T_FecPago = pago.D_FecPago.ToString(FormatosDateTime.BASIC_DATETIME),
-                I_MontoTotalPagado = pago.I_MontoTotalPagado
+                I_MontoTotalPagado = pago.I_MontoTotalPagado,
+                T_Observacion = pago.T_Observacion
             };
 
             return PartialView("_DetallePagoTasa", model);
@@ -199,7 +200,8 @@ namespace WebApp.Controllers
 
         public ActionResult GuardarPagoTasa(EditarPagoTasa model)
         {
-            var result = _pagosModel.ActualizarPagoTasa(model.I_PagoBancoID, model.C_CodDepositante, model.I_NuevaTasaUnfvID ?? model.I_TasaUnfvID, WebSecurity.CurrentUserId);
+            var result = _pagosModel.ActualizarPagoTasa(model.I_PagoBancoID, model.C_CodDepositante, model.I_NuevaTasaUnfvID ?? model.I_TasaUnfvID,
+                model.T_Observacion, WebSecurity.CurrentUserId);
 
             return PartialView("_MsgGuardarPagoTasa", result);
         }

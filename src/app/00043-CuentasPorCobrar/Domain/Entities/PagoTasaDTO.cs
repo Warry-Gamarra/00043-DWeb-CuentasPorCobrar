@@ -47,5 +47,7 @@ namespace Domain.Entities
         public DateTime D_FecCre { get; set; }
 
         public string C_CodigoInterno { get; set; }
+
+        public string T_Observacion { get; set; }
     }
 }

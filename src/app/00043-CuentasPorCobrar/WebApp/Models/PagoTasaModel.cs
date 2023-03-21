@@ -54,5 +54,7 @@ namespace WebApp.Models
         }
 
         public DateTime D_FecCre { get; set; }
+
+        public string T_Observacion { get; set; }
     }
 }
