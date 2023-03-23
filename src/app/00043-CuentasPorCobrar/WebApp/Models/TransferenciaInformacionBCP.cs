@@ -74,7 +74,7 @@ namespace WebApp.Models
             string tipoValidacion = "C";
             string nombreEmpresa = "UNIVERSIDAD NACIONAL FEDERICO VILLARREAL";
             int cantidadRegistros = cuotas_pago.Count();
-            int montoTotal = (int)(cuotas_pago.Sum(c => c.I_MontoOblig - c.I_MontoPagadoActual) * 100);
+            int montoTotal = (int)(cuotas_pago.Sum(c => c.I_MontoOblig - c.I_MontoPagadoSinMora) * 100);
             string tipoArchivoActualizacion = "R";
             string codigoServicio = "000000";
             string fillerCabecera = "";
@@ -103,7 +103,7 @@ namespace WebApp.Models
                 string codigoDepositante = item.C_CodAlu.PadLeft(14, '0');
                 string nombreDepositante = item.T_NombresCompletos;
                 nombreDepositante = StringExtensions.SinCaracteresEspecialies(nombreDepositante.Substring(0, (nombreDepositante.Length < 40 ? nombreDepositante.Length : 40)));
-                int montoCupon = (int)((item.I_MontoOblig - item.I_MontoPagadoActual) * 100);
+                int montoCupon = (int)((item.I_MontoOblig - item.I_MontoPagadoSinMora) * 100);
                 string informacionRetorno = item.C_CodRc + item.I_ProcesoID.ToString("D6") + montoCupon.ToString("D15");
                 int montoMora = 0;
                 int montoMinimo = (item.I_Anio == 2021 && item.C_CodRc == "064") ? 4000 : montoCupon;
