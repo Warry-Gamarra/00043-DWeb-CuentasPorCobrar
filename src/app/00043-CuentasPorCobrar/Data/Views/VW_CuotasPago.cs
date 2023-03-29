@@ -170,19 +170,30 @@ namespace Data.Views
 	                    pen.C_Nivel IN ('2', '3') AND
 	                    pen.C_CodEsc = ISNULL(@C_CodEsc, pen.C_CodEsc) AND
 	                    pen.B_Pagado = 0 AND
-	                    pen.I_Prioridad = 2 AND
-	                    EXISTS (
-		                    SELECT mat2.I_ObligacionAluID FROM dbo.VW_CuotasPago_General mat2 
-		                    WHERE 
-			                    mat2.I_MatAluID = pen.I_MatAluID AND 
-			                    mat2.I_Anio = pen.I_Anio AND 
-			                    mat2.I_Periodo = pen.I_Periodo AND
-			                    mat2.I_Prioridad = 1 AND
-			                    (
-				                    (DATEDIFF(DAY, GETDATE(), mat2.D_FecVencto) >= 0 AND mat2.B_Pagado = 0) OR
-				                    (mat2.B_Pagado = 1)
-			                    )
-                        )";
+	                    pen.I_Prioridad = 2 AND 
+	                    (
+		                    EXISTS (--Se muestran pensiones de alumnos que pagaron su matrícula
+			                    SELECT mat2.I_ObligacionAluID FROM dbo.VW_CuotasPago_General mat2 
+			                    WHERE 
+				                    mat2.I_MatAluID = pen.I_MatAluID AND 
+				                    mat2.I_Anio = pen.I_Anio AND 
+				                    mat2.I_Periodo = pen.I_Periodo AND
+				                    mat2.I_Prioridad = 1 AND
+				                    (
+					                    (DATEDIFF(DAY, GETDATE(), mat2.D_FecVencto) >= 0 AND mat2.B_Pagado = 0) OR
+					                    (mat2.B_Pagado = 1)
+				                    )
+		                    )
+	                    OR 
+		                    NOT EXISTS(--Se muestran alumnos que sólo pagan pensiones (caso de reservas de matrícula)
+			                    SELECT mat3.I_ObligacionAluID FROM dbo.VW_CuotasPago_General mat3
+			                    WHERE
+				                    mat3.I_MatAluID = pen.I_MatAluID AND 
+				                    mat3.I_Anio = pen.I_Anio AND 
+				                    mat3.I_Periodo = pen.I_Periodo AND
+				                    mat3.I_Prioridad = 1
+		                    )
+	                    )";
 
                 var parameters = new { I_Anio = anio, C_CodEsc = codPosgrado };
 
