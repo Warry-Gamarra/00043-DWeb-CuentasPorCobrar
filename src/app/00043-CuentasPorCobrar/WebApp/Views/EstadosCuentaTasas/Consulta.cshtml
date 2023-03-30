@@ -114,6 +114,7 @@
                             columns.Add(c => c.T_EntidadDesc).Titled("Banco");
                             columns.Add(c => c.C_NumeroCuenta).Titled("Cta.Deposito").Css("text-center");
                             columns.Add(c => c.I_MontoTotalPagado).Titled("Monto Pagado").Filterable(true).Css("text-center");
+                            columns.Add(c => c.D_FecMod).Titled("Fec.Mod.").Css("text-center");
                         }).WithPaging(12).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
                 </div>
             </div>

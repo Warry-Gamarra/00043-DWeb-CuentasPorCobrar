@@ -33,8 +33,6 @@ namespace WebApp.Controllers
 
             if (model.buscar)
             {
-                model.fechaHasta = String.IsNullOrEmpty(model.fechaHasta) ? model.fechaHasta : (model.fechaHasta + " 23:59:59");
-
                 model.resultado = tasaService.listarPagoTasas(model);
             }
 
@@ -51,8 +49,6 @@ namespace WebApp.Controllers
         {
             if (model.buscar)
             {
-                model.fechaHasta = String.IsNullOrEmpty(model.fechaHasta) ? model.fechaHasta : (model.fechaHasta + " 23:59:59");
-
                 model.resultado = tasaService.listarPagoTasas(model);
             }
             else
@@ -69,10 +65,11 @@ namespace WebApp.Controllers
                 worksheet.Column("C").Width = 20;
                 worksheet.Column("D").Width = 35;
                 worksheet.Column("E").Width = 15;
-                worksheet.Column("G").Width = 35;
+                worksheet.Column("F").Width = 35;
                 worksheet.Columns("G:H").Width = 15;
                 worksheet.Column("I").Width = 30;
-                worksheet.Columns("J:K").Width = 15;
+                worksheet.Columns("J:L").Width = 15;
+                worksheet.Column("M").Width = 35;
 
                 worksheet.Cell(currentRow, 1).Value = "Cod.Operación";
                 worksheet.Cell(currentRow, 2).Value = "Cod.Interno (BCP)";
@@ -85,7 +82,9 @@ namespace WebApp.Controllers
                 worksheet.Cell(currentRow, 9).Value = "Banco";
                 worksheet.Cell(currentRow, 10).Value = "Cta.Deposito";
                 worksheet.Cell(currentRow, 11).Value = "Monto Pagado";
-                
+                worksheet.Cell(currentRow, 12).Value = "Fec.Mod";
+                worksheet.Cell(currentRow, 13).Value = "Obs.";
+
                 foreach (var item in model.resultado)
                 {
                     currentRow++;
@@ -100,6 +99,8 @@ namespace WebApp.Controllers
                     worksheet.Cell(currentRow, 9).SetValue<string>(item.T_EntidadDesc);
                     worksheet.Cell(currentRow, 10).SetValue<string>(item.C_NumeroCuenta);
                     worksheet.Cell(currentRow, 11).SetValue<decimal>(item.I_MontoTotalPagado);
+                    worksheet.Cell(currentRow, 12).SetValue<DateTime?>(item.D_FecMod);
+                    worksheet.Cell(currentRow, 13).SetValue<string>(item.T_Observacion);
                 }
 
                 worksheet.Columns("H").Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;

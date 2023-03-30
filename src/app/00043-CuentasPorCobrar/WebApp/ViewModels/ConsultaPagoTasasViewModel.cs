@@ -46,7 +46,7 @@ namespace WebApp.ViewModels
                 if (String.IsNullOrWhiteSpace(fechaHasta))
                     return null;
 
-                return DateTime.ParseExact(fechaHasta, FormatosDateTime.BASIC_DATETIME, CultureInfo.InvariantCulture);
+                return DateTime.ParseExact(fechaHasta, FormatosDateTime.BASIC_DATE, CultureInfo.InvariantCulture);
             }
         }
 

@@ -49,6 +49,8 @@ namespace Data.Views
         public decimal I_InteresMoratorio { get; set; }
 
         public DateTime D_FecCre { get; set; }
+        
+        public DateTime? D_FecMod { get; set; }
 
         public string C_CodigoInterno { get; set; }
 
