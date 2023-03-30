@@ -352,3 +352,46 @@ GO
 
 --SELECT * FROM TR_PagoBanco
 --SELECT * FROM TRI_PagoProcesadoUnfv
+
+
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_Pagos')
+	DROP VIEW [dbo].[VW_Pagos]
+GO
+  
+CREATE VIEW [dbo].[VW_Pagos]  
+AS  
+ SELECT   
+  ROW_NUMBER() OVER(PARTITION BY mat.C_CodAlu ORDER BY mat.C_CodAlu, pro.I_Anio, pro.I_Periodo, pro.I_Prioridad, cab.D_FecVencto) AS I_NroOrden,  
+  cta.I_CtaDepositoID, ISNULL(cta.C_NumeroCuenta, '') AS C_NumeroCuenta, pagban.C_CodOperacion, pagban.C_CodDepositante, pagban.I_PagoBancoID,  
+  pagban.T_NomDepositante, pagban.D_FecPago, pagban.I_Cantidad, tipPer.T_OpcionCod AS C_Periodo,  
+  CONCAT(mat.T_ApePaterno, ' ', mat.T_ApeMaterno, ' ', mat.T_Nombre) AS T_NomAlumno, tipEs.T_OpcionCod as C_Nivel,   
+  cab.I_ObligacionAluID, pro.I_ProcesoID, pro.N_CodBanco, mat.C_CodAlu, mat.C_RcCod, pro.I_Anio, tipPer.T_OpcionCod AS I_Periodo, pro.T_ProcesoDesc,   
+  (CAST(pro.I_Anio AS varchar) + '-' + tipPer.T_OpcionCod + ' ' + cat.T_CatPagoDesc) AS T_Concepto, cab.D_FecVencto, pro.I_Prioridad, cab.C_Moneda, cab.I_MontoOblig,  
+  cab.B_Pagado, pagban.T_LugarPago, cab.D_FecCre, SUM(pagpro.I_MontoPagado) AS I_MontoPagado, ISNULL(srv.C_CodServicio, '') AS C_CodServicio,   
+  pagban.C_Referencia, pagban.I_EntidadFinanID, ISNULL(ef.T_EntidadDesc, '') AS T_EntidadDesc, mat.T_FacDesc, mat.T_DenomProg,  
+  ISNULL(pagban.T_InformacionAdicional, '') AS T_InformacionAdicional, 1 AS B_EsObligacion  
+ FROM dbo.VW_MatriculaAlumno mat  
+  INNER JOIN dbo.TR_ObligacionAluCab cab ON cab.I_MatAluID = mat.I_MatAluID AND cab.B_Eliminado = 0 AND cab.B_Habilitado = 1
+  INNER JOIN dbo.TR_ObligacionAluDet det ON det.I_ObligacionAluID = cab.I_ObligacionAluID AND det.B_Eliminado = 0 AND det.B_Habilitado = 1
+  INNER JOIN dbo.TC_Proceso pro ON pro.I_ProcesoID = cab.I_ProcesoID AND pro.B_Eliminado = 0  
+  INNER JOIN dbo.TC_CategoriaPago cat ON cat.I_CatPagoID = pro.I_CatPagoID AND cat.B_Eliminado = 0  
+  LEFT JOIN dbo.TC_Servicios srv ON srv.I_ServicioID = cat.I_ServicioID AND srv.B_Eliminado = 0  
+  INNER JOIN dbo.TC_CatalogoOpcion tipEs ON tipEs.I_ParametroID = 2 AND tipEs.I_OpcionID = cat.I_Nivel  
+  INNER JOIN dbo.TC_CatalogoOpcion tipPer ON tipPer.I_ParametroID = 5 AND tipPer.I_OpcionID = pro.I_Periodo  
+  INNER JOIN dbo.TRI_PagoProcesadoUnfv pagpro ON pagpro.I_ObligacionAluDetID = det.I_ObligacionAluDetID AND pagpro.B_Anulado = 0  
+  INNER JOIN dbo.TR_PagoBanco pagban ON pagban.I_PagoBancoID = pagpro.I_PagoBancoID AND pagban.B_Anulado = 0  
+  INNER JOIN dbo.TC_CuentaDeposito cta ON cta.I_CtaDepositoID = pagpro.I_CtaDepositoID  
+  INNER JOIN dbo.TC_EntidadFinanciera ef ON ef.I_EntidadFinanID = pagban.I_EntidadFinanID  
+ WHERE pagban.I_TipoPagoID = 133  
+ GROUP BY  
+  mat.C_CodAlu, pro.I_Anio, pro.I_Periodo, pro.I_Prioridad, cab.D_FecVencto,  
+  cta.I_CtaDepositoID, C_NumeroCuenta, pagban.C_CodOperacion, pagban.C_CodDepositante,  
+  pagban.T_NomDepositante, pagban.D_FecPago, pagban.I_Cantidad, tipPer.T_OpcionCod, pagban.I_PagoBancoID,  
+  CONCAT(mat.T_ApePaterno, ' ', mat.T_ApeMaterno, ' ', mat.T_Nombre), tipEs.T_OpcionCod, cat.T_CatPagoDesc,  
+  cab.I_ObligacionAluID, pro.I_ProcesoID, pro.N_CodBanco, mat.C_CodAlu, mat.C_RcCod, tipPer.T_OpcionCod,   
+  pro.T_ProcesoDesc, pro.I_Prioridad, cab.C_Moneda, cab.I_MontoOblig,  
+  cab.B_Pagado, pagban.T_LugarPago, cab.D_FecCre, ISNULL(srv.C_CodServicio, ''),  
+  pagban.C_Referencia, pagban.I_EntidadFinanID, ISNULL(ef.T_EntidadDesc, ''), mat.T_FacDesc, mat.T_DenomProg,  
+  ISNULL(pagban.T_InformacionAdicional, '')  
+GO

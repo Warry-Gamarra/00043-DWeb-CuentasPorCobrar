@@ -105,7 +105,7 @@ namespace Data.Views
             try
             {
                 string s_command = @"SELECT P.*  FROM dbo.VW_Pagos P 
-                                     WHERE DATEDIFF(day, @D_FechaIni, D_FecPago) >= 0 AND DATEDIFF(day, D_FecPago, @D_FechaFin) >= 0 AND C_Nivel = '1'";
+                                     WHERE DATEDIFF(day, @D_FechaIni, D_FecPago) >= 0 AND DATEDIFF(day, D_FecPago, @D_FechaFin) >= 0";
 
                 if (dependenciaId.HasValue)
                     s_command += " AND I_DependenciaID = @I_DependenciaID ";
