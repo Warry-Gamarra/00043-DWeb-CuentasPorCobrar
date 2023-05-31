@@ -395,3 +395,37 @@ AS
   pagban.C_Referencia, pagban.I_EntidadFinanID, ISNULL(ef.T_EntidadDesc, ''), mat.T_FacDesc, mat.T_DenomProg,  
   ISNULL(pagban.T_InformacionAdicional, '')  
 GO
+
+
+--------------------------------------------------------
+
+--SELECT * FROM dbo.TR_PagoBanco
+CREATE TABLE TR_ConstanciaPago
+(
+	I_ConstanciaPagoID INT IDENTITY(1,1),
+	I_PagoBancoID INT NOT NULL,
+	I_ConstanciaPagoNum INT UNIQUE NOT NULL,
+	I_UsuarioCre INT NOT NULL,
+	D_FecCre DATETIME NOT NULL,
+	CONSTRAINT PK_ConstanciaPago PRIMARY KEY (I_ConstanciaPagoID),
+	CONSTRAINT FK_PagoBanco_ConstanciaPago FOREIGN KEY (I_PagoBancoID) REFERENCES TR_PagoBanco (I_PagoBancoID)
+)
+GO
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_GrabarConstanciaPago')
+	DROP PROCEDURE [dbo].[USP_I_GrabarConstanciaPago]
+GO
+
+CREATE PROCEDURE [dbo].[USP_I_GrabarConstanciaPago]
+@I_PagoBancoID INT,
+@UserID INT
+AS
+BEGIN  
+	SET NOCOUNT ON;
+
+	DECLARE @I_ConstanciaPagoNum INT = ISNULL((SELECT MAX(I_ConstanciaPagoNum) FROM dbo.TR_ConstanciaPago), 0) + 1
+
+	INSERT dbo.TR_ConstanciaPago(I_PagoBancoID, I_ConstanciaPagoNum, I_UsuarioCre, D_FecCre)
+	VALUES(@I_PagoBancoID, @I_ConstanciaPagoNum, @UserID, GETDATE())
+END
+GO
