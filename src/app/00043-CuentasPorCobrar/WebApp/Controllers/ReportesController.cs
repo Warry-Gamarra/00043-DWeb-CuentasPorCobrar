@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using WebApp.Models;
 using WebApp.Models.Facades;
 using WebApp.Models.ReportModels;
+using WebGrease.Css.Extensions;
 
 namespace WebApp.Controllers
 {
@@ -154,27 +155,42 @@ namespace WebApp.Controllers
 
             string reportName = "RptConstanciaPago";
 
-            /*string dataSet1 = "CabeceraDataSet";
+            var pagoBanco = pagosModel.ObtenerPagoBanco(id);
 
-            string dataSet2 = "DetalleDataSet";
+            var listaConceptos = pagosModel.ObtenerPagosPorBoucher(pagoBanco.I_EntidadFinanID, pagoBanco.C_CodOperacion, 
+                pagoBanco.C_CodDepositante, pagoBanco.D_FecPago.Value);
+
+            string dataSet = "PagoObligacionDS";
+
+            var pagoObligacionDSet = new List<PagoObligacionRptModel>();
+
+            listaConceptos.OrderBy(c => c.D_FecVencto).ForEach(c => {
+                pagoObligacionDSet.Add(new PagoObligacionRptModel()
+                {
+                    T_ConceptoPago = c.T_ProcesoDesc,
+                    T_MontoPagado = c.T_MontoPago,
+                    T_Mora = c.T_InteresMora,
+                    T_TotalPagado = c.T_MontoPagoTotal
+                });
+            });
 
             var reportDataSets = new Dictionary<string, Object>();
 
-            var cabeceraDataSet = 0;
-
-            var detalleDataSet = 1;
-
-            reportDataSets.Add(dataSet1, cabeceraDataSet);
-
-            reportDataSets.Add(dataSet2, detalleDataSet);*/
+            reportDataSets.Add(dataSet, pagoObligacionDSet);
 
             var parameterList = new List<ReportParameter>();
 
-            parameterList.Add(new ReportParameter("T_NroConstancia", "2023-00001"));
-            parameterList.Add(new ReportParameter("C_CodAlu", "2010012091"));
-            parameterList.Add(new ReportParameter("T_Alumno", "HUMBERTO JACINTO MANYARI MELENDEZ"));
+            string entidadFinanciera = pagoBanco.C_CodOperacion +
+                (pagoBanco.C_CodigoInterno != null && pagoBanco.C_CodigoInterno.Length > 0 ? " / " + pagoBanco.C_CodigoInterno : "");
 
-            return ReportExport(docType, reportName, null, parameterList);
+            parameterList.Add(new ReportParameter("T_NroConstancia", "2023-00001"));
+            parameterList.Add(new ReportParameter("C_CodAlu", pagoBanco.T_CodDepositante));
+            parameterList.Add(new ReportParameter("T_Alumno", pagoBanco.T_DatosDepositante));
+            parameterList.Add(new ReportParameter("T_EntidadFinanciera", pagoBanco.T_EntidadDesc));
+            parameterList.Add(new ReportParameter("T_NroLiquidacion", entidadFinanciera));
+            parameterList.Add(new ReportParameter("T_FechaPago", pagoBanco.T_FecPago));
+
+            return ReportExport(docType, reportName, reportDataSets, parameterList);
         }
 
         private FileContentResult ReportExport(string docType, string reportName, Dictionary<string, Object> reportDataSets, IEnumerable<ReportParameter> parameters)

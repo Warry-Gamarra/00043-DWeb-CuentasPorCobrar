@@ -429,3 +429,15 @@ BEGIN
 	VALUES(@I_PagoBancoID, @I_ConstanciaPagoNum, @UserID, GETDATE())
 END
 GO
+
+----MÁS DE 1 CÓDIGO DE OPERACIÓN
+--SELECT b.C_CodOperacion, COUNT(*) FROM dbo.TR_PagoBanco b
+--WHERE b.B_Anulado = 0
+--GROUP BY b.C_CodOperacion HAVING COUNT(*) > 2
+
+----MÁS DE 1 PAGO PARA UNA SÓLA OBLIGACIÓN
+--SELECT det.I_ObligacionAluDetID, det.I_Monto, COUNT(*) FROM dbo.TR_ObligacionAluDet det
+--INNER JOIN dbo.TRI_PagoProcesadoUnfv p ON p.I_ObligacionAluDetID = det.I_ObligacionAluDetID
+--WHERE det.B_Habilitado = 1 AND det.B_Eliminado = 0
+--GROUP BY det.I_ObligacionAluDetID, det.I_Monto
+--HAVING COUNT(*) > 1

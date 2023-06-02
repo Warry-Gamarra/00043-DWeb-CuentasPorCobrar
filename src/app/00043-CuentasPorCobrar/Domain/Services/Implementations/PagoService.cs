@@ -4,6 +4,7 @@ using Data.Views;
 using Domain.Entities;
 using Domain.Helpers;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -268,6 +269,16 @@ namespace Domain.Services.Implementations
             var result = usp.Execute();
 
             return new Response(result);
+        }
+
+        public IEnumerable<PagoBancoObligacionDTO> ObtenerPagosPorBoucher(int idEntidadFinanciera, string codOperacion,
+            string codDepositante, DateTime fechaPago)
+        {
+            var lista = VW_PagoBancoObligaciones.GetByBoucher(idEntidadFinanciera, codOperacion, codDepositante, fechaPago);
+
+            var result = lista.Select(x => Mapper.VW_PagoBancoObligaciones_To_PagoObligacionDTO(x));
+
+            return result;
         }
     }
 }

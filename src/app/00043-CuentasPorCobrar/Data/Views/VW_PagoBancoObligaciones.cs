@@ -231,5 +231,37 @@ namespace Data.Views
 
             return result;
         }
+
+        public static IEnumerable<VW_PagoBancoObligaciones> GetByBoucher(int idEntidadFinanciera, string codOperacion, 
+            string codDepositante, DateTime fechaPago)
+        {
+            string s_command;
+            IEnumerable<VW_PagoBancoObligaciones> result;
+            DynamicParameters parameters;
+
+            try
+            {
+                s_command = "SELECT b.* FROM dbo.VW_PagoBancoObligaciones b " +
+                    "WHERE b.I_EntidadFinanID = @I_EntidadFinanID AND b.C_CodOperacion = @C_CodOperacion " +
+                    "AND b.C_CodDepositante = @C_CodDepositante AND DATEDIFF(SECOND, b.D_FecPago, @D_FecPago) = 0";
+
+                parameters = new DynamicParameters();
+                parameters.Add(name: "I_EntidadFinanID", dbType: DbType.Int32, value: idEntidadFinanciera);
+                parameters.Add(name: "C_CodOperacion", dbType: DbType.String, value: codOperacion);
+                parameters.Add(name: "C_CodDepositante", dbType: DbType.String, value: codDepositante);
+                parameters.Add(name: "D_FecPago", dbType: DbType.DateTime, value: fechaPago);
+
+                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
+                {
+                    result = _dbConnection.Query<VW_PagoBancoObligaciones>(s_command, parameters, commandType: CommandType.Text);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
     }
 }

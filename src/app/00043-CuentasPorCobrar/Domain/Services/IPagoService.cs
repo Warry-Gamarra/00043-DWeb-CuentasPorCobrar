@@ -30,5 +30,8 @@ namespace Domain.Services
         IEnumerable<PagoObligacionDetalleDTO> ObtenerPagoObligacionDetalle(int idObligacionDet);
 
         Response ActualizarPagoTasa(int I_PagoBancoID, string C_CodDepositante, int I_TasaUnfvId, string T_Observacion, int I_CurrentUserID);
+
+        IEnumerable<PagoBancoObligacionDTO> ObtenerPagosPorBoucher(int idEntidadFinanciera, string codOperacion, 
+            string codDepositante, DateTime fechaPago);
     }
 }
