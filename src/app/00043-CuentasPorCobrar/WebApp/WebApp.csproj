@@ -704,6 +704,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="ReportesRDLC\RptConstanciaPago.rdlc">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="ReportesRDLC\RptObligacionesPorPeriodo.rdlc">
       <SubType>Designer</SubType>
     </EmbeddedResource>

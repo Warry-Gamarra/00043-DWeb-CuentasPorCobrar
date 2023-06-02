@@ -1,5 +1,6 @@
 ﻿using ClosedXML.Excel;
 using Domain.Helpers;
+using Microsoft.Reporting.WebForms;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -10,6 +11,7 @@ using System.Web.Mvc;
 using WebApp.Models;
 using WebApp.Models.Facades;
 using WebApp.ViewModels;
+using WebMatrix.WebData;
 
 namespace WebApp.Controllers
 {
@@ -1417,9 +1419,18 @@ namespace WebApp.Controllers
         [Route("consulta/ingresos-de-obligaciones")]
         public ActionResult ListarPagosBancoObligaciones(ConsultaPagosBancoObligacionesViewModel model)
         {
+            bool verConstanciaPago = false;
+
             if (model.buscar)
             {
                 model.resultado = pagoModel.ListarPagoBancoObligacion(model);
+
+                var user = usersModel.Find(WebSecurity.CurrentUserId);
+
+                if (user.RoleName.Equals(RoleNames.ADMINISTRADOR) || user.RoleName.Equals(RoleNames.TESORERIA))
+                {
+                    verConstanciaPago = true;
+                }
             }
             
             ViewBag.Title = "Consulta de Ingresos de Pago de Obligaciones";
@@ -1432,6 +1443,8 @@ namespace WebApp.Controllers
             ViewBag.CondicionesPago = new SelectList(selectModels.GetCondicionesPago(), "Value", "TextDisplay", model.condicion);
 
             ViewBag.TipoEstudios = new SelectList(generalServiceFacade.Listar_TipoEstudios(null), "Value", "TextDisplay", model.tipoEstudio);
+
+            ViewBag.VerConstanciaPago = verConstanciaPago;
 
             return View(model);
         }

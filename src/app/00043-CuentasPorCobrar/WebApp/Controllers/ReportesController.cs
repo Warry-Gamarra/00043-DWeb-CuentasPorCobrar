@@ -146,6 +146,37 @@ namespace WebApp.Controllers
             return ReportExport(docType, reportName, reportDataSets, parameterList);
         }
 
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
+        [Route("consulta/ingresos-de-obligaciones/constancia-pago")]
+        public ActionResult ImprimirConstanciaPago(int id)
+        {
+            string docType = "pdf";
+
+            string reportName = "RptConstanciaPago";
+
+            /*string dataSet1 = "CabeceraDataSet";
+
+            string dataSet2 = "DetalleDataSet";
+
+            var reportDataSets = new Dictionary<string, Object>();
+
+            var cabeceraDataSet = 0;
+
+            var detalleDataSet = 1;
+
+            reportDataSets.Add(dataSet1, cabeceraDataSet);
+
+            reportDataSets.Add(dataSet2, detalleDataSet);*/
+
+            var parameterList = new List<ReportParameter>();
+
+            parameterList.Add(new ReportParameter("T_NroConstancia", "2023-00001"));
+            parameterList.Add(new ReportParameter("C_CodAlu", "2010012091"));
+            parameterList.Add(new ReportParameter("T_Alumno", "HUMBERTO JACINTO MANYARI MELENDEZ"));
+
+            return ReportExport(docType, reportName, null, parameterList);
+        }
+
         private FileContentResult ReportExport(string docType, string reportName, Dictionary<string, Object> reportDataSets, IEnumerable<ReportParameter> parameters)
         {
             string reportPath = Path.Combine(Server.MapPath("~/ReportesRDLC"), reportName + ".rdlc");
