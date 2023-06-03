@@ -18,12 +18,14 @@ namespace WebApp.Controllers
         IObligacionServiceFacade obligacionServiceFacade;
         IAlumnosClientFacade alumnosClientFacade;
         PagosModel pagosModel;
+        public ITasaServiceFacade _tasaService;
 
         public ReportesController()
         {
             obligacionServiceFacade = new ObligacionServiceFacade();
             alumnosClientFacade = new AlumnosClientFacade();
             pagosModel = new PagosModel();
+            _tasaService = new TasaServiceFacade();
         }
 
         [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONTABILIDAD + ", " + RoleNames.TESORERIA)]
@@ -148,25 +150,30 @@ namespace WebApp.Controllers
         }
 
         [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
-        [Route("consulta/ingresos-de-obligaciones/constancia-pago")]
-        public ActionResult ImprimirConstanciaPago(int id)
+        [Route("consulta/ingresos-de-obligaciones/constancia-pago-obligacion")]
+        public ActionResult ImprimirConstanciaPagoObligacion(int id)
         {
             string docType = "pdf";
 
-            string reportName = "RptConstanciaPago";
+            string reportName = "RptConstanciaPagoObligacion";
 
             var pagoBanco = pagosModel.ObtenerPagoBanco(id);
 
-            var listaConceptos = pagosModel.ObtenerPagosPorBoucher(pagoBanco.I_EntidadFinanID, pagoBanco.C_CodOperacion, 
+            var listaConceptos = pagosModel.ObtenerPagosPorBoucher(pagoBanco.I_EntidadFinanID, pagoBanco.C_CodOperacion,
                 pagoBanco.C_CodDepositante, pagoBanco.D_FecPago.Value);
+
+            //Verificar si existe el número de constancia
+
+            //Asignar el nro de constancia.
 
             string dataSet = "PagoObligacionDS";
 
             var pagoObligacionDSet = new List<PagoObligacionRptModel>();
 
-            listaConceptos.OrderBy(c => c.D_FecVencto).ForEach(c => {
-                pagoObligacionDSet.Add(new PagoObligacionRptModel()
-                {
+            listaConceptos
+                .OrderBy(c => c.T_ProcesoDesc)
+                .OrderBy(c => c.D_FecVencto)
+                .ForEach(c => {pagoObligacionDSet.Add(new PagoObligacionRptModel() {
                     T_ConceptoPago = c.T_ProcesoDesc,
                     T_MontoPagado = c.T_MontoPago,
                     T_Mora = c.T_InteresMora,
@@ -180,14 +187,54 @@ namespace WebApp.Controllers
 
             var parameterList = new List<ReportParameter>();
 
-            string entidadFinanciera = pagoBanco.C_CodOperacion +
-                (pagoBanco.C_CodigoInterno != null && pagoBanco.C_CodigoInterno.Length > 0 ? " / " + pagoBanco.C_CodigoInterno : "");
-
             parameterList.Add(new ReportParameter("T_NroConstancia", "2023-00001"));
             parameterList.Add(new ReportParameter("C_CodAlu", pagoBanco.T_CodDepositante));
             parameterList.Add(new ReportParameter("T_Alumno", pagoBanco.T_DatosDepositante));
             parameterList.Add(new ReportParameter("T_EntidadFinanciera", pagoBanco.T_EntidadDesc));
-            parameterList.Add(new ReportParameter("T_NroLiquidacion", entidadFinanciera));
+            parameterList.Add(new ReportParameter("T_NroLiquidacion", pagoBanco.C_CodOperacion));
+            parameterList.Add(new ReportParameter("C_CodigoInterno", pagoBanco.C_CodigoInterno));
+            parameterList.Add(new ReportParameter("T_FechaPago", pagoBanco.T_FecPago));
+
+            return ReportExport(docType, reportName, reportDataSets, parameterList);
+        }
+
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
+        [Route("consulta/ingresos-de-obligaciones/constancia-pago-tasa")]
+        public ActionResult ImprimirConstanciaPagoTasa(int id)
+        {
+            string docType = "pdf";
+
+            string reportName = "RptConstanciaPagoTasa";
+
+            var pagoBanco = _tasaService.ObtenerPagoTasa(id);
+
+            //Verificar si existe el número de constancia
+
+            //Asignar el nro de constancia.
+
+            string dataSet = "PagoTasaDS";
+
+            var pagoTasaDSet = new List<PagoTasaRptModel>();
+
+            pagoTasaDSet.Add(new PagoTasaRptModel()
+            {
+                T_ConceptoPago = pagoBanco.T_ConceptoPagoDesc,
+                T_Tasa = pagoBanco.C_CodTasa,
+                T_TotalPagado = pagoBanco.T_MontoTotalPagado
+            });
+
+            var reportDataSets = new Dictionary<string, Object>();
+
+            reportDataSets.Add(dataSet, pagoTasaDSet);
+
+            var parameterList = new List<ReportParameter>();
+
+            parameterList.Add(new ReportParameter("T_NroConstancia", "2023-00002"));
+            parameterList.Add(new ReportParameter("C_CodDepositante", pagoBanco.C_CodDepositante));
+            parameterList.Add(new ReportParameter("T_NomDepositante", pagoBanco.T_NomDepositante.StartsWith("0") ? "-" : pagoBanco.T_NomDepositante));
+            parameterList.Add(new ReportParameter("T_EntidadFinanciera", pagoBanco.T_EntidadDesc));
+            parameterList.Add(new ReportParameter("T_NroLiquidacion", pagoBanco.C_CodOperacion));
+            parameterList.Add(new ReportParameter("C_CodigoInterno", pagoBanco.C_CodigoInterno));
             parameterList.Add(new ReportParameter("T_FechaPago", pagoBanco.T_FecPago));
 
             return ReportExport(docType, reportName, reportDataSets, parameterList);

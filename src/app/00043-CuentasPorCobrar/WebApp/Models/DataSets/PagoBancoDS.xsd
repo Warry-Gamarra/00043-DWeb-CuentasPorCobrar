@@ -9,15 +9,24 @@
       </DataSource>
     </xs:appinfo>
   </xs:annotation>
-  <xs:element name="PagoBancoDS" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_UserDSName="PagoBancoDS" msprop:Generator_DataSetName="PagoBancoDS">
+  <xs:element name="PagoBancoDS" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_UserDSName="PagoBancoDS" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="PagoBancoDS">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="PagoObligacionDT" msprop:Generator_RowEvHandlerName="PagoObligacionDTRowChangeEventHandler" msprop:Generator_RowDeletedName="PagoObligacionDTRowDeleted" msprop:Generator_RowDeletingName="PagoObligacionDTRowDeleting" msprop:Generator_RowEvArgName="PagoObligacionDTRowChangeEvent" msprop:Generator_TablePropName="PagoObligacionDT" msprop:Generator_RowChangedName="PagoObligacionDTRowChanged" msprop:Generator_RowChangingName="PagoObligacionDTRowChanging" msprop:Generator_TableClassName="PagoObligacionDTDataTable" msprop:Generator_RowClassName="PagoObligacionDTRow" msprop:Generator_TableVarName="tablePagoObligacionDT" msprop:Generator_UserTableName="PagoObligacionDT">
+        <xs:element name="PagoObligacionDT" msprop:Generator_RowClassName="PagoObligacionDTRow" msprop:Generator_RowEvHandlerName="PagoObligacionDTRowChangeEventHandler" msprop:Generator_RowDeletedName="PagoObligacionDTRowDeleted" msprop:Generator_RowDeletingName="PagoObligacionDTRowDeleting" msprop:Generator_RowEvArgName="PagoObligacionDTRowChangeEvent" msprop:Generator_TablePropName="PagoObligacionDT" msprop:Generator_RowChangedName="PagoObligacionDTRowChanged" msprop:Generator_UserTableName="PagoObligacionDT" msprop:Generator_RowChangingName="PagoObligacionDTRowChanging" msprop:Generator_TableClassName="PagoObligacionDTDataTable" msprop:Generator_TableVarName="tablePagoObligacionDT">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="T_ConceptoPago" msprop:Generator_UserColumnName="T_ConceptoPago" msprop:Generator_ColumnPropNameInTable="T_ConceptoPagoColumn" msprop:Generator_ColumnPropNameInRow="T_ConceptoPago" msprop:Generator_ColumnVarNameInTable="columnT_ConceptoPago" type="xs:string" minOccurs="0" />
+              <xs:element name="T_MontoPagado" msprop:Generator_UserColumnName="T_MontoPagado" msprop:Generator_ColumnPropNameInTable="T_MontoPagadoColumn" msprop:Generator_ColumnPropNameInRow="T_MontoPagado" msprop:Generator_ColumnVarNameInTable="columnT_MontoPagado" type="xs:string" minOccurs="0" />
+              <xs:element name="T_Mora" msprop:Generator_UserColumnName="T_Mora" msprop:Generator_ColumnPropNameInTable="T_MoraColumn" msprop:Generator_ColumnPropNameInRow="T_Mora" msprop:Generator_ColumnVarNameInTable="columnT_Mora" type="xs:string" minOccurs="0" />
+              <xs:element name="T_TotalPagado" msprop:Generator_UserColumnName="T_TotalPagado" msprop:Generator_ColumnPropNameInTable="T_TotalPagadoColumn" msprop:Generator_ColumnPropNameInRow="T_TotalPagado" msprop:Generator_ColumnVarNameInTable="columnT_TotalPagado" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="PagoTasaDT" msprop:Generator_RowEvHandlerName="PagoTasaDTRowChangeEventHandler" msprop:Generator_RowDeletedName="PagoTasaDTRowDeleted" msprop:Generator_RowDeletingName="PagoTasaDTRowDeleting" msprop:Generator_RowEvArgName="PagoTasaDTRowChangeEvent" msprop:Generator_TablePropName="PagoTasaDT" msprop:Generator_RowChangedName="PagoTasaDTRowChanged" msprop:Generator_RowChangingName="PagoTasaDTRowChanging" msprop:Generator_TableClassName="PagoTasaDTDataTable" msprop:Generator_RowClassName="PagoTasaDTRow" msprop:Generator_TableVarName="tablePagoTasaDT" msprop:Generator_UserTableName="PagoTasaDT">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="T_ConceptoPago" msprop:Generator_ColumnPropNameInRow="T_ConceptoPago" msprop:Generator_ColumnPropNameInTable="T_ConceptoPagoColumn" msprop:Generator_ColumnVarNameInTable="columnT_ConceptoPago" msprop:Generator_UserColumnName="T_ConceptoPago" type="xs:string" minOccurs="0" />
-              <xs:element name="T_MontoPagado" msprop:Generator_ColumnPropNameInRow="T_MontoPagado" msprop:Generator_ColumnPropNameInTable="T_MontoPagadoColumn" msprop:Generator_ColumnVarNameInTable="columnT_MontoPagado" msprop:Generator_UserColumnName="T_MontoPagado" type="xs:string" minOccurs="0" />
-              <xs:element name="T_Mora" msprop:Generator_ColumnPropNameInRow="T_Mora" msprop:Generator_ColumnPropNameInTable="T_MoraColumn" msprop:Generator_ColumnVarNameInTable="columnT_Mora" msprop:Generator_UserColumnName="T_Mora" type="xs:string" minOccurs="0" />
+              <xs:element name="T_Tasa" msprop:Generator_ColumnPropNameInRow="T_Tasa" msprop:Generator_ColumnPropNameInTable="T_TasaColumn" msprop:Generator_ColumnVarNameInTable="columnT_Tasa" msprop:Generator_UserColumnName="T_Tasa" type="xs:string" minOccurs="0" />
               <xs:element name="T_TotalPagado" msprop:Generator_ColumnPropNameInRow="T_TotalPagado" msprop:Generator_ColumnPropNameInTable="T_TotalPagadoColumn" msprop:Generator_ColumnVarNameInTable="columnT_TotalPagado" msprop:Generator_UserColumnName="T_TotalPagado" type="xs:string" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>

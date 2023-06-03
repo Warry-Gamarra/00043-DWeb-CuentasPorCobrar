@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using WebApp.Models;
 using WebApp.Models.Facades;
 using WebApp.ViewModels;
+using WebMatrix.WebData;
 
 namespace WebApp.Controllers
 {
@@ -18,28 +19,41 @@ namespace WebApp.Controllers
     {
         ITasaServiceFacade tasaService;
         SelectModel selectModels;
-        
+        UsersModel usersModel;
+
         public EstadosCuentaTasasController()
         {
             tasaService = new TasaServiceFacade();
             selectModels = new SelectModel();
+            usersModel = new UsersModel();
         }
 
         [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONSULTA + ", " + RoleNames.TESORERIA)]
         [Route("consulta/tasas")]
         public ActionResult Consulta(ConsultaPagoTasasViewModel model)
         {
-            ViewBag.Title = "Consulta de Pago de Tasas";
+            bool verConstanciaPago = false;
 
             if (model.buscar)
             {
                 model.resultado = tasaService.listarPagoTasas(model);
+
+                var user = usersModel.Find(WebSecurity.CurrentUserId);
+
+                if (user.RoleName.Equals(RoleNames.ADMINISTRADOR) || user.RoleName.Equals(RoleNames.TESORERIA))
+                {
+                    verConstanciaPago = true;
+                }
             }
+
+            ViewBag.Title = "Consulta de Pago de Tasas";
 
             ViewBag.EntidadesFinancieras = new SelectList(selectModels.GetEntidadesFinancieras(), "Value", "TextDisplay", model.entidadFinanciera);
 
             ViewBag.CtaDeposito = new SelectList(
                 model.entidadFinanciera.HasValue ? selectModels.GetCtasDeposito(model.entidadFinanciera.Value) : new List<SelectViewModel>(), "Value", "TextDisplay", model.idCtaDeposito);
+
+            ViewBag.VerConstanciaPago = verConstanciaPago;
 
             return View(model);
         }

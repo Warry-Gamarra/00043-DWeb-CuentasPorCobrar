@@ -399,12 +399,11 @@ GO
 
 --------------------------------------------------------
 
---SELECT * FROM dbo.TR_PagoBanco
 CREATE TABLE TR_ConstanciaPago
 (
 	I_ConstanciaPagoID INT IDENTITY(1,1),
 	I_PagoBancoID INT NOT NULL,
-	I_ConstanciaPagoNum INT UNIQUE NOT NULL,
+	I_ConstanciaPagoNum INT NOT NULL,
 	I_UsuarioCre INT NOT NULL,
 	D_FecCre DATETIME NOT NULL,
 	CONSTRAINT PK_ConstanciaPago PRIMARY KEY (I_ConstanciaPagoID),
@@ -418,13 +417,12 @@ GO
 
 CREATE PROCEDURE [dbo].[USP_I_GrabarConstanciaPago]
 @I_PagoBancoID INT,
+@I_ConstanciaPagoNum INT,
 @UserID INT
 AS
 BEGIN  
 	SET NOCOUNT ON;
-
-	DECLARE @I_ConstanciaPagoNum INT = ISNULL((SELECT MAX(I_ConstanciaPagoNum) FROM dbo.TR_ConstanciaPago), 0) + 1
-
+	
 	INSERT dbo.TR_ConstanciaPago(I_PagoBancoID, I_ConstanciaPagoNum, I_UsuarioCre, D_FecCre)
 	VALUES(@I_PagoBancoID, @I_ConstanciaPagoNum, @UserID, GETDATE())
 END
@@ -441,3 +439,9 @@ GO
 --WHERE det.B_Habilitado = 1 AND det.B_Eliminado = 0
 --GROUP BY det.I_ObligacionAluDetID, det.I_Monto
 --HAVING COUNT(*) > 1
+
+
+--SELECT * FROM dbo.VW_PagoBancoObligaciones WHERE C_CodOperacion = '462164'
+--SELECT * FROM dbo.VW_PagoBancoObligaciones WHERE C_CodOperacion = '252504'
+--SELECT * FROM dbo.VW_PagoBancoObligaciones WHERE C_CodOperacion = '342818'
+

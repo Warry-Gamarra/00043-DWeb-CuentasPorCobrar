@@ -190,7 +190,7 @@ namespace WebApp.Controllers
                 T_NomDepositante = pago.T_NomDepositante,
                 T_EntidadDesc = pago.T_EntidadDesc,
                 C_NumeroCuenta = pago.C_NumeroCuenta,
-                T_FecPago = pago.D_FecPago.ToString(FormatosDateTime.BASIC_DATETIME),
+                T_FecPago = pago.T_FecPago,
                 I_MontoTotalPagado = pago.I_MontoTotalPagado,
                 T_Observacion = pago.T_Observacion
             };

@@ -2,6 +2,11 @@
 @using GridMvc.Html
 @Scripts.Render("~/bundles/jqueryval")
 
+@{
+    var verConstanciaPago = (bool)ViewBag.VerConstanciaPago;
+}
+
+
 <style>
     .input-daterange {
         display: flex !important;
@@ -98,24 +103,28 @@
                 <div class="table-responsive mt-4">
                     <p class="h5">Relación de pagos</p>
                     @if (Model.resultado != null && Model.resultado.Count() > 0)
-                        {
-                            <button type="button" id="btnExcelDownload" class="btn btn-link pl-0">Descargar información en Excel [.xlsx]</button>
-                        }
+                    {
+                        <button type="button" id="btnExcelDownload" class="btn btn-link pl-0">Descargar información en Excel [.xlsx]</button>
+                    }
 
-                        @Html.Grid(Model.resultado).Columns(columns => {
-                            columns.Add(c => c.C_CodOperacion).Titled("Cod.Operación").Css("text-center");
-                            columns.Add(c => c.C_CodigoInterno).Titled("Cod.Interno (BCP)").Css("text-center");
-                            columns.Add(c => c.C_CodDepositante).Titled("Cod.Depositante").Filterable(true);
-                            columns.Add(c => c.T_NomDepositante).Titled("Nom.Depositante").Filterable(true);
-                            columns.Add(c => c.C_CodTasa).Titled("Tasa").Css("text-center");
-                            columns.Add(c => c.T_ConceptoPagoDesc).Titled("Concepto");
-                            columns.Add(c => c.D_FecPago).Titled("Fec.Pago").Css("text-center");
-                            columns.Add(c => c.M_Monto).Titled("Monto Tasa").Filterable(true).Css("text-center");
-                            columns.Add(c => c.T_EntidadDesc).Titled("Banco");
-                            columns.Add(c => c.C_NumeroCuenta).Titled("Cta.Deposito").Css("text-center");
-                            columns.Add(c => c.I_MontoTotalPagado).Titled("Monto Pagado").Filterable(true).Css("text-center");
-                            columns.Add(c => c.D_FecMod).Titled("Fec.Mod.").Css("text-center");
-                        }).WithPaging(12).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
+                    @Html.Grid(Model.resultado).Columns(columns =>
+                    {
+                        columns.Add(c => c.C_CodOperacion).Titled("Cod.Operación").Css("text-center");
+                        columns.Add(c => c.C_CodigoInterno).Titled("Cod.Interno (BCP)").Css("text-center");
+                        columns.Add(c => c.C_CodDepositante).Titled("Cod.Depositante").Filterable(true);
+                        columns.Add(c => c.T_NomDepositante).Titled("Nom.Depositante").Filterable(true);
+                        columns.Add(c => c.C_CodTasa).Titled("Tasa").Css("text-center");
+                        columns.Add(c => c.T_ConceptoPagoDesc).Titled("Concepto");
+                        columns.Add(c => c.D_FecPago).Titled("Fec.Pago").Css("text-center");
+                        columns.Add(c => c.M_Monto).Titled("Monto Tasa").Filterable(true).Css("text-center");
+                        columns.Add(c => c.T_EntidadDesc).Titled("Banco");
+                        columns.Add(c => c.C_NumeroCuenta).Titled("Cta.Deposito").Css("text-center");
+                        columns.Add(c => c.I_MontoTotalPagado).Titled("Monto Pagado").Filterable(true).Css("text-center");
+                        columns.Add(c => c.D_FecMod).Titled("Fec.Mod.").Css("text-center");
+                       columns.Add().Titled("").Css("text-center").Encoded(false).Sanitized(false).RenderValueAs(model =>
+                            verConstanciaPago ? String.Format("<br /><a href=\"{0}\" target=\"_blank\"><i class=\"fa fa-2x fa-print\"></i></a>",
+                            Url.Action("ImprimirConstanciaPagoTasa", "Reportes", new { id = model.I_PagoBancoID })) : "");
+                    }).WithPaging(12).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
                 </div>
             </div>
         </div>

@@ -11,7 +11,7 @@
     </DataSource>
   </DataSources>
   <DataSets>
-    <DataSet Name="PagoObligacionDS">
+    <DataSet Name="PagoTasaDS">
       <Query>
         <DataSourceName>PagoBancoDS</DataSourceName>
         <CommandText>/* Local Query */</CommandText>
@@ -21,12 +21,8 @@
           <DataField>T_ConceptoPago</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="T_MontoPagado">
-          <DataField>T_MontoPagado</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="T_Mora">
-          <DataField>T_Mora</DataField>
+        <Field Name="T_Tasa">
+          <DataField>T_Tasa</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="T_TotalPagado">
@@ -37,14 +33,14 @@
       <rd:DataSetInfo>
         <rd:DataSetName>PagoBancoDS</rd:DataSetName>
         <rd:SchemaPath>F:\git\repos\00043-DWeb-CuentasPorCobrar\src\app\00043-CuentasPorCobrar\WebApp\Models\DataSets\PagoBancoDS.xsd</rd:SchemaPath>
-        <rd:TableName>PagoObligacionDT</rd:TableName>
+        <rd:TableName>PagoTasaDT</rd:TableName>
         <rd:TableAdapterFillMethod />
         <rd:TableAdapterGetDataMethod />
         <rd:TableAdapterName />
       </rd:DataSetInfo>
     </DataSet>
   </DataSets>
-
+  
       <Body>
         <ReportItems>
           <Textbox Name="Textbox2">
@@ -218,7 +214,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=Parameters!C_CodAlu.Value</Value>
+                    <Value>=Parameters!C_CodDepositante.Value</Value>
                     <Style>
                       <FontSize>8pt</FontSize>
                     </Style>
@@ -231,7 +227,7 @@
             <Top>0.21924cm</Top>
             <Left>4.02578cm</Left>
             <Height>0.49417cm</Height>
-            <Width>8.45941cm</Width>
+            <Width>6.47504cm</Width>
             <ZIndex>5</ZIndex>
             <Style>
               <Border>
@@ -250,7 +246,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=Parameters!T_Alumno.Value</Value>
+                    <Value>=Parameters!T_NomDepositante.Value</Value>
                     <Style>
                       <FontSize>8pt</FontSize>
                     </Style>
@@ -263,7 +259,7 @@
             <Top>0.8898cm</Top>
             <Left>4.02579cm</Left>
             <Height>0.49417cm</Height>
-            <Width>8.45941cm</Width>
+            <Width>6.47504cm</Width>
             <ZIndex>6</ZIndex>
             <Style>
               <Border>
@@ -295,7 +291,7 @@
             <Top>1.56036cm</Top>
             <Left>4.02579cm</Left>
             <Height>0.49417cm</Height>
-            <Width>8.45941cm</Width>
+            <Width>6.47504cm</Width>
             <ZIndex>7</ZIndex>
             <Style>
               <Border>
@@ -327,7 +323,7 @@
             <Top>2.90148cm</Top>
             <Left>4.02579cm</Left>
             <Height>0.49417cm</Height>
-            <Width>8.45941cm</Width>
+            <Width>6.47504cm</Width>
             <ZIndex>8</ZIndex>
             <Style>
               <Border>
@@ -359,8 +355,73 @@
             <Top>2.23092cm</Top>
             <Left>4.02579cm</Left>
             <Height>0.49417cm</Height>
-            <Width>8.45941cm</Width>
+            <Width>6.47504cm</Width>
             <ZIndex>9</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="T_Alumno5">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=Parameters!C_CodigoInterno.Value</Value>
+                    <Style>
+                      <FontSize>8pt</FontSize>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>T_Alumno</rd:DefaultName>
+            <Top>2.23092cm</Top>
+            <Left>14.65007cm</Left>
+            <Height>0.49417cm</Height>
+            <Width>3.19421cm</Width>
+            <ZIndex>10</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox10">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Otros</Value>
+                    <Style>
+                      <FontSize>8pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox2</rd:DefaultName>
+            <Top>2.23092cm</Top>
+            <Left>12.29118cm</Left>
+            <Height>0.49417cm</Height>
+            <Width>2.1825cm</Width>
+            <ZIndex>11</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -375,16 +436,13 @@
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>8.85218cm</Width>
+                  <Width>10.74896cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>4.27271cm</Width>
+                  <Width>4.30642cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.5cm</Width>
-                </TablixColumn>
-                <TablixColumn>
-                  <Width>2.5cm</Width>
+                  <Width>3.369cm</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
@@ -416,9 +474,12 @@
                             <Border>
                               <Style>Solid</Style>
                             </Border>
-                            <BottomBorder>
-                              <Color>Black</Color>
-                            </BottomBorder>
+                            <LeftBorder>
+                              <Style>None</Style>
+                            </LeftBorder>
+                            <RightBorder>
+                              <Style>None</Style>
+                            </RightBorder>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -436,14 +497,14 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Monto Pagado</Value>
+                                  <Value>Tasa</Value>
                                   <Style>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style>
-                                <TextAlign>Right</TextAlign>
+                                <TextAlign>Center</TextAlign>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
@@ -452,6 +513,12 @@
                             <Border>
                               <Style>Solid</Style>
                             </Border>
+                            <LeftBorder>
+                              <Style>None</Style>
+                            </LeftBorder>
+                            <RightBorder>
+                              <Style>None</Style>
+                            </RightBorder>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -469,7 +536,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Mora</Value>
+                                  <Value>Total Pagado</Value>
                                   <Style>
                                     <FontSize>8pt</FontSize>
                                   </Style>
@@ -485,39 +552,12 @@
                             <Border>
                               <Style>Solid</Style>
                             </Border>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox15">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>Total Pagado</Value>
-                                  <Style>
-                                    <FontSize>8pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Right</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox15</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Style>Solid</Style>
-                            </Border>
+                            <LeftBorder>
+                              <Style>None</Style>
+                            </LeftBorder>
+                            <RightBorder>
+                              <Style>None</Style>
+                            </RightBorder>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -554,43 +594,7 @@
                           <rd:DefaultName>T_ConceptoPago</rd:DefaultName>
                           <Style>
                             <Border>
-                              <Style>Solid</Style>
-                            </Border>
-                            <BottomBorder>
-                              <Color>Black</Color>
-                            </BottomBorder>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="T_MontoPagado">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>=Fields!T_MontoPagado.Value</Value>
-                                  <Style>
-                                    <FontSize>8pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Right</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>T_MontoPagado</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Style>Solid</Style>
+                              <Style>None</Style>
                             </Border>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
@@ -602,28 +606,28 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="T_Mora">
+                        <Textbox Name="T_Tasa">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!T_Mora.Value</Value>
+                                  <Value>=Fields!T_Tasa.Value</Value>
                                   <Style>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style>
-                                <TextAlign>Right</TextAlign>
+                                <TextAlign>Center</TextAlign>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>T_Mora</rd:DefaultName>
+                          <rd:DefaultName>T_Tasa</rd:DefaultName>
                           <Style>
                             <Border>
-                              <Style>Solid</Style>
+                              <Style>None</Style>
                             </Border>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
@@ -656,7 +660,7 @@
                           <rd:DefaultName>T_TotalPagado</rd:DefaultName>
                           <Style>
                             <Border>
-                              <Style>Solid</Style>
+                              <Style>None</Style>
                             </Border>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
@@ -675,7 +679,6 @@
                 <TablixMember />
                 <TablixMember />
                 <TablixMember />
-                <TablixMember />
               </TablixMembers>
             </TablixColumnHierarchy>
             <TablixRowHierarchy>
@@ -688,12 +691,12 @@
                 </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
-            <DataSetName>PagoObligacionDS</DataSetName>
-            <Top>4.87345cm</Top>
-            <Left>0.01764cm</Left>
+            <DataSetName>PagoTasaDS</DataSetName>
+            <Top>4.82053cm</Top>
+            <Left>0.05294cm</Left>
             <Height>1.2cm</Height>
-            <Width>18.12489cm</Width>
-            <ZIndex>10</ZIndex>
+            <Width>18.42438cm</Width>
+            <ZIndex>12</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -701,7 +704,7 @@
             </Style>
           </Tablix>
         </ReportItems>
-        <Height>4.40625in</Height>
+        <Height>2.625in</Height>
         <Style>
           <Border>
             <Color>White</Color>
@@ -709,7 +712,7 @@
           </Border>
         </Style>
       </Body>
-      <Width>7.54537in</Width>
+      <Width>7.33704in</Width>
       <Page>
         <PageHeader>
           <Height>3.35192cm</Height>
@@ -786,7 +789,7 @@
               </Paragraphs>
               <rd:DefaultName>Textbox2</rd:DefaultName>
               <Top>0.46073cm</Top>
-              <Left>14.61948cm</Left>
+              <Left>13.98448cm</Left>
               <Height>0.5cm</Height>
               <Width>2.04409cm</Width>
               <ZIndex>2</ZIndex>
@@ -820,7 +823,7 @@
               </Paragraphs>
               <rd:DefaultName>Textbox1</rd:DefaultName>
               <Top>0.46073cm</Top>
-              <Left>16.66357cm</Left>
+              <Left>16.02857cm</Left>
               <Height>0.5cm</Height>
               <Width>2.44875cm</Width>
               <ZIndex>3</ZIndex>
@@ -853,7 +856,7 @@
               </Paragraphs>
               <rd:DefaultName>Textbox2</rd:DefaultName>
               <Top>1.13129cm</Top>
-              <Left>14.61948cm</Left>
+              <Left>13.98448cm</Left>
               <Height>0.5cm</Height>
               <Width>1.69131cm</Width>
               <ZIndex>4</ZIndex>
@@ -887,7 +890,7 @@
               </Paragraphs>
               <rd:DefaultName>T_NroConstancia</rd:DefaultName>
               <Top>1.13712cm</Top>
-              <Left>16.48718cm</Left>
+              <Left>15.85218cm</Left>
               <Height>0.5cm</Height>
               <Width>2.62514cm</Width>
               <ZIndex>5</ZIndex>
@@ -958,13 +961,13 @@
       </Page>
     
   <ReportParameters>
-    <ReportParameter Name="C_CodAlu">
+    <ReportParameter Name="C_CodDepositante">
       <DataType>String</DataType>
       <Nullable>true</Nullable>
       <AllowBlank>true</AllowBlank>
       <Prompt>ReportParameter1</Prompt>
     </ReportParameter>
-    <ReportParameter Name="T_Alumno">
+    <ReportParameter Name="T_NomDepositante">
       <DataType>String</DataType>
       <Nullable>true</Nullable>
       <AllowBlank>true</AllowBlank>
@@ -984,6 +987,12 @@
     </ReportParameter>
     <ReportParameter Name="T_FechaPago">
       <DataType>String</DataType>
+      <Prompt>ReportParameter1</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="C_CodigoInterno">
+      <DataType>String</DataType>
+      <Nullable>true</Nullable>
+      <AllowBlank>true</AllowBlank>
       <Prompt>ReportParameter1</Prompt>
     </ReportParameter>
   </ReportParameters>

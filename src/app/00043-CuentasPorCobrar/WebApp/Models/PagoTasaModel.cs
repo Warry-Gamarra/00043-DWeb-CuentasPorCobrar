@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -41,6 +42,14 @@ namespace WebApp.Models
 
         public DateTime D_FecPago { get; set; }
 
+        public string T_FecPago
+        {
+            get
+            {
+                return D_FecPago.ToString(FormatosDateTime.BASIC_DATETIME);
+            }
+        }
+
         public decimal I_MontoPagado { get; set; }
 
         public decimal I_InteresMoratorio { get; set; }
@@ -50,6 +59,14 @@ namespace WebApp.Models
             get
             {
                 return I_MontoPagado + I_InteresMoratorio;
+            }
+        }
+
+        public string T_MontoTotalPagado
+        {
+            get 
+            {
+                return I_MontoTotalPagado.ToString(FormatosDecimal.BASIC_DECIMAL);
             }
         }
 

@@ -111,6 +111,7 @@
     <Compile Include="Tables\TI_TasaUnfv.cs" />
     <Compile Include="Tables\TI_TasaUnfv_CtaDepoServicio.cs" />
     <Compile Include="Tables\TRI_PagoProcesadoUnfv.cs" />
+    <Compile Include="Tables\TR_ConstanciaPago.cs" />
     <Compile Include="Tables\TR_ImportacionArchivos.cs" />
     <Compile Include="Tables\TR_DevolucionPago.cs" />
     <Compile Include="Tables\TR_ObligacionAluCab.cs" />

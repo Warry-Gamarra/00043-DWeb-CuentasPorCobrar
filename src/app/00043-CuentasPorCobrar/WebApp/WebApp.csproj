@@ -459,6 +459,7 @@
     <Compile Include="Models\Facades\ReporteGeneralServiceFacade.cs" />
     <Compile Include="Models\ReportModels\CabObligacionAlumnoRptModel.cs" />
     <Compile Include="Models\ReportModels\DetObligacionAlumnoRptModel.cs" />
+    <Compile Include="Models\ReportModels\PagoTasaRptModel.cs" />
     <Compile Include="Models\ReportModels\PagoObligacionRptModel.cs" />
     <Compile Include="ViewModels\FechaVctoObligacionViewModel.cs" />
     <Compile Include="ViewModels\ConsultaPagosBancoObligacionesViewModel.cs" />
@@ -721,7 +722,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ReportesRDLC\RptConstanciaPago.rdlc">
+    <EmbeddedResource Include="ReportesRDLC\RptConstanciaPagoTasa.rdlc">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportesRDLC\RptConstanciaPagoObligacion.rdlc">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="ReportesRDLC\RptObligacionesPorPeriodo.rdlc">
