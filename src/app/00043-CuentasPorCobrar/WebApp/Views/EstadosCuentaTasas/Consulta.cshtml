@@ -120,8 +120,9 @@
                         columns.Add(c => c.T_EntidadDesc).Titled("Banco");
                         columns.Add(c => c.C_NumeroCuenta).Titled("Cta.Deposito").Css("text-center");
                         columns.Add(c => c.I_MontoTotalPagado).Titled("Monto Pagado").Filterable(true).Css("text-center");
+                        columns.Add(c => c.T_Constancia).Titled("Nro.Constancia").Css("text-center");
                         columns.Add(c => c.D_FecMod).Titled("Fec.Mod.").Css("text-center");
-                       columns.Add().Titled("").Css("text-center").Encoded(false).Sanitized(false).RenderValueAs(model =>
+                        columns.Add().Titled("").Css("text-center").Encoded(false).Sanitized(false).RenderValueAs(model =>
                             verConstanciaPago ? String.Format("<br /><a href=\"{0}\" target=\"_blank\"><i class=\"fa fa-2x fa-print\"></i></a>",
                             Url.Action("ImprimirConstanciaPagoTasa", "Reportes", new { id = model.I_PagoBancoID })) : "");
                     }).WithPaging(12).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")

@@ -136,5 +136,24 @@ namespace WebApp.ViewModels
                 return D_FecVencto.HasValue ? D_FecVencto.Value.ToString(FormatosDateTime.BASIC_DATE) : "";
             }
         }
+
+        public int? I_AnioConstancia { get; set; }
+
+        public int? I_NnroConstancia { get; set; }
+
+        public string T_Constancia
+        {
+            get
+            {
+                if (I_AnioConstancia.HasValue && I_NnroConstancia.HasValue)
+                {
+                    return String.Format("{0}-{1}", I_AnioConstancia.Value, I_NnroConstancia.Value.ToString().PadLeft(5, '0'));
+                }
+                else
+                {
+                    return "";
+                }
+            }
+        }
     }
 }

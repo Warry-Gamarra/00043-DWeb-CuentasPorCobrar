@@ -51,5 +51,9 @@ namespace Domain.Entities
         public string C_CodigoInterno { get; set; }
 
         public string T_Observacion { get; set; }
+
+        public int? I_AnioConstancia { get; set; }
+
+        public int? I_NnroConstancia { get; set; }
     }
 }

@@ -63,5 +63,9 @@ namespace Domain.Entities
         public string T_ProcesoDesc { get; set; }
 
         public DateTime? D_FecVencto { get; set; }
+
+        public int? I_AnioConstancia { get; set; }
+
+        public int? I_NnroConstancia { get; set; }
     }
 }

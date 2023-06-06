@@ -187,13 +187,14 @@ namespace WebApp.Controllers
 
             var parameterList = new List<ReportParameter>();
 
-            parameterList.Add(new ReportParameter("T_NroConstancia", "2023-00001"));
+            parameterList.Add(new ReportParameter("T_NroConstancia", pagoBanco.T_Constancia));
             parameterList.Add(new ReportParameter("C_CodAlu", pagoBanco.T_CodDepositante));
             parameterList.Add(new ReportParameter("T_Alumno", pagoBanco.T_DatosDepositante));
             parameterList.Add(new ReportParameter("T_EntidadFinanciera", pagoBanco.T_EntidadDesc));
             parameterList.Add(new ReportParameter("T_NroLiquidacion", pagoBanco.C_CodOperacion));
             parameterList.Add(new ReportParameter("C_CodigoInterno", pagoBanco.C_CodigoInterno));
             parameterList.Add(new ReportParameter("T_FechaPago", pagoBanco.T_FecPago));
+            parameterList.Add(new ReportParameter("T_TotalPagado", listaConceptos.Sum(x => x.I_MontoPagoTotal).ToString(FormatosDecimal.BASIC_DECIMAL)));
 
             return ReportExport(docType, reportName, reportDataSets, parameterList);
         }
@@ -229,7 +230,7 @@ namespace WebApp.Controllers
 
             var parameterList = new List<ReportParameter>();
 
-            parameterList.Add(new ReportParameter("T_NroConstancia", "2023-00002"));
+            parameterList.Add(new ReportParameter("T_NroConstancia", pagoBanco.T_Constancia));
             parameterList.Add(new ReportParameter("C_CodDepositante", pagoBanco.C_CodDepositante));
             parameterList.Add(new ReportParameter("T_NomDepositante", pagoBanco.T_NomDepositante.StartsWith("0") ? "-" : pagoBanco.T_NomDepositante));
             parameterList.Add(new ReportParameter("T_EntidadFinanciera", pagoBanco.T_EntidadDesc));

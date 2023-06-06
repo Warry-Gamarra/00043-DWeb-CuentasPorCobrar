@@ -430,7 +430,9 @@ namespace WebApp.Models
                 D_FecCre = dto.D_FecCre,
                 D_FecMod = dto.D_FecMod,
                 C_CodigoInterno = dto.C_CodigoInterno,
-                T_Observacion = dto.T_Observacion
+                T_Observacion = dto.T_Observacion,
+                I_AnioConstancia = dto.I_AnioConstancia,
+                I_NnroConstancia = dto.I_NnroConstancia
             };
 
             return model;
@@ -467,7 +469,9 @@ namespace WebApp.Models
                 T_MotivoCoreccion = dto.T_MotivoCoreccion,
                 C_CodigoInterno = dto.C_CodigoInterno,
                 T_ProcesoDesc = dto.T_ProcesoDesc,
-                D_FecVencto = dto.D_FecVencto
+                D_FecVencto = dto.D_FecVencto,
+                I_AnioConstancia = dto.I_AnioConstancia,
+                I_NnroConstancia = dto.I_NnroConstancia
             };
 
             return model;

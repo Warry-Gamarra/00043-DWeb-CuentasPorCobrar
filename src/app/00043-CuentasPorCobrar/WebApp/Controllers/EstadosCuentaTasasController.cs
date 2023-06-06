@@ -82,8 +82,8 @@ namespace WebApp.Controllers
                 worksheet.Column("F").Width = 35;
                 worksheet.Columns("G:H").Width = 15;
                 worksheet.Column("I").Width = 30;
-                worksheet.Columns("J:L").Width = 15;
-                worksheet.Column("M").Width = 35;
+                worksheet.Columns("J:M").Width = 15;
+                worksheet.Column("N").Width = 35;
 
                 worksheet.Cell(currentRow, 1).Value = "Cod.Operación";
                 worksheet.Cell(currentRow, 2).Value = "Cod.Interno (BCP)";
@@ -96,8 +96,9 @@ namespace WebApp.Controllers
                 worksheet.Cell(currentRow, 9).Value = "Banco";
                 worksheet.Cell(currentRow, 10).Value = "Cta.Deposito";
                 worksheet.Cell(currentRow, 11).Value = "Monto Pagado";
-                worksheet.Cell(currentRow, 12).Value = "Fec.Mod";
-                worksheet.Cell(currentRow, 13).Value = "Obs.";
+                worksheet.Cell(currentRow, 12).Value = "Nro.Constancia";
+                worksheet.Cell(currentRow, 13).Value = "Fec.Mod";
+                worksheet.Cell(currentRow, 14).Value = "Obs.";
 
                 foreach (var item in model.resultado)
                 {
@@ -113,12 +114,14 @@ namespace WebApp.Controllers
                     worksheet.Cell(currentRow, 9).SetValue<string>(item.T_EntidadDesc);
                     worksheet.Cell(currentRow, 10).SetValue<string>(item.C_NumeroCuenta);
                     worksheet.Cell(currentRow, 11).SetValue<decimal>(item.I_MontoTotalPagado);
-                    worksheet.Cell(currentRow, 12).SetValue<DateTime?>(item.D_FecMod);
-                    worksheet.Cell(currentRow, 13).SetValue<string>(item.T_Observacion);
+                    worksheet.Cell(currentRow, 12).SetValue<string>(item.T_Constancia);
+                    worksheet.Cell(currentRow, 13).SetValue<DateTime?>(item.D_FecMod);
+                    worksheet.Cell(currentRow, 14).SetValue<string>(item.T_Observacion);
                 }
 
                 worksheet.Columns("H").Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
                 worksheet.Columns("K").Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
+                worksheet.Columns("L").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
 
                 using (var stream = new MemoryStream())
                 {

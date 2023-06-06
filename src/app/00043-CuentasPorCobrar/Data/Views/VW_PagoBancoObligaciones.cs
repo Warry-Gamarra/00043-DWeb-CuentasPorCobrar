@@ -68,6 +68,10 @@ namespace Data.Views
 
         public DateTime? D_FecVencto { get; set; }
 
+        public int? I_AnioConstancia { get; set; }
+
+        public int? I_NnroConstancia { get; set; }
+
         public static VW_PagoBancoObligaciones FindByID(int idPagoBanco)
         {
             string s_command;

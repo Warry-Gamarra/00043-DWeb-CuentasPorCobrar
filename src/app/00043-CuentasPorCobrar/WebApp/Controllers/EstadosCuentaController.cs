@@ -1464,8 +1464,8 @@ namespace WebApp.Controllers
                 worksheet.Column("E").Width = 25;
                 worksheet.Columns("F:G").Width = 16;
                 worksheet.Column("H").Width = 30;
-                worksheet.Columns("I:N").Width = 16;
-                worksheet.Column("O").Width = 30;
+                worksheet.Columns("I:O").Width = 16;
+                worksheet.Column("P").Width = 30;
 
                 var currentRow = 1;
 
@@ -1482,9 +1482,10 @@ namespace WebApp.Controllers
                 worksheet.Cell(currentRow, 10).Value = "Monto Pagado";
                 worksheet.Cell(currentRow, 11).Value = "Mora";
                 worksheet.Cell(currentRow, 12).Value = "Lugar";
-                worksheet.Cell(currentRow, 13).Value = "Fec.Reg.Sistema";
-                worksheet.Cell(currentRow, 14).Value = "Condición";
-                worksheet.Cell(currentRow, 15).Value = "Observación";
+                worksheet.Cell(currentRow, 13).Value = "Nro.Constancia";
+                worksheet.Cell(currentRow, 14).Value = "Fec.Reg.Sistema";
+                worksheet.Cell(currentRow, 15).Value = "Condición";
+                worksheet.Cell(currentRow, 16).Value = "Observación";
                 #endregion
 
                 #region Body
@@ -1503,13 +1504,15 @@ namespace WebApp.Controllers
                     worksheet.Cell(currentRow, 10).SetValue<decimal>(item.I_MontoPago);
                     worksheet.Cell(currentRow, 11).SetValue<decimal>(item.I_InteresMora);
                     worksheet.Cell(currentRow, 12).SetValue<string>(item.T_LugarPago);
-                    worksheet.Cell(currentRow, 13).SetValue<DateTime>(item.D_FecCre);
-                    worksheet.Cell(currentRow, 14).SetValue<string>(item.T_Condicion);
-                    worksheet.Cell(currentRow, 15).SetValue<string>(item.T_Observacion);
+                    worksheet.Cell(currentRow, 13).SetValue<string>(item.T_Constancia);
+                    worksheet.Cell(currentRow, 14).SetValue<DateTime>(item.D_FecCre);
+                    worksheet.Cell(currentRow, 15).SetValue<string>(item.T_Condicion);
+                    worksheet.Cell(currentRow, 16).SetValue<string>(item.T_Observacion);
                 }
                 #endregion
 
                 worksheet.Range(worksheet.Cell(2, 10), worksheet.Cell(currentRow, 11)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
+                worksheet.Columns("M").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Right);
 
                 using (var stream = new MemoryStream())
                 {

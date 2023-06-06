@@ -138,9 +138,11 @@
                         columns.Add(c => c.I_MontoPago).Titled("Monto Pagado").Filterable(true).Css("text-center");
                         columns.Add(c => c.I_InteresMora).Titled("Mora").Filterable(true).Css("text-center");
                         columns.Add(c => c.D_FecCre).Titled("Fec.Reg.Sistema").Filterable(true).Css("text-center").SetWidth(90);
-                        columns.Add().Titled("Condición").Css("text-center").Encoded(false).Sanitized(false).RenderValueAs(model =>
-                            verConstanciaPago ? String.Format("{0}<br /><a href=\"{1}\" target=\"_blank\"><i class=\"fa fa-2x fa-print\"></i></a>", 
-                            model.T_Condicion, Url.Action("ImprimirConstanciaPagoObligacion", "Reportes", new { id = model.I_PagoBancoID})) : model.T_Condicion
+                        columns.Add(c => c.T_Condicion).Titled("Condición").Filterable(true).Css("text-center");
+                        columns.Add(c => c.T_Constancia).Titled("Nro.Constancia").Css("text-center");
+                        columns.Add().Titled("").Css("text-center").Encoded(false).Sanitized(false).RenderValueAs(model =>
+                            verConstanciaPago ? String.Format("<a href=\"{0}\" target=\"_blank\"><i class=\"fa fa-2x fa-print\"></i></a>",
+                            Url.Action("ImprimirConstanciaPagoObligacion", "Reportes", new { id = model.I_PagoBancoID})) : ""
                         );
                     }).WithPaging(12).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
                 </div>
