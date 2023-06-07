@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Web;
 using System.Web.Mvc;
 using WebApp.Models;
@@ -227,6 +228,61 @@ namespace WebApp.Controllers
             }
         }
 
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONTABILIDAD + ", " + RoleNames.TESORERIA)]
+        public ActionResult DescargarConstanciaPagoObligaciones(ConsultaPagosBancoObligacionesViewModel model)
+        {
+            model.resultado = pagosModel.ListarPagoBancoObligacion(model);
+
+            var listaPagos = model.resultado.GroupBy(x => new { x.I_EntidadFinanID, x.C_CodOperacion, x.C_CodDepositante, x.T_FecPago });
+
+            string docType = "pdf";
+
+            string reportName = "RptConstanciaPagoObligacion";
+
+            bool generarReporte;
+
+            string fileName;
+
+            using (var zip = new ZipFile())
+            {
+                foreach (var item in listaPagos)
+                {
+                    var listaConceptosModel = new List<PagoConstanciaModel>();
+
+                    item.ForEach(x => {
+                        listaConceptosModel.Add(new PagoConstanciaModel()
+                        {
+                            pagoBancoID = x.I_PagoBancoID,
+                            anioConstancia = x.I_AnioConstancia,
+                            nroConstancia = x.I_NroConstancia
+                        });
+                    });
+
+                    var resultado = pagosModel.ObtenerNroConstancia(listaConceptosModel, WebSecurity.CurrentUserId);
+
+                    generarReporte = resultado.Item1;
+
+                    if (generarReporte)
+                    {
+                        fileName = DateTime.Now.ToString() + ".pdf";
+
+                        var renderedBytes = ReportStream(docType, reportName, null, null);
+
+                        using (var stream = new MemoryStream(renderedBytes))
+                        {
+                            zip.AddEntry(fileName, stream.ToArray());
+                        }
+                    }
+                }
+
+                var output = new MemoryStream();
+
+                zip.Save(output);
+
+                return File(output.ToArray(), "application/zip", DateTime.Now.ToString() + ".zip");
+            }
+        }
+
         [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
         [Route("consulta/ingresos-de-obligaciones/constancia-pago-tasa")]
         public ActionResult ImprimirConstanciaPagoTasa(int id)
@@ -284,7 +340,7 @@ namespace WebApp.Controllers
             }
             else
             {
-                return RedirectToAction("Consulta", "EstadosCuentaTasa");
+                return RedirectToAction("Consulta", "EstadosCuentaTasas");
             }
         }
 
@@ -332,69 +388,43 @@ namespace WebApp.Controllers
             return File(renderedBytes, mimeType);
         }
 
-        //private FileContentResult ReportExport(string docType, string reportName, Dictionary<string, Object> reportDataSets, IEnumerable<ReportParameter> parameters)
-        //{
-        //    string reportPath = Path.Combine(Server.MapPath("~/ReportesRDLC"), reportName + ".rdlc");
+        private byte[] ReportStream(string docType, string reportName, Dictionary<string, Object> reportDataSets, IEnumerable<ReportParameter> parameters)
+        {
+            string reportPath = Path.Combine(Server.MapPath("~/ReportesRDLC"), reportName + ".rdlc");
 
-        //    if (!System.IO.File.Exists(reportPath))
-        //    {
-        //        throw new FileNotFoundException();
-        //    }
+            if (!System.IO.File.Exists(reportPath))
+            {
+                throw new FileNotFoundException();
+            }
 
-        //    var localReport = new LocalReport()
-        //    {
-        //        ReportPath = reportPath,
-        //        EnableExternalImages = true
-        //    };
+            var localReport = new LocalReport()
+            {
+                ReportPath = reportPath,
+                EnableExternalImages = true
+            };
 
-        //    if (reportDataSets != null && reportDataSets.Count() > 0)
-        //    {
-        //        foreach (var item in reportDataSets)
-        //        {
-        //            localReport.DataSources.Add(new ReportDataSource(item.Key, item.Value));
-        //        }
-        //    }
+            if (reportDataSets != null && reportDataSets.Count() > 0)
+            {
+                foreach (var item in reportDataSets)
+                {
+                    localReport.DataSources.Add(new ReportDataSource(item.Key, item.Value));
+                }
+            }
 
-        //    if (parameters != null && parameters.Count() > 0)
-        //    {
-        //        localReport.SetParameters(parameters);
-        //    }
+            if (parameters != null && parameters.Count() > 0)
+            {
+                localReport.SetParameters(parameters);
+            }
 
-        //    string reportType = docType;
-        //    string mimeType;
-        //    string encoding;
-        //    string fileNameExtension;
+            string reportType = docType;
+            string mimeType;
+            string encoding;
+            string fileNameExtension;
 
-        //    Warning[] warnings;
-        //    string[] streams;
-        //    byte[] renderedBytes;
+            Warning[] warnings;
+            string[] streams;
 
-        //    renderedBytes = localReport.Render(reportType, null, out mimeType, out encoding, out fileNameExtension, out streams, out warnings);
-
-        //    string extension = (docType == "excel") ? "xls" : "pdf";
-
-        //    //Nuevo
-        //    var stream = new MemoryStream(renderedBytes);
-
-        //    using (ZipFile zip = new ZipFile())
-        //    {
-        //        //foreach (var smdId in reports)
-        //        //{
-        //            string fileName = $"smdReport_{DateTime.Now.ToString()}" + extension;
-
-        //        using (var report = stream)
-        //            {
-        //                // convert stream to archive
-        //                zip.AddEntry($"{fileName}", report.ToArray());
-        //            }
-        //        //}
-
-        //        MemoryStream output = new MemoryStream();
-
-        //        zip.Save(output);
-
-        //        return File(output.ToArray(), "application/zip", "sample.zip");
-        //    }
-        //}
+            return localReport.Render(reportType, null, out mimeType, out encoding, out fileNameExtension, out streams, out warnings);
+        }
     }
 }

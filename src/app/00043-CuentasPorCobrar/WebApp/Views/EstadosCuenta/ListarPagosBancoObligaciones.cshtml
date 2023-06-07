@@ -123,10 +123,12 @@
                     <p class="h5">Relación de estudiantes registrados en el sistema</p>
                     @if (Model.resultado != null && Model.resultado.Count() > 0)
                     {
-                        <button type="button" id="btnDescargaExcel" class="btn btn-link pl-0">Descargar información en Excel [.xlsx]</button>
+                        <button type="button" id="btnDescargaExcel" class="btn btn-link">Descargar información en Excel [.xlsx]</button><text>|</text>
+                        <button type="button" id="btnDescargaZip" class="btn btn-link">Descargar Constancias [.zip]</button>
                     }
 
-                    @Html.Grid(Model.resultado).Columns(columns => {
+                    @Html.Grid(Model.resultado).Columns(columns =>
+                    {
                         columns.Add(c => c.T_EntidadDesc).Titled("Banco");
                         columns.Add(c => c.C_NumeroCuenta).Titled("Cta.Deposito").Filterable(true).Css("text-center");
                         columns.Add(c => c.C_CodOperacion).Titled("Cod.Operación").Css("text-center");
@@ -142,7 +144,7 @@
                         columns.Add(c => c.T_Constancia).Titled("Nro.Constancia").Css("text-center");
                         columns.Add().Titled("").Css("text-center").Encoded(false).Sanitized(false).RenderValueAs(model =>
                             verConstanciaPago ? String.Format("<a href=\"{0}\" target=\"_blank\"><i class=\"fa fa-2x fa-print\"></i></a>",
-                            Url.Action("ImprimirConstanciaPagoObligacion", "Reportes", new { id = model.I_PagoBancoID})) : ""
+                            Url.Action("ImprimirConstanciaPagoObligacion", "Reportes", new { id = model.I_PagoBancoID })) : ""
                         );
                     }).WithPaging(12).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
                 </div>
@@ -174,6 +176,11 @@
 
         $(document).on("click", "#btnDescargaExcel", function (e) {
             document.forms.frmConsultaPagosBancoObligaciones.action = "@Url.Action("ListarPagosBancoObligacionesDescargaExcel", "EstadosCuenta")";
+            document.forms.frmConsultaPagosBancoObligaciones.submit();
+        });
+
+        $(document).on("click", "#btnDescargaZip", function (e) {
+            document.forms.frmConsultaPagosBancoObligaciones.action = "@Url.Action("DescargarConstanciaPagoObligaciones", "Reportes")";
             document.forms.frmConsultaPagosBancoObligaciones.submit();
         });
 
