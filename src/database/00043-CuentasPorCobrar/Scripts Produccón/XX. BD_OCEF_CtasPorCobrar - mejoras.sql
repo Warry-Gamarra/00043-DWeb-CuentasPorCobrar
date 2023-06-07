@@ -404,11 +404,11 @@ CREATE TABLE TR_ConstanciaPago
 	I_ConstanciaPagoID INT IDENTITY(1,1),
 	I_PagoBancoID INT NOT NULL,
 	I_AnioConstancia INT NOT NULL,
-	I_NnroConstancia INT NOT NULL,
+	I_NroConstancia INT NOT NULL,
 	I_UsuarioCre INT NOT NULL,
 	D_FecCre DATETIME NOT NULL,
 	CONSTRAINT PK_ConstanciaPago PRIMARY KEY (I_ConstanciaPagoID),
-	CONSTRAINT UQ_ConstanciaPago UNIQUE (I_AnioConstancia, I_NnroConstancia, I_PagoBancoID),
+	CONSTRAINT UQ_ConstanciaPago UNIQUE (I_AnioConstancia, I_NroConstancia, I_PagoBancoID),
 	CONSTRAINT FK_PagoBanco_ConstanciaPago FOREIGN KEY (I_PagoBancoID) REFERENCES TR_PagoBanco (I_PagoBancoID)
 )
 GO
@@ -419,14 +419,15 @@ GO
 
 CREATE PROCEDURE [dbo].[USP_I_GrabarConstanciaPago]
 @I_PagoBancoID INT,
-@I_ConstanciaPagoNum INT,
+@I_AnioConstancia INT,
+@I_NroConstancia INT,
 @UserID INT
 AS
 BEGIN  
 	SET NOCOUNT ON;
 	
-	INSERT dbo.TR_ConstanciaPago(I_PagoBancoID, I_ConstanciaPagoNum, I_UsuarioCre, D_FecCre)
-	VALUES(@I_PagoBancoID, @I_ConstanciaPagoNum, @UserID, GETDATE())
+	INSERT dbo.TR_ConstanciaPago(I_PagoBancoID, I_AnioConstancia, I_NroConstancia, I_UsuarioCre, D_FecCre)
+	VALUES(@I_PagoBancoID, @I_AnioConstancia, @I_NroConstancia, @UserID, GETDATE())
 END
 GO
 
@@ -444,7 +445,7 @@ AS
 		b.T_MotivoCoreccion, ISNULL(SUM(p.I_MontoPagado), 0) AS I_MontoProcesado, b.C_CodigoInterno,
 		ISNULL(pro.T_ProcesoDesc, b.T_ProcesoDescArchivo) AS T_ProcesoDesc,
 		ISNULL(pro.D_FecVencto, b.D_FecVenctoArchivo) AS D_FecVencto,
-		cons.I_AnioConstancia, cons.I_NnroConstancia
+		cons.I_AnioConstancia, cons.I_NroConstancia
 	FROM TR_PagoBanco b
 	LEFT JOIN dbo.TRI_PagoProcesadoUnfv p ON p.I_PagoBancoID = b.I_PagoBancoID AND p.B_Anulado = 0
 	LEFT JOIN dbo.TR_ObligacionAluDet d ON d.I_ObligacionAluDetID = p.I_ObligacionAluDetID AND d.B_Habilitado = 1 AND d.B_Eliminado = 0
@@ -460,7 +461,7 @@ AS
 		c.I_ObligacionAluID, m.I_MatAluID, m.C_CodAlu, b.T_NomDepositante, m.T_Nombre, m.T_ApePaterno, m.T_ApeMaterno, m.N_Grado,
 		b.D_FecPago, b.I_MontoPago, b.I_InteresMora, b.T_LugarPago, b.D_FecCre, b.I_CondicionPagoID, cn.T_OpcionDesc, b.T_Observacion, b.T_MotivoCoreccion,
 		b.C_CodigoInterno, pro.T_ProcesoDesc, b.T_ProcesoDescArchivo, pro.D_FecVencto, b.D_FecVenctoArchivo,
-		cons.I_AnioConstancia, cons.I_NnroConstancia
+		cons.I_AnioConstancia, cons.I_NroConstancia
 GO
 
 
@@ -475,7 +476,7 @@ AS
 		tu.T_Clasificador, cl.C_CodClasificador, cl.T_ClasificadorDesc, t.M_Monto,
 		pag.C_CodOperacion, pag.C_CodDepositante, pag.T_NomDepositante, pag.D_FecPago, pr.I_MontoPagado, pag.D_FecCre, pag.D_FecMod,
 		pag.C_CodigoInterno, pag.T_Observacion,
-		cons.I_AnioConstancia, cons.I_NnroConstancia
+		cons.I_AnioConstancia, cons.I_NroConstancia
 	FROM dbo.TR_PagoBanco pag
 	INNER JOIN dbo.TRI_PagoProcesadoUnfv pr ON pr.I_PagoBancoID = pag.I_PagoBancoID
 	INNER JOIN dbo.TI_TasaUnfv t ON t.I_TasaUnfvID = pr.I_TasaUnfvID

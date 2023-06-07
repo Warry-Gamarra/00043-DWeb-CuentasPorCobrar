@@ -878,5 +878,20 @@ namespace WebApp.Models
 
             return result;
         }
+
+        public int GenerarNroConstancia(int anioConstancia)
+        {
+            return pagoService.GenerarNroConstancia(anioConstancia);
+        }
+
+        public int? ObtenerNroConstancia(int pagoBancoID)
+        {
+            return pagoService.ObtenerNroConstancia(pagoBancoID);
+        }
+
+        public Response GenerarNroConstancia(int pagoBancoID, int anioConstancia, int nroConstancia, int userID)
+        {
+            return pagoService.GenerarNroConstancia(pagoBancoID, anioConstancia, nroConstancia, userID);
+        }
     }
 }

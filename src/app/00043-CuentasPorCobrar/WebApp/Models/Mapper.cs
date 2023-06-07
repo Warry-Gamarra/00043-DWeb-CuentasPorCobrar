@@ -432,7 +432,7 @@ namespace WebApp.Models
                 C_CodigoInterno = dto.C_CodigoInterno,
                 T_Observacion = dto.T_Observacion,
                 I_AnioConstancia = dto.I_AnioConstancia,
-                I_NnroConstancia = dto.I_NnroConstancia
+                I_NroConstancia = dto.I_NroConstancia
             };
 
             return model;
@@ -471,7 +471,7 @@ namespace WebApp.Models
                 T_ProcesoDesc = dto.T_ProcesoDesc,
                 D_FecVencto = dto.D_FecVencto,
                 I_AnioConstancia = dto.I_AnioConstancia,
-                I_NnroConstancia = dto.I_NnroConstancia
+                I_NroConstancia = dto.I_NroConstancia
             };
 
             return model;

@@ -9,9 +9,11 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using WebApp.Models;
+using WebApp.Models.DataSets;
 using WebApp.Models.Facades;
 using WebApp.Models.ReportModels;
 using WebGrease.Css.Extensions;
+using WebMatrix.WebData;
 
 namespace WebApp.Controllers
 {
@@ -155,50 +157,112 @@ namespace WebApp.Controllers
         [Route("consulta/ingresos-de-obligaciones/constancia-pago-obligacion")]
         public ActionResult ImprimirConstanciaPagoObligacion(int id)
         {
-            string docType = "pdf";
-
-            string reportName = "RptConstanciaPagoObligacion";
-
             var pagoBanco = pagosModel.ObtenerPagoBanco(id);
 
             var listaConceptos = pagosModel.ObtenerPagosPorBoucher(pagoBanco.I_EntidadFinanID, pagoBanco.C_CodOperacion,
                 pagoBanco.C_CodDepositante, pagoBanco.D_FecPago.Value);
 
-            //Verificar si existe el número de constancia
+            bool generarReporte = true;
 
-            //Asignar el nro de constancia.
+            int anioConstancia = DateTime.Now.Year;
 
-            string dataSet = "PagoObligacionDS";
+            int nroConstancia;
 
-            var pagoObligacionDSet = new List<PagoObligacionRptModel>();
+            int errorGrabacion = 0;
 
-            listaConceptos
-                .OrderBy(c => c.T_ProcesoDesc)
-                .OrderBy(c => c.D_FecVencto)
-                .ForEach(c => {pagoObligacionDSet.Add(new PagoObligacionRptModel() {
-                    T_ConceptoPago = c.T_ProcesoDesc,
-                    T_MontoPagado = c.T_MontoPago,
-                    T_Mora = c.T_InteresMora,
-                    T_TotalPagado = c.T_MontoPagoTotal
+            if (listaConceptos.Where(x => x.I_NroConstancia.HasValue).Count() == 0)
+            {
+                nroConstancia = pagosModel.GenerarNroConstancia(anioConstancia);
+
+                listaConceptos.Where(x => !x.I_NroConstancia.HasValue).ForEach(x => {
+                    var result = pagosModel.GenerarNroConstancia(x.I_PagoBancoID, anioConstancia, nroConstancia, WebSecurity.CurrentUserId);
+
+                    if (!result.Value)
+                    {
+                        errorGrabacion++;
+                    }
                 });
-            });
 
-            var reportDataSets = new Dictionary<string, Object>();
+                if (errorGrabacion > 0)
+                {
+                    generarReporte = false;
+                }
+                else
+                {
+                    pagoBanco.I_AnioConstancia = anioConstancia;
+                    pagoBanco.I_NroConstancia = nroConstancia;
+                }
+            }
+            else if (listaConceptos.Where(x => !x.I_NroConstancia.HasValue).Count() > 0)
+            {
+                nroConstancia = listaConceptos.Where(x => x.I_NroConstancia.HasValue).First().I_NroConstancia.Value;
 
-            reportDataSets.Add(dataSet, pagoObligacionDSet);
+                anioConstancia = listaConceptos.Where(x => x.I_NroConstancia.HasValue).First().I_AnioConstancia.Value;
 
-            var parameterList = new List<ReportParameter>();
+                listaConceptos.Where(x => !x.I_NroConstancia.HasValue).ForEach(x => {
+                    var result = pagosModel.GenerarNroConstancia(x.I_PagoBancoID, anioConstancia, nroConstancia, WebSecurity.CurrentUserId);
 
-            parameterList.Add(new ReportParameter("T_NroConstancia", "2023-00001"));//pagoBanco.T_Constancia));
-            parameterList.Add(new ReportParameter("C_CodAlu", pagoBanco.T_CodDepositante));
-            parameterList.Add(new ReportParameter("T_Alumno", pagoBanco.T_DatosDepositante));
-            parameterList.Add(new ReportParameter("T_EntidadFinanciera", pagoBanco.T_EntidadDesc));
-            parameterList.Add(new ReportParameter("T_NroLiquidacion", pagoBanco.C_CodOperacion));
-            parameterList.Add(new ReportParameter("C_CodigoInterno", pagoBanco.C_CodigoInterno));
-            parameterList.Add(new ReportParameter("T_FechaPago", pagoBanco.T_FecPago));
-            parameterList.Add(new ReportParameter("T_TotalPagado", listaConceptos.Sum(x => x.I_MontoPagoTotal).ToString(FormatosDecimal.BASIC_DECIMAL)));
+                    if (!result.Value)
+                    {
+                        errorGrabacion++;
+                    }
+                });
 
-            return ReportExport(docType, reportName, reportDataSets, parameterList);
+                if (errorGrabacion > 0)
+                {
+                    generarReporte = false;
+                }
+                else
+                {
+                    pagoBanco.I_AnioConstancia = anioConstancia;
+                    pagoBanco.I_NroConstancia = nroConstancia;
+                }
+            }
+
+            if (generarReporte)
+            {
+                string docType = "pdf";
+
+                string reportName = "RptConstanciaPagoObligacion";
+
+                string dataSet = "PagoObligacionDS";
+
+                var pagoObligacionDSet = new List<PagoObligacionRptModel>();
+
+                listaConceptos
+                    .OrderBy(c => c.T_ProcesoDesc)
+                    .OrderBy(c => c.D_FecVencto)
+                    .ForEach(c => {
+                        pagoObligacionDSet.Add(new PagoObligacionRptModel()
+                        {
+                            T_ConceptoPago = c.T_ProcesoDesc,
+                            T_MontoPagado = c.T_MontoPago,
+                            T_Mora = c.T_InteresMora,
+                            T_TotalPagado = c.T_MontoPagoTotal
+                        });
+                    });
+
+                var reportDataSets = new Dictionary<string, Object>();
+
+                reportDataSets.Add(dataSet, pagoObligacionDSet);
+
+                var parameterList = new List<ReportParameter>();
+
+                parameterList.Add(new ReportParameter("T_NroConstancia", pagoBanco.T_Constancia));
+                parameterList.Add(new ReportParameter("C_CodAlu", pagoBanco.T_CodDepositante));
+                parameterList.Add(new ReportParameter("T_Alumno", pagoBanco.T_DatosDepositante));
+                parameterList.Add(new ReportParameter("T_EntidadFinanciera", pagoBanco.T_EntidadDesc));
+                parameterList.Add(new ReportParameter("T_NroLiquidacion", pagoBanco.C_CodOperacion));
+                parameterList.Add(new ReportParameter("C_CodigoInterno", pagoBanco.C_CodigoInterno));
+                parameterList.Add(new ReportParameter("T_FechaPago", pagoBanco.T_FecPago));
+                parameterList.Add(new ReportParameter("T_TotalPagado", listaConceptos.Sum(x => x.I_MontoPagoTotal).ToString(FormatosDecimal.BASIC_DECIMAL)));
+
+                return ReportExport(docType, reportName, reportDataSets, parameterList);
+            }
+            else
+            {
+                return RedirectToAction("ListarPagosBancoObligaciones", "EstadosCuenta");
+            }
         }
 
         [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
@@ -243,50 +307,6 @@ namespace WebApp.Controllers
             return ReportExport(docType, reportName, reportDataSets, parameterList);
         }
 
-        //private FileContentResult ReportExport(string docType, string reportName, Dictionary<string, Object> reportDataSets, IEnumerable<ReportParameter> parameters)
-        //{
-        //    string reportPath = Path.Combine(Server.MapPath("~/ReportesRDLC"), reportName + ".rdlc");
-
-        //    if (!System.IO.File.Exists(reportPath))
-        //    {
-        //        throw new FileNotFoundException();    
-        //    }
-
-        //    var localReport = new LocalReport()
-        //    {
-        //        ReportPath = reportPath,
-        //        EnableExternalImages = true
-        //    };
-
-        //    if (reportDataSets != null && reportDataSets.Count() > 0)
-        //    {
-        //        foreach (var item in reportDataSets)
-        //        {
-        //            localReport.DataSources.Add(new ReportDataSource(item.Key, item.Value));
-        //        }
-        //    }
-
-        //    if (parameters != null && parameters.Count() > 0)
-        //    {
-        //        localReport.SetParameters(parameters);
-        //    }
-
-        //    string reportType = docType;
-        //    string mimeType;
-        //    string encoding;
-        //    string fileNameExtension;
-
-        //    Warning[] warnings;
-        //    string[] streams;
-        //    byte[] renderedBytes;
-
-        //    renderedBytes = localReport.Render(reportType, null, out mimeType, out encoding, out fileNameExtension, out streams, out warnings);
-
-        //    string extension = (docType == "excel") ? "xls" : "pdf";
-
-        //    return File(renderedBytes, mimeType);
-        //}
-
         private FileContentResult ReportExport(string docType, string reportName, Dictionary<string, Object> reportDataSets, IEnumerable<ReportParameter> parameters)
         {
             string reportPath = Path.Combine(Server.MapPath("~/ReportesRDLC"), reportName + ".rdlc");
@@ -328,28 +348,72 @@ namespace WebApp.Controllers
 
             string extension = (docType == "excel") ? "xls" : "pdf";
 
-            //Nuevo
-            var stream = new MemoryStream(renderedBytes);
-
-            using (ZipFile zip = new ZipFile())
-            {
-                //foreach (var smdId in reports)
-                //{
-                    string fileName = $"smdReport_{DateTime.Now.ToString()}" + extension;
-                    
-                using (var report = stream)
-                    {
-                        // convert stream to archive
-                        zip.AddEntry($"{fileName}", report.ToArray());
-                    }
-                //}
-                
-                MemoryStream output = new MemoryStream();
-
-                zip.Save(output);
-
-                return File(output.ToArray(), "application/zip", "sample.zip");
-            }
+            return File(renderedBytes, mimeType);
         }
+
+        //private FileContentResult ReportExport(string docType, string reportName, Dictionary<string, Object> reportDataSets, IEnumerable<ReportParameter> parameters)
+        //{
+        //    string reportPath = Path.Combine(Server.MapPath("~/ReportesRDLC"), reportName + ".rdlc");
+
+        //    if (!System.IO.File.Exists(reportPath))
+        //    {
+        //        throw new FileNotFoundException();
+        //    }
+
+        //    var localReport = new LocalReport()
+        //    {
+        //        ReportPath = reportPath,
+        //        EnableExternalImages = true
+        //    };
+
+        //    if (reportDataSets != null && reportDataSets.Count() > 0)
+        //    {
+        //        foreach (var item in reportDataSets)
+        //        {
+        //            localReport.DataSources.Add(new ReportDataSource(item.Key, item.Value));
+        //        }
+        //    }
+
+        //    if (parameters != null && parameters.Count() > 0)
+        //    {
+        //        localReport.SetParameters(parameters);
+        //    }
+
+        //    string reportType = docType;
+        //    string mimeType;
+        //    string encoding;
+        //    string fileNameExtension;
+
+        //    Warning[] warnings;
+        //    string[] streams;
+        //    byte[] renderedBytes;
+
+        //    renderedBytes = localReport.Render(reportType, null, out mimeType, out encoding, out fileNameExtension, out streams, out warnings);
+
+        //    string extension = (docType == "excel") ? "xls" : "pdf";
+
+        //    //Nuevo
+        //    var stream = new MemoryStream(renderedBytes);
+
+        //    using (ZipFile zip = new ZipFile())
+        //    {
+        //        //foreach (var smdId in reports)
+        //        //{
+        //            string fileName = $"smdReport_{DateTime.Now.ToString()}" + extension;
+
+        //        using (var report = stream)
+        //            {
+        //                // convert stream to archive
+        //                zip.AddEntry($"{fileName}", report.ToArray());
+        //            }
+        //        //}
+
+        //        MemoryStream output = new MemoryStream();
+
+        //        zip.Save(output);
+
+        //        return File(output.ToArray(), "application/zip", "sample.zip");
+        //    }
+        //}
     }
 }

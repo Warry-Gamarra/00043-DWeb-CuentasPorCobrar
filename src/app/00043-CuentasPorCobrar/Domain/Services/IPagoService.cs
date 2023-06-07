@@ -33,5 +33,11 @@ namespace Domain.Services
 
         IEnumerable<PagoBancoObligacionDTO> ObtenerPagosPorBoucher(int idEntidadFinanciera, string codOperacion, 
             string codDepositante, DateTime fechaPago);
+
+        int GenerarNroConstancia(int anioConstancia);
+
+        int? ObtenerNroConstancia(int pagoBancoID);
+
+        Response GenerarNroConstancia(int pagoBancoID, int anioConstancia, int nroConstancia, int userID);
     }
 }

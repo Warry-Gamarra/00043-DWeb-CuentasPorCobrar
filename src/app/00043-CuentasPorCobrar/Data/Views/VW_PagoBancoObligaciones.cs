@@ -70,7 +70,7 @@ namespace Data.Views
 
         public int? I_AnioConstancia { get; set; }
 
-        public int? I_NnroConstancia { get; set; }
+        public int? I_NroConstancia { get; set; }
 
         public static VW_PagoBancoObligaciones FindByID(int idPagoBanco)
         {

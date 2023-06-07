@@ -66,6 +66,6 @@ namespace Domain.Entities
 
         public int? I_AnioConstancia { get; set; }
 
-        public int? I_NnroConstancia { get; set; }
+        public int? I_NroConstancia { get; set; }
     }
 }

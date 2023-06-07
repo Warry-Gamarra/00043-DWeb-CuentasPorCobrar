@@ -664,7 +664,7 @@ namespace Domain.Entities
                 C_CodigoInterno = vw.C_CodigoInterno,
                 T_Observacion = vw.T_Observacion,
                 I_AnioConstancia = vw.I_AnioConstancia,
-                I_NnroConstancia = vw.I_NnroConstancia
+                I_NroConstancia = vw.I_NroConstancia
             };
 
             return dto;
@@ -703,7 +703,7 @@ namespace Domain.Entities
                 T_ProcesoDesc = vw.T_ProcesoDesc,
                 D_FecVencto = vw.D_FecVencto,
                 I_AnioConstancia = vw.I_AnioConstancia,
-                I_NnroConstancia = vw.I_NnroConstancia
+                I_NroConstancia = vw.I_NroConstancia
             };
 
             return dto;

@@ -16,25 +16,28 @@ namespace Data.Tables
 
         public int I_PagoBancoID { get; set; }
 
-        public int I_ConstanciaPagoNum { get; set; }
+        public int I_AnioConstancia { get; set; }
+
+        public int I_NroConstancia { get; set; }
 
         public int I_UsuarioCre { get; set; }
 
         public DateTime D_FecCre { get; set; }
 
-        public static int GenerarNroConstancia()
+        public static int GenerarNroConstancia(int I_AnioConstancia)
         {
             int nroConstancia;
 
             try
             {
-                string s_command = @"SELECT ISNULL(MAX(I_ConstanciaPagoNum), 0) + 1 AS I_ConstanciaPagoNum FROM dbo.TR_ConstanciaPago;";
+                string s_command = "SELECT ISNULL(MAX(I_NroConstancia), 0) + 1 AS I_NroConstancia FROM dbo.TR_ConstanciaPago " +
+                    "WHERE I_AnioConstancia = @I_AnioConstancia;";
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    var query = _dbConnection.QuerySingle<TR_ConstanciaPago>(s_command, null, commandType: CommandType.Text);
+                    var query = _dbConnection.QuerySingle<TR_ConstanciaPago>(s_command, new { I_AnioConstancia = I_AnioConstancia }, commandType: CommandType.Text);
 
-                    nroConstancia = query.I_ConstanciaPagoNum;
+                    nroConstancia = query.I_NroConstancia;
                 }
             }
             catch (Exception)
@@ -57,7 +60,7 @@ namespace Data.Tables
                 {
                     var query = _dbConnection.QuerySingle<TR_ConstanciaPago>(s_command, new { I_PagoBancoID = I_PagoBancoID }, commandType: CommandType.Text);
 
-                    nroConstancia = query.I_ConstanciaPagoNum;
+                    nroConstancia = query.I_NroConstancia;
                 }
             }
             catch (Exception)
@@ -80,7 +83,8 @@ namespace Data.Tables
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
                     parameters.Add(name: "I_PagoBancoID", dbType: DbType.Int32, value: I_PagoBancoID);
-                    parameters.Add(name: "I_ConstanciaPagoNum", dbType: DbType.Int32, value: I_ConstanciaPagoNum);
+                    parameters.Add(name: "I_AnioConstancia", dbType: DbType.Int32, value: I_AnioConstancia);
+                    parameters.Add(name: "I_NroConstancia", dbType: DbType.Int32, value: I_NroConstancia);
                     parameters.Add(name: "UserID", dbType: DbType.Int32, value: I_UsuarioCre);
                     
                     _dbConnection.Execute(s_command, parameters, commandType: CommandType.StoredProcedure);

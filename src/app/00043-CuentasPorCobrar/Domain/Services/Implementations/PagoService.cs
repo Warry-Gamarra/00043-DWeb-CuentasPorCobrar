@@ -280,5 +280,30 @@ namespace Domain.Services.Implementations
 
             return result;
         }
+
+        public int GenerarNroConstancia(int anioConstancia)
+        {
+            return TR_ConstanciaPago.GenerarNroConstancia(anioConstancia);
+        }
+
+        public int? ObtenerNroConstancia(int pagoBancoID)
+        {
+            return TR_ConstanciaPago.GetNroConstancia(pagoBancoID);
+        }
+
+        public Response GenerarNroConstancia(int pagoBancoID, int anioConstancia, int nroConstancia, int userID)
+        {
+            var table = new TR_ConstanciaPago()
+            {
+                I_PagoBancoID = pagoBancoID,
+                I_AnioConstancia = anioConstancia,
+                I_NroConstancia = nroConstancia,
+                I_UsuarioCre = userID
+            };
+
+            var result = table.Save();
+
+            return new Response(result);
+        }
     }
 }
