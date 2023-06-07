@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Web;
+using WebApp.Models.DataSets;
 using WebApp.ViewModels;
 
 namespace WebApp.Models
@@ -879,19 +880,54 @@ namespace WebApp.Models
             return result;
         }
 
-        public int GenerarNroConstancia(int anioConstancia)
+        public Tuple<bool, int, int> ObtenerNroConstancia(IEnumerable<PagoConstanciaModel> listaConceptos, int userID)
         {
-            return pagoService.GenerarNroConstancia(anioConstancia);
-        }
+            bool generarReporte = true;
 
-        public int? ObtenerNroConstancia(int pagoBancoID)
-        {
-            return pagoService.ObtenerNroConstancia(pagoBancoID);
-        }
+            int anioConstancia = 0, nroConstancia = 0, errorGrabacion = 0;
 
-        public Response GenerarNroConstancia(int pagoBancoID, int anioConstancia, int nroConstancia, int userID)
-        {
-            return pagoService.GenerarNroConstancia(pagoBancoID, anioConstancia, nroConstancia, userID);
+            if (listaConceptos.Where(x => x.nroConstancia.HasValue).Count() == 0)
+            {
+                anioConstancia = DateTime.Now.Year;
+
+                nroConstancia = pagoService.GenerarNroConstancia(anioConstancia);
+
+                listaConceptos.Where(x => !x.nroConstancia.HasValue).ToList().ForEach(x => {
+                    var result = pagoService.GenerarNroConstancia(x.pagoBancoID, anioConstancia, nroConstancia, userID);
+
+                    if (!result.Value)
+                    {
+                        errorGrabacion++;
+                    }
+                });
+
+                if (errorGrabacion > 0)
+                {
+                    generarReporte = false;
+                }
+            }
+            else if (listaConceptos.Where(x => !x.nroConstancia.HasValue).Count() > 0)
+            {
+                anioConstancia = listaConceptos.Where(x => x.nroConstancia.HasValue).First().anioConstancia.Value;
+
+                nroConstancia = listaConceptos.Where(x => x.nroConstancia.HasValue).First().nroConstancia.Value;
+
+                listaConceptos.Where(x => !x.nroConstancia.HasValue).ToList().ForEach(x => {
+                    var result = pagoService.GenerarNroConstancia(x.pagoBancoID, anioConstancia, nroConstancia, userID);
+
+                    if (!result.Value)
+                    {
+                        errorGrabacion++;
+                    }
+                });
+
+                if (errorGrabacion > 0)
+                {
+                    generarReporte = false;
+                }
+            }
+
+            return new Tuple<bool, int, int>(generarReporte, anioConstancia, nroConstancia);
         }
     }
 }

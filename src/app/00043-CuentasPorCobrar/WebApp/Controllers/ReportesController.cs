@@ -12,6 +12,7 @@ using WebApp.Models;
 using WebApp.Models.DataSets;
 using WebApp.Models.Facades;
 using WebApp.Models.ReportModels;
+using WebApp.ViewModels;
 using WebGrease.Css.Extensions;
 using WebMatrix.WebData;
 
@@ -162,62 +163,23 @@ namespace WebApp.Controllers
             var listaConceptos = pagosModel.ObtenerPagosPorBoucher(pagoBanco.I_EntidadFinanID, pagoBanco.C_CodOperacion,
                 pagoBanco.C_CodDepositante, pagoBanco.D_FecPago.Value);
 
-            bool generarReporte = true;
+            var listaConceptosModel = new List<PagoConstanciaModel>();
 
-            int anioConstancia = DateTime.Now.Year;
-
-            int nroConstancia;
-
-            int errorGrabacion = 0;
-
-            if (listaConceptos.Where(x => x.I_NroConstancia.HasValue).Count() == 0)
-            {
-                nroConstancia = pagosModel.GenerarNroConstancia(anioConstancia);
-
-                listaConceptos.Where(x => !x.I_NroConstancia.HasValue).ForEach(x => {
-                    var result = pagosModel.GenerarNroConstancia(x.I_PagoBancoID, anioConstancia, nroConstancia, WebSecurity.CurrentUserId);
-
-                    if (!result.Value)
-                    {
-                        errorGrabacion++;
-                    }
+            listaConceptos.ForEach(x => {
+                listaConceptosModel.Add(new PagoConstanciaModel() { 
+                    pagoBancoID = x.I_PagoBancoID,
+                    anioConstancia = x.I_AnioConstancia,
+                    nroConstancia = x.I_NroConstancia
                 });
+            });
 
-                if (errorGrabacion > 0)
-                {
-                    generarReporte = false;
-                }
-                else
-                {
-                    pagoBanco.I_AnioConstancia = anioConstancia;
-                    pagoBanco.I_NroConstancia = nroConstancia;
-                }
-            }
-            else if (listaConceptos.Where(x => !x.I_NroConstancia.HasValue).Count() > 0)
-            {
-                nroConstancia = listaConceptos.Where(x => x.I_NroConstancia.HasValue).First().I_NroConstancia.Value;
+            var resultado = pagosModel.ObtenerNroConstancia(listaConceptosModel, WebSecurity.CurrentUserId);
 
-                anioConstancia = listaConceptos.Where(x => x.I_NroConstancia.HasValue).First().I_AnioConstancia.Value;
+            bool generarReporte = resultado.Item1;
 
-                listaConceptos.Where(x => !x.I_NroConstancia.HasValue).ForEach(x => {
-                    var result = pagosModel.GenerarNroConstancia(x.I_PagoBancoID, anioConstancia, nroConstancia, WebSecurity.CurrentUserId);
+            if (!pagoBanco.I_AnioConstancia.HasValue) { pagoBanco.I_AnioConstancia = resultado.Item2; }
 
-                    if (!result.Value)
-                    {
-                        errorGrabacion++;
-                    }
-                });
-
-                if (errorGrabacion > 0)
-                {
-                    generarReporte = false;
-                }
-                else
-                {
-                    pagoBanco.I_AnioConstancia = anioConstancia;
-                    pagoBanco.I_NroConstancia = nroConstancia;
-                }
-            }
+            if (!pagoBanco.I_NroConstancia.HasValue) { pagoBanco.I_NroConstancia = resultado.Item3; }
 
             if (generarReporte)
             {
@@ -275,36 +237,55 @@ namespace WebApp.Controllers
 
             var pagoBanco = _tasaService.ObtenerPagoTasa(id);
 
-            //Verificar si existe el número de constancia
+            var listaConceptosModel = new List<PagoConstanciaModel>();
 
-            //Asignar el nro de constancia.
-
-            string dataSet = "PagoTasaDS";
-
-            var pagoTasaDSet = new List<PagoTasaRptModel>();
-
-            pagoTasaDSet.Add(new PagoTasaRptModel()
-            {
-                T_ConceptoPago = pagoBanco.T_ConceptoPagoDesc,
-                T_Tasa = pagoBanco.C_CodTasa,
-                T_TotalPagado = pagoBanco.T_MontoTotalPagado
+            listaConceptosModel.Add(new PagoConstanciaModel() {
+                pagoBancoID = pagoBanco.I_PagoBancoID,
+                anioConstancia = pagoBanco.I_AnioConstancia,
+                nroConstancia = pagoBanco.I_NroConstancia
             });
 
-            var reportDataSets = new Dictionary<string, Object>();
+            var resultado = pagosModel.ObtenerNroConstancia(listaConceptosModel, WebSecurity.CurrentUserId);
 
-            reportDataSets.Add(dataSet, pagoTasaDSet);
+            bool generarReporte = resultado.Item1;
 
-            var parameterList = new List<ReportParameter>();
+            if (!pagoBanco.I_AnioConstancia.HasValue) { pagoBanco.I_AnioConstancia = resultado.Item2; }
 
-            parameterList.Add(new ReportParameter("T_NroConstancia", "2023-00001"));//pagoBanco.T_Constancia));
-            parameterList.Add(new ReportParameter("C_CodDepositante", pagoBanco.C_CodDepositante));
-            parameterList.Add(new ReportParameter("T_NomDepositante", pagoBanco.T_NomDepositante.StartsWith("0") ? "-" : pagoBanco.T_NomDepositante));
-            parameterList.Add(new ReportParameter("T_EntidadFinanciera", pagoBanco.T_EntidadDesc));
-            parameterList.Add(new ReportParameter("T_NroLiquidacion", pagoBanco.C_CodOperacion));
-            parameterList.Add(new ReportParameter("C_CodigoInterno", pagoBanco.C_CodigoInterno));
-            parameterList.Add(new ReportParameter("T_FechaPago", pagoBanco.T_FecPago));
+            if (!pagoBanco.I_NroConstancia.HasValue) { pagoBanco.I_NroConstancia = resultado.Item3; }
 
-            return ReportExport(docType, reportName, reportDataSets, parameterList);
+            if (generarReporte)
+            {
+                string dataSet = "PagoTasaDS";
+
+                var pagoTasaDSet = new List<PagoTasaRptModel>();
+
+                pagoTasaDSet.Add(new PagoTasaRptModel()
+                {
+                    T_ConceptoPago = pagoBanco.T_ConceptoPagoDesc,
+                    T_Tasa = pagoBanco.C_CodTasa,
+                    T_TotalPagado = pagoBanco.T_MontoTotalPagado
+                });
+
+                var reportDataSets = new Dictionary<string, Object>();
+
+                reportDataSets.Add(dataSet, pagoTasaDSet);
+
+                var parameterList = new List<ReportParameter>();
+
+                parameterList.Add(new ReportParameter("T_NroConstancia", pagoBanco.T_Constancia));
+                parameterList.Add(new ReportParameter("C_CodDepositante", pagoBanco.C_CodDepositante));
+                parameterList.Add(new ReportParameter("T_NomDepositante", pagoBanco.T_NomDepositante.StartsWith("0") ? "-" : pagoBanco.T_NomDepositante));
+                parameterList.Add(new ReportParameter("T_EntidadFinanciera", pagoBanco.T_EntidadDesc));
+                parameterList.Add(new ReportParameter("T_NroLiquidacion", pagoBanco.C_CodOperacion));
+                parameterList.Add(new ReportParameter("C_CodigoInterno", pagoBanco.C_CodigoInterno));
+                parameterList.Add(new ReportParameter("T_FechaPago", pagoBanco.T_FecPago));
+
+                return ReportExport(docType, reportName, reportDataSets, parameterList);
+            }
+            else
+            {
+                return RedirectToAction("Consulta", "EstadosCuentaTasa");
+            }
         }
 
         private FileContentResult ReportExport(string docType, string reportName, Dictionary<string, Object> reportDataSets, IEnumerable<ReportParameter> parameters)

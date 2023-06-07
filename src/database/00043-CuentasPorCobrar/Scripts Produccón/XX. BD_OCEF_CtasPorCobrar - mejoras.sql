@@ -409,6 +409,7 @@ CREATE TABLE TR_ConstanciaPago
 	D_FecCre DATETIME NOT NULL,
 	CONSTRAINT PK_ConstanciaPago PRIMARY KEY (I_ConstanciaPagoID),
 	CONSTRAINT UQ_ConstanciaPago UNIQUE (I_AnioConstancia, I_NroConstancia, I_PagoBancoID),
+	CONSTRAINT UQ_PagoBanco UNIQUE (I_PagoBancoID),
 	CONSTRAINT FK_PagoBanco_ConstanciaPago FOREIGN KEY (I_PagoBancoID) REFERENCES TR_PagoBanco (I_PagoBancoID)
 )
 GO
