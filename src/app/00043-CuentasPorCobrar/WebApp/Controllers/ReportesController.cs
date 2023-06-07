@@ -1,6 +1,8 @@
 ﻿using Domain.Helpers;
+using Ionic.Zip;
 using Microsoft.Reporting.WebForms;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -187,7 +189,7 @@ namespace WebApp.Controllers
 
             var parameterList = new List<ReportParameter>();
 
-            parameterList.Add(new ReportParameter("T_NroConstancia", pagoBanco.T_Constancia));
+            parameterList.Add(new ReportParameter("T_NroConstancia", "2023-00001"));//pagoBanco.T_Constancia));
             parameterList.Add(new ReportParameter("C_CodAlu", pagoBanco.T_CodDepositante));
             parameterList.Add(new ReportParameter("T_Alumno", pagoBanco.T_DatosDepositante));
             parameterList.Add(new ReportParameter("T_EntidadFinanciera", pagoBanco.T_EntidadDesc));
@@ -230,7 +232,7 @@ namespace WebApp.Controllers
 
             var parameterList = new List<ReportParameter>();
 
-            parameterList.Add(new ReportParameter("T_NroConstancia", pagoBanco.T_Constancia));
+            parameterList.Add(new ReportParameter("T_NroConstancia", "2023-00001"));//pagoBanco.T_Constancia));
             parameterList.Add(new ReportParameter("C_CodDepositante", pagoBanco.C_CodDepositante));
             parameterList.Add(new ReportParameter("T_NomDepositante", pagoBanco.T_NomDepositante.StartsWith("0") ? "-" : pagoBanco.T_NomDepositante));
             parameterList.Add(new ReportParameter("T_EntidadFinanciera", pagoBanco.T_EntidadDesc));
@@ -241,13 +243,57 @@ namespace WebApp.Controllers
             return ReportExport(docType, reportName, reportDataSets, parameterList);
         }
 
+        //private FileContentResult ReportExport(string docType, string reportName, Dictionary<string, Object> reportDataSets, IEnumerable<ReportParameter> parameters)
+        //{
+        //    string reportPath = Path.Combine(Server.MapPath("~/ReportesRDLC"), reportName + ".rdlc");
+
+        //    if (!System.IO.File.Exists(reportPath))
+        //    {
+        //        throw new FileNotFoundException();    
+        //    }
+
+        //    var localReport = new LocalReport()
+        //    {
+        //        ReportPath = reportPath,
+        //        EnableExternalImages = true
+        //    };
+
+        //    if (reportDataSets != null && reportDataSets.Count() > 0)
+        //    {
+        //        foreach (var item in reportDataSets)
+        //        {
+        //            localReport.DataSources.Add(new ReportDataSource(item.Key, item.Value));
+        //        }
+        //    }
+
+        //    if (parameters != null && parameters.Count() > 0)
+        //    {
+        //        localReport.SetParameters(parameters);
+        //    }
+
+        //    string reportType = docType;
+        //    string mimeType;
+        //    string encoding;
+        //    string fileNameExtension;
+
+        //    Warning[] warnings;
+        //    string[] streams;
+        //    byte[] renderedBytes;
+
+        //    renderedBytes = localReport.Render(reportType, null, out mimeType, out encoding, out fileNameExtension, out streams, out warnings);
+
+        //    string extension = (docType == "excel") ? "xls" : "pdf";
+
+        //    return File(renderedBytes, mimeType);
+        //}
+
         private FileContentResult ReportExport(string docType, string reportName, Dictionary<string, Object> reportDataSets, IEnumerable<ReportParameter> parameters)
         {
             string reportPath = Path.Combine(Server.MapPath("~/ReportesRDLC"), reportName + ".rdlc");
 
             if (!System.IO.File.Exists(reportPath))
             {
-                throw new FileNotFoundException();    
+                throw new FileNotFoundException();
             }
 
             var localReport = new LocalReport()
@@ -281,8 +327,29 @@ namespace WebApp.Controllers
             renderedBytes = localReport.Render(reportType, null, out mimeType, out encoding, out fileNameExtension, out streams, out warnings);
 
             string extension = (docType == "excel") ? "xls" : "pdf";
-            
-            return File(renderedBytes, mimeType);
+
+            //Nuevo
+            var stream = new MemoryStream(renderedBytes);
+
+            using (ZipFile zip = new ZipFile())
+            {
+                //foreach (var smdId in reports)
+                //{
+                    string fileName = $"smdReport_{DateTime.Now.ToString()}" + extension;
+                    
+                using (var report = stream)
+                    {
+                        // convert stream to archive
+                        zip.AddEntry($"{fileName}", report.ToArray());
+                    }
+                //}
+                
+                MemoryStream output = new MemoryStream();
+
+                zip.Save(output);
+
+                return File(output.ToArray(), "application/zip", "sample.zip");
+            }
         }
     }
 }
