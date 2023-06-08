@@ -26,7 +26,7 @@ namespace WebApp.Controllers
         IAlumnosClientFacade alumnosClientFacade;
         PagosModel pagosModel;
         public ITasaServiceFacade _tasaService;
-
+        
         public ReportesController()
         {
             obligacionServiceFacade = new ObligacionServiceFacade();
@@ -39,7 +39,12 @@ namespace WebApp.Controllers
         [Route("obligaciones/reporte-obligacion-alumno")]
         public ActionResult ReporteObligaciones(int anio, int periodo, string codalu, string codrc)
         {
-            string reportName = "RptObligacionesPorPeriodo";
+            string reportPath = Path.Combine(Server.MapPath("~/ReportesRDLC"), "RptObligacionesPorPeriodo.rdlc");
+
+            if (!System.IO.File.Exists(reportPath))
+            {
+                throw new FileNotFoundException();
+            }
 
             string dataSet1 = "CabeceraObligacionAlumnoDSet";
 
@@ -151,7 +156,7 @@ namespace WebApp.Controllers
                 parameterList.Add(new ReportParameter(numeroCuota, ""));
             }
 
-            var reporte = GenerarReporte(reportName, reportDataSets, parameterList);
+            var reporte = GenerarReporte(reportPath, reportDataSets, parameterList);
 
             return File(reporte.RenderedBytes, reporte.MimeType);
         }
@@ -185,7 +190,12 @@ namespace WebApp.Controllers
 
             if (generarReporte)
             {
-                string reportName = "RptConstanciaPagoObligacion";
+                string reportPath = Path.Combine(Server.MapPath("~/ReportesRDLC"), "RptConstanciaPagoObligacion.rdlc");
+
+                if (!System.IO.File.Exists(reportPath))
+                {
+                    throw new FileNotFoundException();
+                }
 
                 string dataSet = "PagoObligacionDS";
 
@@ -219,7 +229,7 @@ namespace WebApp.Controllers
                 parameterList.Add(new ReportParameter("T_FechaPago", pagoBanco.T_FecPago));
                 parameterList.Add(new ReportParameter("T_TotalPagado", listaConceptos.Sum(x => x.I_MontoPagoTotal).ToString(FormatosDecimal.BASIC_DECIMAL)));
 
-                var reporte = GenerarReporte(reportName, reportDataSets, parameterList);
+                var reporte = GenerarReporte(reportPath, reportDataSets, parameterList);
 
                 return File(reporte.RenderedBytes, reporte.MimeType);
             }
@@ -230,13 +240,19 @@ namespace WebApp.Controllers
         }
 
         [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONTABILIDAD + ", " + RoleNames.TESORERIA)]
+        [Route("consulta/ingresos-de-obligaciones/constancias-pago-obligacion")]
         public ActionResult DescargarConstanciaPagoObligaciones(ConsultaPagosBancoObligacionesViewModel model)
         {
             var listaGeneral = pagosModel.ListarPagoBancoObligacion(model);
 
             var listaPagos = listaGeneral.GroupBy(x => new { x.I_EntidadFinanID, x.C_CodOperacion, x.C_CodDepositante, x.T_FecPago });
 
-            string reportName = "RptConstanciaPagoObligacion", dataSet = "PagoObligacionDS";
+            string reportPath = Path.Combine(Server.MapPath("~/ReportesRDLC"), "RptConstanciaPagoObligacion.rdlc"), dataSet = "PagoObligacionDS";
+
+            if (!System.IO.File.Exists(reportPath))
+            {
+                throw new FileNotFoundException();
+            }
 
             bool generarReporte;
 
@@ -299,7 +315,7 @@ namespace WebApp.Controllers
                         parameterList.Add(new ReportParameter("T_FechaPago", pagoCabecera.T_FecPago));
                         parameterList.Add(new ReportParameter("T_TotalPagado", item.Sum(x => x.I_MontoPagoTotal).ToString(FormatosDecimal.BASIC_DECIMAL)));
 
-                        var reporte = GenerarReporte(reportName, reportDataSets, parameterList);
+                        var reporte = GenerarReporte(reportPath, reportDataSets, parameterList);
 
                         using (var stream = new MemoryStream(reporte.RenderedBytes))
                         {
@@ -324,7 +340,12 @@ namespace WebApp.Controllers
         [Route("consulta/ingresos-de-obligaciones/constancia-pago-tasa")]
         public ActionResult ImprimirConstanciaPagoTasa(int id)
         {
-            string reportName = "RptConstanciaPagoTasa";
+            string reportPath = Path.Combine(Server.MapPath("~/ReportesRDLC"), "RptConstanciaPagoTasa.rdlc");
+
+            if (!System.IO.File.Exists(reportPath))
+            {
+                throw new FileNotFoundException();
+            }
 
             var pagoBanco = _tasaService.ObtenerPagoTasa(id);
 
@@ -371,7 +392,7 @@ namespace WebApp.Controllers
                 parameterList.Add(new ReportParameter("C_CodigoInterno", pagoBanco.C_CodigoInterno));
                 parameterList.Add(new ReportParameter("T_FechaPago", pagoBanco.T_FecPago));
 
-                var reporte = GenerarReporte(reportName, reportDataSets, parameterList);
+                var reporte = GenerarReporte(reportPath, reportDataSets, parameterList);
 
                 return File(reporte.RenderedBytes, reporte.MimeType);
             }
@@ -382,11 +403,17 @@ namespace WebApp.Controllers
         }
 
         [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONTABILIDAD + ", " + RoleNames.TESORERIA)]
+        [Route("consulta/ingresos-de-obligaciones/constancias-pago-tasa")]
         public ActionResult DescargarConstanciaPagoTasas(ConsultaPagoTasasViewModel model)
         {
             var listaPagos = _tasaService.listarPagoTasas(model);
 
-            string reportName = "RptConstanciaPagoTasa", dataSet = "PagoTasaDS";
+            string reportPath = Path.Combine(Server.MapPath("~/ReportesRDLC"), "RptConstanciaPagoTasa.rdlc"), dataSet = "PagoTasaDS";
+
+            if (!System.IO.File.Exists(reportPath))
+            {
+                throw new FileNotFoundException();
+            }
 
             bool generarReporte;
 
@@ -438,7 +465,7 @@ namespace WebApp.Controllers
                         parameterList.Add(new ReportParameter("C_CodigoInterno", item.C_CodigoInterno));
                         parameterList.Add(new ReportParameter("T_FechaPago", item.T_FecPago));
 
-                        var reporte = GenerarReporte(reportName, reportDataSets, parameterList);
+                        var reporte = GenerarReporte(reportPath, reportDataSets, parameterList);
 
                         using (var stream = new MemoryStream(reporte.RenderedBytes))
                         {
@@ -459,15 +486,8 @@ namespace WebApp.Controllers
             }
         }
 
-        private ReporteModel GenerarReporte(string reportName, Dictionary<string, Object> reportDataSets, IEnumerable<ReportParameter> parameters)
+        private ReporteModel GenerarReporte(string reportPath, Dictionary<string, Object> reportDataSets, IEnumerable<ReportParameter> parameters)
         {
-            string reportPath = Path.Combine(Server.MapPath("~/ReportesRDLC"), reportName + ".rdlc");
-
-            if (!System.IO.File.Exists(reportPath))
-            {
-                throw new FileNotFoundException();
-            }
-
             var localReport = new LocalReport()
             {
                 ReportPath = reportPath,
@@ -484,7 +504,7 @@ namespace WebApp.Controllers
 
             if (parameters != null && parameters.Count() > 0)
             {
-                localReport.SetParameters(parameters);
+                localReport.SetParameters(parameters);//Esta línea causa lentitud
             }
 
             string mimeType;
