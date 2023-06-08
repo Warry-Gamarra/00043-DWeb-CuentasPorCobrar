@@ -30,7 +30,7 @@
         <dd class="col-sm-9">@obligacion.T_FecVencto</dd>
 
         <dt class="col-sm-3">Pagado a la fecha</dt>
-        <dd class="col-sm-9" id="montoPagado">@obligacion.T_MontoPagadoActual</dd>
+        <dd class="col-sm-9" id="montoPagado">@obligacion.T_MontoPagadoSinMora</dd>
     </dl>
 </div>
 
@@ -70,7 +70,8 @@
                     <th>Fecha Pago</th>
                     <th>Monto</th>
                     <th>Mora</th>
-                    <th>Obs</th>
+                    <th>Condición</th>
+                    <th>Obs./Coment.</th>
                     <th></th>
                 </tr>
             </thead>
@@ -86,7 +87,28 @@
                             <td>@item.T_FecPago</td>
                             <td>@item.T_MontoPago</td>
                             <td>@item.T_InteresMora</td>
-                            <td>@item.T_Observacion</td>
+                            <td>@item.T_Condicion</td>
+                            <td>
+
+                                @if (item.T_Observacion != null && item.T_MotivoCoreccion != null)
+                                {
+                                    <ul>
+                                        <li>@item.T_Observacion</li>
+                                        <li>@item.T_MotivoCoreccion</li>
+                                    </ul>
+                                }
+                                else
+                                {
+                                    if (item.T_Observacion != null)
+                                    {
+                                        @item.T_Observacion
+                                    }
+                                    if (item.T_MotivoCoreccion != null)
+                                    {
+                                        @item.T_MotivoCoreccion
+                                    }
+                                }
+                            </td>
                             <td>
                                 <button class="btn btn-success btn-sm btnAsignarPago" data-id-pago-banco="@item.I_PagoBancoID">Asignar</button>
                             </td>
