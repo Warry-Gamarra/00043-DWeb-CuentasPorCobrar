@@ -1,4 +1,5 @@
-﻿using Domain.Helpers;
+﻿using DocumentFormat.OpenXml.Bibliography;
+using Domain.Helpers;
 using Ionic.Zip;
 using Microsoft.Reporting.WebForms;
 using System;
@@ -38,8 +39,6 @@ namespace WebApp.Controllers
         [Route("obligaciones/reporte-obligacion-alumno")]
         public ActionResult ReporteObligaciones(int anio, int periodo, string codalu, string codrc)
         {
-            string docType = "pdf";
-
             string reportName = "RptObligacionesPorPeriodo";
 
             string dataSet1 = "CabeceraObligacionAlumnoDSet";
@@ -152,7 +151,9 @@ namespace WebApp.Controllers
                 parameterList.Add(new ReportParameter(numeroCuota, ""));
             }
 
-            return ReportExport(docType, reportName, reportDataSets, parameterList);
+            var reporte = GenerarReporte(reportName, reportDataSets, parameterList);
+
+            return File(reporte.RenderedBytes, reporte.MimeType);
         }
 
         [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
@@ -184,8 +185,6 @@ namespace WebApp.Controllers
 
             if (generarReporte)
             {
-                string docType = "pdf";
-
                 string reportName = "RptConstanciaPagoObligacion";
 
                 string dataSet = "PagoObligacionDS";
@@ -220,7 +219,9 @@ namespace WebApp.Controllers
                 parameterList.Add(new ReportParameter("T_FechaPago", pagoBanco.T_FecPago));
                 parameterList.Add(new ReportParameter("T_TotalPagado", listaConceptos.Sum(x => x.I_MontoPagoTotal).ToString(FormatosDecimal.BASIC_DECIMAL)));
 
-                return ReportExport(docType, reportName, reportDataSets, parameterList);
+                var reporte = GenerarReporte(reportName, reportDataSets, parameterList);
+
+                return File(reporte.RenderedBytes, reporte.MimeType);
             }
             else
             {
@@ -231,22 +232,22 @@ namespace WebApp.Controllers
         [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONTABILIDAD + ", " + RoleNames.TESORERIA)]
         public ActionResult DescargarConstanciaPagoObligaciones(ConsultaPagosBancoObligacionesViewModel model)
         {
-            model.resultado = pagosModel.ListarPagoBancoObligacion(model);
+            var listaGeneral = pagosModel.ListarPagoBancoObligacion(model);
 
-            var listaPagos = model.resultado.GroupBy(x => new { x.I_EntidadFinanID, x.C_CodOperacion, x.C_CodDepositante, x.T_FecPago });
+            var listaPagos = listaGeneral.GroupBy(x => new { x.I_EntidadFinanID, x.C_CodOperacion, x.C_CodDepositante, x.T_FecPago });
 
-            string docType = "pdf";
-
-            string reportName = "RptConstanciaPagoObligacion";
+            string reportName = "RptConstanciaPagoObligacion", dataSet = "PagoObligacionDS";
 
             bool generarReporte;
 
-            string fileName;
+            string pdfFileName, zipFileName;
 
             using (var zip = new ZipFile())
             {
                 foreach (var item in listaPagos)
                 {
+                    var pagoCabecera = item.First();
+
                     var listaConceptosModel = new List<PagoConstanciaModel>();
 
                     item.ForEach(x => {
@@ -262,24 +263,60 @@ namespace WebApp.Controllers
 
                     generarReporte = resultado.Item1;
 
+                    if (!pagoCabecera.I_AnioConstancia.HasValue) { pagoCabecera.I_AnioConstancia = resultado.Item2; }
+
+                    if (!pagoCabecera.I_NroConstancia.HasValue) { pagoCabecera.I_NroConstancia = resultado.Item3; }
+
                     if (generarReporte)
                     {
-                        fileName = DateTime.Now.ToString() + ".pdf";
+                        var pagoObligacionDSet = new List<PagoObligacionRptModel>();
 
-                        var renderedBytes = ReportStream(docType, reportName, null, null);
+                        item
+                            .OrderBy(c => c.T_ProcesoDesc)
+                            .OrderBy(c => c.D_FecVencto)
+                            .ForEach(c => {
+                                pagoObligacionDSet.Add(new PagoObligacionRptModel()
+                                {
+                                    T_ConceptoPago = c.T_ProcesoDesc,
+                                    T_MontoPagado = c.T_MontoPago,
+                                    T_Mora = c.T_InteresMora,
+                                    T_TotalPagado = c.T_MontoPagoTotal
+                                });
+                            });
 
-                        using (var stream = new MemoryStream(renderedBytes))
+                        var reportDataSets = new Dictionary<string, Object>();
+
+                        reportDataSets.Add(dataSet, pagoObligacionDSet);
+
+                        var parameterList = new List<ReportParameter>();
+
+                        parameterList.Add(new ReportParameter("T_NroConstancia", pagoCabecera.T_Constancia));
+                        parameterList.Add(new ReportParameter("C_CodAlu", pagoCabecera.T_CodDepositante));
+                        parameterList.Add(new ReportParameter("T_Alumno", pagoCabecera.T_DatosDepositante));
+                        parameterList.Add(new ReportParameter("T_EntidadFinanciera", pagoCabecera.T_EntidadDesc));
+                        parameterList.Add(new ReportParameter("T_NroLiquidacion", pagoCabecera.C_CodOperacion));
+                        parameterList.Add(new ReportParameter("C_CodigoInterno", pagoCabecera.C_CodigoInterno));
+                        parameterList.Add(new ReportParameter("T_FechaPago", pagoCabecera.T_FecPago));
+                        parameterList.Add(new ReportParameter("T_TotalPagado", item.Sum(x => x.I_MontoPagoTotal).ToString(FormatosDecimal.BASIC_DECIMAL)));
+
+                        var reporte = GenerarReporte(reportName, reportDataSets, parameterList);
+
+                        using (var stream = new MemoryStream(reporte.RenderedBytes))
                         {
-                            zip.AddEntry(fileName, stream.ToArray());
+                            pdfFileName = pagoCabecera.T_Constancia + ".pdf";
+
+                            zip.AddEntry(pdfFileName, stream.ToArray());
                         }
                     }
                 }
+
+                zipFileName = DateTime.Now.ToString(FormatosDateTime.BASIC_DATETIME2) + ".zip";
 
                 var output = new MemoryStream();
 
                 zip.Save(output);
 
-                return File(output.ToArray(), "application/zip", DateTime.Now.ToString() + ".zip");
+                return File(output.ToArray(), "application/zip", zipFileName);
             }
         }
 
@@ -287,8 +324,6 @@ namespace WebApp.Controllers
         [Route("consulta/ingresos-de-obligaciones/constancia-pago-tasa")]
         public ActionResult ImprimirConstanciaPagoTasa(int id)
         {
-            string docType = "pdf";
-
             string reportName = "RptConstanciaPagoTasa";
 
             var pagoBanco = _tasaService.ObtenerPagoTasa(id);
@@ -336,7 +371,9 @@ namespace WebApp.Controllers
                 parameterList.Add(new ReportParameter("C_CodigoInterno", pagoBanco.C_CodigoInterno));
                 parameterList.Add(new ReportParameter("T_FechaPago", pagoBanco.T_FecPago));
 
-                return ReportExport(docType, reportName, reportDataSets, parameterList);
+                var reporte = GenerarReporte(reportName, reportDataSets, parameterList);
+
+                return File(reporte.RenderedBytes, reporte.MimeType);
             }
             else
             {
@@ -344,51 +381,85 @@ namespace WebApp.Controllers
             }
         }
 
-        private FileContentResult ReportExport(string docType, string reportName, Dictionary<string, Object> reportDataSets, IEnumerable<ReportParameter> parameters)
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONTABILIDAD + ", " + RoleNames.TESORERIA)]
+        public ActionResult DescargarConstanciaPagoTasas(ConsultaPagoTasasViewModel model)
         {
-            string reportPath = Path.Combine(Server.MapPath("~/ReportesRDLC"), reportName + ".rdlc");
+            var listaPagos = _tasaService.listarPagoTasas(model);
 
-            if (!System.IO.File.Exists(reportPath))
-            {
-                throw new FileNotFoundException();
-            }
+            string reportName = "RptConstanciaPagoTasa", dataSet = "PagoTasaDS";
 
-            var localReport = new LocalReport()
-            {
-                ReportPath = reportPath,
-                EnableExternalImages = true
-            };
+            bool generarReporte;
 
-            if (reportDataSets != null && reportDataSets.Count() > 0)
+            string pdfFileName, zipFileName;
+
+            using (var zip = new ZipFile())
             {
-                foreach (var item in reportDataSets)
+                foreach (var item in listaPagos)
                 {
-                    localReport.DataSources.Add(new ReportDataSource(item.Key, item.Value));
+                    var listaConceptosModel = new List<PagoConstanciaModel>();
+
+                    listaConceptosModel.Add(new PagoConstanciaModel()
+                    {
+                        pagoBancoID = item.I_PagoBancoID,
+                        anioConstancia = item.I_AnioConstancia,
+                        nroConstancia = item.I_NroConstancia
+                    });
+
+                    var resultado = pagosModel.ObtenerNroConstancia(listaConceptosModel, WebSecurity.CurrentUserId);
+
+                    generarReporte = resultado.Item1;
+
+                    if (!item.I_AnioConstancia.HasValue) { item.I_AnioConstancia = resultado.Item2; }
+
+                    if (!item.I_NroConstancia.HasValue) { item.I_NroConstancia = resultado.Item3; }
+
+                    if (generarReporte)
+                    {
+                        var pagoTasaDSet = new List<PagoTasaRptModel>();
+
+                        pagoTasaDSet.Add(new PagoTasaRptModel()
+                        {
+                            T_ConceptoPago = item.T_ConceptoPagoDesc,
+                            T_Tasa = item.C_CodTasa,
+                            T_TotalPagado = item.T_MontoTotalPagado
+                        });
+
+                        var reportDataSets = new Dictionary<string, Object>();
+
+                        reportDataSets.Add(dataSet, pagoTasaDSet);
+
+                        var parameterList = new List<ReportParameter>();
+
+                        parameterList.Add(new ReportParameter("T_NroConstancia", item.T_Constancia));
+                        parameterList.Add(new ReportParameter("C_CodDepositante", item.C_CodDepositante));
+                        parameterList.Add(new ReportParameter("T_NomDepositante", item.T_NomDepositante.StartsWith("0") ? "-" : item.T_NomDepositante));
+                        parameterList.Add(new ReportParameter("T_EntidadFinanciera", item.T_EntidadDesc));
+                        parameterList.Add(new ReportParameter("T_NroLiquidacion", item.C_CodOperacion));
+                        parameterList.Add(new ReportParameter("C_CodigoInterno", item.C_CodigoInterno));
+                        parameterList.Add(new ReportParameter("T_FechaPago", item.T_FecPago));
+
+                        var reporte = GenerarReporte(reportName, reportDataSets, parameterList);
+
+                        using (var stream = new MemoryStream(reporte.RenderedBytes))
+                        {
+                            pdfFileName = item.T_Constancia + ".pdf";
+
+                            zip.AddEntry(pdfFileName, stream.ToArray());
+                        }
+                    }
                 }
+
+                zipFileName = DateTime.Now.ToString(FormatosDateTime.BASIC_DATETIME2) + ".zip";
+
+                var output = new MemoryStream();
+
+                zip.Save(output);
+
+                return File(output.ToArray(), "application/zip", zipFileName);
             }
-
-            if (parameters != null && parameters.Count() > 0)
-            {
-                localReport.SetParameters(parameters);
-            }
-
-            string reportType = docType;
-            string mimeType;
-            string encoding;
-            string fileNameExtension;
-
-            Warning[] warnings;
-            string[] streams;
-            byte[] renderedBytes;
-
-            renderedBytes = localReport.Render(reportType, null, out mimeType, out encoding, out fileNameExtension, out streams, out warnings);
-
-            string extension = (docType == "excel") ? "xls" : "pdf";
-
-            return File(renderedBytes, mimeType);
         }
 
-        private byte[] ReportStream(string docType, string reportName, Dictionary<string, Object> reportDataSets, IEnumerable<ReportParameter> parameters)
+        private ReporteModel GenerarReporte(string reportName, Dictionary<string, Object> reportDataSets, IEnumerable<ReportParameter> parameters)
         {
             string reportPath = Path.Combine(Server.MapPath("~/ReportesRDLC"), reportName + ".rdlc");
 
@@ -416,15 +487,15 @@ namespace WebApp.Controllers
                 localReport.SetParameters(parameters);
             }
 
-            string reportType = docType;
             string mimeType;
             string encoding;
             string fileNameExtension;
 
             Warning[] warnings;
             string[] streams;
+            byte[] renderedBytes = localReport.Render("pdf", null, out mimeType, out encoding, out fileNameExtension, out streams, out warnings);
 
-            return localReport.Render(reportType, null, out mimeType, out encoding, out fileNameExtension, out streams, out warnings);
+            return new ReporteModel(renderedBytes, mimeType, encoding, fileNameExtension);
         }
     }
 }

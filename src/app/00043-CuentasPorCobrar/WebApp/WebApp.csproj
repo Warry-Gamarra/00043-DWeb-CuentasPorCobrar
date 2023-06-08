@@ -461,6 +461,7 @@
     <Compile Include="Models\Facades\IReporteGeneralServiceFacade.cs" />
     <Compile Include="Models\Facades\ReporteGeneralServiceFacade.cs" />
     <Compile Include="Models\PagoConstanciaModel.cs" />
+    <Compile Include="Models\ReporteModel.cs" />
     <Compile Include="Models\ReportModels\CabObligacionAlumnoRptModel.cs" />
     <Compile Include="Models\ReportModels\DetObligacionAlumnoRptModel.cs" />
     <Compile Include="Models\ReportModels\PagoTasaRptModel.cs" />

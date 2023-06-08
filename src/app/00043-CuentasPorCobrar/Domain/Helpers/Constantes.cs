@@ -23,6 +23,8 @@ namespace Domain.Helpers
 
         public const string BASIC_DATETIME = "dd/MM/yyyy HH:mm:ss";
 
+        public const string BASIC_DATETIME2 = "dd-MM-yyyy HH:mm:ss";
+
         public const string PAYMENT_DATETIME_FORMAT = "yyyyMMddHHmmss";
     }
 
