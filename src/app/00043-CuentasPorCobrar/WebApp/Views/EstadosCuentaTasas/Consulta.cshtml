@@ -151,16 +151,19 @@
 
         $(document).on("click", "#btnConsultaTasas", function (e) {
             document.forms.frmConsultaTasas.action = "@Url.Action("Consulta", "EstadosCuentaTasas")";
+            document.forms.frmConsultaTasas.target = "";
             document.forms.frmConsultaTasas.submit();
         });
 
         $(document).on("click", "#btnExcelDownload", function (e) {
             document.forms.frmConsultaTasas.action = "@Url.Action("DescargaExcelConsultaTasas", "EstadosCuentaTasas")";
+            document.forms.frmConsultaTasas.target = "_blank";
             document.forms.frmConsultaTasas.submit();
         });
 
         $(document).on("click", "#btnDescargaZip", function (e) {
             document.forms.frmConsultaTasas.action = "@Url.Action("DescargarConstanciaPagoTasas", "Reportes")";
+            document.forms.frmConsultaTasas.target = "_blank";
             document.forms.frmConsultaTasas.submit();
         });
 

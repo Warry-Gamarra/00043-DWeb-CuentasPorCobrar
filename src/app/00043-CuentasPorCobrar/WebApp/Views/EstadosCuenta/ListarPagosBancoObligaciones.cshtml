@@ -171,16 +171,19 @@
 
         $(document).on("click", "#btnConsultar", function (e) {
             document.forms.frmConsultaPagosBancoObligaciones.action = "@Url.Action("ListarPagosBancoObligaciones", "EstadosCuenta")";
+            document.forms.frmConsultaPagosBancoObligaciones.target = "";
             document.forms.frmConsultaPagosBancoObligaciones.submit();
         });
 
         $(document).on("click", "#btnDescargaExcel", function (e) {
             document.forms.frmConsultaPagosBancoObligaciones.action = "@Url.Action("ListarPagosBancoObligacionesDescargaExcel", "EstadosCuenta")";
+            document.forms.frmConsultaPagosBancoObligaciones.target = "_blank";
             document.forms.frmConsultaPagosBancoObligaciones.submit();
         });
 
         $(document).on("click", "#btnDescargaZip", function (e) {
             document.forms.frmConsultaPagosBancoObligaciones.action = "@Url.Action("DescargarConstanciaPagoObligaciones", "Reportes")";
+            document.forms.frmConsultaPagosBancoObligaciones.target = "_blank";
             document.forms.frmConsultaPagosBancoObligaciones.submit();
         });
 
