@@ -229,6 +229,16 @@
                 let html = '';
 
                 $.each(data, function (i, item) {
+                    let obs = '';
+
+                    if (item.T_Observacion != null) {
+                        obs = item.T_Observacion;
+                    }
+
+                    if (item.T_MotivoCoreccion != null) {
+                        obs = item.T_MotivoCoreccion;
+                    }
+
                     html = html + '<tr>' +
                         '<td>' + item.T_DatosDepositante + '<br />(' + item.T_CodDepositante + ')</td>' +
                         '<td>' + item.T_EntidadDesc + '<br />(' + item.C_NumeroCuenta + ')</td>' +
@@ -236,6 +246,8 @@
                         '<td>' + item.T_FecPago + '</td>' +
                         '<td>' + item.T_MontoPago + '</td>' +
                         '<td>' + item.T_InteresMora + '</td>' +
+                        '<td>' + item.T_Condicion + '</td>' +
+                        '<td>' + obs + '</td>' +
                         '<td>' + '<button class="btn btn-success btn-sm btnAsignarPago" data-id-pago-banco="' + item.I_PagoBancoID + '">Asignar</button>' + '</td>' +
                         '</tr>';
                 });

@@ -155,8 +155,6 @@ namespace WebApp.Controllers
 
             if (model.buscar)
             {
-                model.fechaHasta = String.IsNullOrEmpty(model.fechaHasta) ? model.fechaHasta : (model.fechaHasta + " 23:59:59");
-
                 model.resultado = _tasaService.listarPagoTasas(model);
             }
 
