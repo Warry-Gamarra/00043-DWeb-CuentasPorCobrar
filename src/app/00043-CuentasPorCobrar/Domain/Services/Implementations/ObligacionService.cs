@@ -108,23 +108,68 @@ namespace Domain.Services.Implementations
         
         public IEnumerable<CuotaPagoDTO> Obtener_CuotasPago_X_Proceso(int anio, int? periodo, TipoEstudio tipoEstudio, string codDependencia)
         {
-            IEnumerable<VW_CuotasPago> cuotaPagos;
+            IEnumerable<CuotaPagoDTO> cuotasPagoDTO;
 
             switch (tipoEstudio)
             {
                 case TipoEstudio.Pregrado:
-                    cuotaPagos = VW_CuotasPago.GetPregrado(anio, periodo, codDependencia);
+                    var cuotasPregrado = USP_S_Listar_ObligacionesPendientes.ExecutePregrado(anio, periodo, codDependencia);
+
+                    cuotasPagoDTO = cuotasPregrado.Select(x => new CuotaPagoDTO() { 
+                        I_NroOrden = x.I_NroOrden,
+                        I_Anio = x.I_Anio,
+                        I_Periodo = x.I_Periodo,
+                        C_CodRc = x.C_CodRc,
+                        C_CodAlu = x.C_CodAlu,
+                        C_CodFac = x.C_CodFac,
+                        C_CodEsc = x.C_CodEsc,
+                        T_Nombre = x.T_Nombre,
+                        T_ApePaterno = x.T_ApePaterno,
+                        T_ApeMaterno = x.T_ApeMaterno,
+                        I_ProcesoID = x.I_ProcesoID,
+                        C_Periodo = x.C_Periodo,
+                        I_Prioridad = x.I_Prioridad,
+                        N_CodBanco = x.N_CodBanco,
+                        C_CodServicio = x.C_CodServicio,
+                        D_FecVencto = x.D_FecVencto,
+                        I_MontoOblig = x.I_MontoOblig,
+                        I_MontoPagadoSinMora = x.I_MontoPagadoSinMora
+                    });
+
                     break;
+
                 case TipoEstudio.Posgrado:
-                    cuotaPagos = VW_CuotasPago.GetPosgrado(anio, codDependencia);
+                    var cuotasPosgrado = USP_S_Listar_ObligacionesPendientes.ExecutePosgrado(anio, codDependencia);
+
+                    cuotasPagoDTO = cuotasPosgrado.Select(x => new CuotaPagoDTO()
+                    {
+                        I_NroOrden = x.I_NroOrden,
+                        I_Anio = x.I_Anio,
+                        I_Periodo = x.I_Periodo,
+                        C_CodRc = x.C_CodRc,
+                        C_CodAlu = x.C_CodAlu,
+                        C_CodFac = x.C_CodFac,
+                        C_CodEsc = x.C_CodEsc,
+                        T_Nombre = x.T_Nombre,
+                        T_ApePaterno = x.T_ApePaterno,
+                        T_ApeMaterno = x.T_ApeMaterno,
+                        I_ProcesoID = x.I_ProcesoID,
+                        C_Periodo = x.C_Periodo,
+                        I_Prioridad = x.I_Prioridad,
+                        N_CodBanco = x.N_CodBanco,
+                        C_CodServicio = x.C_CodServicio,
+                        D_FecVencto = x.D_FecVencto,
+                        I_MontoOblig = x.I_MontoOblig,
+                        I_MontoPagadoSinMora = x.I_MontoPagadoSinMora
+                    });
+
                     break;
+
                 default:
                     throw new InvalidOperationException();
             }
 
-            var result = cuotaPagos.Select(c => Mapper.VW_CuotaPago_To_CuotaPagoDTO(c));
-
-            return result;
+            return cuotasPagoDTO;
         }
 
         public ImportacionPagoResponse Grabar_Pago_Obligaciones(List<PagoObligacionEntity> dataPagoObligaciones, string observacion, int currentUserID)

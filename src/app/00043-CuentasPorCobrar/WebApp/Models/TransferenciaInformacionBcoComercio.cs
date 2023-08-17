@@ -31,8 +31,7 @@ namespace WebApp.Models
                 throw new Exception("No hay registros.");
             }
 
-            var cuotas_pago = obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(anio, periodo, tipoEstudio.Value, dependencia).
-                Where(x => !x.B_Pagado && x.I_MontoOblig > 0).ToList();
+            var cuotas_pago = obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(anio, periodo, tipoEstudio.Value, dependencia);
 
             if (cuotas_pago.Count == 0)
             {

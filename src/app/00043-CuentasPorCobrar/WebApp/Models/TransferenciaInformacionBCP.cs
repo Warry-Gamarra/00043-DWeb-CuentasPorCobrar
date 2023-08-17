@@ -29,32 +29,27 @@ namespace WebApp.Models
 
             if (tipoEstudio == null)
             {
-                var cuotas_pregrado = _obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(anio, periodo, TipoEstudio.Pregrado, dependencia).
-                    Where(x => !x.B_Pagado && x.I_MontoOblig > 0);
+                var cuotas_pregrado = _obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(anio, periodo, TipoEstudio.Pregrado, dependencia);
 
-                var cuotas_posgrado = _obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(anio, periodo, TipoEstudio.Posgrado, dependencia).
-                    Where(x => !x.B_Pagado && x.I_MontoOblig > 0);
+                var cuotas_posgrado = _obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(anio, periodo, TipoEstudio.Posgrado, dependencia);
 
                 cuotas_pago = cuotas_pregrado.Concat(cuotas_posgrado);
-
-                var cuentas_pregrado = _obligacionServiceFacade.Obtener_CtaDeposito_X_Periodo(anio, periodo, TipoEstudio.Pregrado).Where(x => x.I_EntidadFinanID == Bancos.BCP_ID);
-
-                var cuentas_posgrado = _obligacionServiceFacade.Obtener_CtaDeposito_X_Periodo(anio, periodo, TipoEstudio.Posgrado).Where(x => x.I_EntidadFinanID == Bancos.BCP_ID);
-
-                cuentas_bcp = cuentas_pregrado.Concat(cuentas_posgrado);
             }
             else
             {
-                cuotas_pago = _obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(anio, periodo, tipoEstudio.Value, dependencia).
-                    Where(x => !x.B_Pagado && x.I_MontoOblig > 0);
-
-                cuentas_bcp = _obligacionServiceFacade.Obtener_CtaDeposito_X_Periodo(anio, periodo, tipoEstudio.Value).Where(x => x.I_EntidadFinanID == Bancos.BCP_ID);
+                cuotas_pago = _obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(anio, periodo, tipoEstudio.Value, dependencia);
             }
 
             if (cuotas_pago.Count() == 0)
             {
                 throw new Exception("No hay registros.");
             }
+
+            var cuentas_pregrado = _obligacionServiceFacade.Obtener_CtaDeposito_X_Periodo(anio, periodo, TipoEstudio.Pregrado).Where(x => x.I_EntidadFinanID == Bancos.BCP_ID);
+
+            var cuentas_posgrado = _obligacionServiceFacade.Obtener_CtaDeposito_X_Periodo(anio, periodo, TipoEstudio.Posgrado).Where(x => x.I_EntidadFinanID == Bancos.BCP_ID);
+
+            cuentas_bcp = cuentas_pregrado.Concat(cuentas_posgrado);
 
             if (cuentas_bcp.GroupBy(x => x.C_NumeroCuenta).Count() > 1)
             {
@@ -65,7 +60,7 @@ namespace WebApp.Models
 
             var memoryStream = new MemoryStream();
 
-            var writer = new StreamWriter(memoryStream, Encoding.UTF8);
+            var writer = new StreamWriter(memoryStream, Encoding.Default);
 
             string tipoRegistro = "CC";
             string codigoSucursal = cuentas_bcp_split[0].Substring(0, 3);
