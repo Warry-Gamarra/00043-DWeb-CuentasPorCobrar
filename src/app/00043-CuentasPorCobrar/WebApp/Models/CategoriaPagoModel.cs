@@ -52,19 +52,33 @@ namespace WebApp.Models
 
         public Response Save(CategoriaPagoRegistroViewModel model, int currentUserId)
         {
-            CategoriaPago categoriaPago = new CategoriaPago()
-            {
-                CategoriaId = model.Id,
-                Descripcion = model.Nombre,
-                Nivel = model.NivelId,
-                TipoAlumno = model.TipoAlumnoId,
-                Prioridad = model.Prioridad,
-                EsObligacion = model.EsObligacion,
-                CodBcoComercio = model.CodBcoComercio,
-                CuentasDeposito = model.CuentasDeposito.ToList()
-            };
+            Response result;
 
-            Response result = _categoriaPago.Save(categoriaPago, currentUserId, (model.Id.HasValue ? SaveOption.Update : SaveOption.Insert));
+            try
+            {
+                CategoriaPago categoriaPago = new CategoriaPago()
+                {
+                    CategoriaId = model.Id,
+                    Descripcion = model.Nombre,
+                    Nivel = model.NivelId,
+                    TipoAlumno = model.TipoAlumnoId,
+                    Prioridad = model.Prioridad,
+                    EsObligacion = model.EsObligacion,
+                    CodBcoComercio = model.CodBcoComercio
+                };
+
+                categoriaPago.CuentasDeposito = model.CuentasDeposito != null ? model.CuentasDeposito.ToList() : new List<int>();
+
+                result = _categoriaPago.Save(categoriaPago, currentUserId, (model.Id.HasValue ? SaveOption.Update : SaveOption.Insert));
+            }
+            catch (Exception ex)
+            {
+                result = new Response()
+                {
+                    Value = false,
+                    Message = ex.Message
+                };
+            }
 
             if (result.Value)
             {
