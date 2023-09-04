@@ -14,7 +14,7 @@ namespace Domain.Services.Implementations
 {
     public class ObligacionService : IObligacionService
     {
-        public Response Generar_Obligaciones_Pregrado(int anio, int periodo, string codFacultad, bool? B_Ingresante, bool B_AlumnosSinObligaciones, int currentUserID)
+        public Response Generar_Obligaciones_Pregrado(int anio, int periodo, string codFacultad, bool? B_Ingresante, bool B_AlumnosSinObligaciones, bool soloAplicarExtmp, int currentUserID)
         {
             ResponseData result;
 
@@ -25,7 +25,8 @@ namespace Domain.Services.Implementations
                 C_CodFac = codFacultad,
                 I_UsuarioCre = currentUserID,
                 B_Ingresante = B_Ingresante,
-                B_AlumnosSinObligaciones = B_AlumnosSinObligaciones
+                B_AlumnosSinObligaciones = B_AlumnosSinObligaciones,
+                B_SoloAplicarExtemporaneo = soloAplicarExtmp
             };
 
             result = generarObligaciones.Execute();

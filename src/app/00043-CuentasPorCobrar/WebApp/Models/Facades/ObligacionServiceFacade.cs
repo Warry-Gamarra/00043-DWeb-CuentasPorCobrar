@@ -126,7 +126,7 @@ namespace WebApp.Models.Facades
             switch (tipoEstudio)
             {
                 case TipoEstudio.Pregrado:
-                    return _obligacionService.Generar_Obligaciones_Pregrado(anio, periodo, codFac, esIngresante, sinObligaciones, currentUserID);
+                    return _obligacionService.Generar_Obligaciones_Pregrado(anio, periodo, codFac, esIngresante, sinObligaciones, soloAplicarExtmp, currentUserID);
 
                 case TipoEstudio.Posgrado:
                     return _obligacionService.Generar_Obligaciones_Posgrado(anio, periodo, codGrado, esIngresante, sinObligaciones, soloAplicarExtmp, currentUserID);
