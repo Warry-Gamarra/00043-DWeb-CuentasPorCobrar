@@ -34,7 +34,7 @@ namespace WebApp.Models.Facades
         }
 
         public Response Generar_Obligaciones(int anio, int periodo, TipoEstudio tipoEstudio, string codDependencia, bool? esIngresante, 
-            bool sinObligaciones, int currentUserID)
+            bool sinObligaciones, bool soloAplicarExtmp, int currentUserID)
         {
             IEnumerable<Proceso> procesos = _procesoService.Listar_Procesos();
             string codFac = null, codGrado = null;
@@ -129,7 +129,7 @@ namespace WebApp.Models.Facades
                     return _obligacionService.Generar_Obligaciones_Pregrado(anio, periodo, codFac, esIngresante, sinObligaciones, currentUserID);
 
                 case TipoEstudio.Posgrado:
-                    return _obligacionService.Generar_Obligaciones_Posgrado(anio, periodo, codGrado, esIngresante, sinObligaciones, currentUserID);
+                    return _obligacionService.Generar_Obligaciones_Posgrado(anio, periodo, codGrado, esIngresante, sinObligaciones, soloAplicarExtmp, currentUserID);
                 default:
                     throw new NotImplementedException("Ha ocurrido un error al identificar si el alumno es de Pregrado o Posgrado.");
             }

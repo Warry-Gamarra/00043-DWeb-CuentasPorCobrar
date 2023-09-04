@@ -496,7 +496,10 @@ namespace Domain.Services
                         B_Habilitado = conceptoPago.B_Habilitado.HasValue ? conceptoPago.B_Habilitado.Value : false,
                         I_UsuarioCre = conceptoPago.I_UsuarioCre,
                         I_UsuarioMod = conceptoPago.I_UsuarioMod,
-                        B_Mora = conceptoPago.B_Mora
+                        B_Mora = conceptoPago.B_Mora,
+                        I_TipoDescuentoID = conceptoPago.I_TipoDescuentoID,
+                        B_EsPagoMatricula = conceptoPago.B_EsPagoMatricula,
+                        B_EsPagoExtmp = conceptoPago.B_EsPagoExtmp
                     };
                 }
             }

@@ -45,7 +45,7 @@ namespace WebApp.Controllers
             pagosModel = new PagosModel();
         }
 
-        public ActionResult Generar(int? anio, int? periodo, string dependencia, bool? esIngresante, bool? sinObligaciones, TipoEstudio tipoEstudio = TipoEstudio.Pregrado)
+        public ActionResult Generar(int? anio, int? periodo, string dependencia, bool? esIngresante, bool? sinObligaciones, bool soloAplicarExtmp = false, TipoEstudio tipoEstudio = TipoEstudio.Pregrado)
         {
             int defaultAño, defaultPeriodo;
 
@@ -72,13 +72,14 @@ namespace WebApp.Controllers
                     {
                         anio = defaultAño,
                         periodo = defaultPeriodo,
-                        esIngresante = defaultEsIngresante
+                        esIngresante = defaultEsIngresante,
+                        soloAplicarExtmp = soloAplicarExtmp
                     };
 
                     if (defaultSinObligaciones.Value)
                     {
                         model.obligacionGenerada = false;
-                    }                        
+                    }
 
                     switch (defaultTipoEstudio)
                     {
@@ -110,6 +111,7 @@ namespace WebApp.Controllers
                 deFaultDependencia = (string)TempData["dependencia"];
                 defaultEsIngresante = (bool?)TempData["esIngresante"];
                 defaultSinObligaciones = (bool)TempData["sinObligaciones"];
+                soloAplicarExtmp = (bool)TempData["soloAplicarExtmp"];
 
                 ViewBag.Success = result.Value;
                 ViewBag.Message = result.Message;
@@ -131,11 +133,13 @@ namespace WebApp.Controllers
 
             ViewBag.TieneObligacion = new SelectList(generalServiceFacade.Listar_CondicionAlumnoObligacion(), "Value", "TextDisplay", defaultSinObligaciones);
 
+            ViewBag.CondicionGeneracion = new SelectList(generalServiceFacade.Listar_CondicionGeneracion(), "Value", "TextDisplay", soloAplicarExtmp);
+
             return View(cuotas_pago);
         }
 
         [HttpPost]
-        public ActionResult Generar(int anio, int periodo, TipoEstudio tipoEstudio, string dependencia, bool? esIngresante, bool sinObligaciones)
+        public ActionResult Generar(int anio, int periodo, TipoEstudio tipoEstudio, string dependencia, bool? esIngresante, bool sinObligaciones, bool soloAplicarExtmp)
         {
             Response result;
             int currentUserID;
@@ -144,7 +148,7 @@ namespace WebApp.Controllers
             {
                 currentUserID = WebSecurity.CurrentUserId;
 
-                result = obligacionServiceFacade.Generar_Obligaciones(anio, periodo, tipoEstudio, dependencia, esIngresante, sinObligaciones, currentUserID);
+                result = obligacionServiceFacade.Generar_Obligaciones(anio, periodo, tipoEstudio, dependencia, esIngresante, sinObligaciones, soloAplicarExtmp, currentUserID);
             }
             catch (Exception ex)
             {
@@ -162,6 +166,7 @@ namespace WebApp.Controllers
             TempData["dependencia"] = dependencia;
             TempData["esIngresante"] = esIngresante; 
             TempData["sinObligaciones"] = sinObligaciones;
+            TempData["soloAplicarExtmp"] = soloAplicarExtmp;
 
             return RedirectToAction("Generar", "Obligaciones");
         }

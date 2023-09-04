@@ -55,6 +55,12 @@ namespace Data.Tables
         public int? I_UsuarioMod { get; set; }
         public DateTime? D_FecMod { get; set; }
 
+        public int? I_TipoDescuentoID { get; set; }
+        
+        public bool B_EsPagoMatricula { get; set; }
+
+        public bool B_EsPagoExtmp { get; set; }
+
         public static TI_ConceptoPago FindByID(int I_ConcPagID)
         {
             TI_ConceptoPago result;

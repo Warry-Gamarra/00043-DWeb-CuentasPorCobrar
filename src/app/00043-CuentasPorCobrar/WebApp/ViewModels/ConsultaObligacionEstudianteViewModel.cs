@@ -33,6 +33,8 @@ namespace WebApp.ViewModels
 
         public bool? obligacionGenerada { get; set; }
 
+        public bool soloAplicarExtmp { get; set; }
+
         public TipoEstudio tipoEstudio { get; set; }
 
         public string fechaDesde { get; set; }

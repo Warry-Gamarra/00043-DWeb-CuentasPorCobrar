@@ -200,7 +200,10 @@ namespace WebApp.Models
                 T_DescripcionLarga = conceptoPago.T_DescripcionLarga,
                 T_Documento = conceptoPago.T_Documento,
                 B_Habilitado = conceptoPago.B_Habilitado,
-                B_Mora = conceptoPago.B_Mora.GetValueOrDefault()
+                B_Mora = conceptoPago.B_Mora.GetValueOrDefault(),
+                I_TipoDescuentoID = conceptoPago.I_TipoDescuentoID,
+                B_EsPagoMatricula = conceptoPago.B_EsPagoMatricula,
+                B_EsPagoExtmp = conceptoPago.B_EsPagoExtmp
             };
 
             return model;

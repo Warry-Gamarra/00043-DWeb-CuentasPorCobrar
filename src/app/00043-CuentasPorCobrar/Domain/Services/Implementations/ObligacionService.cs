@@ -33,7 +33,7 @@ namespace Domain.Services.Implementations
             return new Response(result);
         }
 
-        public Response Generar_Obligaciones_Posgrado(int anio, int periodo, string codGrado, bool? B_Ingresante, bool B_AlumnosSinObligaciones, int currentUserID)
+        public Response Generar_Obligaciones_Posgrado(int anio, int periodo, string codGrado, bool? B_Ingresante, bool B_AlumnosSinObligaciones, bool soloAplicarExtmp, int currentUserID)
         {
             ResponseData result;
 
@@ -44,7 +44,8 @@ namespace Domain.Services.Implementations
                 C_CodEsc = codGrado,
                 I_UsuarioCre = currentUserID,
                 B_Ingresante = B_Ingresante,
-                B_AlumnosSinObligaciones = B_AlumnosSinObligaciones
+                B_AlumnosSinObligaciones = B_AlumnosSinObligaciones,
+                B_SoloAplicarExtemporaneo = soloAplicarExtmp
             };
 
             result = generarObligaciones.Execute();

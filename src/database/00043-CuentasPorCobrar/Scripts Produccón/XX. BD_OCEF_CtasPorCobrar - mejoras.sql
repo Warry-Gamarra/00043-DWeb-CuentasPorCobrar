@@ -2,7 +2,7 @@ USE [master]
 GO
 
 RESTORE DATABASE [BD_OCEF_CtasPorCobrar]
-FROM DISK = N'F:\Microsoft SQL Server\Backup\Bk_BD_OCEF_CtasPorCobrar_20230512.bak' WITH FILE = 1, 
+FROM DISK = N'F:\Microsoft SQL Server\Backup\Bk_BD_OCEF_CtasPorCobrar_20230825.bak' WITH FILE = 1, 
      MOVE N'BD_OCEF_CtasPorCobrar' TO N'F:\Microsoft SQL Server\DATA\BD_OCEF_CtasPorCobrar.mdf', 
      MOVE N'BD_OCEF_CtasPorCobrar_log' TO N'F:\Microsoft SQL Server\DATA\BD_OCEF_CtasPorCobrar_log.ldf',
 	 NOUNLOAD,
@@ -22,9 +22,11 @@ INSERT dbo.TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B
 GO
 INSERT dbo.TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) VALUES(25, '047', 'UNFV ADMISION 2018', 1, 0, 1, GETDATE())
 GO
+INSERT dbo.TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) VALUES(26, '048', 'UNFV TASAS CARPETA POSTUL 2018', 1, 0, 1, GETDATE())
+GO
 SET IDENTITY_INSERT dbo.TC_Servicios OFF
 GO
-DBCC CHECKIDENT ('dbo.TC_Servicios', RESEED, 25);  
+DBCC CHECKIDENT ('dbo.TC_Servicios', RESEED, 26);  
 GO  
 
 INSERT dbo.TI_CtaDepo_Servicio(I_CtaDepositoID, I_ServicioID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) VALUES(2, 5, 1, 0, 1, GETDATE())

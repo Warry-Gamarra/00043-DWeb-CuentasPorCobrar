@@ -8,7 +8,7 @@ namespace WebApp.Models.Facades
 {
     public interface IObligacionServiceFacade
     {
-        Response Generar_Obligaciones(int anio, int periodo, TipoEstudio tipoEstudio, string codDependencia, bool? esIngresante, bool sinObligaciones, int currentUserID);
+        Response Generar_Obligaciones(int anio, int periodo, TipoEstudio tipoEstudio, string codDependencia, bool? esIngresante, bool sinObligaciones, bool soloAplicarExtmp, int currentUserID);
 
         Response Generar_Obligaciones_PorAlumno(int anio, int periodo, string codAlu, string codRc, string nivel, int currentUserID);
 
