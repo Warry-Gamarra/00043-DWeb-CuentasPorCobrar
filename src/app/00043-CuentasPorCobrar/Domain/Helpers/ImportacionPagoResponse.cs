@@ -94,7 +94,8 @@ namespace Domain.Helpers
                 T_ErrorMessage = x.T_ErrorMessage,
                 C_CodigoInterno = x.C_CodigoInterno,
                 T_SourceFileName = x.T_SourceFileName,
-                C_Extorno = x.C_Extorno
+                C_Extorno = x.C_Extorno,
+                C_CodServicio = x.C_CodServicio
             });
 
             setMessage(TipoPago.Tasa);

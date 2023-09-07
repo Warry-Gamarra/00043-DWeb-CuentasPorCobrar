@@ -220,7 +220,9 @@ namespace WebApp.Controllers
 
             Session["BANCO_PAGO"] = nombreBanco;
 
-            return Json(generalResult, JsonRequestBehavior.AllowGet);
+            var jsonResponse = Json(generalResult, JsonRequestBehavior.AllowGet);
+            //json.MaxJsonLength = int.MaxValue;
+            return jsonResponse;
         }
 
         [HttpGet]
@@ -307,20 +309,21 @@ namespace WebApp.Controllers
                 worksheet.Cell(currentRow, 2).Value = "Banco";
                 worksheet.Cell(currentRow, 3).Value = "CodDepositante";
                 worksheet.Cell(currentRow, 4).Value = "NomDepositante";
-                worksheet.Cell(currentRow, 5).Value = "CodTasa";
-                worksheet.Cell(currentRow, 6).Value = "TasaDesc";
-                worksheet.Cell(currentRow, 7).Value = "CodOperacion";
-                worksheet.Cell(currentRow, 8).Value = "Referencia";
-                worksheet.Cell(currentRow, 9).Value = "CodigoInterno (BCP)";
-                worksheet.Cell(currentRow, 10).Value = "FechaPago";
-                worksheet.Cell(currentRow, 11).Value = "Cantidad";
-                worksheet.Cell(currentRow, 12).Value = "Moneda";
-                worksheet.Cell(currentRow, 13).Value = "MontoPago";
-                worksheet.Cell(currentRow, 14).Value = "Recargo";
-                worksheet.Cell(currentRow, 15).Value = "LugarPago";
-                worksheet.Cell(currentRow, 16).Value = "InformacionAdicional";
-                worksheet.Cell(currentRow, 17).Value = "Registrado";
-                worksheet.Cell(currentRow, 18).Value = "Estado";
+                worksheet.Cell(currentRow, 5).Value = "CodServicio";
+                worksheet.Cell(currentRow, 6).Value = "CodTasa";
+                worksheet.Cell(currentRow, 7).Value = "TasaDesc";
+                worksheet.Cell(currentRow, 8).Value = "CodOperacion";
+                worksheet.Cell(currentRow, 9).Value = "Referencia";
+                worksheet.Cell(currentRow, 10).Value = "CodigoInterno (BCP)";
+                worksheet.Cell(currentRow, 11).Value = "FechaPago";
+                worksheet.Cell(currentRow, 12).Value = "Cantidad";
+                worksheet.Cell(currentRow, 13).Value = "Moneda";
+                worksheet.Cell(currentRow, 14).Value = "MontoPago";
+                worksheet.Cell(currentRow, 15).Value = "Recargo";
+                worksheet.Cell(currentRow, 16).Value = "LugarPago";
+                worksheet.Cell(currentRow, 17).Value = "InformacionAdicional";
+                worksheet.Cell(currentRow, 18).Value = "Registrado";
+                worksheet.Cell(currentRow, 19).Value = "Estado";
 
                 var resultados = (IEnumerable<Domain.Entities.PagoTasaObsEntity>)Session["PAGO_TASA_RESULT"];
 
@@ -331,23 +334,24 @@ namespace WebApp.Controllers
                     worksheet.Cell(currentRow, 2).SetValue<string>(nomBanco);
                     worksheet.Cell(currentRow, 3).SetValue<string>(item.C_CodDepositante);
                     worksheet.Cell(currentRow, 4).SetValue<string>(item.T_NomDepositante);
-                    worksheet.Cell(currentRow, 5).SetValue<string>(item.C_CodTasa);
-                    worksheet.Cell(currentRow, 6).SetValue<string>(item.T_TasaDesc);
-                    worksheet.Cell(currentRow, 7).SetValue<string>(item.C_CodOperacion);
-                    worksheet.Cell(currentRow, 8).SetValue<string>(item.C_Referencia);
-                    worksheet.Cell(currentRow, 9).SetValue<string>(item.C_CodigoInterno);
-                    worksheet.Cell(currentRow, 10).SetValue<string>(item.D_FecPago.ToString(FormatosDateTime.BASIC_DATETIME));
-                    worksheet.Cell(currentRow, 11).SetValue<string>(item.I_Cantidad.ToString());
-                    worksheet.Cell(currentRow, 12).SetValue<string>(item.C_Moneda);
-                    worksheet.Cell(currentRow, 13).SetValue<decimal?>(item.I_MontoPago);
-                    worksheet.Cell(currentRow, 14).SetValue<decimal?>(item.I_InteresMora);
-                    worksheet.Cell(currentRow, 15).SetValue<string>(item.T_LugarPago);
-                    worksheet.Cell(currentRow, 16).SetValue<string>(item.T_InformacionAdicional);
-                    worksheet.Cell(currentRow, 17).SetValue<string>(item.B_Success ? "Sí" : "No");
-                    worksheet.Cell(currentRow, 18).SetValue<string>(item.T_ErrorMessage);
+                    worksheet.Cell(currentRow, 5).SetValue<string>(item.C_CodServicio);
+                    worksheet.Cell(currentRow, 6).SetValue<string>(item.C_CodTasa);
+                    worksheet.Cell(currentRow, 7).SetValue<string>(item.T_TasaDesc);
+                    worksheet.Cell(currentRow, 8).SetValue<string>(item.C_CodOperacion);
+                    worksheet.Cell(currentRow, 9).SetValue<string>(item.C_Referencia);
+                    worksheet.Cell(currentRow, 10).SetValue<string>(item.C_CodigoInterno);
+                    worksheet.Cell(currentRow, 11).SetValue<string>(item.D_FecPago.ToString(FormatosDateTime.BASIC_DATETIME));
+                    worksheet.Cell(currentRow, 12).SetValue<string>(item.I_Cantidad.ToString());
+                    worksheet.Cell(currentRow, 13).SetValue<string>(item.C_Moneda);
+                    worksheet.Cell(currentRow, 14).SetValue<decimal?>(item.I_MontoPago);
+                    worksheet.Cell(currentRow, 15).SetValue<decimal?>(item.I_InteresMora);
+                    worksheet.Cell(currentRow, 16).SetValue<string>(item.T_LugarPago);
+                    worksheet.Cell(currentRow, 17).SetValue<string>(item.T_InformacionAdicional);
+                    worksheet.Cell(currentRow, 18).SetValue<string>(item.B_Success ? "Sí" : "No");
+                    worksheet.Cell(currentRow, 19).SetValue<string>(item.T_ErrorMessage);
                 }
 
-                worksheet.Range(worksheet.Cell(2, 13), worksheet.Cell(currentRow, 14)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
+                worksheet.Range(worksheet.Cell(2, 14), worksheet.Cell(currentRow, 15)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
 
                 using (var stream = new MemoryStream())
                 {

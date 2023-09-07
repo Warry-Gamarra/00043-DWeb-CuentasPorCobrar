@@ -30,5 +30,7 @@ namespace Domain.Entities
         public string C_CodigoInterno { get; set; }
         public string T_SourceFileName { get; set; }
         public string C_Extorno { get; set; }
+        
+        public string C_CodServicio { get; set; }
     }
 }
