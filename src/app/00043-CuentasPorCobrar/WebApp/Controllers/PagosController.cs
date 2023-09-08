@@ -221,7 +221,7 @@ namespace WebApp.Controllers
             Session["BANCO_PAGO"] = nombreBanco;
 
             var jsonResponse = Json(generalResult, JsonRequestBehavior.AllowGet);
-            //json.MaxJsonLength = int.MaxValue;
+            //jsonResponse.MaxJsonLength = int.MaxValue;
             return jsonResponse;
         }
 
