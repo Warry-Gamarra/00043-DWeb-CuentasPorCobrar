@@ -1,16 +1,3 @@
-USE [master]
-GO
-
-RESTORE DATABASE [BD_OCEF_CtasPorCobrar]
-FROM DISK = N'F:\Microsoft SQL Server\Backup\Bk_BD_OCEF_CtasPorCobrar_20230825.bak' WITH FILE = 1, 
-     MOVE N'BD_OCEF_CtasPorCobrar' TO N'F:\Microsoft SQL Server\DATA\BD_OCEF_CtasPorCobrar.mdf', 
-     MOVE N'BD_OCEF_CtasPorCobrar_log' TO N'F:\Microsoft SQL Server\DATA\BD_OCEF_CtasPorCobrar_log.ldf',
-	 NOUNLOAD,
-	 REPLACE,
-	 STATS = 5;
-GO
-
-
 USE BD_OCEF_CtasPorCobrar
 GO
 
