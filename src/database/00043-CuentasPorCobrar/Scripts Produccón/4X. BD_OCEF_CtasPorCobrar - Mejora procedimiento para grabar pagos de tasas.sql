@@ -2,6 +2,31 @@ USE BD_OCEF_CtasPorCobrar
 GO
 
 
+ALTER VIEW [dbo].[VW_MatriculaAlumno]  
+AS  
+SELECT   
+	 m.I_MatAluID, a.C_CodAlu, a.C_RcCod, a.T_Nombre, a.T_ApePaterno, ISNULL(a.T_ApeMaterno, '') AS T_ApeMaterno, a.N_Grado, m.I_Anio, m.I_Periodo,
+	 a.C_CodFac, a.T_FacDesc, a.C_CodEsc, a.T_EscDesc, m.C_EstMat, m.C_Ciclo, m.B_Ingresante, m.I_CredDesaprob, m.B_Habilitado, cat.T_OpcionCod as C_Periodo, cat.T_OpcionDesc as T_Periodo,
+	 a.T_DenomProg, a.C_CodModIng, A.T_ModIngDesc, CASE WHEN nv.I_AluMultaID IS NULL THEN 0 ELSE 1 END B_TieneMultaPorNoVotar, a.I_DependenciaID
+FROM TC_MatriculaAlumno m
+INNER JOIN BD_UNFV_Repositorio.dbo.VW_Alumnos a ON a.C_CodAlu = m.C_CodAlu AND a.C_RcCod = m.C_CodRc
+LEFT JOIN dbo.TC_CatalogoOpcion cat ON cat.I_OpcionID = m.I_Periodo
+LEFT JOIN dbo.TC_AlumnoMultaNoVotar nv ON nv.B_Eliminado = 0 and nv.C_CodAlu = m.C_CodAlu and nv.C_CodRc = m.C_CodRc and nv.I_Periodo = m.I_Periodo and nv.I_Anio = m.I_Anio
+WHERE m.B_Habilitado = 1 AND m.B_Eliminado = 0
+GO
+
+
+
+DROP VIEW [dbo].[VW_CuotasPago_X_Ciclo]
+GO
+
+
+
+DROP VIEW [dbo].[VW_CuotasPago_General]
+GO
+
+
+
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -219,3 +244,92 @@ BEGIN
 	SELECT * FROM @Tmp_PagoTasas;
 END  
 GO
+
+
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[USP_S_ListarCuotasPagos_X_Periodo]
+@C_CodAlu VARCHAR(10),
+@I_Anio INT,
+@I_PeriodoID INT
+AS
+/*
+EXEC USP_S_ListarCuotasPagos_X_Periodo '2016029912',2022, 19
+GO
+*/
+BEGIN
+	SET NOCOUNT ON;
+
+	SELECT 
+		mat.C_CodAlu,
+		mat.T_ApePaterno,
+		mat.T_ApeMaterno,
+		mat.T_Nombre,
+		mat.C_RcCod,
+		mat.T_DenomProg, 
+		pro.T_ProcesoDesc,
+		mat.I_Anio,
+		per.T_OpcionDesc AS T_Periodo,
+		cab.D_FecVencto,
+		cab.B_Pagado,
+		cab.I_MontoOblig,
+		null AS D_FecPago,
+		'' as C_CodOperacion, 
+		'' as C_NumeroCuenta, 
+		'' as T_EntidadDesc
+	FROM dbo.VW_MatriculaAlumno mat
+	INNER JOIN dbo.TR_ObligacionAluCab cab ON cab.I_MatAluID = mat.I_MatAluID
+	INNER JOIN dbo.TC_Proceso pro ON pro.I_ProcesoID = cab.I_ProcesoID
+	INNER JOIN dbo.TC_CatalogoOpcion per ON per.I_OpcionID = mat.I_Periodo  
+	WHERE cab.B_Habilitado = 1 AND cab.B_Eliminado = 0 AND
+		mat.C_CodAlu = @C_CodAlu AND mat.I_Anio = @I_Anio AND mat.I_Periodo = @I_PeriodoID AND pro.I_Prioridad = 1
+END
+GO
+
+
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[USP_S_ListarIngresos_X_CuotasPagos]
+@C_CodAlu VARCHAR(10),
+@I_Anio INT,
+@I_PeriodoID INT
+AS
+/*
+EXEC USP_S_ListarIngresos_X_CuotasPagos '2016029912',2022, 19
+GO
+*/
+BEGIN
+	SET NOCOUNT ON;
+
+	SELECT
+		cab.I_ObligacionAluID, 
+		pagban.I_MontoPago + pagban.I_InteresMora AS I_MontoPago,
+		pagban.D_FecPago,
+		pagban.C_CodOperacion,
+		cta.C_NumeroCuenta,
+		ef.T_EntidadDesc
+	FROM dbo.TC_MatriculaAlumno mat
+	INNER JOIN dbo.TR_ObligacionAluCab cab ON cab.I_MatAluID = mat.I_MatAluID
+	INNER JOIN dbo.TR_ObligacionAluDet det ON det.I_ObligacionAluID = cab.I_ObligacionAluID
+	INNER JOIN dbo.TC_Proceso pro ON pro.I_ProcesoID = cab.I_ProcesoID
+	INNER JOIN dbo.TRI_PagoProcesadoUnfv pagpro ON pagpro.I_ObligacionAluDetID = det.I_ObligacionAluDetID
+	INNER JOIN dbo.TR_PagoBanco pagban ON pagban.I_PagoBancoID = pagpro.I_PagoBancoID
+	INNER JOIN dbo.TC_CuentaDeposito cta ON cta.I_CtaDepositoID = pagpro.I_CtaDepositoID
+	INNER JOIN dbo.TC_EntidadFinanciera ef ON ef.I_EntidadFinanID = pagban.I_EntidadFinanID
+	WHERE mat.B_Habilitado = 1 AND mat.B_Eliminado = 0 AND
+		cab.B_Habilitado = 1 AND cab.B_Eliminado = 0 AND
+		det.B_Habilitado = 1 AND det.B_Eliminado = 0 AND
+		pagpro.B_Anulado = 0 AND pagban.B_Anulado = 0 AND
+		mat.C_CodAlu = @C_CodAlu AND mat.I_Anio = @I_Anio AND mat.I_Periodo = @I_PeriodoID AND pro.I_Prioridad = 1
+	GROUP BY cab.I_ObligacionAluID, pagban.I_MontoPago + pagban.I_InteresMora, pagban.D_FecPago, pagban.C_CodOperacion, cta.C_NumeroCuenta, ef.T_EntidadDesc
+	ORDER BY pagban.D_FecPago
+END
+GO
+
+
