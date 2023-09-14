@@ -373,7 +373,7 @@ namespace WebApp.Controllers
 
                         cantErrores++;
                     }
-                    else if (cuotaPago.I_MontoPagadoActual > 0)
+                    else if (cuotaPago.I_MontoPagadoSinMora > 0)
                     {
                         response.Message = "No se puede anular el registro porque esta cuota tiene un pago incompleto";
 

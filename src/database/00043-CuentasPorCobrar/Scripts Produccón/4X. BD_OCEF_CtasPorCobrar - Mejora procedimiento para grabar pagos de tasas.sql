@@ -333,3 +333,213 @@ END
 GO
 
 
+ 
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[USP_U_ActualizarMontoObligaciones]  
+@I_ObligacionAluDetID INT,  
+@I_Monto decimal(15, 2),  
+@I_TipoDocumento INT,  
+@T_DescDocumento VARCHAR(250),  
+@CurrentUserId INT,  
+@B_Result BIT OUTPUT,  
+@T_Message NVARCHAR(4000) OUTPUT   
+AS
+/*
+DECLARE @B_Result bit, @T_Message nvarchar(4000)  
+  
+EXEC USP_U_ActualizarMontoObligaciones  
+	@I_ObligacionAluDetID = 1,  
+	@I_Monto = 10,  
+	@I_TipoDocumento = 1,  
+	@T_DescDocumento = 'r.r. xxxx-2-21 del 01/01/2025',  
+	@CurrentUserId = 1,  
+	@B_Result = @B_Result output,  
+	@T_Message = @T_Message output  
+  
+SELECT @B_Result as B_Result, @T_Message as T_Message  
+GO
+*/
+BEGIN  
+	SET NOCOUNT ON;
+
+	DECLARE @I_ObligacionAluID INT,  
+		@I_MontoOblig DECIMAL(15, 2),  
+		@I_MontoObligPagado DECIMAL(15, 2),
+		@B_Pagado BIT,  
+		@CurrentDate datetime = getdate()  
+   
+	SET @I_ObligacionAluID = (SELECT I_ObligacionAluID FROM TR_ObligacionAluDet   
+		WHERE I_ObligacionAluDetID = @I_ObligacionAluDetID AND B_Habilitado = 1 AND B_Eliminado = 0)  
+   
+	IF (@I_ObligacionAluID IS NOT NULL)  
+	BEGIN  
+    
+		SET @B_Pagado = (SELECT B_Pagado FROM TR_ObligacionAluDet   
+			WHERE I_ObligacionAluDetID = @I_ObligacionAluDetID AND B_Habilitado = 1 AND B_Eliminado = 0)  
+  
+		IF (@B_Pagado = 0)
+		BEGIN  
+  
+			BEGIN TRAN  
+			BEGIN TRY  
+				UPDATE TR_ObligacionAluDet SET  
+					I_Monto = @I_Monto,  
+					I_TipoDocumento = @I_TipoDocumento,  
+					T_DescDocumento = @T_DescDocumento,  
+					I_UsuarioMod = @CurrentUserId,  
+					D_FecMod = @CurrentDate  
+				WHERE I_ObligacionAluDetID = @I_ObligacionAluDetID  
+  
+				SET @I_MontoOblig = (SELECT SUM(d.I_Monto) from TR_ObligacionAluDet d  
+					WHERE d.I_ObligacionAluID = @I_ObligacionAluID and d.B_Habilitado = 1 and d.B_Eliminado = 0 AND d.B_Mora = 0)  
+
+				SET @I_MontoObligPagado = (SELECT SUM(pro.I_MontoPagado) FROM dbo.TR_ObligacionAluDet d
+					INNER JOIN dbo.TRI_PagoProcesadoUnfv pro ON pro.I_ObligacionAluDetID = d.I_ObligacionAluDetID
+					WHERE d.B_Habilitado = 1 AND d.B_Eliminado = 0 AND d.B_Mora = 0 AND pro.B_Anulado = 0 AND d.I_ObligacionAluID = @I_ObligacionAluID)
+
+				IF (@I_MontoOblig = @I_MontoObligPagado) BEGIN
+					UPDATE TR_ObligacionAluCab SET   
+						I_MontoOblig = @I_MontoOblig,  
+						B_Pagado = 1,
+						I_UsuarioMod = @CurrentUserId,  
+						D_FecMod = @CurrentDate 
+					WHERE I_ObligacionAluID = @I_ObligacionAluID
+
+					UPDATE TR_ObligacionAluDet SET 
+						B_Pagado = 1,
+						I_UsuarioMod = @CurrentUserId,  
+						D_FecMod = @CurrentDate 
+					WHERE I_ObligacionAluID = @I_ObligacionAluID AND B_Habilitado = 1  AND B_Eliminado = 0 AND B_Pagado = 0
+				END
+				ELSE BEGIN
+					UPDATE TR_ObligacionAluCab SET   
+						I_MontoOblig = @I_MontoOblig,  
+						I_UsuarioMod = @CurrentUserId,  
+						D_FecMod = @CurrentDate  
+					WHERE I_ObligacionAluID = @I_ObligacionAluID
+				END
+     
+				COMMIT TRAN  
+				SET @B_Result = 1  
+				SET @T_Message = 'Actualización correcta.'  
+			END TRY  
+			BEGIN CATCH  
+				ROLLBACK TRAN  
+				SET @B_Result = 0  
+				SET @T_Message = ERROR_MESSAGE()  
+			END CATCH
+		END  
+		ELSE
+		BEGIN  
+			SET @B_Result = 0  
+			SET @T_Message = 'La obligación ya ha sido pagada.'  
+		END  
+	END  
+	ELSE 
+	BEGIN  
+		SET @B_Result = 0  
+		SET @T_Message = 'La obligación seleccionada no existe.'  
+	END
+END  
+GO
+
+
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE USP_S_ObtenerCuotaPago
+@I_ObligacionAluID INT
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	SELECT
+		cab.I_ObligacionAluID,
+		mat.C_CodAlu,
+		mat.C_RcCod,
+		mat.T_Nombre,
+		mat.T_ApePaterno,
+		mat.T_ApeMaterno,
+		mat.I_Anio,
+		mat.I_Periodo,
+		per.T_OpcionCod AS C_Periodo,
+		per.T_OpcionDesc AS T_Periodo,
+		pro.I_ProcesoID,
+		pro.T_ProcesoDesc,
+		cab.D_FecVencto,
+		pro.I_Prioridad,
+		pro.N_CodBanco,
+		cab.I_MontoOblig,
+		ISNULL(
+		(SELECT SUM(pagpro.I_MontoPagado) FROM dbo.TRI_PagoProcesadoUnfv pagpro
+		INNER JOIN dbo.TR_ObligacionAluDet det ON det.I_ObligacionAluDetID = pagpro.I_ObligacionAluDetID 
+		WHERE det.I_ObligacionAluID = cab.I_ObligacionAluID AND det.B_Habilitado = 1 AND det.B_Eliminado = 0 AND pagpro.B_Anulado = 0), 0) AS I_MontoPagadoActual,
+		ISNULL(
+		(SELECT SUM(pagpro.I_MontoPagado) FROM dbo.TRI_PagoProcesadoUnfv pagpro
+		INNER JOIN dbo.TR_ObligacionAluDet det ON det.I_ObligacionAluDetID = pagpro.I_ObligacionAluDetID
+		WHERE det.I_ObligacionAluID = cab.I_ObligacionAluID AND det.B_Habilitado = 1 AND det.B_Eliminado = 0 AND pagpro.B_Anulado = 0 AND det.B_Mora = 0), 0) AS I_MontoPagadoSinMora,
+		cab.B_Pagado,
+		cab.D_FecCre
+	FROM dbo.VW_MatriculaAlumno mat
+	INNER JOIN dbo.TR_ObligacionAluCab cab ON cab.I_MatAluID = mat.I_MatAluID AND cab.B_Habilitado = 1 AND cab.B_Eliminado = 0
+	INNER JOIN dbo.TC_Proceso pro ON pro.I_ProcesoID = cab.I_ProcesoID AND pro.B_Eliminado = 0
+	INNER JOIN dbo.TC_CatalogoOpcion per ON per.I_OpcionID = mat.I_Periodo
+	WHERE cab.I_ObligacionAluID = @I_ObligacionAluID
+END
+GO
+
+
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE USP_S_ListarCuotasPagos_X_Alumno
+@I_Anio INT,
+@I_Periodo INT,
+@C_CodAlu VARCHAR(20),
+@C_RcCod VARCHAR(3)
+AS
+BEGIN
+	SET NOCOUNT ON;
+	
+	SELECT
+		ROW_NUMBER() OVER(PARTITION BY mat.I_Anio, mat.I_Periodo, mat.C_RcCod, mat.C_CodAlu ORDER BY pro.I_Prioridad, cab.D_FecVencto) AS I_NroOrden,
+		cab.I_ObligacionAluID,
+		mat.C_CodAlu,
+		mat.C_RcCod,
+		mat.T_Nombre,
+		mat.T_ApePaterno,
+		mat.T_ApeMaterno,
+		mat.I_Anio,
+		mat.I_Periodo,
+		per.T_OpcionCod AS C_Periodo,
+		per.T_OpcionDesc AS T_Periodo,
+		pro.I_ProcesoID,
+		pro.T_ProcesoDesc,
+		cab.D_FecVencto,
+		pro.I_Prioridad,
+		pro.N_CodBanco,
+		cab.I_MontoOblig,
+		cab.B_Pagado,
+		cab.D_FecCre,
+		ISNULL(
+		(SELECT SUM(pagpro.I_MontoPagado) FROM dbo.TRI_PagoProcesadoUnfv pagpro
+		INNER JOIN dbo.TR_ObligacionAluDet det ON det.I_ObligacionAluDetID = pagpro.I_ObligacionAluDetID 
+		WHERE det.I_ObligacionAluID = cab.I_ObligacionAluID AND det.B_Habilitado = 1 AND det.B_Eliminado = 0 AND pagpro.B_Anulado = 0), 0) AS I_MontoPagadoActual,
+		ISNULL(
+		(SELECT SUM(pagpro.I_MontoPagado) FROM dbo.TRI_PagoProcesadoUnfv pagpro
+		INNER JOIN dbo.TR_ObligacionAluDet det ON det.I_ObligacionAluDetID = pagpro.I_ObligacionAluDetID
+	WHERE det.I_ObligacionAluID = cab.I_ObligacionAluID AND det.B_Habilitado = 1 AND det.B_Eliminado = 0 AND pagpro.B_Anulado = 0 AND det.B_Mora = 0), 0) AS I_MontoPagadoSinMora
+	FROM dbo.VW_MatriculaAlumno mat
+	INNER JOIN dbo.TR_ObligacionAluCab cab ON cab.I_MatAluID = mat.I_MatAluID AND cab.B_Habilitado = 1 AND cab.B_Eliminado = 0
+	INNER JOIN dbo.TC_Proceso pro ON pro.I_ProcesoID = cab.I_ProcesoID AND pro.B_Eliminado = 0
+	INNER JOIN dbo.TC_CatalogoOpcion per ON per.I_OpcionID = mat.I_Periodo
+	WHERE mat.I_Anio = @I_Anio AND mat.I_Periodo = @I_Periodo AND mat.C_CodAlu = @C_CodAlu AND mat.C_RcCod = @C_RcCod;
+END
+GO

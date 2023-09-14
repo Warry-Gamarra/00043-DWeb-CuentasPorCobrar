@@ -35,7 +35,7 @@ namespace WebApp.Controllers
             _tasaService = new TasaServiceFacade();
         }
 
-        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONTABILIDAD + ", " + RoleNames.TESORERIA)]
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONTABILIDAD + ", " + RoleNames.TESORERIA + ", " + RoleNames.CONSULTA)]
         [Route("obligaciones/reporte-obligacion-alumno")]
         public ActionResult ReporteObligaciones(int anio, int periodo, string codalu, string codrc)
         {

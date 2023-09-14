@@ -17,7 +17,6 @@ using System.Web.Http.Results;
 
 namespace WebApp.Controllers
 {
-    [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
     public class PagosController : Controller
     {
         private readonly IGeneralServiceFacade generalServiceFacade;
@@ -47,17 +46,18 @@ namespace WebApp.Controllers
             matriculaServiceFacade = new MatriculaServiceFacade();
         }
 
-        // GET: Pagos
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
         [Route("consultas/pagos-realizados/{anio}")]
         public ActionResult Index(int anio)
         {
             ViewBag.Title = "Pagos Registrados";
 
             var model = new List<DatosPagoViewModel>();
+
             return View(model);
         }
 
-
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
         [Route("operaciones/generar-archivos-pago")]
         public ActionResult ExportarDatosPago()
         {
@@ -82,6 +82,7 @@ namespace WebApp.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("operaciones/generar-archivos-pago")]
@@ -115,6 +116,7 @@ namespace WebApp.Controllers
             }
         }
 
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
         [Route("operaciones/cargar-pagos")]
         public ActionResult ImportarArchivosPago()
         {
@@ -128,7 +130,7 @@ namespace WebApp.Controllers
         }
 
 
-        //[Route("operaciones/cargar-pagos/obligaciones")]
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
         public ActionResult ImportarPagoObligaciones()
         {
             ViewBag.Title = "Cargar pagos de obligaciones";
@@ -138,6 +140,7 @@ namespace WebApp.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
         [Route("operaciones/cargar-pagos/seleccionar-archivo/obligaciones")]
         public ActionResult SeleccionarArchivoObligaciones()
         {
@@ -151,7 +154,7 @@ namespace WebApp.Controllers
             return PartialView("_SeleccionarArchivoObligaciones", model);
         }
 
-        //[Route("operaciones/cargar-pagos/tasas")]
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
         public ActionResult ImportarPagoTasas()
         {
             ViewBag.Title = "Cargar pagos de tasas";
@@ -161,7 +164,7 @@ namespace WebApp.Controllers
             return View(model);
         }
 
-
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
         [Route("operaciones/cargar-pagos/seleccionar-archivo/tasas")]
         public ActionResult SeleccionarArchivoTasas()
         {
@@ -173,7 +176,7 @@ namespace WebApp.Controllers
             return PartialView("_SeleccionarArchivoTasas", model);
         }
 
-
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
         [HttpPost]
         public ActionResult CargarArchivoPago(IEnumerable<HttpPostedFileBase> file, CargarArchivoViewModel model)
         {
@@ -225,6 +228,7 @@ namespace WebApp.Controllers
             return jsonResponse;
         }
 
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
         [HttpGet]
         public ActionResult DescargarResultadoPagoObligaciones()
         {
@@ -292,6 +296,7 @@ namespace WebApp.Controllers
             }
         }
 
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
         [HttpGet]
         public ActionResult DescargarResultadoPagoTasas()
         {
@@ -363,6 +368,7 @@ namespace WebApp.Controllers
             }
         }
 
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
         [HttpGet]
         public ActionResult RegistrarPagoObligacion()
         {
@@ -382,6 +388,7 @@ namespace WebApp.Controllers
             return PartialView("_RegistrarPagoObligacion", model);
         }
 
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult RegistrarPagoObligacion(PagoObligacionViewModel model)
@@ -424,6 +431,7 @@ namespace WebApp.Controllers
             return PartialView("_MsgRegistrarPagoObligacion", result);
         }
 
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
         [HttpGet]
         public ActionResult RegistrarPagoTasa()
         {
@@ -439,6 +447,7 @@ namespace WebApp.Controllers
             return PartialView("_RegistrarPagoTasa", model);
         }
 
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
         [HttpPost]
         public ActionResult RegistrarPagoTasa(PagoTasaViewModel model)
         {
@@ -480,7 +489,7 @@ namespace WebApp.Controllers
             return PartialView("_MsgRegistrarPagoTasa", result);
         }
 
-
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
         [Route("operaciones/actualizar-pagos")]
         public ActionResult Actualizar()
         {
@@ -493,6 +502,7 @@ namespace WebApp.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
         [HttpPost]
         public ActionResult ObtenerPagosRegistrados(string txtFecDesde, string txtFecHasta, int? cboEntRecauda, int? cboDependencia)
         {
@@ -504,7 +514,7 @@ namespace WebApp.Controllers
             return PartialView("_ResultadoConsultaPagos", model);
         }
 
-
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
         [Route("operaciones/pagos/{id}/ver-detalle")]
         public ActionResult Detalle(int id)
         {
@@ -515,6 +525,7 @@ namespace WebApp.Controllers
             return PartialView("_DetallesPago", model);
         }
 
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
         [Route("operaciones/pagos/{id}/registrar-nro-siaf")]
         public ActionResult RegistrarSiaf(int[] pagosId)
         {
@@ -525,6 +536,7 @@ namespace WebApp.Controllers
             return PartialView("_RegistrarSiaf", model);
         }
 
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
         [HttpPost]
         public ActionResult RegistrarSiafLote(int[] pagosId, int nroSiaf)
         {
@@ -536,6 +548,7 @@ namespace WebApp.Controllers
 
         }
 
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult RegistrarSiaf(DatosPagoViewModel model)
@@ -566,6 +579,7 @@ namespace WebApp.Controllers
 
         }
 
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
         [HttpPost]
         public ActionResult AnularRegistroPago(int pagoProcesId)
         {
@@ -576,7 +590,7 @@ namespace WebApp.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
-
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
         [Route("operaciones/pagos/exportar-recaudacion-temporal-pagos")]
         public ActionResult ExportarRecaudacionTemporal()
         {
@@ -589,6 +603,7 @@ namespace WebApp.Controllers
             return View();
         }
 
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
         [HttpPost]
         public ActionResult ExportarRecaudacionTemporalPost(int cboEntFinan, TipoEstudio? cboTipoEst, TipoPago cboTipoPago, string fechaDesde, string fechaHasta)
         {
@@ -609,6 +624,7 @@ namespace WebApp.Controllers
 
         }
 
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
         public ActionResult AsignarPagoObligacion(int obligacionID)
         {
             var obligacion = obligacionServiceFacade.Obtener_CuotaPago(obligacionID);
@@ -632,6 +648,7 @@ namespace WebApp.Controllers
             return PartialView("_AsignarPagoObligacion");
         }
 
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
         [HttpPost]
         [HandleJsonExceptionAttribute]
         public ActionResult AsignarPagoObservado(int idObligacion, int idPagoBanco, string motivoCoreccion)
@@ -682,6 +699,7 @@ namespace WebApp.Controllers
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA + ", " + RoleNames.CONSULTA + ", " + RoleNames.DEPENDENCIA)]
         public ActionResult VerPagosObligacion(int obligacionID, bool soloLectura = false)
         {
             var obligacion = obligacionServiceFacade.Obtener_CuotaPago(obligacionID);
@@ -699,6 +717,7 @@ namespace WebApp.Controllers
             return PartialView("_VerPagosObligacion");
         }
 
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
         [HttpPost]
         [HandleJsonExceptionAttribute]
         public ActionResult DesenlazarPagoObligacion(int idPagoBanco, string motivoCoreccion)

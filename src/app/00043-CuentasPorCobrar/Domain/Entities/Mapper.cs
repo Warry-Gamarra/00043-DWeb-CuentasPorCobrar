@@ -160,19 +160,14 @@ namespace Domain.Entities
             return obligacionDetalleDTO;
         }
 
-        public static CuotaPagoDTO VW_CuotaPago_To_CuotaPagoDTO(VW_CuotasPago cuotaPago)
+        public static CuotaPagoDTO USP_S_ListarCuotasPagos_X_Alumno_To_CuotaPagoDTO(USP_S_ListarCuotasPagos_X_Alumno cuotaPago)
         {
             var cuotaPagoDTO = new CuotaPagoDTO()
             {
                 I_NroOrden = cuotaPago.I_NroOrden,
                 I_ObligacionAluID = cuotaPago.I_ObligacionAluID,
-                I_MatAluID = cuotaPago.I_MatAluID,
-                I_ProcesoID = cuotaPago.I_ProcesoID,
-                N_CodBanco = cuotaPago.N_CodBanco ?? "",
                 C_CodAlu = cuotaPago.C_CodAlu,
                 C_CodRc = cuotaPago.C_RcCod,
-                C_CodFac = cuotaPago.C_CodFac,
-                C_CodEsc = cuotaPago.C_CodEsc,
                 T_Nombre = cuotaPago.T_Nombre,
                 T_ApePaterno = cuotaPago.T_ApePaterno,
                 T_ApeMaterno = cuotaPago.T_ApeMaterno ?? "",
@@ -180,20 +175,43 @@ namespace Domain.Entities
                 I_Periodo = cuotaPago.I_Periodo,
                 C_Periodo = cuotaPago.C_Periodo,
                 T_Periodo = cuotaPago.T_Periodo,
+                I_ProcesoID = cuotaPago.I_ProcesoID,
                 T_ProcesoDesc = cuotaPago.T_ProcesoDesc,
                 D_FecVencto = cuotaPago.D_FecVencto,
                 I_Prioridad = cuotaPago.I_Prioridad,
-                C_Moneda = cuotaPago.C_Moneda,
-                C_Nivel = cuotaPago.C_Nivel,
-                C_TipoAlumno = cuotaPago.C_TipoAlumno,
+                N_CodBanco = cuotaPago.N_CodBanco,
+                I_MontoOblig = cuotaPago.I_MontoOblig,
+                I_MontoPagadoActual = cuotaPago.I_MontoPagadoActual,
+                I_MontoPagadoSinMora = cuotaPago.I_MontoPagadoSinMora,
+                B_Pagado = cuotaPago.B_Pagado,
+                D_FecCre = cuotaPago.D_FecCre
+            };
+
+            return cuotaPagoDTO;
+        }
+
+        public static CuotaPagoDTO USP_S_ObtenerCuotaPago_To_CuotaPagoDTO(USP_S_ObtenerCuotaPago cuotaPago)
+        {
+            var cuotaPagoDTO = new CuotaPagoDTO()
+            {
+                I_ObligacionAluID = cuotaPago.I_ObligacionAluID,
+                C_CodAlu = cuotaPago.C_CodAlu,
+                T_Nombre = cuotaPago.T_Nombre,
+                T_ApePaterno = cuotaPago.T_ApePaterno,
+                T_ApeMaterno = cuotaPago.T_ApeMaterno ?? "",
+                I_Anio = cuotaPago.I_Anio,
+                C_Periodo = cuotaPago.C_Periodo,
+                T_Periodo = cuotaPago.T_Periodo,
+                I_ProcesoID = cuotaPago.I_ProcesoID,
+                T_ProcesoDesc = cuotaPago.T_ProcesoDesc,
+                D_FecVencto = cuotaPago.D_FecVencto,
+                I_Prioridad = cuotaPago.I_Prioridad,
+                N_CodBanco = cuotaPago.N_CodBanco,
                 I_MontoOblig = cuotaPago.I_MontoOblig,
                 I_MontoPagadoActual = cuotaPago.I_MontoPagadoActual,
                 I_MontoPagadoSinMora = cuotaPago.I_MontoPagadoSinMora,
                 B_Pagado = cuotaPago.B_Pagado,
                 D_FecCre = cuotaPago.D_FecCre,
-                C_CodServicio = cuotaPago.C_CodServicio,
-                T_FacDesc = cuotaPago.T_FacDesc,
-                T_DenomProg = cuotaPago.T_DenomProg
             };
 
             return cuotaPagoDTO;

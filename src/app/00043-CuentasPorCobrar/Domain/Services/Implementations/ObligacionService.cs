@@ -101,9 +101,9 @@ namespace Domain.Services.Implementations
 
         public IEnumerable<CuotaPagoDTO> Obtener_CuotasPago(int anio, int periodo, string codAlu, string codRc)
         {
-            var cuotaPagos = VW_CuotasPago.FindByAlumno(anio, periodo, codAlu, codRc);
+            var cuotaPagos = USP_S_ListarCuotasPagos_X_Alumno.Execute(anio, periodo, codAlu, codRc);
 
-            var result = cuotaPagos.Select(c => Mapper.VW_CuotaPago_To_CuotaPagoDTO(c));
+            var result = cuotaPagos.Select(c => Mapper.USP_S_ListarCuotasPagos_X_Alumno_To_CuotaPagoDTO(c));
 
             return result;
         }
@@ -249,9 +249,9 @@ namespace Domain.Services.Implementations
 
         public CuotaPagoDTO Obtener_CuotaPago(int obligacionID)
         {
-            var cuotaPago = VW_CuotasPago.FindByObligacionID(obligacionID);
+            var cuotaPago = USP_S_ObtenerCuotaPago.Execute(obligacionID);
 
-            return (cuotaPago == null) ? null : Mapper.VW_CuotaPago_To_CuotaPagoDTO(cuotaPago);
+            return (cuotaPago == null) ? null : Mapper.USP_S_ObtenerCuotaPago_To_CuotaPagoDTO(cuotaPago);
         }
 
         public IEnumerable<ObligacionDetalleDTO> Obtener_DetalleObligacion_X_Obligacion(int idObligacion)

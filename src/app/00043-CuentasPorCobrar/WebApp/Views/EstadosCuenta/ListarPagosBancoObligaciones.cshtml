@@ -123,8 +123,12 @@
                     <p class="h5">Relación de estudiantes registrados en el sistema</p>
                     @if (Model.resultado != null && Model.resultado.Count() > 0)
                     {
-                        <button type="button" id="btnDescargaExcel" class="btn btn-link">Descargar información en Excel [.xlsx]</button><text>|</text>
-                        <button type="button" id="btnDescargaZip" class="btn btn-link">Descargar Constancias [.zip]</button>
+                        <button type="button" id="btnDescargaExcel" class="btn btn-link">Descargar información en Excel [.xlsx]</button>
+                        if (verConstanciaPago)
+                        {
+                            <text>|</text>
+                            <button type="button" id="btnDescargaZip" class="btn btn-link">Descargar Constancias [.zip]</button>
+                        }
                     }
 
                     @Html.Grid(Model.resultado).Columns(columns =>
