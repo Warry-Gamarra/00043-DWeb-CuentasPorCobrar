@@ -2,6 +2,18 @@ USE BD_OCEF_CtasPorCobrar
 GO
 
 
+CREATE VIEW [dbo].[VW_Servicio_X_CuentaDeposito]
+AS
+	SELECT cs.I_CtaDepoServicioID, e.T_EntidadDesc, c.C_NumeroCuenta, s.C_CodServicio, s.T_DescServ, cs.B_Habilitado
+	FROM dbo.TI_CtaDepo_Servicio cs
+	INNER JOIN dbo.TC_Servicios s ON s.I_ServicioID = cs.I_ServicioID
+	INNER JOIN dbo.TC_CuentaDeposito c ON c.I_CtaDepositoID = cs.I_CtaDepositoID
+	INNER JOIN dbo.TC_EntidadFinanciera e ON e.I_EntidadFinanID = c.I_EntidadFinanID
+	WHERE cs.B_Eliminado = 0
+GO
+
+
+
 ALTER VIEW [dbo].[VW_MatriculaAlumno]  
 AS  
 SELECT   

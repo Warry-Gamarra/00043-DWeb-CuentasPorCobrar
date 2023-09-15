@@ -107,7 +107,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tables\TC_ClasificadorEquivalenciaAnio.cs" />
     <Compile Include="Tables\TC_ClasificadorEquivalencia.cs" />
-    <Compile Include="Tables\TC_Servicios.cs" />
+    <Compile Include="Views\VW_Servicio_X_CuentaDeposito.cs" />
     <Compile Include="Tables\TI_ConceptoCategoriaPago.cs" />
     <Compile Include="Tables\TI_CtaDepo_Servicio.cs" />
     <Compile Include="Tables\TI_TasaUnfv.cs" />

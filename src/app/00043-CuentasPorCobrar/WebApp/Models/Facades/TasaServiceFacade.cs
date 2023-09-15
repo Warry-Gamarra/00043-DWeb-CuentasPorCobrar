@@ -160,8 +160,9 @@ namespace WebApp.Models.Facades
                 I_UsuarioMod = currentUserId
             };
 
-            result = tasaService.Grabar_TasaUnfv(tasaEntity, saveOption, model.CtaDepositoID, model.servicioID);
-        
+            //result = tasaService.Grabar_TasaUnfv(tasaEntity, saveOption, model.CtaDepositoID, model.servicioID);
+            result = tasaService.Grabar_TasaUnfv(tasaEntity, saveOption, null, null);
+
             if (result.Value)
             {
                 result.Success(false);

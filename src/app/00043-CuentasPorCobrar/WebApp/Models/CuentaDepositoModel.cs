@@ -73,31 +73,5 @@ namespace WebApp.Models
             }
             return result;
         }
-
-        public List<SelectGroupViewModel> Listar_Combo_CtaDepositoHabilitadas()
-        {
-            List<SelectGroupViewModel> result = new List<SelectGroupViewModel>();
-
-            var lista = _cuentaDeposito.Find();
-
-            if (lista != null)
-            {
-                foreach (var entidad in lista.Select(x => x.T_EntidadDesc).Distinct())
-                {
-                    result.Add(new SelectGroupViewModel()
-                    {
-                        NameGroup = entidad,
-                        ItemsGroup = lista.Where(x => x.T_EntidadDesc == entidad).Select(x => new SelectViewModel()
-                        {
-                            Value = x.I_CtaDepID.ToString(),
-                            TextDisplay = String.Format("{0} - {1}", x.T_DescCuenta, x.C_NumeroCuenta),
-                            NameGroup = entidad
-                        }).ToList()
-                    });
-                }
-            }
-
-            return result;
-        }
     }
 }

@@ -18,7 +18,7 @@ namespace WebApp.Models
         private readonly EntidadRecaudadora _entidadFinanciera;
         private readonly IClasificadorEquivalencia _clasificadorEquivalencia;
         private ICuentaDeposito _cuentaDeposito;
-        IServicioBcoComercioService servicioBcoComercioService;
+        ICtaDepoServicioService _ctaDepoServicioService;
 
         public SelectModel()
         {
@@ -28,7 +28,7 @@ namespace WebApp.Models
             _entidadFinanciera = new EntidadRecaudadora();
             _clasificadorEquivalencia = new ClasificadorEquivalencia();
             _cuentaDeposito = new CuentaDeposito();
-            servicioBcoComercioService = new ServicioBcoComercioService();
+            _ctaDepoServicioService = new CtaDepoServicioService();
         }
 
         public List<SelectViewModel> GetRoles()
@@ -193,13 +193,14 @@ namespace WebApp.Models
             return result;
         }
 
-        public List<SelectViewModel> GetServiciosBcoComercioTasas()
+        public List<SelectViewModel> GetCtaDepoServicioParaTasas()
         {
-            var lista = servicioBcoComercioService.listaServiciosBcoComercioTasa();
+            var lista = _ctaDepoServicioService.listaCtaDepoServicio();
 
-            var result = lista.Select(x => new SelectViewModel() {
-                Value = x.I_ServicioID.ToString(),
-                TextDisplay = String.Format("\"{0}\" - {1}", x.C_CodServicio, x.T_DescServ)
+            var result = lista.Select(x => new SelectViewModel()
+            {
+                Value = x.ctaDepoServicioID.ToString(),
+                TextDisplay = String.Format("\"{0}\" - {1} - {2} _ {3}", x.entidadDesc, x.numeroCuenta, x.codServicio, x.descServ)
             });
 
             return result.ToList();

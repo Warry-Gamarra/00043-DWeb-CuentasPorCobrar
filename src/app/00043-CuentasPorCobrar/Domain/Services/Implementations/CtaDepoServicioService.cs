@@ -1,4 +1,5 @@
 ﻿using Data.Tables;
+using Data.Views;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Services.Implementations
 {
-    public class ServicioBcoComercioService : IServicioBcoComercioService
+    public class CtaDepoServicioService : ICtaDepoServicioService
     {
         public readonly int ObligacionPregrado = 1;
 
@@ -21,16 +22,18 @@ namespace Domain.Services.Implementations
             return new int[] { ObligacionPregrado, ObligacionPosgrado, BCPTasas };
         }
 
-        public IEnumerable<ServicioBcoComercioDto> listaServiciosBcoComercioTasa()
+        public IEnumerable<CtaDepoServicioDto> listaCtaDepoServicio()
         {
-            var lista = TC_Servicios.GetAll().Where(s => !serviciosExcluidos().Contains(s.I_ServicioID));
+            var lista = VW_Servicio_X_CuentaDeposito.GetAll();
 
-            var result = lista.Select(s => new ServicioBcoComercioDto()
+            var result = lista.Select(s => new CtaDepoServicioDto()
             {
-                I_ServicioID = s.I_ServicioID,
-                T_DescServ = s.T_DescServ,
-                C_CodServicio = s.C_CodServicio,
-                B_Habilitado = s.B_Habilitado
+                ctaDepoServicioID = s.I_CtaDepoServicioID,
+                entidadDesc = s.T_EntidadDesc,
+                numeroCuenta = s.C_NumeroCuenta,
+                codServicio = s.C_CodServicio,
+                descServ = s.T_DescServ,
+                habilitado = s.B_Habilitado
             });
 
             return result;

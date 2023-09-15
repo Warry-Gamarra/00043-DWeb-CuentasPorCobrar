@@ -8,26 +8,33 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Data.Tables
+namespace Data.Views
 {
-    public class TC_Servicios
+    public class VW_Servicio_X_CuentaDeposito
     {
-        public int I_ServicioID { get; set; }
+        public int I_CtaDepoServicioID { get; set; }
+        
+        public string T_EntidadDesc { get; set; }
+        
+        public string C_NumeroCuenta { get; set; }
+        
         public string C_CodServicio { get; set; }
+
         public string T_DescServ { get; set; }
+
         public bool B_Habilitado { get; set; }
 
-        public static IEnumerable<TC_Servicios> GetAll()
+        public static IEnumerable<VW_Servicio_X_CuentaDeposito> GetAll()
         {
-            IEnumerable<TC_Servicios> result;
+            IEnumerable<VW_Servicio_X_CuentaDeposito> result;
 
             try
             {
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    var s_command = @"SELECT * FROM TC_Servicios WHERE B_Eliminado = 0";
+                    var s_command = @"SELECT * FROM VW_Servicio_X_CuentaDeposito;";
 
-                    result = _dbConnection.Query<TC_Servicios>(s_command, commandType: CommandType.Text);
+                    result = _dbConnection.Query<VW_Servicio_X_CuentaDeposito>(s_command, commandType: CommandType.Text);
                 }
             }
             catch (Exception ex)
