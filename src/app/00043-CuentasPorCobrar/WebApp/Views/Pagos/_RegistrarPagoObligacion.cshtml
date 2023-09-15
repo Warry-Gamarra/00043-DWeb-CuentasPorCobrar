@@ -260,14 +260,17 @@
         $('#form-obligacion-manual #codigoOperacion').val('');
         $('#form-obligacion-manual #codigoReferencia').val('');
 
+        $('#form-obligacion-manual #I_MontoPago').val('0');
         $('#form-obligacion-manual #idEntidadFinanciera').val('');
         limpiarCtasDeposito();
 
         $('#form-obligacion-manual #fechaPago').val('');
         $('#form-obligacion-manual #horas').val(0);
         $('#form-obligacion-manual #minutos').val(0);
+        $('#form-obligacion-manual #segundos').val(0);
 
         $('#form-obligacion-manual #lugarPago').val('');
+        $('#form-obligacion-manual #observacion').val('');
 
         $('#form-obligacion-manual #div_footer #div_msg').remove();
         $('.field-validation-error').html('').addClass('field-validation-valid').removeClass('field-validation-error');
