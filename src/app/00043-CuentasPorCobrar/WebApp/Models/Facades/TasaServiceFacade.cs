@@ -160,8 +160,7 @@ namespace WebApp.Models.Facades
                 I_UsuarioMod = currentUserId
             };
 
-            //result = tasaService.Grabar_TasaUnfv(tasaEntity, saveOption, model.CtaDepositoID, model.servicioID);
-            result = tasaService.Grabar_TasaUnfv(tasaEntity, saveOption, null, null);
+            result = tasaService.Grabar_TasaUnfv(tasaEntity, saveOption, model.CtaDepoServicioID);
 
             if (result.Value)
             {
@@ -232,14 +231,9 @@ namespace WebApp.Models.Facades
             return result;
         }
 
-        public int[] ObtenerCtaDepositoIDs(int tasaUnfvID)
+        public int[] ObtenerCtaDepositoServicioIDs(int tasaUnfvID)
         {
-            return tasaService.ObtenerCtaDepositoIDs(tasaUnfvID);
-        }
-
-        public int[] ObtenerServicioIDs(int tasaUnfvID)
-        {
-            return tasaService.ObtenerServicioIDs(tasaUnfvID);
+            return tasaService.ObtenerCtaDepositoServicioIDs(tasaUnfvID);
         }
     }
 }

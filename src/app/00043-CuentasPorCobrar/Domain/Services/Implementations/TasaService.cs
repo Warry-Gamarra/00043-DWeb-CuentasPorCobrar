@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.UI;
 using Data;
 using Data.Procedures;
 using Data.Tables;
@@ -109,7 +111,7 @@ namespace Domain.Services.Implementations
             return null;
         }
 
-        public Response Grabar_TasaUnfv(TasaEntity tasaEntity, SaveOption saveOption, int[] ctasDeposito, int[] codServicioBcoComercioTasas)
+        public Response Grabar_TasaUnfv(TasaEntity tasaEntity, SaveOption saveOption, int[] ctasDepositoServicio)
         {
             ResponseData result;
 
@@ -122,6 +124,11 @@ namespace Domain.Services.Implementations
                     if (VW_Tasas.GetAll().FirstOrDefault(x => x.I_TasaUnfvID == tasaEntity.I_TasaUnfvID) != null)
                     {
                         return new Response() { Value = false, Message = "La tasa ya se encuentra registrada" };
+                    }
+
+                    if (CodServicioDuplicado(ctasDepositoServicio))
+                    {
+                        return new Response() { Value = false, Message = "Código de Servicio seleccionado 2 veces." };
                     }
 
                     var nuevaTasaUnfv = new USP_I_GrabarTasaUnfv()
@@ -170,6 +177,11 @@ namespace Domain.Services.Implementations
                     break;
 
                 case SaveOption.Update:
+                    if (CodServicioDuplicado(ctasDepositoServicio))
+                    {
+                        return new Response() { Value = false, Message = "Código de Servicio seleccionado 2 veces." };
+                    }
+
                     var tasaUnfvActualizada = new USP_U_ActualizarTasaUnfv()
                     {
                         I_TasaUnfvID = tasaEntity.I_TasaUnfvID,
@@ -232,66 +244,21 @@ namespace Domain.Services.Implementations
             {
                 TI_TasaUnfv_CtaDepoServicio.DeshabilitarPorTasa(tasaEntity.I_TasaUnfvID, currentUserID);
 
-                if (ctasDeposito != null && ctasDeposito.Count() > 0)
+                if (ctasDepositoServicio != null && ctasDepositoServicio.Count() > 0)
                 {
-                    var listaCtaDeposito = new CuentaDeposito().Find();
-
-                    var listaCtaDepositoServicio = TI_CtaDepo_Servicio.GetAll();
-
                     var listaTasaCtaDepositoServicio = TI_TasaUnfv_CtaDepoServicio.GetAll();
 
-                    int ctaDepositoServicioID;
-
-                    foreach (var idCtaDeposito in ctasDeposito)
+                    foreach (var ctaDepositoServicioID in ctasDepositoServicio)
                     {
-                        var ctaDeposito = listaCtaDeposito.First(x => x.I_CtaDepID == idCtaDeposito);
-
-                        //BANCO COMERCIO
-                        if (ctaDeposito.I_EntidadFinanId == Bancos.BANCO_COMERCIO_ID)
+                        if (listaTasaCtaDepositoServicio.Any(x => x.I_CtaDepoServicioID == ctaDepositoServicioID && x.I_TasaUnfvID == tasaEntity.I_TasaUnfvID))
                         {
-                            if (codServicioBcoComercioTasas != null && codServicioBcoComercioTasas.Count() > 0)
-                            {
-                                foreach (var idServicio in codServicioBcoComercioTasas)
-                                {
-                                    if (listaCtaDepositoServicio.Any(x => x.I_CtaDepositoID == idCtaDeposito && x.I_ServicioID == idServicio))
-                                    {
-                                        var ctaDepositoServicio = listaCtaDepositoServicio.First(x => x.I_CtaDepositoID == idCtaDeposito && x.I_ServicioID == idServicio);
+                            var tasaCtaDepositoServicio = listaTasaCtaDepositoServicio.First(x => x.I_CtaDepoServicioID == ctaDepositoServicioID && x.I_TasaUnfvID == tasaEntity.I_TasaUnfvID);
 
-                                        ctaDepositoServicioID = ctaDepositoServicio.I_CtaDepoServicioID;
-                                    }
-                                    else
-                                    {
-                                        ctaDepositoServicioID = TI_CtaDepo_Servicio.Insert(idCtaDeposito, idServicio, currentUserID);
-                                    }
-
-                                    if (listaTasaCtaDepositoServicio.Any(x => x.I_CtaDepoServicioID == ctaDepositoServicioID && x.I_TasaUnfvID == tasaEntity.I_TasaUnfvID))
-                                    {
-                                        var tasaCtaDepositoServicio = listaTasaCtaDepositoServicio.First(x => x.I_CtaDepoServicioID == ctaDepositoServicioID && x.I_TasaUnfvID == tasaEntity.I_TasaUnfvID);
-
-                                        TI_TasaUnfv_CtaDepoServicio.CambiarEstado(tasaCtaDepositoServicio.I_TasaCtaDepoServicioID, 1, currentUserID);
-                                    }
-                                    else
-                                    {
-                                        TI_TasaUnfv_CtaDepoServicio.Insert(ctaDepositoServicioID, tasaEntity.I_TasaUnfvID, currentUserID);
-                                    }
-                                }
-                            }
+                            TI_TasaUnfv_CtaDepoServicio.CambiarEstado(tasaCtaDepositoServicio.I_TasaCtaDepoServicioID, true, currentUserID);
                         }
-                        //BCP
-                        else if (ctaDeposito.I_EntidadFinanId == Bancos.BCP_ID)
+                        else
                         {
-                            ctaDepositoServicioID = 3;
-
-                            if (listaTasaCtaDepositoServicio.Any(x => x.I_CtaDepoServicioID == ctaDepositoServicioID && x.I_TasaUnfvID == tasaEntity.I_TasaUnfvID))
-                            {
-                                var tasaCtaDepositoServicio = listaTasaCtaDepositoServicio.First(x => x.I_CtaDepoServicioID == ctaDepositoServicioID && x.I_TasaUnfvID == tasaEntity.I_TasaUnfvID);
-
-                                TI_TasaUnfv_CtaDepoServicio.CambiarEstado(tasaCtaDepositoServicio.I_TasaCtaDepoServicioID, 1, currentUserID);
-                            }
-                            else
-                            {
-                                TI_TasaUnfv_CtaDepoServicio.Insert(ctaDepositoServicioID, tasaEntity.I_TasaUnfvID, currentUserID);
-                            }
+                            TI_TasaUnfv_CtaDepoServicio.Insert(ctaDepositoServicioID, tasaEntity.I_TasaUnfvID, currentUserID);
                         }
                     }
                 }
@@ -366,14 +333,35 @@ namespace Domain.Services.Implementations
             return new Response(tasa.ChangeState(currentUserId));
         }
 
-        public int[] ObtenerCtaDepositoIDs(int tasaUnfvID)
+        public int[] ObtenerCtaDepositoServicioIDs(int tasaUnfvID)
         {
-            return TI_CtaDepo_Servicio.ObtenerCtaDepositoIDByTasa(tasaUnfvID);
+            return TI_TasaUnfv_CtaDepoServicio.ObtenerCtaDepositoServicioIDByTasa(tasaUnfvID);
         }
 
-        public int[] ObtenerServicioIDs(int tasaUnfvID)
+        private bool CodServicioDuplicado(int[] ctasDepositoServicio)
         {
-            return TI_CtaDepo_Servicio.ObtenerServicioIDByTasa(tasaUnfvID);
+            bool existeError = false;
+
+            if (ctasDepositoServicio != null && ctasDepositoServicio.Length > 0)
+            {
+                var listaServiciosSeleccionados = new List<int>();
+
+                foreach (var ctaDepoServicioID in ctasDepositoServicio)
+                {
+                    var item = TI_CtaDepo_Servicio.FindByID(ctaDepoServicioID);
+
+                    if (listaServiciosSeleccionados.Contains(item.I_ServicioID))
+                    {
+                        existeError = true;
+
+                        break;
+                    }
+
+                    listaServiciosSeleccionados.Add(item.I_ServicioID);
+                }
+            }
+
+            return existeError;
         }
     }
 }

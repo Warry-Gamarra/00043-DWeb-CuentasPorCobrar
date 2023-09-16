@@ -100,12 +100,6 @@ namespace WebApp.ViewModels
         public bool MostrarFormulario { get; set; }
         public bool PermitirCambiarTasa { get; set; }
 
-        //[Display(Name = "Nro de Cta.Cte")]
-        //public int[] CtaDepositoID { get; set; }
-
-        //[Display(Name = "Cod.Servicios (Sólo Banco de Comercio)")]
-        //public int[] servicioID { get; set; }
-
         [Display(Name = "Nro de Cta.Cte")]
         public int[] CtaDepoServicioID { get; set; }
     }

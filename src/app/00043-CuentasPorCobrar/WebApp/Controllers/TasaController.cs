@@ -60,16 +60,7 @@ namespace WebApp.Controllers
 
             ViewBag.Conceptos = new SelectList(_conceptoModel.Listar_CatalogoConceptos(TipoPago.Tasa, true), "Id", "NombreConcepto");
 
-            //var ctasDeposito = new List<SelectViewModel>();
-
-            //foreach (var item in _cuentasDeposito.Listar_Combo_CtaDepositoHabilitadas().Select(x => x.ItemsGroup))
-            //{
-            //    ctasDeposito.AddRange(item);
-            //}
-
-            //ViewBag.CtasDeposito = new SelectList(ctasDeposito, "Value", "TextDisplay", "NameGroup", null, null);
-
-            ViewBag.ListaCtasDepositoServicios = new SelectList(_selectModel.GetCtaDepoServicioParaTasas(), "Value", "TextDisplay");
+            ViewBag.ListaCtasDepositoServicios = _selectModel.GetCtaDepoServicioParaTasas();
 
             var model = new RegistrarTasaViewModel()
             {
@@ -92,20 +83,9 @@ namespace WebApp.Controllers
 
             model.PermitirCambiarTasa = false;
 
-            //var ctasDeposito = new List<SelectViewModel>();
+            model.CtaDepoServicioID = _tasaService.ObtenerCtaDepositoServicioIDs(id);
 
-            //foreach (var item in _cuentasDeposito.Listar_Combo_CtaDepositoHabilitadas().Select(x => x.ItemsGroup))
-            //{
-            //    ctasDeposito.AddRange(item);
-            //}
-
-            //model.CtaDepositoID = _tasaService.ObtenerCtaDepositoIDs(id);
-
-            //ViewBag.CtasDeposito = new SelectList(ctasDeposito, "Value", "TextDisplay", "NameGroup", model.CtaDepositoID, null);
-
-            //model.servicioID = _tasaService.ObtenerServicioIDs(id);
-
-            ViewBag.ListaCtasDepositoServicios = new SelectList(_selectModel.GetCtaDepoServicioParaTasas(), "Value", "TextDisplay", model.CtaDepoServicioID);
+            ViewBag.ListaCtasDepositoServicios = _selectModel.GetCtaDepoServicioParaTasas(model.CtaDepoServicioID);
 
             return PartialView("_RegistrarConceptosPagoTasa", model);
         }

@@ -25,7 +25,7 @@ namespace Data.Tables
             {
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    var s_command = @"SELECT * FROM TI_TasaUnfv_CtaDepoServicio WHERE B_Eliminado = 0";
+                    var s_command = @"SELECT * FROM TI_TasaUnfv_CtaDepoServicio WHERE B_Eliminado = 0;";
 
                     result = _dbConnection.Query<TI_TasaUnfv_CtaDepoServicio>(s_command, commandType: CommandType.Text);
                 }
@@ -44,10 +44,17 @@ namespace Data.Tables
             {
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    var s_command = String.Format("INSERT TI_TasaUnfv_CtaDepoServicio(I_CtaDepoServicioID, I_TasaUnfvID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) VALUES({0}, {1}, 1, 0, {2}, GETDATE())", 
-                        ctaDepositoServicioID, tasaUnfvID, currentUserID);
+                    var s_command = @"INSERT TI_TasaUnfv_CtaDepoServicio(I_CtaDepoServicioID, I_TasaUnfvID, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) 
+                        VALUES(@I_CtaDepoServicioID, @I_TasaUnfvID, 1, 0, @I_UsuarioCre, GETDATE());";
 
-                    _dbConnection.Execute(s_command, commandType: CommandType.Text);
+                    var parameters = new
+                    {
+                        I_CtaDepoServicioID = ctaDepositoServicioID,
+                        I_TasaUnfvID = tasaUnfvID,
+                        I_UsuarioCre = currentUserID
+                    };
+
+                    _dbConnection.Execute(s_command, parameters, commandType: CommandType.Text);
                 }
             }
             catch (Exception)
@@ -61,9 +68,16 @@ namespace Data.Tables
             {
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    var s_command = String.Format("UPDATE TI_TasaUnfv_CtaDepoServicio SET B_Habilitado = 0, I_UsuarioMod = {0}, D_FecMod = GETDATE() WHERE I_TasaUnfvID = {1}", currentUserID, tasaUnfvID);
+                    var s_command = @"UPDATE TI_TasaUnfv_CtaDepoServicio SET B_Habilitado = 0, I_UsuarioMod = @I_UsuarioMod, D_FecMod = GETDATE() 
+                        WHERE I_TasaUnfvID = @I_TasaUnfvID;";
 
-                    _dbConnection.Execute(s_command, commandType: CommandType.Text);
+                    var parameters = new
+                    {
+                        I_UsuarioMod = currentUserID,
+                        I_TasaUnfvID = tasaUnfvID
+                    };
+
+                    _dbConnection.Execute(s_command, parameters, commandType: CommandType.Text);
                 }
             }
             catch (Exception)
@@ -71,21 +85,54 @@ namespace Data.Tables
             }
         }
 
-        public static void CambiarEstado(int tasaCtaDepoServicioID, int estado, int currentUserID)
+        public static void CambiarEstado(int tasaCtaDepoServicioID, bool estado, int currentUserID)
         {
             try
             {
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    var s_command = String.Format("UPDATE TI_TasaUnfv_CtaDepoServicio SET B_Habilitado = {0}, I_UsuarioMod = {1}, D_FecMod = GETDATE() WHERE I_TasaCtaDepoServicioID = {2}",
-                        estado, currentUserID, tasaCtaDepoServicioID);
+                    var s_command = @"UPDATE TI_TasaUnfv_CtaDepoServicio SET B_Habilitado = @B_Habilitado, I_UsuarioMod = @I_UsuarioMod, D_FecMod = GETDATE() 
+                        WHERE I_TasaCtaDepoServicioID = @I_TasaCtaDepoServicioID;";
 
-                    _dbConnection.Execute(s_command, commandType: CommandType.Text);
+                    var parameters = new
+                    {
+                        B_Habilitado = estado,
+                        I_UsuarioMod = currentUserID,
+                        I_TasaCtaDepoServicioID = tasaCtaDepoServicioID
+                    };
+
+                    _dbConnection.Execute(s_command, parameters, commandType: CommandType.Text);
                 }
             }
             catch (Exception)
             {
             }
+        }
+
+        public static int[] ObtenerCtaDepositoServicioIDByTasa(int tasaUnfvID)
+        {
+            int[] result;
+
+            try
+            {
+                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
+                {
+                    var s_command = @"SELECT I_CtaDepoServicioID FROM TI_TasaUnfv_CtaDepoServicio 
+                        WHERE B_Habilitado = 1 AND B_Eliminado = 0 AND I_TasaUnfvID = @I_TasaUnfvID;";
+
+                    var parameters = new { I_TasaUnfvID = tasaUnfvID };
+
+                    var lista = _dbConnection.Query<TI_TasaUnfv_CtaDepoServicio>(s_command, parameters, commandType: CommandType.Text);
+
+                    result = lista.Select(x => x.I_CtaDepoServicioID).ToArray();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
         }
     }
 }

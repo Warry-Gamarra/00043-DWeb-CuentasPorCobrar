@@ -23,8 +23,6 @@ namespace WebApp.Models.Facades
 
         Response ChangeState(int conceptoId, bool currentState, int currentUserId, string returnUrl);
 
-        int[] ObtenerCtaDepositoIDs(int tasaUnfvID);
-
-        int[] ObtenerServicioIDs(int tasaUnfvID);
+        int[] ObtenerCtaDepositoServicioIDs(int tasaUnfvID);
     }
 }

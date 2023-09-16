@@ -5,7 +5,9 @@ using Domain.Services.Implementations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
+using System.Web.Mvc;
 using WebApp.ViewModels;
 
 namespace WebApp.Models
@@ -193,17 +195,29 @@ namespace WebApp.Models
             return result;
         }
 
-        public List<SelectViewModel> GetCtaDepoServicioParaTasas()
+        public SelectList GetCtaDepoServicioParaTasas(int[] selectedItem = null)
         {
+            var result = new List<SelectListItem>();
+
             var lista = _ctaDepoServicioService.listaCtaDepoServicio();
 
-            var result = lista.Select(x => new SelectViewModel()
+            foreach (var group in lista.GroupBy(x => x.entidadDesc))
             {
-                Value = x.ctaDepoServicioID.ToString(),
-                TextDisplay = String.Format("\"{0}\" - {1} - {2} _ {3}", x.entidadDesc, x.numeroCuenta, x.codServicio, x.descServ)
-            });
+                var optionGroup = new SelectListGroup() { Name = group.Key };
 
-            return result.ToList();
+                var range = group.OrderBy(x => x.codServicio).Select(x => new SelectListItem() { 
+                    Value = x.ctaDepoServicioID.ToString(),
+                    Text = String.Format("{0} {1} ({2})", x.codServicio, x.descServ, x.numeroCuenta),
+                    Group = optionGroup,
+                    Selected = (selectedItem != null && selectedItem.Contains(x.ctaDepoServicioID))
+                });
+
+                result.AddRange(
+                   range
+                );
+            }
+
+            return new SelectList(result, "Value", "Text", "Group.Name", null, null);
         }
     }
 }

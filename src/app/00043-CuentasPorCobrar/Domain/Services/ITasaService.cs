@@ -19,14 +19,12 @@ namespace Domain.Services
 
         PagoTasaDTO ObtenerPagoTasa(int I_PagoBancoID);
 
-        Response Grabar_TasaUnfv(TasaEntity tasaEntity, SaveOption saveOption, int[] ctasDeposito, int[] codServicioBcoComercioTasas);
+        Response Grabar_TasaUnfv(TasaEntity tasaEntity, SaveOption saveOption, int[] ctasDepositoServicio);
 
         TasaEntity ObtenerTasaUnfv(int id);
 
         Response ChangeState(int tasaUnfvId, bool currentState, int currentUserId);
 
-        int[] ObtenerCtaDepositoIDs(int tasaUnfvID);
-
-        int[] ObtenerServicioIDs(int tasaUnfvID);
+        int[] ObtenerCtaDepositoServicioIDs(int tasaUnfvID);
     }
 }
