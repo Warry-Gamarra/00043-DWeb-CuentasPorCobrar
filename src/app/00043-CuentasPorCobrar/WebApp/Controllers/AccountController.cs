@@ -65,7 +65,8 @@ namespace WebApp.Controllers
             }
 
             ViewBag.ReturnUrl = returnUrl;
-            return View();
+            
+            return View(new LoginViewModel());
         }
 
         [Route("logout")]
