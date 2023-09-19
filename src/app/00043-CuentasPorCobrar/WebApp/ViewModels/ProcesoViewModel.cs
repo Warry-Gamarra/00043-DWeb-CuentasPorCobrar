@@ -52,6 +52,8 @@ namespace WebApp.ViewModels
         public int[] CtasBcoComercio { get; set; }
 
         public bool editarFecha { get; set; }
+
+        public int? CuotaPagoID { get; set; }
     }
 
 

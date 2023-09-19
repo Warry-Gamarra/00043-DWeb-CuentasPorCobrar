@@ -197,7 +197,8 @@ namespace WebApp.Models
                 B_Habilitado = true,
                 I_UsuarioCre = currentUserId,
                 I_UsuarioMod = currentUserId,
-                editarFecha = model.editarFecha
+                editarFecha = model.editarFecha,
+                cuotaPagoID = model.CuotaPagoID
             };
 
             var resultProceso = _procesoService.Grabar_Proceso(procesoEntity, procesoSaveOption);
@@ -318,7 +319,8 @@ namespace WebApp.Models
                 PrioridadId = proceso.I_Prioridad,
                 CtasBcoComercio = ctasBcoComercio.Select(x => x.I_CtaDepID).ToArray(),
                 CodBcoComercio = proceso.N_CodBanco,
-                CtaDepositoID = cuentasProceso.Select(x => x.I_CtaDepositoID).ToArray()
+                CtaDepositoID = cuentasProceso.Select(x => x.I_CtaDepositoID).ToArray(),
+                CuotaPagoID = proceso.cuotaPagoID
             };
 
             if (cuentasProceso.Where(x => x.I_EntidadFinanID == Bancos.BANCO_COMERCIO_ID).Count() > 0)

@@ -250,7 +250,8 @@ namespace Domain.Entities
                 C_Nivel = uspProceso.C_Nivel,
                 I_TipoAlumno = uspProceso.I_TipoAlumno,
                 T_TipoAlumno = uspProceso.T_TipoAlumno,
-                C_TipoAlumno = uspProceso.C_TipoAlumno
+                C_TipoAlumno = uspProceso.C_TipoAlumno,
+                cuotaPagoID = uspProceso.I_CuotaPagoID
             };
 
             return proceso;

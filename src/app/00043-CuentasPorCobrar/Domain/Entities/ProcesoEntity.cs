@@ -20,5 +20,7 @@ namespace Domain.Entities
         public int? I_UsuarioCre { get; set; }
         public int? I_UsuarioMod { get; set; }
         public bool editarFecha { get;  set; }
+
+        public int? cuotaPagoID { get; set; }
     }
 }

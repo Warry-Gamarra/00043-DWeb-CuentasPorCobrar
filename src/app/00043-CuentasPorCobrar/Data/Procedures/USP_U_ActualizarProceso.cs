@@ -23,6 +23,8 @@ namespace Data.Procedures
         public int I_UsuarioMod { get; set; }
         public bool editarFecha { get; set; }
 
+        public int? I_CuotaPagoID { get; set; }
+
         public ResponseData Execute()
         {
             ResponseData result = new ResponseData();
@@ -44,6 +46,7 @@ namespace Data.Procedures
                     parameters.Add(name: "B_Habilitado", dbType: DbType.Boolean, value: this.B_Habilitado);
                     parameters.Add(name: "I_UsuarioMod", dbType: DbType.Int32, value: this.I_UsuarioMod);
                     parameters.Add(name: "B_EditarFecha", dbType: DbType.Int32, value: this.editarFecha);
+                    parameters.Add(name: "I_CuotaPagoID", dbType: DbType.Int32, value: this.I_CuotaPagoID);
 
                     parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);
                     parameters.Add(name: "T_Message", dbType: DbType.String, size: 4000, direction: ParameterDirection.Output);

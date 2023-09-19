@@ -25,5 +25,7 @@ namespace Domain.Entities
         public int I_TipoAlumno { get; set; }
         public string T_TipoAlumno { get; set; }
         public string C_TipoAlumno { get; set; }
+
+        public int? cuotaPagoID { get; set; }
     }
 }

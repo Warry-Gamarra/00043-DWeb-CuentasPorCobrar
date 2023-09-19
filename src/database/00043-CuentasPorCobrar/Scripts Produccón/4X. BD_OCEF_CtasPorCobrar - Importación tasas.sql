@@ -39,3 +39,9 @@ GO
 
 UPDATE TI_TasaUnfv SET I_TipoObligacion = 10 WHERE I_TipoObligacion IS NULL;
 GO
+
+ALTER TABLE TC_Proceso ADD I_CuotaPagoID INT
+GO
+
+UPDATE dbo.TC_Proceso SET I_CuotaPagoID = I_ProcesoID
+GO

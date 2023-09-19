@@ -22,6 +22,8 @@ namespace Data.Procedures
         public string T_ProcesoDesc { get; set; }
         public int I_UsuarioCre { get; set; }
 
+        public int? I_CuotaPagoID { get; set; }
+
         public ResponseData Execute()
         {
             ResponseData result = new ResponseData();
@@ -41,6 +43,7 @@ namespace Data.Procedures
                     parameters.Add(name: "N_CodBanco", dbType: DbType.String, size: 10, value: this.N_CodBanco);
                     parameters.Add(name: "T_ProcesoDesc", dbType: DbType.String, size: 250, value: this.T_ProcesoDesc);
                     parameters.Add(name: "I_UsuarioCre", dbType: DbType.Int32, value: this.I_UsuarioCre);
+                    parameters.Add(name: "I_CuotaPagoID", dbType: DbType.Int32, value: this.I_CuotaPagoID);
 
                     parameters.Add(name: "I_ProcesoID", dbType: DbType.Int32, direction: ParameterDirection.Output);
                     parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);

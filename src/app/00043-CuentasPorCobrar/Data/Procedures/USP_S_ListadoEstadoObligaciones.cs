@@ -96,7 +96,8 @@ namespace Data.Procedures
                     parameters.Add(name: "T_ApeMaternoAlu", dbType: DbType.String, value: pr.T_ApeMaternoAlu);
                     parameters.Add(name: "I_DependenciaID", dbType: DbType.Int32, value: pr.I_DependenciaID);
 
-                    result = _dbConnection.Query<USP_S_ListadoEstadoObligaciones>(s_command, parameters, commandType: CommandType.StoredProcedure);
+                    result = _dbConnection.Query<USP_S_ListadoEstadoObligaciones>(s_command, parameters, commandType: CommandType.StoredProcedure, 
+                        commandTimeout: 100);
                 }
             }
             catch (Exception ex)

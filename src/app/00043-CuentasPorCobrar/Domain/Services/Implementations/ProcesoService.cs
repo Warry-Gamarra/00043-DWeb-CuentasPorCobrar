@@ -113,7 +113,8 @@ namespace Domain.Services.Implementations
                         I_Periodo = procesoEntity.I_Periodo,
                         N_CodBanco = procesoEntity.N_CodBanco,
                         T_ProcesoDesc = procesoEntity.T_ProcesoDesc,
-                        I_UsuarioCre = procesoEntity.I_UsuarioCre.GetValueOrDefault()
+                        I_UsuarioCre = procesoEntity.I_UsuarioCre.GetValueOrDefault(),
+                        I_CuotaPagoID = procesoEntity.cuotaPagoID
                     };
 
                     result = grabarProceso.Execute();
@@ -132,7 +133,8 @@ namespace Domain.Services.Implementations
                         T_ProcesoDesc = procesoEntity.T_ProcesoDesc,
                         N_CodBanco = procesoEntity.N_CodBanco,
                         I_UsuarioMod = procesoEntity.I_UsuarioMod.GetValueOrDefault(),
-                        editarFecha = procesoEntity.editarFecha
+                        editarFecha = procesoEntity.editarFecha,
+                        I_CuotaPagoID = procesoEntity.cuotaPagoID
                     };
 
                     result = actualizarProceso.Execute();
