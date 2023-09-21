@@ -601,6 +601,8 @@ AS
 BEGIN
 	SET NOCOUNT ON;
   
+	BEGIN TRAN
+
 	BEGIN TRY
 		DECLARE @I_Grado INT,  
 		@I_AlumnoDestino INT  
@@ -665,6 +667,9 @@ ALTER PROCEDURE dbo.USP_U_ActualizarProceso
 AS  
 BEGIN  
 	SET NOCOUNT ON;
+	
+	BEGIN TRAN
+	
 	BEGIN TRY
 		DECLARE @CurrentDate datetime = getdate()  
   
