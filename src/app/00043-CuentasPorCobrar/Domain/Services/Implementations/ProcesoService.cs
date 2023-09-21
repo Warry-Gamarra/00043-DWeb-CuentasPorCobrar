@@ -92,16 +92,24 @@ namespace Domain.Services.Implementations
         public Response Grabar_Proceso(ProcesoEntity procesoEntity, SaveOption saveOption)
         {
             ResponseData result;
+            List<USP_S_Procesos> listaProcesos;
 
             switch (saveOption)
             {
                 case SaveOption.Insert:
 
-                    if (USP_S_Procesos.Execute().FirstOrDefault(x => x.I_CatPagoID == procesoEntity.I_CatPagoID 
+                    listaProcesos = USP_S_Procesos.Execute();
+
+                    if (listaProcesos.FirstOrDefault(x => x.I_CatPagoID == procesoEntity.I_CatPagoID 
                                                                    && x.I_Anio == procesoEntity.I_Anio 
                                                                    && x.I_Periodo == procesoEntity.I_Periodo) != null)
                     {
                         return new Response() { Value =false, Message = "La cuota de pago ya se encuentra registrada" };
+                    }
+
+                    if (procesoEntity.cuotaPagoID.HasValue && listaProcesos.Exists(x => x.I_CuotaPagoID.HasValue && x.I_CuotaPagoID.Value.Equals(procesoEntity.cuotaPagoID.Value)))
+                    {
+                        return new Response() { Value = false, Message = "El ID de Cuota de Pago se repite en este sistema." };
                     }
 
                     var grabarProceso = new USP_I_GrabarProceso()
@@ -122,6 +130,15 @@ namespace Domain.Services.Implementations
                     break;
 
                 case SaveOption.Update:
+                    
+                    listaProcesos = USP_S_Procesos.Execute();
+
+                    if (procesoEntity.cuotaPagoID.HasValue && listaProcesos.Exists(x =>
+                        x.I_ProcesoID != procesoEntity.I_ProcesoID && x.I_CuotaPagoID.HasValue && x.I_CuotaPagoID.Value.Equals(procesoEntity.cuotaPagoID.Value)))
+                    {
+                        return new Response() { Value = false, Message = "El ID de Cuota de Pago se repite en este sistema." };
+                    }
+
                     var actualizarProceso = new USP_U_ActualizarProceso()
                     {
                         I_ProcesoID = procesoEntity.I_ProcesoID,
