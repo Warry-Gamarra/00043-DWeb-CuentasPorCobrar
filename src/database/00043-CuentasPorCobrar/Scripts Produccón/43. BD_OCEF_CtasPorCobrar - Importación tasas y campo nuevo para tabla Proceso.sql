@@ -1,7 +1,16 @@
 USE BD_OCEF_CtasPorCobrar
 GO
 
---REGISTRO DE SERVICIOS COMERCIO
+
+--NUEVO CAMPO CUOTA PAGO ID DEL TEMPORAL
+ALTER TABLE TC_Proceso ADD I_CuotaPagoID INT
+GO
+
+UPDATE dbo.TC_Proceso SET I_CuotaPagoID = I_ProcesoID
+GO
+
+
+--REGISTRO DE SERVICIOS DEL BANCO DE COMERCIO
 SET IDENTITY_INSERT dbo.TC_Servicios ON
 GO
 INSERT dbo.TC_Servicios(I_ServicioID, C_CodServicio, T_DescServ, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre) VALUES(24, '046', 'UNFV ADMISION 2017', 1, 0, 1, GETDATE())
@@ -39,14 +48,7 @@ GO
 UPDATE TI_TasaUnfv SET I_TipoObligacion = 10 WHERE I_TipoObligacion IS NULL;
 GO
 
-ALTER TABLE TC_Proceso ADD I_CuotaPagoID INT
-GO
-
---NUEVO CAMPO CUOTA PAGO ID DEL TEMPORAL
-UPDATE dbo.TC_Proceso SET I_CuotaPagoID = I_ProcesoID
-GO
-
---IMPORTACIÓN TASAS
+--REGISTRO DE TASAS ACADÉMICAS
 DECLARE @I_ConceptoID INT, @I_TasaUnfvID INT, @I_CtaDepoServicioID INT;
 IF EXISTS (SELECT I_ConceptoID FROM dbo.TC_Concepto WHERE I_TipoObligacion = 10 AND T_ClasifCorto = '82988') BEGIN
 	SET @I_ConceptoID = (SELECT I_ConceptoID FROM dbo.TC_Concepto WHERE I_TipoObligacion = 10 AND T_ClasifCorto = '82988');

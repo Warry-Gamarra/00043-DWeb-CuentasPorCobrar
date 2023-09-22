@@ -702,7 +702,6 @@ namespace WebApp.Models
             string fecVencto;
             string cantidad;
             string montoPago;
-            string procesoID;
             string lugarPago;
             string agencia;
             string nomDepositante;
@@ -719,11 +718,11 @@ namespace WebApp.Models
             string cadenaDetalle = "";
             string informacionAdicional = "";
 
-            foreach (var item in infoPagos)
+            foreach (var item in infoPagos.Where(x => x.CuotaPagoID.HasValue && x.CuotaPagoID.Value > 0))
             {
                 fecVencto = item.FecVencto.ToString("yyyyMMdd");
                 informacionAdicional = item.CodAlumno + item.CodRc + item.Anio + item.Periodo + item.FecVencto.Year.ToString() + item.FecVencto.Month.ToString().PadLeft(2, ' ') + 
-                                       item.FecVencto.Day.ToString().PadLeft(2, ' ') + item.CuotaPago.ToString().PadLeft(10, ' ') + item.MontoPago.ToString("#.00").PadLeft(10, ' ');
+                                       item.FecVencto.Day.ToString().PadLeft(2, ' ') + item.CuotaPagoID.ToString().PadLeft(10, ' ') + item.MontoPago.ToString("#.00").PadLeft(10, ' ');
 
                 codigoServicio = item.CodServicio.PadRight(4, ' ');
                 codigoSucursal = "".PadRight(3, ' ');
@@ -736,7 +735,6 @@ namespace WebApp.Models
                 fecPago = item.FecPago.ToString("yyyyMMdd");
                 cantidad = item.Cantidad.ToString();
                 montoPago = Convert.ToInt32(item.MontoPago * 100).ToString().PadLeft(14, '0');
-                procesoID = item.CuotaPago.ToString();
                 nomDepositante = item.NomDepositante.Substring2(0, 40).PadRight(40, ' ');
                 horaPago = item.FecPago.ToString("HHmmss");
                 interesMora = 0.ToString().PadLeft(14, '0');
