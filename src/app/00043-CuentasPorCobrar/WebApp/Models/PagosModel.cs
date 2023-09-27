@@ -198,6 +198,8 @@ namespace WebApp.Models
 
             var listaProcesos = procesoService.Listar_Procesos();
 
+            Proceso procesoDTO;
+
             for (int i = detalle.FilPosicionIni - 1; i < detalle.FilPosicionFin; i++)
             {
                 string line = linesFile[i];
@@ -293,7 +295,20 @@ namespace WebApp.Models
                 {
                     pagoEntity.I_ProcesoID = int.Parse(line.Substring(columnas["I_ProcesoID"].Inicial - 1, columnas["I_ProcesoID"].Final - columnas["I_ProcesoID"].Inicial + 1));
 
-                    pagoEntity.T_ProcesoDesc = listaProcesos.FirstOrDefault(x => x.I_ProcesoID == pagoEntity.I_ProcesoID).T_ProcesoDesc;
+                    procesoDTO = listaProcesos.FirstOrDefault(x => x.I_ProcesoID == pagoEntity.I_ProcesoID);
+
+                    if (procesoDTO != null)
+                    {
+                        pagoEntity.T_ProcesoDesc = procesoDTO.T_ProcesoDesc;
+                    }
+                    else
+                    {
+                        pagoEntity.T_ProcesoDesc = pagoEntity.I_ProcesoID.ToString();
+
+                        pagoEntity.B_Correcto = false;
+
+                        pagoEntity.T_ErrorMessage = "ID de Cuota de Pago desconocido.";
+                    }
                 }
                 catch (Exception ex)
                 {

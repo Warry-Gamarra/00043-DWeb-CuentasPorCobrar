@@ -287,7 +287,8 @@ namespace Domain.Services
                     D_FecMod = x.D_FecMod,
                     I_Monto = x.I_Monto,
                     I_MontoMinimo = x.I_MontoMinimo,
-                    B_Mora = x.B_Mora
+                    B_Mora = x.B_Mora,
+                    T_ClasifCorto = x.T_ClasifCorto
                 }).ToList();
 
                 return result;

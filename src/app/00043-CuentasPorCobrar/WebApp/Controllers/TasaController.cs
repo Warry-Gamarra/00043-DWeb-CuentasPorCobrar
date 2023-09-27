@@ -58,7 +58,16 @@ namespace WebApp.Controllers
         {
             ViewBag.Title = "Registrar Concepto";
 
-            ViewBag.Conceptos = new SelectList(_conceptoModel.Listar_CatalogoConceptos(TipoPago.Tasa, true), "Id", "NombreConcepto");
+            var listaTasas = _conceptoModel.Listar_CatalogoConceptos(TipoPago.Tasa, true);
+
+            var items = new List<SelectListItem>();
+
+            listaTasas.ForEach(t => items.Add(new SelectListItem() {
+                Value = t.Id.Value.ToString(),
+                Text = String.Format("{0} - {1}", t.ClasifCorto, t.NombreConcepto)
+            }));
+
+            ViewBag.Conceptos = new SelectList(items.OrderBy(i => i.Text), "Value", "Text");
 
             ViewBag.ListaCtasDepositoServicios = _selectModel.GetCtaDepoServicioParaTasas();
 

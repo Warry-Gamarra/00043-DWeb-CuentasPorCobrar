@@ -16,7 +16,7 @@ namespace WebApp.ViewModels
         public decimal MontoMinimo { get; set; }
         public bool Habilitado { get; set; }
         public DateTime? FecModificacion { get; set; }
-
+        public string ClasifCorto { get; set; }
 
         public CatalogoConceptosViewModel() { }
 
@@ -29,6 +29,7 @@ namespace WebApp.ViewModels
             this.FecModificacion = concepto.D_FecMod ?? concepto.D_FecCre;
             this.Monto = concepto.I_Monto;
             this.MontoMinimo = concepto.I_MontoMinimo;
+            this.ClasifCorto = concepto.T_ClasifCorto;
         }
     }
 
