@@ -128,7 +128,8 @@
                            model.B_Pagado.HasValue ? (!model.B_Pagado.Value ? "<a href=\"" + Url.Action("EditarDetalleObligacion", "Obligaciones", new { obligacionID = model.I_ObligacionAluID }) +
                            "\" class=\"modal-link-lg\"><i class=\"fa fa-pencil-square-o\"></i> Editar</a>" : "") : "");
                        columns.Add().SetWidth(90).Css("text-center").Encoded(false).Sanitized(false).RenderValueAs(model =>
-                           model.B_Pagado.HasValue ? (!model.B_Pagado.Value ? "<a href=\"#\" onclick=\"ConfirmarAnulacion(" + model.I_ObligacionAluID + ");\"><i class=\"fa fa-trash\"></i> Eliminar</a>" : "") : "");
+                           model.B_Pagado.HasValue ? (!model.B_Pagado.Value ? "<a href=\"#\" onclick=\"ConfirmarAnulacion(" + model.I_ObligacionAluID + ", '" + model.T_ApellidosNombres + "', '" + model.T_ProcesoDesc + "', '" + model.T_FecVencto +
+                           "');\"><i class=\"fa fa-trash\"></i> Eliminar</a>" : "") : "");
                     }).WithPaging(12).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
                 </div>
             </div>
@@ -347,10 +348,10 @@
             });
         }
 
-        function ConfirmarAnulacion(idObligacion) {
+        function ConfirmarAnulacion(idObligacion, persona, cuota, fecVcto) {
             Swal.fire({
                 title: '',
-                html: "¿Desea anular la cuota seleccionada?.",
+                html: "¿Desea anular la cuota seleccionada?<br /><br />" + persona + "<br />" + cuota + "<br />(" + fecVcto + ")",
                 icon: MESSAGE_TYPE.WARNING,
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
