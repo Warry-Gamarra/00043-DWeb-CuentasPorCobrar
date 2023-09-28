@@ -119,15 +119,33 @@
                        columns.Add(c => c.I_MontoOblig).Titled("Monto Obl.").Filterable(true).Css("text-center");
                        columns.Add(c => c.T_FecVencto).Titled("Fec.Vcto").Filterable(true).Css("text-center");
                        columns.Add(c => c.T_Pagado).Titled("Estado").Filterable(true).Css("text-center");
-                       columns.Add().SetWidth(125).Css("text-center").Encoded(false).Sanitized(false).RenderValueAs(model =>
+                       columns.Add().SetWidth(90).Css("text-center").Encoded(false).Sanitized(false).RenderValueAs(model =>
                            model.B_Pagado.HasValue ? (model.B_Pagado.Value ? "" : "<a href=\""+ Url.Action("AsignarPagoObligacion", "Pagos", new { obligacionID = model.I_ObligacionAluID }) +
                            "\" class=\"modal-link-lg\"><i class=\"fa fa-pencil-square-o\"></i> Asignar</a>") : "");
-                       columns.Add().SetWidth(125).Css("text-center").Encoded(false).Sanitized(false).RenderValueAs(model =>
+                       columns.Add().SetWidth(90).Css("text-center").Encoded(false).Sanitized(false).RenderValueAs(model =>
                            @<a href="@Url.Action("VerPagosObligacion", "Pagos", new { obligacionID = model.I_ObligacionAluID })" class="modal-link-lg"><i class="fa fa-fw fa-money" aria-hidden="true"></i> Pago</a>);
-                       columns.Add().SetWidth(125).Css("text-center").Encoded(false).Sanitized(false).RenderValueAs(model =>
+                       columns.Add().SetWidth(90).Css("text-center").Encoded(false).Sanitized(false).RenderValueAs(model =>
                            model.B_Pagado.HasValue ? (!model.B_Pagado.Value ? "<a href=\"" + Url.Action("EditarDetalleObligacion", "Obligaciones", new { obligacionID = model.I_ObligacionAluID }) +
                            "\" class=\"modal-link-lg\"><i class=\"fa fa-pencil-square-o\"></i> Editar</a>" : "") : "");
-               }).WithPaging(12).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
+                       columns.Add().SetWidth(90).Css("text-center").Encoded(false).Sanitized(false).RenderValueAs(model =>
+                           model.B_Pagado.HasValue ? (!model.B_Pagado.Value ? "<a href=\"#\" onclick=\"ConfirmarAnulacion(" + model.I_ObligacionAluID + ");\"><i class=\"fa fa-trash\"></i> Eliminar</a>" : "") : "");
+                    }).WithPaging(12).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalEspera" tabindex="-1" role="dialog" aria-labelledby="lblModalEspera" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="lblModalEspera">Mensaje del sistema</h5>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex align-items-center">
+                    <strong>Espere un momento . . .</strong>
+                    <div class="spinner-border ml-auto text-primary" role="status" aria-hidden="true"></div>
                 </div>
             </div>
         </div>
@@ -141,7 +159,7 @@
             SUCCESS: 'success',
             WARNING: 'warning',
             ERROR: 'error'
-        }; 
+        };
 
         $("#formConsultaObligaciones").on("change", "#tipoEstudio", function (e) {
             let tipoEstudio = $(this).val();
@@ -325,6 +343,65 @@
                     cabMontoObligacion.html(montoObligacion);
 
                     cabMontoPagado.html(montoPagado);
+                }
+            });
+        }
+
+        function ConfirmarAnulacion(idObligacion) {
+            Swal.fire({
+                title: '',
+                html: "¿Desea anular la cuota seleccionada?.",
+                icon: MESSAGE_TYPE.WARNING,
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si, continuar.',
+                cancelButtonText: 'No, cancelar.'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    AnularObligacion(idObligacion);
+                }
+            });
+        }
+
+        function AnularObligacion(idObligacion) {
+            let parametros = {
+                obligaciones: [idObligacion]
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("AnularCuotaPago", "Obligaciones")',
+                data: parametros,
+                dataType: 'json',
+                beforeSend: function () {
+                    $('#modalEspera').modal('show');
+                },
+                success: function (data) {
+                    if (data) {
+                        if (data.Value) {
+                            window.location.reload();
+                        } else {
+                            Swal.fire({
+                                title: '',
+                                text: data.Message,
+                                icon: MESSAGE_TYPE.ERROR,
+                                timer: 6000
+                            });
+                        }
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    var jsonException = JSON.parse(xhr.responseText);
+                    Swal.fire({
+                        title: '',
+                        text: jsonException.Message,
+                        icon: MESSAGE_TYPE.ERROR,
+                        timer: 6000
+                    });
+                },
+                complete: function () {
+                    $('#modalEspera').modal('hide');
                 }
             });
         }

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 using WebApp.Models;
@@ -344,6 +345,8 @@ namespace WebApp.Controllers
         [HandleJsonExceptionAttribute]
         public ActionResult AnularCuotaPago(int[] obligaciones)
         {
+            Thread.Sleep(500);
+
             Response response = new Response()
             {
                 Value = false
