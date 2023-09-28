@@ -128,7 +128,7 @@
                            model.B_Pagado.HasValue ? (!model.B_Pagado.Value ? "<a href=\"" + Url.Action("EditarDetalleObligacion", "Obligaciones", new { obligacionID = model.I_ObligacionAluID }) +
                            "\" class=\"modal-link-lg\"><i class=\"fa fa-pencil-square-o\"></i> Editar</a>" : "") : "");
                        columns.Add().SetWidth(90).Css("text-center").Encoded(false).Sanitized(false).RenderValueAs(model =>
-                           model.B_Pagado.HasValue ? (!model.B_Pagado.Value ? "<a href=\"#\" onclick=\"ConfirmarAnulacion(" + model.I_ObligacionAluID + ", '" + model.T_ApellidosNombres + "', '" + model.T_ProcesoDesc + "', '" + model.T_FecVencto +
+                           model.B_Pagado.HasValue ? (!model.B_Pagado.Value ? "<a href=\"#\" onclick=\"ConfirmarAnulacion(" + model.I_ObligacionAluID + ", '" + model.T_ApellidosNombres.Replace("'", "`") + "', '" + model.T_ProcesoDesc + "', '" + model.T_FecVencto +
                            "');\"><i class=\"fa fa-trash\"></i> Eliminar</a>" : "") : "");
                     }).WithPaging(12).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
                 </div>
