@@ -14,5 +14,7 @@ namespace Domain.Services
         IEnumerable<CarreraProfesionalDTO> GetByEsc(string codEsc, string codFac);
 
         CarreraProfesionalDTO GetByID(string codRc);
+
+        IEnumerable<CarreraProfesionalDTO> GetAll();
     }
 }

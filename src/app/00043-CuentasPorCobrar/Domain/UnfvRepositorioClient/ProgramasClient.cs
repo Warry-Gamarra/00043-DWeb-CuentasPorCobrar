@@ -180,5 +180,42 @@ namespace Domain.UnfvRepositorioClient
 
             return result;
         }
+
+        public IEnumerable<EspecialidadModel> GetEspecialidades()
+        {
+            string url, jsonResponse;
+            HttpWebRequest request;
+            IEnumerable<EspecialidadModel> result;
+
+            try
+            {
+                var uri = UnfvRepositorioClientConfiguration.BaseUrl("especialidades");
+
+                url = uri.ToString();
+
+                request = (HttpWebRequest)WebRequest.Create(url);
+
+                request.Method = HttpVerb.GET.ToString();
+
+                using (var response = (HttpWebResponse)request.GetResponse())
+                using (var responseStream = response.GetResponseStream())
+                using (var reader = new StreamReader(responseStream))
+                {
+                    jsonResponse = reader.ReadToEnd();
+
+                    result = JsonConvert.DeserializeObject<List<EspecialidadModel>>(jsonResponse);
+                }
+            }
+            catch (WebException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
     }
 }

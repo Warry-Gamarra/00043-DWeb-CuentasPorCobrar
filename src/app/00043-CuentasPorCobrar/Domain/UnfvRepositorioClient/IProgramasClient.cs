@@ -15,5 +15,7 @@ namespace Domain.UnfvRepositorioClient
         IEnumerable<EspecialidadModel> GetEspecialidades(string codFac);
 
         IEnumerable<EspecialidadModel> GetEspecialidades(string codFac, string codEsc);
+
+        IEnumerable<EspecialidadModel> GetEspecialidades();
     }
 }

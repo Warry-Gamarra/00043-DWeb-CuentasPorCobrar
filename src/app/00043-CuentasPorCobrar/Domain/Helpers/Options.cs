@@ -53,7 +53,9 @@ namespace Domain.Helpers
     public enum TipoEstudio
     {
         Pregrado,
-        Posgrado
+        Posgrado,
+        Segunda_Especialidad,
+        Residentado
     }
 
     public enum CondicionPago

@@ -52,12 +52,12 @@ namespace WebApi.Models
 
         public IEnumerable<CarreraProfesionalModel> GetCarrerasProfesionalesByFac(string codFac)
         {
-            return _especialidadService.GetByFac(codFac).Select(e => Mapper.CarreraProfesionalDTO_To_CarreraProfesionalModel(e)); ;
+            return _especialidadService.GetByFac(codFac).Select(e => Mapper.CarreraProfesionalDTO_To_CarreraProfesionalModel(e));
         }
 
         public IEnumerable<CarreraProfesionalModel> GetCarrerasProfesionalesByEsc(string codEsc, string codFac)
         {
-            return _especialidadService.GetByEsc(codEsc, codFac).Select(e => Mapper.CarreraProfesionalDTO_To_CarreraProfesionalModel(e)); ;
+            return _especialidadService.GetByEsc(codEsc, codFac).Select(e => Mapper.CarreraProfesionalDTO_To_CarreraProfesionalModel(e));
         }
 
         public CarreraProfesionalModel GetCarreraProfesionalByID(string codRc)
@@ -98,6 +98,11 @@ namespace WebApi.Models
             var programaUnfvDTO = _programaUnfvService.GetByCodRc(codRc);
 
             return Mapper.ProgramaUnfvDTO_To_ProgramaUnfvModel(programaUnfvDTO);
+        }
+
+        public IEnumerable<CarreraProfesionalModel> GetCarrerasProfesionales()
+        {
+            return _especialidadService.GetAll().Select(e => Mapper.CarreraProfesionalDTO_To_CarreraProfesionalModel(e));
         }
     }
 }

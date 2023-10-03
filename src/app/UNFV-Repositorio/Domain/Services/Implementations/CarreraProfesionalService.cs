@@ -61,5 +61,23 @@ namespace Domain.Services.Implementations
 
             return result;
         }
+
+        public IEnumerable<CarreraProfesionalDTO> GetAll()
+        {
+            IEnumerable<CarreraProfesionalDTO> result;
+
+            var carrerasProfesionales = _carreraProfesionalRepository.GetAll();
+
+            if (carrerasProfesionales == null)
+            {
+                result = new List<CarreraProfesionalDTO>();
+            }
+            else
+            {
+                result = carrerasProfesionales.Select(c => Mapper.VW_CarreraProfesional_To_CarreraProfesionalDTO(c));
+            }
+
+            return result;
+        }
     }
 }

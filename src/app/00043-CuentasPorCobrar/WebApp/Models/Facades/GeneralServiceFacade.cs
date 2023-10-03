@@ -36,7 +36,7 @@ namespace WebApp.Models.Facades
             else if (DependenciaID == DependenciaEUPG.ID)
                 lista = generalService.Listar_TipoEstudios().Where(x => x.Equals(TipoEstudio.Posgrado));
             else
-                lista = generalService.Listar_TipoEstudios().Where(x => x.Equals(TipoEstudio.Pregrado));
+                lista = generalService.Listar_TipoEstudios().Where(x => !x.Equals(TipoEstudio.Posgrado));
 
             var result = lista.Select(x => new SelectViewModel() { Value = x.ToString(), TextDisplay = x.ToString() });
 

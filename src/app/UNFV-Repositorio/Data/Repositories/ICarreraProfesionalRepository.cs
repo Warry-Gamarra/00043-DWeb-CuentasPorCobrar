@@ -14,5 +14,7 @@ namespace Data.Repositories
         IEnumerable<VW_CarreraProfesional> GetByEsc(string codEsc, string codFac);
 
         VW_CarreraProfesional GetByID(string codRc);
+
+        IEnumerable<VW_CarreraProfesional> GetAll();
     }
 }

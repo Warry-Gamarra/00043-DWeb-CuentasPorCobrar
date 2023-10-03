@@ -29,6 +29,10 @@ namespace Domain.Services.Implementations
 
             result.Add(TipoEstudio.Posgrado);
 
+            result.Add(TipoEstudio.Segunda_Especialidad);
+
+            result.Add(TipoEstudio.Residentado);
+
             return result;
         }
 

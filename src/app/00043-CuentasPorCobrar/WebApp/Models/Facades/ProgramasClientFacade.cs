@@ -73,6 +73,7 @@ namespace WebApp.Models.Facades
         public IEnumerable<SelectViewModel> GetDependencias(TipoEstudio tipoEstudio, int? dependenciaID)
         {
             IEnumerable<FacultadModel> facultades;
+            IEnumerable<EspecialidadModel> especialidades;
             IEnumerable<SelectViewModel> result;
 
             try
@@ -105,6 +106,18 @@ namespace WebApp.Models.Facades
                             Value = x.CodFac,
                             TextDisplay = x.FacDesc
                         });
+
+                        break;
+
+                    case TipoEstudio.Segunda_Especialidad:
+                        especialidades = programasClient.GetEspecialidades().Where(x => x.N_Grado == "4");
+
+                        result = especialidades
+                            .GroupBy(x => new { x.C_CodFac, x.T_FacDesc} )
+                            .Select(x => new SelectViewModel() { 
+                                Value = x.Key.C_CodFac,
+                                TextDisplay = x.Key.T_FacDesc
+                            });
 
                         break;
 

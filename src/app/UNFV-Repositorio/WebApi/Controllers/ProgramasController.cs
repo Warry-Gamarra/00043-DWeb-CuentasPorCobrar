@@ -153,5 +153,12 @@ namespace WebApi.Controllers
         {
             return Ok(_service.GetCarreraProfesionalByID(codRc));
         }
+
+        [HttpGet]
+        [Route("especialidades")]
+        public IHttpActionResult GetCarrerasProfesionales()
+        {
+            return Ok(_service.GetCarrerasProfesionales());
+        }
     }
 }

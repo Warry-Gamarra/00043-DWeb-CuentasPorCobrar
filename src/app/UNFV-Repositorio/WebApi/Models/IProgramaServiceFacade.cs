@@ -31,5 +31,7 @@ namespace WebApi.Models
         ProgramaUnfvModel GetProgramaUnfvByID(string codProg);
 
         ProgramaUnfvModel GetProgramaUnfvByCodRc(string codRc);
+
+        IEnumerable<CarreraProfesionalModel> GetCarrerasProfesionales();
     }
 }

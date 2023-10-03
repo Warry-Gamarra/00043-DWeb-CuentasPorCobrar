@@ -52,5 +52,19 @@ namespace Data.Repositories.Implementations
             }
             return result;
         }
+
+        public IEnumerable<VW_CarreraProfesional> GetAll()
+        {
+            IEnumerable<VW_CarreraProfesional> result;
+            try
+            {
+                result = VW_CarreraProfesional.GetAll();
+            }
+            catch (Exception)
+            {
+                result = null;
+            }
+            return result;
+        }
     }
 }
