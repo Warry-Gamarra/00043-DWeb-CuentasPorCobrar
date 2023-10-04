@@ -78,7 +78,7 @@ namespace Data.Procedures
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    parameters.Add(name: "B_EsPregrado", dbType: DbType.Boolean, value: pr.B_EsPregrado);
+                    parameters.Add(name: "I_TipoEstudio", dbType: DbType.Boolean, value: pr.I_TipoEstudio);
                     parameters.Add(name: "I_Anio", dbType: DbType.Int32, value: pr.I_Anio);
                     parameters.Add(name: "I_Periodo", dbType: DbType.Int32, value: pr.I_Periodo);
                     parameters.Add(name: "C_CodFac", dbType: DbType.String, value: pr.C_CodFac);
@@ -111,7 +111,7 @@ namespace Data.Procedures
 
     public class USP_S_ListadoEstadoObligaciones_Parameters
     {
-        public bool B_EsPregrado { get; set; }
+        public int I_TipoEstudio { get; set; }
         public int I_Anio { get; set; }
         public int? I_Periodo { get; set; }
         public string C_CodFac { get; set; }

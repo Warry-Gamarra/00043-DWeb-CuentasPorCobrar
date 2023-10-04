@@ -101,7 +101,7 @@ namespace Domain.Services.Implementations
                 C_CodFac = codFac,
                 C_CodEsc = codEsc,
                 C_RcCod = codRc,
-                B_EsPregrado = false,
+                I_TipoEstudio = 2,
                 B_Ingresante = esIngresante,
                 B_Pagado = estaPagado,
                 B_ObligacionGenerada = obligacionGenerada,

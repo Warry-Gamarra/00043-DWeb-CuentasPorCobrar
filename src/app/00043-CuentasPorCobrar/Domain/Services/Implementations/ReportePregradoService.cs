@@ -1,5 +1,6 @@
 ﻿using Data.Procedures;
 using Domain.Entities;
+using Domain.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -103,7 +104,7 @@ namespace Domain.Services.Implementations
                 C_CodFac = codFac,
                 C_CodEsc = codEsc,
                 C_RcCod = codRc,
-                B_EsPregrado = true,
+                I_TipoEstudio = 1,
                 B_Ingresante = esIngresante,
                 B_Pagado = estaPagado,
                 B_ObligacionGenerada = obligacionGenerada,
