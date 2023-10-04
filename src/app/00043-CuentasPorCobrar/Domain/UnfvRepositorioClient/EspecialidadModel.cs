@@ -36,8 +36,8 @@ namespace Domain.UnfvRepositorioClient
 
         public int? I_IdAplica { get; set; }
 
-        public int B_Habilitado { get; set; }
+        public bool B_Habilitado { get; set; }
 
-        public int B_Eliminado { get; set; }
+        public int? I_DependenciaID { get; set; }
     }
 }

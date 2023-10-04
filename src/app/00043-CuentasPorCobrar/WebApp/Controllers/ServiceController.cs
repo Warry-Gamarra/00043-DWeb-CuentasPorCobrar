@@ -164,9 +164,9 @@ namespace WebApp.Controllers
         }
 
         // GET: api/service/GetEscuelas?codFac=codFac
-        public IEnumerable<SelectViewModel> GetEscuelas(string codFac)
+        public IEnumerable<SelectViewModel> GetEscuelas(TipoEstudio tipoEstudio, string codFac)
         {
-            return programasClientFacade.GetEscuelas(codFac);
+            return programasClientFacade.GetEscuelas(tipoEstudio, codFac);
         }
 
         // GET: api/service/GetEspecialidades?codFac=codFac
@@ -176,9 +176,9 @@ namespace WebApp.Controllers
         }
 
         // GET: api/service/GetEspecialidades?codFac=codFac&codEsc=codEsc
-        public IEnumerable<SelectViewModel> GetEspecialidades(string codFac, string codEsc)
+        public IEnumerable<SelectViewModel> GetEspecialidades(TipoEstudio tipoEstudio, string codFac, string codEsc)
         {
-            return programasClientFacade.GetEspecialidades(codFac, codEsc);
+            return programasClientFacade.GetEspecialidades(tipoEstudio, codFac, codEsc);
         }
 
         // GET: api/service/GetPagosObservados?codOperacion=codOperacion&codAlumno=codAlumno

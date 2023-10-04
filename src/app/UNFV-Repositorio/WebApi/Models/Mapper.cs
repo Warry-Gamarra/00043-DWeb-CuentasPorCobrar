@@ -64,7 +64,7 @@ namespace WebApi.Models
                 N_Grado = carreraProfesionalDTO.N_Grado,
                 I_IdAplica = carreraProfesionalDTO.I_IdAplica,
                 B_Habilitado = carreraProfesionalDTO.B_Habilitado,
-                B_Eliminado = carreraProfesionalDTO.B_Eliminado,
+                I_DependenciaID = carreraProfesionalDTO.I_DependenciaID,
             };
 
             return carreraProfesionalModel;

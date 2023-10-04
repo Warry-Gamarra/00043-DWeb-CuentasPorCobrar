@@ -259,8 +259,8 @@ namespace WebApp.Controllers
             ViewBag.Periodos = new SelectList(catalogoServiceFacade.Listar_Periodos(), "Value", "TextDisplay", model.periodo);
             ViewBag.TipoEstudios = new SelectList(generalServiceFacade.Listar_TipoEstudios(model.dependencia), "Value", "TextDisplay", model.tipoEstudio);
             ViewBag.Dependencias = new SelectList(listaDependencias, "Value", "TextDisplay", model.codFac);
-            ViewBag.Escuelas = new SelectList(programasClientFacade.GetEscuelas(model.codFac), "Value", "TextDisplay", model.codEsc);
-            ViewBag.Especialidades = new SelectList(programasClientFacade.GetEspecialidades(model.codFac, model.codEsc), "Value", "TextDisplay", model.codRc);
+            ViewBag.Escuelas = new SelectList(programasClientFacade.GetEscuelas(model.tipoEstudio, model.codFac), "Value", "TextDisplay", model.codEsc);
+            ViewBag.Especialidades = new SelectList(programasClientFacade.GetEspecialidades(model.tipoEstudio, model.codFac, model.codEsc), "Value", "TextDisplay", model.codRc);
 
             ViewBag.TipoAlumno = new SelectList(generalServiceFacade.Listar_TipoAlumno(), "Value", "TextDisplay", model.esIngresante);
             ViewBag.ExistenciaObligaciones = new SelectList(generalServiceFacade.Listar_CondicionExistenciaObligaciones(), "Value", "TextDisplay", model.obligacionGenerada);

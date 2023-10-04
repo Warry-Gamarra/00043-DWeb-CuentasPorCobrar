@@ -14,10 +14,10 @@ namespace WebApp.Models.Facades
 
         IEnumerable<SelectViewModel> GetDependencias(TipoEstudio tipoEstudio, int? dependenciaID);
 
-        IEnumerable<SelectViewModel> GetEscuelas(string codFac);
+        IEnumerable<SelectViewModel> GetEscuelas(TipoEstudio tipoEstudio, string codFac);
 
         IEnumerable<SelectViewModel> GetEspecialidades(string codFac);
 
-        IEnumerable<SelectViewModel> GetEspecialidades(string codFac, string codEsc);
+        IEnumerable<SelectViewModel> GetEspecialidades(TipoEstudio tipoEstudio, string codFac, string codEsc);
     }
 }

@@ -188,16 +188,18 @@
         });
 
         $("#frmConsultaEstudianteMatricula").on("change", "#codFac", function (e) {
+            let tipoEstudio = $("#tipoEstudio").val();
             let codFac = $(this).val();
 
-            CargarEscuelas(codFac);
+            CargarEscuelas(tipoEstudio, codFac);
         });
 
         $("#frmConsultaEstudianteMatricula").on("change", "#codEsc", function (e) {
+            let tipoEstudio = $("#tipoEstudio").val();
             let codFac = $("#codFac").val();
             let codEsc = $(this).val();
 
-            CargarEspecialidades(codFac, codEsc);
+            CargarEspecialidades(tipoEstudio, codFac, codEsc);
         });
 
         $(document).on("click", "#btnConsultarEstudiante", function (e) {
@@ -246,7 +248,7 @@
                                 html += '<option value="' + item.Value + '">' + item.TextDisplay + '</option>'
 
                                 if (i == 0) {
-                                    CargarEscuelas(data.length == 1 ? item.Value : null);
+                                    CargarEscuelas(tipoEstudio, data.length == 1 ? item.Value : null);
                                 }
                             });
 
@@ -263,11 +265,12 @@
             });
         }
 
-        function CargarEscuelas(codFac) {
+        function CargarEscuelas(tipoEstudio, codFac) {
             let cmbEscuelas = $('#codEsc');
             let cmbEspecialidades = $('#codRc');
 
             let parametros = {
+                tipoEstudio: tipoEstudio,
                 codFac: codFac
             };
 
@@ -286,10 +289,11 @@
                             let html = (data.length == 1) ? '' : '<option value="">TODOS</option>';
 
                             $.each(data, function (i, item) {
+                                debugger;
                                 html += '<option value="' + item.Value + '">' + item.TextDisplay + '</option>'
 
                                 if (i == 0) {
-                                    CargarEspecialidades($("#codFac").val(), data.lengh == 1 ? item.Value : null);
+                                    CargarEspecialidades(tipoEstudio, codFac, data.length == 1 ? item.Value : null);
                                 }
                             });
 
@@ -305,10 +309,11 @@
             });
         }
 
-        function CargarEspecialidades(codFac, codEsc) {
+        function CargarEspecialidades(tipoEstudio, codFac, codEsc) {
             let cmbEspecialidad = $('#codRc');
 
             let parametros = {
+                tipoEstudio: tipoEstudio,
                 codFac: codFac,
                 codEsc: codEsc
             };

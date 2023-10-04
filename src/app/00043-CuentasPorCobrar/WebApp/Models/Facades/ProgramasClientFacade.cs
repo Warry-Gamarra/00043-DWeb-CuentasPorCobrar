@@ -12,6 +12,10 @@ namespace WebApp.Models.Facades
     {
         IProgramasClient programasClient;
 
+        private readonly string PREGRADO = "1";
+        private readonly string SEGUNDA_ESPECIALIDAD = "4";
+        private readonly string RESIDENTADO = "5";
+
         public ProgramasClientFacade()
         {
             programasClient = new ProgramasClient();
@@ -83,26 +87,27 @@ namespace WebApp.Models.Facades
                     case TipoEstudio.Pregrado:
                         string[] excluidos = { "CA", "CI", "CP", "CV", "EP" };
 
-                        facultades = programasClient.GetFacultades().Where(f => !excluidos.Contains(f.CodFac));
+                        especialidades = programasClient.GetEspecialidades().Where(x => x.N_Grado == PREGRADO && !excluidos.Contains(x.C_CodFac));
 
                         if (dependenciaID.HasValue)
                         {
-                            facultades = facultades.Where(f => f.DependenciaID.Equals(dependenciaID.Value));
+                            especialidades = especialidades.Where(f => f.I_DependenciaID.HasValue && f.I_DependenciaID.Value.Equals(dependenciaID.Value));
                         }
 
-                        result = facultades.Select(x => new SelectViewModel()
-                        {
-                            Value = x.CodFac,
-                            TextDisplay = x.FacDesc
-                        }).OrderBy(f => f.TextDisplay);
+                        result = especialidades
+                           .GroupBy(x => new { x.C_CodFac, x.T_FacDesc })
+                           .Select(x => new SelectViewModel() {
+                               Value = x.Key.C_CodFac,
+                               TextDisplay = x.Key.T_FacDesc
+                           })
+                           .OrderBy(x => x.TextDisplay);
 
                         break;
 
                     case TipoEstudio.Posgrado:
                         facultades = programasClient.GetFacultades().Where(x => x.CodFac == "EP");
 
-                        result = facultades.Select(x => new SelectViewModel()
-                        {
+                        result = facultades.Select(x => new SelectViewModel() {
                             Value = x.CodFac,
                             TextDisplay = x.FacDesc
                         });
@@ -110,11 +115,23 @@ namespace WebApp.Models.Facades
                         break;
 
                     case TipoEstudio.Segunda_Especialidad:
-                        especialidades = programasClient.GetEspecialidades().Where(x => x.N_Grado == "4");
+                        especialidades = programasClient.GetEspecialidades().Where(x => x.N_Grado == SEGUNDA_ESPECIALIDAD);
 
                         result = especialidades
                             .GroupBy(x => new { x.C_CodFac, x.T_FacDesc} )
                             .Select(x => new SelectViewModel() { 
+                                Value = x.Key.C_CodFac,
+                                TextDisplay = x.Key.T_FacDesc
+                            });
+
+                        break;
+
+                    case TipoEstudio.Residentado:
+                        especialidades = programasClient.GetEspecialidades().Where(x => x.N_Grado == RESIDENTADO);
+
+                        result = especialidades
+                            .GroupBy(x => new { x.C_CodFac, x.T_FacDesc })
+                            .Select(x => new SelectViewModel() {
                                 Value = x.Key.C_CodFac,
                                 TextDisplay = x.Key.T_FacDesc
                             });
@@ -135,20 +152,74 @@ namespace WebApp.Models.Facades
             return result;
         }
 
-        public IEnumerable<SelectViewModel> GetEscuelas(string codFac)
+        public IEnumerable<SelectViewModel> GetEscuelas(TipoEstudio tipoEstudio, string codFac)
         {
             IEnumerable<EscuelaModel> escuelas;
+            IEnumerable<EspecialidadModel> especialidades;
             IEnumerable<SelectViewModel> result;
 
             try
             {
-                escuelas = programasClient.GetEscuelas(codFac);
-
-                result = escuelas.Select(x => new SelectViewModel()
+                switch (tipoEstudio)
                 {
-                    Value = x.CodEsc,
-                    TextDisplay = x.EscDesc
-                }).OrderBy(f => f.TextDisplay);
+                    case TipoEstudio.Pregrado:
+                        especialidades = programasClient.GetEspecialidades()
+                            .Where(x => x.N_Grado == PREGRADO && x.C_CodFac == codFac);
+
+                        result = especialidades
+                            .GroupBy(x => new { x.C_CodEsc, x.T_EscDesc })
+                            .Select(x => new SelectViewModel()
+                            {
+                                Value = x.Key.C_CodEsc,
+                                TextDisplay = x.Key.T_EscDesc
+                            });
+
+                        break;
+
+                    case TipoEstudio.Posgrado:
+                        escuelas = programasClient.GetEscuelas(codFac);
+
+                        result = escuelas.Select(x => new SelectViewModel()
+                        {
+                            Value = x.CodEsc,
+                            TextDisplay = x.EscDesc
+                        }).OrderBy(f => f.TextDisplay);
+
+                        break;
+
+                    case TipoEstudio.Segunda_Especialidad:
+                        especialidades = programasClient.GetEspecialidades()
+                            .Where(x => x.N_Grado == SEGUNDA_ESPECIALIDAD && x.C_CodFac == codFac);
+
+                        result = especialidades
+                            .GroupBy(x => new { x.C_CodEsc, x.T_EscDesc })
+                            .Select(x => new SelectViewModel()
+                            {
+                                Value = x.Key.C_CodEsc,
+                                TextDisplay = x.Key.T_EscDesc
+                            });
+
+                        break;
+
+                    case TipoEstudio.Residentado:
+                        especialidades = programasClient.GetEspecialidades()
+                            .Where(x => x.N_Grado == RESIDENTADO && x.C_CodFac == codFac);
+
+                        result = especialidades
+                            .GroupBy(x => new { x.C_CodEsc, x.T_EscDesc })
+                            .Select(x => new SelectViewModel()
+                            {
+                                Value = x.Key.C_CodEsc,
+                                TextDisplay = x.Key.T_EscDesc
+                            });
+
+                        break;
+                    
+                    default:
+                        result = new List<SelectViewModel>();
+
+                        break;
+                }
             }
             catch (Exception)
             {
@@ -181,7 +252,7 @@ namespace WebApp.Models.Facades
             return result;
         }
 
-        public IEnumerable<SelectViewModel> GetEspecialidades(string codFac, string codEsc)
+        public IEnumerable<SelectViewModel> GetEspecialidades(TipoEstudio tipoEstudio, string codFac, string codEsc)
         {
             IEnumerable<EspecialidadModel> especialidades;
             IEnumerable<SelectViewModel> result;

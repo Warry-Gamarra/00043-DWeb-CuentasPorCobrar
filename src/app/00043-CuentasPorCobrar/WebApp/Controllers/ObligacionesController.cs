@@ -275,8 +275,8 @@ namespace WebApp.Controllers
             ViewBag.Periodos = new SelectList(catalogoServiceFacade.Listar_Periodos(), "Value", "TextDisplay", model.periodo);
             ViewBag.TipoEstudios = new SelectList(generalServiceFacade.Listar_TipoEstudios(null), "Value", "TextDisplay", model.tipoEstudio);
             ViewBag.Dependencias = new SelectList(programasClientFacade.GetDependencias(model.tipoEstudio, null), "Value", "TextDisplay", model.codFac);
-            ViewBag.Escuelas = new SelectList(programasClientFacade.GetEscuelas(model.codFac), "Value", "TextDisplay", model.codEsc);
-            ViewBag.Especialidades = new SelectList(programasClientFacade.GetEspecialidades(model.codFac, model.codEsc), "Value", "TextDisplay", model.codRc);
+            ViewBag.Escuelas = new SelectList(programasClientFacade.GetEscuelas(model.tipoEstudio, model.codFac), "Value", "TextDisplay", model.codEsc);
+            ViewBag.Especialidades = new SelectList(programasClientFacade.GetEspecialidades(model.tipoEstudio, model.codFac, model.codEsc), "Value", "TextDisplay", model.codRc);
             ViewBag.TipoAlumno = new SelectList(generalServiceFacade.Listar_TipoAlumno(), "Value", "TextDisplay", model.esIngresante);
             ViewBag.EstadoPagoObligaciones = new SelectList(generalServiceFacade.Listar_CondicionPagoObligacion(), "Value", "TextDisplay", model.estaPagado);
             ViewBag.FiltroDependencias = (model.tipoEstudio == TipoEstudio.Posgrado) ? null : "TODOS";

@@ -289,7 +289,7 @@ namespace Domain.Entities
                 N_Grado = carreraProfesional.N_Grado,
                 I_IdAplica = carreraProfesional.I_IdAplica,
                 B_Habilitado = carreraProfesional.B_Habilitado,
-                B_Eliminado = carreraProfesional.B_Eliminado,
+                I_DependenciaID = carreraProfesional.I_DependenciaID,
             };
 
             return carreraProfesionalDTO;
