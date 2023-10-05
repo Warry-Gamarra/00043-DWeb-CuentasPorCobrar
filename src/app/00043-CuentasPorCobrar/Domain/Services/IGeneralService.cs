@@ -11,7 +11,7 @@ namespace Domain.Services
     {
         IEnumerable<int> Listar_Anios();
 
-        IEnumerable<TipoEstudio> Listar_TipoEstudios();
+        IEnumerable<TipoEstudio> Listar_TipoEstudios(bool paraTemporalPagos = false);
 
         IEnumerable<int> Listar_Horas();
 

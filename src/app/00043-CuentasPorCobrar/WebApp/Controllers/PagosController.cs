@@ -597,7 +597,7 @@ namespace WebApp.Controllers
             ViewBag.Title = "Exportar recaudación para el Temporal de Pagos";
 
             ViewBag.EntidadesFinancieras = new SelectList(ListaEntidadesFinancieras(), "Value", "TextDisplay");
-            ViewBag.TipoEstudios = new SelectList(generalServiceFacade.Listar_TipoEstudios(null), "Value", "TextDisplay");
+            ViewBag.TipoEstudios = new SelectList(generalServiceFacade.Listar_TipoEstudios(null, true), "Value", "TextDisplay");
             ViewBag.TipoPago = new SelectList(generalServiceFacade.Listar_TiposPago(), "Value", "TextDisplay");
 
             return View();

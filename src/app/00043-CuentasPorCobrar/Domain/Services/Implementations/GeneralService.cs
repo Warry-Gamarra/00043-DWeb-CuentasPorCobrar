@@ -21,7 +21,7 @@ namespace Domain.Services.Implementations
             return lista;
         }
 
-        public IEnumerable<TipoEstudio> Listar_TipoEstudios()
+        public IEnumerable<TipoEstudio> Listar_TipoEstudios(bool paraTemporalPagos = false)
         {
             var result = new List<TipoEstudio>();
 
@@ -29,9 +29,12 @@ namespace Domain.Services.Implementations
 
             result.Add(TipoEstudio.Posgrado);
 
-            result.Add(TipoEstudio.Segunda_Especialidad);
+            if (!paraTemporalPagos)
+            {
+                result.Add(TipoEstudio.Segunda_Especialidad);
 
-            result.Add(TipoEstudio.Residentado);
+                result.Add(TipoEstudio.Residentado);
+            }
 
             return result;
         }

@@ -27,16 +27,16 @@ namespace WebApp.Models.Facades
             return result;
         }
 
-        public IEnumerable<SelectViewModel> Listar_TipoEstudios(int? DependenciaID)
+        public IEnumerable<SelectViewModel> Listar_TipoEstudios(int? DependenciaID, bool paraTemporalPagos = false)
         {
             IEnumerable<TipoEstudio> lista;
 
             if (!DependenciaID.HasValue)
-                lista = generalService.Listar_TipoEstudios();
+                lista = generalService.Listar_TipoEstudios(paraTemporalPagos);
             else if (DependenciaID == DependenciaEUPG.ID)
-                lista = generalService.Listar_TipoEstudios().Where(x => x.Equals(TipoEstudio.Posgrado));
+                lista = generalService.Listar_TipoEstudios(paraTemporalPagos).Where(x => x.Equals(TipoEstudio.Posgrado));
             else
-                lista = generalService.Listar_TipoEstudios().Where(x => !x.Equals(TipoEstudio.Posgrado));
+                lista = generalService.Listar_TipoEstudios(paraTemporalPagos).Where(x => !x.Equals(TipoEstudio.Posgrado));
 
             var result = lista.Select(x => new SelectViewModel() { Value = x.ToString(), TextDisplay = x.ToString() });
 

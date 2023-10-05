@@ -23,7 +23,7 @@ namespace WebApp.Models.Facades
 
         public IEnumerable<SelectViewModel> GetFacultades(TipoEstudio tipoEstudio, int? dependenciaID)
         {
-            IEnumerable<FacultadModel> facultades;
+            IEnumerable<EspecialidadModel> especialidades;
             IEnumerable<EscuelaModel> posgrado;
             IEnumerable<SelectViewModel> result;
 
@@ -34,18 +34,21 @@ namespace WebApp.Models.Facades
                     case TipoEstudio.Pregrado:
                         string[] excluidos = { "CA", "CI", "CP", "CV", "EP" };
 
-                        facultades = programasClient.GetFacultades().Where(f => !excluidos.Contains(f.CodFac));
+                        especialidades = programasClient.GetEspecialidades().Where(x => x.N_Grado == PREGRADO && !excluidos.Contains(x.C_CodFac));
 
                         if (dependenciaID.HasValue)
                         {
-                            facultades = facultades.Where(f => f.DependenciaID.Equals(dependenciaID.Value));
+                            especialidades = especialidades.Where(f => f.I_DependenciaID.HasValue && f.I_DependenciaID.Value.Equals(dependenciaID.Value));
                         }
 
-                        result = facultades.Select(x => new SelectViewModel()
-                        {
-                            Value = x.CodFac,
-                            TextDisplay = x.FacDesc
-                        }).OrderBy(f => f.TextDisplay);
+                        result = especialidades
+                           .GroupBy(x => new { x.C_CodFac, x.T_FacDesc })
+                           .Select(x => new SelectViewModel()
+                           {
+                               Value = x.Key.C_CodFac,
+                               TextDisplay = x.Key.T_FacDesc
+                           })
+                           .OrderBy(x => x.TextDisplay);
 
                         break;
 
@@ -57,6 +60,42 @@ namespace WebApp.Models.Facades
                             Value = x.CodEsc,
                             TextDisplay = x.EscDesc
                         }).OrderByDescending(f => f.TextDisplay);
+
+                        break;
+
+                    case TipoEstudio.Segunda_Especialidad:
+                        especialidades = programasClient.GetEspecialidades().Where(x => x.N_Grado == SEGUNDA_ESPECIALIDAD);
+
+                        if (dependenciaID.HasValue)
+                        {
+                            especialidades = especialidades.Where(f => f.I_DependenciaID.HasValue && f.I_DependenciaID.Value.Equals(dependenciaID.Value));
+                        }
+
+                        result = especialidades
+                            .GroupBy(x => new { x.C_CodFac, x.T_FacDesc })
+                            .Select(x => new SelectViewModel()
+                            {
+                                Value = x.Key.C_CodFac,
+                                TextDisplay = x.Key.T_FacDesc
+                            });
+
+                        break;
+
+                    case TipoEstudio.Residentado:
+                        especialidades = programasClient.GetEspecialidades().Where(x => x.N_Grado == RESIDENTADO);
+
+                        if (dependenciaID.HasValue)
+                        {
+                            especialidades = especialidades.Where(f => f.I_DependenciaID.HasValue && f.I_DependenciaID.Value.Equals(dependenciaID.Value));
+                        }
+
+                        result = especialidades
+                            .GroupBy(x => new { x.C_CodFac, x.T_FacDesc })
+                            .Select(x => new SelectViewModel()
+                            {
+                                Value = x.Key.C_CodFac,
+                                TextDisplay = x.Key.T_FacDesc
+                            });
 
                         break;
 
@@ -117,6 +156,11 @@ namespace WebApp.Models.Facades
                     case TipoEstudio.Segunda_Especialidad:
                         especialidades = programasClient.GetEspecialidades().Where(x => x.N_Grado == SEGUNDA_ESPECIALIDAD);
 
+                        if (dependenciaID.HasValue)
+                        {
+                            especialidades = especialidades.Where(f => f.I_DependenciaID.HasValue && f.I_DependenciaID.Value.Equals(dependenciaID.Value));
+                        }
+
                         result = especialidades
                             .GroupBy(x => new { x.C_CodFac, x.T_FacDesc} )
                             .Select(x => new SelectViewModel() { 
@@ -128,6 +172,11 @@ namespace WebApp.Models.Facades
 
                     case TipoEstudio.Residentado:
                         especialidades = programasClient.GetEspecialidades().Where(x => x.N_Grado == RESIDENTADO);
+
+                        if (dependenciaID.HasValue)
+                        {
+                            especialidades = especialidades.Where(f => f.I_DependenciaID.HasValue && f.I_DependenciaID.Value.Equals(dependenciaID.Value));
+                        }
 
                         result = especialidades
                             .GroupBy(x => new { x.C_CodFac, x.T_FacDesc })
