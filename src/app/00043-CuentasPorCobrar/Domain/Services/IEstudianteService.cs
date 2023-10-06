@@ -11,7 +11,7 @@ namespace Domain.Services
 {
     public interface IEstudianteService
     {
-        DataMatriculaResponse GrabarMatriculas(List<MatriculaEntity> tipoAlumno, bool alumnosPregado, int currentUserId);
+        DataMatriculaResponse GrabarMatriculas(List<MatriculaEntity> dataMatriculas, TipoAlumno tipoAlumno, int currentUserId);
 
         IEnumerable<MatriculaDTO> GetMatriculaPregrado(int anio, int periodo);
 

@@ -74,6 +74,42 @@ namespace WebApp.Models
 
                                         break;
 
+                                    case TipoAlumno.SegundaEspecialidad:
+                                        colNames = new string[]
+                                        {
+                                            reader.GetValue(0)?.ToString(),
+                                            reader.GetValue(1)?.ToString(),
+                                            reader.GetValue(2)?.ToString(),
+                                            reader.GetValue(3)?.ToString(),
+                                            reader.GetValue(4)?.ToString(),
+                                            reader.GetValue(5)?.ToString(),
+                                            reader.GetValue(6)?.ToString(),
+                                            reader.GetValue(7)?.ToString()
+                                        };
+
+                                        if (!expectedColPosgrado.SequenceEqual(colNames))
+                                            throw new Exception("Las columnas no son las esperadas");
+
+                                        break;
+
+                                    case TipoAlumno.Residentado:
+                                        colNames = new string[]
+                                        {
+                                            reader.GetValue(0)?.ToString(),
+                                            reader.GetValue(1)?.ToString(),
+                                            reader.GetValue(2)?.ToString(),
+                                            reader.GetValue(3)?.ToString(),
+                                            reader.GetValue(4)?.ToString(),
+                                            reader.GetValue(5)?.ToString(),
+                                            reader.GetValue(6)?.ToString(),
+                                            reader.GetValue(7)?.ToString()
+                                        };
+
+                                        if (!expectedColPosgrado.SequenceEqual(colNames))
+                                            throw new Exception("Las columnas no son las esperadas");
+
+                                        break;
+
                                     default:
                                         throw new Exception("Tipo de archivo incorrecto");
                                 }

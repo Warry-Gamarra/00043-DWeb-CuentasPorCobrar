@@ -36,6 +36,12 @@ namespace WebApp.Models
                 case TipoAlumno.Posgrado:
                     result.Color = "primary";
                     break;
+                case TipoAlumno.SegundaEspecialidad:
+                    result.Color = "success";
+                    break;
+                case TipoAlumno.Residentado:
+                    result.Color = "secondary";
+                    break;
             }
 
             switch (tipoArchivoAlumno)
@@ -109,9 +115,7 @@ namespace WebApp.Models
 
             var dataMatriculas = matriculaSource.GetList(tipoAlumno, filePath);
 
-            bool alumnosPregado = (tipoAlumno == TipoAlumno.Pregrado);
-
-            var result = _estudiante.GrabarMatriculas(dataMatriculas, alumnosPregado, currentUserId);
+            var result = _estudiante.GrabarMatriculas(dataMatriculas, tipoAlumno, currentUserId);
 
             return result;
         }

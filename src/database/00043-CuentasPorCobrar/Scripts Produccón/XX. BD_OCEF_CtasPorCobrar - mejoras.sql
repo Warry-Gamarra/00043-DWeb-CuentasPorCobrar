@@ -53,6 +53,160 @@ USE BD_OCEF_CtasPorCobrar
 GO
 
 
+INSERT dbo.TC_CatalogoOpcion(I_ParametroID, T_OpcionCod, T_OpcionDesc, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
+VALUES(2, '6', 'Residentado Médico', 1, 0, 1, GETDATE())
+GO
+
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_IU_GrabarMatriculaPosgrado')
+	DROP PROCEDURE [dbo].[USP_IU_GrabarMatriculaPosgrado]
+GO
+
+CREATE PROCEDURE [dbo].[USP_IU_GrabarMatriculaPosgrado]
+@Tbl_Matricula [dbo].[type_dataMatricula] READONLY  
+,@I_TipoEstudio INT
+,@D_FecRegistro datetime    
+,@UserID  int    
+,@B_Result  bit    OUTPUT    
+,@T_Message  nvarchar(4000) OUTPUT
+AS    
+BEGIN  
+	SET NOCOUNT ON;  
+  
+	BEGIN TRY  
+	BEGIN TRANSACTION  
+		CREATE TABLE #Tmp_Matricula    
+		(    
+			C_CodRC   VARCHAR(3),  
+			C_CodAlu  VARCHAR(20),    
+			I_Anio   INT,    
+			C_Periodo  VARCHAR(50),    
+			I_Periodo  INT,    
+			C_EstMat  VARCHAR(2),    
+			C_Ciclo   VARCHAR(2),    
+			B_Ingresante BIT,    
+			I_CredDesaprob TINYINT    
+		);
+   
+		IF (@I_TipoEstudio = 2) 
+		BEGIN
+			INSERT #Tmp_Matricula(C_CodRC, C_CodAlu, I_Anio, C_Periodo, I_Periodo, C_EstMat, C_Ciclo, B_Ingresante, I_CredDesaprob)    
+			SELECT m.C_CodRC, m.C_CodAlu, m.I_Anio, m.C_Periodo, c.I_OpcionID AS I_Periodo, m.C_EstMat, m.C_Ciclo, m.B_Ingresante, m.I_CredDesaprob    
+			FROM @Tbl_Matricula AS m    
+			INNER JOIN dbo.TC_CatalogoOpcion c ON c.I_ParametroID = 5 AND c.T_OpcionCod = m.C_Periodo    
+			INNER JOIN BD_UNFV_Repositorio.dbo.VW_Alumnos a ON a.C_CodAlu = m.C_CodAlu and a.C_RcCod = m.C_CodRC    
+			WHERE c.B_Eliminado = 0 AND a.N_Grado IN ('2', '3');
+		END
+		ELSE
+		BEGIN
+			IF (@I_TipoEstudio = 3)
+			BEGIN
+				INSERT #Tmp_Matricula(C_CodRC, C_CodAlu, I_Anio, C_Periodo, I_Periodo, C_EstMat, C_Ciclo, B_Ingresante, I_CredDesaprob)    
+				SELECT m.C_CodRC, m.C_CodAlu, m.I_Anio, m.C_Periodo, c.I_OpcionID AS I_Periodo, m.C_EstMat, m.C_Ciclo, m.B_Ingresante, m.I_CredDesaprob    
+				FROM @Tbl_Matricula AS m    
+				INNER JOIN dbo.TC_CatalogoOpcion c ON c.I_ParametroID = 5 AND c.T_OpcionCod = m.C_Periodo    
+				INNER JOIN BD_UNFV_Repositorio.dbo.VW_Alumnos a ON a.C_CodAlu = m.C_CodAlu and a.C_RcCod = m.C_CodRC    
+				WHERE c.B_Eliminado = 0 AND a.N_Grado = '4';
+			END
+			ELSE
+			BEGIN
+				INSERT #Tmp_Matricula(C_CodRC, C_CodAlu, I_Anio, C_Periodo, I_Periodo, C_EstMat, C_Ciclo, B_Ingresante, I_CredDesaprob)    
+				SELECT m.C_CodRC, m.C_CodAlu, m.I_Anio, m.C_Periodo, c.I_OpcionID AS I_Periodo, m.C_EstMat, m.C_Ciclo, m.B_Ingresante, m.I_CredDesaprob    
+				FROM @Tbl_Matricula AS m    
+				INNER JOIN dbo.TC_CatalogoOpcion c ON c.I_ParametroID = 5 AND c.T_OpcionCod = m.C_Periodo    
+				INNER JOIN BD_UNFV_Repositorio.dbo.VW_Alumnos a ON a.C_CodAlu = m.C_CodAlu and a.C_RcCod = m.C_CodRC    
+				WHERE c.B_Eliminado = 0 AND a.N_Grado = '5';
+			END;
+		END;
+
+		--Update para alumnos sin obligaciones    
+		WITH Tmp_SinObligaciones(I_MatAluID, C_EstMat, C_Ciclo, B_Ingresante, I_CredDesaprob)    
+		AS    
+		(    
+			SELECT mat.I_MatAluID, tmp.C_EstMat, tmp.C_Ciclo, tmp.B_Ingresante, tmp.I_CredDesaprob FROM dbo.TC_MatriculaAlumno mat    
+			LEFT JOIN dbo.TR_ObligacionAluCab obl ON obl.I_MatAluID = mat.I_MatAluID AND obl.B_Eliminado = 0    
+			INNER JOIN #Tmp_Matricula AS tmp ON tmp.C_CodRc = mat.C_CodRc AND tmp.C_CodAlu = mat.C_CodAlu AND tmp.I_Anio = mat.I_Anio AND tmp.I_Periodo = mat.I_Periodo    
+			WHERE mat.B_Eliminado = 0 AND obl.I_MatAluID IS NULL    
+		)    
+		MERGE INTO dbo.TC_MatriculaAlumno AS trg USING Tmp_SinObligaciones AS src ON trg.I_MatAluID = src.I_MatAluID    
+		WHEN MATCHED THEN    
+		UPDATE SET   C_EstMat = src.C_EstMat    
+		, C_Ciclo = src.C_Ciclo    
+		, B_Ingresante = src.B_Ingresante    
+		, I_CredDesaprob = src.I_CredDesaprob    
+		, I_UsuarioMod = @UserID    
+		, D_FecMod = @D_FecRegistro;
+
+		--Actualizo información de alumnos que tengan obligaciones generadas pero que NO esten pagas.    
+		UPDATE mat SET    
+			mat.C_EstMat = tmp.C_EstMat, mat.C_Ciclo = tmp.C_Ciclo, mat.B_Ingresante = tmp.B_Ingresante, mat.I_CredDesaprob = tmp.I_CredDesaprob,    
+			mat.I_UsuarioMod = @UserID, D_FecMod = @D_FecRegistro    
+		FROM dbo.TC_MatriculaAlumno mat    
+		INNER JOIN #Tmp_Matricula AS tmp ON tmp.C_CodRc = mat.C_CodRc AND tmp.C_CodAlu = mat.C_CodAlu AND tmp.I_Anio = mat.I_Anio AND tmp.I_Periodo = mat.I_Periodo    
+		WHERE mat.B_Eliminado = 0 AND NOT EXISTS(    
+				SELECT m.I_MatAluID FROM dbo.TC_MatriculaAlumno m    
+				INNER JOIN dbo.TR_ObligacionAluCab obl ON obl.I_MatAluID = m.I_MatAluID AND obl.B_Eliminado = 0 AND obl.B_Pagado = 1    
+				WHERE m.B_Eliminado = 0 AND tmp.C_CodRc = m.C_CodRc AND tmp.C_CodAlu = m.C_CodAlu AND tmp.I_Anio = m.I_Anio AND tmp.I_Periodo = m.I_Periodo    
+			);
+    
+		--Después elimino dichas obligaciones(en detalle) para que se generen de nuevo.    
+		UPDATE det SET det.B_Habilitado = 0, det.B_Eliminado = 1, det.I_UsuarioMod = @UserID, det.D_FecMod = @D_FecRegistro    
+		FROM #Tmp_Matricula tmp    
+		INNER JOIN dbo.TC_MatriculaAlumno mat ON tmp.C_CodRc = mat.C_CodRc AND tmp.C_CodAlu = mat.C_CodAlu AND tmp.I_Anio = mat.I_Anio AND tmp.I_Periodo = mat.I_Periodo AND mat.B_Eliminado = 0    
+		INNER JOIN dbo.TR_ObligacionAluCab cab ON cab.I_MatAluID = mat.I_MatAluID AND cab.B_Eliminado = 0    
+		INNER JOIN dbo.TR_ObligacionAluDet det ON det.I_ObligacionAluID = cab.I_ObligacionAluID AND det.B_Eliminado = 0    
+		WHERE NOT EXISTS(    
+				SELECT m.I_MatAluID FROM dbo.TC_MatriculaAlumno m    
+				INNER JOIN dbo.TR_ObligacionAluCab obl ON obl.I_MatAluID = m.I_MatAluID AND obl.B_Eliminado = 0 AND obl.B_Pagado = 1    
+				WHERE m.B_Eliminado = 0 AND tmp.C_CodRc = m.C_CodRc AND tmp.C_CodAlu = m.C_CodAlu AND tmp.I_Anio = m.I_Anio AND tmp.I_Periodo = m.I_Periodo    
+			);
+    
+		--Después elimino dichas obligaciones(en cabecera) para que se generen de nuevo.    
+		UPDATE cab SET cab.B_Habilitado = 0, cab.B_Eliminado = 1, cab.I_UsuarioMod = @UserID, cab.D_FecMod = @D_FecRegistro    
+		FROM #Tmp_Matricula tmp    
+		INNER JOIN dbo.TC_MatriculaAlumno mat ON tmp.C_CodRc = mat.C_CodRc AND tmp.C_CodAlu = mat.C_CodAlu AND tmp.I_Anio = mat.I_Anio AND tmp.I_Periodo = mat.I_Periodo AND mat.B_Eliminado = 0    
+		INNER JOIN dbo.TR_ObligacionAluCab cab ON cab.I_MatAluID = mat.I_MatAluID AND cab.B_Eliminado = 0    
+		WHERE NOT EXISTS(    
+				SELECT m.I_MatAluID FROM dbo.TC_MatriculaAlumno m    
+				INNER JOIN dbo.TR_ObligacionAluCab obl ON obl.I_MatAluID = m.I_MatAluID AND obl.B_Eliminado = 0 AND obl.B_Pagado = 1    
+				WHERE m.B_Eliminado = 0 AND tmp.C_CodRc = m.C_CodRc AND tmp.C_CodAlu = m.C_CodAlu AND tmp.I_Anio = m.I_Anio AND tmp.I_Periodo = m.I_Periodo    
+			);
+    
+    
+		--Insert para alumnos nuevos    
+		MERGE INTO TC_MatriculaAlumno AS trg USING #Tmp_Matricula AS src    
+		ON trg.C_CodRc = src.C_CodRc AND trg.C_CodAlu = src.C_CodAlu AND trg.I_Anio = src.I_Anio AND trg.I_Periodo = src.I_Periodo AND trg.B_Eliminado = 0    
+		WHEN NOT MATCHED BY TARGET THEN    
+		INSERT (C_CodRc, C_CodAlu, I_Anio, I_Periodo, C_EstMat, C_Ciclo, B_Ingresante, I_CredDesaprob, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, B_Migrado)    
+		VALUES (src.C_CodRc, src.C_CodAlu, src.I_Anio, src.I_Periodo, src.C_EstMat, src.C_Ciclo, src.B_Ingresante, src.I_CredDesaprob, 1, 0, @UserID, @D_FecRegistro, 0);    
+    
+		--Informar relación de alumnos que ya tienen obligaciones pagadas y de alumnos inexistentes.    
+		SELECT DISTINCT tmp.C_CodRC, tmp.C_CodAlu, tmp.I_Anio, tmp.C_Periodo, tmp.C_EstMat, tmp.C_Ciclo, tmp.B_Ingresante, tmp.I_CredDesaprob, 0 as B_Success, 'El alumno tiene obligaciones pagadas.' AS T_Message     
+		FROM #Tmp_Matricula tmp    
+		INNER JOIN dbo.TC_MatriculaAlumno mat ON tmp.C_CodRc = mat.C_CodRc AND tmp.C_CodAlu = mat.C_CodAlu AND tmp.I_Anio = mat.I_Anio AND tmp.I_Periodo = mat.I_Periodo AND mat.B_Eliminado = 0    
+		INNER JOIN dbo.TR_ObligacionAluCab obl ON obl.I_MatAluID = mat.I_MatAluID AND obl.B_Eliminado = 0 AND obl.B_Pagado = 1    
+		UNION    
+		SELECT m.C_CodRC, m.C_CodAlu, m.I_Anio, m.C_Periodo, m.C_EstMat, m.C_Ciclo, m.B_Ingresante, m.I_CredDesaprob, 0 AS B_Success, 'El Código de alumno no existe.' AS T_Message FROM @Tbl_Matricula AS m    
+		LEFT JOIN BD_UNFV_Repositorio.dbo.VW_Alumnos a ON a.C_CodAlu = m.C_CodAlu AND a.C_RcCod = m.C_CodRC    
+		WHERE a.C_CodAlu IS NULL;
+    
+		COMMIT TRANSACTION
+    
+		SET @B_Result = 1;
+		SET @T_Message = 'La importación de datos de alumno finalizó de manera exitosa';
+      
+	END TRY  
+	BEGIN CATCH    
+		ROLLBACK TRANSACTION
+		SET @B_Result = 0;
+		SET @T_Message = ERROR_MESSAGE();
+	END CATCH  
+END
+GO
+
+
+
 IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_ListadoEstadoObligaciones')
 	DROP PROCEDURE [dbo].[USP_S_ListadoEstadoObligaciones]
 GO

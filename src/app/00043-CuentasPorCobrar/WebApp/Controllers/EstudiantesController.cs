@@ -67,6 +67,21 @@ namespace WebApp.Controllers
             return PartialView("_SeleccionarArchivo", model);
         }
 
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
+        [Route("operaciones/cargar-aptos-segunda-especialidad")]
+        public ActionResult CargarArchivoMatriculaSegundaEspecialidad()
+        {
+            var model = _seleccionarArchivoModel.Init(TipoAlumno.SegundaEspecialidad, TipoArchivoAlumno.Matricula);
+            return PartialView("_SeleccionarArchivo", model);
+        }
+
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
+        [Route("operaciones/cargar-aptos-residentado")]
+        public ActionResult CargarArchivoMatriculaResidentado()
+        {
+            var model = _seleccionarArchivoModel.Init(TipoAlumno.Residentado, TipoArchivoAlumno.Matricula);
+            return PartialView("_SeleccionarArchivo", model);
+        }
 
         [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
         [Route("operaciones/cargar-multas-pregrado")]
@@ -248,6 +263,14 @@ namespace WebApp.Controllers
                         break;
 
                     case TipoEstudio.Posgrado:
+                        model.resultado = reportePosgradoServiceFacade.EstadoObligacionAlumnos(model);
+                        break;
+
+                    case TipoEstudio.Segunda_Especialidad:
+                        model.resultado = reportePosgradoServiceFacade.EstadoObligacionAlumnos(model);
+                        break;
+
+                    case TipoEstudio.Residentado:
                         model.resultado = reportePosgradoServiceFacade.EstadoObligacionAlumnos(model);
                         break;
                 }

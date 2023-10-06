@@ -21,8 +21,10 @@ namespace Domain.Services.Implementations
             _periodos = TC_CatalogoOpcion.FindByParametro((int)Parametro.Periodo);
         }
 
-        public DataMatriculaResponse GrabarMatriculas(List<MatriculaEntity> dataMatriculas, bool alumnosPregado, int currentUserId)
+        public DataMatriculaResponse GrabarMatriculas(List<MatriculaEntity> dataMatriculas, TipoAlumno tipoAlumno, int currentUserId)
         {
+            bool alumnosPregado = (tipoAlumno == TipoAlumno.Pregrado);
+
             var observados = new List<MatriculaObsEntity>();
 
             //Validando el código de alumno.
@@ -58,7 +60,7 @@ namespace Domain.Services.Implementations
             dataMatriculas.RemoveAll(mat => CampoPeriodoIncorrecto(mat.C_Periodo));
 
             //Validando  codigo de curso
-            if (alumnosPregado)
+            if (tipoAlumno.Equals(TipoAlumno.Pregrado))
             {
                 observados.AddRange(
                     dataMatriculas.Where(mat => CampoCodCursoIncorrecto(mat.C_CodCurso)).
@@ -106,7 +108,7 @@ namespace Domain.Services.Implementations
 
             dataMatriculas.RemoveAll(mat => CampoCreditoIncorrecto(mat.I_CredDesaprob, mat.I_Vez));
 
-            if (alumnosPregado)
+            if (tipoAlumno.Equals(TipoAlumno.Pregrado))
             {
                 //Validando el campo vez.
                 observados.AddRange(
@@ -123,7 +125,8 @@ namespace Domain.Services.Implementations
                 {
                     B_AlumnosPregrado = alumnosPregado,
                     UserID = currentUserId,
-                    D_FecRegistro = DateTime.Now
+                    D_FecRegistro = DateTime.Now,
+                    I_TipoEstudio = tipoAlumno.Equals(TipoAlumno.Posgrado) ? 2 : (tipoAlumno.Equals(TipoAlumno.SegundaEspecialidad) ? 3 : (tipoAlumno.Equals(TipoAlumno.Residentado) ? 4 : 1))
                 };
 
                 var dataTable = Mapper.MatriculaEntity_To_DataTable(dataMatriculas);
