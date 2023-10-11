@@ -23,8 +23,7 @@ namespace WebApp.Controllers
         IProgramasClientFacade programasClientFacade;
         IMatriculaServiceFacade matriculaServiceFacade;
 
-        //IReportePregradoServiceFacade reportePregradoServiceFacade;
-        //IReportePosgradoServiceFacade reportePosgradoServiceFacade;
+        IReporteServiceFacade reporteServiceFacade;
 
         UsersModel usersModel;
 
@@ -36,8 +35,7 @@ namespace WebApp.Controllers
             programasClientFacade = new ProgramasClientFacade();
             matriculaServiceFacade = new MatriculaServiceFacade();
 
-            //reportePregradoServiceFacade = new ReportePregradoServiceFacade();
-            //reportePosgradoServiceFacade = new ReportePosgradoServiceFacade();
+            reporteServiceFacade = new ReporteServiceFacade();
 
             usersModel = new UsersModel();
         }
@@ -256,24 +254,7 @@ namespace WebApp.Controllers
 
             if (model.anio.HasValue)
             {
-                switch (model.tipoEstudio)
-                {
-                    case TipoEstudio.Pregrado:
-                        //model.resultado = reportePregradoServiceFacade.EstadoObligacionAlumnos(model);
-                        break;
-
-                    case TipoEstudio.Posgrado:
-                        //model.resultado = reportePosgradoServiceFacade.EstadoObligacionAlumnos(model);
-                        break;
-
-                    case TipoEstudio.Segunda_Especialidad:
-                        //model.resultado = reportePosgradoServiceFacade.EstadoObligacionAlumnos(model);
-                        break;
-
-                    case TipoEstudio.Residentado:
-                        //model.resultado = reportePosgradoServiceFacade.EstadoObligacionAlumnos(model);
-                        break;
-                }
+                model.resultado = reporteServiceFacade.EstadoObligacionAlumnos(model);
             }
 
             ViewBag.Title = "Consulta de Estudiantes";
@@ -316,17 +297,8 @@ namespace WebApp.Controllers
                 model.tipoEstudio = (model.dependencia == DependenciaEUPG.ID) ? TipoEstudio.Posgrado : TipoEstudio.Pregrado;
             }
 
-            switch (model.tipoEstudio)
-            {
-                case TipoEstudio.Pregrado:
-                    //model.resultado = reportePregradoServiceFacade.EstadoObligacionAlumnos(model);
-                    break;
-
-                case TipoEstudio.Posgrado:
-                    //model.resultado = reportePosgradoServiceFacade.EstadoObligacionAlumnos(model);
-                    break;
-            }
-
+            model.resultado = reporteServiceFacade.EstadoObligacionAlumnos(model);
+            
             using (var workbook = new XLWorkbook())
             {
                 var worksheet = workbook.Worksheets.Add("Obligaciones");

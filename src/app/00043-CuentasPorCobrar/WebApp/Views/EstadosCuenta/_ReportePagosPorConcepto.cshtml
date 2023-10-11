@@ -1,4 +1,4 @@
-﻿@model WebApp.ViewModels.ReportePorGradoYConceptoViewModel
+﻿@model WebApp.ViewModels.ReportePagosUnfvPorConceptoViewModel
 
 <p class="h2 text-center">@Model.Titulo.ToUpper()</p>
 
@@ -19,7 +19,7 @@
 </div>
 
 @{
-    var agrupaClasif = Model.listaPagos.GroupBy(x => new { x.C_CodClasificador, x.C_CodEsc });
+    var agrupaClasif = Model.listaPagos.GroupBy(x => x.C_CodClasificador);
     int nroOrdenGrupo = 1;
     int nroOrdenFilas;
     string estiloCelda;
@@ -29,7 +29,6 @@
     <table class="table table-bordered table-sm" id="tbl_pagos">
         <thead>
             <tr class="thead-light">
-                <th class="text-center">Grado</th>
                 <th class="text-center">Cod.Clasificador</th>
                 <th class="text-center">Clasificador</th>
                 <th class="text-center">Concepto</th>
@@ -41,15 +40,18 @@
             @foreach (var grupoClasif in agrupaClasif)
             {
                 nroOrdenFilas = 1;
-                estiloCelda = (nroOrdenGrupo % 2 == 0) ? "celdaPintada" : "";
+                estiloCelda = (nroOrdenGrupo%2 == 0) ? "celdaPintada" : "";
                 foreach (var item in grupoClasif)
                 {
                     <tr class="@estiloCelda">
                         @if (nroOrdenFilas == 1)
                         {
-                            <td rowspan="@grupoClasif.Count()">@item.T_EscDesc</td>
-                            <td class="text-center" rowspan="@grupoClasif.Count()">@item.C_CodClasificador</td>
-                            <td rowspan="@grupoClasif.Count()">@item.T_ClasificadorDesc</td>
+                            <td class="text-center" rowspan="@grupoClasif.Count()">
+                                @item.C_CodClasificador
+                            </td>
+                            <td rowspan="@grupoClasif.Count()">
+                                @item.T_ClasificadorDesc
+                            </td>
                         }
                         <td>@item.T_ConceptoPagoDesc</td>
                         <td class="text-right">@item.T_MontoTotal</td>
@@ -68,8 +70,7 @@
                 <th></th>
                 <th></th>
                 <th></th>
-                <th></th>
-                <th class="text-right">Total</th>
+                <th class="text-right">Total (S/)</th>
                 <th class="text-right">@Model.T_MontoTotal</th>
             </tr>
         </tbody>

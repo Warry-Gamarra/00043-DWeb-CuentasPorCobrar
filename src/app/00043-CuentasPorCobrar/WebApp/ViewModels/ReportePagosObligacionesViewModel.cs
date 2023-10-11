@@ -7,7 +7,7 @@ using System.Linq;
 using System.Web;
 
 namespace WebApp.ViewModels
-{/*
+{
     public class ReportePagosObligacionesViewModel
     {
         public ReportePagosObligacionesViewModel()
@@ -65,21 +65,12 @@ namespace WebApp.ViewModels
         public int? idDependencia { get; set; }
 
         //Pregrado
-        public ReportePagosPregradoGeneralViewModel reportePagosPorFacultadViewModel { get; set; }
+        public ReportePagosUnfvGeneralViewModel reportePagosGeneralViewModel { get; set; }
 
-        public ReportePagosPregradoPorConceptoViewModel reportePagosPregradoPorConceptoViewModel { get; set; }
+        public ReportePagosUnfvPorConceptoViewModel reportePagosPorConceptoViewModel { get; set; }
 
-        public ReportePorFacultadYConceptoViewModel reportePorFacultadYConceptoViewModel { get; set; }
+        public ReportePorDependenciaYConceptoViewModel reportePorDependenciaYConceptoViewModel { get; set; }
 
-        public ReporteConceptosPorFacultadViewModel reporteConceptosPorFacultadViewModel { get; set; }
-
-        //Posgrado
-        public ReportePagosPosgradoGeneralViewModel reportePagosPorGradoViewModel { get; set; }
-
-        public ReportePagosPosgradoPorConceptoViewModel reportePagosPosgradoPorConceptoViewModel { get; set; }
-
-        public ReportePorGradoYConceptoViewModel reportePorGradoYConceptoViewModel { get; set; }
-
-        public ReporteConceptosPorGradoViewModel reporteConceptosPorGradoViewModel { get; set; }
-    }*/
+        public ReporteConceptosPorDependenciaViewModel reporteConceptosPorDependenciaViewModel { get; set; }
+    }
 }

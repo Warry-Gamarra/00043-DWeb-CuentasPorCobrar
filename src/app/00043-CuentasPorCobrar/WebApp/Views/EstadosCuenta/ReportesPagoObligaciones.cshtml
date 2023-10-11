@@ -99,61 +99,30 @@
         </div>
     </div>
     <div class="col-xl-10 col-lg-12 mx-auto my-4">
-        @if (Model != null && Model.reportePagosPorFacultadViewModel != null)
+        @if (Model != null && Model.reportePagosGeneralViewModel != null)
         {
-            @Html.Partial("_ReportePagosPregradoGeneral", Model.reportePagosPorFacultadViewModel)
+            @Html.Partial("_ReportePagosGeneral", Model.reportePagosGeneralViewModel)
 
             <button type="button" id="btnExcelDescargar" class="btn btn-link pl-0">Descargar información en Excel [.xlsx]</button>
         }
 
-        @if (Model != null && Model.reportePagosPregradoPorConceptoViewModel != null)
+        @if (Model != null && Model.reportePagosPorConceptoViewModel != null)
         {
-            @Html.Partial("_ReportePagosPregradoPorConcepto", Model.reportePagosPregradoPorConceptoViewModel)
+            @Html.Partial("_ReportePagosPorConcepto", Model.reportePagosPorConceptoViewModel)
 
             <button type="button" id="btnExcelDescargar" class="btn btn-link pl-0">Descargar información en Excel [.xlsx]</button>
         }
 
-        @if (Model != null && Model.reportePorFacultadYConceptoViewModel != null)
+        @if (Model != null && Model.reportePorDependenciaYConceptoViewModel != null)
         {
-            @Html.Partial("_ReportePregradoPorFacultadYConcepto", Model.reportePorFacultadYConceptoViewModel)
+            @Html.Partial("_ReportePosgradoPorDependenciaYConcepto", Model.reportePorDependenciaYConceptoViewModel)
 
             <button type="button" id="btnExcelDescargar" class="btn btn-link pl-0">Descargar información en Excel [.xlsx]</button>
         }
 
-        @if (Model != null && Model.reporteConceptosPorFacultadViewModel != null)
+        @if (Model != null && Model.reporteConceptosPorDependenciaViewModel != null)
         {
-            @Html.Partial("_ReportePregradoConceptosPorFacultad", Model.reporteConceptosPorFacultadViewModel)
-
-            <button type="button" id="btnExcelDescargar" class="btn btn-link pl-0">Descargar información en Excel [.xlsx]</button>
-        }
-
-
-
-
-        @if (Model != null && Model.reportePagosPorGradoViewModel != null)
-        {
-            @Html.Partial("_ReportePagosPosgradoGeneral", Model.reportePagosPorGradoViewModel)
-
-            <button type="button" id="btnExcelDescargar" class="btn btn-link pl-0">Descargar información en Excel [.xlsx]</button>
-        }
-
-        @if (Model != null && Model.reportePagosPosgradoPorConceptoViewModel != null)
-        {
-            @Html.Partial("_ReportePagosPosgradoPorConcepto", Model.reportePagosPosgradoPorConceptoViewModel)
-
-            <button type="button" id="btnExcelDescargar" class="btn btn-link pl-0">Descargar información en Excel [.xlsx]</button>
-        }
-
-        @if (Model != null && Model.reportePorGradoYConceptoViewModel != null)
-        {
-            @Html.Partial("_ReportePosgradoPorGradoYConcepto", Model.reportePorGradoYConceptoViewModel)
-
-            <button type="button" id="btnExcelDescargar" class="btn btn-link pl-0">Descargar información en Excel [.xlsx]</button>
-        }
-
-        @if (Model != null && Model.reporteConceptosPorGradoViewModel != null)
-        {
-            @Html.Partial("_ReportePosgradoConceptosPorGrado", Model.reporteConceptosPorGradoViewModel)
+            @Html.Partial("_ReporteConceptosPorDependencia", Model.reporteConceptosPorDependenciaViewModel)
 
             <button type="button" id="btnExcelDescargar" class="btn btn-link pl-0">Descargar información en Excel [.xlsx]</button>
         }

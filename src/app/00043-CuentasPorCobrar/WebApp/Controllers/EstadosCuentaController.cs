@@ -19,8 +19,7 @@ namespace WebApp.Controllers
     [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONSULTA + ", " + RoleNames.DEPENDENCIA + ", " + RoleNames.TESORERIA)]
     public class EstadosCuentaController : Controller
     {
-        //IReportePregradoServiceFacade reportePregradoServiceFacade;
-        //IReportePosgradoServiceFacade reportePosgradoServiceFacade;
+        IReporteServiceFacade reporteServiceFacade;
         IProgramasClientFacade programasClientFacade;
         IGeneralServiceFacade generalServiceFacade;
         SelectModel selectModels;
@@ -31,8 +30,7 @@ namespace WebApp.Controllers
 
         public EstadosCuentaController()
         {
-            //reportePregradoServiceFacade = new ReportePregradoServiceFacade();
-            //reportePosgradoServiceFacade = new ReportePosgradoServiceFacade();
+            reporteServiceFacade = new ReporteServiceFacade();
             programasClientFacade = new ProgramasClientFacade();
             generalServiceFacade = new GeneralServiceFacade();
             selectModels = new SelectModel();
@@ -41,7 +39,7 @@ namespace WebApp.Controllers
             catalogoServiceFacade = new CatalogoServiceFacade();
             usersModel = new UsersModel();
         }
-        /*
+        
         // GET: EstadosCuenta
         [Route("consultas/estados-de-cuenta")]
         public ActionResult Index()
@@ -1785,6 +1783,6 @@ namespace WebApp.Controllers
                     return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", nombreArchivo);
                 }
             }
-        }*/
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿@model WebApp.ViewModels.ReporteConceptosPorGradoViewModel
+﻿@model WebApp.ViewModels.ReportePorDependenciaYConceptoViewModel
 
 <p class="h2 text-center">@Model.Titulo.ToUpper()</p>
 
@@ -6,7 +6,6 @@
 
 <div class="row">
     <div class="col-lg-6">
-        <p>Grado: <b>@Model.Grado.ToUpper()</b></p>
         @if (!String.IsNullOrEmpty(Model.nombreEntidadFinanc))
         {
             <p>Entidad Financiera: <b>@Model.nombreEntidadFinanc</b></p>
@@ -20,7 +19,7 @@
 </div>
 
 @{
-    var agrupaClasif = Model.listaPagos.GroupBy(x => new { x.C_CodClasificador });
+    var agrupaClasif = Model.listaPagos.GroupBy(x => new { x.C_CodClasificador, x.C_CodEsc });
     int nroOrdenGrupo = 1;
     int nroOrdenFilas;
     string estiloCelda;
@@ -30,10 +29,10 @@
     <table class="table table-bordered table-sm" id="tbl_pagos">
         <thead>
             <tr class="thead-light">
+                <th class="text-center">Grado (CAMBIAR A FACULTAD EN PREGRADO)</th>
                 <th class="text-center">Cod.Clasificador</th>
                 <th class="text-center">Clasificador</th>
                 <th class="text-center">Concepto</th>
-                <th class="text-center">Cantidad</th>
                 <th class="text-center">Monto (S/)</th>
                 <th class="text-center">Total (S/)</th>
             </tr>
@@ -48,11 +47,11 @@
                     <tr class="@estiloCelda">
                         @if (nroOrdenFilas == 1)
                         {
+                            <td rowspan="@grupoClasif.Count()">@item.T_DependenciaDesc</td>
                             <td class="text-center" rowspan="@grupoClasif.Count()">@item.C_CodClasificador</td>
                             <td rowspan="@grupoClasif.Count()">@item.T_ClasificadorDesc</td>
                         }
                         <td>@item.T_ConceptoPagoDesc</td>
-                        <td class="text-center">@item.I_Cantidad</td>
                         <td class="text-right">@item.T_MontoTotal</td>
                         @if (nroOrdenFilas == 1)
                         {

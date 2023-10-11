@@ -551,7 +551,7 @@
     <Compile Include="ViewModels\TasaViewModel.cs" />
     <Compile Include="ViewModels\UserManualViewModel.cs" />
     <Compile Include="ViewModels\UsersViewModels.cs" />
-    <Content Include="Views\EstadosCuenta\_ReportePosgradoPorGradoYConcepto.cshtml" />
+    <Content Include="Views\EstadosCuenta\_ReportePosgradoPorDependenciaYConcepto.cshtml" />
     <Content Include="Models\DataSets\ObligacionAlumnoDS.xsc">
       <DependentUpon>ObligacionAlumnoDS.xsd</DependentUpon>
     </Content>
@@ -575,7 +575,6 @@
     <Content Include="Models\DataSets\PagoBancoDS.xss">
       <DependentUpon>PagoBancoDS.xsd</DependentUpon>
     </Content>
-    <None Include="Views\EstadosCuenta\_ReportePregradoPorFacultadYConcepto.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config">
@@ -667,15 +666,12 @@
     <Content Include="Views\Devoluciones\_ResultadoBusquedaPago.cshtml" />
     <Content Include="Views\Pagos\_ResultadoConsultaPagos.cshtml" />
     <Content Include="Views\Pagos\_MsgRegistrarPagoObligacion.cshtml" />
-    <Content Include="Views\EstadosCuenta\_ReportePagosPregradoGeneral.cshtml" />
-    <Content Include="Views\EstadosCuenta\_ReportePregradoConceptosPorFacultad.cshtml" />
-    <Content Include="Views\EstadosCuenta\_ReportePagosPregradoPorConcepto.cshtml" />
+    <Content Include="Views\EstadosCuenta\_ReportePagosGeneral.cshtml" />
     <Content Include="Views\Pagos\Actualizar.cshtml" />
     <Content Include="Views\Pagos\_DetallesPago.cshtml" />
     <Content Include="Views\Pagos\_RegistrarSiaf.cshtml" />
-    <Content Include="Views\EstadosCuenta\_ReportePosgradoConceptosPorGrado.cshtml" />
-    <Content Include="Views\EstadosCuenta\_ReportePagosPosgradoPorConcepto.cshtml" />
-    <Content Include="Views\EstadosCuenta\_ReportePagosPosgradoGeneral.cshtml" />
+    <Content Include="Views\EstadosCuenta\_ReporteConceptosPorDependencia.cshtml" />
+    <Content Include="Views\EstadosCuenta\_ReportePagosPorConcepto.cshtml" />
     <Content Include="Views\ConceptoPago\_MsgRegistrarConceptoObligacion.cshtml" />
     <Content Include="Views\EstadosCuenta\ResumenAnualObligacionesPorClasificadores.cshtml" />
     <Content Include="Views\EstadosCuenta\ResumenAnualObligacionesPorDependencias.cshtml" />
