@@ -382,21 +382,21 @@ namespace Domain.Entities
             return multaNoVotarSinRegistrar;
         }
 
-        public static PagoPregradoGeneralDTO USP_S_ReportePagoObligacionesPregrado_To_PagoPregradoGeneralDTO(USP_S_ReportePagoObligacionesPregrado sp)
+        public static PagoGeneralDTO USP_S_ReportePagoObligacionesPregrado_To_PagoGeneralDTO(USP_S_ReportePagoObligacionesPregrado sp)
         {
-            var result = new PagoPregradoGeneralDTO()
+            var result = new PagoGeneralDTO()
             {
-                T_FacDesc = sp.T_FacDesc,
-                C_CodFac = sp.C_CodFac,
+                T_DependenciaDesc = sp.T_FacDesc,
+                C_CodDependencia = sp.C_CodFac,
                 I_MontoTotal = sp.I_MontoTotal
             };
 
             return result;
         }
 
-        public static PagoPregradoPorConceptoDTO USP_S_ReportePagoObligacionesPregrado_To_PagoPregradoPorConceptoDTO(USP_S_ReportePagoObligacionesPregrado sp)
+        public static PagoPorConceptoDTO USP_S_ReportePagoObligacionesPregrado_To_PagoPorConceptoDTO(USP_S_ReportePagoObligacionesPregrado sp)
         {
-            var result = new PagoPregradoPorConceptoDTO()
+            var result = new PagoPorConceptoDTO()
             {
                 I_ConceptoID = sp.I_ConceptoID,
                 C_CodClasificador = sp.C_CodClasificador,
@@ -408,12 +408,12 @@ namespace Domain.Entities
             return result;
         }
 
-        public static ConceptoPregradoPorFacultadDTO USP_S_ReportePagoObligacionesPregrado_To_ConceptoPregradoPorFacultadDTO(USP_S_ReportePagoObligacionesPregrado sp)
+        public static ConceptoPorDependenciaDTO USP_S_ReportePagoObligacionesPregrado_To_ConceptoPorDependenciaDTO(USP_S_ReportePagoObligacionesPregrado sp)
         {
-            var result = new ConceptoPregradoPorFacultadDTO()
+            var result = new ConceptoPorDependenciaDTO()
             {
-                T_FacDesc = sp.T_FacDesc,
-                C_CodFac = sp.C_CodFac,
+                T_DependenciaDesc = sp.T_FacDesc,
+                C_CodDependencia = sp.C_CodFac,
                 I_ConceptoID = sp.I_ConceptoID,
                 C_CodClasificador = sp.C_CodClasificador,
                 T_ClasificadorDesc = sp.T_ClasificadorDesc,
@@ -462,21 +462,21 @@ namespace Domain.Entities
             return result;
         }
 
-        public static PagoPosgradoGeneralDTO USP_S_ReportePagoObligacionesPosgrado_To_PagoPosgradoGeneralDTO(USP_S_ReportePagoObligacionesPosgrado sp)
+        public static PagoGeneralDTO USP_S_ReportePagoObligacionesPosgrado_To_PagoGeneralDTO(USP_S_ReportePagoObligacionesPosgrado sp)
         {
-            var result = new PagoPosgradoGeneralDTO()
+            var result = new PagoGeneralDTO()
             {
-                T_EscDesc = sp.T_EscDesc,
-                C_CodEsc = sp.C_CodEsc,
+                T_DependenciaDesc = sp.T_EscDesc,
+                C_CodDependencia = sp.C_CodEsc,
                 I_MontoTotal = sp.I_MontoTotal
             };
 
             return result;
         }
 
-        public static PagoPosgradoPorConceptoDTO USP_S_ReportePagoObligacionesPosgrado_To_PagoPosgradoPorConceptoDTO(USP_S_ReportePagoObligacionesPosgrado sp)
+        public static PagoPorConceptoDTO USP_S_ReportePagoObligacionesPosgrado_To_PagoPorConceptoDTO(USP_S_ReportePagoObligacionesPosgrado sp)
         {
-            var result = new PagoPosgradoPorConceptoDTO()
+            var result = new PagoPorConceptoDTO()
             {
                 I_ConceptoID = sp.I_ConceptoID,
                 C_CodClasificador = sp.C_CodClasificador,
@@ -488,12 +488,12 @@ namespace Domain.Entities
             return result;
         }
 
-        public static ConceptoPosgradoPorGradoDTO USP_S_ReportePagoObligacionesPosgrado_To_ConceptoPosgradoPorGradoDTO(USP_S_ReportePagoObligacionesPosgrado sp)
+        public static ConceptoPorDependenciaDTO USP_S_ReportePagoObligacionesPosgrado_To_ConceptoPorDependenciaDTO(USP_S_ReportePagoObligacionesPosgrado sp)
         {
-            var result = new ConceptoPosgradoPorGradoDTO()
+            var result = new ConceptoPorDependenciaDTO()
             {
-                T_EscDesc = sp.T_EscDesc,
-                C_CodEsc = sp.C_CodEsc,
+                T_DependenciaDesc = sp.T_EscDesc,
+                C_CodDependencia = sp.C_CodEsc,
                 I_ConceptoID = sp.I_ConceptoID,
                 C_CodClasificador = sp.C_CodClasificador,
                 T_ClasificadorDesc = sp.T_ClasificadorDesc,

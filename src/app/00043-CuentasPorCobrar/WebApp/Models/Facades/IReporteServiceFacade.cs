@@ -6,7 +6,7 @@ using WebApp.ViewModels;
 
 namespace WebApp.Models.Facades
 {
-    public interface IReportePregradoServiceFacade
+    public interface IReporteServiceFacade
     {
         ReportePagosPregradoGeneralViewModel ReporteGeneral(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito);
 

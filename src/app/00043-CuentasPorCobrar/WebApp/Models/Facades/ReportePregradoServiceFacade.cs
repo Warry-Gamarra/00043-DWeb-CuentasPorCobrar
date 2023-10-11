@@ -10,7 +10,7 @@ using WebApp.ViewModels;
 
 namespace WebApp.Models.Facades
 {
-    public class ReportePregradoServiceFacade : IReportePregradoServiceFacade
+    public class ReportePregradoServiceFacade : IReporteServiceFacade
     {
         IReportePregradoService reporteService;
         IEntidadRecaudadora entidadRecaudadoraService;

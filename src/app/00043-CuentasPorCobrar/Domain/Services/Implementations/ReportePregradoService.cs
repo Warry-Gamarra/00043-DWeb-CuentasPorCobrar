@@ -9,13 +9,9 @@ using System.Threading.Tasks;
 
 namespace Domain.Services.Implementations
 {
-    public class ReportePregradoService : IReportePregradoService
+    public class ReportePregradoService : IReporteUnfvService
     {
-        public ReportePregradoService()
-        {
-        }
-
-        public IEnumerable<PagoPregradoGeneralDTO> ReporteGeneral(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito)
+        public IEnumerable<PagoGeneralDTO> ReporteGeneral(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito)
         {
             if (DateTime.Compare(fechaInicio, fechaFin) > 0)
             {
@@ -24,12 +20,12 @@ namespace Domain.Services.Implementations
 
             var pagos = USP_S_ReportePagoObligacionesPregrado.ReporteGeneral(fechaInicio, fechaFin, idEntidanFinanc, ctaDeposito);
 
-            var result = pagos.Select(p => Mapper.USP_S_ReportePagoObligacionesPregrado_To_PagoPregradoGeneralDTO(p));
+            var result = pagos.Select(p => Mapper.USP_S_ReportePagoObligacionesPregrado_To_PagoGeneralDTO(p));
 
             return result;
         }
 
-        public IEnumerable<PagoPregradoPorConceptoDTO> ReportePorConceptos(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito)
+        public IEnumerable<PagoPorConceptoDTO> ReportePorConceptos(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito)
         {
             if (DateTime.Compare(fechaInicio, fechaFin) > 0)
             {
@@ -38,12 +34,12 @@ namespace Domain.Services.Implementations
 
             var pagos = USP_S_ReportePagoObligacionesPregrado.ReportePorConceptos(fechaInicio, fechaFin, idEntidanFinanc, ctaDeposito);
 
-            var result = pagos.Select(p => Mapper.USP_S_ReportePagoObligacionesPregrado_To_PagoPregradoPorConceptoDTO(p));
+            var result = pagos.Select(p => Mapper.USP_S_ReportePagoObligacionesPregrado_To_PagoPorConceptoDTO(p));
 
             return result;
         }
 
-        public IEnumerable<ConceptoPregradoPorFacultadDTO> ReportePorFacultadYConcepto(
+        public IEnumerable<ConceptoPorDependenciaDTO> ReportePorDependenciaYConcepto(
             DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito)
         {
             if (DateTime.Compare(fechaInicio, fechaFin) > 0)
@@ -53,12 +49,12 @@ namespace Domain.Services.Implementations
 
             var pagos = USP_S_ReportePagoObligacionesPregrado.ReportePorFacultadYConcepto(fechaInicio, fechaFin, idEntidanFinanc, ctaDeposito);
 
-            var result = pagos.Select(p => Mapper.USP_S_ReportePagoObligacionesPregrado_To_ConceptoPregradoPorFacultadDTO(p));
+            var result = pagos.Select(p => Mapper.USP_S_ReportePagoObligacionesPregrado_To_ConceptoPorDependenciaDTO(p));
 
             return result;
         }
 
-        public IEnumerable<ConceptoPregradoPorFacultadDTO> ReporteConceptosPorFacultad(
+        public IEnumerable<ConceptoPorDependenciaDTO> ReporteConceptosPorDependencia(
             string codFac, DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito)
         {
             if (DateTime.Compare(fechaInicio, fechaFin) > 0)
@@ -68,7 +64,7 @@ namespace Domain.Services.Implementations
 
             var pagos = USP_S_ReportePagoObligacionesPregrado.ReporteConceptosPorFacultad(codFac, fechaInicio, fechaFin, idEntidanFinanc, ctaDeposito);
 
-            var result = pagos.Select(p => Mapper.USP_S_ReportePagoObligacionesPregrado_To_ConceptoPregradoPorFacultadDTO(p));
+            var result = pagos.Select(p => Mapper.USP_S_ReportePagoObligacionesPregrado_To_ConceptoPorDependenciaDTO(p));
 
             return result;
         }

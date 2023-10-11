@@ -10,15 +10,14 @@ using WebApp.ViewModels;
 
 namespace WebApp.Models.Facades
 {
-    public class ReportePosgradoServiceFacade : IReportePosgradoServiceFacade
+    public class ReporteServiceFacade : IReporteServiceFacade
     {
-        IReportePosgradoService reporteService;
+        IReporteUnfvService reporteService;
         IEntidadRecaudadora entidadRecaudadoraService;
         ICuentaDeposito cuentaDeposito;
 
-        public ReportePosgradoServiceFacade()
+        public ReporteServiceFacade()
         {
-            reporteService = new ReportePosgradoService();
             entidadRecaudadoraService = new EntidadRecaudadora();
             cuentaDeposito = new CuentaDeposito();
         }
@@ -134,6 +133,34 @@ namespace WebApp.Models.Facades
             var result = lista.Select(x => Mapper.EstadoObligacionDTO_To_EstadoObligacionViewModel(x));
 
             return result;
+        }
+
+        private void GetReporteService(TipoEstudio tipo)
+        {
+            if (reporteService == null)
+            {
+                switch (tipo)
+                {
+                    case TipoEstudio.Pregrado:
+                        reporteService = new ReportePregradoService();
+                        break;
+
+                    case TipoEstudio.Posgrado:
+                        reporteService = new ReportePosgradoService();
+                        break;
+
+                    case TipoEstudio.Segunda_Especialidad:
+                        reporteService = new ReporteSegundaEspecialidadService();
+                        break;
+
+                    case TipoEstudio.Residentado:
+                        reporteService = new ReporteResidentadoService();
+                        break;
+
+                    default:
+                        throw new NotImplementedException();
+                }
+            }
         }
     }
 }

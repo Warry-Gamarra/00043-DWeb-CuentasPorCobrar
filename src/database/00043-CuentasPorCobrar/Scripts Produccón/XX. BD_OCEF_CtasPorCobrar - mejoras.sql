@@ -323,8 +323,8 @@ BEGIN
 /*  
 EXEC USP_S_ListadoEstadoObligaciones  
 @I_TipoEstudio = 3,
-@I_Anio = 2021,
-@I_Periodo = NULL,
+@I_Anio = 2023,
+@I_Periodo = 19,
 @C_CodFac = NULL,  
 @C_CodEsc = NULL,  
 @C_RcCod = NULL,  

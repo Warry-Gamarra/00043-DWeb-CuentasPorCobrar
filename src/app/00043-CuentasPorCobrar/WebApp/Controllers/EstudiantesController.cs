@@ -23,8 +23,8 @@ namespace WebApp.Controllers
         IProgramasClientFacade programasClientFacade;
         IMatriculaServiceFacade matriculaServiceFacade;
 
-        IReportePregradoServiceFacade reportePregradoServiceFacade;
-        IReportePosgradoServiceFacade reportePosgradoServiceFacade;
+        //IReportePregradoServiceFacade reportePregradoServiceFacade;
+        //IReportePosgradoServiceFacade reportePosgradoServiceFacade;
 
         UsersModel usersModel;
 
@@ -36,8 +36,8 @@ namespace WebApp.Controllers
             programasClientFacade = new ProgramasClientFacade();
             matriculaServiceFacade = new MatriculaServiceFacade();
 
-            reportePregradoServiceFacade = new ReportePregradoServiceFacade();
-            reportePosgradoServiceFacade = new ReportePosgradoServiceFacade();
+            //reportePregradoServiceFacade = new ReportePregradoServiceFacade();
+            //reportePosgradoServiceFacade = new ReportePosgradoServiceFacade();
 
             usersModel = new UsersModel();
         }

@@ -19,8 +19,8 @@ namespace WebApp.Controllers
     [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONSULTA + ", " + RoleNames.DEPENDENCIA + ", " + RoleNames.TESORERIA)]
     public class EstadosCuentaController : Controller
     {
-        IReportePregradoServiceFacade reportePregradoServiceFacade;
-        IReportePosgradoServiceFacade reportePosgradoServiceFacade;
+        //IReportePregradoServiceFacade reportePregradoServiceFacade;
+        //IReportePosgradoServiceFacade reportePosgradoServiceFacade;
         IProgramasClientFacade programasClientFacade;
         IGeneralServiceFacade generalServiceFacade;
         SelectModel selectModels;
@@ -31,8 +31,8 @@ namespace WebApp.Controllers
 
         public EstadosCuentaController()
         {
-            reportePregradoServiceFacade = new ReportePregradoServiceFacade();
-            reportePosgradoServiceFacade = new ReportePosgradoServiceFacade();
+            //reportePregradoServiceFacade = new ReportePregradoServiceFacade();
+            //reportePosgradoServiceFacade = new ReportePosgradoServiceFacade();
             programasClientFacade = new ProgramasClientFacade();
             generalServiceFacade = new GeneralServiceFacade();
             selectModels = new SelectModel();

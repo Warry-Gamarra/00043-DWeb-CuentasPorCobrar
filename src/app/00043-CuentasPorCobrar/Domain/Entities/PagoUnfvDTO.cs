@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class PagoPregradoGeneralDTO
+    public class PagoGeneralDTO
     {
-        public string T_FacDesc { get; set; }
-        public string C_CodFac { get; set; }
+        public string T_DependenciaDesc { get; set; }
+        public string C_CodDependencia { get; set; }
         public decimal I_MontoTotal { get; set; }
         public string T_MontoTotal
         {
@@ -21,7 +21,7 @@ namespace Domain.Entities
         }
     }
 
-    public class PagoPregradoPorConceptoDTO
+    public class PagoPorConceptoDTO
     {
         public int I_ConceptoID { get; set; }
         public string C_CodClasificador { get; set; }
@@ -37,10 +37,10 @@ namespace Domain.Entities
         }
     }
 
-    public class ConceptoPregradoPorFacultadDTO
+    public class ConceptoPorDependenciaDTO
     {
-        public string T_FacDesc { get; set; }
-        public string C_CodFac { get; set; }
+        public string T_DependenciaDesc { get; set; }
+        public string C_CodDependencia { get; set; }
         public int I_ConceptoID { get; set; }
         public string C_CodClasificador { get; set; }
         public string T_ClasificadorDesc { get; set; }

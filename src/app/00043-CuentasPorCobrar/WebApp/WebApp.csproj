@@ -459,6 +459,7 @@
     </Compile>
     <Compile Include="Models\EditarPagoTasa.cs" />
     <Compile Include="Models\Facades\IReporteGeneralServiceFacade.cs" />
+    <Compile Include="Models\Facades\IReporteServiceFacade.cs" />
     <Compile Include="Models\Facades\ReporteGeneralServiceFacade.cs" />
     <Compile Include="Models\PagoConstanciaModel.cs" />
     <Compile Include="Models\ReporteModel.cs" />
@@ -480,8 +481,6 @@
     <Compile Include="Models\EstructuraArchivoModel.cs" />
     <Compile Include="Models\EstudianteModel.cs" />
     <Compile Include="Models\Facades\CatalogoServiceFacade.cs" />
-    <Compile Include="Models\Facades\IReportePosgradoServiceFacade.cs" />
-    <Compile Include="Models\Facades\IReportePregradoServiceFacade.cs" />
     <Compile Include="Models\Facades\ITasaServiceFacade.cs" />
     <Compile Include="Models\Facades\MatriculaServiceFacade.cs" />
     <Compile Include="Models\Facades\GeneralServiceFacade.cs" />
