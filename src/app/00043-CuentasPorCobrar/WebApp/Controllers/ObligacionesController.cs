@@ -25,8 +25,7 @@ namespace WebApp.Controllers
         IAlumnosClientFacade alumnosClientFacade;
         IProgramasClientFacade programasClientFacade;
         IMatriculaServiceFacade matriculaServiceFacade;
-        //IReportePregradoServiceFacade reportePregradoServiceFacade;
-        //IReportePosgradoServiceFacade reportePosgradoServiceFacade;
+        IReporteServiceFacade reporteServiceFacade;
         SelectModel selectModels;
         PagosModel pagosModel;
 
@@ -39,8 +38,7 @@ namespace WebApp.Controllers
             programasClientFacade = new ProgramasClientFacade();
             matriculaServiceFacade = new MatriculaServiceFacade();
 
-            //reportePregradoServiceFacade = new ReportePregradoServiceFacade();
-            //reportePosgradoServiceFacade = new ReportePosgradoServiceFacade();
+            reporteServiceFacade = new ReporteServiceFacade();
 
             selectModels = new SelectModel();
             pagosModel = new PagosModel();
@@ -73,31 +71,15 @@ namespace WebApp.Controllers
                     {
                         anio = defaultAño,
                         periodo = defaultPeriodo,
+                        tipoEstudio = defaultTipoEstudio,
+                        codFac = defaultTipoEstudio.Equals(TipoEstudio.Posgrado) ? null : (dependencia == "" ? null : dependencia),
+                        codEsc = defaultTipoEstudio.Equals(TipoEstudio.Posgrado) ? dependencia == "" ? null : dependencia : null,
                         esIngresante = defaultEsIngresante,
+                        obligacionGenerada = defaultSinObligaciones.Value ? false : true,
                         soloAplicarExtmp = soloAplicarExtmp
                     };
 
-                    if (defaultSinObligaciones.Value)
-                    {
-                        model.obligacionGenerada = false;
-                    }
-
-                    switch (defaultTipoEstudio)
-                    {
-                        case TipoEstudio.Pregrado:
-                            model.codFac = dependencia == "" ? null : dependencia;
-                            cuotas_pago = reportePregradoServiceFacade.EstadoObligacionAlumnos(model);
-                            break;
-
-                        case TipoEstudio.Posgrado:
-                            model.codEsc = dependencia == "" ? null : dependencia;
-                            cuotas_pago = reportePosgradoServiceFacade.EstadoObligacionAlumnos(model);
-                            break;
-                        default:
-                            cuotas_pago = new List<EstadoObligacionViewModel>();
-                            break;
-
-                    }
+                    cuotas_pago = reporteServiceFacade.EstadoObligacionAlumnos(model);
                 }
                 else
                     cuotas_pago = new List<EstadoObligacionViewModel>();
@@ -259,16 +241,7 @@ namespace WebApp.Controllers
                 model.fechaDesde = null;
                 model.fechaHasta = null;
 
-                switch (model.tipoEstudio)
-                {
-                    case TipoEstudio.Pregrado:
-                        model.resultado = reportePregradoServiceFacade.EstadoObligacionAlumnos(model);
-                        break;
-
-                    case TipoEstudio.Posgrado:
-                        model.resultado = reportePosgradoServiceFacade.EstadoObligacionAlumnos(model);
-                        break;
-                }
+                model.resultado = reporteServiceFacade.EstadoObligacionAlumnos(model);
             }
 
             ViewBag.Anios = new SelectList(generalServiceFacade.Listar_Anios(), "Value", "TextDisplay", model.anio.HasValue ? model.anio.Value : DateTime.Now.Year);

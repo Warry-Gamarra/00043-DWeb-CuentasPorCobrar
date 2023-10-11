@@ -159,6 +159,24 @@ namespace Domain.Services.Implementations
             return result;
         }
 
+        public IEnumerable<MatriculaDTO> GetMatriculaSegundaEspecialidad(int anio, int periodo)
+        {
+            var matriculas = VW_MatriculaAlumno.GetSegundaEspecialidad(anio, periodo);
+
+            var result = matriculas.Select(m => Mapper.MatriculaDTO_To_VW_MatriculaAlumno(m));
+
+            return result;
+        }
+
+        public IEnumerable<MatriculaDTO> GetMatriculaResidentado(int anio, int periodo)
+        {
+            var matriculas = VW_MatriculaAlumno.GetResidentado(anio, periodo);
+
+            var result = matriculas.Select(m => Mapper.MatriculaDTO_To_VW_MatriculaAlumno(m));
+
+            return result;
+        }
+
         private bool CampoCodigoAlumnoIncorrecto(string codigoAlumno)
         {
             return String.IsNullOrWhiteSpace(codigoAlumno) || codigoAlumno.Length != 10;

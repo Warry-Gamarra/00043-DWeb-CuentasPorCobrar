@@ -22,7 +22,7 @@ namespace WebApp.Models.Facades
             cuentaDeposito = new CuentaDeposito();
         }
 
-        public ReportePagosPosgradoGeneralViewModel ReporteGeneral(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito)
+        public ReportePagosUnfvGeneralViewModel ReporteGeneral(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito)
         {
             var pagos = reporteService.ReporteGeneral(fechaInicio, fechaFin, idEntidanFinanc, ctaDeposito);
 
@@ -30,7 +30,7 @@ namespace WebApp.Models.Facades
 
             string numeroCuenta = ctaDeposito.HasValue ? cuentaDeposito.Find(ctaDeposito.Value).C_NumeroCuenta : null;
 
-            var reporte = new ReportePagosPosgradoGeneralViewModel(pagos)
+            var reporte = new ReportePagosUnfvGeneralViewModel(pagos)
             {
                 FechaInicio = fechaInicio.ToString(FormatosDateTime.BASIC_DATE),
                 FechaFin = fechaFin.ToString(FormatosDateTime.BASIC_DATE),
@@ -42,7 +42,7 @@ namespace WebApp.Models.Facades
             return reporte;
         }
 
-        public ReportePagosPosgradoPorConceptoViewModel ReportePorConceptos(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito)
+        public ReportePagosUnfvPorConceptoViewModel ReportePorConceptos(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito)
         {
             var pagos = reporteService.ReportePorConceptos(fechaInicio, fechaFin, idEntidanFinanc, ctaDeposito);
 
@@ -50,7 +50,7 @@ namespace WebApp.Models.Facades
 
             string numeroCuenta = ctaDeposito.HasValue ? cuentaDeposito.Find(ctaDeposito.Value).C_NumeroCuenta : null;
 
-            var reporte = new ReportePagosPosgradoPorConceptoViewModel(pagos)
+            var reporte = new ReportePagosUnfvPorConceptoViewModel(pagos)
             {
                 FechaInicio = fechaInicio.ToString(FormatosDateTime.BASIC_DATE),
                 FechaFin = fechaFin.ToString(FormatosDateTime.BASIC_DATE),
@@ -62,15 +62,15 @@ namespace WebApp.Models.Facades
             return reporte;
         }
 
-        public ReportePorGradoYConceptoViewModel ReportePorGradoYConcepto(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito)
+        public ReportePorDependenciaYConceptoViewModel ReportePorDependenciaYConcepto(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito)
         {
-            var pagos = reporteService.ReportePorGradoYConcepto(fechaInicio, fechaFin, idEntidanFinanc, ctaDeposito);
+            var pagos = reporteService.ReportePorDependenciaYConcepto(fechaInicio, fechaFin, idEntidanFinanc, ctaDeposito);
 
             string nombreEntidadFinanc = idEntidanFinanc.HasValue ? entidadRecaudadoraService.Find(idEntidanFinanc.Value).Nombre : null;
 
             string numeroCuenta = ctaDeposito.HasValue ? cuentaDeposito.Find(ctaDeposito.Value).C_NumeroCuenta : null;
 
-            var reporte = new ReportePorGradoYConceptoViewModel(pagos)
+            var reporte = new ReportePorDependenciaYConceptoViewModel(pagos)
             {
                 FechaInicio = fechaInicio.ToString(FormatosDateTime.BASIC_DATE),
                 FechaFin = fechaFin.ToString(FormatosDateTime.BASIC_DATE),
@@ -82,17 +82,17 @@ namespace WebApp.Models.Facades
             return reporte;
         }
 
-        public ReporteConceptosPorGradoViewModel ReporteConceptosPorGrado(string codEsc, DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito)
+        public ReporteConceptosPorDependenciaViewModel ReporteConceptosPorDependencia(string codDep, DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito)
         {
-            var pagos = reporteService.ReporteConceptosPorGrado(codEsc, fechaInicio, fechaFin, idEntidanFinanc, ctaDeposito);
+            var pagos = reporteService.ReporteConceptosPorDependencia(codDep, fechaInicio, fechaFin, idEntidanFinanc, ctaDeposito);
 
             string nombreEntidadFinanc = idEntidanFinanc.HasValue ? entidadRecaudadoraService.Find(idEntidanFinanc.Value).Nombre : null;
 
             string numeroCuenta = ctaDeposito.HasValue ? cuentaDeposito.Find(ctaDeposito.Value).C_NumeroCuenta : null;
 
-            var reporte = new ReporteConceptosPorGradoViewModel(pagos)
+            var reporte = new ReporteConceptosPorDependenciaViewModel(pagos)
             {
-                Grado = pagos.Count() > 0 ? pagos.FirstOrDefault().T_EscDesc : "",
+                Dependencia = pagos.Count() > 0 ? pagos.FirstOrDefault().T_DependenciaDesc : "",
                 FechaInicio = fechaInicio.ToString(FormatosDateTime.BASIC_DATE),
                 FechaFin = fechaFin.ToString(FormatosDateTime.BASIC_DATE),
                 Titulo = "Reporte de Pago de Conceptos por Grado",
@@ -127,6 +127,8 @@ namespace WebApp.Models.Facades
 
         public IEnumerable<EstadoObligacionViewModel> EstadoObligacionAlumnos(ConsultaObligacionEstudianteViewModel parametro)
         {
+            GetReporteService(parametro.tipoEstudio);
+
             var lista = reporteService.EstadoObligacionAlumnos(parametro.anio.Value, parametro.periodo, parametro.codFac, parametro.codEsc, parametro.codRc, parametro.esIngresante, parametro.estaPagado, parametro.obligacionGenerada,
                 parametro.fechaInicio, parametro.fechaFin, parametro.codAlumno, parametro.nomAlumno, parametro.apePaternoAlumno, parametro.apeMaternoAlumno, parametro.dependencia);
 

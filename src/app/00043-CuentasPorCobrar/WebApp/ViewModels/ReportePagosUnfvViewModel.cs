@@ -9,7 +9,7 @@ using System.Web;
 
 namespace WebApp.ViewModels
 {
-    public class ReportePagosPregradoGeneralViewModel
+    public class ReportePagosUnfvGeneralViewModel
     {
         public string Titulo { get; set; }
         public string FechaInicio { get; set; }
@@ -18,7 +18,7 @@ namespace WebApp.ViewModels
         public string HoraActual { get; }
         public string nombreEntidadFinanc { get; set; }
         public string numeroCuenta { get; set; }
-        public IEnumerable<PagoPregradoGeneralDTO> listaPagos { get; }
+        public IEnumerable<PagoGeneralDTO> listaPagos { get; }
 
         public string SubTitulo
         {
@@ -42,8 +42,7 @@ namespace WebApp.ViewModels
             }
         }
         
-
-        public ReportePagosPregradoGeneralViewModel(IEnumerable<PagoPregradoGeneralDTO> listaPagos)
+        public ReportePagosUnfvGeneralViewModel(IEnumerable<PagoGeneralDTO> listaPagos)
         {
             FechaActual = DateTime.Now.ToString(FormatosDateTime.BASIC_DATE);
             HoraActual = DateTime.Now.ToString(FormatosDateTime.BASIC_TIME);
@@ -53,7 +52,7 @@ namespace WebApp.ViewModels
 
 
 
-    public class ReportePagosPregradoPorConceptoViewModel
+    public class ReportePagosUnfvPorConceptoViewModel
     {
         public string Titulo { get; set; }
         public string FechaInicio { get; set; }
@@ -62,7 +61,7 @@ namespace WebApp.ViewModels
         public string HoraActual { get; }
         public string nombreEntidadFinanc { get; set; }
         public string numeroCuenta { get; set; }
-        public IEnumerable<PagoPregradoPorConceptoDTO> listaPagos { get; }
+        public IEnumerable<PagoPorConceptoDTO> listaPagos { get; }
 
         public string SubTitulo
         {
@@ -86,7 +85,7 @@ namespace WebApp.ViewModels
             }
         }
         
-        public ReportePagosPregradoPorConceptoViewModel(IEnumerable<PagoPregradoPorConceptoDTO> listaPagos)
+        public ReportePagosUnfvPorConceptoViewModel(IEnumerable<PagoPorConceptoDTO> listaPagos)
         {
             FechaActual = DateTime.Now.ToString(FormatosDateTime.BASIC_DATE);
             HoraActual = DateTime.Now.ToString(FormatosDateTime.BASIC_TIME);
@@ -96,7 +95,7 @@ namespace WebApp.ViewModels
 
 
 
-    public class ReportePorFacultadYConceptoViewModel
+    public class ReportePorDependenciaYConceptoViewModel
     {
         public string Titulo { get; set; }
         public string FechaInicio { get; set; }
@@ -105,7 +104,7 @@ namespace WebApp.ViewModels
         public string HoraActual { get; }
         public string nombreEntidadFinanc { get; set; }
         public string numeroCuenta { get; set; }
-        public IEnumerable<ConceptoPregradoPorFacultadDTO> listaPagos { get; }
+        public IEnumerable<ConceptoPorDependenciaDTO> listaPagos { get; }
 
         public string SubTitulo
         {
@@ -129,7 +128,7 @@ namespace WebApp.ViewModels
             }
         }
 
-        public ReportePorFacultadYConceptoViewModel(IEnumerable<ConceptoPregradoPorFacultadDTO> listaPagos)
+        public ReportePorDependenciaYConceptoViewModel(IEnumerable<ConceptoPorDependenciaDTO> listaPagos)
         {
             FechaActual = DateTime.Now.ToString(FormatosDateTime.BASIC_DATE);
             HoraActual = DateTime.Now.ToString(FormatosDateTime.BASIC_TIME);
@@ -139,17 +138,17 @@ namespace WebApp.ViewModels
 
 
 
-    public class ReporteConceptosPorFacultadViewModel
+    public class ReporteConceptosPorDependenciaViewModel
     {
         public string Titulo { get; set; }
-        public string Facultad { get; set; }
+        public string Dependencia { get; set; }
         public string FechaInicio { get; set; }
         public string FechaFin { get; set; }
         public string FechaActual { get; }
         public string HoraActual { get; }
         public string nombreEntidadFinanc { get; set; }
         public string numeroCuenta { get; set; }
-        public IEnumerable<ConceptoPregradoPorFacultadDTO> listaPagos { get; }
+        public IEnumerable<ConceptoPorDependenciaDTO> listaPagos { get; }
 
         public string SubTitulo
         {
@@ -173,7 +172,7 @@ namespace WebApp.ViewModels
             }
         }
 
-        public ReporteConceptosPorFacultadViewModel(IEnumerable<ConceptoPregradoPorFacultadDTO> listaPagos)
+        public ReporteConceptosPorDependenciaViewModel(IEnumerable<ConceptoPorDependenciaDTO> listaPagos)
         {
             FechaActual = DateTime.Now.ToString(FormatosDateTime.BASIC_DATE);
             HoraActual = DateTime.Now.ToString(FormatosDateTime.BASIC_TIME);

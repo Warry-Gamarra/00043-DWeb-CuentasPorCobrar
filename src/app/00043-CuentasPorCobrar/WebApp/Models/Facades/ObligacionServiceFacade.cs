@@ -20,6 +20,8 @@ namespace WebApp.Models.Facades
         private const string C_NivelPregrado = "1";
         private const string C_NivelMaestria = "2";
         private const string C_NivelDoctorado = "3";
+        private const string C_NivelSegundaEspecialidad = "4";
+        private const string C_NivelResidentado = "5";
 
         private const string C_TipoAlumnoIngresante = "2";
         private const string C_TipoAlumnoRegular = "1";
@@ -47,12 +49,28 @@ namespace WebApp.Models.Facades
                     codFac = codDependencia;
 
                     break;
+
                 case TipoEstudio.Posgrado:
                     procesos = procesos.Where(x => x.C_Nivel == C_NivelMaestria || x.C_Nivel == C_NivelDoctorado);
 
                     codGrado = codDependencia;
 
                     break;
+
+                case TipoEstudio.Segunda_Especialidad:
+                    procesos = procesos.Where(x => x.C_Nivel == C_NivelSegundaEspecialidad);
+                    
+                    codFac = codDependencia;
+                    
+                    break;
+
+                case TipoEstudio.Residentado:
+                    codFac = codDependencia;
+
+                    procesos = procesos.Where(x => x.C_Nivel == C_NivelResidentado);
+
+                    break;
+
                 default:
                     throw new NotImplementedException("Ha ocurrido un error al identificar si el alumno es de Pregrado o Posgrado.");
             }
@@ -116,6 +134,24 @@ namespace WebApp.Models.Facades
                     }
 
                     break;
+
+                case TipoEstudio.Segunda_Especialidad:
+                    matriculas = _estudianteService.GetMatriculaSegundaEspecialidad(anio, periodo);
+
+                    if (!String.IsNullOrEmpty(codFac))
+                    {
+                        matriculas = matriculas.Where(x => x.C_CodFac == codFac);
+                    }
+                    break;
+
+                case TipoEstudio.Residentado:
+                    matriculas = _estudianteService.GetMatriculaResidentado(anio, periodo);
+
+                    if (!String.IsNullOrEmpty(codFac))
+                    {
+                        matriculas = matriculas.Where(x => x.C_CodFac == codFac);
+                    }
+                    break;
             }
 
             if (matriculas.Count() == 0)
@@ -146,6 +182,14 @@ namespace WebApp.Models.Facades
             else if (nivel == C_NivelMaestria || nivel == C_NivelDoctorado)
             {
                 tipoEstudio = TipoEstudio.Posgrado;
+            }
+            else if (nivel == C_NivelSegundaEspecialidad)
+            {
+                tipoEstudio = TipoEstudio.Segunda_Especialidad;
+            }
+            else if (nivel == C_NivelResidentado)
+            {
+                tipoEstudio = TipoEstudio.Residentado;
             }
             else
             {
@@ -242,7 +286,7 @@ namespace WebApp.Models.Facades
         }
 
         public IEnumerable<CtaDepoProcesoModel> Obtener_CtaDeposito_X_Periodo(int anio, int? periodo, TipoEstudio tipoEstudio)
-        {
+        {//AQUÍ AGREGAR SEGUNDA ESPECIALIDAD Y RESIDENTADO
             IEnumerable<CtaDepoProcesoModel> result;
 
             IEnumerable<CtaDepoProceso> ctasDeposito;

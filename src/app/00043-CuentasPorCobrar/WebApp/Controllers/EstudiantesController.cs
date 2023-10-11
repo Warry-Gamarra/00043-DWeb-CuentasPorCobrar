@@ -259,19 +259,19 @@ namespace WebApp.Controllers
                 switch (model.tipoEstudio)
                 {
                     case TipoEstudio.Pregrado:
-                        model.resultado = reportePregradoServiceFacade.EstadoObligacionAlumnos(model);
+                        //model.resultado = reportePregradoServiceFacade.EstadoObligacionAlumnos(model);
                         break;
 
                     case TipoEstudio.Posgrado:
-                        model.resultado = reportePosgradoServiceFacade.EstadoObligacionAlumnos(model);
+                        //model.resultado = reportePosgradoServiceFacade.EstadoObligacionAlumnos(model);
                         break;
 
                     case TipoEstudio.Segunda_Especialidad:
-                        model.resultado = reportePosgradoServiceFacade.EstadoObligacionAlumnos(model);
+                        //model.resultado = reportePosgradoServiceFacade.EstadoObligacionAlumnos(model);
                         break;
 
                     case TipoEstudio.Residentado:
-                        model.resultado = reportePosgradoServiceFacade.EstadoObligacionAlumnos(model);
+                        //model.resultado = reportePosgradoServiceFacade.EstadoObligacionAlumnos(model);
                         break;
                 }
             }
@@ -319,11 +319,11 @@ namespace WebApp.Controllers
             switch (model.tipoEstudio)
             {
                 case TipoEstudio.Pregrado:
-                    model.resultado = reportePregradoServiceFacade.EstadoObligacionAlumnos(model);
+                    //model.resultado = reportePregradoServiceFacade.EstadoObligacionAlumnos(model);
                     break;
 
                 case TipoEstudio.Posgrado:
-                    model.resultado = reportePosgradoServiceFacade.EstadoObligacionAlumnos(model);
+                    //model.resultado = reportePosgradoServiceFacade.EstadoObligacionAlumnos(model);
                     break;
             }
 

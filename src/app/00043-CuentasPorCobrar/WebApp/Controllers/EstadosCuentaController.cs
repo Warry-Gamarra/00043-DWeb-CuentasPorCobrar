@@ -41,7 +41,7 @@ namespace WebApp.Controllers
             catalogoServiceFacade = new CatalogoServiceFacade();
             usersModel = new UsersModel();
         }
-
+        /*
         // GET: EstadosCuenta
         [Route("consultas/estados-de-cuenta")]
         public ActionResult Index()
@@ -1785,6 +1785,6 @@ namespace WebApp.Controllers
                     return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", nombreArchivo);
                 }
             }
-        }
+        }*/
     }
 }

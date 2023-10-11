@@ -52,9 +52,10 @@ GO
 USE BD_OCEF_CtasPorCobrar
 GO
 
+UPDATE dbo.TC_CatalogoOpcion SET T_OpcionCod = '6' WHERE I_OpcionID = 8
 
 INSERT dbo.TC_CatalogoOpcion(I_ParametroID, T_OpcionCod, T_OpcionDesc, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre)
-VALUES(2, '6', 'Residentado Médico', 1, 0, 1, GETDATE())
+VALUES(2, '5', 'Residentado Médico', 1, 0, 1, GETDATE())
 GO
 
 
@@ -343,8 +344,6 @@ GO
 */  
 END
 GO
-
-
 
 
 

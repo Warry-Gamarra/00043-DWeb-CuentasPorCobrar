@@ -102,6 +102,48 @@ namespace Data.Views
             return result;
         }
 
+        public static IEnumerable<VW_MatriculaAlumno> GetSegundaEspecialidad(int anio, int periodo)
+        {
+            IEnumerable<VW_MatriculaAlumno> result;
+
+            try
+            {
+                string s_command = @"SELECT m.* FROM dbo.VW_MatriculaAlumno m WHERE m.I_Anio = @I_Anio AND m.I_Periodo = @I_Periodo AND m.N_Grado = 4";
+
+                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
+                {
+                    result = _dbConnection.Query<VW_MatriculaAlumno>(s_command, new { I_Anio = anio, I_Periodo = periodo }, commandType: CommandType.Text);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
+
+        public static IEnumerable<VW_MatriculaAlumno> GetResidentado(int anio, int periodo)
+        {
+            IEnumerable<VW_MatriculaAlumno> result;
+
+            try
+            {
+                string s_command = @"SELECT m.* FROM dbo.VW_MatriculaAlumno m WHERE m.I_Anio = @I_Anio AND m.I_Periodo = @I_Periodo AND m.N_Grado = 5";
+
+                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
+                {
+                    result = _dbConnection.Query<VW_MatriculaAlumno>(s_command, new { I_Anio = anio, I_Periodo = periodo }, commandType: CommandType.Text);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
+
         public static VW_MatriculaAlumno GetMatricula(int anio, int periodo, string codAlu, string codRc)
         {
             VW_MatriculaAlumno result;

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Web;
 
 namespace WebApp.ViewModels
-{
+{/*
     public class ReportePagosObligacionesViewModel
     {
         public ReportePagosObligacionesViewModel()
@@ -81,5 +81,5 @@ namespace WebApp.ViewModels
         public ReportePorGradoYConceptoViewModel reportePorGradoYConceptoViewModel { get; set; }
 
         public ReporteConceptosPorGradoViewModel reporteConceptosPorGradoViewModel { get; set; }
-    }
+    }*/
 }

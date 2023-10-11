@@ -492,8 +492,7 @@
     <Compile Include="Models\Facades\IObligacionServiceFacade.cs" />
     <Compile Include="Models\Facades\IProgramasClientFacade.cs" />
     <Compile Include="Models\Facades\ProgramasClientFacade.cs" />
-    <Compile Include="Models\Facades\ReportePosgradoServiceFacade.cs" />
-    <Compile Include="Models\Facades\ReportePregradoServiceFacade.cs" />
+    <Compile Include="Models\Facades\ReporteServiceFacade.cs" />
     <Compile Include="Models\Facades\TasaServiceFacade.cs" />
     <Compile Include="Models\IAlumnosSinVotoSource.cs" />
     <Compile Include="Models\IMatriculaSource.cs" />
@@ -545,8 +544,7 @@
     <Compile Include="ViewModels\PagoObligacionViewModel.cs" />
     <Compile Include="ViewModels\CargaArchivosViewModels.cs" />
     <Compile Include="ViewModels\ProcesoViewModel.cs" />
-    <Compile Include="ViewModels\ReportePagosPosgradoViewModel.cs" />
-    <Compile Include="ViewModels\ReportePagosPregradoViewModel.cs" />
+    <Compile Include="ViewModels\ReportePagosUnfvViewModel.cs" />
     <Compile Include="ViewModels\RolesViewModel.cs" />
     <Compile Include="ViewModels\SelectViewModel.cs" />
     <Compile Include="ViewModels\PagoTasaViewModel.cs" />
