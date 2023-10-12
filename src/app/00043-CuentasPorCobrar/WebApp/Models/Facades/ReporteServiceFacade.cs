@@ -22,8 +22,10 @@ namespace WebApp.Models.Facades
             cuentaDeposito = new CuentaDeposito();
         }
 
-        public ReportePagosUnfvGeneralViewModel ReporteGeneral(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito)
+        public ReportePagosUnfvGeneralViewModel ReporteGeneral(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito, TipoEstudio tipoEstudio)
         {
+            GetReporteService(tipoEstudio);
+
             var pagos = reporteService.ReporteGeneral(fechaInicio, fechaFin, idEntidanFinanc, ctaDeposito);
 
             string nombreEntidadFinanc = idEntidanFinanc.HasValue ? entidadRecaudadoraService.Find(idEntidanFinanc.Value).Nombre : null;
@@ -34,7 +36,7 @@ namespace WebApp.Models.Facades
             {
                 FechaInicio = fechaInicio.ToString(FormatosDateTime.BASIC_DATE),
                 FechaFin = fechaFin.ToString(FormatosDateTime.BASIC_DATE),
-                Titulo = "Reporte de Pagos de Posgrado",
+                Titulo = "Reporte de Pagos de ***",
                 nombreEntidadFinanc = nombreEntidadFinanc,
                 numeroCuenta = numeroCuenta
             };
@@ -42,8 +44,10 @@ namespace WebApp.Models.Facades
             return reporte;
         }
 
-        public ReportePagosUnfvPorConceptoViewModel ReportePorConceptos(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito)
+        public ReportePagosUnfvPorConceptoViewModel ReportePorConceptos(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito, TipoEstudio tipoEstudio)
         {
+            GetReporteService(tipoEstudio);
+
             var pagos = reporteService.ReportePorConceptos(fechaInicio, fechaFin, idEntidanFinanc, ctaDeposito);
 
             string nombreEntidadFinanc = idEntidanFinanc.HasValue ? entidadRecaudadoraService.Find(idEntidanFinanc.Value).Nombre : null;
@@ -62,8 +66,10 @@ namespace WebApp.Models.Facades
             return reporte;
         }
 
-        public ReportePorDependenciaYConceptoViewModel ReportePorDependenciaYConcepto(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito)
+        public ReportePorDependenciaYConceptoViewModel ReportePorDependenciaYConcepto(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito, TipoEstudio tipoEstudio)
         {
+            GetReporteService(tipoEstudio);
+
             var pagos = reporteService.ReportePorDependenciaYConcepto(fechaInicio, fechaFin, idEntidanFinanc, ctaDeposito);
 
             string nombreEntidadFinanc = idEntidanFinanc.HasValue ? entidadRecaudadoraService.Find(idEntidanFinanc.Value).Nombre : null;
@@ -74,7 +80,7 @@ namespace WebApp.Models.Facades
             {
                 FechaInicio = fechaInicio.ToString(FormatosDateTime.BASIC_DATE),
                 FechaFin = fechaFin.ToString(FormatosDateTime.BASIC_DATE),
-                Titulo = "Reporte de Pagos por Grado",
+                Titulo = "Reporte de Pagos por ***",//Grado o Facultad
                 nombreEntidadFinanc = nombreEntidadFinanc,
                 numeroCuenta = numeroCuenta
             };
@@ -82,8 +88,10 @@ namespace WebApp.Models.Facades
             return reporte;
         }
 
-        public ReporteConceptosPorDependenciaViewModel ReporteConceptosPorDependencia(string codDep, DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito)
+        public ReporteConceptosPorDependenciaViewModel ReporteConceptosPorDependencia(string codDep, DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito, TipoEstudio tipoEstudio)
         {
+            GetReporteService(tipoEstudio);
+
             var pagos = reporteService.ReporteConceptosPorDependencia(codDep, fechaInicio, fechaFin, idEntidanFinanc, ctaDeposito);
 
             string nombreEntidadFinanc = idEntidanFinanc.HasValue ? entidadRecaudadoraService.Find(idEntidanFinanc.Value).Nombre : null;
@@ -95,7 +103,7 @@ namespace WebApp.Models.Facades
                 Dependencia = pagos.Count() > 0 ? pagos.FirstOrDefault().T_DependenciaDesc : "",
                 FechaInicio = fechaInicio.ToString(FormatosDateTime.BASIC_DATE),
                 FechaFin = fechaFin.ToString(FormatosDateTime.BASIC_DATE),
-                Titulo = "Reporte de Pago de Conceptos por Grado",
+                Titulo = "Reporte de Pago de Conceptos por ***",//Grado o Facultad
                 nombreEntidadFinanc = nombreEntidadFinanc,
                 numeroCuenta = numeroCuenta
             };
@@ -103,24 +111,28 @@ namespace WebApp.Models.Facades
             return reporte;
         }
 
-        public ReporteResumenAnualPagoObligaciones_X_Clasificadores ResumenAnualPagoOblig_X_Clasificadores(int anio, int? entidadFinanID, int? ctaDepositoID)
+        public ReporteResumenAnualPagoObligaciones_X_Clasificadores ResumenAnualPagoOblig_X_Clasificadores(int anio, TipoEstudio tipoEstudio, int? entidadFinanID, int? ctaDepositoID)
         {
+            GetReporteService(tipoEstudio);
+
             var lista = reporteService.ResumenAnualPagoOblig_X_Clasificadores(anio, entidadFinanID, ctaDepositoID);
 
             string nombreEntidadFinanc = entidadFinanID.HasValue ? entidadRecaudadoraService.Find(entidadFinanID.Value).Nombre : null;
 
-            var result = new ReporteResumenAnualPagoObligaciones_X_Clasificadores(anio, TipoEstudio.Posgrado, nombreEntidadFinanc, null, lista);
+            var result = new ReporteResumenAnualPagoObligaciones_X_Clasificadores(anio, tipoEstudio, nombreEntidadFinanc, null, lista);
 
             return result;
         }
 
-        public ReporteResumenAnualPagoObligaciones_X_Dependencias ResumenAnualPagoOblig_X_Dependencias(int anio, int? entidadFinanID, int? ctaDepositoID)
+        public ReporteResumenAnualPagoObligaciones_X_Dependencias ResumenAnualPagoOblig_X_Dependencias(int anio, TipoEstudio tipoEstudio, int? entidadFinanID, int? ctaDepositoID)
         {
+            GetReporteService(tipoEstudio);
+
             var lista = reporteService.ResumenAnualPagoOblig_X_Dependencia(anio, entidadFinanID, ctaDepositoID);
 
             string nombreEntidadFinanc = entidadFinanID.HasValue ? entidadRecaudadoraService.Find(entidadFinanID.Value).Nombre : null;
 
-            var result = new ReporteResumenAnualPagoObligaciones_X_Dependencias(anio, TipoEstudio.Posgrado, nombreEntidadFinanc, null, lista);
+            var result = new ReporteResumenAnualPagoObligaciones_X_Dependencias(anio, tipoEstudio, nombreEntidadFinanc, null, lista);
 
             return result;
         }
@@ -137,11 +149,11 @@ namespace WebApp.Models.Facades
             return result;
         }
 
-        private void GetReporteService(TipoEstudio tipo)
+        private void GetReporteService(TipoEstudio tipoEstudio)
         {
             if (reporteService == null)
             {
-                switch (tipo)
+                switch (tipoEstudio)
                 {
                     case TipoEstudio.Pregrado:
                         reporteService = new ReportePregradoService();

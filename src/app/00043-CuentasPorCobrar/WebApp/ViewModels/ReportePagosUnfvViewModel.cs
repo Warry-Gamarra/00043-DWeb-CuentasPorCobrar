@@ -19,6 +19,7 @@ namespace WebApp.ViewModels
         public string nombreEntidadFinanc { get; set; }
         public string numeroCuenta { get; set; }
         public IEnumerable<PagoGeneralDTO> listaPagos { get; }
+        public string nombreColumnaDependencia { get; set; }
 
         public string SubTitulo
         {
@@ -47,6 +48,7 @@ namespace WebApp.ViewModels
             FechaActual = DateTime.Now.ToString(FormatosDateTime.BASIC_DATE);
             HoraActual = DateTime.Now.ToString(FormatosDateTime.BASIC_TIME);
             this.listaPagos = listaPagos;
+            nombreColumnaDependencia = "Facultad o Grado";
         }
     }
 
@@ -104,6 +106,7 @@ namespace WebApp.ViewModels
         public string HoraActual { get; }
         public string nombreEntidadFinanc { get; set; }
         public string numeroCuenta { get; set; }
+        public string nombreColumnaDependencia { get; set; }
         public IEnumerable<ConceptoPorDependenciaDTO> listaPagos { get; }
 
         public string SubTitulo
@@ -133,6 +136,7 @@ namespace WebApp.ViewModels
             FechaActual = DateTime.Now.ToString(FormatosDateTime.BASIC_DATE);
             HoraActual = DateTime.Now.ToString(FormatosDateTime.BASIC_TIME);
             this.listaPagos = listaPagos;
+            nombreColumnaDependencia = "Facultad o Grado";
         }
     }
 
@@ -148,6 +152,7 @@ namespace WebApp.ViewModels
         public string HoraActual { get; }
         public string nombreEntidadFinanc { get; set; }
         public string numeroCuenta { get; set; }
+        public string nombreColumnaDependencia { get; set; }
         public IEnumerable<ConceptoPorDependenciaDTO> listaPagos { get; }
 
         public string SubTitulo
@@ -177,6 +182,7 @@ namespace WebApp.ViewModels
             FechaActual = DateTime.Now.ToString(FormatosDateTime.BASIC_DATE);
             HoraActual = DateTime.Now.ToString(FormatosDateTime.BASIC_TIME);
             this.listaPagos = listaPagos;
+            nombreColumnaDependencia = "Facultad o Grado";
         }
     }
 }

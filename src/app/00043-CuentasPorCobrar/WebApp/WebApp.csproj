@@ -551,7 +551,7 @@
     <Compile Include="ViewModels\TasaViewModel.cs" />
     <Compile Include="ViewModels\UserManualViewModel.cs" />
     <Compile Include="ViewModels\UsersViewModels.cs" />
-    <Content Include="Views\EstadosCuenta\_ReportePosgradoPorDependenciaYConcepto.cshtml" />
+    <Content Include="Views\EstadosCuenta\_ReportePorDependenciaYConcepto.cshtml" />
     <Content Include="Models\DataSets\ObligacionAlumnoDS.xsc">
       <DependentUpon>ObligacionAlumnoDS.xsd</DependentUpon>
     </Content>

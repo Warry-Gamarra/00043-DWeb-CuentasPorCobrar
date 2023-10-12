@@ -19,7 +19,7 @@
 </div>
 
 @{
-    var agrupaClasif = Model.listaPagos.GroupBy(x => new { x.C_CodClasificador, x.C_CodEsc });
+    var agrupaClasif = Model.listaPagos.GroupBy(x => new { x.C_CodClasificador, x.C_CodDependencia });
     int nroOrdenGrupo = 1;
     int nroOrdenFilas;
     string estiloCelda;
@@ -29,7 +29,7 @@
     <table class="table table-bordered table-sm" id="tbl_pagos">
         <thead>
             <tr class="thead-light">
-                <th class="text-center">Grado (CAMBIAR A FACULTAD EN PREGRADO)</th>
+                <th class="text-center">@Model.nombreColumnaDependencia</th>
                 <th class="text-center">Cod.Clasificador</th>
                 <th class="text-center">Clasificador</th>
                 <th class="text-center">Concepto</th>
