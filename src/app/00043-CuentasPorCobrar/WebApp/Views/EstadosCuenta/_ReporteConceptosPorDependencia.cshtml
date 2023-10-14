@@ -6,10 +6,15 @@
 
 <div class="row">
     <div class="col-lg-6">
-        <p>Grado: <b>@Model.Dependencia.ToUpper()</b></p>
+        <p>@Model.nombreColumnaDependencia: <b>@Model.Dependencia.ToUpper()</b></p>
         @if (!String.IsNullOrEmpty(Model.nombreEntidadFinanc))
         {
             <p>Entidad Financiera: <b>@Model.nombreEntidadFinanc</b></p>
+
+        }
+        @if (!String.IsNullOrEmpty(Model.numeroCuenta))
+        {
+            <p>Número Cuenta: <b>@Model.numeroCuenta</b></p>
 
         }
     </div>

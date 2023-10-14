@@ -64,7 +64,6 @@ namespace WebApp.ViewModels
 
         public int? idDependencia { get; set; }
 
-        //Pregrado
         public ReportePagosUnfvGeneralViewModel reportePagosGeneralViewModel { get; set; }
 
         public ReportePagosUnfvPorConceptoViewModel reportePagosPorConceptoViewModel { get; set; }

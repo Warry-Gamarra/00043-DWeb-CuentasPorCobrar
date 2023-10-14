@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel;
+using DocumentFormat.OpenXml.EMMA;
 using Domain.Helpers;
 using Microsoft.Reporting.WebForms;
 using System;
@@ -84,11 +85,11 @@ namespace WebApp.Controllers
 
             ViewBag.DependenciaDefault = model.idDependencia.HasValue ? listaDependencias.First().Value : "";
 
-            string title;
+            string tipoReporte;
 
-            ObtenerReportePagoDeObligaciones(model, out title);
+            ObtenerReportePagoDeObligaciones(model, out tipoReporte);
 
-            ViewBag.Title = title;
+            ViewBag.Title = "Reportes de Pago de Obligaciones de " + tipoReporte;
             
             return View(model);
         }
@@ -387,78 +388,73 @@ namespace WebApp.Controllers
             }
         }
 
-        private void ObtenerReportePagoDeObligaciones(ReportePagosObligacionesViewModel model, out string title)
+        private void ObtenerReportePagoDeObligaciones(ReportePagosObligacionesViewModel model, out string tipoReporte)
         {
-            //title = "Reportes de Pago de Obligaciones de Pregrado";
-            //title = "Reportes de Pago de Obligaciones de Posgrado";
-            title = "Reportes de Pago de Obligaciones de ***";
-
             if (model.tipoReporte == Reportes.REPORTE_GENERAL)
             {
                 model.reportePagosGeneralViewModel = reporteServiceFacade.ReporteGeneral(
-                    model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera, model.ctaDeposito, model.tipoEstudio);
+                    model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera, model.ctaDeposito, model.tipoEstudio, out tipoReporte);
             }
-
-            if (model.tipoReporte == Reportes.REPORTE_CONCEPTO)
+            else if (model.tipoReporte == Reportes.REPORTE_CONCEPTO)
             {
                 model.reportePagosPorConceptoViewModel = reporteServiceFacade.ReportePorConceptos(
-                    model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera, model.ctaDeposito, model.tipoEstudio);
+                    model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera, model.ctaDeposito, model.tipoEstudio, out tipoReporte);
             }
-
-            if (model.tipoReporte == Reportes.REPORTE_FACULTAD)
+            else if (model.tipoReporte == Reportes.REPORTE_FACULTAD)
             {
                 if (String.IsNullOrEmpty(model.dependencia))
                 {
                     model.reportePorDependenciaYConceptoViewModel = reporteServiceFacade.ReportePorDependenciaYConcepto(
-                        model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera, model.ctaDeposito, model.tipoEstudio);
+                        model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera, model.ctaDeposito, model.tipoEstudio, out tipoReporte);
                 }
                 else
                 {
                     model.reporteConceptosPorDependenciaViewModel = reporteServiceFacade.ReporteConceptosPorDependencia(
-                        model.dependencia, model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera, model.ctaDeposito, model.tipoEstudio);
+                        model.dependencia, model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera, model.ctaDeposito, model.tipoEstudio, out tipoReporte);
                 }
+            }
+            else
+            {
+                tipoReporte = "la UNFV";
             }
         }
 
         private Tuple<string, XLWorkbook> ObtenerReporteExcelPagoDeObligaciones(ReportePagosObligacionesViewModel model)
         {
             string nombreArchivo = "";
+            string tipoReporte;
             XLWorkbook workbook = null;
-
-            //nombreArchivo = Pregrado o Posgrado o SegundaEspecialidad o Residentado
 
             if (model.tipoReporte == Reportes.REPORTE_GENERAL)
             {
-                nombreArchivo = "Reporte *** General" + " al " + DateTime.Now.ToString(FormatosDateTime.BASIC_DATE2) + ".xlsx";
-
                 workbook  = ReporteExcelPagosEnGeneral(
-                    reporteServiceFacade.ReporteGeneral(model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera, model.ctaDeposito, model.tipoEstudio));
-            }
+                    reporteServiceFacade.ReporteGeneral(model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera, model.ctaDeposito, model.tipoEstudio, out tipoReporte));
 
-            if (model.tipoReporte == Reportes.REPORTE_CONCEPTO)
+                nombreArchivo = "Reporte " + tipoReporte + " General" + " al " + DateTime.Now.ToString(FormatosDateTime.BASIC_DATE2) + ".xlsx";
+            }
+            else  if (model.tipoReporte == Reportes.REPORTE_CONCEPTO)
             {
-                nombreArchivo = "Reporte *** por Conceptos" + " al " + DateTime.Now.ToString(FormatosDateTime.BASIC_DATE2) + ".xlsx";
-
                 workbook = ReporteExcelPagosPorConcepto(
-                    reporteServiceFacade.ReportePorConceptos(model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera, model.ctaDeposito, model.tipoEstudio));
-            }
+                    reporteServiceFacade.ReportePorConceptos(model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera, model.ctaDeposito, model.tipoEstudio, out tipoReporte));
 
-            if (model.tipoReporte == Reportes.REPORTE_FACULTAD)
+                nombreArchivo = "Reporte " + tipoReporte + " por Conceptos" + " al " + DateTime.Now.ToString(FormatosDateTime.BASIC_DATE2) + ".xlsx";
+            }
+            else if (model.tipoReporte == Reportes.REPORTE_FACULTAD)
             {
                 if (String.IsNullOrEmpty(model.dependencia))
                 {
-                    //Por Grados en lugar de Facultades para el caso de Posgrado
-                    nombreArchivo = "Reporte *** por ****" + " al " + DateTime.Now.ToString(FormatosDateTime.BASIC_DATE2) + ".xlsx";
+                    var reporte = reporteServiceFacade.ReportePorDependenciaYConcepto(model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera, model.ctaDeposito, model.tipoEstudio, out tipoReporte);
+                    
+                    workbook = ReporteExcelDependenciaYConceptos(reporte, model.tipoEstudio);
 
-                    workbook = ReporteExcelDependenciaYConceptos(
-                        reporteServiceFacade.ReportePorDependenciaYConcepto(model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera, model.ctaDeposito, model.tipoEstudio));
+                    nombreArchivo = "Reporte " + tipoReporte + " por " + reporte.nombreColumnaDependencia + " al " + DateTime.Now.ToString(FormatosDateTime.BASIC_DATE2) + ".xlsx";
                 }
                 else
                 {
-                    nombreArchivo = "Reporte *** por Conceptos" + " al " + DateTime.Now.ToString(FormatosDateTime.BASIC_DATE2) + ".xlsx";
-
                     workbook = ReporteExcelConceptosPorDependencia(
-                        reporteServiceFacade.ReporteConceptosPorDependencia(model.dependencia, model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera, model.ctaDeposito, model.tipoEstudio));
+                        reporteServiceFacade.ReporteConceptosPorDependencia(model.dependencia, model.fechaInicio.Value, model.fechaFin.Value, model.idEntidadFinanciera, model.ctaDeposito, model.tipoEstudio, out tipoReporte));
+
+                    nombreArchivo = "Reporte " + tipoReporte + " por Conceptos" + " al " + DateTime.Now.ToString(FormatosDateTime.BASIC_DATE2) + ".xlsx";
                 }
             }
 
@@ -644,18 +640,24 @@ namespace WebApp.Controllers
             worksheet.Cell(currentRow, 5).SetValue<decimal>(reporte.MontoTotal);
 
             worksheet.Range(worksheet.Cell(inicial, 4), worksheet.Cell(currentRow, 5)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
-
             return workbook;
         }
 
-        private XLWorkbook ReporteExcelDependenciaYConceptos(ReportePorDependenciaYConceptoViewModel reporte)
+        private XLWorkbook ReporteExcelDependenciaYConceptos(ReportePorDependenciaYConceptoViewModel reporte, TipoEstudio tipoEstudio)
         {
             var workbook = new XLWorkbook();
 
             var worksheet = workbook.Worksheets.Add("Reporte");
 
-            worksheet.Column("A").Width = 60;
-            //worksheet.Columns("A:B").Width = 14; En Posgrado estaba así
+            if (tipoEstudio.Equals(TipoEstudio.Posgrado))
+            {
+                worksheet.Column("A").Width = 14;
+            }
+            else
+            {
+                worksheet.Column("A").Width = 60;
+            }
+
             worksheet.Column("B").Width = 14;
 
             worksheet.Column("C").Width = 30;
@@ -867,9 +869,6 @@ namespace WebApp.Controllers
 
             worksheet.Cell(currentRow, 5).Value = "Total (S/)";
             worksheet.Cell(currentRow, 6).SetValue<decimal>(reporte.MontoTotal);
-
-            //worksheet.Cell(currentRow, 3).Value = "Total (S/)"; EN POSGRADO
-            //worksheet.Cell(currentRow, 4).SetValue<decimal>(reporte.MontoTotal); EN POSGRADO
 
             worksheet.Range(worksheet.Cell(inicial, 5), worksheet.Cell(currentRow, 6)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
 

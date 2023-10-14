@@ -12,9 +12,9 @@ namespace WebApp.Models.Facades
 {
     public class ReporteServiceFacade : IReporteServiceFacade
     {
-        IReporteUnfvService reporteService;
-        IEntidadRecaudadora entidadRecaudadoraService;
-        ICuentaDeposito cuentaDeposito;
+        private IReporteUnfvService reporteService;
+        private IEntidadRecaudadora entidadRecaudadoraService;
+        private ICuentaDeposito cuentaDeposito;
 
         public ReporteServiceFacade()
         {
@@ -22,9 +22,11 @@ namespace WebApp.Models.Facades
             cuentaDeposito = new CuentaDeposito();
         }
 
-        public ReportePagosUnfvGeneralViewModel ReporteGeneral(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito, TipoEstudio tipoEstudio)
+        public ReportePagosUnfvGeneralViewModel ReporteGeneral(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito, TipoEstudio tipoEstudio, out string tipoReporte)
         {
-            GetReporteService(tipoEstudio);
+            string nombreColumnaDependencia;
+
+            GetReporteService(tipoEstudio, out tipoReporte, out nombreColumnaDependencia);
 
             var pagos = reporteService.ReporteGeneral(fechaInicio, fechaFin, idEntidanFinanc, ctaDeposito);
 
@@ -36,17 +38,20 @@ namespace WebApp.Models.Facades
             {
                 FechaInicio = fechaInicio.ToString(FormatosDateTime.BASIC_DATE),
                 FechaFin = fechaFin.ToString(FormatosDateTime.BASIC_DATE),
-                Titulo = "Reporte de Pagos de ***",
+                Titulo = "Reporte de Pagos de " + tipoReporte,
                 nombreEntidadFinanc = nombreEntidadFinanc,
-                numeroCuenta = numeroCuenta
+                numeroCuenta = numeroCuenta,
+                nombreColumnaDependencia = nombreColumnaDependencia
             };
 
             return reporte;
         }
 
-        public ReportePagosUnfvPorConceptoViewModel ReportePorConceptos(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito, TipoEstudio tipoEstudio)
+        public ReportePagosUnfvPorConceptoViewModel ReportePorConceptos(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito, TipoEstudio tipoEstudio, out string tipoReporte)
         {
-            GetReporteService(tipoEstudio);
+            string nombreColumnaDependencia;
+
+            GetReporteService(tipoEstudio, out tipoReporte, out nombreColumnaDependencia);
 
             var pagos = reporteService.ReportePorConceptos(fechaInicio, fechaFin, idEntidanFinanc, ctaDeposito);
 
@@ -66,9 +71,11 @@ namespace WebApp.Models.Facades
             return reporte;
         }
 
-        public ReportePorDependenciaYConceptoViewModel ReportePorDependenciaYConcepto(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito, TipoEstudio tipoEstudio)
+        public ReportePorDependenciaYConceptoViewModel ReportePorDependenciaYConcepto(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito, TipoEstudio tipoEstudio, out string tipoReporte)
         {
-            GetReporteService(tipoEstudio);
+            string nombreColumnaDependencia;
+
+            GetReporteService(tipoEstudio, out tipoReporte, out nombreColumnaDependencia);
 
             var pagos = reporteService.ReportePorDependenciaYConcepto(fechaInicio, fechaFin, idEntidanFinanc, ctaDeposito);
 
@@ -80,17 +87,20 @@ namespace WebApp.Models.Facades
             {
                 FechaInicio = fechaInicio.ToString(FormatosDateTime.BASIC_DATE),
                 FechaFin = fechaFin.ToString(FormatosDateTime.BASIC_DATE),
-                Titulo = "Reporte de Pagos por ***",//Grado o Facultad
+                Titulo = "Reporte de Pagos por " + nombreColumnaDependencia,
                 nombreEntidadFinanc = nombreEntidadFinanc,
-                numeroCuenta = numeroCuenta
+                numeroCuenta = numeroCuenta,
+                nombreColumnaDependencia = nombreColumnaDependencia
             };
 
             return reporte;
         }
 
-        public ReporteConceptosPorDependenciaViewModel ReporteConceptosPorDependencia(string codDep, DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito, TipoEstudio tipoEstudio)
+        public ReporteConceptosPorDependenciaViewModel ReporteConceptosPorDependencia(string codDep, DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito, TipoEstudio tipoEstudio, out string tipoReporte)
         {
-            GetReporteService(tipoEstudio);
+            string nombreColumnaDependencia;
+
+            GetReporteService(tipoEstudio, out tipoReporte, out nombreColumnaDependencia);
 
             var pagos = reporteService.ReporteConceptosPorDependencia(codDep, fechaInicio, fechaFin, idEntidanFinanc, ctaDeposito);
 
@@ -103,9 +113,10 @@ namespace WebApp.Models.Facades
                 Dependencia = pagos.Count() > 0 ? pagos.FirstOrDefault().T_DependenciaDesc : "",
                 FechaInicio = fechaInicio.ToString(FormatosDateTime.BASIC_DATE),
                 FechaFin = fechaFin.ToString(FormatosDateTime.BASIC_DATE),
-                Titulo = "Reporte de Pago de Conceptos por ***",//Grado o Facultad
+                Titulo = "Reporte de Pago de Conceptos por " + nombreColumnaDependencia,
                 nombreEntidadFinanc = nombreEntidadFinanc,
-                numeroCuenta = numeroCuenta
+                numeroCuenta = numeroCuenta,
+                nombreColumnaDependencia = nombreColumnaDependencia
             };
 
             return reporte;
@@ -174,6 +185,39 @@ namespace WebApp.Models.Facades
                     default:
                         throw new NotImplementedException();
                 }
+            }
+        }
+
+        private void GetReporteService(TipoEstudio tipoEstudio, out string tipoReporte, out string nombreColumnaDependencia)
+        {
+            switch (tipoEstudio)
+            {
+                case TipoEstudio.Pregrado:
+                    reporteService = new ReportePregradoService();
+                    tipoReporte = "Pregrado";
+                    nombreColumnaDependencia = "Facultad";
+                    break;
+
+                case TipoEstudio.Posgrado:
+                    reporteService = new ReportePosgradoService();
+                    tipoReporte = "Posgrado";
+                    nombreColumnaDependencia = "Grado";
+                    break;
+
+                case TipoEstudio.Segunda_Especialidad:
+                    reporteService = new ReporteSegundaEspecialidadService();
+                    tipoReporte = "Segunda Especialidad";
+                    nombreColumnaDependencia = "Facultad";
+                    break;
+
+                case TipoEstudio.Residentado:
+                    reporteService = new ReporteResidentadoService();
+                    tipoReporte = "Residentado Médico";
+                    nombreColumnaDependencia = "Dependencia";
+                    break;
+
+                default:
+                    throw new NotImplementedException();
             }
         }
     }

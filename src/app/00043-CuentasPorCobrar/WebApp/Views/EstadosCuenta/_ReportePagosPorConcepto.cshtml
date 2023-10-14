@@ -11,6 +11,11 @@
             <p>Entidad Financiera: <b>@Model.nombreEntidadFinanc</b></p>
 
         }
+        @if (!String.IsNullOrEmpty(Model.numeroCuenta))
+        {
+            <p>Número Cuenta: <b>@Model.numeroCuenta</b></p>
+
+        }
     </div>
     <div class="col-lg-6">
         <p class="h5 text-right"><small>Fecha consulta: <b>@Model.FechaActual</b></small></p>

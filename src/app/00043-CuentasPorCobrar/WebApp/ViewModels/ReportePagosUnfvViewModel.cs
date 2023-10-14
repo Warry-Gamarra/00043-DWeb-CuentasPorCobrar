@@ -48,7 +48,6 @@ namespace WebApp.ViewModels
             FechaActual = DateTime.Now.ToString(FormatosDateTime.BASIC_DATE);
             HoraActual = DateTime.Now.ToString(FormatosDateTime.BASIC_TIME);
             this.listaPagos = listaPagos;
-            nombreColumnaDependencia = "Facultad o Grado";
         }
     }
 
@@ -136,7 +135,6 @@ namespace WebApp.ViewModels
             FechaActual = DateTime.Now.ToString(FormatosDateTime.BASIC_DATE);
             HoraActual = DateTime.Now.ToString(FormatosDateTime.BASIC_TIME);
             this.listaPagos = listaPagos;
-            nombreColumnaDependencia = "Facultad o Grado";
         }
     }
 
@@ -182,7 +180,6 @@ namespace WebApp.ViewModels
             FechaActual = DateTime.Now.ToString(FormatosDateTime.BASIC_DATE);
             HoraActual = DateTime.Now.ToString(FormatosDateTime.BASIC_TIME);
             this.listaPagos = listaPagos;
-            nombreColumnaDependencia = "Facultad o Grado";
         }
     }
 }
