@@ -10,7 +10,7 @@ namespace Domain.Services.Implementations
 {
     public class ReportePosgradoService : IReporteUnfvService
     {
-        private const int POSGRADO = 1;
+        private const int POSGRADO = 2;
 
         public IEnumerable<PagoGeneralDTO> ReporteGeneral(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito)
         {
