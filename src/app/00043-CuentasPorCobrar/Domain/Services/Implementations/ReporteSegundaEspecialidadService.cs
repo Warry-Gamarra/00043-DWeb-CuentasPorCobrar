@@ -10,6 +10,8 @@ namespace Domain.Services.Implementations
 {
     public class ReporteSegundaEspecialidadService : IReporteUnfvService
     {
+        private const int RESIDENTADO = 3;
+
         public IEnumerable<PagoGeneralDTO> ReporteGeneral(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito)
         {
             if (DateTime.Compare(fechaInicio, fechaFin) > 0)
@@ -17,36 +19,55 @@ namespace Domain.Services.Implementations
                 throw new Exception("La Fecha de Fin debe ser mayor a la Fecha de Inicio.");
             }
 
-            var pagos = USP_S_ReportePagoObligacionesPregrado.ReporteGeneral(fechaInicio, fechaFin, idEntidanFinanc, ctaDeposito);
+            var pagos = USP_S_ReportePagoObligacionesPregrado.ReporteGeneral(fechaInicio, fechaFin, idEntidanFinanc, ctaDeposito, RESIDENTADO);
 
             var result = pagos.Select(p => Mapper.USP_S_ReportePagoObligacionesPregrado_To_PagoGeneralDTO(p));
 
             return result;
         }
 
-        public IEnumerable<ConceptoPorDependenciaDTO> ReporteConceptosPorDependencia(string codDependencia, DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito)
-        {
-            throw new NotImplementedException();
-        }
-
         public IEnumerable<PagoPorConceptoDTO> ReportePorConceptos(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito)
         {
-            throw new NotImplementedException();
+            if (DateTime.Compare(fechaInicio, fechaFin) > 0)
+            {
+                throw new Exception("La Fecha de Fin debe ser mayor a la Fecha de Inicio.");
+            }
+
+            var pagos = USP_S_ReportePagoObligacionesPregrado.ReportePorConceptos(fechaInicio, fechaFin, idEntidanFinanc, ctaDeposito, RESIDENTADO);
+
+            var result = pagos.Select(p => Mapper.USP_S_ReportePagoObligacionesPregrado_To_PagoPorConceptoDTO(p));
+
+            return result;
         }
 
-        public IEnumerable<ConceptoPorDependenciaDTO> ReportePorDependenciaYConcepto(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito)
+        public IEnumerable<ConceptoPorDependenciaDTO> ReportePorDependenciaYConcepto(
+            DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito)
         {
-            throw new NotImplementedException();
+            if (DateTime.Compare(fechaInicio, fechaFin) > 0)
+            {
+                throw new Exception("La Fecha de Fin debe ser mayor a la Fecha de Inicio.");
+            }
+
+            var pagos = USP_S_ReportePagoObligacionesPregrado.ReportePorFacultadYConcepto(fechaInicio, fechaFin, idEntidanFinanc, ctaDeposito, RESIDENTADO);
+
+            var result = pagos.Select(p => Mapper.USP_S_ReportePagoObligacionesPregrado_To_ConceptoPorDependenciaDTO(p));
+
+            return result;
         }
 
-        public IEnumerable<ResumenAnualPagoDeObligaciones_X_ClasificadorDTO> ResumenAnualPagoOblig_X_Clasificadores(int anio, int? entidadFinanID, int? ctaDepositoID)
+        public IEnumerable<ConceptoPorDependenciaDTO> ReporteConceptosPorDependencia(
+            string codFac, DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito)
         {
-            throw new NotImplementedException();
-        }
+            if (DateTime.Compare(fechaInicio, fechaFin) > 0)
+            {
+                throw new Exception("La Fecha de Fin debe ser mayor a la Fecha de Inicio.");
+            }
 
-        public IEnumerable<ResumenAnualPagoDeObligaciones_X_DependenciaDTO> ResumenAnualPagoOblig_X_Dependencia(int anio, int? entidadFinanID, int? ctaDepositoID)
-        {
-            throw new NotImplementedException();
+            var pagos = USP_S_ReportePagoObligacionesPregrado.ReporteConceptosPorFacultad(codFac, fechaInicio, fechaFin, idEntidanFinanc, ctaDeposito, RESIDENTADO);
+
+            var result = pagos.Select(p => Mapper.USP_S_ReportePagoObligacionesPregrado_To_ConceptoPorDependenciaDTO(p));
+
+            return result;
         }
 
         public IEnumerable<EstadoObligacionDTO> EstadoObligacionAlumnos(int anio, int? periodo, string codFac, string codEsc, string codRc, bool? esIngresante, bool? estaPagado, bool? obligacionGenerada, DateTime? fechaInicio, DateTime? fechaFin, string codAlu, string nomAlu, string apePaternoAlumno, string apeMaternoAlumno, int? dependenciaID)
@@ -58,7 +79,7 @@ namespace Domain.Services.Implementations
                 C_CodFac = codFac,
                 C_CodEsc = codEsc,
                 C_RcCod = codRc,
-                I_TipoEstudio = 3,
+                I_TipoEstudio = RESIDENTADO,
                 B_Ingresante = esIngresante,
                 B_Pagado = estaPagado,
                 B_ObligacionGenerada = obligacionGenerada,

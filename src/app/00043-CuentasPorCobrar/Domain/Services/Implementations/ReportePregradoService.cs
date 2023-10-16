@@ -11,6 +11,8 @@ namespace Domain.Services.Implementations
 {
     public class ReportePregradoService : IReporteUnfvService
     {
+        private const int PREGRADO = 1;
+
         public IEnumerable<PagoGeneralDTO> ReporteGeneral(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito)
         {
             if (DateTime.Compare(fechaInicio, fechaFin) > 0)
@@ -18,7 +20,7 @@ namespace Domain.Services.Implementations
                 throw new Exception("La Fecha de Fin debe ser mayor a la Fecha de Inicio.");
             }
 
-            var pagos = USP_S_ReportePagoObligacionesPregrado.ReporteGeneral(fechaInicio, fechaFin, idEntidanFinanc, ctaDeposito);
+            var pagos = USP_S_ReportePagoObligacionesPregrado.ReporteGeneral(fechaInicio, fechaFin, idEntidanFinanc, ctaDeposito, PREGRADO);
 
             var result = pagos.Select(p => Mapper.USP_S_ReportePagoObligacionesPregrado_To_PagoGeneralDTO(p));
 
@@ -32,7 +34,7 @@ namespace Domain.Services.Implementations
                 throw new Exception("La Fecha de Fin debe ser mayor a la Fecha de Inicio.");
             }
 
-            var pagos = USP_S_ReportePagoObligacionesPregrado.ReportePorConceptos(fechaInicio, fechaFin, idEntidanFinanc, ctaDeposito);
+            var pagos = USP_S_ReportePagoObligacionesPregrado.ReportePorConceptos(fechaInicio, fechaFin, idEntidanFinanc, ctaDeposito, PREGRADO);
 
             var result = pagos.Select(p => Mapper.USP_S_ReportePagoObligacionesPregrado_To_PagoPorConceptoDTO(p));
 
@@ -47,7 +49,7 @@ namespace Domain.Services.Implementations
                 throw new Exception("La Fecha de Fin debe ser mayor a la Fecha de Inicio.");
             }
 
-            var pagos = USP_S_ReportePagoObligacionesPregrado.ReportePorFacultadYConcepto(fechaInicio, fechaFin, idEntidanFinanc, ctaDeposito);
+            var pagos = USP_S_ReportePagoObligacionesPregrado.ReportePorFacultadYConcepto(fechaInicio, fechaFin, idEntidanFinanc, ctaDeposito, PREGRADO);
 
             var result = pagos.Select(p => Mapper.USP_S_ReportePagoObligacionesPregrado_To_ConceptoPorDependenciaDTO(p));
 
@@ -62,29 +64,9 @@ namespace Domain.Services.Implementations
                 throw new Exception("La Fecha de Fin debe ser mayor a la Fecha de Inicio.");
             }
 
-            var pagos = USP_S_ReportePagoObligacionesPregrado.ReporteConceptosPorFacultad(codFac, fechaInicio, fechaFin, idEntidanFinanc, ctaDeposito);
+            var pagos = USP_S_ReportePagoObligacionesPregrado.ReporteConceptosPorFacultad(codFac, fechaInicio, fechaFin, idEntidanFinanc, ctaDeposito, PREGRADO);
 
             var result = pagos.Select(p => Mapper.USP_S_ReportePagoObligacionesPregrado_To_ConceptoPorDependenciaDTO(p));
-
-            return result;
-        }
-
-        public IEnumerable<ResumenAnualPagoDeObligaciones_X_ClasificadorDTO> ResumenAnualPagoOblig_X_Clasificadores(int anio, int? entidadFinanID, int? ctaDepositoID)
-        {
-            var lista = USP_S_ResumenAnualPagoDeObligaciones_X_Clasificadores.Execute(anio, true, entidadFinanID, ctaDepositoID);
-
-            var result = lista.Select(
-                x => Mapper.USP_S_ResumenAnualPagoDeObligaciones_X_Clasificadores_To_ResumenAnualPagoDeObligaciones_X_ClasificadorDTO(x));
-
-            return result;
-        }
-
-        public IEnumerable<ResumenAnualPagoDeObligaciones_X_DependenciaDTO> ResumenAnualPagoOblig_X_Dependencia(int anio, int? entidadFinanID, int? ctaDepositoID)
-        {
-            var lista = USP_S_ResumenAnualPagoDeObligaciones_X_Dependencia.Execute(anio, true, entidadFinanID, ctaDepositoID);
-
-            var result = lista.Select(
-                x => Mapper.USP_S_ResumenAnualPagoDeObligaciones_X_Dependencia_To_ResumenAnualPagoDeObligaciones_X_DependenciaDTO(x));
 
             return result;
         }
@@ -100,7 +82,7 @@ namespace Domain.Services.Implementations
                 C_CodFac = codFac,
                 C_CodEsc = codEsc,
                 C_RcCod = codRc,
-                I_TipoEstudio = 1,
+                I_TipoEstudio = PREGRADO,
                 B_Ingresante = esIngresante,
                 B_Pagado = estaPagado,
                 B_ObligacionGenerada = obligacionGenerada,

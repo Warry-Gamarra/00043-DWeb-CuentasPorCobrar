@@ -527,52 +527,6 @@ namespace Domain.Entities
             return result;
         }
 
-        public static ResumenAnualPagoDeObligaciones_X_ClasificadorDTO USP_S_ResumenAnualPagoDeObligaciones_X_Clasificadores_To_ResumenAnualPagoDeObligaciones_X_ClasificadorDTO(USP_S_ResumenAnualPagoDeObligaciones_X_Clasificadores sp)
-        {
-            var result = new ResumenAnualPagoDeObligaciones_X_ClasificadorDTO()
-            {
-                C_CodClasificador = sp.C_CodClasificador,
-                T_ClasificadorDesc = sp.T_ClasificadorDesc,
-                Enero = sp.Enero,
-                Febrero = sp.Febrero,
-                Marzo = sp.Marzo,
-                Abril = sp.Abril,
-                Mayo = sp.Mayo,
-                Junio = sp.Junio,
-                Julio = sp.Julio,
-                Agosto = sp.Agosto,
-                Setiembre = sp.Setiembre,
-                Octubre = sp.Octubre,
-                Noviembre = sp.Noviembre,
-                Diciembre = sp.Diciembre
-            };
-
-            return result;
-        }
-
-        public static ResumenAnualPagoDeObligaciones_X_DependenciaDTO USP_S_ResumenAnualPagoDeObligaciones_X_Dependencia_To_ResumenAnualPagoDeObligaciones_X_DependenciaDTO(USP_S_ResumenAnualPagoDeObligaciones_X_Dependencia sp)
-        {
-            var result = new ResumenAnualPagoDeObligaciones_X_DependenciaDTO()
-            {
-                C_CodDependencia = sp.C_CodDependencia,
-                T_Dependencia = sp.T_Dependencia,
-                Enero = sp.Enero,
-                Febrero = sp.Febrero,
-                Marzo = sp.Marzo,
-                Abril = sp.Abril,
-                Mayo = sp.Mayo,
-                Junio = sp.Junio,
-                Julio = sp.Julio,
-                Agosto = sp.Agosto,
-                Setiembre = sp.Setiembre,
-                Octubre = sp.Octubre,
-                Noviembre = sp.Noviembre,
-                Diciembre = sp.Diciembre
-            };
-
-            return result;
-        }
-
         public static EstadoObligacionDTO USP_S_ListadoEstadoObligaciones_To_EstadoObligacionDTO(USP_S_ListadoEstadoObligaciones sp)
         {
             var result = new EstadoObligacionDTO()

@@ -122,32 +122,6 @@ namespace WebApp.Models.Facades
             return reporte;
         }
 
-        public ReporteResumenAnualPagoObligaciones_X_Clasificadores ResumenAnualPagoOblig_X_Clasificadores(int anio, TipoEstudio tipoEstudio, int? entidadFinanID, int? ctaDepositoID)
-        {
-            GetReporteService(tipoEstudio);
-
-            var lista = reporteService.ResumenAnualPagoOblig_X_Clasificadores(anio, entidadFinanID, ctaDepositoID);
-
-            string nombreEntidadFinanc = entidadFinanID.HasValue ? entidadRecaudadoraService.Find(entidadFinanID.Value).Nombre : null;
-
-            var result = new ReporteResumenAnualPagoObligaciones_X_Clasificadores(anio, tipoEstudio, nombreEntidadFinanc, null, lista);
-
-            return result;
-        }
-
-        public ReporteResumenAnualPagoObligaciones_X_Dependencias ResumenAnualPagoOblig_X_Dependencias(int anio, TipoEstudio tipoEstudio, int? entidadFinanID, int? ctaDepositoID)
-        {
-            GetReporteService(tipoEstudio);
-
-            var lista = reporteService.ResumenAnualPagoOblig_X_Dependencia(anio, entidadFinanID, ctaDepositoID);
-
-            string nombreEntidadFinanc = entidadFinanID.HasValue ? entidadRecaudadoraService.Find(entidadFinanID.Value).Nombre : null;
-
-            var result = new ReporteResumenAnualPagoObligaciones_X_Dependencias(anio, tipoEstudio, nombreEntidadFinanc, null, lista);
-
-            return result;
-        }
-
         public IEnumerable<EstadoObligacionViewModel> EstadoObligacionAlumnos(ConsultaObligacionEstudianteViewModel parametro)
         {
             GetReporteService(parametro.tipoEstudio);

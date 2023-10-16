@@ -79,10 +79,8 @@
     <Compile Include="Procedures\USP_IU_RelacionarPagoConObligacion.cs" />
     <Compile Include="Procedures\USP_S_Listar_ObligacionesPendientes.cs" />
     <Compile Include="Procedures\USP_S_ObtenerFechaVencimientoObligacion.cs" />
-    <Compile Include="Procedures\USP_S_ResumenAnualPagoDeObligaciones_X_Clasificadores.cs" />
     <Compile Include="Procedures\USP_S_ReportePagoObligacionesPosgrado.cs" />
     <Compile Include="Procedures\USP_S_ReportePagoObligacionesPregrado.cs" />
-    <Compile Include="Procedures\USP_S_ResumenAnualPagoDeObligaciones_X_Dependencia.cs" />
     <Compile Include="Procedures\USP_S_ResumenAnualPagoDeObligaciones_X_Dia.cs" />
     <Compile Include="Procedures\USP_S_ValidarCodOperacionTasa.cs" />
     <Compile Include="Procedures\USP_S_ValidarCodOperacionObligacion.cs" />

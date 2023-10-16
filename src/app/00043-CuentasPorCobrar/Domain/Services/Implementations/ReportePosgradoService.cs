@@ -10,6 +10,8 @@ namespace Domain.Services.Implementations
 {
     public class ReportePosgradoService : IReporteUnfvService
     {
+        private const int POSGRADO = 1;
+
         public IEnumerable<PagoGeneralDTO> ReporteGeneral(DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito)
         {
             if (DateTime.Compare(fechaInicio, fechaFin) > 0)
@@ -66,26 +68,6 @@ namespace Domain.Services.Implementations
             return result;
         }
 
-        public IEnumerable<ResumenAnualPagoDeObligaciones_X_ClasificadorDTO> ResumenAnualPagoOblig_X_Clasificadores(int anio, int? entidadFinanID, int? ctaDepositoID)
-        {
-            var lista = USP_S_ResumenAnualPagoDeObligaciones_X_Clasificadores.Execute(anio, false, entidadFinanID, ctaDepositoID);
-
-            var result = lista.Select(
-                x => Mapper.USP_S_ResumenAnualPagoDeObligaciones_X_Clasificadores_To_ResumenAnualPagoDeObligaciones_X_ClasificadorDTO(x));
-
-            return result;
-        }
-
-        public IEnumerable<ResumenAnualPagoDeObligaciones_X_DependenciaDTO> ResumenAnualPagoOblig_X_Dependencia(int anio, int? entidadFinanID, int? ctaDepositoID)
-        {
-            var lista = USP_S_ResumenAnualPagoDeObligaciones_X_Dependencia.Execute(anio, false, entidadFinanID, ctaDepositoID);
-
-            var result = lista.Select(
-                x => Mapper.USP_S_ResumenAnualPagoDeObligaciones_X_Dependencia_To_ResumenAnualPagoDeObligaciones_X_DependenciaDTO(x));
-
-            return result;
-        }
-
         public IEnumerable<EstadoObligacionDTO> EstadoObligacionAlumnos(int anio, int? periodo, string codFac, string codEsc, string codRc, 
             bool? esIngresante, bool? estaPagado, bool? obligacionGenerada, DateTime? fechaInicio, DateTime? fechaFin, string codAlu,
             string nomAlu, string apePaternoAlumno, string apeMaternoAlumno, int? dependenciaID)
@@ -97,7 +79,7 @@ namespace Domain.Services.Implementations
                 C_CodFac = codFac,
                 C_CodEsc = codEsc,
                 C_RcCod = codRc,
-                I_TipoEstudio = 2,
+                I_TipoEstudio = POSGRADO,
                 B_Ingresante = esIngresante,
                 B_Pagado = estaPagado,
                 B_ObligacionGenerada = obligacionGenerada,

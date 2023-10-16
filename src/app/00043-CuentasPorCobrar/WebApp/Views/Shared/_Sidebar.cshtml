@@ -22,9 +22,7 @@
                     }
 
                     <li><a href="@Url.Action("ReportesPagoObligaciones", "EstadosCuenta")"><i class="fa fa-fw fa-tasks"></i>&nbsp; Reporte Pago de Obligaciones</a></li>
-                    @*<li><a href="@Url.Action("ResumenAnualObligacionesPorClasificadores", "EstadosCuenta")"><i class="fa fa-fw fa-tasks"></i>&nbsp; Resumen Clasificadores (Obligaciones)</a></li>
-                    <li><a href="@Url.Action("ResumenAnualObligacionesPorDependencias", "EstadosCuenta")"><i class="fa fa-fw fa-tasks"></i>&nbsp; Resumen Dependencias (Obligaciones)</a></li>*@
-
+                    
                     @if (User.IsInRole(RoleNames.ADMINISTRADOR) || User.IsInRole(RoleNames.CONSULTA) || User.IsInRole(RoleNames.TESORERIA))
                     {
                         <li><a href="@Url.Action("ResumenAnualObligacionesPorDia", "EstadosCuenta")"><i class="fa fa-bank"></i>&nbsp; Resumen Ingresos de Obligaciones</a></li>

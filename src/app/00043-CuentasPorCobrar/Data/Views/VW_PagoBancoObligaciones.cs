@@ -127,7 +127,7 @@ namespace Data.Views
         }
 
         public static IEnumerable<VW_PagoBancoObligaciones> GetAll(int? idEntidadFinanciera, int? ctdDeposito, string codOperacion, string codDepositante, DateTime? fechaInicio, DateTime? fechaFinal,
-            int? condicion, string nomAlumno, string apellidoPaterno, string apellidoMaterno, string codigoInterno, bool? esPregrado)
+            int? condicion, string nomAlumno, string apellidoPaterno, string apellidoMaterno, string codigoInterno, int? tipoEstudio)
         {
             string s_command, filters;
             IEnumerable<VW_PagoBancoObligaciones> result;
@@ -178,7 +178,7 @@ namespace Data.Views
 
                 if (fechaFinal.HasValue)
                 {
-                    filters = filters + (filters.Length == 0 ? "WHERE " : "AND ") + "DATEDIFF(DAY, b.D_FecPago, @D_FechaFin) >= 0";
+                    filters = filters + (filters.Length == 0 ? "WHERE " : "AND ") + "DATEDIFF(DAY, b.D_FecPago, @D_FechaFin) >= 0 ";
 
                     parameters.Add(name: "D_FechaFin", dbType: DbType.DateTime, value: fechaFinal.Value);
                 }
@@ -218,9 +218,9 @@ namespace Data.Views
                     parameters.Add(name: "C_CodigoInterno", dbType: DbType.String, value: codigoInterno);
                 }
 
-                if (esPregrado.HasValue)
+                if (tipoEstudio.HasValue)
                 {
-                    filters = filters + (filters.Length == 0 ? "WHERE " : "AND ") + "b.N_Grado " + (esPregrado.Value ? "= '1' " : "IN ('2', '3') ");
+                    filters = filters + (filters.Length == 0 ? "WHERE " : "AND ") + "b.N_Grado " + (tipoEstudio.Value == 1 ? "= '1' " : (tipoEstudio.Value == 2 ? "IN ('2', '3') " : (tipoEstudio.Value == 3 ? "= '4' " : "= '5' ")));
                 }
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))

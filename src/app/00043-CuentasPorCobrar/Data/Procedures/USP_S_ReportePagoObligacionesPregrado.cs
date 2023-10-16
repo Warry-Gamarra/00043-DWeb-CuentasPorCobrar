@@ -28,7 +28,7 @@ namespace Data.Procedures
         
 
         public static IEnumerable<USP_S_ReportePagoObligacionesPregrado> ReporteGeneral(
-            DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito)
+            DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito, int tipoEstudio)
         {
             IEnumerable<USP_S_ReportePagoObligacionesPregrado> result;
             DynamicParameters parameters;
@@ -39,6 +39,7 @@ namespace Data.Procedures
 
                 parameters = new DynamicParameters();
                 parameters.Add(name: "I_TipoReporte", dbType: DbType.Int32, value: General);
+                parameters.Add(name: "I_TipoEstudio", dbType: DbType.Int32, value: tipoEstudio);
                 parameters.Add(name: "D_FechaIni", dbType: DbType.Date, value: fechaInicio);
                 parameters.Add(name: "D_FechaFin", dbType: DbType.Date, value: fechaFin);
                 parameters.Add(name: "I_EntidadFinanID", dbType: DbType.Int32, value: idEntidanFinanc);
@@ -58,7 +59,7 @@ namespace Data.Procedures
         }
 
         public static IEnumerable<USP_S_ReportePagoObligacionesPregrado> ReportePorConceptos(
-            DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito)
+            DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito, int tipoEstudio)
         {
             IEnumerable<USP_S_ReportePagoObligacionesPregrado> result;
             DynamicParameters parameters;
@@ -69,6 +70,7 @@ namespace Data.Procedures
 
                 parameters = new DynamicParameters();
                 parameters.Add(name: "I_TipoReporte", dbType: DbType.Int32, value: PorConcepto);
+                parameters.Add(name: "I_TipoEstudio", dbType: DbType.Int32, value: tipoEstudio);
                 parameters.Add(name: "D_FechaIni", dbType: DbType.Date, value: fechaInicio);
                 parameters.Add(name: "D_FechaFin", dbType: DbType.Date, value: fechaFin);
                 parameters.Add(name: "I_EntidadFinanID", dbType: DbType.Int32, value: idEntidanFinanc);
@@ -88,7 +90,7 @@ namespace Data.Procedures
         }
 
         public static IEnumerable<USP_S_ReportePagoObligacionesPregrado> ReportePorFacultadYConcepto(
-            DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito)
+            DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito, int tipoEstudio)
         {
             IEnumerable<USP_S_ReportePagoObligacionesPregrado> result;
             DynamicParameters parameters;
@@ -99,6 +101,7 @@ namespace Data.Procedures
 
                 parameters = new DynamicParameters();
                 parameters.Add(name: "I_TipoReporte", dbType: DbType.Int32, value: PorFacultadYConcepto);
+                parameters.Add(name: "I_TipoEstudio", dbType: DbType.Int32, value: tipoEstudio);
                 parameters.Add(name: "D_FechaIni", dbType: DbType.Date, value: fechaInicio);
                 parameters.Add(name: "D_FechaFin", dbType: DbType.Date, value: fechaFin);
                 parameters.Add(name: "I_EntidadFinanID", dbType: DbType.Int32, value: idEntidanFinanc);
@@ -118,7 +121,7 @@ namespace Data.Procedures
         }
 
         public static IEnumerable<USP_S_ReportePagoObligacionesPregrado> ReporteConceptosPorFacultad(
-            string codFac, DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito)
+            string codFac, DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito, int tipoEstudio)
         {
             IEnumerable<USP_S_ReportePagoObligacionesPregrado> result;
             DynamicParameters parameters;
@@ -129,6 +132,7 @@ namespace Data.Procedures
 
                 parameters = new DynamicParameters();
                 parameters.Add(name: "I_TipoReporte", dbType: DbType.Int32, value: ConceptoPorFacultad);
+                parameters.Add(name: "I_TipoEstudio", dbType: DbType.Int32, value: tipoEstudio);
                 parameters.Add(name: "C_CodFac", dbType: DbType.String, value: codFac);
                 parameters.Add(name: "D_FechaIni", dbType: DbType.Date, value: fechaInicio);
                 parameters.Add(name: "D_FechaFin", dbType: DbType.Date, value: fechaFin);

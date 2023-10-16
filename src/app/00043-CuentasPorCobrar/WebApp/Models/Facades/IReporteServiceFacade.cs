@@ -17,10 +17,6 @@ namespace WebApp.Models.Facades
 
         ReporteConceptosPorDependenciaViewModel ReporteConceptosPorDependencia(string codDep, DateTime fechaInicio, DateTime fechaFin, int? idEntidanFinanc, int? ctaDeposito, TipoEstudio tipoEstudio, out string tituloVista);
 
-        ReporteResumenAnualPagoObligaciones_X_Clasificadores ResumenAnualPagoOblig_X_Clasificadores(int anio, TipoEstudio tipoEstudio, int? entidadFinanID, int? ctaDepositoID);
-
-        ReporteResumenAnualPagoObligaciones_X_Dependencias ResumenAnualPagoOblig_X_Dependencias(int anio, TipoEstudio tipoEstudio, int? entidadFinanID, int? ctaDepositoID);
-
         IEnumerable<EstadoObligacionViewModel> EstadoObligacionAlumnos(ConsultaObligacionEstudianteViewModel parametro);
     }
 }

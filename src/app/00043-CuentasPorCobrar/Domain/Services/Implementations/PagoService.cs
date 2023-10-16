@@ -197,15 +197,15 @@ namespace Domain.Services.Implementations
         public IEnumerable<PagoBancoObligacionDTO> ListarPagosBanco(int? idEntidadFinanciera, int? ctdDeposito, string codOperacion, string codDepositante, DateTime? fechaInicio, DateTime? fechaFinal,
             int? condicion, string nomAlumno, string apellidoPaterno, string apellidoMaterno, string codigoInterno, TipoEstudio? tipoEstudio)
         {
-            bool? esPregrado = null;
+            int? iTipoEstudio = null;
 
             if (tipoEstudio.HasValue)
             {
-                esPregrado = tipoEstudio.Value.Equals(TipoEstudio.Pregrado);
+                iTipoEstudio = tipoEstudio.Value.Equals(TipoEstudio.Pregrado) ? 1 : (tipoEstudio.Value.Equals(TipoEstudio.Posgrado) ? 2 : (tipoEstudio.Value.Equals(TipoEstudio.Segunda_Especialidad) ? 3 : 4));
             }
 
             var lista = VW_PagoBancoObligaciones.GetAll(idEntidadFinanciera, ctdDeposito, codOperacion, codDepositante, fechaInicio, fechaFinal, condicion,
-                nomAlumno, apellidoPaterno, apellidoMaterno, codigoInterno, esPregrado);
+                nomAlumno, apellidoPaterno, apellidoMaterno, codigoInterno, iTipoEstudio);
 
             var result = lista.Select(x => Mapper.VW_PagoBancoObligaciones_To_PagoObligacionDTO(x));
 

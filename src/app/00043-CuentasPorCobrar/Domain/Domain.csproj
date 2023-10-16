@@ -89,8 +89,6 @@
     <Compile Include="Entities\PagoTasaDTO.cs" />
     <Compile Include="Entities\PagoTasaObsEntity.cs" />
     <Compile Include="Entities\PagoTasaEntity.cs" />
-    <Compile Include="Entities\ResumenAnualPagoDeObligaciones_X_ClasificadorDTO.cs" />
-    <Compile Include="Entities\ResumenAnualPagoDeObligaciones_X_DependenciaDTO.cs" />
     <Compile Include="Entities\ResumenAnualPagoDeObligaciones_X_DiaDTO.cs" />
     <Compile Include="Entities\MatriculaDTO.cs" />
     <Compile Include="Entities\MatriculaEntity.cs" />
