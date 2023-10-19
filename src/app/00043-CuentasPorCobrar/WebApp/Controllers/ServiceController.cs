@@ -92,23 +92,6 @@ namespace WebApp.Controllers
             return model;
         }
 
-        // GET: api/service/GetCtasDepositoPorPeriodo?anio=2021&periodo=15
-        //public IEnumerable<SelectViewModel> GetCtasDepositoPorPeriodo(int anio, int? periodo, TipoEstudio tipoEstudio)
-        //{
-        //    var ctasDeposito = _obligacionServiceFacade.Obtener_CtaDeposito_X_Periodo(anio, periodo, tipoEstudio);
-
-        //    var entidades = ctasDeposito.GroupBy(x => x.I_EntidadFinanID);
-
-        //    var result = entidades.Select(
-        //        x => new SelectViewModel()
-        //        {
-        //            Value = x.Key.ToString(),
-        //            TextDisplay = x.First().T_EntidadDesc
-        //        });
-
-        //    return result;
-        //}
-
         // GET: api/service/GetColumnasPorTabla?nombreTabla=TR_PagoBanco
         public IEnumerable<SelectViewModel> GetColumnasPorTabla(string nombreTabla)
         {

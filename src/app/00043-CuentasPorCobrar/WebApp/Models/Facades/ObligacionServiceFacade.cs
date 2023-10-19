@@ -285,28 +285,45 @@ namespace WebApp.Models.Facades
             return result;
         }
 
-        public IEnumerable<CtaDepoProcesoModel> Obtener_CtaDeposito_X_Periodo(int anio, int? periodo, TipoEstudio tipoEstudio)
-        {//AQUÍ AGREGAR SEGUNDA ESPECIALIDAD Y RESIDENTADO
+        public IEnumerable<CtaDepoProcesoModel> Obtener_CtaDeposito_X_Periodo(int anio, int? periodo, TipoEstudio? tipoEstudio)
+        {
             IEnumerable<CtaDepoProcesoModel> result;
 
             IEnumerable<CtaDepoProceso> ctasDeposito;
 
-            switch (tipoEstudio)
+            if (tipoEstudio.HasValue)
             {
-                case TipoEstudio.Pregrado:
-                    ctasDeposito = _obligacionService.Obtener_CtaDeposito_X_Periodo(anio, periodo)
-                        .Where(x => x.C_Nivel == C_NivelPregrado);
-                    break;
+                switch (tipoEstudio.Value)
+                {
+                    case TipoEstudio.Pregrado:
+                        ctasDeposito = _obligacionService.Obtener_CtaDeposito_X_Periodo(anio, periodo)
+                            .Where(x => x.C_Nivel == C_NivelPregrado);
+                        break;
 
-                case TipoEstudio.Posgrado:
-                    ctasDeposito = _obligacionService.Obtener_CtaDeposito_X_Periodo(anio, periodo)
-                        .Where(x => x.C_Nivel == C_NivelMaestria || x.C_Nivel == C_NivelDoctorado);
-                    break;
+                    case TipoEstudio.Posgrado:
+                        ctasDeposito = _obligacionService.Obtener_CtaDeposito_X_Periodo(anio, periodo)
+                            .Where(x => x.C_Nivel == C_NivelMaestria || x.C_Nivel == C_NivelDoctorado);
+                        break;
 
-                default:
-                    throw new NotImplementedException("Ha ocurrido un error al identificar si el alumno es de Pregrado o Posgrado.");
+                    case TipoEstudio.Segunda_Especialidad:
+                        ctasDeposito = _obligacionService.Obtener_CtaDeposito_X_Periodo(anio, periodo)
+                            .Where(x => x.C_Nivel == C_NivelSegundaEspecialidad);
+                        break;
+
+                    case TipoEstudio.Residentado:
+                        ctasDeposito = _obligacionService.Obtener_CtaDeposito_X_Periodo(anio, periodo)
+                            .Where(x => x.C_Nivel == C_NivelResidentado);
+                        break;
+
+                    default:
+                        throw new NotImplementedException("Ha ocurrido un error al identificar si el alumno es de Pregrado o Posgrado.");
+                }
             }
-
+            else
+            {
+                ctasDeposito = _obligacionService.Obtener_CtaDeposito_X_Periodo(anio, periodo);
+            }
+            
             result = ctasDeposito.Select(x => Mapper.CtaDepoProceso_To_CtaDepoProcesoModel(x));
 
             return result;

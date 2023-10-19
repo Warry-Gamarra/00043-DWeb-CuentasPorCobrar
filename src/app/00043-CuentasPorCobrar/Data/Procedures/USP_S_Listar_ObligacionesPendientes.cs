@@ -49,7 +49,7 @@ namespace Data.Procedures
 
         public decimal I_MontoPagadoSinMora { get; set; }
 
-        public static IEnumerable<USP_S_Listar_ObligacionesPendientes> ExecutePregrado(int anio, int? periodo, string codFac)
+        public static IEnumerable<USP_S_Listar_ObligacionesPendientes> ExecutePregrado(int anio, int nivel, int? periodo, string codFac)
         {
             IEnumerable<USP_S_Listar_ObligacionesPendientes> result;
             DynamicParameters parameters;
@@ -63,6 +63,8 @@ namespace Data.Procedures
                 parameters = new DynamicParameters();
 
                 parameters.Add(name: "I_Anio", dbType: DbType.Int32, value: anio);
+                
+                parameters.Add(name: "I_Nivel", dbType: DbType.Int32, value: nivel);
 
                 parameters.Add(name: "I_Periodo", dbType: DbType.Int32, value: periodo);
 

@@ -5,7 +5,7 @@ GO
 ALTER DATABASE [BD_UNFV_Repositorio] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
 
 RESTORE DATABASE [BD_UNFV_Repositorio]
-FROM DISK = N'F:\Microsoft SQL Server\Backup\Bk_BD_UNFV_Repositorio_20231012.bak' WITH FILE = 1, 
+FROM DISK = N'F:\Microsoft SQL Server\Backup\Bk_BD_UNFV_Repositorio_20231017.bak' WITH FILE = 1, 
      MOVE N'BD_UNFV_Repositorio' TO N'F:\Microsoft SQL Server\DATA\BD_UNFV_Repositorio.mdf', 
      MOVE N'BD_UNFV_Repositorio_log' TO N'F:\Microsoft SQL Server\DATA\BD_UNFV_Repositorio_log.ldf',
 	 NOUNLOAD,
@@ -30,7 +30,7 @@ GO
 ALTER DATABASE [BD_OCEF_CtasPorCobrar] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
 
 RESTORE DATABASE [BD_OCEF_CtasPorCobrar]
-FROM DISK = N'F:\Microsoft SQL Server\Backup\Bk_BD_OCEF_CtasPorCobrar_20231012.bak' WITH FILE = 1, 
+FROM DISK = N'F:\Microsoft SQL Server\Backup\Bk_BD_OCEF_CtasPorCobrar_20231017.bak' WITH FILE = 1, 
      MOVE N'BD_OCEF_CtasPorCobrar' TO N'F:\Microsoft SQL Server\DATA\BD_OCEF_CtasPorCobrar.mdf', 
      MOVE N'BD_OCEF_CtasPorCobrar_log' TO N'F:\Microsoft SQL Server\DATA\BD_OCEF_CtasPorCobrar_log.ldf',
 	 NOUNLOAD,
@@ -493,6 +493,54 @@ END
 GO
 
 
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_Listar_ObligacionesPendientes_Pregrado')
+	DROP PROCEDURE [dbo].[USP_S_Listar_ObligacionesPendientes_Pregrado]
+GO
+
+CREATE PROCEDURE [dbo].[USP_S_Listar_ObligacionesPendientes_Pregrado]
+@I_Anio INT,
+@I_Nivel INT,
+@I_Periodo INT = NULL,
+@C_CodFac VARCHAR(2) = NULL
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	SELECT
+	ROW_NUMBER() OVER(PARTITION BY mat.I_Anio, mat.I_Periodo, mat.C_CodRc, mat.C_CodAlu ORDER BY pro.I_Prioridad, cab.D_FecVencto) AS I_NroOrden,
+	mat.I_Anio,
+	mat.I_Periodo,
+	mat.C_CodRc,
+	mat.C_CodAlu,
+	alu.C_CodFac,
+	alu.C_CodEsc,
+	alu.T_Nombre,
+	alu.T_ApePaterno,
+	alu.T_ApeMaterno,
+	pro.I_ProcesoID,
+	per.T_OpcionCod AS C_Periodo,
+	pro.I_Prioridad,
+	pro.N_CodBanco,
+	ISNULL(srv.C_CodServicio, '') AS C_CodServicio,
+	cab.D_FecVencto,
+	cab.I_MontoOblig,
+	ISNULL((SELECT SUM(pagpro.I_MontoPagado) FROM dbo.TRI_PagoProcesadoUnfv pagpro
+		INNER JOIN dbo.TR_ObligacionAluDet det ON det.I_ObligacionAluDetID = pagpro.I_ObligacionAluDetID
+		WHERE det.I_ObligacionAluID = cab.I_ObligacionAluID AND det.B_Habilitado = 1 AND det.B_Eliminado = 0 AND pagpro.B_Anulado = 0 AND det.B_Mora = 0), 0) AS I_MontoPagadoSinMora
+	FROM dbo.TC_MatriculaAlumno mat
+	INNER JOIN BD_UNFV_Repositorio.dbo.VW_Alumnos alu ON alu.C_CodAlu = mat.C_CodAlu AND alu.C_RcCod = mat.C_CodRc 
+	INNER JOIN dbo.TR_ObligacionAluCab cab ON cab.I_MatAluID = mat.I_MatAluID AND cab.B_Habilitado = 1 AND cab.B_Eliminado = 0
+	INNER JOIN dbo.TC_Proceso pro ON pro.I_ProcesoID = cab.I_ProcesoID AND pro.B_Eliminado = 0
+	INNER JOIN dbo.TC_CategoriaPago cat ON cat.I_CatPagoID = pro.I_CatPagoID AND cat.B_Eliminado = 0
+	LEFT JOIN dbo.TC_Servicios srv ON srv.I_ServicioID = cat.I_ServicioID AND srv.B_Eliminado = 0
+	INNER JOIN dbo.TC_CatalogoOpcion per ON per.I_OpcionID = pro.I_Periodo
+	WHERE mat.B_Eliminado = 0 AND mat.B_Habilitado = 1 AND cat.I_Nivel = @I_Nivel AND cab.B_Pagado = 0 AND cab.I_MontoOblig > 0 AND
+		mat.I_Anio = @I_Anio AND 
+		mat.I_Periodo = ISNULL(@I_Periodo, mat.I_Periodo) AND 
+		alu.C_CodFac = ISNULL(@C_CodFac, alu.C_CodFac)
+END
+GO
 
 
 

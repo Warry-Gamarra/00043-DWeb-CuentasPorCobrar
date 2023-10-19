@@ -29,27 +29,33 @@ namespace WebApp.Models
 
             if (tipoEstudio == null)
             {
+                #region Cuotas
                 var cuotas_pregrado = _obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(anio, periodo, TipoEstudio.Pregrado, dependencia);
 
                 var cuotas_posgrado = _obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(anio, periodo, TipoEstudio.Posgrado, dependencia);
 
-                cuotas_pago = cuotas_pregrado.Concat(cuotas_posgrado);
+                var cuotas_segunda_especialidad = _obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(anio, periodo, TipoEstudio.Segunda_Especialidad, dependencia);
+
+                var cuotas_residentado = _obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(anio, periodo, TipoEstudio.Residentado, dependencia);
+
+                cuotas_pago = cuotas_pregrado.Concat(cuotas_posgrado).Concat(cuotas_segunda_especialidad).Concat(cuotas_residentado);
+                #endregion
+
+                cuentas_bcp = _obligacionServiceFacade.Obtener_CtaDeposito_X_Periodo(anio, periodo, null)
+                    .Where(x => x.I_EntidadFinanID == Bancos.BCP_ID);
             }
             else
             {
                 cuotas_pago = _obligacionServiceFacade.Obtener_CuotasPago_X_Proceso(anio, periodo, tipoEstudio.Value, dependencia);
+
+                cuentas_bcp = _obligacionServiceFacade.Obtener_CtaDeposito_X_Periodo(anio, periodo, tipoEstudio.Value)
+                    .Where(x => x.I_EntidadFinanID == Bancos.BCP_ID);
             }
 
             if (cuotas_pago.Count() == 0)
             {
                 throw new Exception("No hay registros.");
             }
-
-            var cuentas_pregrado = _obligacionServiceFacade.Obtener_CtaDeposito_X_Periodo(anio, periodo, TipoEstudio.Pregrado).Where(x => x.I_EntidadFinanID == Bancos.BCP_ID);
-
-            var cuentas_posgrado = _obligacionServiceFacade.Obtener_CtaDeposito_X_Periodo(anio, periodo, TipoEstudio.Posgrado).Where(x => x.I_EntidadFinanID == Bancos.BCP_ID);
-
-            cuentas_bcp = cuentas_pregrado.Concat(cuentas_posgrado);
 
             if (cuentas_bcp.GroupBy(x => x.C_NumeroCuenta).Count() > 1)
             {

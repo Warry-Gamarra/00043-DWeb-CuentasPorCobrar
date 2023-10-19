@@ -92,12 +92,16 @@
             cmbTipoEstudio.html('');
 
             if (idBanco == BANCO.COMERCIO) {
-                html += '<option value="Pregrado" selected="selected">Pregrado</option>'
-                html += '<option value="Posgrado">Posgrado</option>'
+                html += '<option value="Pregrado" selected="selected">Pregrado</option>';
+                html += '<option value="Posgrado">Posgrado</option>';
+                html += '<option value="Segunda_Especialidad">Segunda_Especialidad</option>';
+                html += '<option value="Residentado">Residentado</option>';
             } else if (idBanco == BANCO.BCP) {
-                html += '<option value="" selected="selected">TODOS</option>'
-                html += '<option value="Pregrado">Pregrado</option>'
-                html += '<option value="Posgrado">Posgrado</option>'
+                html += '<option value="" selected="selected">TODOS</option>';
+                html += '<option value="Pregrado">Pregrado</option>';
+                html += '<option value="Posgrado">Posgrado</option>';
+                html += '<option value="Segunda_Especialidad">Segunda_Especialidad</option>';
+                html += '<option value="Residentado">Residentado</option>';
 
                 $('#frmExportarPago #I_Periodo').val('');
             }
