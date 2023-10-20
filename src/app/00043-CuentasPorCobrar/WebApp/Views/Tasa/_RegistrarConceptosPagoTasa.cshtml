@@ -251,6 +251,8 @@
 
                     $('#search-container').hide();
                     $('#concepto-form').show();
+
+                    $('#CtaDepoServicioID').val(null).trigger('change');
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     $('#alert-message p.alert').removeClass('alert-info').addClass('alert-danger').html(jqXHR.responseText)
@@ -270,6 +272,8 @@
 
         $('#btn-remove').on('click', function (event) {
             event.preventDefault();
+
+            $('#div-alert').html('');
 
             $('#concepto-form').hide();
             $('#search-loader').show();
