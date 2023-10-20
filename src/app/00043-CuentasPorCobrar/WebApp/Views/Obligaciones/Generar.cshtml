@@ -306,11 +306,49 @@
         });
 
         $("#frmGenerarOblig").on("click", "#btnGenerarOblig", function (e) {
-            $('#modalEspera .modal-body strong').html('Generando obligaciones . . .');
-            AbrirModalEsperaGeneracionOblig();
-            LimpiarMensajeGenerarOblig();
-            $("#frmGenerarOblig").prop("method", "POST");
-            document.getElementById('frmGenerarOblig').submit()
+            let sinObligaciones = $('#frmGenerarOblig #sinObligaciones').val();
+            let soloAplicarExtmp = $('#frmGenerarOblig #soloAplicarExtmp').val();
+
+            if (sinObligaciones === 'True' && soloAplicarExtmp === 'True') {
+                MostrarMensajeObligacionesPorAlumno('No se puede agregar matrícula extemporánea a alumnos sin obligaciones', MESSAGE_TYPE.ERROR);
+            } else {
+                let anio = $('#frmGenerarOblig #anio').find("option:selected").text();
+                let periodo = $('#frmGenerarOblig #periodo').find("option:selected").text();
+                let tipoEstudio = $('#frmGenerarOblig #tipoEstudio').find("option:selected").text();
+                let dependencia = $('#frmGenerarOblig #dependencia').find("option:selected").text();
+                let tipoAlumno = $('#frmGenerarOblig #esIngresante').find("option:selected").text();
+                let dirigidoAlumnos = $('#frmGenerarOblig #sinObligaciones').find("option:selected").text();
+                let accion = $('#frmGenerarOblig #soloAplicarExtmp').find("option:selected").text();
+
+                let htmlText = '<p class="text-left">Las opciones seleccionadas son:</p>';
+                htmlText += `<dl class="row text-left">`;
+                htmlText += `<dt class="col-sm-4">Acción</dt><dd class="col-sm-8 font-weight-bold">${accion}</dd>`;
+                htmlText += `<dt class="col-sm-4">Nivel</dt><dd class="col-sm-8">${tipoEstudio}</dd>`;
+                htmlText += `<dt class="col-sm-4">Periodo</dt><dd class="col-sm-8">${anio} - ${periodo}</dd>`;
+                htmlText += `<dt class="col-sm-4">Tipo alumno</dt><dd class="col-sm-8">${tipoAlumno}</dd>`;
+                htmlText += `<dt class="col-sm-4">Dependencia</dt><dd class="col-sm-8">${dependencia}</dd>`;
+                htmlText += `<dt class="col-sm-4">Dirigido a</dt><dd class="col-sm-8">Alumnos ${dirigidoAlumnos}</dd>`;
+                htmlText += '</dl>';
+
+                Swal.fire({
+                    title: '',
+                    html: htmlText,
+                    icon: MESSAGE_TYPE.WARNING,
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Si, continuar.',
+                    cancelButtonText: 'No, cancelar.'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $('#modalEspera .modal-body strong').html('Generando obligaciones . . .');
+                        AbrirModalEsperaGeneracionOblig();
+                        LimpiarMensajeGenerarOblig();
+                        $("#frmGenerarOblig").prop("method", "POST");
+                        document.getElementById('frmGenerarOblig').submit()
+                    }
+                });
+            }
         });
 
         $("#frmGenerarOblig").on("click", "#btnConsultaOblig", function (e) {

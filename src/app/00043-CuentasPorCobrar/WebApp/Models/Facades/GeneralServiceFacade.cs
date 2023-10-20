@@ -144,9 +144,9 @@ namespace WebApp.Models.Facades
         {
             var lista = new List<SelectViewModel>();
 
-            lista.Add(new SelectViewModel() { Value = true.ToString(), TextDisplay = "Sin obligaciones" });
+            lista.Add(new SelectViewModel() { Value = true.ToString(), TextDisplay = "sin obligaciones" });
 
-            lista.Add(new SelectViewModel() { Value = false.ToString(), TextDisplay = "En general" });
+            lista.Add(new SelectViewModel() { Value = false.ToString(), TextDisplay = "en general" });
 
             return lista;
 
