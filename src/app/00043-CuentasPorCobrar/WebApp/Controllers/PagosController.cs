@@ -605,7 +605,7 @@ namespace WebApp.Controllers
 
         [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
         [HttpPost]
-        public ActionResult ExportarRecaudacionTemporalPost(int cboEntFinan, TipoEstudio? cboTipoEst, TipoPago cboTipoPago, string fechaDesde, string fechaHasta)
+        public ActionResult ExportarRecaudacionTemporalPost(int cboEntFinan, TipoEstudio? cboTipoEst, string fechaDesde, string fechaHasta)
         {
             DateTime fecDesde = DateTime.Parse(fechaDesde);
             DateTime fecHasta = DateTime.Parse(fechaHasta);
@@ -614,7 +614,7 @@ namespace WebApp.Controllers
 
             try
             {
-                MemoryStream memoryStream = pagosModel.ExportarInformacionTemporalPagos(cboEntFinan, fecDesde, fecHasta, cboTipoEst, cboTipoPago);
+                MemoryStream memoryStream = pagosModel.ExportarInformacionTemporalPagos(cboEntFinan, fecDesde, fecHasta, cboTipoEst);
                 return File(memoryStream, "text/plain", $"Recaudacion{nombreEntidad}{tipoEstudio}_de_{fecDesde.ToString("yyyyMMdd")}_a_{fecHasta.ToString("yyyyMMdd")}.txt");
             }
             catch (Exception ex)

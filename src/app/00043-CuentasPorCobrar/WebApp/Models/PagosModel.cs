@@ -674,12 +674,12 @@ namespace WebApp.Models
         }
 
 
-        public MemoryStream ExportarInformacionTemporalPagos(int entRecaudaId, DateTime fecIni, DateTime fecFin, TipoEstudio? tipoEstudio, TipoPago tipoPago)
+        public MemoryStream ExportarInformacionTemporalPagos(int entRecaudaId, DateTime fecIni, DateTime fecFin, TipoEstudio? tipoEstudio)
         {
             var memoryStream = new MemoryStream();
             var writer = new StreamWriter(memoryStream, Encoding.Default);
 
-            var infoPagos = pagoService.ListarPagosRegistrados(fecIni, fecFin, tipoEstudio, entRecaudaId, tipoPago);
+            var infoPagos = pagoService.ListarPagosRegistrados(fecIni, fecFin, tipoEstudio, entRecaudaId);
 
 
             #region Cabecera

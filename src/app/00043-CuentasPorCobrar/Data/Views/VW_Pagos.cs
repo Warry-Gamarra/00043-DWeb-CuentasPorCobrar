@@ -125,7 +125,7 @@ namespace Data.Views
             return result;
         }
 
-        public static IEnumerable<VW_Pagos> FindPregrado(int? entRecaudaId, int? dependenciaId, bool esObligacion, DateTime fecIni, DateTime fecFin)
+        public static IEnumerable<VW_Pagos> FindPregrado(int? entRecaudaId, int? dependenciaId, DateTime fecIni, DateTime fecFin)
         {
             IEnumerable<VW_Pagos> result;
 
@@ -139,16 +139,6 @@ namespace Data.Views
 
                 if (entRecaudaId.HasValue)
                     s_command += " AND I_EntidadFinanID = @I_EntidadFinanID ";
-
-
-                if (esObligacion)
-                {
-                    s_command += " AND B_EsObligacion = 1 ";
-                }
-                else
-                {
-                    s_command += " AND B_EsObligacion = 0 ";
-                }
 
                 s_command += ";";
 
@@ -172,7 +162,7 @@ namespace Data.Views
             return result;
         }
 
-        public static IEnumerable<VW_Pagos> FindPosgrado(int? entRecaudaId, int? dependenciaId, bool esObligacion, DateTime fecIni, DateTime fecFin)
+        public static IEnumerable<VW_Pagos> FindPosgrado(int? entRecaudaId, int? dependenciaId, DateTime fecIni, DateTime fecFin)
         {
             IEnumerable<VW_Pagos> result;
 
@@ -186,15 +176,6 @@ namespace Data.Views
 
                 if (entRecaudaId.HasValue)
                     s_command += " AND I_EntidadFinanID = @I_EntidadFinanID ";
-
-                if (esObligacion)
-                {
-                    s_command += " AND B_EsObligacion = 1 ";
-                }
-                else
-                {
-                    s_command += " AND B_EsObligacion = 0 ";
-                }
 
                 s_command += ";";
 
