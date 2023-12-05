@@ -60,6 +60,10 @@ namespace Data.Views
 
         public int? I_NroConstancia { get;set; }
 
+        public int I_CondicionPagoID { get; set; }
+
+        public string T_Condicion { get; set; }
+
         public static IEnumerable<VW_PagoTasas> GetAll(int? idEntidadFinanciera, int? idCtaDeposito, string codOperacion, DateTime? fechaInicio, DateTime? fechaFinal,
                 string codDepositante, string nomDepositante, string codInterno)
         {

@@ -63,6 +63,7 @@ CREATE TABLE dbo.TR_ComprobantePago(
 	CONSTRAINT FK_Estado_ComprobantePago FOREIGN KEY (I_EstadoComprobanteID) REFERENCES TC_EstadoComprobante(I_EstadoComprobanteID),
 	CONSTRAINT UQ_ComprobantePago UNIQUE (I_NumeroSerie, I_NumeroComprobante)
 )
+GO
 
 ALTER TABLE dbo.TR_PagoBanco ADD I_ComprobantePagoID INT
 GO
@@ -127,17 +128,3 @@ BEGIN
 END
 GO
 
-DECLARE @B_Result BIT, @T_Message NVARCHAR(4000);
-
-EXEC USP_I_GrabarComprobantePago 
-	@I_TipoComprobanteID = 5,
-	@I_NumeroSerie = 1,
-	@I_NumeroComprobante = 1,
-	@B_EsGravado = 0,
-	@D_FechaEmision = '2023-10-10',
-	@I_EstadoComprobanteID = 1,
-	@UserID = 1,
-	@B_Result = @B_Result OUTPUT,  
-	@T_Message = @T_Message OUTPUT;
-
-SELECT @B_Result, @T_Message;

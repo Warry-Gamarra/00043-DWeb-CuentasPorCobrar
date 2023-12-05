@@ -1,0 +1,45 @@
+﻿using Domain.Helpers;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace WebApp.Models
+{
+    public class ComprobantePagoModel
+    {
+        public int pagoBancoID { get; set; }
+
+        public string entidadDesc { get; set; }
+
+        public string numeroCuenta { get; set; }
+
+        public string codOperacion { get; set; }
+
+        public string codigoInterno { get; set; }
+
+        public string codDepositante { get; set; }
+
+        public string nomDepositante { get; set; }
+
+        public DateTime fecPago { get; set; }
+
+        public decimal montoPagado { get; set; }
+
+        public decimal interesMoratorio { get; set; }
+
+        public decimal montoTotal
+        {
+            get
+            {
+                return montoPagado + interesMoratorio;
+            }
+        }
+
+        public string lugarPago { get; set; }
+
+        public string condicionPago { get; set; }
+
+        public TipoPago tipoPago { get; set; }
+    }
+}

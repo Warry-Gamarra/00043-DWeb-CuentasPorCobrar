@@ -417,6 +417,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CategoriaPagoController.cs" />
     <Compile Include="Controllers\ClasificadoresController.cs" />
+    <Compile Include="Controllers\ComprobantePagoController.cs" />
     <Compile Include="Controllers\ConceptoPagoController.cs" />
     <Compile Include="Controllers\CuentaDepositoController.cs" />
     <Compile Include="Controllers\DependenciaController.cs" />
@@ -446,6 +447,7 @@
     <Compile Include="Models\AlumnosSinVotoSourceFactory.cs" />
     <Compile Include="Models\AppConfiguration.cs" />
     <Compile Include="Models\CategoriaPagoModel.cs" />
+    <Compile Include="Models\ComprobantePagoModel.cs" />
     <Compile Include="Models\ConceptoModel.cs" />
     <Compile Include="Models\DataSets\ObligacionAlumnoDS.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -458,6 +460,8 @@
       <DependentUpon>PagoBancoDS.xsd</DependentUpon>
     </Compile>
     <Compile Include="Models\EditarPagoTasa.cs" />
+    <Compile Include="Models\Facades\ComprobantePagoServiceFacade.cs" />
+    <Compile Include="Models\Facades\IComprobantePagoServiceFacade.cs" />
     <Compile Include="Models\Facades\IReporteGeneralServiceFacade.cs" />
     <Compile Include="Models\Facades\IReporteServiceFacade.cs" />
     <Compile Include="Models\Facades\ReporteGeneralServiceFacade.cs" />
@@ -467,6 +471,7 @@
     <Compile Include="Models\ReportModels\DetObligacionAlumnoRptModel.cs" />
     <Compile Include="Models\ReportModels\PagoTasaRptModel.cs" />
     <Compile Include="Models\ReportModels\PagoObligacionRptModel.cs" />
+    <Compile Include="ViewModels\ConsultaComprobantePagoViewModel.cs" />
     <Compile Include="ViewModels\FechaVctoObligacionViewModel.cs" />
     <Compile Include="ViewModels\ConsultaPagosBancoObligacionesViewModel.cs" />
     <Compile Include="Models\CtaDepoProcesoModel.cs" />
@@ -690,6 +695,7 @@
     <Content Include="Views\Tasa\ConsultaPagoTasa.cshtml" />
     <Content Include="Views\Tasa\_DetallePagoTasa.cshtml" />
     <Content Include="Views\Tasa\_MsgGuardarPagoTasa.cshtml" />
+    <Content Include="Views\ComprobantePago\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
