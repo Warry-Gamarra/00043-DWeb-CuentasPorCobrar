@@ -24,6 +24,8 @@ namespace WebApp.ViewModels
 
         public string codDepositante { get; set; }
 
+        public string nomDepositante { get; set; }
+
         public string fechaDesde { get; set; }
 
         public DateTime? fechaInicio

@@ -34,5 +34,19 @@ namespace Domain.Entities
         public string condicionPago { get; set; }
 
         public TipoPago tipoPago { get; set; }
+
+        public int? comprobantePagoID { get; set; }
+
+        public int? numeroSerie { get; set; }
+
+        public int? numeroComprobante { get; set; }
+
+        public DateTime? fechaEmision { get; set; }
+
+        public bool? esGravado { get; set; }
+
+        public string tipoComprobanteDesc { get; set; }
+
+        public string estadoComprobanteDesc { get; set; }
     }
 }

@@ -21,7 +21,7 @@ namespace WebApp.Models.Facades
         public IEnumerable<ComprobantePagoModel> ListarComprobantesPagoBanco(ConsultaComprobantePagoViewModel filtro)
         {
             var resultado = comprobantePagoService.ListarComprobantesPagoBanco(filtro.tipoPago, filtro.entidadFinanciera, filtro.idCtaDeposito,
-                filtro.codOperacion, filtro.codInterno, filtro.codDepositante, filtro.fechaInicio, filtro.fechaFin)
+                filtro.codOperacion, filtro.codInterno, filtro.codDepositante, filtro.nomDepositante, filtro.fechaInicio, filtro.fechaFin)
                 .Select(x => new ComprobantePagoModel() { 
                     pagoBancoID = x.pagoBancoID,
                     entidadDesc = x.entidadDesc,
@@ -35,7 +35,14 @@ namespace WebApp.Models.Facades
                     interesMoratorio = x.interesMoratorio,
                     lugarPago = x.lugarPago,
                     condicionPago = x.condicionPago,
-                    tipoPago = x.tipoPago
+                    tipoPago = x.tipoPago,
+                    comprobantePagoID = x.comprobantePagoID,
+                    numeroSerie = x.numeroSerie,
+                    numeroComprobante = x.numeroComprobante,
+                    fechaEmision = x.fechaEmision,
+                    esGravado = x.esGravado,
+                    tipoComprobanteDesc = x.tipoComprobanteDesc,
+                    estadoComprobanteDesc = x.estadoComprobanteDesc
                 });
 
             return resultado;

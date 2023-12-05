@@ -128,3 +128,104 @@ BEGIN
 END
 GO
 
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_ListarComprobantePago')
+	DROP PROCEDURE [dbo].[USP_S_ListarComprobantePago]
+GO
+
+CREATE PROCEDURE [dbo].[USP_S_ListarComprobantePago]
+AS
+BEGIN
+	SET NOCOUNT ON;
+	SELECT TOP 1000
+		pagBan.I_PagoBancoID,
+		ban.T_EntidadDesc,
+		cta.C_NumeroCuenta,
+		pagBan.C_CodOperacion,
+		pagBan.C_CodigoInterno,
+		pagBan.C_CodDepositante,
+		pagban.T_NomDepositante,
+		pagBan.D_FecPago,
+		pagBan.I_MontoPago,
+		pagBan.I_InteresMora,
+		pagBan.T_LugarPago,
+		cond.T_OpcionDesc AS 'T_Condicion',
+		pagBan.I_TipoPagoID,
+		com.I_ComprobantePagoID,
+		com.I_NumeroSerie,
+		com.I_NumeroComprobante,
+		com.D_FechaEmision,
+		com.B_EsGravado,
+		tipCom.T_TipoComprobanteDesc,
+		estCom.T_EstadoComprobanteDesc
+	FROM dbo.TR_PagoBanco pagBan
+	INNER JOIN dbo.TC_EntidadFinanciera ban ON ban.I_EntidadFinanID = pagBan.I_EntidadFinanID
+	INNER JOIN dbo.TC_CuentaDeposito cta ON cta.I_CtaDepositoID = pagBan.I_CtaDepositoID
+	INNER JOIN dbo.TC_CatalogoOpcion cond ON cond.I_OpcionID = pagBan.I_CondicionPagoID
+	LEFT JOIN dbo.TR_ComprobantePago com ON com.I_ComprobantePagoID = pagBan.I_ComprobantePagoID
+	LEFT JOIN dbo.TC_TipoComprobante tipCom ON tipCom.I_TipoComprobanteID = com.I_TipoComprobanteID
+	LEFT JOIN dbo.TC_EstadoComprobante estCom ON estCom.I_EstadoComprobanteID = com.I_EstadoComprobanteID
+	WHERE pagBan.B_Anulado = 0 AND NOT pagBan.I_TipoPagoID = 132;
+END
+GO
+
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_ObtenerComprobantePago')
+	DROP PROCEDURE [dbo].[USP_S_ObtenerComprobantePago]
+GO
+
+CREATE PROCEDURE [dbo].[USP_S_ObtenerComprobantePago]
+@I_PagoBancoID INT
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	DECLARE @C_CodDepositante VARCHAR(250),
+			@I_EntidadFinanID INT,
+			@C_CodOperacion VARCHAR(250),
+			@D_FecPago DATETIME;
+
+	SELECT 
+		@C_CodDepositante = b.C_CodDepositante,
+		@I_EntidadFinanID = b.I_EntidadFinanID,
+		@C_CodOperacion = b.C_CodOperacion,
+		@D_FecPago = D_FecPago
+	FROM dbo.TR_PagoBanco b
+	WHERE b.I_PagoBancoID = @I_PagoBancoID ;
+
+	SELECT
+		pagBan.I_PagoBancoID,
+		ban.T_EntidadDesc,
+		cta.C_NumeroCuenta,
+		pagBan.C_CodOperacion,
+		pagBan.C_CodigoInterno,
+		pagBan.C_CodDepositante,
+		pagban.T_NomDepositante,
+		pagBan.D_FecPago,
+		pagBan.I_MontoPago,
+		pagBan.I_InteresMora,
+		pagBan.T_LugarPago,
+		cond.T_OpcionDesc AS 'T_Condicion',
+		pagBan.I_TipoPagoID,
+		com.I_NumeroSerie,
+		com.I_NumeroComprobante,
+		com.D_FechaEmision,
+		com.B_EsGravado,
+		tipCom.T_TipoComprobanteDesc,
+		estCom.T_EstadoComprobanteDesc
+	FROM dbo.TR_PagoBanco pagBan
+	INNER JOIN dbo.TC_EntidadFinanciera ban ON ban.I_EntidadFinanID = pagBan.I_EntidadFinanID
+	INNER JOIN dbo.TC_CuentaDeposito cta ON cta.I_CtaDepositoID = pagBan.I_CtaDepositoID
+	INNER JOIN dbo.TC_CatalogoOpcion cond ON cond.I_OpcionID = pagBan.I_CondicionPagoID
+	LEFT JOIN dbo.TR_ComprobantePago com ON com.I_ComprobantePagoID = pagBan.I_ComprobantePagoID
+	LEFT JOIN dbo.TC_TipoComprobante tipCom ON tipCom.I_TipoComprobanteID = com.I_TipoComprobanteID
+	LEFT JOIN dbo.TC_EstadoComprobante estCom ON estCom.I_EstadoComprobanteID = com.I_EstadoComprobanteID
+	WHERE pagBan.B_Anulado = 0 AND NOT pagBan.I_TipoPagoID = 132 AND 
+		pagBan.C_CodDepositante	 = @C_CodDepositante AND
+		pagBan.I_EntidadFinanID = @I_EntidadFinanID AND
+		pagBan.C_CodOperacion = @C_CodOperacion AND
+		DATEDIFF(SECOND, pagBan.D_FecPago, @D_FecPago) = 0;
+END
+GO

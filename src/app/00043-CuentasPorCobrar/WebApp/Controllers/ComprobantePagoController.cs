@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using WebApp.Models;
@@ -36,6 +37,11 @@ namespace WebApp.Controllers
                 model.entidadFinanciera.HasValue ? _selectModel.GetCtasDeposito(model.entidadFinanciera.Value) : new List<SelectViewModel>(), "Value", "TextDisplay", model.idCtaDeposito);
 
             return View(model);
+        }
+
+        public ActionResult GenerarNumeroComprobante(int id)
+        {
+            return PartialView("_GenerarNumeroComprobante");
         }
     }
 }
