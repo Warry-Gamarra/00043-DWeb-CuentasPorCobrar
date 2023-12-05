@@ -118,7 +118,7 @@
                         columns.Add(c => c.entidadDesc).Titled("Banco");
                         columns.Add(c => c.condicionPago).Titled("Condición").Css("text-center");
                         columns.Add().SetWidth(100).Encoded(false).Sanitized(false).RenderValueAs(
-                            model => model.comprobantePagoID.HasValue ? "" : "<a href=" + Url.Action("GenerarNumeroComprobante", "ComprobantePago", new { id = model.pagoBancoID }) + " class=\"modal-link\"><i class=\"fa fa-file\" aria-hidden=\"true\" title=\"Generar Número de Comprobante\"></i></a>");
+                            model => model.comprobantePagoID.HasValue ? "" : "<a href=" + Url.Action("InformacioPago", "ComprobantePago", new { id = model.pagoBancoID }) + " class=\"modal-link\"><i class=\"fa fa-file\" aria-hidden=\"true\" title=\"Generar Número de Comprobante\"></i></a>");
                     }).WithPaging(12).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
                 </div>
             </div>

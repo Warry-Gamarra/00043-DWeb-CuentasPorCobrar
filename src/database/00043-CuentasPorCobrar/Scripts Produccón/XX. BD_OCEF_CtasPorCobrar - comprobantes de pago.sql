@@ -135,10 +135,23 @@ IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCE
 GO
 
 CREATE PROCEDURE [dbo].[USP_S_ListarComprobantePago]
+@I_TipoPagoID INT = NULL,
+@I_EntidadFinanID INT = NULL,
+@I_CtaDepositoID INT = NULL,
+@C_CodOperacion VARCHAR(50) = NULL,
+@C_CodigoInterno VARCHAR(250) = NULL,
+@C_CodDepositante VARCHAR(20) = NULL,
+@T_NomDepositante VARCHAR(200) = NULL,
+@D_FechaInicio DATETIME = NULL,
+@D_FechaFin DATETIME = NULL
 AS
 BEGIN
 	SET NOCOUNT ON;
-	SELECT TOP 1000
+	
+	DECLARE @SQLString NVARCHAR(4000),  
+			@ParmDefinition NVARCHAR(500);
+
+	SET @SQLString = N'SELECT TOP 1000
 		pagBan.I_PagoBancoID,
 		ban.T_EntidadDesc,
 		cta.C_NumeroCuenta,
@@ -150,7 +163,7 @@ BEGIN
 		pagBan.I_MontoPago,
 		pagBan.I_InteresMora,
 		pagBan.T_LugarPago,
-		cond.T_OpcionDesc AS 'T_Condicion',
+		cond.T_OpcionDesc AS ''T_Condicion'',
 		pagBan.I_TipoPagoID,
 		com.I_ComprobantePagoID,
 		com.I_NumeroSerie,
@@ -166,10 +179,33 @@ BEGIN
 	LEFT JOIN dbo.TR_ComprobantePago com ON com.I_ComprobantePagoID = pagBan.I_ComprobantePagoID
 	LEFT JOIN dbo.TC_TipoComprobante tipCom ON tipCom.I_TipoComprobanteID = com.I_TipoComprobanteID
 	LEFT JOIN dbo.TC_EstadoComprobante estCom ON estCom.I_EstadoComprobanteID = com.I_EstadoComprobanteID
-	WHERE pagBan.B_Anulado = 0 AND NOT pagBan.I_TipoPagoID = 132;
+	WHERE pagBan.B_Anulado = 0 AND NOT pagBan.I_TipoPagoID = 132
+	' + CASE WHEN @I_TipoPagoID IS NULL THEN '' ELSE 'AND pagBan.I_TipoPagoID = @I_TipoPagoID ' END + '
+	' + CASE WHEN @I_EntidadFinanID IS NULL THEN '' ELSE 'AND pagBan.I_EntidadFinanID = @I_EntidadFinanID' END + '
+	' + CASE WHEN @I_CtaDepositoID IS NULL THEN '' ELSE 'AND pagBan.I_CtaDepositoID = @I_CtaDepositoID' END + '
+	' + CASE WHEN @C_CodOperacion IS NULL THEN '' ELSE 'AND pagBan.C_CodOperacion LIKE ''%'' + @C_CodOperacion' END + '
+	' + CASE WHEN @C_CodigoInterno IS NULL THEN '' ELSE 'AND pagBan.C_CodigoInterno LIKE ''%'' + @C_CodigoInterno' END + '
+	' + CASE WHEN @C_CodDepositante IS NULL THEN '' ELSE 'AND pagBan.C_CodDepositante LIKE ''%'' + @C_CodDepositante' END + '
+	' + CASE WHEN @T_NomDepositante IS NULL THEN '' ELSE 'AND pagBan.T_NomDepositante LIKE ''%'' + @T_NomDepositante + ''%'' COLLATE Modern_Spanish_CI_AI' END + '
+	' + CASE WHEN @D_FechaInicio IS NULL THEN '' ELSE 'AND DATEDIFF(DAY, pagBan.D_FecPago, @D_FechaInicio) <= 0' END + '
+	' + CASE WHEN @D_FechaFin IS NULL THEN '' ELSE 'AND DATEDIFF(DAY, pagBan.D_FecPago, @D_FechaFin) >= 0' END + '
+	ORDER BY pagBan.D_FecPago DESC';
+
+	SET @ParmDefinition = N'@I_TipoPagoID INT, @I_EntidadFinanID INT, @I_CtaDepositoID INT, @C_CodOperacion VARCHAR(50), @C_CodigoInterno VARCHAR(250),
+		@C_CodDepositante VARCHAR(20), @T_NomDepositante VARCHAR(200), @D_FechaInicio DATETIME, @D_FechaFin DATETIME';
+
+	EXECUTE sp_executesql @SQLString, @ParmDefinition,
+		@I_TipoPagoID = @I_TipoPagoID,
+		@I_EntidadFinanID = @I_EntidadFinanID,
+		@I_CtaDepositoID = @I_CtaDepositoID,
+		@C_CodOperacion = @C_CodOperacion,
+		@C_CodigoInterno = @C_CodigoInterno,
+		@C_CodDepositante = @C_CodDepositante,
+		@T_NomDepositante = @T_NomDepositante,
+		@D_FechaInicio = @D_FechaInicio,
+		@D_FechaFin = @D_FechaFin;
 END
 GO
-
 
 
 IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_ObtenerComprobantePago')
@@ -229,3 +265,9 @@ BEGIN
 		DATEDIFF(SECOND, pagBan.D_FecPago, @D_FecPago) = 0;
 END
 GO
+
+
+EXEC USP_S_ListarComprobantePago @C_CodOperacion = '738724';
+EXEC USP_S_ObtenerComprobantePago @I_PagoBancoID = 609301
+
+SELECT * FROM dbo.TR_PagoBanco WHERE C_CodOperacion = '738724' AND C_CodDepositante = '2021003578'

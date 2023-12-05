@@ -12,5 +12,7 @@ namespace Domain.Services
     {
         IEnumerable<ComprobantePagoDTO> ListarComprobantesPagoBanco(TipoPago? tipoPago, int? idEntidadFinanciera, int? ctaDeposito,
             string codOperacion, string codigoInterno, string codDepositante, string nomDepositante, DateTime? fechaInicio, DateTime? fechaFinal);
+
+        IEnumerable<ComprobantePagoDTO> ObtenerComprobantePagoBanco(int pagoBancoID);
     }
 }

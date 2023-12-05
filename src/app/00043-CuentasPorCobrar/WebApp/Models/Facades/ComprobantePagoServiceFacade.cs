@@ -47,5 +47,34 @@ namespace WebApp.Models.Facades
 
             return resultado;
         }
+
+        public IEnumerable<ComprobantePagoModel> ObtenerComprobantePagoBanco(int pagoBancoID)
+        {
+            var resultado = comprobantePagoService.ObtenerComprobantePagoBanco(pagoBancoID)
+                .Select(x => new ComprobantePagoModel() {
+                    pagoBancoID = x.pagoBancoID,
+                    entidadDesc = x.entidadDesc,
+                    numeroCuenta = x.numeroCuenta,
+                    codOperacion = x.codOperacion,
+                    codigoInterno = x.codigoInterno,
+                    codDepositante = x.codDepositante,
+                    nomDepositante = x.nomDepositante,
+                    fecPago = x.fecPago,
+                    montoPagado = x.montoPagado,
+                    interesMoratorio = x.interesMoratorio,
+                    lugarPago = x.lugarPago,
+                    condicionPago = x.condicionPago,
+                    tipoPago = x.tipoPago,
+                    comprobantePagoID = x.comprobantePagoID,
+                    numeroSerie = x.numeroSerie,
+                    numeroComprobante = x.numeroComprobante,
+                    fechaEmision = x.fechaEmision,
+                    esGravado = x.esGravado,
+                    tipoComprobanteDesc = x.tipoComprobanteDesc,
+                    estadoComprobanteDesc = x.estadoComprobanteDesc
+                });
+
+            return resultado;
+        }
     }
 }

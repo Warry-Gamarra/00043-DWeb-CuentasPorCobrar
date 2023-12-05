@@ -696,7 +696,7 @@
     <Content Include="Views\Tasa\_DetallePagoTasa.cshtml" />
     <Content Include="Views\Tasa\_MsgGuardarPagoTasa.cshtml" />
     <Content Include="Views\ComprobantePago\Index.cshtml" />
-    <Content Include="Views\ComprobantePago\_GenerarNumeroComprobante.cshtml" />
+    <Content Include="Views\ComprobantePago\_InformacioPago.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

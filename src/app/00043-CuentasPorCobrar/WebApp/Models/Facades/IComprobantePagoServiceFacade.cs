@@ -11,5 +11,7 @@ namespace WebApp.Models.Facades
     public interface IComprobantePagoServiceFacade
     {
         IEnumerable<ComprobantePagoModel> ListarComprobantesPagoBanco(ConsultaComprobantePagoViewModel filtro);
+
+        IEnumerable<ComprobantePagoModel> ObtenerComprobantePagoBanco(int pagoBancoID);
     }
 }

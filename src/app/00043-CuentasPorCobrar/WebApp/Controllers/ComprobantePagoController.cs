@@ -1,4 +1,5 @@
 ﻿using DocumentFormat.OpenXml.EMMA;
+using Domain.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,9 +40,39 @@ namespace WebApp.Controllers
             return View(model);
         }
 
+        public ActionResult InformacioPago(int id)
+        {
+            var model = _comprobantePagoServiceFacade.ObtenerComprobantePagoBanco(id);
+
+            ViewBag.Title = "Comprobante de Pago";
+
+            ViewBag.CodDepositante = model.First().codDepositante;
+
+            ViewBag.NombreDepositante = model.First().nomDepositante;
+
+            ViewBag.TotalPagado = model.Sum(x => x.montoTotal).ToString(FormatosDecimal.BASIC_DECIMAL);
+
+            ViewBag.FechaPago = model.First().fecPago.ToString(FormatosDateTime.BASIC_DATETIME);
+
+            ViewBag.CodOperacion = model.First().codOperacion;
+
+            ViewBag.EntidadFinanciera = model.First().entidadDesc;
+
+            ViewBag.TieneComprobante = model.First().comprobantePagoID.HasValue;
+
+            ViewBag.PagoBancoID = id;
+
+            return PartialView("_InformacioPago", model);
+        }
+
+        [HttpPost]
         public ActionResult GenerarNumeroComprobante(int id)
         {
-            return PartialView("_GenerarNumeroComprobante");
+            var model = _comprobantePagoServiceFacade.ObtenerComprobantePagoBanco(id);
+
+            int[] pagosRelacionados = model.Select(x => x.pagoBancoID).ToArray();
+
+            return PartialView("_GenerarNumeroComprobante", model);
         }
     }
 }
