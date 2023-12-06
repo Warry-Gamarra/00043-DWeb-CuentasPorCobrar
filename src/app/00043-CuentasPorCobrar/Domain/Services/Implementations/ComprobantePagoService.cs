@@ -1,9 +1,11 @@
-﻿using Data.Procedures;
+﻿using Data;
+using Data.Procedures;
 using Data.Views;
 using Domain.Entities;
 using Domain.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,6 +37,7 @@ namespace Domain.Services.Implementations
                 .GetAll(tipoPagoID, idEntidadFinanciera, ctaDeposito, codOperacion, codigoInterno, codDepositante, nomDepositante, fechaInicio, fechaFinal)
                 .Select(x => new ComprobantePagoDTO() {
                     pagoBancoID = x.I_PagoBancoID,
+                    entidadFinanID = x.I_EntidadFinanID,
                     entidadDesc = x.T_EntidadDesc,
                     numeroCuenta = x.C_NumeroCuenta,
                     codOperacion = x.C_CodOperacion,
@@ -63,6 +66,7 @@ namespace Domain.Services.Implementations
             var result = USP_S_ObtenerComprobantePago.GetAll(pagoBancoID)
                 .Select(x => new ComprobantePagoDTO() {
                     pagoBancoID = x.I_PagoBancoID,
+                    entidadFinanID = x.I_EntidadFinanID,
                     entidadDesc = x.T_EntidadDesc,
                     numeroCuenta = x.C_NumeroCuenta,
                     codOperacion = x.C_CodOperacion,
@@ -84,6 +88,32 @@ namespace Domain.Services.Implementations
                 }); ;
 
             return result;
+        }
+
+        public Response GenerarNumeroComprobante(int[] pagosBancoID, int tipoComprobanteID, int numeroSerie, bool esGravado, int currentUserID)
+        {
+            ResponseData result;
+
+            var generarComprobantePago = new USP_I_GrabarComprobantePago()
+            {
+                I_TipoComprobanteID = tipoComprobanteID,
+                I_NumeroSerie = numeroSerie,
+                B_EsGravado = esGravado,
+                UserID = currentUserID
+            };
+
+            DataTable dataTable = new DataTable();
+            
+            dataTable.Columns.Add("ID");
+
+            foreach (int id in pagosBancoID)
+            {
+                dataTable.Rows.Add(id);
+            }
+            
+            result = generarComprobantePago.Execute(dataTable);
+
+            return new Response(result);
         }
     }
 }

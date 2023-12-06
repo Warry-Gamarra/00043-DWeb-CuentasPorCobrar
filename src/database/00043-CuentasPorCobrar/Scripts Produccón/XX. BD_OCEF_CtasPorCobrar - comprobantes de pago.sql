@@ -93,10 +93,7 @@ CREATE PROCEDURE [dbo].[USP_I_GrabarComprobantePago]
 @PagoBancoIDs [dbo].[type_Ids] READONLY,
 @I_TipoComprobanteID INT,
 @I_NumeroSerie INT,
-@I_NumeroComprobante INT,
 @B_EsGravado BIT,
-@D_FechaEmision DATETIME,
-@I_EstadoComprobanteID INT,
 @UserID INT,
 @B_Result BIT OUTPUT,  
 @T_Message NVARCHAR(4000) OUTPUT
@@ -104,17 +101,30 @@ AS
 BEGIN  
 	SET NOCOUNT ON;
 	
-	DECLARE @I_ComprobantePagoID INT;
+	DECLARE @I_ComprobantePagoID INT,
+			@I_NumeroComprobante INT,
+			@D_FechaEmision DATETIME,
+			@I_EstadoComprobanteID INT;
 
 	BEGIN TRAN
 	BEGIN TRY
+
+		SET @I_EstadoComprobanteID = (SELECT I_EstadoComprobanteID FROM dbo.TC_EstadoComprobante WHERE C_EstadoComprobanteCod = 'PEN');
 		
+		SET @I_NumeroComprobante = (SELECT ISNULL(MAX(c.I_NumeroComprobante), 0) FROM dbo.TR_ComprobantePago c WHERE c.I_NumeroSerie = @I_NumeroSerie) + 1;
+
+		SET @D_FechaEmision = GETDATE();
+
 		INSERT dbo.TR_ComprobantePago(I_TipoComprobanteID, I_NumeroSerie, I_NumeroComprobante, B_EsGravado, D_FechaEmision, I_EstadoComprobanteID, I_UsuarioCre, D_FecCre)
-		VALUES(@I_TipoComprobanteID, @I_NumeroSerie, @I_NumeroComprobante, @B_EsGravado, @D_FechaEmision, @I_EstadoComprobanteID, @UserID, GETDATE());
+		VALUES(@I_TipoComprobanteID, @I_NumeroSerie, @I_NumeroComprobante, @B_EsGravado, @D_FechaEmision, @I_EstadoComprobanteID, @UserID, @D_FechaEmision);
 
 		SET @I_ComprobantePagoID = SCOPE_IDENTITY();
 
-		UPDATE dbo.TR_PagoBanco SET I_ComprobantePagoID = @I_ComprobantePagoID WHERE I_PagoBancoID IN (SELECT ID FROM @PagoBancoIDs)
+		UPDATE dbo.TR_PagoBanco SET 
+			I_ComprobantePagoID = @I_ComprobantePagoID,
+			I_UsuarioMod = @UserID,
+			D_FecMod = @D_FechaEmision
+		WHERE I_PagoBancoID IN (SELECT ID FROM @PagoBancoIDs);
 		
 		COMMIT TRAN
 		SET @B_Result = 1;
@@ -153,6 +163,7 @@ BEGIN
 
 	SET @SQLString = N'SELECT TOP 1000
 		pagBan.I_PagoBancoID,
+		ban.I_EntidadFinanID,
 		ban.T_EntidadDesc,
 		cta.C_NumeroCuenta,
 		pagBan.C_CodOperacion,
@@ -233,6 +244,7 @@ BEGIN
 
 	SELECT
 		pagBan.I_PagoBancoID,
+		ban.I_EntidadFinanID,
 		ban.T_EntidadDesc,
 		cta.C_NumeroCuenta,
 		pagBan.C_CodOperacion,
@@ -245,6 +257,7 @@ BEGIN
 		pagBan.T_LugarPago,
 		cond.T_OpcionDesc AS 'T_Condicion',
 		pagBan.I_TipoPagoID,
+		com.I_ComprobantePagoID,
 		com.I_NumeroSerie,
 		com.I_NumeroComprobante,
 		com.D_FechaEmision,
@@ -268,6 +281,13 @@ GO
 
 
 EXEC USP_S_ListarComprobantePago @C_CodOperacion = '738724';
-EXEC USP_S_ObtenerComprobantePago @I_PagoBancoID = 609301
 
-SELECT * FROM dbo.TR_PagoBanco WHERE C_CodOperacion = '738724' AND C_CodDepositante = '2021003578'
+EXEC USP_S_ObtenerComprobantePago @I_PagoBancoID = 609301;
+
+SELECT * FROM dbo.TC_TipoComprobante
+SELECT * FROM dbo.TC_EstadoComprobante
+
+SELECT * FROM dbo.TR_ComprobantePago
+
+
+SELECT * FROM 

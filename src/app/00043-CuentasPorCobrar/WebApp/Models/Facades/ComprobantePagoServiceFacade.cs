@@ -5,25 +5,27 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 using WebApp.ViewModels;
 
 namespace WebApp.Models.Facades
 {
     public class ComprobantePagoServiceFacade : IComprobantePagoServiceFacade
     {
-        private IComprobantePagoService comprobantePagoService;
+        private IComprobantePagoService _comprobantePagoService;
         
         public ComprobantePagoServiceFacade()
         {
-            comprobantePagoService = new ComprobantePagoService();
+            _comprobantePagoService = new ComprobantePagoService();
         }
 
         public IEnumerable<ComprobantePagoModel> ListarComprobantesPagoBanco(ConsultaComprobantePagoViewModel filtro)
         {
-            var resultado = comprobantePagoService.ListarComprobantesPagoBanco(filtro.tipoPago, filtro.entidadFinanciera, filtro.idCtaDeposito,
+            var resultado = _comprobantePagoService.ListarComprobantesPagoBanco(filtro.tipoPago, filtro.entidadFinanciera, filtro.idCtaDeposito,
                 filtro.codOperacion, filtro.codInterno, filtro.codDepositante, filtro.nomDepositante, filtro.fechaInicio, filtro.fechaFin)
                 .Select(x => new ComprobantePagoModel() { 
                     pagoBancoID = x.pagoBancoID,
+                    entidadFinanID = x.entidadFinanID,
                     entidadDesc = x.entidadDesc,
                     numeroCuenta = x.numeroCuenta,
                     codOperacion = x.codOperacion,
@@ -50,9 +52,10 @@ namespace WebApp.Models.Facades
 
         public IEnumerable<ComprobantePagoModel> ObtenerComprobantePagoBanco(int pagoBancoID)
         {
-            var resultado = comprobantePagoService.ObtenerComprobantePagoBanco(pagoBancoID)
+            var resultado = _comprobantePagoService.ObtenerComprobantePagoBanco(pagoBancoID)
                 .Select(x => new ComprobantePagoModel() {
                     pagoBancoID = x.pagoBancoID,
+                    entidadFinanID = x.entidadFinanID,
                     entidadDesc = x.entidadDesc,
                     numeroCuenta = x.numeroCuenta,
                     codOperacion = x.codOperacion,
@@ -73,6 +76,25 @@ namespace WebApp.Models.Facades
                     tipoComprobanteDesc = x.tipoComprobanteDesc,
                     estadoComprobanteDesc = x.estadoComprobanteDesc
                 });
+
+            return resultado;
+        }
+
+        public Response GenerarNumeroComprobante(int[] pagosBancoID, int tipoComprobanteID, int numeroSerie, bool esGravado, int currentUserID)
+        {
+            Response resultado;
+
+            try
+            {
+                resultado = _comprobantePagoService.GenerarNumeroComprobante(pagosBancoID, tipoComprobanteID, numeroSerie, esGravado, currentUserID);
+            }
+            catch (Exception ex)
+            {
+                resultado = new Response()
+                {
+                    Message = ex.Message
+                };
+            }
 
             return resultado;
         }

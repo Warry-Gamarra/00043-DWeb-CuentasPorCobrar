@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using WebApp.Models;
 using WebApp.Models.Facades;
 using WebApp.ViewModels;
+using WebMatrix.WebData;
 
 namespace WebApp.Controllers
 {
@@ -46,18 +47,6 @@ namespace WebApp.Controllers
 
             ViewBag.Title = "Comprobante de Pago";
 
-            ViewBag.CodDepositante = model.First().codDepositante;
-
-            ViewBag.NombreDepositante = model.First().nomDepositante;
-
-            ViewBag.TotalPagado = model.Sum(x => x.montoTotal).ToString(FormatosDecimal.BASIC_DECIMAL);
-
-            ViewBag.FechaPago = model.First().fecPago.ToString(FormatosDateTime.BASIC_DATETIME);
-
-            ViewBag.CodOperacion = model.First().codOperacion;
-
-            ViewBag.EntidadFinanciera = model.First().entidadDesc;
-
             ViewBag.TieneComprobante = model.First().comprobantePagoID.HasValue;
 
             ViewBag.PagoBancoID = id;
@@ -66,13 +55,17 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
-        public ActionResult GenerarNumeroComprobante(int id)
+        public JsonResult GenerarNumeroComprobante(int pagoBancoId, int tipoComprobanteID, int numeroSerie, bool esGravado)
         {
-            var model = _comprobantePagoServiceFacade.ObtenerComprobantePagoBanco(id);
+            var model = _comprobantePagoServiceFacade.ObtenerComprobantePagoBanco(pagoBancoId);
 
-            int[] pagosRelacionados = model.Select(x => x.pagoBancoID).ToArray();
+            int[] pagosBancoId = model.Select(x => x.pagoBancoID).ToArray();
 
-            return PartialView("_GenerarNumeroComprobante", model);
+            var resultado = _comprobantePagoServiceFacade.GenerarNumeroComprobante(pagosBancoId, tipoComprobanteID, numeroSerie, esGravado, WebSecurity.CurrentUserId);
+
+            var jsonResponse = Json(resultado, JsonRequestBehavior.AllowGet);
+
+            return jsonResponse;
         }
     }
 }

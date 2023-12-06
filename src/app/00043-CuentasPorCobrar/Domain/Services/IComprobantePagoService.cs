@@ -14,5 +14,7 @@ namespace Domain.Services
             string codOperacion, string codigoInterno, string codDepositante, string nomDepositante, DateTime? fechaInicio, DateTime? fechaFinal);
 
         IEnumerable<ComprobantePagoDTO> ObtenerComprobantePagoBanco(int pagoBancoID);
+
+        Response GenerarNumeroComprobante(int[] pagosBancoID, int tipoComprobanteID, int numeroSerie, bool esGravado, int currentUserID);
     }
 }

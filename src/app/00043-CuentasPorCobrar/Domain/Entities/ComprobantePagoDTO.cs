@@ -11,6 +11,8 @@ namespace Domain.Entities
     {
         public int pagoBancoID { get; set; }
 
+        public int entidadFinanID { get; set; }
+
         public string entidadDesc { get; set; }
 
         public string numeroCuenta { get; set; }

@@ -11,41 +11,90 @@
     <button type="button" class="close closeModal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 </div>
 
-<div class="modal-body" id="cabeceraObligacion">
-    <dl class="row">
-        <dt class="col-sm-3">Código Depositante</dt>
-        <dd class="col-sm-9">@ViewBag.CodDepositante</dd>
-
-        <dt class="col-sm-3">Nombre Depositante</dt>
-        <dd class="col-sm-9">@ViewBag.NombreDepositante</dd>
-
-        <dt class="col-sm-3">Total Pagado</dt>
-        <dd class="col-sm-9">@ViewBag.TotalPagado</dd>
-
-        <dt class="col-sm-3">Fecha Pago</dt>
-        <dd class="col-sm-9">@ViewBag.FechaPago</dd>
-
-        <dt class="col-sm-3">Código de Operacion</dt>
-        <dd class="col-sm-9">@ViewBag.CodOperacion</dd>
-
-        <dt class="col-sm-3">Banco</dt>
-        <dd class="col-sm-9">@ViewBag.EntidadFinanciera</dd>
-    </dl>
-</div>
-
 <div class="modal-body">
-    <table class="table table-bordered table-hover table-sm" id="tblPagos">
-        <thead>
-            <tr>
-                <th>Banco</th>
-                <th>Cod.Operacion</th>
-                <th>Fecha Pago</th>
-                <th>Monto</th>
-                <th>Mora</th>
-                <th>Comentarios</th>
-            </tr>
-        </thead>
-    </table>
+    <dl class="row">
+        <dt class="col-sm-3 mb-3">Código Depositante</dt>
+        <dd class="col-sm-9">@Model.First().codDepositante</dd>
+
+        <dt class="col-sm-3 mb-3">Nombre Depositante</dt>
+        <dd class="col-sm-9">@Model.First().nomDepositante</dd>
+
+        <dt class="col-sm-3 mb-3">Total Pagado</dt>
+        <dd class="col-sm-9">@Model.Sum(x => x.montoTotal).ToString(Domain.Helpers.FormatosDecimal.BASIC_DECIMAL)</dd>
+
+        <dt class="col-sm-3 mb-3">Fecha Pago</dt>
+        <dd class="col-sm-9">@Model.First().fecPago.ToString(Domain.Helpers.FormatosDateTime.BASIC_DATETIME)</dd>
+
+        <dt class="col-sm-3 mb-3">Código de Operacion</dt>
+        <dd class="col-sm-9">@Model.First().codOperacion</dd>
+
+        @if (Model.First().entidadFinanID == Domain.Helpers.Bancos.BCP_ID)
+        {
+            <dt class="col-sm-3 mb-3">Código Interno</dt>
+            <dd class="col-sm-9">@Model.First().codigoInterno</dd>
+        }
+
+        <dt class="col-sm-3 mb-3">Banco</dt>
+        <dd class="col-sm-9">@Model.First().entidadDesc</dd>
+
+        <dt class="col-sm-3 mb-3">Tipo de Comprobante</dt>
+        @if (tieneComprobante)
+        {
+            <dd class="col-sm-9">@Model.First().tipoComprobanteDesc</dd>
+        }
+        else
+        {
+            <dd class="col-sm-9">
+                <select id="cmbTipoComprobante" class="form-control">
+                    <option value="6">Boleta de venta</option>
+                    <option value="5">Factura</option>
+                    <option value="7">Nota de crédito</option>
+                    <option value="8">Nota de débito</option>
+                </select>
+            </dd>
+        }
+
+        <dt class="col-sm-3 mb-3">Serie</dt>
+        @if (tieneComprobante)
+        {
+            <dd class="col-sm-9">@Model.First().numeroSerie</dd>
+        }
+        else
+        {
+            <dd class="col-sm-9">
+                <select id="cmbSerie" class="form-control">
+                    <option value="1">1</option>
+                </select>
+            </dd>
+        }
+
+        @if (tieneComprobante)
+        {
+            <dt class="col-sm-3 mb-3">Número de Comprobante</dt>
+            <dd class="col-sm-9">@Model.First().numeroComprobante</dd>
+        }
+
+        <dt class="col-sm-3 mb-3">Es Gravado</dt>
+        @if (tieneComprobante)
+        {
+            <dd class="col-sm-9">@Model.First().gravadoDesc</dd>
+        }
+        else
+        {
+            <dd class="col-sm-9">
+                <select id="cmbEsGravado" class="form-control">
+                    <option value="True">Sí</option>
+                    <option value="False">No</option>
+                </select>
+            </dd>
+        }
+
+        @if (tieneComprobante)
+        {
+            <dt class="col-sm-3 mb-3">Estado Comprobante</dt>
+            <dd class="col-sm-9">@Model.First().estadoComprobanteDesc</dd>
+        }
+    </dl>
 </div>
 
 <div class="modal-footer" id="div_msg_comprobante">
@@ -64,11 +113,17 @@
 
 <script type="text/javascript">
     $(document).on('click', '#div_msg_comprobante #btnGenerar', function (e) {
-        let pagoBancoID = @pagoBancoID;
+        let parametros = {
+            pagoBancoId: @pagoBancoID,
+            tipoComprobanteID: $('#cmbTipoComprobante').val(),
+            numeroSerie: $('#cmbSerie').val(),
+            esGravado: $('#cmbEsGravado').val()
+        };
 
         $.ajax({
             type: 'POST',
-            url: '@Url.Action("GenerarNumeroComprobante", "ComprobantePago")/' + pagoBancoID,
+            url: '@Url.Action("GenerarNumeroComprobante", "ComprobantePago")',
+            data: parametros,
             dataType: 'json',
             beforeSend: function () {
                 $('#div_msg_comprobante #loading').css('display', 'block');

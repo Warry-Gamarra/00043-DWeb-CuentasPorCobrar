@@ -117,8 +117,8 @@
                         columns.Add(c => c.montoTotal).Titled("Total Pagado").Css("text-center");
                         columns.Add(c => c.entidadDesc).Titled("Banco");
                         columns.Add(c => c.condicionPago).Titled("Condición").Css("text-center");
-                        columns.Add().SetWidth(100).Encoded(false).Sanitized(false).RenderValueAs(
-                            model => model.comprobantePagoID.HasValue ? "" : "<a href=" + Url.Action("InformacioPago", "ComprobantePago", new { id = model.pagoBancoID }) + " class=\"modal-link\"><i class=\"fa fa-file\" aria-hidden=\"true\" title=\"Generar Número de Comprobante\"></i></a>");
+                        columns.Add().SetWidth(100).Encoded(false).Sanitized(false).Css("text-center").RenderValueAs(
+                            model => "<a href=" + Url.Action("InformacioPago", "ComprobantePago", new { id = model.pagoBancoID }) + " class=\"modal-link\"><i class=\"fa fa-file\" aria-hidden=\"true\" title=\"Generar Número de Comprobante\"></i></a>");
                     }).WithPaging(12).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
                 </div>
             </div>
@@ -141,6 +141,14 @@
 
         $('#datepicker .input-daterange #fechaDesde').datepicker('update', "@Model.fechaDesde");
         $('#datepicker .input-daterange #fechaHasta').datepicker('update', "@Model.fechaHasta");
+
+        $(document).on("click", ".modal-header .closeModal", function (e) {
+            window.location.reload();
+        });
+
+        $(document).on("click", ".modal-footer .closeModal", function (e) {
+            window.location.reload();
+        });
 
         $(document).on("click", "#btnConsulta", function (e) {
             document.forms.frmConsultaComprobantePago.action = "@Url.Action("Index", "ComprobantePago")";

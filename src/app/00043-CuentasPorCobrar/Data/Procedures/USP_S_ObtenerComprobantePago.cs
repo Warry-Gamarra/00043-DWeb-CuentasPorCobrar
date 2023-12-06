@@ -15,6 +15,8 @@ namespace Data.Procedures
     {
         public int I_PagoBancoID { get; set; }
 
+        public int I_EntidadFinanID { get; set; }
+
         public string T_EntidadDesc { get; set; }
 
         public string C_NumeroCuenta { get; set; }

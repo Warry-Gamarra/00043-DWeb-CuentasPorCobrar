@@ -10,6 +10,8 @@ namespace WebApp.Models
     {
         public int pagoBancoID { get; set; }
 
+        public int entidadFinanID { get; set; }
+
         public string entidadDesc { get; set; }
 
         public string numeroCuenta { get; set; }
@@ -51,6 +53,14 @@ namespace WebApp.Models
         public DateTime? fechaEmision { get; set; }
 
         public bool? esGravado { get; set; }
+
+        public string gravadoDesc
+        {
+            get
+            {
+                return esGravado.HasValue ? (esGravado.Value ? "Sí" : "No") : "";
+            }
+        }
 
         public string tipoComprobanteDesc { get; set; }
 
