@@ -90,14 +90,14 @@ namespace Domain.Services.Implementations
             return result;
         }
 
-        public Response GenerarNumeroComprobante(int[] pagosBancoID, int tipoComprobanteID, int numeroSerie, bool esGravado, int currentUserID)
+        public Response GenerarNumeroComprobante(int[] pagosBancoID, int tipoComprobanteID, int serieID, bool esGravado, int currentUserID)
         {
             ResponseData result;
 
             var generarComprobantePago = new USP_I_GrabarComprobantePago()
             {
                 I_TipoComprobanteID = tipoComprobanteID,
-                I_NumeroSerie = numeroSerie,
+                I_SerieID = serieID,
                 B_EsGravado = esGravado,
                 UserID = currentUserID
             };

@@ -17,11 +17,13 @@ namespace WebApp.Controllers
     {
         private SelectModel _selectModel;
         private IComprobantePagoServiceFacade _comprobantePagoServiceFacade;
+        private IGeneralServiceFacade generalServiceFacade;
 
         public ComprobantePagoController()
         {
             _selectModel = new SelectModel();
             _comprobantePagoServiceFacade = new ComprobantePagoServiceFacade();
+            generalServiceFacade = new GeneralServiceFacade();
         }
 
         public ActionResult Index(ConsultaComprobantePagoViewModel model)
@@ -37,6 +39,8 @@ namespace WebApp.Controllers
 
             ViewBag.CtaDeposito = new SelectList(
                 model.entidadFinanciera.HasValue ? _selectModel.GetCtasDeposito(model.entidadFinanciera.Value) : new List<SelectViewModel>(), "Value", "TextDisplay", model.idCtaDeposito);
+
+            ViewBag.TipoPago = new SelectList(generalServiceFacade.Listar_TiposPago(), "Value", "TextDisplay");
 
             return View(model);
         }
@@ -55,13 +59,13 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
-        public JsonResult GenerarNumeroComprobante(int pagoBancoId, int tipoComprobanteID, int numeroSerie, bool esGravado)
+        public JsonResult GenerarNumeroComprobante(int pagoBancoId, int tipoComprobanteID, int serieID, bool esGravado)
         {
             var model = _comprobantePagoServiceFacade.ObtenerComprobantePagoBanco(pagoBancoId);
 
             int[] pagosBancoId = model.Select(x => x.pagoBancoID).ToArray();
 
-            var resultado = _comprobantePagoServiceFacade.GenerarNumeroComprobante(pagosBancoId, tipoComprobanteID, numeroSerie, esGravado, WebSecurity.CurrentUserId);
+            var resultado = _comprobantePagoServiceFacade.GenerarNumeroComprobante(pagosBancoId, tipoComprobanteID, serieID, esGravado, WebSecurity.CurrentUserId);
 
             var jsonResponse = Json(resultado, JsonRequestBehavior.AllowGet);
 

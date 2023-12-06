@@ -15,7 +15,7 @@ namespace Data.Procedures
     {
         public int I_TipoComprobanteID { get; set; }
         
-        public int I_NumeroSerie { get; set; }
+        public int I_SerieID { get; set; }
 
         public bool B_EsGravado { get; set; }
 
@@ -39,7 +39,7 @@ namespace Data.Procedures
                     parameters = new DynamicParameters();
                     parameters.Add(name: "PagoBancoIDs", value: dataTable.AsTableValuedParameter("dbo.type_Ids"));
                     parameters.Add(name: "I_TipoComprobanteID", dbType: DbType.Int32, value: I_TipoComprobanteID);
-                    parameters.Add(name: "I_NumeroSerie", dbType: DbType.Int32, value: I_NumeroSerie);
+                    parameters.Add(name: "I_SerieID", dbType: DbType.Int32, value: I_SerieID);
                     parameters.Add(name: "B_EsGravado", dbType: DbType.Boolean, value: B_EsGravado);
                     parameters.Add(name: "UserID", dbType: DbType.Int32, value: UserID);
                     parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);

@@ -14,6 +14,6 @@ namespace WebApp.Models.Facades
 
         IEnumerable<ComprobantePagoModel> ObtenerComprobantePagoBanco(int pagoBancoID);
 
-        Response GenerarNumeroComprobante(int[] pagosBancoID, int tipoComprobanteID, int numeroSerie, bool esGravado, int currentUserID);
+        Response GenerarNumeroComprobante(int[] pagosBancoID, int tipoComprobanteID, int serieID, bool esGravado, int currentUserID);
     }
 }

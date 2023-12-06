@@ -46,10 +46,10 @@
         {
             <dd class="col-sm-9">
                 <select id="cmbTipoComprobante" class="form-control">
-                    <option value="6">Boleta de venta</option>
-                    <option value="5">Factura</option>
-                    <option value="7">Nota de crédito</option>
-                    <option value="8">Nota de débito</option>
+                    <option value="2">Boleta de venta</option>
+                    <option value="1">Factura</option>
+                    <option value="3">Nota de crédito</option>
+                    <option value="4">Nota de débito</option>
                 </select>
             </dd>
         }
@@ -116,7 +116,7 @@
         let parametros = {
             pagoBancoId: @pagoBancoID,
             tipoComprobanteID: $('#cmbTipoComprobante').val(),
-            numeroSerie: $('#cmbSerie').val(),
+            serieID: $('#cmbSerie').val(),
             esGravado: $('#cmbEsGravado').val()
         };
 

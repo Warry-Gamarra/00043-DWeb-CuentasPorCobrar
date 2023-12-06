@@ -46,10 +46,22 @@ CREATE TABLE dbo.TC_EstadoComprobante
 )
 GO
 
+CREATE TABLE dbo.TC_SerieComprobante(
+	I_SerieID INT IDENTITY(1,1),
+	I_NumeroSerie INT NOT NULL,
+	B_Habilitado INT NOT NULL,
+	I_UsuarioCre INT NOT NULL,
+	D_FecCre DATETIME NOT NULL,
+	I_UsuarioMod INT,
+	D_FecMod DATETIME,
+	CONSTRAINT PK_SerieComprobante PRIMARY KEY (I_SerieID)
+)
+GO
+
 CREATE TABLE dbo.TR_ComprobantePago(
 	I_ComprobantePagoID INT IDENTITY(1,1),
 	I_TipoComprobanteID INT NOT NULL,
-	I_NumeroSerie INT NOT NULL,
+	I_SerieID INT NOT NULL,
 	I_NumeroComprobante INT NOT NULL,	
 	B_EsGravado BIT NOT NULL,--EN EL EXCEL GRE->CATALOGOSUNAT->CELDA 109 HAY UNA TABLA TIPO DE AFECTO, CONSULTAR SI ESTE VALOR SE OBTIENE DE AHÍ, o lo dejo como booleano.
 	D_FechaEmision DATETIME NOT NULL,
@@ -61,7 +73,8 @@ CREATE TABLE dbo.TR_ComprobantePago(
 	CONSTRAINT PK_ComprobantePago PRIMARY KEY (I_ComprobantePagoID),
 	CONSTRAINT FK_TipoComprobante_ComprobantePago FOREIGN KEY (I_TipoComprobanteID) REFERENCES TC_TipoComprobante(I_TipoComprobanteID),
 	CONSTRAINT FK_Estado_ComprobantePago FOREIGN KEY (I_EstadoComprobanteID) REFERENCES TC_EstadoComprobante(I_EstadoComprobanteID),
-	CONSTRAINT UQ_ComprobantePago UNIQUE (I_NumeroSerie, I_NumeroComprobante)
+	CONSTRAINT UQ_ComprobantePago UNIQUE (I_SerieID, I_NumeroComprobante),
+	CONSTRAINT FK_SerieComprobante_ComprobantePago FOREIGN KEY (I_SerieID) REFERENCES TC_SerieComprobante(I_SerieID)
 )
 GO
 
@@ -69,6 +82,9 @@ ALTER TABLE dbo.TR_PagoBanco ADD I_ComprobantePagoID INT
 GO
 
 ALTER TABLE dbo.TR_PagoBanco ADD CONSTRAINT FK_ComprobantePago_PagoBanco FOREIGN KEY (I_ComprobantePagoID) REFERENCES TR_ComprobantePago(I_ComprobantePagoID)
+GO
+
+INSERT dbo.TC_SerieComprobante(I_NumeroSerie, B_Habilitado, I_UsuarioCre, D_FecCre) VALUES(1, 1, 1, GETDATE())
 GO
 
 INSERT dbo.TC_TipoComprobante(C_TipoComprobanteCod, T_TipoComprobanteDesc, B_Habilitado, I_UsuarioCre, D_FecCre) VALUES('01', 'Factura', 0, 1, GETDATE())
@@ -92,7 +108,7 @@ GO
 CREATE PROCEDURE [dbo].[USP_I_GrabarComprobantePago]
 @PagoBancoIDs [dbo].[type_Ids] READONLY,
 @I_TipoComprobanteID INT,
-@I_NumeroSerie INT,
+@I_SerieID INT,
 @B_EsGravado BIT,
 @UserID INT,
 @B_Result BIT OUTPUT,  
@@ -111,12 +127,12 @@ BEGIN
 
 		SET @I_EstadoComprobanteID = (SELECT I_EstadoComprobanteID FROM dbo.TC_EstadoComprobante WHERE C_EstadoComprobanteCod = 'PEN');
 		
-		SET @I_NumeroComprobante = (SELECT ISNULL(MAX(c.I_NumeroComprobante), 0) FROM dbo.TR_ComprobantePago c WHERE c.I_NumeroSerie = @I_NumeroSerie) + 1;
+		SET @I_NumeroComprobante = (SELECT ISNULL(MAX(c.I_NumeroComprobante), 0) FROM dbo.TR_ComprobantePago c WHERE c.I_SerieID = @I_SerieID) + 1;
 
 		SET @D_FechaEmision = GETDATE();
 
-		INSERT dbo.TR_ComprobantePago(I_TipoComprobanteID, I_NumeroSerie, I_NumeroComprobante, B_EsGravado, D_FechaEmision, I_EstadoComprobanteID, I_UsuarioCre, D_FecCre)
-		VALUES(@I_TipoComprobanteID, @I_NumeroSerie, @I_NumeroComprobante, @B_EsGravado, @D_FechaEmision, @I_EstadoComprobanteID, @UserID, @D_FechaEmision);
+		INSERT dbo.TR_ComprobantePago(I_TipoComprobanteID, I_SerieID, I_NumeroComprobante, B_EsGravado, D_FechaEmision, I_EstadoComprobanteID, I_UsuarioCre, D_FecCre)
+		VALUES(@I_TipoComprobanteID, @I_SerieID, @I_NumeroComprobante, @B_EsGravado, @D_FechaEmision, @I_EstadoComprobanteID, @UserID, @D_FechaEmision);
 
 		SET @I_ComprobantePagoID = SCOPE_IDENTITY();
 
@@ -177,7 +193,7 @@ BEGIN
 		cond.T_OpcionDesc AS ''T_Condicion'',
 		pagBan.I_TipoPagoID,
 		com.I_ComprobantePagoID,
-		com.I_NumeroSerie,
+		ser.I_NumeroSerie,
 		com.I_NumeroComprobante,
 		com.D_FechaEmision,
 		com.B_EsGravado,
@@ -188,6 +204,7 @@ BEGIN
 	INNER JOIN dbo.TC_CuentaDeposito cta ON cta.I_CtaDepositoID = pagBan.I_CtaDepositoID
 	INNER JOIN dbo.TC_CatalogoOpcion cond ON cond.I_OpcionID = pagBan.I_CondicionPagoID
 	LEFT JOIN dbo.TR_ComprobantePago com ON com.I_ComprobantePagoID = pagBan.I_ComprobantePagoID
+	LEFT JOIN dbo.TC_SerieComprobante ser ON ser.I_SerieID = com.I_SerieID
 	LEFT JOIN dbo.TC_TipoComprobante tipCom ON tipCom.I_TipoComprobanteID = com.I_TipoComprobanteID
 	LEFT JOIN dbo.TC_EstadoComprobante estCom ON estCom.I_EstadoComprobanteID = com.I_EstadoComprobanteID
 	WHERE pagBan.B_Anulado = 0 AND NOT pagBan.I_TipoPagoID = 132
@@ -258,7 +275,7 @@ BEGIN
 		cond.T_OpcionDesc AS 'T_Condicion',
 		pagBan.I_TipoPagoID,
 		com.I_ComprobantePagoID,
-		com.I_NumeroSerie,
+		ser.I_NumeroSerie,
 		com.I_NumeroComprobante,
 		com.D_FechaEmision,
 		com.B_EsGravado,
@@ -269,6 +286,7 @@ BEGIN
 	INNER JOIN dbo.TC_CuentaDeposito cta ON cta.I_CtaDepositoID = pagBan.I_CtaDepositoID
 	INNER JOIN dbo.TC_CatalogoOpcion cond ON cond.I_OpcionID = pagBan.I_CondicionPagoID
 	LEFT JOIN dbo.TR_ComprobantePago com ON com.I_ComprobantePagoID = pagBan.I_ComprobantePagoID
+	LEFT JOIN dbo.TC_SerieComprobante ser ON ser.I_SerieID = com.I_SerieID
 	LEFT JOIN dbo.TC_TipoComprobante tipCom ON tipCom.I_TipoComprobanteID = com.I_TipoComprobanteID
 	LEFT JOIN dbo.TC_EstadoComprobante estCom ON estCom.I_EstadoComprobanteID = com.I_EstadoComprobanteID
 	WHERE pagBan.B_Anulado = 0 AND NOT pagBan.I_TipoPagoID = 132 AND 
@@ -281,13 +299,4 @@ GO
 
 
 EXEC USP_S_ListarComprobantePago @C_CodOperacion = '738724';
-
 EXEC USP_S_ObtenerComprobantePago @I_PagoBancoID = 609301;
-
-SELECT * FROM dbo.TC_TipoComprobante
-SELECT * FROM dbo.TC_EstadoComprobante
-
-SELECT * FROM dbo.TR_ComprobantePago
-
-
-SELECT * FROM 

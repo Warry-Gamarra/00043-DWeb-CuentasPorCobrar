@@ -80,13 +80,13 @@ namespace WebApp.Models.Facades
             return resultado;
         }
 
-        public Response GenerarNumeroComprobante(int[] pagosBancoID, int tipoComprobanteID, int numeroSerie, bool esGravado, int currentUserID)
+        public Response GenerarNumeroComprobante(int[] pagosBancoID, int tipoComprobanteID, int serieID, bool esGravado, int currentUserID)
         {
             Response resultado;
 
             try
             {
-                resultado = _comprobantePagoService.GenerarNumeroComprobante(pagosBancoID, tipoComprobanteID, numeroSerie, esGravado, currentUserID);
+                resultado = _comprobantePagoService.GenerarNumeroComprobante(pagosBancoID, tipoComprobanteID, serieID, esGravado, currentUserID);
             }
             catch (Exception ex)
             {
