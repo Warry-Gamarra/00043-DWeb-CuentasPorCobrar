@@ -101,8 +101,10 @@
     <Compile Include="Entities\PagoUnfvDTO.cs" />
     <Compile Include="Entities\SeccionArchivo.cs" />
     <Compile Include="Entities\CtaDepoServicioDto.cs" />
+    <Compile Include="Entities\SerieComprobanteDTO.cs" />
     <Compile Include="Entities\TasaDTO.cs" />
     <Compile Include="Entities\TasaEntity.cs" />
+    <Compile Include="Entities\TipoComprobanteDTO.cs" />
     <Compile Include="Helpers\Constantes.cs" />
     <Compile Include="Helpers\ImportacionPagoResponse.cs" />
     <Compile Include="Helpers\MultaNoVotarResponse.cs" />
@@ -132,7 +134,9 @@
     <Compile Include="Services\Implementations\CtaDepoServicioService.cs" />
     <Compile Include="Services\Implementations\ReporteResidentadoService.cs" />
     <Compile Include="Services\Implementations\ReporteSegundaEspecialidadService.cs" />
+    <Compile Include="Services\Implementations\SerieComprobanteService.cs" />
     <Compile Include="Services\Implementations\TasaService.cs" />
+    <Compile Include="Services\Implementations\TipoComprobanteService.cs" />
     <Compile Include="Services\IPagoService.cs" />
     <Compile Include="Services\IReporteGeneralService.cs" />
     <Compile Include="Services\ITasaService.cs" />
@@ -174,10 +178,12 @@
     <Compile Include="Services\IProcesoService.cs" />
     <Compile Include="Services\IReporteUnfvService.cs" />
     <Compile Include="Services\IRoles.cs" />
+    <Compile Include="Services\ITipoComprobanteService.cs" />
     <Compile Include="Services\IUser.cs" />
     <Compile Include="Services\Implementations\ObligacionService.cs" />
     <Compile Include="Services\Implementations\ProcesoService.cs" />
     <Compile Include="Services\ConceptoPagoService.cs" />
+    <Compile Include="Services\ISerieComprobanteService.cs" />
     <Compile Include="UnfvRepositorioClient\AlumnoModel.cs" />
     <Compile Include="UnfvRepositorioClient\EspecialidadModel.cs" />
     <Compile Include="UnfvRepositorioClient\EscuelaModel.cs" />

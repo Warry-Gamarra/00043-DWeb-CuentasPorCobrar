@@ -1,18 +1,11 @@
 /*
-1. CADA PAGO DE ALUMNO ESTÁ RELACIONADO A UN TIPO DE COMPROBANTE.
-	-BOLETA, FACTURA, NOTA DE CRÉDITO, NOTA DE DÉBITO.
-	-Agravado
-
-2. La búsqueda de los pagos se hará bajo los criterios de:
-	-varios criterios
-	-Pagos con fecha de antiguedada  7 días o según criterio
-
-3. Al tener el(los) pago(s) se le asignará el "tipo de comprobante", "serie", "numeración" e internamente un "estado".
-	-Criterio de serie: un número fijo.
-	-Criterio de numeración: por serie del 1 al n.
-	-Estado: procesado, pendiente y con errores.
-
-4. Una vez se tenga la relación de pagos se generará el TXT según formato de digiflow y se almacenará en la ruta.
+- AGREGAR CRITERIO DE SIN NÚMERO DE COMPROBANTE.
+- Pagos con fecha de antiguedad  7 días o según criterio.
+- Mantenimiento de Número de Serie y comprobante.
+- Mantenimiento de Tipo de Comprobante.
+- Mantenimiento para asignar fecha de antiguedad.
+- Agregar validación para OMITIR PAGOS QUE YA TIENEN NÚMERO DE COMPROBANTES.
+- Generar el TXT según formato de digiflow y almacenarlo en una carpeta.
 */
 
 USE BD_OCEF_CtasPorCobrar
@@ -144,7 +137,7 @@ BEGIN
 		
 		COMMIT TRAN
 		SET @B_Result = 1;
-		SET @T_Message = 'Grabación correcta.';
+		SET @T_Message = 'Generación de número de comprobante exitoso.';
 	END TRY
 	BEGIN CATCH
 		ROLLBACK TRAN
@@ -300,3 +293,4 @@ GO
 
 EXEC USP_S_ListarComprobantePago @C_CodOperacion = '738724';
 EXEC USP_S_ObtenerComprobantePago @I_PagoBancoID = 609301;
+

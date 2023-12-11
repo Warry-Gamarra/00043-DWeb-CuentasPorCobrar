@@ -464,7 +464,11 @@
     <Compile Include="Models\Facades\IComprobantePagoServiceFacade.cs" />
     <Compile Include="Models\Facades\IReporteGeneralServiceFacade.cs" />
     <Compile Include="Models\Facades\IReporteServiceFacade.cs" />
+    <Compile Include="Models\Facades\ISerieComprobanteServiceFacade.cs" />
+    <Compile Include="Models\Facades\ITipoComprobanteServiceFacade.cs" />
     <Compile Include="Models\Facades\ReporteGeneralServiceFacade.cs" />
+    <Compile Include="Models\Facades\SerieComprobanteServiceFacade.cs" />
+    <Compile Include="Models\Facades\TipoComprobanteServiceFacade.cs" />
     <Compile Include="Models\PagoConstanciaModel.cs" />
     <Compile Include="Models\ReporteModel.cs" />
     <Compile Include="Models\ReportModels\CabObligacionAlumnoRptModel.cs" />
@@ -697,6 +701,7 @@
     <Content Include="Views\Tasa\_MsgGuardarPagoTasa.cshtml" />
     <Content Include="Views\ComprobantePago\Index.cshtml" />
     <Content Include="Views\ComprobantePago\_InformacioPago.cshtml" />
+    <Content Include="Views\ComprobantePago\_GeneracionGrupal.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -1,4 +1,5 @@
 ﻿using DocumentFormat.OpenXml.EMMA;
+using DocumentFormat.OpenXml.Office2010.Excel;
 using Domain.Helpers;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using WebApp.Models;
+using WebApp.Models.DataSets;
 using WebApp.Models.Facades;
 using WebApp.ViewModels;
 using WebMatrix.WebData;
@@ -18,14 +20,19 @@ namespace WebApp.Controllers
         private SelectModel _selectModel;
         private IComprobantePagoServiceFacade _comprobantePagoServiceFacade;
         private IGeneralServiceFacade generalServiceFacade;
+        private ITipoComprobanteServiceFacade _tipoComprobanteServiceFacade;
+        private ISerieComprobanteServiceFacade _serieComprobanteServiceFacade;
 
         public ComprobantePagoController()
         {
             _selectModel = new SelectModel();
             _comprobantePagoServiceFacade = new ComprobantePagoServiceFacade();
             generalServiceFacade = new GeneralServiceFacade();
+            _tipoComprobanteServiceFacade = new TipoComprobanteServiceFacade();
+            _serieComprobanteServiceFacade = new SerieComprobanteServiceFacade();
         }
 
+        [HttpGet]
         public ActionResult Index(ConsultaComprobantePagoViewModel model)
         {
             ViewBag.Title = "Consulta de Pagos en Banco";
@@ -45,6 +52,7 @@ namespace WebApp.Controllers
             return View(model);
         }
 
+        [HttpGet]
         public ActionResult InformacioPago(int id)
         {
             var model = _comprobantePagoServiceFacade.ObtenerComprobantePagoBanco(id);
@@ -54,6 +62,10 @@ namespace WebApp.Controllers
             ViewBag.TieneComprobante = model.First().comprobantePagoID.HasValue;
 
             ViewBag.PagoBancoID = id;
+
+            ViewBag.ComboTipoComprobante = new SelectList(_tipoComprobanteServiceFacade.ListarTiposComprobante(true), "Value", "TextDisplay");
+
+            ViewBag.ComboSerieComprobante = new SelectList(_serieComprobanteServiceFacade.ListarSeriesComprobante(true), "Value", "TextDisplay");
 
             return PartialView("_InformacioPago", model);
         }
@@ -66,6 +78,28 @@ namespace WebApp.Controllers
             int[] pagosBancoId = model.Select(x => x.pagoBancoID).ToArray();
 
             var resultado = _comprobantePagoServiceFacade.GenerarNumeroComprobante(pagosBancoId, tipoComprobanteID, serieID, esGravado, WebSecurity.CurrentUserId);
+
+            var jsonResponse = Json(resultado, JsonRequestBehavior.AllowGet);
+
+            return jsonResponse;
+        }
+
+        [HttpGet]
+        public ActionResult GeneracionGrupal()
+        {
+            ViewBag.Title = "Generar Comprobantes de Pago";
+
+            ViewBag.ComboTipoComprobante = new SelectList(_tipoComprobanteServiceFacade.ListarTiposComprobante(true), "Value", "TextDisplay");
+
+            ViewBag.ComboSerieComprobante = new SelectList(_serieComprobanteServiceFacade.ListarSeriesComprobante(true), "Value", "TextDisplay");
+
+            return PartialView("_GeneracionGrupal");
+        }
+
+        [HttpPost]
+        public JsonResult GenerarNumeroComprobanteGrupal(ConsultaComprobantePagoViewModel model, int tipoComprobanteID, int serieID, bool esGravado)
+        {
+            var resultado = _comprobantePagoServiceFacade.GenerarNumeroComprobante(model, tipoComprobanteID, serieID, esGravado, WebSecurity.CurrentUserId);
 
             var jsonResponse = Json(resultado, JsonRequestBehavior.AllowGet);
 

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using WebApp.ViewModels;
+using WebMatrix.WebData;
 
 namespace WebApp.Models.Facades
 {
@@ -97,6 +98,38 @@ namespace WebApp.Models.Facades
             }
 
             return resultado;
+        }
+
+        public Response GenerarNumeroComprobante(ConsultaComprobantePagoViewModel filtro, int tipoComprobanteID, int serieID, bool esGravado, int currentUserID)
+        {
+            var listaPagos = _comprobantePagoService.ListarComprobantesPagoBanco(filtro.tipoPago, filtro.entidadFinanciera, filtro.idCtaDeposito,
+                filtro.codOperacion, filtro.codInterno, filtro.codDepositante, filtro.nomDepositante, filtro.fechaInicio, filtro.fechaFin)
+                .GroupBy(x => new { x.codOperacion, x.codDepositante, x.fecPago, x.entidadFinanID });
+
+            var cantRegistros = listaPagos.Count();
+
+            var cantGeneracionCorrecta = 0;
+
+            foreach (var pago in listaPagos)
+            {
+                var pagosBancoId = pago.Select(x => x.pagoBancoID).ToArray();
+
+                var resultado = this.GenerarNumeroComprobante(pagosBancoId, tipoComprobanteID, serieID, esGravado, currentUserID);
+
+                if (resultado.Value)
+                {
+                    cantGeneracionCorrecta++;
+                }
+            }
+
+            var resultadoGeneral = new Response();
+
+            resultadoGeneral.Value = (cantRegistros == cantGeneracionCorrecta);
+
+            resultadoGeneral.Message = resultadoGeneral.Value ? "La generación de número de comprobante correcta." :
+                String.Format("Se generaron {0} números de comprobante de {1}.", cantGeneracionCorrecta, cantRegistros);
+
+            return resultadoGeneral;
         }
     }
 }

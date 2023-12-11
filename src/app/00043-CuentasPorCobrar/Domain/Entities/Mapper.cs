@@ -725,5 +725,30 @@ namespace Domain.Entities
 
             return result;
         }
+
+        public static TipoComprobanteDTO TC_TipoComprobante_To_TipoComprobanteDTO(TC_TipoComprobante table)
+        {
+            var dto = new TipoComprobanteDTO()
+            {
+                tipoComprobanteID = table.I_TipoComprobanteID,
+                tipoComprobanteCod = table.C_TipoComprobanteCod,
+                tipoComprobanteDesc = table.T_TipoComprobanteDesc,
+                estaHabilitado = table.B_Habilitado
+            };
+
+            return dto;
+        }
+
+        public static SerieComprobanteDTO TC_SerieComprobante_To_SerieComprobanteDTO(TC_SerieComprobante table)
+        {
+            var dto = new SerieComprobanteDTO()
+            {
+                serieID = table.I_SerieID,
+                numeroSerie = table.I_NumeroSerie,
+                estaHabilitado = table.B_Habilitado
+            };
+
+            return dto;
+        }
     }
 }

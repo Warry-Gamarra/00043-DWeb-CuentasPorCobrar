@@ -1,0 +1,99 @@
+﻿@Scripts.Render("~/bundles/jqueryval")
+
+<div class="modal-header bg-dark-gray" style="border-radius: .2rem .2rem 0px 0px">
+    <h5 class="modal-title text-center"><i class="fa bi-layers-half">&nbsp;</i> @ViewBag.Title</h5>
+    <button type="button" class="close closeModal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+
+<div class="modal-body">
+    <dl class="row">
+        <dt class="col-sm-3 mb-3">Tipo de Comprobante</dt>
+        <dd class="col-sm-9">
+            @Html.DropDownList("cmbTipoComprobante", ViewBag.ComboTipoComprobante as SelectList, new { @class = "form-control text-uppercase" })
+        </dd>
+
+        <dt class="col-sm-3 mb-3">Serie</dt>
+        <dd class="col-sm-9">
+            @Html.DropDownList("cmbSerie", ViewBag.ComboSerieComprobante as SelectList, new { @class = "form-control" })
+        </dd>
+
+        <dt class="col-sm-3 mb-3">Es Gravado</dt>
+        <dd class="col-sm-9">
+            <select id="cmbEsGravado" class="form-control">
+                <option value="True">Sí</option>
+                <option value="False">No</option>
+            </select>
+        </dd>
+    </dl>
+</div>
+
+<div class="modal-footer" id="div_msg_comprobante">
+    <div class="col-md-12" style="display: none;" id="loading">
+        <h6></h6>
+        <div class="progress">
+            <div class="indeterminate"></div>
+        </div>
+    </div>
+    <button type="button" class="btn btn-primary" id="btnGenerarGrupal"><i class="fa fa-file"></i> Generar Números</button>
+    <button type="button" class="btn btn-secondary closeModal"><i class="fa fa-times-circle-o"></i> Cancelar</button>
+</div>
+
+<script type="text/javascript">
+    const MESSAGE_TYPE = {
+        INFO: 'info',
+        SUCCESS: 'success',
+        WARNING: 'warning',
+        ERROR: 'error'
+    };
+
+    $(document).on('click', '#div_msg_comprobante #btnGenerarGrupal', function (e) {
+        let parametros = {
+            tipoComprobanteID: $('#cmbTipoComprobante').val(),
+            serieID: $('#cmbSerie').val(),
+            esGravado: $('#cmbEsGravado').val(),
+            tipoPago: $('#frmConsultaComprobantePago #tipoPago').val(),
+            entidadFinanciera: $('#frmConsultaComprobantePago #entidadFinanciera').val(),
+            idCtaDeposito: $('#frmConsultaComprobantePago #idCtaDeposito').val(),
+            codOperacion: $('#frmConsultaComprobantePago #codOperacion').val(),
+            codInterno: $('#frmConsultaComprobantePago #codInterno').val(),
+            codDepositante: $('#frmConsultaComprobantePago #codDepositante').val(),
+            nomDepositante: $('#frmConsultaComprobantePago #nomDepositante').val(),
+            fechaDesde: $('#frmConsultaComprobantePago #fechaDesde').val(),
+            fechaHasta: $('#frmConsultaComprobantePago #fechaHasta').val()
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GenerarNumeroComprobanteGrupal", "ComprobantePago")',
+            data: parametros,
+            dataType: 'json',
+            beforeSend: function () {
+                $('#div_msg_comprobante #loading').css('display', 'block');
+                $('#div_msg_comprobante #loading h6').html('Generando números de comprobante...');
+            },
+            success: function (data) {
+                if (data !== null) {
+                    let icon = MESSAGE_TYPE.ERROR;
+
+                    if (data.Value) {
+                        icon = MESSAGE_TYPE.SUCCESS;
+                    }
+
+                    Swal.fire({
+                        title: '',
+                        text: data.Message,
+                        icon: icon,
+                        timer: 6000
+                    });
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                var jsonException = JSON.parse(xhr.responseText);
+            },
+            complete: function () {
+                $('#div_msg_comprobante #loading').css('display', 'none');
+                $('#div_msg_comprobante #loading h6').html('');
+            }
+        });
+    });
+</script>

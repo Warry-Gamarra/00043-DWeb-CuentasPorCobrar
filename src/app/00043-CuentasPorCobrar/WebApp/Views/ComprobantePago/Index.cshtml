@@ -104,8 +104,8 @@
 
                     @if (Model.resultado != null && Model.resultado.Count() > 0)
                     {
-                        <button type="button" id="btnGenerarNumeroComprobante" class="btn btn-link">
-                            <i class="fa fa-file" aria-hidden="true"></i> Generar Número de Comprobantes</button>
+                        <a href="@Url.Action("GeneracionGrupal", "ComprobantePago")" class="modal-link">
+                            <i class="fa fa-file" aria-hidden="true"></i> Generar Número de Comprobantes</a>
                     }
 
                     @Html.Grid(Model.resultado).Columns(columns =>

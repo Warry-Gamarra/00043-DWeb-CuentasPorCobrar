@@ -45,12 +45,7 @@
         else
         {
             <dd class="col-sm-9">
-                <select id="cmbTipoComprobante" class="form-control">
-                    <option value="2">Boleta de venta</option>
-                    <option value="1">Factura</option>
-                    <option value="3">Nota de crédito</option>
-                    <option value="4">Nota de débito</option>
-                </select>
+                @Html.DropDownList("cmbTipoComprobante", ViewBag.ComboTipoComprobante as SelectList,new { @class = "form-control text-uppercase" })
             </dd>
         }
 
@@ -62,9 +57,7 @@
         else
         {
             <dd class="col-sm-9">
-                <select id="cmbSerie" class="form-control">
-                    <option value="1">1</option>
-                </select>
+                @Html.DropDownList("cmbSerie", ViewBag.ComboSerieComprobante as SelectList,new { @class = "form-control" })
             </dd>
         }
 
@@ -112,6 +105,13 @@
 </div>
 
 <script type="text/javascript">
+    const MESSAGE_TYPE = {
+        INFO: 'info',
+        SUCCESS: 'success',
+        WARNING: 'warning',
+        ERROR: 'error'
+    };
+
     $(document).on('click', '#div_msg_comprobante #btnGenerar', function (e) {
         let parametros = {
             pagoBancoId: @pagoBancoID,
