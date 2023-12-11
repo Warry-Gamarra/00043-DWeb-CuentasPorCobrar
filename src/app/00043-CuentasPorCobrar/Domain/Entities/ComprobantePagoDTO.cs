@@ -47,6 +47,8 @@ namespace Domain.Entities
 
         public bool? esGravado { get; set; }
 
+        public string tipoComprobanteCod { get; set; }
+
         public string tipoComprobanteDesc { get; set; }
 
         public string estadoComprobanteDesc { get; set; }

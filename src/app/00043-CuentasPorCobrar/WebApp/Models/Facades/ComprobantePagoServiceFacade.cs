@@ -4,6 +4,7 @@ using Domain.Services.Implementations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using WebApp.ViewModels;
@@ -44,6 +45,7 @@ namespace WebApp.Models.Facades
                     numeroComprobante = x.numeroComprobante,
                     fechaEmision = x.fechaEmision,
                     esGravado = x.esGravado,
+                    tipoComprobanteCod = x.tipoComprobanteCod,
                     tipoComprobanteDesc = x.tipoComprobanteDesc,
                     estadoComprobanteDesc = x.estadoComprobanteDesc
                 });
@@ -74,6 +76,7 @@ namespace WebApp.Models.Facades
                     numeroComprobante = x.numeroComprobante,
                     fechaEmision = x.fechaEmision,
                     esGravado = x.esGravado,
+                    tipoComprobanteCod = x.tipoComprobanteCod,
                     tipoComprobanteDesc = x.tipoComprobanteDesc,
                     estadoComprobanteDesc = x.estadoComprobanteDesc
                 });
@@ -89,17 +92,28 @@ namespace WebApp.Models.Facades
 
             try
             {
-                resultadoGeneracionNumComprobante = _comprobantePagoService.GenerarNumeroComprobante(pagosBancoID, tipoComprobanteID, serieID, esGravado, currentUserID);
+                var comprobanteDTO = _comprobantePagoService.ObtenerComprobantePagoBanco(pagosBancoID[0]);
 
-                if (resultadoGeneracionNumComprobante.Value)
+                if (comprobanteDTO.Where(x => x.comprobanteID.HasValue).Count() == 0)
                 {
-                    resultadoGeneracionTXT = _comprobantePagoService.GenerarTXTDigiFlow();
+                    resultadoGeneracionNumComprobante = _comprobantePagoService.GenerarNumeroComprobante(pagosBancoID, tipoComprobanteID, serieID, esGravado, currentUserID);
 
-                    resultado = resultadoGeneracionTXT;
+                    if (resultadoGeneracionNumComprobante.Value)
+                    {
+                        resultadoGeneracionTXT = _comprobantePagoService.GenerarTXTDigiFlow(pagosBancoID);
+
+                        resultado = resultadoGeneracionTXT;
+                    }
+                    else
+                    {
+                        resultado = resultadoGeneracionNumComprobante;
+                    }
                 }
                 else
                 {
-                    resultado = resultadoGeneracionNumComprobante;
+                    resultado = new Response() {
+                        Message = "Este registro ya tiene un comprobante registrado."
+                    };
                 }
             }
             catch (Exception ex)

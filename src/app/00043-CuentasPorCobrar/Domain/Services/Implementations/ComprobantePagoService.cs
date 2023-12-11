@@ -4,8 +4,11 @@ using Data.Views;
 using Domain.Entities;
 using Domain.Helpers;
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -54,6 +57,7 @@ namespace Domain.Services.Implementations
                     numeroComprobante = x.I_NumeroComprobante,
                     fechaEmision = x.D_FechaEmision,
                     esGravado = x.B_EsGravado,
+                    tipoComprobanteCod = x.C_TipoComprobanteCod,
                     tipoComprobanteDesc = x.T_TipoComprobanteDesc,
                     estadoComprobanteDesc = x.T_EstadoComprobanteDesc
                 }); ;
@@ -83,6 +87,7 @@ namespace Domain.Services.Implementations
                     numeroComprobante = x.I_NumeroComprobante,
                     fechaEmision = x.D_FechaEmision,
                     esGravado = x.B_EsGravado,
+                    tipoComprobanteCod = x.C_TipoComprobanteCod,
                     tipoComprobanteDesc = x.T_TipoComprobanteDesc,
                     estadoComprobanteDesc = x.T_EstadoComprobanteDesc
                 }); ;
@@ -116,21 +121,78 @@ namespace Domain.Services.Implementations
             return new Response(result);
         }
 
-        public Response GenerarTXTDigiFlow()
+        public Response GenerarTXTDigiFlow(int[] pagosBancoID)
         {
+            IEnumerable<ComprobantePagoDTO> comprobantePagoDTO;
             Response response;
 
             try
             {
-                response = new Response() { 
-                    Value = false,
-                    Message = "Se generó un número de comprobante, pero ocurrió un error al generar el TXT."
+                comprobantePagoDTO = this.ObtenerComprobantePagoBanco(pagosBancoID[0]);
+
+                var memoryStream = new MemoryStream();
+
+                var writer = new StreamWriter(memoryStream, Encoding.Default);
+
+                string inicialTipoComprobante = comprobantePagoDTO.First().tipoComprobanteCod == TipoComprobante.BOLETA ? "B" : (comprobantePagoDTO.First().tipoComprobanteCod == TipoComprobante.FACTURA ? "F" : "");
+
+                string numeroSerie = comprobantePagoDTO.First().numeroSerie.Value.ToString("D4");
+
+                string numeroComprobante = comprobantePagoDTO.First().numeroComprobante.Value.ToString("D8");
+
+                decimal montoPagado = comprobantePagoDTO.Sum(x => x.montoPagado + x.interesMoratorio);
+
+                DateTime fechaEmision = comprobantePagoDTO.First().fechaEmision.Value;
+
+                string nombreArchivo = String.Format("{0}{1}_{2}_Simple_DGF.txt", inicialTipoComprobante, numeroSerie, numeroComprobante);
+
+                string filaSerie = String.Format("A;Serie;;{0}{1}", inicialTipoComprobante, numeroSerie);
+                writer.WriteLine(filaSerie);
+
+                string filaCorrelativo = String.Format("A;Correlativo;;{0}", numeroComprobante);
+                writer.WriteLine(filaCorrelativo);
+
+                string filaRUCEmisor = "A;RUTEmis;;20170934289";
+                writer.WriteLine(filaRUCEmisor);
+
+                string filaNombreComercial = "A;NomComer;;UNIVERSIDAD NACIONAL FEDERICO VILLARREAL";
+                writer.WriteLine(filaNombreComercial);
+
+                string filaRazonSocial = "A;RznSocEmis;;UNIVERSIDAD NACIONAL FEDERICO VILLARREAL";
+                writer.WriteLine(filaRazonSocial);
+
+                string filaMontoNeto = String.Format("A;MntNeto;;{0}", montoPagado.ToString(FormatosDecimal.BASIC_DECIMAL));
+                writer.WriteLine(filaMontoNeto);
+
+                string filaMontoTotalIGV = "A;MntTotalIgv;;0";
+                writer.WriteLine(filaMontoTotalIGV);
+
+                string filaMontoTotal = String.Format("A;MntTotal;;{0}", montoPagado.ToString(FormatosDecimal.BASIC_DECIMAL));
+                writer.WriteLine(filaMontoTotal);
+
+                string filaFechaEmision = String.Format("A;FchEmis;;{0}", fechaEmision.ToString(FormatosDateTime.BASIC_DATE3));
+                writer.WriteLine(filaFechaEmision);
+
+                writer.Flush();
+
+                memoryStream.Seek(0, SeekOrigin.Begin);
+
+                string directorioGuardado = ConfigurationManager.AppSettings["DirectorioDigiflow"].ToString();
+
+                using (FileStream fileStream = new FileStream(Path.Combine(directorioGuardado, nombreArchivo), FileMode.Create))
+                {
+                    memoryStream.CopyTo(fileStream);
+                }
+
+                response = new Response() {
+                    Value = true,
+                    Message = "Generación de número de comprobante y archivo TXT exitoso."
                 };
             }
             catch (Exception ex)
             {
                 response = new Response() { 
-                    Message = ex.Message
+                    Message = "Se generó un número de comprobante, pero ocurrió un error al generar el TXT. Error: [" + ex.Message + "]"
                 };
             }
 

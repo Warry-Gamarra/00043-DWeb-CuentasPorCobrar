@@ -49,6 +49,8 @@ namespace Data.Procedures
 
         public bool? B_EsGravado { get; set; }
 
+        public string C_TipoComprobanteCod { get;set; }
+
         public string T_TipoComprobanteDesc { get; set; }
 
         public string T_EstadoComprobanteDesc { get; set; }

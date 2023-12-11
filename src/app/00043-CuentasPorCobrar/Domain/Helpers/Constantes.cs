@@ -19,6 +19,8 @@ namespace Domain.Helpers
 
         public const string BASIC_DATE2 = "dd-MM-yyyy";
 
+        public const string BASIC_DATE3 = "yyyy-MM-dd";
+
         public const string BASIC_TIME = "HH:mm:ss";
 
         public const string BASIC_DATETIME = "dd/MM/yyyy HH:mm:ss";
@@ -64,4 +66,14 @@ namespace Domain.Helpers
         public const int ID = 14;
     }
 
+    public static class TipoComprobante
+    {
+        public const string BOLETA = "03";
+
+        public const string FACTURA = "01";
+
+        public const string NOTA_CREDITO = "07";
+
+        public const string NOTA_DEBITO = "08";
+    }
 }

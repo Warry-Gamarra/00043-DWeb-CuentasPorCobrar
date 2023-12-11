@@ -62,6 +62,8 @@ namespace WebApp.Models
             }
         }
 
+        public string tipoComprobanteCod {  get; set; }
+
         public string tipoComprobanteDesc { get; set; }
 
         public string estadoComprobanteDesc { get; set; }

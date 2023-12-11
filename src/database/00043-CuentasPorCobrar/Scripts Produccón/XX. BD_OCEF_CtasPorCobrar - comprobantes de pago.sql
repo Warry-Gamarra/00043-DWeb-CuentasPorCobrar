@@ -1,12 +1,16 @@
 /*
-- AGREGAR CRITERIO DE SIN NÚMERO DE COMPROBANTE y estado comprobante.
-- Pagos con fecha de antiguedad  7 días o según criterio.
+- AGREGAR CRITERIO DE SIN NÚMERO DE COMPROBANTE, estado comprobante Y TIPO COMPROBANTE.
 - Mantenimiento de Número de Serie y comprobante.
 - Mantenimiento de Tipo de Comprobante.
+- Pagos con fecha de antiguedad  7 días (bloquear) o según criterio.
 - Mantenimiento para asignar fecha de antiguedad.
-- Agregar validación para OMITIR PAGOS QUE YA TIENEN NÚMERO DE COMPROBANTES.
-- Generar el TXT según formato de digiflow y almacenarlo en una carpeta.
 - Realizar el calculo de gravado en el TXT.
+- Generar el TXT según formato de digiflow y almacenarlo en una carpeta.
+
+
+NOTAS:
+---EN EL EXCEL GRE->CATALOGOSUNAT->CELDA 109 HAY UNA TABLA TIPO DE AFECTO, CONSULTAR SI ESTE VALOR SE OBTIENE DE AHÍ, o lo dejo como booleano.
+--Al crear el TXT, el nombre del archivo debe tener el numero de comprobante con 4 digitos, pero al ser varios pagos se va a llegar rápido a los 4 dígitos.
 */
 
 USE BD_OCEF_CtasPorCobrar
@@ -57,7 +61,7 @@ CREATE TABLE dbo.TR_Comprobante(
 	I_TipoComprobanteID INT NOT NULL,
 	I_SerieID INT NOT NULL,
 	I_NumeroComprobante INT NOT NULL,	
-	B_EsGravado BIT NOT NULL,--EN EL EXCEL GRE->CATALOGOSUNAT->CELDA 109 HAY UNA TABLA TIPO DE AFECTO, CONSULTAR SI ESTE VALOR SE OBTIENE DE AHÍ, o lo dejo como booleano.
+	B_EsGravado BIT NOT NULL,
 	D_FechaEmision DATETIME NOT NULL,
 	I_EstadoComprobanteID INT NOT NULL,
 	I_UsuarioCre INT NOT NULL,
@@ -203,6 +207,7 @@ BEGIN
 		com.I_NumeroComprobante,
 		com.D_FechaEmision,
 		com.B_EsGravado,
+		tipCom.C_TipoComprobanteCod,
 		tipCom.T_TipoComprobanteDesc,
 		estCom.T_EstadoComprobanteDesc
 	FROM dbo.TR_PagoBanco pagBan
@@ -286,6 +291,7 @@ BEGIN
 		com.I_NumeroComprobante,
 		com.D_FechaEmision,
 		com.B_EsGravado,
+		tipCom.C_TipoComprobanteCod,
 		tipCom.T_TipoComprobanteDesc,
 		estCom.T_EstadoComprobanteDesc
 	FROM dbo.TR_PagoBanco pagBan
@@ -309,7 +315,3 @@ GO
 EXEC USP_S_ListarComprobantePago @C_CodOperacion = '738724';
 EXEC USP_S_ObtenerComprobantePago @I_PagoBancoID = 609301;
 
-
-
-SELECT * FROM dbo.TR_Comprobante
-SELECT * FROM dbo.TR_Comprobante_PagoBanco
