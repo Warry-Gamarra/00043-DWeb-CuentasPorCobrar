@@ -39,7 +39,7 @@ namespace WebApp.Models.Facades
                     lugarPago = x.lugarPago,
                     condicionPago = x.condicionPago,
                     tipoPago = x.tipoPago,
-                    comprobantePagoID = x.comprobantePagoID,
+                    comprobanteID = x.comprobanteID,
                     numeroSerie = x.numeroSerie,
                     numeroComprobante = x.numeroComprobante,
                     fechaEmision = x.fechaEmision,
@@ -69,7 +69,7 @@ namespace WebApp.Models.Facades
                     lugarPago = x.lugarPago,
                     condicionPago = x.condicionPago,
                     tipoPago = x.tipoPago,
-                    comprobantePagoID = x.comprobantePagoID,
+                    comprobanteID = x.comprobanteID,
                     numeroSerie = x.numeroSerie,
                     numeroComprobante = x.numeroComprobante,
                     fechaEmision = x.fechaEmision,
@@ -83,11 +83,24 @@ namespace WebApp.Models.Facades
 
         public Response GenerarNumeroComprobante(int[] pagosBancoID, int tipoComprobanteID, int serieID, bool esGravado, int currentUserID)
         {
+            Response resultadoGeneracionNumComprobante;
+            Response resultadoGeneracionTXT;
             Response resultado;
 
             try
             {
-                resultado = _comprobantePagoService.GenerarNumeroComprobante(pagosBancoID, tipoComprobanteID, serieID, esGravado, currentUserID);
+                resultadoGeneracionNumComprobante = _comprobantePagoService.GenerarNumeroComprobante(pagosBancoID, tipoComprobanteID, serieID, esGravado, currentUserID);
+
+                if (resultadoGeneracionNumComprobante.Value)
+                {
+                    resultadoGeneracionTXT = _comprobantePagoService.GenerarTXTDigiFlow();
+
+                    resultado = resultadoGeneracionTXT;
+                }
+                else
+                {
+                    resultado = resultadoGeneracionNumComprobante;
+                }
             }
             catch (Exception ex)
             {
@@ -126,8 +139,13 @@ namespace WebApp.Models.Facades
 
             resultadoGeneral.Value = (cantRegistros == cantGeneracionCorrecta);
 
-            resultadoGeneral.Message = resultadoGeneral.Value ? "La generación de número de comprobante correcta." :
-                String.Format("Se generaron {0} números de comprobante de {1}.", cantGeneracionCorrecta, cantRegistros);
+            resultadoGeneral.Message = resultadoGeneral.Value ? "La generación de archivo TXT correcto." :
+                    String.Format("Se {0} \"{1}\" {2} TXT de \"{3}\" {4}.",
+                    cantGeneracionCorrecta == 1 ? "generó" : "generaron",
+                    cantGeneracionCorrecta,
+                    cantGeneracionCorrecta == 1 ? "archivo" : "archivos",
+                    cantRegistros,
+                    cantRegistros == 1 ? "pago" : "pagos");
 
             return resultadoGeneral;
         }

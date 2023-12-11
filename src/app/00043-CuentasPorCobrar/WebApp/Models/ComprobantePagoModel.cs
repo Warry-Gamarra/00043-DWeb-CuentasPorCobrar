@@ -44,7 +44,7 @@ namespace WebApp.Models
 
         public TipoPago tipoPago { get; set; }
 
-        public int? comprobantePagoID { get; set; }
+        public int? comprobanteID { get; set; }
 
         public int? numeroSerie { get; set; }
 
@@ -70,7 +70,7 @@ namespace WebApp.Models
         {
             get
             {
-                return comprobantePagoID.HasValue ? String.Format("{0} - {1}", numeroSerie.Value, numeroComprobante.Value) : "---";
+                return comprobanteID.HasValue ? String.Format("{0} - {1}", numeroSerie.Value, numeroComprobante.Value) : "---";
             }
         }
     }

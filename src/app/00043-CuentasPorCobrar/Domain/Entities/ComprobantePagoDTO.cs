@@ -37,7 +37,7 @@ namespace Domain.Entities
 
         public TipoPago tipoPago { get; set; }
 
-        public int? comprobantePagoID { get; set; }
+        public int? comprobanteID { get; set; }
 
         public int? numeroSerie { get; set; }
 

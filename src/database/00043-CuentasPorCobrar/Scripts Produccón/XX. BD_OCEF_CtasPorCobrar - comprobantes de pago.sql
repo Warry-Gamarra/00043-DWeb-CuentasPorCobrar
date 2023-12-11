@@ -1,11 +1,12 @@
 /*
-- AGREGAR CRITERIO DE SIN NÚMERO DE COMPROBANTE.
+- AGREGAR CRITERIO DE SIN NÚMERO DE COMPROBANTE y estado comprobante.
 - Pagos con fecha de antiguedad  7 días o según criterio.
 - Mantenimiento de Número de Serie y comprobante.
 - Mantenimiento de Tipo de Comprobante.
 - Mantenimiento para asignar fecha de antiguedad.
 - Agregar validación para OMITIR PAGOS QUE YA TIENEN NÚMERO DE COMPROBANTES.
 - Generar el TXT según formato de digiflow y almacenarlo en una carpeta.
+- Realizar el calculo de gravado en el TXT.
 */
 
 USE BD_OCEF_CtasPorCobrar
@@ -51,8 +52,8 @@ CREATE TABLE dbo.TC_SerieComprobante(
 )
 GO
 
-CREATE TABLE dbo.TR_ComprobantePago(
-	I_ComprobantePagoID INT IDENTITY(1,1),
+CREATE TABLE dbo.TR_Comprobante(
+	I_ComprobanteID INT IDENTITY(1,1),
 	I_TipoComprobanteID INT NOT NULL,
 	I_SerieID INT NOT NULL,
 	I_NumeroComprobante INT NOT NULL,	
@@ -61,9 +62,7 @@ CREATE TABLE dbo.TR_ComprobantePago(
 	I_EstadoComprobanteID INT NOT NULL,
 	I_UsuarioCre INT NOT NULL,
 	D_FecCre DATETIME NOT NULL,
-	I_UsuarioMod INT,
-	D_FecMod DATETIME,
-	CONSTRAINT PK_ComprobantePago PRIMARY KEY (I_ComprobantePagoID),
+	CONSTRAINT PK_Comprobante PRIMARY KEY (I_ComprobanteID),
 	CONSTRAINT FK_TipoComprobante_ComprobantePago FOREIGN KEY (I_TipoComprobanteID) REFERENCES TC_TipoComprobante(I_TipoComprobanteID),
 	CONSTRAINT FK_Estado_ComprobantePago FOREIGN KEY (I_EstadoComprobanteID) REFERENCES TC_EstadoComprobante(I_EstadoComprobanteID),
 	CONSTRAINT UQ_ComprobantePago UNIQUE (I_SerieID, I_NumeroComprobante),
@@ -71,10 +70,19 @@ CREATE TABLE dbo.TR_ComprobantePago(
 )
 GO
 
-ALTER TABLE dbo.TR_PagoBanco ADD I_ComprobantePagoID INT
-GO
-
-ALTER TABLE dbo.TR_PagoBanco ADD CONSTRAINT FK_ComprobantePago_PagoBanco FOREIGN KEY (I_ComprobantePagoID) REFERENCES TR_ComprobantePago(I_ComprobantePagoID)
+CREATE TABLE dbo.TR_Comprobante_PagoBanco(
+	I_ComprobantePagoBancoID INT IDENTITY(1,1),
+	I_ComprobanteID INT NOT NULL,
+	I_PagoBancoID INT NOT NULL,
+	B_Habilitado BIT NOT NULL,
+	I_UsuarioCre INT NOT NULL,
+	D_FecCre DATETIME NOT NULL,
+	I_UsuarioMod INT,
+	D_FecMod DATETIME,
+	CONSTRAINT PK_ComprobantePagoBanco PRIMARY KEY(I_ComprobantePagoBancoID),
+	CONSTRAINT FK_ComprobantePago_ComprobantePagoBanco FOREIGN KEY (I_ComprobanteID) REFERENCES TR_Comprobante(I_ComprobanteID),
+	CONSTRAINT FK_PagoBanco_ComprobantePagoBanco FOREIGN KEY (I_PagoBancoID) REFERENCES TR_PagoBanco(I_PagoBancoID)
+)
 GO
 
 INSERT dbo.TC_SerieComprobante(I_NumeroSerie, B_Habilitado, I_UsuarioCre, D_FecCre) VALUES(1, 1, 1, GETDATE())
@@ -110,8 +118,9 @@ AS
 BEGIN  
 	SET NOCOUNT ON;
 	
-	DECLARE @I_ComprobantePagoID INT,
+	DECLARE @I_ComprobanteID INT,
 			@I_NumeroComprobante INT,
+			@D_FechaAccion DATETIME,
 			@D_FechaEmision DATETIME,
 			@I_EstadoComprobanteID INT;
 
@@ -120,21 +129,25 @@ BEGIN
 
 		SET @I_EstadoComprobanteID = (SELECT I_EstadoComprobanteID FROM dbo.TC_EstadoComprobante WHERE C_EstadoComprobanteCod = 'PEN');
 		
-		SET @I_NumeroComprobante = (SELECT ISNULL(MAX(c.I_NumeroComprobante), 0) FROM dbo.TR_ComprobantePago c WHERE c.I_SerieID = @I_SerieID) + 1;
+		SET @I_NumeroComprobante = (SELECT ISNULL(MAX(c.I_NumeroComprobante), 0) FROM dbo.TR_Comprobante c WHERE c.I_SerieID = @I_SerieID) + 1;
 
+		SET @D_FechaAccion = GETDATE();
 		SET @D_FechaEmision = GETDATE();
 
-		INSERT dbo.TR_ComprobantePago(I_TipoComprobanteID, I_SerieID, I_NumeroComprobante, B_EsGravado, D_FechaEmision, I_EstadoComprobanteID, I_UsuarioCre, D_FecCre)
-		VALUES(@I_TipoComprobanteID, @I_SerieID, @I_NumeroComprobante, @B_EsGravado, @D_FechaEmision, @I_EstadoComprobanteID, @UserID, @D_FechaEmision);
+		INSERT dbo.TR_Comprobante(I_TipoComprobanteID, I_SerieID, I_NumeroComprobante, B_EsGravado, D_FechaEmision, I_EstadoComprobanteID, I_UsuarioCre, D_FecCre)
+		VALUES(@I_TipoComprobanteID, @I_SerieID, @I_NumeroComprobante, @B_EsGravado, @D_FechaEmision, @I_EstadoComprobanteID, @UserID, @D_FechaAccion);
 
-		SET @I_ComprobantePagoID = SCOPE_IDENTITY();
+		SET @I_ComprobanteID = SCOPE_IDENTITY();
 
-		UPDATE dbo.TR_PagoBanco SET 
-			I_ComprobantePagoID = @I_ComprobantePagoID,
+		UPDATE dbo.TR_Comprobante_PagoBanco SET 
+			B_Habilitado = 0,
 			I_UsuarioMod = @UserID,
-			D_FecMod = @D_FechaEmision
-		WHERE I_PagoBancoID IN (SELECT ID FROM @PagoBancoIDs);
-		
+			D_FecMod = @D_FechaAccion
+		WHERE I_PagoBancoID IN (SELECT ID FROM @PagoBancoIDs) AND B_Habilitado = 1;
+
+		INSERT dbo.TR_Comprobante_PagoBanco(I_ComprobanteID, I_PagoBancoID, B_Habilitado, I_UsuarioCre, D_FecCre)
+		SELECT @I_ComprobanteID, ID, 1, @UserID, @D_FechaAccion FROM @PagoBancoIDs;
+
 		COMMIT TRAN
 		SET @B_Result = 1;
 		SET @T_Message = 'Generación de número de comprobante exitoso.';
@@ -185,7 +198,7 @@ BEGIN
 		pagBan.T_LugarPago,
 		cond.T_OpcionDesc AS ''T_Condicion'',
 		pagBan.I_TipoPagoID,
-		com.I_ComprobantePagoID,
+		com.I_ComprobanteID,
 		ser.I_NumeroSerie,
 		com.I_NumeroComprobante,
 		com.D_FechaEmision,
@@ -196,7 +209,8 @@ BEGIN
 	INNER JOIN dbo.TC_EntidadFinanciera ban ON ban.I_EntidadFinanID = pagBan.I_EntidadFinanID
 	INNER JOIN dbo.TC_CuentaDeposito cta ON cta.I_CtaDepositoID = pagBan.I_CtaDepositoID
 	INNER JOIN dbo.TC_CatalogoOpcion cond ON cond.I_OpcionID = pagBan.I_CondicionPagoID
-	LEFT JOIN dbo.TR_ComprobantePago com ON com.I_ComprobantePagoID = pagBan.I_ComprobantePagoID
+	LEFT JOIN dbo.TR_Comprobante_PagoBanco cpb ON cpb.I_PagoBancoID = pagBan.I_PagoBancoID AND cpb.B_Habilitado = 1
+	LEFT JOIN dbo.TR_Comprobante com ON com.I_ComprobanteID = cpb.I_ComprobanteID	
 	LEFT JOIN dbo.TC_SerieComprobante ser ON ser.I_SerieID = com.I_SerieID
 	LEFT JOIN dbo.TC_TipoComprobante tipCom ON tipCom.I_TipoComprobanteID = com.I_TipoComprobanteID
 	LEFT JOIN dbo.TC_EstadoComprobante estCom ON estCom.I_EstadoComprobanteID = com.I_EstadoComprobanteID
@@ -267,7 +281,7 @@ BEGIN
 		pagBan.T_LugarPago,
 		cond.T_OpcionDesc AS 'T_Condicion',
 		pagBan.I_TipoPagoID,
-		com.I_ComprobantePagoID,
+		com.I_ComprobanteID,
 		ser.I_NumeroSerie,
 		com.I_NumeroComprobante,
 		com.D_FechaEmision,
@@ -278,7 +292,8 @@ BEGIN
 	INNER JOIN dbo.TC_EntidadFinanciera ban ON ban.I_EntidadFinanID = pagBan.I_EntidadFinanID
 	INNER JOIN dbo.TC_CuentaDeposito cta ON cta.I_CtaDepositoID = pagBan.I_CtaDepositoID
 	INNER JOIN dbo.TC_CatalogoOpcion cond ON cond.I_OpcionID = pagBan.I_CondicionPagoID
-	LEFT JOIN dbo.TR_ComprobantePago com ON com.I_ComprobantePagoID = pagBan.I_ComprobantePagoID
+	LEFT JOIN dbo.TR_Comprobante_PagoBanco cpb ON cpb.I_PagoBancoID = pagBan.I_PagoBancoID AND cpb.B_Habilitado = 1
+	LEFT JOIN dbo.TR_Comprobante com ON com.I_ComprobanteID = cpb.I_ComprobanteID	
 	LEFT JOIN dbo.TC_SerieComprobante ser ON ser.I_SerieID = com.I_SerieID
 	LEFT JOIN dbo.TC_TipoComprobante tipCom ON tipCom.I_TipoComprobanteID = com.I_TipoComprobanteID
 	LEFT JOIN dbo.TC_EstadoComprobante estCom ON estCom.I_EstadoComprobanteID = com.I_EstadoComprobanteID
@@ -294,3 +309,7 @@ GO
 EXEC USP_S_ListarComprobantePago @C_CodOperacion = '738724';
 EXEC USP_S_ObtenerComprobantePago @I_PagoBancoID = 609301;
 
+
+
+SELECT * FROM dbo.TR_Comprobante
+SELECT * FROM dbo.TR_Comprobante_PagoBanco

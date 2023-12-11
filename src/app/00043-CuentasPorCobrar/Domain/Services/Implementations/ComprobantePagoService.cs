@@ -49,7 +49,7 @@ namespace Domain.Services.Implementations
                     interesMoratorio = x.I_InteresMora,
                     condicionPago = x.T_Condicion,
                     tipoPago = x.I_TipoPagoID == 133 ? TipoPago.Obligacion : TipoPago.Tasa,
-                    comprobantePagoID = x.I_ComprobantePagoID,
+                    comprobanteID = x.I_ComprobanteID,
                     numeroSerie = x.I_NumeroSerie,
                     numeroComprobante = x.I_NumeroComprobante,
                     fechaEmision = x.D_FechaEmision,
@@ -78,7 +78,7 @@ namespace Domain.Services.Implementations
                     interesMoratorio = x.I_InteresMora,
                     condicionPago = x.T_Condicion,
                     tipoPago = x.I_TipoPagoID == 133 ? TipoPago.Obligacion : TipoPago.Tasa,
-                    comprobantePagoID = x.I_ComprobantePagoID,
+                    comprobanteID = x.I_ComprobanteID,
                     numeroSerie = x.I_NumeroSerie,
                     numeroComprobante = x.I_NumeroComprobante,
                     fechaEmision = x.D_FechaEmision,
@@ -114,6 +114,27 @@ namespace Domain.Services.Implementations
             result = generarComprobantePago.Execute(dataTable);
 
             return new Response(result);
+        }
+
+        public Response GenerarTXTDigiFlow()
+        {
+            Response response;
+
+            try
+            {
+                response = new Response() { 
+                    Value = false,
+                    Message = "Se generó un número de comprobante, pero ocurrió un error al generar el TXT."
+                };
+            }
+            catch (Exception ex)
+            {
+                response = new Response() { 
+                    Message = ex.Message
+                };
+            }
+
+            return response;
         }
     }
 }

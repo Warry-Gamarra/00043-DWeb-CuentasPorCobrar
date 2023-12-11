@@ -39,7 +39,7 @@ namespace Data.Procedures
 
         public int I_TipoPagoID { get; set; }
 
-        public int? I_ComprobantePagoID { get; set; }
+        public int? I_ComprobanteID { get; set; }
 
         public int? I_NumeroSerie { get; set; }
 

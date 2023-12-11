@@ -59,7 +59,7 @@ namespace WebApp.Controllers
 
             ViewBag.Title = "Comprobante de Pago";
 
-            ViewBag.TieneComprobante = model.First().comprobantePagoID.HasValue;
+            ViewBag.TieneComprobante = model.First().comprobanteID.HasValue;
 
             ViewBag.PagoBancoID = id;
 
