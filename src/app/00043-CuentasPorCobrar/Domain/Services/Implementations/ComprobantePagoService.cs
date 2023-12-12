@@ -18,7 +18,8 @@ namespace Domain.Services.Implementations
     public class ComprobantePagoService : IComprobantePagoService
     {
         public IEnumerable<ComprobantePagoDTO> ListarComprobantesPagoBanco(TipoPago? tipoPago, int? idEntidadFinanciera, int? ctaDeposito, 
-            string codOperacion, string codigoInterno, string codDepositante, string nomDepositante, DateTime? fechaInicio, DateTime? fechaFinal)
+            string codOperacion, string codigoInterno, string codDepositante, string nomDepositante, DateTime? fechaInicio, DateTime? fechaFinal,
+            int? tipoComprobanteID, bool? estadoGeneracion, int? estadoComprobanteID)
         {
             int? tipoPagoID = null;
 
@@ -37,7 +38,8 @@ namespace Domain.Services.Implementations
             }
 
             var result = USP_S_ListarComprobantePago
-                .GetAll(tipoPagoID, idEntidadFinanciera, ctaDeposito, codOperacion, codigoInterno, codDepositante, nomDepositante, fechaInicio, fechaFinal)
+                .GetAll(tipoPagoID, idEntidadFinanciera, ctaDeposito, codOperacion, codigoInterno, codDepositante, nomDepositante, fechaInicio, fechaFinal,
+                tipoComprobanteID, estadoGeneracion, estadoComprobanteID)
                 .Select(x => new ComprobantePagoDTO() {
                     pagoBancoID = x.I_PagoBancoID,
                     entidadFinanID = x.I_EntidadFinanID,

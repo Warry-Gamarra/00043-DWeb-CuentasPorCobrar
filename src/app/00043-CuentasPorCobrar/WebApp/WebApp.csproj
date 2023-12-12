@@ -461,7 +461,9 @@
     </Compile>
     <Compile Include="Models\EditarPagoTasa.cs" />
     <Compile Include="Models\Facades\ComprobantePagoServiceFacade.cs" />
+    <Compile Include="Models\Facades\EstadoComprobanteServiceFacade.cs" />
     <Compile Include="Models\Facades\IComprobantePagoServiceFacade.cs" />
+    <Compile Include="Models\Facades\IEstadoComprobanteServiceFacade.cs" />
     <Compile Include="Models\Facades\IReporteGeneralServiceFacade.cs" />
     <Compile Include="Models\Facades\IReporteServiceFacade.cs" />
     <Compile Include="Models\Facades\ISerieComprobanteServiceFacade.cs" />

@@ -750,5 +750,18 @@ namespace Domain.Entities
 
             return dto;
         }
+
+        public static EstadoComprobanteDTO TC_EstadoComprobante_To_EstadoComprobanteDTO(TC_EstadoComprobante table)
+        {
+            var dto = new EstadoComprobanteDTO()
+            {
+                estadoComprobanteID = table.I_EstadoComprobanteID,
+                estadoComprobanteCod = table.C_EstadoComprobanteCod,
+                estadoComprobanteDesc = table.T_EstadoComprobanteDesc,
+                estaHabilitado = table.B_Habilitado
+            };
+
+            return dto;
+        }
     }
 }

@@ -11,7 +11,7 @@
     <button type="button" class="close closeModal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 </div>
 
-<div class="modal-body">
+<div class="modal-body" id="frmGenerarComprobante">
     <dl class="row">
         <dt class="col-sm-3 mb-3">Código Depositante</dt>
         <dd class="col-sm-9">@Model.First().codDepositante</dd>
@@ -115,9 +115,9 @@
     $(document).on('click', '#div_msg_comprobante #btnGenerar', function (e) {
         let parametros = {
             pagoBancoId: @pagoBancoID,
-            tipoComprobanteID: $('#cmbTipoComprobante').val(),
-            serieID: $('#cmbSerie').val(),
-            esGravado: $('#cmbEsGravado').val()
+            tipoComprobanteID: $('#frmGenerarComprobante #cmbTipoComprobante').val(),
+            serieID: $('#frmGenerarComprobante #cmbSerie').val(),
+            esGravado: $('#frmGenerarComprobante #cmbEsGravado').val()
         };
 
         $.ajax({

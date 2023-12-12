@@ -24,7 +24,8 @@ namespace WebApp.Models.Facades
         public IEnumerable<ComprobantePagoModel> ListarComprobantesPagoBanco(ConsultaComprobantePagoViewModel filtro)
         {
             var resultado = _comprobantePagoService.ListarComprobantesPagoBanco(filtro.tipoPago, filtro.entidadFinanciera, filtro.idCtaDeposito,
-                filtro.codOperacion, filtro.codInterno, filtro.codDepositante, filtro.nomDepositante, filtro.fechaInicio, filtro.fechaFin)
+                filtro.codOperacion, filtro.codInterno, filtro.codDepositante, filtro.nomDepositante, filtro.fechaInicio, filtro.fechaFin,
+                filtro.tipoComprobanteID, filtro.estadoGeneracion, filtro.estadoComprobanteID)
                 .Select(x => new ComprobantePagoModel() { 
                     pagoBancoID = x.pagoBancoID,
                     entidadFinanID = x.entidadFinanID,
@@ -130,7 +131,8 @@ namespace WebApp.Models.Facades
         public Response GenerarNumeroComprobante(ConsultaComprobantePagoViewModel filtro, int tipoComprobanteID, int serieID, bool esGravado, int currentUserID)
         {
             var listaPagos = _comprobantePagoService.ListarComprobantesPagoBanco(filtro.tipoPago, filtro.entidadFinanciera, filtro.idCtaDeposito,
-                filtro.codOperacion, filtro.codInterno, filtro.codDepositante, filtro.nomDepositante, filtro.fechaInicio, filtro.fechaFin)
+                filtro.codOperacion, filtro.codInterno, filtro.codDepositante, filtro.nomDepositante, filtro.fechaInicio, filtro.fechaFin,
+                filtro.tipoComprobanteID, filtro.estadoGeneracion, filtro.estadoComprobanteID)
                 .GroupBy(x => new { x.codOperacion, x.codDepositante, x.fecPago, x.entidadFinanID });
 
             var cantRegistros = listaPagos.Count();

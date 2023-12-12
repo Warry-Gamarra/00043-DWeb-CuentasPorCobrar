@@ -14,6 +14,12 @@ namespace WebApp.ViewModels
 
         public TipoPago? tipoPago { get; set; }
 
+        public int? tipoComprobanteID { get; set; }
+
+        public bool? estadoGeneracion { get; set; }
+
+        public int? estadoComprobanteID { get; set; }
+
         public int? entidadFinanciera { get; set; }
 
         public int? idCtaDeposito { get; set; }

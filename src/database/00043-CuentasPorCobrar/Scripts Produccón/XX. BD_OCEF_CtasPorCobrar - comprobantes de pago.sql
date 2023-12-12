@@ -1,16 +1,19 @@
 /*
-- AGREGAR CRITERIO DE SIN NÚMERO DE COMPROBANTE, estado comprobante Y TIPO COMPROBANTE.
+HOY
+----
 - Mantenimiento de Número de Serie y comprobante.
 - Mantenimiento de Tipo de Comprobante.
-- Pagos con fecha de antiguedad  7 días (bloquear) o según criterio.
+- Generar sólo a Pagos con fecha de antiguedad  7 días (bloquear).
 - Mantenimiento para asignar fecha de antiguedad.
 - Realizar el calculo de gravado en el TXT.
-- Generar el TXT según formato de digiflow y almacenarlo en una carpeta.
+- Sólo se pueden generar series hasta 9999.
+- Sólo se pueden generar números de comprobante hasta 99999999.
 
-
-NOTAS:
----EN EL EXCEL GRE->CATALOGOSUNAT->CELDA 109 HAY UNA TABLA TIPO DE AFECTO, CONSULTAR SI ESTE VALOR SE OBTIENE DE AHÍ, o lo dejo como booleano.
---Al crear el TXT, el nombre del archivo debe tener el numero de comprobante con 4 digitos, pero al ser varios pagos se va a llegar rápido a los 4 dígitos.
+MAÑANA
+-------
+- Generar el TXT según formato de digiflow y almacenarlo en una carpeta remota.
+- Consultar  la carpeta para actualizar el estado de los comprobantes.
+- Ver el flujo para generar un número de comprobante cuando el estado es error.
 */
 
 USE BD_OCEF_CtasPorCobrar
@@ -179,7 +182,10 @@ CREATE PROCEDURE [dbo].[USP_S_ListarComprobantePago]
 @C_CodDepositante VARCHAR(20) = NULL,
 @T_NomDepositante VARCHAR(200) = NULL,
 @D_FechaInicio DATETIME = NULL,
-@D_FechaFin DATETIME = NULL
+@D_FechaFin DATETIME = NULL,
+@I_TipoComprobanteID INT = NULL,
+@I_EstadoGeneracion BIT = NULL,
+@I_EstadoComprobanteID INT = NULL
 AS
 BEGIN
 	SET NOCOUNT ON;
@@ -220,7 +226,7 @@ BEGIN
 	LEFT JOIN dbo.TC_TipoComprobante tipCom ON tipCom.I_TipoComprobanteID = com.I_TipoComprobanteID
 	LEFT JOIN dbo.TC_EstadoComprobante estCom ON estCom.I_EstadoComprobanteID = com.I_EstadoComprobanteID
 	WHERE pagBan.B_Anulado = 0 AND NOT pagBan.I_TipoPagoID = 132
-	' + CASE WHEN @I_TipoPagoID IS NULL THEN '' ELSE 'AND pagBan.I_TipoPagoID = @I_TipoPagoID ' END + '
+	' + CASE WHEN @I_TipoPagoID IS NULL THEN '' ELSE 'AND pagBan.I_TipoPagoID = @I_TipoPagoID' END + '
 	' + CASE WHEN @I_EntidadFinanID IS NULL THEN '' ELSE 'AND pagBan.I_EntidadFinanID = @I_EntidadFinanID' END + '
 	' + CASE WHEN @I_CtaDepositoID IS NULL THEN '' ELSE 'AND pagBan.I_CtaDepositoID = @I_CtaDepositoID' END + '
 	' + CASE WHEN @C_CodOperacion IS NULL THEN '' ELSE 'AND pagBan.C_CodOperacion LIKE ''%'' + @C_CodOperacion' END + '
@@ -229,10 +235,13 @@ BEGIN
 	' + CASE WHEN @T_NomDepositante IS NULL THEN '' ELSE 'AND pagBan.T_NomDepositante LIKE ''%'' + @T_NomDepositante + ''%'' COLLATE Modern_Spanish_CI_AI' END + '
 	' + CASE WHEN @D_FechaInicio IS NULL THEN '' ELSE 'AND DATEDIFF(DAY, pagBan.D_FecPago, @D_FechaInicio) <= 0' END + '
 	' + CASE WHEN @D_FechaFin IS NULL THEN '' ELSE 'AND DATEDIFF(DAY, pagBan.D_FecPago, @D_FechaFin) >= 0' END + '
+	' + CASE WHEN @I_TipoComprobanteID IS NULL THEN '' ELSE 'AND com.I_TipoComprobanteID = @I_TipoComprobanteID' END + '
+	' + CASE WHEN @I_EstadoGeneracion IS NULL THEN '' ELSE (CASE WHEN @I_EstadoGeneracion = 1 THEN 'AND com.I_ComprobanteID IS NOT NULL' ELSE 'AND com.I_ComprobanteID IS NULL' END) END + '
+	' + CASE WHEN @I_EstadoComprobanteID IS NULL THEN '' ELSE 'AND com.I_EstadoComprobanteID = @I_EstadoComprobanteID' END + '
 	ORDER BY pagBan.D_FecPago DESC';
-
+	
 	SET @ParmDefinition = N'@I_TipoPagoID INT, @I_EntidadFinanID INT, @I_CtaDepositoID INT, @C_CodOperacion VARCHAR(50), @C_CodigoInterno VARCHAR(250),
-		@C_CodDepositante VARCHAR(20), @T_NomDepositante VARCHAR(200), @D_FechaInicio DATETIME, @D_FechaFin DATETIME';
+		@C_CodDepositante VARCHAR(20), @T_NomDepositante VARCHAR(200), @D_FechaInicio DATETIME, @D_FechaFin DATETIME, @I_TipoComprobanteID INT, @I_EstadoComprobanteID INT';
 
 	EXECUTE sp_executesql @SQLString, @ParmDefinition,
 		@I_TipoPagoID = @I_TipoPagoID,
@@ -243,7 +252,9 @@ BEGIN
 		@C_CodDepositante = @C_CodDepositante,
 		@T_NomDepositante = @T_NomDepositante,
 		@D_FechaInicio = @D_FechaInicio,
-		@D_FechaFin = @D_FechaFin;
+		@D_FechaFin = @D_FechaFin,
+		@I_TipoComprobanteID = @I_TipoComprobanteID,
+		@I_EstadoComprobanteID = @I_EstadoComprobanteID;
 END
 GO
 
@@ -314,4 +325,3 @@ GO
 
 EXEC USP_S_ListarComprobantePago @C_CodOperacion = '738724';
 EXEC USP_S_ObtenerComprobantePago @I_PagoBancoID = 609301;
-

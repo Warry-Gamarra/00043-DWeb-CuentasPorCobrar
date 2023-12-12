@@ -11,7 +11,8 @@ namespace Domain.Services
     public interface IComprobantePagoService
     {
         IEnumerable<ComprobantePagoDTO> ListarComprobantesPagoBanco(TipoPago? tipoPago, int? idEntidadFinanciera, int? ctaDeposito,
-            string codOperacion, string codigoInterno, string codDepositante, string nomDepositante, DateTime? fechaInicio, DateTime? fechaFinal);
+            string codOperacion, string codigoInterno, string codDepositante, string nomDepositante, DateTime? fechaInicio, DateTime? fechaFinal,
+            int? tipoComprobanteID, bool? estadoGeneracion, int? estadoComprobanteID);
 
         IEnumerable<ComprobantePagoDTO> ObtenerComprobantePagoBanco(int pagoBancoID);
 

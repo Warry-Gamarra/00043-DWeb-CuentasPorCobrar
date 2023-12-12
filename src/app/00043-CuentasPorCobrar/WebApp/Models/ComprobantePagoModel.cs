@@ -72,7 +72,7 @@ namespace WebApp.Models
         {
             get
             {
-                return comprobanteID.HasValue ? String.Format("{0} - {1}", numeroSerie.Value, numeroComprobante.Value) : "---";
+                return comprobanteID.HasValue ? String.Format("{0} - {1}", numeroSerie.Value.ToString("D4"), numeroComprobante.Value.ToString("D8")) : "---";
             }
         }
     }

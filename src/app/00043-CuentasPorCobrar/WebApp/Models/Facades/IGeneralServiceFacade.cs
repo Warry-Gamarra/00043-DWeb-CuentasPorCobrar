@@ -29,5 +29,7 @@ namespace WebApp.Models.Facades
         IEnumerable<SelectViewModel> Listar_CondicionAlumnoObligacion();
 
         IEnumerable<SelectViewModel> Listar_CondicionGeneracion();
+
+        IEnumerable<SelectViewModel> Listar_EstadoGeneracionComprobante();
     }
 }

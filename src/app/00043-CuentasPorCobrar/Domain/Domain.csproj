@@ -84,6 +84,7 @@
     <Compile Include="Entities\ColumnaSeccion.cs" />
     <Compile Include="Entities\ComprobantePagoDTO.cs" />
     <Compile Include="Entities\DevolucionPago.cs" />
+    <Compile Include="Entities\EstadoComprobanteDTO.cs" />
     <Compile Include="Entities\EstadoObligacionDTO.cs" />
     <Compile Include="Entities\PagoBancoObligacionDTO.cs" />
     <Compile Include="Entities\PagoObligacionDetalleDTO.cs" />
@@ -125,9 +126,11 @@
     <Compile Include="Entities\HelperResources.cs" />
     <Compile Include="Entities\CatalogoOpcionEntity.cs" />
     <Compile Include="Entities\CategoriaPago.cs" />
+    <Compile Include="Services\IEstadoComprobanteService.cs" />
     <Compile Include="Services\IComprobantePagoService.cs" />
     <Compile Include="Services\ICtaDepoServicioService.cs" />
     <Compile Include="Services\Implementations\ComprobantePagoService.cs" />
+    <Compile Include="Services\Implementations\EstadoComprobanteService.cs" />
     <Compile Include="Services\Implementations\PagoService.cs" />
     <Compile Include="Services\Implementations\ReporteGeneralService.cs" />
     <Compile Include="Services\Implementations\ReportePosgradoService.cs" />

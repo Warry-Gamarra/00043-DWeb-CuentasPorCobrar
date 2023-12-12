@@ -55,8 +55,9 @@ namespace Data.Procedures
 
         public string T_EstadoComprobanteDesc { get; set; }
 
-        public static IEnumerable<USP_S_ListarComprobantePago> GetAll(int? tipoPago, int? idEntidadFinanciera, int? idCtaDeposito, string codOperacion, string codInterno, 
-            string codDepositante, string nomDepositante, DateTime? fechaInicio, DateTime? fechaFinal)
+        public static IEnumerable<USP_S_ListarComprobantePago> GetAll(int? I_TipoPagoID, int? I_EntidadFinanID, int? I_CtaDepositoID, string C_CodOperacion, 
+            string C_CodigoInterno, string C_CodDepositante, string T_NomDepositante, DateTime? D_FechaInicio, DateTime? D_FechaFin, 
+            int? I_TipoComprobanteID, bool? I_EstadoGeneracion, int? I_EstadoComprobanteID)
         {
             string s_command;
             IEnumerable<USP_S_ListarComprobantePago> result;
@@ -67,15 +68,18 @@ namespace Data.Procedures
                 s_command = "USP_S_ListarComprobantePago";
 
                 parameters = new DynamicParameters();
-                parameters.Add(name: "I_TipoPagoID", dbType: DbType.Int32, value: tipoPago);
-                parameters.Add(name: "I_EntidadFinanID", dbType: DbType.Int32, value: idEntidadFinanciera);
-                parameters.Add(name: "I_CtaDepositoID", dbType: DbType.Int32, value: idCtaDeposito);
-                parameters.Add(name: "C_CodOperacion", dbType: DbType.String, value: codOperacion);
-                parameters.Add(name: "C_CodigoInterno", dbType: DbType.String, value: codInterno);
-                parameters.Add(name: "C_CodDepositante", dbType: DbType.String, value: codDepositante);
-                parameters.Add(name: "T_NomDepositante", dbType: DbType.String, value: nomDepositante);
-                parameters.Add(name: "D_FechaInicio", dbType: DbType.DateTime, value: fechaInicio);
-                parameters.Add(name: "D_FechaFin", dbType: DbType.DateTime, value: fechaFinal);
+                parameters.Add(name: "I_TipoPagoID", dbType: DbType.Int32, value: I_TipoPagoID);
+                parameters.Add(name: "I_EntidadFinanID", dbType: DbType.Int32, value: I_EntidadFinanID);
+                parameters.Add(name: "I_CtaDepositoID", dbType: DbType.Int32, value: I_CtaDepositoID);
+                parameters.Add(name: "C_CodOperacion", dbType: DbType.String, value: C_CodOperacion);
+                parameters.Add(name: "C_CodigoInterno", dbType: DbType.String, value: C_CodigoInterno);
+                parameters.Add(name: "C_CodDepositante", dbType: DbType.String, value: C_CodDepositante);
+                parameters.Add(name: "T_NomDepositante", dbType: DbType.String, value: T_NomDepositante);
+                parameters.Add(name: "D_FechaInicio", dbType: DbType.DateTime, value: D_FechaInicio);
+                parameters.Add(name: "D_FechaFin", dbType: DbType.DateTime, value: D_FechaFin);
+                parameters.Add(name: "I_TipoComprobanteID", dbType: DbType.Int32, value: I_TipoComprobanteID);
+                parameters.Add(name: "I_EstadoGeneracion", dbType: DbType.Boolean, value: I_EstadoGeneracion);
+                parameters.Add(name: "I_EstadoComprobanteID", dbType: DbType.Int32, value: I_EstadoComprobanteID);
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {

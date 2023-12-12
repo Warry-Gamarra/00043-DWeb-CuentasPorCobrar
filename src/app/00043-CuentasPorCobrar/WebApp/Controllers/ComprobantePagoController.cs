@@ -22,6 +22,7 @@ namespace WebApp.Controllers
         private IGeneralServiceFacade generalServiceFacade;
         private ITipoComprobanteServiceFacade _tipoComprobanteServiceFacade;
         private ISerieComprobanteServiceFacade _serieComprobanteServiceFacade;
+        private IEstadoComprobanteServiceFacade _estadoComprobanteServiceFacade;
 
         public ComprobantePagoController()
         {
@@ -30,6 +31,7 @@ namespace WebApp.Controllers
             generalServiceFacade = new GeneralServiceFacade();
             _tipoComprobanteServiceFacade = new TipoComprobanteServiceFacade();
             _serieComprobanteServiceFacade = new SerieComprobanteServiceFacade();
+            _estadoComprobanteServiceFacade = new EstadoComprobanteServiceFacade();
         }
 
         [HttpGet]
@@ -48,6 +50,12 @@ namespace WebApp.Controllers
                 model.entidadFinanciera.HasValue ? _selectModel.GetCtasDeposito(model.entidadFinanciera.Value) : new List<SelectViewModel>(), "Value", "TextDisplay", model.idCtaDeposito);
 
             ViewBag.TipoPago = new SelectList(generalServiceFacade.Listar_TiposPago(), "Value", "TextDisplay");
+
+            ViewBag.TiposComprobante = new SelectList(_tipoComprobanteServiceFacade.ListarTiposComprobante(false), "Value", "TextDisplay");
+
+            ViewBag.EstadosComprobante = new SelectList(_estadoComprobanteServiceFacade.ListarEstadosComprobante(false), "Value", "TextDisplay");
+
+            ViewBag.EstadosGeneracionComprobante = new SelectList(generalServiceFacade.Listar_EstadoGeneracionComprobante(), "Value", "TextDisplay");
 
             return View(model);
         }

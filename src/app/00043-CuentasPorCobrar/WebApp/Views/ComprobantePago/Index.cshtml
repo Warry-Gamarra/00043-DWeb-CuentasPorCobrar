@@ -37,35 +37,47 @@
                         <form name="frmConsultaComprobantePago" id="frmConsultaComprobantePago" method="get" action="@Url.Action("Index", "ComprobantePago")">
                             <div class="form-row">
                                 @Html.Hidden("buscar", true)
-                                <div class="form-group col-lg-2 col-md-4">
+                                <div class="form-group col-xl-2 col-lg-3 col-md-4">
                                     <label for="tipoPago">Tipo Pago</label>
                                     @Html.DropDownListFor(model => model.tipoPago, ViewBag.TipoPago as SelectList, "TODOS", new { @class = "form-control form-control-sm text-uppercase" })
                                 </div>
-                                <div class="form-group col-lg-3 col-md-4">
+                                <div class="form-group col-xl-2 col-lg-3 col-md-4">
+                                    <label for="estadoGeneracionID">Estado Pago</label>
+                                    @Html.DropDownListFor(model => model.estadoGeneracion, ViewBag.EstadosGeneracionComprobante as SelectList, "TODOS", new { @class = "form-control form-control-sm text-uppercase" })
+                                </div>
+                                <div class="form-group col-xl-2 col-lg-3 col-md-4">
+                                    <label for="estadoComprobanteID">Estado Comprobante</label>
+                                    @Html.DropDownListFor(model => model.estadoComprobanteID, ViewBag.EstadosComprobante as SelectList, "TODOS", new { @class = "form-control form-control-sm text-uppercase" })
+                                </div>
+                                <div class="form-group col-xl-2 col-lg-3 col-md-4">
+                                    <label for="tipoComprobanteID">Tip.Comprobante Generado</label>
+                                    @Html.DropDownListFor(model => model.tipoComprobanteID, ViewBag.TiposComprobante as SelectList, "TODOS", new { @class = "form-control form-control-sm text-uppercase" })
+                                </div>
+                                <div class="form-group col-xl-2 col-lg-3 col-md-4">
                                     <label for="entidadFinanciera">Entidad Financiera</label>
                                     @Html.DropDownListFor(model => model.entidadFinanciera, ViewBag.EntidadesFinancieras as SelectList, "TODOS", new { @class = "form-control form-control-sm text-uppercase" })
                                 </div>
-                                <div class="form-group col-lg-3 col-md-4">
+                                <div class="form-group col-xl-2 col-lg-3 col-md-4">
                                     <label for="idCtaDeposito">Cta. Deposito</label>
                                     @Html.DropDownListFor(model => model.idCtaDeposito, ViewBag.CtaDeposito as SelectList, "TODOS", new { @class = "form-control form-control-sm text-uppercase" })
                                 </div>
-                                <div class="form-group col-lg-2 col-md-3">
+                                <div class="form-group col-xl-2 col-lg-3 col-md-3">
                                     <label for="codOperacion">Cod. de operación</label>
                                     @Html.TextBoxFor(model => model.codOperacion, new { @class = "form-control form-control-sm" })
                                 </div>
-                                <div class="form-group col-lg-2 col-md-3">
+                                <div class="form-group col-xl-2 col-lg-3 col-md-3">
                                     <label for="codInterno">Cod. interno (BCP)</label>
                                     @Html.TextBoxFor(model => model.codInterno, new { @class = "form-control form-control-sm" })
                                 </div>
-                                <div class="form-group col-lg-2 col-md-3">
+                                <div class="form-group col-xl-2 col-lg-3 col-md-3">
                                     <label for="codDepositante">Cod. depositante</label>
                                     @Html.TextBoxFor(model => model.codDepositante, new { @class = "form-control form-control-sm" })
                                 </div>
-                                <div class="form-group col-lg-3 col-md-3">
+                                <div class="form-group col-xl-2 col-lg-3 col-md-3">
                                     <label for="nomDepositante">Nom. depositante</label>
                                     @Html.TextBoxFor(model => model.nomDepositante, new { @class = "form-control form-control-sm" })
                                 </div>
-                                <div class="form-group col-lg-5 col-md-12">
+                                <div class="form-group col-xl-4 col-lg-6 col-md-12">
                                     <div id="datepicker">
                                         <div class="input-daterange">
                                             <div class="form-group col-md-6 col-12" style="padding-left: 0px;">
@@ -91,7 +103,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group col-lg-2 col-md-4 col-sm-6">
+                                <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-6">
                                     <button type="submit" id="btnConsulta" class="btn btn-block btn-outline-primary mt-4"><i class="fa fa-fw fa-search-plus"></i> Iniciar consulta</button>
                                 </div>
                             </div>
@@ -119,7 +131,6 @@
                         columns.Add(c => c.fecPago).Titled("Fec.Pago").Css("text-center");
                         columns.Add(c => c.montoTotal).Titled("Total Pagado").Css("text-center");
                         columns.Add(c => c.entidadDesc).Titled("Banco");
-                        columns.Add(c => c.condicionPago).Titled("Condición").Css("text-center");
                         columns.Add().SetWidth(100).Encoded(false).Sanitized(false).Css("text-center").RenderValueAs(
                             model => "<a href=" + Url.Action("InformacioPago", "ComprobantePago", new { id = model.pagoBancoID }) + " class=\"modal-link\"><i class=\"fa fa-file\" aria-hidden=\"true\" title=\"Número de Comprobante\"></i></a>");
                     }).WithPaging(12).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")

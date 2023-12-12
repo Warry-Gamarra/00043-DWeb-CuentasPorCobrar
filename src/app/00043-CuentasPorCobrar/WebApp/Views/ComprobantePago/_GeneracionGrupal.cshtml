@@ -5,7 +5,7 @@
     <button type="button" class="close closeModal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 </div>
 
-<div class="modal-body">
+<div class="modal-body" id="frmGenerarComprobanteGrupal">
     <dl class="row">
         <dt class="col-sm-3 mb-3">Tipo de Comprobante</dt>
         <dd class="col-sm-9">
@@ -48,18 +48,23 @@
 
     $(document).on('click', '#div_msg_comprobante #btnGenerarGrupal', function (e) {
         let parametros = {
-            tipoComprobanteID: $('#cmbTipoComprobante').val(),
-            serieID: $('#cmbSerie').val(),
-            esGravado: $('#cmbEsGravado').val(),
-            tipoPago: $('#frmConsultaComprobantePago #tipoPago').val(),
-            entidadFinanciera: $('#frmConsultaComprobantePago #entidadFinanciera').val(),
-            idCtaDeposito: $('#frmConsultaComprobantePago #idCtaDeposito').val(),
-            codOperacion: $('#frmConsultaComprobantePago #codOperacion').val(),
-            codInterno: $('#frmConsultaComprobantePago #codInterno').val(),
-            codDepositante: $('#frmConsultaComprobantePago #codDepositante').val(),
-            nomDepositante: $('#frmConsultaComprobantePago #nomDepositante').val(),
-            fechaDesde: $('#frmConsultaComprobantePago #fechaDesde').val(),
-            fechaHasta: $('#frmConsultaComprobantePago #fechaHasta').val()
+            model: {
+                tipoPago: $('#frmConsultaComprobantePago #tipoPago').val(),
+                estadoGeneracion: $('#frmConsultaComprobantePago #estadoGeneracion').val(),
+                estadoComprobanteID: $('#frmConsultaComprobantePago #estadoComprobanteID').val(),    
+                tipoComprobanteID: $('#frmConsultaComprobantePago #tipoComprobanteID').val(),
+                entidadFinanciera: $('#frmConsultaComprobantePago #entidadFinanciera').val(),
+                idCtaDeposito: $('#frmConsultaComprobantePago #idCtaDeposito').val(),
+                codOperacion: $('#frmConsultaComprobantePago #codOperacion').val(),
+                codInterno: $('#frmConsultaComprobantePago #codInterno').val(),
+                codDepositante: $('#frmConsultaComprobantePago #codDepositante').val(),
+                nomDepositante: $('#frmConsultaComprobantePago #nomDepositante').val(),
+                fechaDesde: $('#frmConsultaComprobantePago #fechaDesde').val(),
+                fechaHasta: $('#frmConsultaComprobantePago #fechaHasta').val()
+            },
+            tipoComprobanteID: $('#frmGenerarComprobanteGrupal #cmbTipoComprobante').val(),
+            serieID: $('#frmGenerarComprobanteGrupal #cmbSerie').val(),
+            esGravado: $('#frmGenerarComprobanteGrupal #cmbEsGravado').val()
         };
 
         $.ajax({
