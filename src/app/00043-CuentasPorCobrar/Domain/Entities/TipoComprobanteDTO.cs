@@ -14,6 +14,8 @@ namespace Domain.Entities
 
         public string tipoComprobanteDesc { get; set; }
 
+        public string inicial {  get; set; }
+
         public bool estaHabilitado { get; set; }
     }
 }

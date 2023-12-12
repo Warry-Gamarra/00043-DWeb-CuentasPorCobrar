@@ -18,6 +18,8 @@ namespace Data.Tables
 
         public string T_TipoComprobanteDesc { get; set; }
 
+        public string T_Inicial { get; set; }
+
         public bool B_Habilitado { get; set; }
         
         public static IEnumerable<TC_TipoComprobante> GetAll()

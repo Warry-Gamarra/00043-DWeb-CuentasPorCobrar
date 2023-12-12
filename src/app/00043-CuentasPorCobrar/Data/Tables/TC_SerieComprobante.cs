@@ -16,6 +16,10 @@ namespace Data.Tables
 
         public string I_NumeroSerie { get; set; }
 
+        public int I_FinNumeroComprobante { get; set; }
+
+        public int I_DiasAnterioresPermitido { get; set; }
+
         public bool B_Habilitado { get; set; }
 
         public static IEnumerable<TC_SerieComprobante> GetAll()

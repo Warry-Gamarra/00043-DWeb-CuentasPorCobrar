@@ -53,6 +53,8 @@ namespace Data.Procedures
 
         public string T_TipoComprobanteDesc { get; set; }
 
+        public string T_Inicial {  get; set; }
+
         public string T_EstadoComprobanteDesc { get; set; }
 
         public static IEnumerable<USP_S_ObtenerComprobantePago> GetAll(int pagoBancoID)

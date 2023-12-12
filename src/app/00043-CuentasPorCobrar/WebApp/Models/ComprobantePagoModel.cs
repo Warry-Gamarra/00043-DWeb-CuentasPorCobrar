@@ -66,6 +66,8 @@ namespace WebApp.Models
 
         public string tipoComprobanteDesc { get; set; }
 
+        public string inicial { get; set; }
+
         public string estadoComprobanteDesc { get; set; }
 
         public string comprobantePago

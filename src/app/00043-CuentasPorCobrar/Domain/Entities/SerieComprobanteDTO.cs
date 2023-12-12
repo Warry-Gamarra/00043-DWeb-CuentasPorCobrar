@@ -12,6 +12,10 @@ namespace Domain.Entities
 
         public string numeroSerie { get; set; }
 
+        public int finNumeroComprobante { get; set; }
+
+        public int diasAnterioresPermitido { get; set; }
+
         public bool estaHabilitado { get; set; }
     }
 }

@@ -733,6 +733,7 @@ namespace Domain.Entities
                 tipoComprobanteID = table.I_TipoComprobanteID,
                 tipoComprobanteCod = table.C_TipoComprobanteCod,
                 tipoComprobanteDesc = table.T_TipoComprobanteDesc,
+                inicial = table.T_Inicial,
                 estaHabilitado = table.B_Habilitado
             };
 
@@ -745,6 +746,8 @@ namespace Domain.Entities
             {
                 serieID = table.I_SerieID,
                 numeroSerie = table.I_NumeroSerie,
+                finNumeroComprobante = table.I_FinNumeroComprobante,
+                diasAnterioresPermitido = table.I_DiasAnterioresPermitido,
                 estaHabilitado = table.B_Habilitado
             };
 

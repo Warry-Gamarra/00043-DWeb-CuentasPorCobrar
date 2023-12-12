@@ -1,13 +1,9 @@
 /*
 HOY
 ----
-- Mantenimiento de Número de Serie y comprobante.
+- Mantenimiento de Número de Serie (Sólo se pueden generar series hasta 9999).
 - Mantenimiento de Tipo de Comprobante.
-- Generar sólo a Pagos con fecha de antiguedad  7 días (bloquear).
-- Mantenimiento para asignar fecha de antiguedad.
 - Realizar el calculo de gravado en el TXT.
-- Sólo se pueden generar series hasta 9999.
-- Sólo se pueden generar números de comprobante hasta 99999999.
 
 MAÑANA
 -------
@@ -24,6 +20,7 @@ CREATE TABLE dbo.TC_TipoComprobante
 	I_TipoComprobanteID INT IDENTITY(1,1),
 	C_TipoComprobanteCod VARCHAR(50) NOT NULL,
 	T_TipoComprobanteDesc VARCHAR(250) NOT NULL,
+	T_Inicial CHAR(1) NOT NULL,
 	B_Habilitado BIT NOT NULL,
 	I_UsuarioCre INT NOT NULL,
 	D_FecCre DATETIME NOT NULL,
@@ -50,6 +47,8 @@ GO
 CREATE TABLE dbo.TC_SerieComprobante(
 	I_SerieID INT IDENTITY(1,1),
 	I_NumeroSerie INT NOT NULL,
+	I_FinNumeroComprobante INT NOT NULL,
+	I_DiasAnterioresPermitido INT NOT NULL,
 	B_Habilitado INT NOT NULL,
 	I_UsuarioCre INT NOT NULL,
 	D_FecCre DATETIME NOT NULL,
@@ -92,13 +91,13 @@ CREATE TABLE dbo.TR_Comprobante_PagoBanco(
 )
 GO
 
-INSERT dbo.TC_SerieComprobante(I_NumeroSerie, B_Habilitado, I_UsuarioCre, D_FecCre) VALUES(1, 1, 1, GETDATE())
+INSERT dbo.TC_SerieComprobante(I_NumeroSerie, I_FinNumeroComprobante, I_DiasAnterioresPermitido, B_Habilitado, I_UsuarioCre, D_FecCre) VALUES(1, 99999999, 7, 1, 1, GETDATE())
 GO
 
-INSERT dbo.TC_TipoComprobante(C_TipoComprobanteCod, T_TipoComprobanteDesc, B_Habilitado, I_UsuarioCre, D_FecCre) VALUES('01', 'Factura', 0, 1, GETDATE())
-INSERT dbo.TC_TipoComprobante(C_TipoComprobanteCod, T_TipoComprobanteDesc, B_Habilitado, I_UsuarioCre, D_FecCre) VALUES('03', 'Boleta de venta', 1, 1, GETDATE())
-INSERT dbo.TC_TipoComprobante(C_TipoComprobanteCod, T_TipoComprobanteDesc, B_Habilitado, I_UsuarioCre, D_FecCre) VALUES('07', 'Nota de crédito', 0, 1, GETDATE())
-INSERT dbo.TC_TipoComprobante(C_TipoComprobanteCod, T_TipoComprobanteDesc, B_Habilitado, I_UsuarioCre, D_FecCre) VALUES('08', 'Nota de débito', 0, 1, GETDATE())
+INSERT dbo.TC_TipoComprobante(C_TipoComprobanteCod, T_TipoComprobanteDesc, T_Inicial, B_Habilitado, I_UsuarioCre, D_FecCre) VALUES('01', 'Factura', 'F', 0, 1, GETDATE())
+INSERT dbo.TC_TipoComprobante(C_TipoComprobanteCod, T_TipoComprobanteDesc, T_Inicial, B_Habilitado, I_UsuarioCre, D_FecCre) VALUES('03', 'Boleta de venta', 'B', 1, 1, GETDATE())
+INSERT dbo.TC_TipoComprobante(C_TipoComprobanteCod, T_TipoComprobanteDesc, T_Inicial, B_Habilitado, I_UsuarioCre, D_FecCre) VALUES('07', 'Nota de crédito', '', 0, 1, GETDATE())
+INSERT dbo.TC_TipoComprobante(C_TipoComprobanteCod, T_TipoComprobanteDesc, T_Inicial, B_Habilitado, I_UsuarioCre, D_FecCre) VALUES('08', 'Nota de débito', '', 0, 1, GETDATE())
 GO
 
 INSERT dbo.TC_EstadoComprobante(C_EstadoComprobanteCod, T_EstadoComprobanteDesc, B_Habilitado, I_UsuarioCre, D_FecCre) VALUES('PEN', 'Pendiente', 1, 1, GETDATE())
@@ -119,51 +118,72 @@ CREATE PROCEDURE [dbo].[USP_I_GrabarComprobantePago]
 @I_SerieID INT,
 @B_EsGravado BIT,
 @UserID INT,
-@B_Result BIT OUTPUT,  
+@B_Result BIT OUTPUT,
 @T_Message NVARCHAR(4000) OUTPUT
 AS
 BEGIN  
 	SET NOCOUNT ON;
 	
 	DECLARE @I_ComprobanteID INT,
-			@I_NumeroComprobante INT,
+			@I_NuevoNumeroComprobante INT,
 			@D_FechaAccion DATETIME,
 			@D_FechaEmision DATETIME,
-			@I_EstadoComprobanteID INT;
+			@I_EstadoComprobanteID INT,
+			--VALIDACIONES
+			@I_FinNumeroComprobante INT,
+			@D_FecPago DATETIME,
+			@I_DiasPermitidos INT;
 
-	BEGIN TRAN
-	BEGIN TRY
+	SET @I_NuevoNumeroComprobante = (SELECT ISNULL(MAX(c.I_NumeroComprobante), 0) FROM dbo.TR_Comprobante c WHERE c.I_SerieID = @I_SerieID) + 1;
 
-		SET @I_EstadoComprobanteID = (SELECT I_EstadoComprobanteID FROM dbo.TC_EstadoComprobante WHERE C_EstadoComprobanteCod = 'PEN');
+	SET @D_FecPago = (SELECT TOP 1 b.D_FecPago FROM dbo.TR_PagoBanco b WHERE b.I_PagoBancoID IN (SELECT i.ID FROM @PagoBancoIDs i))
+
+	SELECT @I_FinNumeroComprobante = s.I_FinNumeroComprobante, @I_DiasPermitidos = s.I_DiasAnterioresPermitido 
+	FROM dbo.TC_SerieComprobante s WHERE s.I_SerieID = @I_SerieID;
+
+	IF (@I_NuevoNumeroComprobante <= @I_FinNumeroComprobante) BEGIN
+		IF (DATEDIFF(DAY, @D_FecPago, GETDATE()) <= @I_DiasPermitidos) BEGIN
+
+			SET @I_EstadoComprobanteID = (SELECT I_EstadoComprobanteID FROM dbo.TC_EstadoComprobante WHERE C_EstadoComprobanteCod = 'PEN');
 		
-		SET @I_NumeroComprobante = (SELECT ISNULL(MAX(c.I_NumeroComprobante), 0) FROM dbo.TR_Comprobante c WHERE c.I_SerieID = @I_SerieID) + 1;
+			SET @D_FechaAccion = GETDATE();
+		
+			SET @D_FechaEmision = GETDATE();
 
-		SET @D_FechaAccion = GETDATE();
-		SET @D_FechaEmision = GETDATE();
+			BEGIN TRAN
+			BEGIN TRY
+				INSERT dbo.TR_Comprobante(I_TipoComprobanteID, I_SerieID, I_NumeroComprobante, B_EsGravado, D_FechaEmision, I_EstadoComprobanteID, I_UsuarioCre, D_FecCre)
+				VALUES(@I_TipoComprobanteID, @I_SerieID, @I_NuevoNumeroComprobante, @B_EsGravado, @D_FechaEmision, @I_EstadoComprobanteID, @UserID, @D_FechaAccion);
 
-		INSERT dbo.TR_Comprobante(I_TipoComprobanteID, I_SerieID, I_NumeroComprobante, B_EsGravado, D_FechaEmision, I_EstadoComprobanteID, I_UsuarioCre, D_FecCre)
-		VALUES(@I_TipoComprobanteID, @I_SerieID, @I_NumeroComprobante, @B_EsGravado, @D_FechaEmision, @I_EstadoComprobanteID, @UserID, @D_FechaAccion);
+				SET @I_ComprobanteID = SCOPE_IDENTITY();
 
-		SET @I_ComprobanteID = SCOPE_IDENTITY();
+				UPDATE dbo.TR_Comprobante_PagoBanco SET 
+					B_Habilitado = 0,
+					I_UsuarioMod = @UserID,
+					D_FecMod = @D_FechaAccion
+				WHERE I_PagoBancoID IN (SELECT ID FROM @PagoBancoIDs) AND B_Habilitado = 1;
 
-		UPDATE dbo.TR_Comprobante_PagoBanco SET 
-			B_Habilitado = 0,
-			I_UsuarioMod = @UserID,
-			D_FecMod = @D_FechaAccion
-		WHERE I_PagoBancoID IN (SELECT ID FROM @PagoBancoIDs) AND B_Habilitado = 1;
+				INSERT dbo.TR_Comprobante_PagoBanco(I_ComprobanteID, I_PagoBancoID, B_Habilitado, I_UsuarioCre, D_FecCre)
+				SELECT @I_ComprobanteID, ID, 1, @UserID, @D_FechaAccion FROM @PagoBancoIDs;
 
-		INSERT dbo.TR_Comprobante_PagoBanco(I_ComprobanteID, I_PagoBancoID, B_Habilitado, I_UsuarioCre, D_FecCre)
-		SELECT @I_ComprobanteID, ID, 1, @UserID, @D_FechaAccion FROM @PagoBancoIDs;
+				COMMIT TRAN
+				SET @B_Result = 1;
+				SET @T_Message = 'Generación de número de comprobante exitoso.';
+			END TRY
+			BEGIN CATCH
+				ROLLBACK TRAN
+				SET @B_Result = 0;
+				SET @T_Message = ERROR_MESSAGE();
+			END CATCH
 
-		COMMIT TRAN
-		SET @B_Result = 1;
-		SET @T_Message = 'Generación de número de comprobante exitoso.';
-	END TRY
-	BEGIN CATCH
-		ROLLBACK TRAN
+		END ELSE BEGIN
+			SET @B_Result = 0;
+			SET @T_Message = 'Se excedió la cantidad de días de antigüedad (' + CAST(@I_DiasPermitidos AS VARCHAR) + ') del pago para generar el número de comprobante.';
+		END
+	END ELSE BEGIN
 		SET @B_Result = 0;
-		SET @T_Message = ERROR_MESSAGE();
-	END CATCH
+		SET @T_Message = 'Se excedió el valor permitido (' + CAST(@I_FinNumeroComprobante AS VARCHAR(100)) + ') para el número de comprobante.';
+	END
 END
 GO
 
@@ -215,6 +235,7 @@ BEGIN
 		com.B_EsGravado,
 		tipCom.C_TipoComprobanteCod,
 		tipCom.T_TipoComprobanteDesc,
+		tipCom.T_Inicial,
 		estCom.T_EstadoComprobanteDesc
 	FROM dbo.TR_PagoBanco pagBan
 	INNER JOIN dbo.TC_EntidadFinanciera ban ON ban.I_EntidadFinanID = pagBan.I_EntidadFinanID
@@ -304,6 +325,7 @@ BEGIN
 		com.B_EsGravado,
 		tipCom.C_TipoComprobanteCod,
 		tipCom.T_TipoComprobanteDesc,
+		tipCom.T_Inicial,
 		estCom.T_EstadoComprobanteDesc
 	FROM dbo.TR_PagoBanco pagBan
 	INNER JOIN dbo.TC_EntidadFinanciera ban ON ban.I_EntidadFinanID = pagBan.I_EntidadFinanID

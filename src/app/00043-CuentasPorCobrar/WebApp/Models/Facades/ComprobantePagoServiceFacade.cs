@@ -48,6 +48,7 @@ namespace WebApp.Models.Facades
                     esGravado = x.esGravado,
                     tipoComprobanteCod = x.tipoComprobanteCod,
                     tipoComprobanteDesc = x.tipoComprobanteDesc,
+                    inicial = x.inicial,
                     estadoComprobanteDesc = x.estadoComprobanteDesc
                 });
 
@@ -79,6 +80,7 @@ namespace WebApp.Models.Facades
                     esGravado = x.esGravado,
                     tipoComprobanteCod = x.tipoComprobanteCod,
                     tipoComprobanteDesc = x.tipoComprobanteDesc,
+                    inicial = x.inicial,
                     estadoComprobanteDesc = x.estadoComprobanteDesc
                 });
 

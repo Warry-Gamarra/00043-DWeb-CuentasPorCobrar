@@ -61,6 +61,7 @@ namespace Domain.Services.Implementations
                     esGravado = x.B_EsGravado,
                     tipoComprobanteCod = x.C_TipoComprobanteCod,
                     tipoComprobanteDesc = x.T_TipoComprobanteDesc,
+                    inicial = x.T_Inicial,
                     estadoComprobanteDesc = x.T_EstadoComprobanteDesc
                 }); ;
 
@@ -91,6 +92,7 @@ namespace Domain.Services.Implementations
                     esGravado = x.B_EsGravado,
                     tipoComprobanteCod = x.C_TipoComprobanteCod,
                     tipoComprobanteDesc = x.T_TipoComprobanteDesc,
+                    inicial = x.T_Inicial,
                     estadoComprobanteDesc = x.T_EstadoComprobanteDesc
                 }); ;
 
