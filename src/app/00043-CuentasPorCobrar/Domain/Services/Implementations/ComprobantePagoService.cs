@@ -240,6 +240,8 @@ namespace Domain.Services.Implementations
                         int numeroComprobante = int.Parse(comprobante[1]);
 
                         update = this.ActualizarEstadoComprobante(numeroSerie, numeroComprobante, EstadoComprobante.PROCESADO, currentUserID);
+
+                        update.fileName = nombreArchivo;
                     }
                     catch (Exception ex)
                     {
@@ -271,6 +273,8 @@ namespace Domain.Services.Implementations
                         int numeroComprobante = int.Parse(comprobante[1]);
 
                         update = this.ActualizarEstadoComprobante(numeroSerie, numeroComprobante, EstadoComprobante.ERROR, currentUserID);
+
+                        update.fileName = nombreArchivo;
                     }
                     catch (Exception ex)
                     {

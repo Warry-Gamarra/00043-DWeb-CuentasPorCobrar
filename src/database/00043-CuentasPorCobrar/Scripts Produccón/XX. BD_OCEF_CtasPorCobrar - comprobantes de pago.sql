@@ -1,15 +1,21 @@
 /*
 HOY
 ---
-- Generar el TXT según formato de digiflow y almacenarlo en una carpeta remota.
 - Consultar  la carpeta para actualizar el estado de los comprobantes.
 - Ver el flujo para generar un número de comprobante cuando el estado es error.
+- Mantenimiento de Número de Serie (Sólo se pueden generar series hasta 9999).
+- Mantenimiento de Tipo de Comprobante.
 
 MAÑANA
 -------
-- Mantenimiento de Número de Serie (Sólo se pueden generar series hasta 9999).
-- Mantenimiento de Tipo de Comprobante.
+- Generar el TXT según formato de digiflow y almacenarlo en una carpeta remota.
+
+
+--Correo de Jean: jnique@digiflow.pe
+--Correo de Alex: amoreno@digiflow.pe
 */
+
+
 
 USE BD_OCEF_CtasPorCobrar
 GO
@@ -208,29 +214,46 @@ BEGIN
 	DECLARE @D_FechaAccion DATETIME,
 			@I_EstadoComprobanteID INT;
 
-	SET @D_FechaAccion = GETDATE();
+	IF EXISTS(SELECT c.I_ComprobanteID FROM dbo.TR_Comprobante c INNER JOIN dbo.TC_SerieComprobante s ON s.I_SerieID = c.I_SerieID
+		WHERE s.I_NumeroSerie = @I_NumeroSerie AND c.I_NumeroComprobante = @I_NumeroComprobante) BEGIN
 
-	SET @I_EstadoComprobanteID = (SELECT I_EstadoComprobanteID FROM dbo.TC_EstadoComprobante WHERE C_EstadoComprobanteCod = @C_EstadoComprobanteCod);
+		IF EXISTS(SELECT c.I_ComprobanteID FROM dbo.TR_Comprobante c 
+			INNER JOIN dbo.TC_SerieComprobante s ON s.I_SerieID = c.I_SerieID
+			INNER JOIN dbo.TC_EstadoComprobante e ON e.I_EstadoComprobanteID = c.I_EstadoComprobanteID
+			WHERE s.I_NumeroSerie = @I_NumeroSerie AND c.I_NumeroComprobante = @I_NumeroComprobante AND e.C_EstadoComprobanteCod = 'PEN') BEGIN
 
-	BEGIN TRAN
-	BEGIN TRY
-		UPDATE c SET 
-			c.I_EstadoComprobanteID = @I_EstadoComprobanteID,
-			c.I_UsuarioMod = @UserID,
-			c.D_FecMod = @D_FechaAccion
-		FROM dbo.TR_Comprobante c
-		INNER JOIN dbo.TC_SerieComprobante s ON s.I_SerieID = c.I_SerieID
-		WHERE s.I_NumeroSerie = @I_NumeroSerie AND c.I_NumeroComprobante = @I_NumeroComprobante
+			SET @D_FechaAccion = GETDATE();
 
-		COMMIT TRAN
-		SET @B_Result = 1;
-		SET @T_Message = 'Actualización de estado correcta.';
-	END TRY
-	BEGIN CATCH
-		ROLLBACK TRAN
+			SET @I_EstadoComprobanteID = (SELECT I_EstadoComprobanteID FROM dbo.TC_EstadoComprobante WHERE C_EstadoComprobanteCod = @C_EstadoComprobanteCod);
+
+			BEGIN TRAN
+			BEGIN TRY
+				UPDATE c SET 
+					c.I_EstadoComprobanteID = @I_EstadoComprobanteID,
+					c.I_UsuarioMod = @UserID,
+					c.D_FecMod = @D_FechaAccion
+				FROM dbo.TR_Comprobante c
+				INNER JOIN dbo.TC_SerieComprobante s ON s.I_SerieID = c.I_SerieID
+				WHERE s.I_NumeroSerie = @I_NumeroSerie AND c.I_NumeroComprobante = @I_NumeroComprobante
+
+				COMMIT TRAN
+				SET @B_Result = 1;
+				SET @T_Message = 'Actualización de estado correcta.';
+			END TRY
+			BEGIN CATCH
+				ROLLBACK TRAN
+				SET @B_Result = 0;
+				SET @T_Message = ERROR_MESSAGE();
+			END CATCH
+
+		END ELSE BEGIN
+			SET @B_Result = 1;
+			SET @T_Message = 'El comprobante con serie "' + CAST(@I_NumeroSerie AS VARCHAR) + '" y número "' + CAST(@I_NumeroComprobante AS VARCHAR(20)) + '" ya tiene actualizado el estado.';
+		END
+	END ELSE BEGIN
 		SET @B_Result = 0;
-		SET @T_Message = ERROR_MESSAGE();
-	END CATCH
+		SET @T_Message = 'No existe el comprobante con serie "' + CAST(@I_NumeroSerie AS VARCHAR) + '" y número "' + CAST(@I_NumeroComprobante AS VARCHAR(20)) + '".';
+	END
 END
 GO
 
