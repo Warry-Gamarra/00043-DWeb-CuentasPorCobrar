@@ -138,13 +138,19 @@ namespace Domain.Services.Implementations
 
                 var writer = new StreamWriter(memoryStream, Encoding.Default);
 
-                string inicialTipoComprobante = comprobantePagoDTO.First().tipoComprobanteCod == TipoComprobante.BOLETA ? "B" : (comprobantePagoDTO.First().tipoComprobanteCod == TipoComprobante.FACTURA ? "F" : "");
+                string inicialTipoComprobante = comprobantePagoDTO.First().inicial;
 
                 string numeroSerie = comprobantePagoDTO.First().numeroSerie.Value.ToString("D4");
 
                 string numeroComprobante = comprobantePagoDTO.First().numeroComprobante.Value.ToString("D8");
 
                 decimal montoPagado = comprobantePagoDTO.Sum(x => x.montoPagado + x.interesMoratorio);
+
+                decimal igv = Digiflow.IGV;
+
+                decimal montoIGV = comprobantePagoDTO.First().esGravado.Value ? Math.Round((montoPagado * igv) / (1 + igv), 2) : 0;
+
+                decimal montoNeto = comprobantePagoDTO.First().esGravado.Value ? montoPagado - montoIGV : montoPagado;
 
                 DateTime fechaEmision = comprobantePagoDTO.First().fechaEmision.Value;
 
@@ -165,10 +171,10 @@ namespace Domain.Services.Implementations
                 string filaRazonSocial = "A;RznSocEmis;;UNIVERSIDAD NACIONAL FEDERICO VILLARREAL";
                 writer.WriteLine(filaRazonSocial);
 
-                string filaMontoNeto = String.Format("A;MntNeto;;{0}", montoPagado.ToString(FormatosDecimal.BASIC_DECIMAL));
+                string filaMontoNeto = String.Format("A;MntNeto;;{0}", montoNeto.ToString(FormatosDecimal.BASIC_DECIMAL));
                 writer.WriteLine(filaMontoNeto);
 
-                string filaMontoTotalIGV = "A;MntTotalIgv;;0";
+                string filaMontoTotalIGV = String.Format("A;MntTotalIgv;;{0}", montoIGV.ToString(FormatosDecimal.BASIC_DECIMAL));
                 writer.WriteLine(filaMontoTotalIGV);
 
                 string filaMontoTotal = String.Format("A;MntTotal;;{0}", montoPagado.ToString(FormatosDecimal.BASIC_DECIMAL));
@@ -181,7 +187,7 @@ namespace Domain.Services.Implementations
 
                 memoryStream.Seek(0, SeekOrigin.Begin);
 
-                string directorioGuardado = ConfigurationManager.AppSettings["DirectorioDigiflow"].ToString();
+                string directorioGuardado = Digiflow.DIRECTORIO;
 
                 using (FileStream fileStream = new FileStream(Path.Combine(directorioGuardado, nombreArchivo), FileMode.Create))
                 {

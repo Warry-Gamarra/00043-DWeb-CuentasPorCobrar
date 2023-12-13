@@ -3,7 +3,7 @@ HOY
 ----
 - Mantenimiento de Número de Serie (Sólo se pueden generar series hasta 9999).
 - Mantenimiento de Tipo de Comprobante.
-- Realizar el calculo de gravado en el TXT.
+
 
 MAÑANA
 -------

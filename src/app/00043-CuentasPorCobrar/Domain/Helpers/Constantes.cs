@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -66,14 +67,10 @@ namespace Domain.Helpers
         public const int ID = 14;
     }
 
-    public static class TipoComprobante
+    public  static class Digiflow
     {
-        public const string BOLETA = "03";
+        public static readonly string DIRECTORIO = ConfigurationManager.AppSettings["DirectorioDigiflow"].ToString();
 
-        public const string FACTURA = "01";
-
-        public const string NOTA_CREDITO = "07";
-
-        public const string NOTA_DEBITO = "08";
+        public static readonly decimal IGV = decimal.Parse(ConfigurationManager.AppSettings["IGV"].ToString());
     }
 }
