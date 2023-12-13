@@ -72,5 +72,18 @@ namespace Domain.Helpers
         public static readonly string DIRECTORIO = ConfigurationManager.AppSettings["DirectorioDigiflow"].ToString();
 
         public static readonly decimal IGV = decimal.Parse(ConfigurationManager.AppSettings["IGV"].ToString());
+
+        public static readonly string CarpetaCorrecto = ConfigurationManager.AppSettings["CarpetaCorrecto"].ToString();
+
+        public static readonly string CarpetaError = ConfigurationManager.AppSettings["CarpetaErrror"].ToString();
+    }
+
+    public static class EstadoComprobante
+    {
+        public const string PENDIENTE = "PEN";
+
+        public const string PROCESADO = "PRO";
+
+        public const string ERROR = "ERR";
     }
 }

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using WebApp.ViewModels;
@@ -166,6 +167,25 @@ namespace WebApp.Models.Facades
                     cantRegistros == 1 ? "pago" : "pagos");
 
             return resultadoGeneral;
+        }
+
+        public async Task<Response> VerificarEstadoComprobantes(int currentUserID)
+        {
+            Response resultado;
+
+            try
+            {
+                resultado = await Task.Run(() => _comprobantePagoService.VerificarEstadoComprobantes(currentUserID));
+            }
+            catch (Exception ex)
+            {
+                resultado = new Response()
+                {
+                    Message = ex.Message
+                };
+            }
+
+            return resultado;
         }
     }
 }

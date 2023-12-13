@@ -106,6 +106,9 @@
                                 <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-6">
                                     <button type="submit" id="btnConsulta" class="btn btn-block btn-outline-primary mt-4"><i class="fa fa-fw fa-search-plus"></i> Iniciar consulta</button>
                                 </div>
+                                <div class="form-group col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                                    <button type="button" id="btnVerificarEstadoComprobantes" class="btn btn-block btn-outline-primary mt-4"><i class="fa fa-fw fa-refresh"></i> Verificar estados</button>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -140,6 +143,22 @@
     </div>
 </div>
 
+<div class="modal fade" id="modalEspera" tabindex="-1" role="dialog" aria-labelledby="lblModalEspera" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Mensaje del sistema</h5>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex align-items-center">
+                    <strong>Verificando estado de comprobantes de pagos</strong>
+                    <div class="spinner-border ml-auto text-primary" role="status" aria-hidden="true"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <script>
         $('#datepicker .input-daterange').datepicker({
@@ -164,15 +183,37 @@
             window.location.reload();
         });
 
-        $(document).on("click", "#btnConsulta", function (e) {
+        $('#frmConsultaComprobantePago').on("click", "#btnConsulta", function (e) {
             document.forms.frmConsultaComprobantePago.action = "@Url.Action("Index", "ComprobantePago")";
             document.forms.frmConsultaComprobantePago.submit();
         });
 
-        $(document).on('change', '#frmConsultaComprobantePago #entidadFinanciera', function (e) {
+        $('#frmConsultaComprobantePago').on('change', '#entidadFinanciera', function (e) {
             let idEntidadFinanc = this.value;
 
             ObtenerCtasDeposito(idEntidadFinanc);
+        });
+
+        $('#frmConsultaComprobantePago').on('click', '#btnVerificarEstadoComprobantes', function (e) {
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("VerificarEstadoComprobantes", "ComprobantePago")',
+                dataType: 'json',
+                beforeSend: function () {
+                    $('#modalEspera').modal('show');
+                    console.log('beforeSend');
+                },
+                success: function (data) {
+                    console.log(data);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    var jsonException = JSON.parse(xhr.responseText);
+                },
+                complete: function () {
+                    $('#modalEspera').modal('hide');
+                    console.log('complete');
+                }
+            });
         });
 
         function ObtenerCtasDeposito(idEntidadFinanc) {

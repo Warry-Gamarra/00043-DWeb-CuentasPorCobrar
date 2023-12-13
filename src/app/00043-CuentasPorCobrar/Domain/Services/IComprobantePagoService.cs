@@ -19,5 +19,9 @@ namespace Domain.Services
         Response GenerarNumeroComprobante(int[] pagosBancoID, int tipoComprobanteID, int serieID, bool esGravado, int currentUserID);
 
         Response GenerarTXTDigiFlow(int[] pagosBancoID);
+
+        Response VerificarEstadoComprobantes(int currentUserID);
+
+        UpdateComprobanteStatus ActualizarEstadoComprobante(int numeroSerie, int numeroComprobante, string estadoComprobante, int userID);
     }
 }

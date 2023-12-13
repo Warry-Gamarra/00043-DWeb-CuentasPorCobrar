@@ -126,6 +126,7 @@
     <Compile Include="Entities\HelperResources.cs" />
     <Compile Include="Entities\CatalogoOpcionEntity.cs" />
     <Compile Include="Entities\CategoriaPago.cs" />
+    <Compile Include="Helpers\UpdateComprobanteStatus.cs" />
     <Compile Include="Services\IEstadoComprobanteService.cs" />
     <Compile Include="Services\IComprobantePagoService.cs" />
     <Compile Include="Services\ICtaDepoServicioService.cs" />

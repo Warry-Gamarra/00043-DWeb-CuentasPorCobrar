@@ -87,6 +87,7 @@
     <Compile Include="Procedures\USP_S_ResumenAnualPagoDeObligaciones_X_Dia.cs" />
     <Compile Include="Procedures\USP_S_ValidarCodOperacionTasa.cs" />
     <Compile Include="Procedures\USP_S_ValidarCodOperacionObligacion.cs" />
+    <Compile Include="Procedures\USP_U_ActualizarEstadoComprobantePago.cs" />
     <Compile Include="Procedures\USP_U_ActualizarFechaVencimientoObligaciones.cs" />
     <Compile Include="Procedures\USP_U_ActualizarConceptoPago.cs" />
     <Compile Include="Procedures\USP_I_GrabarConceptoPago.cs" />

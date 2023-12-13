@@ -1,6 +1,5 @@
 ﻿using Dapper;
 using Data.Connection;
-using Data.Types;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -11,32 +10,31 @@ using System.Threading.Tasks;
 
 namespace Data.Procedures
 {
-    public class USP_I_GrabarComprobantePago
+    public class USP_U_ActualizarEstadoComprobantePago
     {
-        public int I_TipoComprobanteID { get; set; }
-        
-        public int I_SerieID { get; set; }
+        public int I_NumeroSerie { get; set; }
 
-        public bool B_EsGravado { get; set; }
+        public int I_NumeroComprobante { get; set; }
+
+        public string C_EstadoComprobanteCod { get; set; }
 
         public int UserID { get; set; }
 
-        public ResponseData Execute(DataTable dataTable)
+        public ResponseData Execute()
         {
             ResponseData result;
             DynamicParameters parameters;
 
             try
             {
-                string s_command = "USP_I_GrabarComprobantePago";
+                string s_command = "USP_U_ActualizarEstadoComprobantePago";
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
                     parameters = new DynamicParameters();
-                    parameters.Add(name: "PagoBancoIDs", value: dataTable.AsTableValuedParameter("dbo.type_Ids"));
-                    parameters.Add(name: "I_TipoComprobanteID", dbType: DbType.Int32, value: I_TipoComprobanteID);
-                    parameters.Add(name: "I_SerieID", dbType: DbType.Int32, value: I_SerieID);
-                    parameters.Add(name: "B_EsGravado", dbType: DbType.Boolean, value: B_EsGravado);
+                    parameters.Add(name: "I_NumeroSerie", dbType: DbType.Int32, value: I_NumeroSerie);
+                    parameters.Add(name: "I_NumeroComprobante", dbType: DbType.Int32, value: I_NumeroComprobante);
+                    parameters.Add(name: "C_EstadoComprobanteCod", dbType: DbType.String, value: C_EstadoComprobanteCod);
                     parameters.Add(name: "UserID", dbType: DbType.Int32, value: UserID);
                     parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);
                     parameters.Add(name: "T_Message", dbType: DbType.String, size: 4000, direction: ParameterDirection.Output);

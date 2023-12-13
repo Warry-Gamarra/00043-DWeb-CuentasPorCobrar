@@ -10,6 +10,7 @@ using System.Configuration;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -207,6 +208,113 @@ namespace Domain.Services.Implementations
             }
 
             return response;
+        }
+
+        public Response VerificarEstadoComprobantes(int currentUserID)
+        {
+            var listaErrores = new List<UpdateComprobanteStatus>();
+            UpdateComprobanteStatus update;
+
+            Response response;
+
+            try
+            {
+                string directorioBase = Digiflow.DIRECTORIO;
+
+                string directorioComprobanteCorrecto = Path.Combine(directorioBase, Digiflow.CarpetaCorrecto);
+
+                string directorioComprobanteError = Path.Combine(directorioBase, Digiflow.CarpetaError);
+
+                string[] comprobantesCorrectos = Directory.GetFiles(directorioComprobanteCorrecto, "*.txt");
+
+                foreach (var item in comprobantesCorrectos)
+                {
+                    string nombreArchivo = Path.GetFileNameWithoutExtension(item);
+
+                    string[] comprobante = nombreArchivo.Split('_');
+
+                    try
+                    {
+                        int numeroSerie = int.Parse(comprobante[0].Length == 4 ? comprobante[0] : comprobante[0].Substring(comprobante[0].Length - 4));
+
+                        int numeroComprobante = int.Parse(comprobante[1]);
+
+                        update = this.ActualizarEstadoComprobante(numeroSerie, numeroComprobante, EstadoComprobante.PROCESADO, currentUserID);
+                    }
+                    catch (Exception ex)
+                    {
+                        update = new UpdateComprobanteStatus()
+                        {
+                            fileName = nombreArchivo,
+                            message = ex.Message 
+                        };
+                    }
+
+                    if (!update.success)
+                    {
+                        listaErrores.Add(update);
+                    }
+                }
+
+                string[] comprobantesErroneos = Directory.GetFiles(directorioComprobanteError, "*.txt");
+
+                foreach(var item in comprobantesErroneos)
+                {
+                    string nombreArchivo = Path.GetFileNameWithoutExtension(item);
+
+                    string[] comprobante = nombreArchivo.Split('_');
+
+                    try
+                    {
+                        int numeroSerie = int.Parse(comprobante[0].Length == 4 ? comprobante[0] : comprobante[0].Substring(comprobante[0].Length - 4));
+
+                        int numeroComprobante = int.Parse(comprobante[1]);
+
+                        update = this.ActualizarEstadoComprobante(numeroSerie, numeroComprobante, EstadoComprobante.ERROR, currentUserID);
+                    }
+                    catch (Exception ex)
+                    {
+                        update = new UpdateComprobanteStatus()
+                        {
+                            fileName = nombreArchivo,
+                            message = ex.Message
+                        };
+                    }
+
+                    if (!update.success)
+                    {
+                        listaErrores.Add(update);
+                    }
+                }
+
+                response = new Response() {
+                    Value = true,
+                    Message = listaErrores.Count() == 0 ? "Comprobación correcta." : "No se lograron actualizar \"" + listaErrores.Count().ToString() + "\" comprobantes."
+                };
+            }
+            catch (Exception ex)
+            {
+                response = new Response() {
+                    Message = ex.Message
+                };
+            }
+
+            return response;
+        }
+
+        public UpdateComprobanteStatus ActualizarEstadoComprobante(int numeroSerie, int numeroComprobante, string estadoComprobante, int userID)
+        {
+            var actualizar = new USP_U_ActualizarEstadoComprobantePago()
+            { 
+                I_NumeroSerie = numeroSerie,
+                I_NumeroComprobante = numeroComprobante,
+                C_EstadoComprobanteCod = estadoComprobante,
+                UserID = userID
+            };
+
+            var result = actualizar.Execute();
+
+            return new UpdateComprobanteStatus() { success = result.Value, message = result.Message };
         }
     }
 }

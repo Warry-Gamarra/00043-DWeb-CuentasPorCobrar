@@ -1,15 +1,14 @@
 /*
 HOY
-----
-- Mantenimiento de Número de Serie (Sólo se pueden generar series hasta 9999).
-- Mantenimiento de Tipo de Comprobante.
-
-
-MAÑANA
--------
+---
 - Generar el TXT según formato de digiflow y almacenarlo en una carpeta remota.
 - Consultar  la carpeta para actualizar el estado de los comprobantes.
 - Ver el flujo para generar un número de comprobante cuando el estado es error.
+
+MAÑANA
+-------
+- Mantenimiento de Número de Serie (Sólo se pueden generar series hasta 9999).
+- Mantenimiento de Tipo de Comprobante.
 */
 
 USE BD_OCEF_CtasPorCobrar
@@ -68,6 +67,8 @@ CREATE TABLE dbo.TR_Comprobante(
 	I_EstadoComprobanteID INT NOT NULL,
 	I_UsuarioCre INT NOT NULL,
 	D_FecCre DATETIME NOT NULL,
+	I_UsuarioMod INT,
+	D_FecMod DATETIME,
 	CONSTRAINT PK_Comprobante PRIMARY KEY (I_ComprobanteID),
 	CONSTRAINT FK_TipoComprobante_ComprobantePago FOREIGN KEY (I_TipoComprobanteID) REFERENCES TC_TipoComprobante(I_TipoComprobanteID),
 	CONSTRAINT FK_Estado_ComprobantePago FOREIGN KEY (I_EstadoComprobanteID) REFERENCES TC_EstadoComprobante(I_EstadoComprobanteID),
@@ -184,6 +185,52 @@ BEGIN
 		SET @B_Result = 0;
 		SET @T_Message = 'Se excedió el valor permitido (' + CAST(@I_FinNumeroComprobante AS VARCHAR(100)) + ') para el número de comprobante.';
 	END
+END
+GO
+
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarEstadoComprobantePago')
+	DROP PROCEDURE [dbo].[USP_U_ActualizarEstadoComprobantePago]
+GO
+
+CREATE PROCEDURE [dbo].[USP_U_ActualizarEstadoComprobantePago]
+@I_NumeroSerie INT,
+@I_NumeroComprobante INT,
+@C_EstadoComprobanteCod VARCHAR(50),
+@UserID INT,
+@B_Result BIT OUTPUT,
+@T_Message NVARCHAR(4000) OUTPUT
+AS
+BEGIN  
+	SET NOCOUNT ON;
+	
+	DECLARE @D_FechaAccion DATETIME,
+			@I_EstadoComprobanteID INT;
+
+	SET @D_FechaAccion = GETDATE();
+
+	SET @I_EstadoComprobanteID = (SELECT I_EstadoComprobanteID FROM dbo.TC_EstadoComprobante WHERE C_EstadoComprobanteCod = @C_EstadoComprobanteCod);
+
+	BEGIN TRAN
+	BEGIN TRY
+		UPDATE c SET 
+			c.I_EstadoComprobanteID = @I_EstadoComprobanteID,
+			c.I_UsuarioMod = @UserID,
+			c.D_FecMod = @D_FechaAccion
+		FROM dbo.TR_Comprobante c
+		INNER JOIN dbo.TC_SerieComprobante s ON s.I_SerieID = c.I_SerieID
+		WHERE s.I_NumeroSerie = @I_NumeroSerie AND c.I_NumeroComprobante = @I_NumeroComprobante
+
+		COMMIT TRAN
+		SET @B_Result = 1;
+		SET @T_Message = 'Actualización de estado correcta.';
+	END TRY
+	BEGIN CATCH
+		ROLLBACK TRAN
+		SET @B_Result = 0;
+		SET @T_Message = ERROR_MESSAGE();
+	END CATCH
 END
 GO
 
@@ -343,7 +390,3 @@ BEGIN
 		DATEDIFF(SECOND, pagBan.D_FecPago, @D_FecPago) = 0;
 END
 GO
-
-
-EXEC USP_S_ListarComprobantePago @C_CodOperacion = '738724';
-EXEC USP_S_ObtenerComprobantePago @I_PagoBancoID = 609301;

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using WebApp.Models;
@@ -108,6 +109,16 @@ namespace WebApp.Controllers
         public JsonResult GenerarNumeroComprobanteGrupal(ConsultaComprobantePagoViewModel model, int tipoComprobanteID, int serieID, bool esGravado)
         {
             var resultado = _comprobantePagoServiceFacade.GenerarNumeroComprobante(model, tipoComprobanteID, serieID, esGravado, WebSecurity.CurrentUserId);
+
+            var jsonResponse = Json(resultado, JsonRequestBehavior.AllowGet);
+
+            return jsonResponse;
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> VerificarEstadoComprobantes()
+        {
+            var resultado = await _comprobantePagoServiceFacade.VerificarEstadoComprobantes(WebSecurity.CurrentUserId);
 
             var jsonResponse = Json(resultado, JsonRequestBehavior.AllowGet);
 

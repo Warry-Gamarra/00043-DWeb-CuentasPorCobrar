@@ -17,5 +17,7 @@ namespace WebApp.Models.Facades
         Response GenerarNumeroComprobante(int[] pagosBancoID, int tipoComprobanteID, int serieID, bool esGravado, int currentUserID);
 
         Response GenerarNumeroComprobante(ConsultaComprobantePagoViewModel filtro, int tipoComprobanteID, int serieID, bool esGravado, int currentUserID);
+
+        Task<Response> VerificarEstadoComprobantes(int currentUserID);
     }
 }
