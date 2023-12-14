@@ -50,6 +50,7 @@ namespace WebApp.Models.Facades
                     tipoComprobanteCod = x.tipoComprobanteCod,
                     tipoComprobanteDesc = x.tipoComprobanteDesc,
                     inicial = x.inicial,
+                    estadoComprobanteCod = x.estadoComprobanteCod,
                     estadoComprobanteDesc = x.estadoComprobanteDesc
                 });
 
@@ -82,13 +83,14 @@ namespace WebApp.Models.Facades
                     tipoComprobanteCod = x.tipoComprobanteCod,
                     tipoComprobanteDesc = x.tipoComprobanteDesc,
                     inicial = x.inicial,
+                    estadoComprobanteCod = x.estadoComprobanteCod,
                     estadoComprobanteDesc = x.estadoComprobanteDesc
                 });
 
             return resultado;
         }
 
-        public Response GenerarNumeroComprobante(int[] pagosBancoID, int tipoComprobanteID, int serieID, bool esGravado, int currentUserID)
+        public Response GenerarNumeroComprobante(int[] pagosBancoID, int tipoComprobanteID, int serieID, bool esGravado, bool esNuevoRegistro, int currentUserID)
         {
             Response resultadoGeneracionNumComprobante;
             Response resultadoGeneracionTXT;
@@ -98,9 +100,9 @@ namespace WebApp.Models.Facades
             {
                 var comprobanteDTO = _comprobantePagoService.ObtenerComprobantePagoBanco(pagosBancoID[0]);
 
-                if (comprobanteDTO.Where(x => x.comprobanteID.HasValue).Count() == 0)
+                if (comprobanteDTO.Where(x => x.comprobanteID.HasValue).Count() == 0 || (!esNuevoRegistro && comprobanteDTO.First().estadoComprobanteCod == EstadoComprobante.ERROR))
                 {
-                    resultadoGeneracionNumComprobante = _comprobantePagoService.GenerarNumeroComprobante(pagosBancoID, tipoComprobanteID, serieID, esGravado, currentUserID);
+                    resultadoGeneracionNumComprobante = _comprobantePagoService.GenerarNumeroComprobante(pagosBancoID, tipoComprobanteID, serieID, esGravado, esNuevoRegistro, currentUserID);
 
                     if (resultadoGeneracionNumComprobante.Value)
                     {
@@ -142,11 +144,13 @@ namespace WebApp.Models.Facades
 
             var cantGeneracionCorrecta = 0;
 
+            bool esNuevoRegistro = true;
+
             foreach (var pago in listaPagos)
             {
                 var pagosBancoId = pago.Select(x => x.pagoBancoID).ToArray();
 
-                var resultado = this.GenerarNumeroComprobante(pagosBancoId, tipoComprobanteID, serieID, esGravado, currentUserID);
+                var resultado = this.GenerarNumeroComprobante(pagosBancoId, tipoComprobanteID, serieID, esGravado, esNuevoRegistro, currentUserID);
 
                 if (resultado.Value)
                 {

@@ -63,6 +63,7 @@ namespace Domain.Services.Implementations
                     tipoComprobanteCod = x.C_TipoComprobanteCod,
                     tipoComprobanteDesc = x.T_TipoComprobanteDesc,
                     inicial = x.T_Inicial,
+                    estadoComprobanteCod = x.C_EstadoComprobanteCod,
                     estadoComprobanteDesc = x.T_EstadoComprobanteDesc
                 }); ;
 
@@ -94,13 +95,14 @@ namespace Domain.Services.Implementations
                     tipoComprobanteCod = x.C_TipoComprobanteCod,
                     tipoComprobanteDesc = x.T_TipoComprobanteDesc,
                     inicial = x.T_Inicial,
+                    estadoComprobanteCod = x.C_EstadoComprobanteCod,
                     estadoComprobanteDesc = x.T_EstadoComprobanteDesc
                 }); ;
 
             return result;
         }
 
-        public Response GenerarNumeroComprobante(int[] pagosBancoID, int tipoComprobanteID, int serieID, bool esGravado, int currentUserID)
+        public Response GenerarNumeroComprobante(int[] pagosBancoID, int tipoComprobanteID, int serieID, bool esGravado, bool esNuevoRegistro, int currentUserID)
         {
             ResponseData result;
 
@@ -109,6 +111,7 @@ namespace Domain.Services.Implementations
                 I_TipoComprobanteID = tipoComprobanteID,
                 I_SerieID = serieID,
                 B_EsGravado = esGravado,
+                B_EsNuevoRegistro = esNuevoRegistro,
                 UserID = currentUserID
             };
 

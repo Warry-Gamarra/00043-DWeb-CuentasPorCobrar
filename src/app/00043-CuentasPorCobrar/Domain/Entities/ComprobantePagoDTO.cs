@@ -53,6 +53,8 @@ namespace Domain.Entities
 
         public string inicial {  get; set; }
 
+        public string estadoComprobanteCod { get; set; }
+
         public string estadoComprobanteDesc { get; set; }
     }
 }

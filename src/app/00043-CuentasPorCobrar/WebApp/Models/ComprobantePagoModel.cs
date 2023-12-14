@@ -68,7 +68,17 @@ namespace WebApp.Models
 
         public string inicial { get; set; }
 
+        public string estadoComprobanteCod { get; set; }
+
         public string estadoComprobanteDesc { get; set; }
+
+        public string textColorEstado
+        {
+            get
+            {
+                return estadoComprobanteCod == EstadoComprobante.PROCESADO ? "text-success" : estadoComprobanteCod == EstadoComprobante.ERROR ? "text-danger" : "";
+            }
+        }
 
         public string comprobantePago
         {

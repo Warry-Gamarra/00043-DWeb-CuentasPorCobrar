@@ -80,13 +80,13 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
-        public JsonResult GenerarNumeroComprobante(int pagoBancoId, int tipoComprobanteID, int serieID, bool esGravado)
+        public JsonResult GenerarNumeroComprobante(int pagoBancoId, int tipoComprobanteID, int serieID, bool esGravado, bool esNuevoRegistro)
         {
             var model = _comprobantePagoServiceFacade.ObtenerComprobantePagoBanco(pagoBancoId);
 
             int[] pagosBancoId = model.Select(x => x.pagoBancoID).ToArray();
 
-            var resultado = _comprobantePagoServiceFacade.GenerarNumeroComprobante(pagosBancoId, tipoComprobanteID, serieID, esGravado, WebSecurity.CurrentUserId);
+            var resultado = _comprobantePagoServiceFacade.GenerarNumeroComprobante(pagosBancoId, tipoComprobanteID, serieID, esGravado, esNuevoRegistro, WebSecurity.CurrentUserId);
 
             var jsonResponse = Json(resultado, JsonRequestBehavior.AllowGet);
 

@@ -1,15 +1,10 @@
 /*
-HOY
+HOY TARDE
 ---
-- Ver el flujo para generar un número de comprobante cuando el estado es error.
 - Mantenimiento de Número de Serie (Sólo se pueden generar series hasta 9999).
 - Mantenimiento de Tipo de Comprobante.
-
-MAÑANA
--------
 - Generar el TXT según formato de digiflow y almacenarlo en una carpeta remota.
-
-
+---------------------------------------------------------------------------------
 --Correo de Jean: jnique@digiflow.pe
 --Correo de Alex: amoreno@digiflow.pe
 */
@@ -123,6 +118,7 @@ CREATE PROCEDURE [dbo].[USP_I_GrabarComprobantePago]
 @I_TipoComprobanteID INT,
 @I_SerieID INT,
 @B_EsGravado BIT,
+@B_EsNuevoRegistro BIT,
 @UserID INT,
 @B_Result BIT OUTPUT,
 @T_Message NVARCHAR(4000) OUTPUT
@@ -215,39 +211,49 @@ BEGIN
 
 	IF EXISTS(SELECT c.I_ComprobanteID FROM dbo.TR_Comprobante c INNER JOIN dbo.TC_SerieComprobante s ON s.I_SerieID = c.I_SerieID
 		WHERE s.I_NumeroSerie = @I_NumeroSerie AND c.I_NumeroComprobante = @I_NumeroComprobante) BEGIN
-
+		
 		IF EXISTS(SELECT c.I_ComprobanteID FROM dbo.TR_Comprobante c 
 			INNER JOIN dbo.TC_SerieComprobante s ON s.I_SerieID = c.I_SerieID
-			INNER JOIN dbo.TC_EstadoComprobante e ON e.I_EstadoComprobanteID = c.I_EstadoComprobanteID
-			WHERE s.I_NumeroSerie = @I_NumeroSerie AND c.I_NumeroComprobante = @I_NumeroComprobante AND e.C_EstadoComprobanteCod = 'PEN') BEGIN
+			INNER JOIN TR_Comprobante_PagoBanco cp ON cp.I_ComprobanteID = c.I_ComprobanteID
+			WHERE s.I_NumeroSerie = @I_NumeroSerie AND c.I_NumeroComprobante = @I_NumeroComprobante AND cp.B_Habilitado = 1) BEGIN
 
-			SET @D_FechaAccion = GETDATE();
-
-			SET @I_EstadoComprobanteID = (SELECT I_EstadoComprobanteID FROM dbo.TC_EstadoComprobante WHERE C_EstadoComprobanteCod = @C_EstadoComprobanteCod);
-
-			BEGIN TRAN
-			BEGIN TRY
-				UPDATE c SET 
-					c.I_EstadoComprobanteID = @I_EstadoComprobanteID,
-					c.I_UsuarioMod = @UserID,
-					c.D_FecMod = @D_FechaAccion
-				FROM dbo.TR_Comprobante c
+			IF EXISTS(SELECT c.I_ComprobanteID FROM dbo.TR_Comprobante c 
 				INNER JOIN dbo.TC_SerieComprobante s ON s.I_SerieID = c.I_SerieID
-				WHERE s.I_NumeroSerie = @I_NumeroSerie AND c.I_NumeroComprobante = @I_NumeroComprobante
+				INNER JOIN dbo.TC_EstadoComprobante e ON e.I_EstadoComprobanteID = c.I_EstadoComprobanteID
+				WHERE s.I_NumeroSerie = @I_NumeroSerie AND c.I_NumeroComprobante = @I_NumeroComprobante AND e.C_EstadoComprobanteCod = 'PEN') BEGIN
 
-				COMMIT TRAN
+				SET @D_FechaAccion = GETDATE();
+
+				SET @I_EstadoComprobanteID = (SELECT I_EstadoComprobanteID FROM dbo.TC_EstadoComprobante WHERE C_EstadoComprobanteCod = @C_EstadoComprobanteCod);
+
+				BEGIN TRAN
+				BEGIN TRY
+					UPDATE c SET 
+						c.I_EstadoComprobanteID = @I_EstadoComprobanteID,
+						c.I_UsuarioMod = @UserID,
+						c.D_FecMod = @D_FechaAccion
+					FROM dbo.TR_Comprobante c
+					INNER JOIN dbo.TC_SerieComprobante s ON s.I_SerieID = c.I_SerieID
+					WHERE s.I_NumeroSerie = @I_NumeroSerie AND c.I_NumeroComprobante = @I_NumeroComprobante
+
+					COMMIT TRAN
+					SET @B_Result = 1;
+					SET @T_Message = 'Actualización de estado correcta.';
+				END TRY
+				BEGIN CATCH
+					ROLLBACK TRAN
+					SET @B_Result = 0;
+					SET @T_Message = ERROR_MESSAGE();
+				END CATCH
+
+			END ELSE BEGIN
 				SET @B_Result = 1;
-				SET @T_Message = 'Actualización de estado correcta.';
-			END TRY
-			BEGIN CATCH
-				ROLLBACK TRAN
-				SET @B_Result = 0;
-				SET @T_Message = ERROR_MESSAGE();
-			END CATCH
+				SET @T_Message = 'El comprobante con serie "' + CAST(@I_NumeroSerie AS VARCHAR) + '" y número "' + CAST(@I_NumeroComprobante AS VARCHAR(20)) + '" ya tiene actualizado el estado.';
+			END
 
 		END ELSE BEGIN
 			SET @B_Result = 1;
-			SET @T_Message = 'El comprobante con serie "' + CAST(@I_NumeroSerie AS VARCHAR) + '" y número "' + CAST(@I_NumeroComprobante AS VARCHAR(20)) + '" ya tiene actualizado el estado.';
+			SET @T_Message = 'El comprobante con serie "' + CAST(@I_NumeroSerie AS VARCHAR) + '" y número "' + CAST(@I_NumeroComprobante AS VARCHAR(20)) + '" está deshabilitado.';
 		END
 	END ELSE BEGIN
 		SET @B_Result = 0;
@@ -305,6 +311,7 @@ BEGIN
 		tipCom.C_TipoComprobanteCod,
 		tipCom.T_TipoComprobanteDesc,
 		tipCom.T_Inicial,
+		estCom.C_EstadoComprobanteCod,
 		estCom.T_EstadoComprobanteDesc
 	FROM dbo.TR_PagoBanco pagBan
 	INNER JOIN dbo.TC_EntidadFinanciera ban ON ban.I_EntidadFinanID = pagBan.I_EntidadFinanID
@@ -395,6 +402,7 @@ BEGIN
 		tipCom.C_TipoComprobanteCod,
 		tipCom.T_TipoComprobanteDesc,
 		tipCom.T_Inicial,
+		estCom.C_EstadoComprobanteCod,
 		estCom.T_EstadoComprobanteDesc
 	FROM dbo.TR_PagoBanco pagBan
 	INNER JOIN dbo.TC_EntidadFinanciera ban ON ban.I_EntidadFinanID = pagBan.I_EntidadFinanID

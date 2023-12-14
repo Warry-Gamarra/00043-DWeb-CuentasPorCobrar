@@ -13,68 +13,62 @@
 
 <div class="modal-body" id="frmGenerarComprobante">
     <dl class="row">
-        <dt class="col-sm-3 mb-3">Código Depositante</dt>
-        <dd class="col-sm-9">@Model.First().codDepositante</dd>
+        <dt class="col-sm-4 mb-3">Código Depositante</dt>
+        <dd class="col-sm-8">@Model.First().codDepositante</dd>
 
-        <dt class="col-sm-3 mb-3">Nombre Depositante</dt>
-        <dd class="col-sm-9">@Model.First().nomDepositante</dd>
+        <dt class="col-sm-4 mb-3">Nom. Depositante</dt>
+        <dd class="col-sm-8">@Model.First().nomDepositante</dd>
 
-        <dt class="col-sm-3 mb-3">Total Pagado</dt>
-        <dd class="col-sm-9">@Model.Sum(x => x.montoTotal).ToString(Domain.Helpers.FormatosDecimal.BASIC_DECIMAL)</dd>
+        <dt class="col-sm-4 mb-3">Total Pagado</dt>
+        <dd class="col-sm-8">@Model.Sum(x => x.montoTotal).ToString(Domain.Helpers.FormatosDecimal.BASIC_DECIMAL)</dd>
 
-        <dt class="col-sm-3 mb-3">Fecha Pago</dt>
-        <dd class="col-sm-9">@Model.First().fecPago.ToString(Domain.Helpers.FormatosDateTime.BASIC_DATETIME)</dd>
+        <dt class="col-sm-4 mb-3">Fecha Pago</dt>
+        <dd class="col-sm-8">@Model.First().fecPago.ToString(Domain.Helpers.FormatosDateTime.BASIC_DATETIME)</dd>
 
-        <dt class="col-sm-3 mb-3">Código de Operacion</dt>
-        <dd class="col-sm-9">@Model.First().codOperacion</dd>
+        <dt class="col-sm-4 mb-3">Cód. Operacion</dt>
+        <dd class="col-sm-8">@Model.First().codOperacion</dd>
 
         @if (Model.First().entidadFinanID == Domain.Helpers.Bancos.BCP_ID)
         {
-            <dt class="col-sm-3 mb-3">Código Interno</dt>
-            <dd class="col-sm-9">@Model.First().codigoInterno</dd>
+            <dt class="col-sm-4 mb-3">Cód. Interno</dt>
+            <dd class="col-sm-8">@Model.First().codigoInterno</dd>
         }
 
-        <dt class="col-sm-3 mb-3">Banco</dt>
-        <dd class="col-sm-9">@Model.First().entidadDesc</dd>
+        <dt class="col-sm-4 mb-3">Banco</dt>
+        <dd class="col-sm-8">@Model.First().entidadDesc</dd>
 
-        <dt class="col-sm-3 mb-3">Tipo de Comprobante</dt>
+        <dt class="col-sm-4 mb-3">Tip. Comprobante</dt>
         @if (tieneComprobante)
         {
-            <dd class="col-sm-9">@Model.First().tipoComprobanteDesc</dd>
+            <dd class="col-sm-8">@Model.First().tipoComprobanteDesc</dd>
         }
         else
         {
-            <dd class="col-sm-9">
-                @Html.DropDownList("cmbTipoComprobante", ViewBag.ComboTipoComprobante as SelectList,new { @class = "form-control text-uppercase" })
+            <dd class="col-sm-8">
+                @Html.DropDownList("cmbTipoComprobante", ViewBag.ComboTipoComprobante as SelectList, new { @class = "form-control text-uppercase" })
             </dd>
         }
 
-        <dt class="col-sm-3 mb-3">Serie</dt>
+        <dt class="col-sm-4 mb-3">Serie Comprobante</dt>
         @if (tieneComprobante)
         {
-            <dd class="col-sm-9">@Model.First().numeroSerie</dd>
+            <dd class="col-sm-8">@Model.First().comprobantePago</dd>
         }
         else
         {
-            <dd class="col-sm-9">
-                @Html.DropDownList("cmbSerie", ViewBag.ComboSerieComprobante as SelectList,new { @class = "form-control" })
+            <dd class="col-sm-8">
+                @Html.DropDownList("cmbSerie", ViewBag.ComboSerieComprobante as SelectList, new { @class = "form-control" })
             </dd>
         }
 
+        <dt class="col-sm-4 mb-3">Es Gravado</dt>
         @if (tieneComprobante)
         {
-            <dt class="col-sm-3 mb-3">Número de Comprobante</dt>
-            <dd class="col-sm-9">@Model.First().numeroComprobante</dd>
-        }
-
-        <dt class="col-sm-3 mb-3">Es Gravado</dt>
-        @if (tieneComprobante)
-        {
-            <dd class="col-sm-9">@Model.First().gravadoDesc</dd>
+            <dd class="col-sm-8">@Model.First().gravadoDesc</dd>
         }
         else
         {
-            <dd class="col-sm-9">
+            <dd class="col-sm-8">
                 <select id="cmbEsGravado" class="form-control">
                     <option value="True">Sí</option>
                     <option value="False">No</option>
@@ -84,10 +78,34 @@
 
         @if (tieneComprobante)
         {
-            <dt class="col-sm-3 mb-3">Estado Comprobante</dt>
-            <dd class="col-sm-9">@Model.First().estadoComprobanteDesc</dd>
+            <dt class="col-sm-4 mb-3">Estado</dt>
+            <dd class="col-sm-8 @Model.First().textColorEstado">@Model.First().estadoComprobanteDesc</dd>
         }
     </dl>
+
+    @if (Model.First().estadoComprobanteCod == Domain.Helpers.EstadoComprobante.ERROR)
+    {
+        <hr style="border-block-style: solid;" />
+        <dl class="row">
+            <dt class="col-sm-4 mb-3">Tip. Comprobante</dt>
+            <dd class="col-sm-8">
+                @Html.DropDownList("cmbTipoComprobante", ViewBag.ComboTipoComprobante as SelectList, new { @class = "form-control text-uppercase" })
+            </dd>
+
+            <dt class="col-sm-4 mb-3">Serie Comprobante</dt>
+            <dd class="col-sm-8">
+                @Html.DropDownList("cmbSerie", ViewBag.ComboSerieComprobante as SelectList, new { @class = "form-control" })
+            </dd>
+
+            <dt class="col-sm-4 mb-3">Es Gravado</dt>
+            <dd class="col-sm-8">
+                <select id="cmbEsGravado" class="form-control">
+                    <option value="True">Sí</option>
+                    <option value="False">No</option>
+                </select>
+            </dd>
+        </dl>
+    }
 </div>
 
 <div class="modal-footer" id="div_msg_comprobante">
@@ -99,7 +117,16 @@
     </div>
     @if (!tieneComprobante)
     {
+        <input type="hidden" id="hdnEsNuevaGeneracion" name="hdnEsNuevaGeneracion" value="True" />
         <button type="button" class="btn btn-primary" id="btnGenerar"><i class="fa fa-file"></i> Generar Número</button>
+    }
+    else
+    {
+        if (Model.First().estadoComprobanteCod == Domain.Helpers.EstadoComprobante.ERROR)
+        {
+            <input type="hidden" id="hdnEsNuevaGeneracion" name="hdnEsNuevaGeneracion" value="False" />
+            <button type="button" class="btn btn-primary" id="btnGenerar"><i class="fa fa-file"></i> Generar Otro Número</button>
+        }
     }
     <button type="button" class="btn btn-secondary closeModal"><i class="fa fa-times-circle-o"></i> Cancelar</button>
 </div>
@@ -110,7 +137,8 @@
             pagoBancoId: @pagoBancoID,
             tipoComprobanteID: $('#frmGenerarComprobante #cmbTipoComprobante').val(),
             serieID: $('#frmGenerarComprobante #cmbSerie').val(),
-            esGravado: $('#frmGenerarComprobante #cmbEsGravado').val()
+            esGravado: $('#frmGenerarComprobante #cmbEsGravado').val(),
+            esNuevoRegistro: $('#hdnEsNuevaGeneracion').val()
         };
 
         $.ajax({
