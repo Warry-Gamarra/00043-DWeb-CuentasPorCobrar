@@ -19,8 +19,6 @@ namespace Data.Procedures
 
         public bool B_EsGravado { get; set; }
 
-        public bool B_EsNuevoRegistro { get; set; }
-
         public int UserID { get; set; }
 
         public ResponseData Execute(DataTable dataTable)
@@ -39,7 +37,6 @@ namespace Data.Procedures
                     parameters.Add(name: "I_TipoComprobanteID", dbType: DbType.Int32, value: I_TipoComprobanteID);
                     parameters.Add(name: "I_SerieID", dbType: DbType.Int32, value: I_SerieID);
                     parameters.Add(name: "B_EsGravado", dbType: DbType.Boolean, value: B_EsGravado);
-                    parameters.Add(name: "B_EsNuevoRegistro", dbType: DbType.Boolean, value: B_EsNuevoRegistro);
                     parameters.Add(name: "UserID", dbType: DbType.Int32, value: UserID);
                     parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);
                     parameters.Add(name: "T_Message", dbType: DbType.String, size: 4000, direction: ParameterDirection.Output);

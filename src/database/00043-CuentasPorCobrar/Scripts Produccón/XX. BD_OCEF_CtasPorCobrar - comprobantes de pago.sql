@@ -118,7 +118,6 @@ CREATE PROCEDURE [dbo].[USP_I_GrabarComprobantePago]
 @I_TipoComprobanteID INT,
 @I_SerieID INT,
 @B_EsGravado BIT,
-@B_EsNuevoRegistro BIT,
 @UserID INT,
 @B_Result BIT OUTPUT,
 @T_Message NVARCHAR(4000) OUTPUT

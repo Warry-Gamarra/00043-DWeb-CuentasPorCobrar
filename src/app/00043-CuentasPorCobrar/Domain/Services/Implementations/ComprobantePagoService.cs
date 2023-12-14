@@ -102,7 +102,7 @@ namespace Domain.Services.Implementations
             return result;
         }
 
-        public Response GenerarNumeroComprobante(int[] pagosBancoID, int tipoComprobanteID, int serieID, bool esGravado, bool esNuevoRegistro, int currentUserID)
+        public Response GenerarNumeroComprobante(int[] pagosBancoID, int tipoComprobanteID, int serieID, bool esGravado, int currentUserID)
         {
             ResponseData result;
 
@@ -111,7 +111,6 @@ namespace Domain.Services.Implementations
                 I_TipoComprobanteID = tipoComprobanteID,
                 I_SerieID = serieID,
                 B_EsGravado = esGravado,
-                B_EsNuevoRegistro = esNuevoRegistro,
                 UserID = currentUserID
             };
 
