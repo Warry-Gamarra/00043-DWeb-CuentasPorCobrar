@@ -292,7 +292,7 @@ namespace Domain.Services.Implementations
                 }
 
                 response = new Response() {
-                    Value = true,
+                    Value = listaErrores.Count() == 0,
                     Message = listaErrores.Count() == 0 ? "Comprobación correcta." : "No se lograron actualizar \"" + listaErrores.Count().ToString() + "\" comprobantes."
                 };
             }

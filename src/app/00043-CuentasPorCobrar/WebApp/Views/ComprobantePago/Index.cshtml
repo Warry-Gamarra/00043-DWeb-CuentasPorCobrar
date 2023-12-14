@@ -161,6 +161,13 @@
 
 @section Scripts {
     <script>
+        const MESSAGE_TYPE = {
+            INFO: 'info',
+            SUCCESS: 'success',
+            WARNING: 'warning',
+            ERROR: 'error'
+        };
+
         $('#datepicker .input-daterange').datepicker({
             todayBtn: 'linked',
             language: 'es',
@@ -195,23 +202,49 @@
         });
 
         $('#frmConsultaComprobantePago').on('click', '#btnVerificarEstadoComprobantes', function (e) {
-            $.ajax({
-                type: 'POST',
-                url: '@Url.Action("VerificarEstadoComprobantes", "ComprobantePago")',
-                dataType: 'json',
-                beforeSend: function () {
-                    $('#modalEspera').modal('show');
-                    console.log('beforeSend');
-                },
-                success: function (data) {
-                    console.log(data);
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    var jsonException = JSON.parse(xhr.responseText);
-                },
-                complete: function () {
-                    $('#modalEspera').modal('hide');
-                    console.log('complete');
+            Swal.fire({
+                title: '',
+                text: '¿Dese verificar el estado de los comprobantes generados?',
+                icon: MESSAGE_TYPE.WARNING,
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si, continuar.',
+                cancelButtonText: 'No, cancelar.'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("VerificarEstadoComprobantes", "ComprobantePago")',
+                        dataType: 'json',
+                        beforeSend: function () {
+                            $('#modalEspera').modal('show');
+                        },
+                        success: function (data) {
+                            if (data !== null) {
+                                let icon = MESSAGE_TYPE.ERROR;
+
+                                if (data.Value) {
+                                    icon = MESSAGE_TYPE.SUCCESS;
+                                }
+
+                                Swal.fire({
+                                    title: '',
+                                    text: data.Message,
+                                    icon: icon,
+                                    timer: 6000
+                                }).then((result) => {
+                                    $('#modalEspera').modal('hide');
+                                });
+                            }
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            var jsonException = JSON.parse(xhr.responseText);
+                        },
+                        complete: function () {
+                            $('#modalEspera').modal('hide');
+                        }
+                    });
                 }
             });
         });
@@ -248,4 +281,3 @@
         }
     </script>
 }
-

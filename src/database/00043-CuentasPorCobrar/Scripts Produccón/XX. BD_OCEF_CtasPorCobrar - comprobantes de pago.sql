@@ -1,7 +1,6 @@
 /*
 HOY
 ---
-- Consultar  la carpeta para actualizar el estado de los comprobantes.
 - Ver el flujo para generar un número de comprobante cuando el estado es error.
 - Mantenimiento de Número de Serie (Sólo se pueden generar series hasta 9999).
 - Mantenimiento de Tipo de Comprobante.
