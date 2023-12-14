@@ -103,9 +103,11 @@
     <Compile Include="Entities\SeccionArchivo.cs" />
     <Compile Include="Entities\CtaDepoServicioDto.cs" />
     <Compile Include="Entities\SerieComprobanteDTO.cs" />
+    <Compile Include="Entities\SerieComprobanteEntity.cs" />
     <Compile Include="Entities\TasaDTO.cs" />
     <Compile Include="Entities\TasaEntity.cs" />
     <Compile Include="Entities\TipoComprobanteDTO.cs" />
+    <Compile Include="Entities\TipoComprobanteEntity.cs" />
     <Compile Include="Helpers\Constantes.cs" />
     <Compile Include="Helpers\ImportacionPagoResponse.cs" />
     <Compile Include="Helpers\MultaNoVotarResponse.cs" />

@@ -6,16 +6,14 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class SerieComprobanteDTO
+    public class SerieComprobanteEntity
     {
-        public int serieID { get; set; }
+        public int? serieID { get; set; }
 
         public int numeroSerie { get; set; }
 
         public int finNumeroComprobante { get; set; }
 
         public int diasAnterioresPermitido { get; set; }
-
-        public bool estaHabilitado { get; set; }
     }
 }

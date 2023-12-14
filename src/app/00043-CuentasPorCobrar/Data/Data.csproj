@@ -68,13 +68,17 @@
   <ItemGroup>
     <Compile Include="Connection\Database.cs" />
     <Compile Include="Connection\ResponseData.cs" />
+    <Compile Include="Procedures\USP_D_EliminarSerieComprobante.cs" />
+    <Compile Include="Procedures\USP_D_EliminarTipoComprobante.cs" />
     <Compile Include="Procedures\USP_IU_GenerarObligacionesPosgrado_X_Ciclo.cs" />
     <Compile Include="Procedures\USP_IU_GenerarObligacionesPregrado_X_Ciclo.cs" />
     <Compile Include="Procedures\USP_I_GrabarAlumnoMultaNoVotar.cs" />
     <Compile Include="Procedures\USP_I_GrabarComprobantePago.cs" />
     <Compile Include="Procedures\USP_I_GrabarPagoObligaciones.cs" />
     <Compile Include="Procedures\USP_I_GrabarPagoTasas.cs" />
+    <Compile Include="Procedures\USP_I_GrabarSerieComprobante.cs" />
     <Compile Include="Procedures\USP_I_GrabarTasaUnfv.cs" />
+    <Compile Include="Procedures\USP_I_GrabarTipoComprobante.cs" />
     <Compile Include="Procedures\USP_S_CantidadDePagosRegistrados_X_Dia.cs" />
     <Compile Include="Procedures\USP_S_ListadoEstadoObligaciones.cs" />
     <Compile Include="Procedures\USP_IU_RelacionarPagoConObligacion.cs" />
@@ -88,6 +92,8 @@
     <Compile Include="Procedures\USP_S_ValidarCodOperacionTasa.cs" />
     <Compile Include="Procedures\USP_S_ValidarCodOperacionObligacion.cs" />
     <Compile Include="Procedures\USP_U_ActualizarEstadoComprobantePago.cs" />
+    <Compile Include="Procedures\USP_U_ActualizarEstadoSerieComprobante.cs" />
+    <Compile Include="Procedures\USP_U_ActualizarEstadoTipoComprobante.cs" />
     <Compile Include="Procedures\USP_U_ActualizarFechaVencimientoObligaciones.cs" />
     <Compile Include="Procedures\USP_U_ActualizarConceptoPago.cs" />
     <Compile Include="Procedures\USP_I_GrabarConceptoPago.cs" />
@@ -102,7 +108,9 @@
     <Compile Include="Procedures\USP_U_ActualizarPagoTasa.cs" />
     <Compile Include="Procedures\USP_U_ActualizarProceso.cs" />
     <Compile Include="Procedures\USP_U_ActualizarCtaDeposito_Proceso.cs" />
+    <Compile Include="Procedures\USP_U_ActualizarSerieComprobante.cs" />
     <Compile Include="Procedures\USP_U_ActualizarTasaUnfv.cs" />
+    <Compile Include="Procedures\USP_U_ActualizarTipoComprobante.cs" />
     <Compile Include="Procedures\USP_U_AnularObligacionAlumno.cs" />
     <Compile Include="Procedures\USP_U_DesenlazarPagoObligacion.cs" />
     <Compile Include="Procedures\USP_S_ObtenerCuotaPago.cs" />

@@ -14,7 +14,7 @@ namespace Data.Tables
     {
         public int I_SerieID { get; set; }
 
-        public string I_NumeroSerie { get; set; }
+        public int I_NumeroSerie { get; set; }
 
         public int I_FinNumeroComprobante { get; set; }
 

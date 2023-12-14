@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,11 @@ namespace Domain.Services
     public interface ITipoComprobanteService
     {
         IEnumerable<TipoComprobanteDTO> ListarTiposComprobante(bool soloHabilitados);
+
+        Response GrabarTipoComprobante(TipoComprobanteEntity entity, SaveOption saveOption, int userID);
+
+        Response ActualizarEstadoTipoComprobante(int tipoComprobanteID, bool estaHabilitado, int userID);
+
+        Response EliminarEstadoTipoComprobante(int tipoComprobanteID);
     }
 }

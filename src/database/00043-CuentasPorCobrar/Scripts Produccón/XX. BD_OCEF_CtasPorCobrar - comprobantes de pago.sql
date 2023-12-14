@@ -19,7 +19,7 @@ CREATE TABLE dbo.TC_TipoComprobante
 	I_TipoComprobanteID INT IDENTITY(1,1),
 	C_TipoComprobanteCod VARCHAR(50) NOT NULL,
 	T_TipoComprobanteDesc VARCHAR(250) NOT NULL,
-	T_Inicial CHAR(1) NOT NULL,
+	T_Inicial VARCHAR(5),
 	B_Habilitado BIT NOT NULL,
 	I_UsuarioCre INT NOT NULL,
 	D_FecCre DATETIME NOT NULL,
@@ -417,5 +417,309 @@ BEGIN
 		pagBan.I_EntidadFinanID = @I_EntidadFinanID AND
 		pagBan.C_CodOperacion = @C_CodOperacion AND
 		DATEDIFF(SECOND, pagBan.D_FecPago, @D_FecPago) = 0;
+END
+GO
+
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_GrabarTipoComprobante')
+	DROP PROCEDURE [dbo].[USP_I_GrabarTipoComprobante]
+GO
+
+CREATE PROCEDURE [dbo].[USP_I_GrabarTipoComprobante]
+@C_TipoComprobanteCod VARCHAR(50),
+@T_TipoComprobanteDesc VARCHAR(250),
+@T_Inicial VARCHAR(5),
+@UserID INT,
+@B_Result BIT OUTPUT,
+@T_Message NVARCHAR(4000) OUTPUT
+AS
+BEGIN  
+	SET NOCOUNT ON;
+
+	DECLARE @D_FechaAccion DATETIME;
+
+	SET @D_FechaAccion = GETDATE();
+
+	BEGIN TRAN
+	BEGIN TRY
+		INSERT dbo.TC_TipoComprobante(C_TipoComprobanteCod, T_TipoComprobanteDesc, T_Inicial, B_Habilitado, I_UsuarioCre, D_FecCre)
+		VALUES(@C_TipoComprobanteCod, @T_TipoComprobanteDesc, @T_Inicial, 1, @UserID, @D_FechaAccion);
+
+		COMMIT TRAN
+		SET @B_Result = 1;
+		SET @T_Message = 'Grabación correcta.';
+	END TRY
+	BEGIN CATCH
+		ROLLBACK TRAN
+		SET @B_Result = 0;
+		SET @T_Message = ERROR_MESSAGE();
+	END CATCH
+END
+GO
+
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarTipoComprobante')
+	DROP PROCEDURE [dbo].[USP_U_ActualizarTipoComprobante]
+GO
+
+CREATE PROCEDURE [dbo].[USP_U_ActualizarTipoComprobante]
+@I_TipoComprobanteID INT,
+@C_TipoComprobanteCod VARCHAR(250),
+@T_TipoComprobanteDesc VARCHAR(250),
+@T_Inicial VARCHAR(5),
+@UserID INT,
+@B_Result BIT OUTPUT,
+@T_Message NVARCHAR(4000) OUTPUT
+AS
+BEGIN  
+	SET NOCOUNT ON;
+
+	DECLARE @D_FechaAccion DATETIME;
+
+	SET @D_FechaAccion = GETDATE();
+
+	BEGIN TRAN
+	BEGIN TRY
+		UPDATE dbo.TC_TipoComprobante SET
+			C_TipoComprobanteCod = @C_TipoComprobanteCod,
+			T_TipoComprobanteDesc = @T_TipoComprobanteDesc,
+			T_Inicial = @T_Inicial,
+			I_UsuarioMod = @UserID,
+			D_FecMod = @D_FechaAccion
+		WHERE I_TipoComprobanteID = @I_TipoComprobanteID;
+
+		COMMIT TRAN
+		SET @B_Result = 1;
+		SET @T_Message = 'Actualización correcta.';
+	END TRY
+	BEGIN CATCH
+		ROLLBACK TRAN
+		SET @B_Result = 0;
+		SET @T_Message = ERROR_MESSAGE();
+	END CATCH
+END
+GO
+
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarEstadoTipoComprobante')
+	DROP PROCEDURE [dbo].[USP_U_ActualizarEstadoTipoComprobante]
+GO
+
+CREATE PROCEDURE [dbo].[USP_U_ActualizarEstadoTipoComprobante]
+@I_TipoComprobanteID INT,
+@B_Habilitado BIT,
+@UserID INT,
+@B_Result BIT OUTPUT,
+@T_Message NVARCHAR(4000) OUTPUT
+AS
+BEGIN  
+	SET NOCOUNT ON;
+
+	DECLARE @D_FechaAccion DATETIME;
+
+	SET @D_FechaAccion = GETDATE();
+
+	BEGIN TRAN
+	BEGIN TRY
+		UPDATE dbo.TC_TipoComprobante SET
+			B_Habilitado = @B_Habilitado,
+			I_UsuarioMod = @UserID,
+			D_FecMod = @D_FechaAccion
+		WHERE I_TipoComprobanteID = @I_TipoComprobanteID;
+
+		COMMIT TRAN
+		SET @B_Result = 1;
+		SET @T_Message = 'Actualización correcta.';
+	END TRY
+	BEGIN CATCH
+		ROLLBACK TRAN
+		SET @B_Result = 0;
+		SET @T_Message = ERROR_MESSAGE();
+	END CATCH
+END
+GO
+
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_D_EliminarTipoComprobante')
+	DROP PROCEDURE [dbo].[USP_D_EliminarTipoComprobante]
+GO
+
+CREATE PROCEDURE [dbo].[USP_D_EliminarTipoComprobante]
+@I_TipoComprobanteID INT,
+@B_Result BIT OUTPUT,
+@T_Message NVARCHAR(4000) OUTPUT
+AS
+BEGIN  
+	SET NOCOUNT ON;
+
+	BEGIN TRAN
+	BEGIN TRY
+		DELETE dbo.TC_TipoComprobante WHERE I_TipoComprobanteID = @I_TipoComprobanteID;
+
+		COMMIT TRAN
+		SET @B_Result = 1;
+		SET @T_Message = 'Eliminación correcta.';
+	END TRY
+	BEGIN CATCH
+		ROLLBACK TRAN
+		SET @B_Result = 0;
+		SET @T_Message = ERROR_MESSAGE();
+	END CATCH
+END
+GO
+
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_GrabarSerieComprobante')
+	DROP PROCEDURE [dbo].[USP_I_GrabarSerieComprobante]
+GO
+
+CREATE PROCEDURE [dbo].[USP_I_GrabarSerieComprobante]
+@I_NumeroSerie INT,
+@I_FinNumeroComprobante INT,
+@I_DiasAnterioresPermitido INT,
+@UserID INT,
+@B_Result BIT OUTPUT,
+@T_Message NVARCHAR(4000) OUTPUT
+AS
+BEGIN  
+	SET NOCOUNT ON;
+
+	DECLARE @D_FechaAccion DATETIME;
+
+	SET @D_FechaAccion = GETDATE();
+
+	BEGIN TRAN
+	BEGIN TRY
+		INSERT dbo.TC_SerieComprobante(I_NumeroSerie, I_FinNumeroComprobante, I_DiasAnterioresPermitido, B_Habilitado, I_UsuarioCre, D_FecCre)
+		VALUES(@I_NumeroSerie, @I_FinNumeroComprobante, @I_DiasAnterioresPermitido, 1, @UserID, @D_FechaAccion);
+
+		COMMIT TRAN
+		SET @B_Result = 1;
+		SET @T_Message = 'Grabación correcta.';
+	END TRY
+	BEGIN CATCH
+		ROLLBACK TRAN
+		SET @B_Result = 0;
+		SET @T_Message = ERROR_MESSAGE();
+	END CATCH
+END
+GO
+
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarSerieComprobante')
+	DROP PROCEDURE [dbo].[USP_U_ActualizarSerieComprobante]
+GO
+
+CREATE PROCEDURE [dbo].[USP_U_ActualizarSerieComprobante]
+@I_SerieID INT,
+@I_NumeroSerie INT,
+@I_FinNumeroComprobante INT,
+@I_DiasAnterioresPermitido INT,
+@UserID INT,
+@B_Result BIT OUTPUT,
+@T_Message NVARCHAR(4000) OUTPUT
+AS
+BEGIN  
+	SET NOCOUNT ON;
+
+	DECLARE @D_FechaAccion DATETIME;
+
+	SET @D_FechaAccion = GETDATE();
+
+	BEGIN TRAN
+	BEGIN TRY
+		UPDATE dbo.TC_SerieComprobante SET
+			I_NumeroSerie = @I_NumeroSerie,
+			I_FinNumeroComprobante = @I_FinNumeroComprobante,
+			I_DiasAnterioresPermitido = @I_DiasAnterioresPermitido,
+			I_UsuarioMod = @UserID,
+			D_FecMod = @D_FechaAccion
+		WHERE I_SerieID = @I_SerieID;
+
+		COMMIT TRAN
+		SET @B_Result = 1;
+		SET @T_Message = 'Actualización correcta.';
+	END TRY
+	BEGIN CATCH
+		ROLLBACK TRAN
+		SET @B_Result = 0;
+		SET @T_Message = ERROR_MESSAGE();
+	END CATCH
+END
+GO
+
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarEstadoSerieComprobante')
+	DROP PROCEDURE [dbo].[USP_U_ActualizarEstadoSerieComprobante]
+GO
+
+CREATE PROCEDURE [dbo].[USP_U_ActualizarEstadoSerieComprobante]
+@I_SerieID INT,
+@B_Habilitado BIT,
+@UserID INT,
+@B_Result BIT OUTPUT,
+@T_Message NVARCHAR(4000) OUTPUT
+AS
+BEGIN  
+	SET NOCOUNT ON;
+
+	DECLARE @D_FechaAccion DATETIME;
+
+	SET @D_FechaAccion = GETDATE();
+
+	BEGIN TRAN
+	BEGIN TRY
+		UPDATE dbo.TC_SerieComprobante SET
+			B_Habilitado = @B_Habilitado,
+			I_UsuarioMod = @UserID,
+			D_FecMod = @D_FechaAccion
+		WHERE I_SerieID = @I_SerieID;
+
+		COMMIT TRAN
+		SET @B_Result = 1;
+		SET @T_Message = 'Actualización correcta.';
+	END TRY
+	BEGIN CATCH
+		ROLLBACK TRAN
+		SET @B_Result = 0;
+		SET @T_Message = ERROR_MESSAGE();
+	END CATCH
+END
+GO
+
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_D_EliminarSerieComprobante')
+	DROP PROCEDURE [dbo].[USP_D_EliminarSerieComprobante]
+GO
+
+CREATE PROCEDURE [dbo].[USP_D_EliminarSerieComprobante]
+@I_SerieID INT,
+@B_Result BIT OUTPUT,
+@T_Message NVARCHAR(4000) OUTPUT
+AS
+BEGIN  
+	SET NOCOUNT ON;
+
+	BEGIN TRAN
+	BEGIN TRY
+		DELETE dbo.TC_SerieComprobante WHERE I_SerieID = @I_SerieID;
+
+		COMMIT TRAN
+		SET @B_Result = 1;
+		SET @T_Message = 'Eliminación correcta.';
+	END TRY
+	BEGIN CATCH
+		ROLLBACK TRAN
+		SET @B_Result = 0;
+		SET @T_Message = ERROR_MESSAGE();
+	END CATCH
 END
 GO

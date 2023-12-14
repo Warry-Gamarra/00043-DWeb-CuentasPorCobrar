@@ -477,6 +477,8 @@
     <Compile Include="Models\ReportModels\DetObligacionAlumnoRptModel.cs" />
     <Compile Include="Models\ReportModels\PagoTasaRptModel.cs" />
     <Compile Include="Models\ReportModels\PagoObligacionRptModel.cs" />
+    <Compile Include="Models\SerieComprobanteModel.cs" />
+    <Compile Include="Models\TipoComprobanteModel.cs" />
     <Compile Include="ViewModels\ConsultaComprobantePagoViewModel.cs" />
     <Compile Include="ViewModels\FechaVctoObligacionViewModel.cs" />
     <Compile Include="ViewModels\ConsultaPagosBancoObligacionesViewModel.cs" />
