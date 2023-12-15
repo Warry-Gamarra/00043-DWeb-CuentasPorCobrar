@@ -86,4 +86,15 @@ namespace Domain.Helpers
 
         public const string ERROR = "ERR";
     }
+
+    public static class CodigoTipoComprobante
+    {
+        public const string FACTURA = "01";
+
+        public const string BOLETA = "03";
+
+        public const string NOTA_CREDITO = "07";
+
+        public const string NOTA_DEBITO = "08";
+    }
 }

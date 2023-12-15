@@ -147,6 +147,10 @@ namespace Domain.Services.Implementations
 
                 string numeroComprobante = comprobantePagoDTO.First().numeroComprobante.Value.ToString("D8");
 
+                string nombreArchivo = String.Format("{0}{1}_{2}.txt", inicialTipoComprobante, numeroSerie, numeroComprobante);
+
+                DateTime fechaEmision = comprobantePagoDTO.First().fechaEmision.Value;
+
                 decimal montoPagado = comprobantePagoDTO.Sum(x => x.montoPagado + x.interesMoratorio);
 
                 decimal igv = Digiflow.IGV;
@@ -155,9 +159,11 @@ namespace Domain.Services.Implementations
 
                 decimal montoNeto = comprobantePagoDTO.First().esGravado.Value ? montoPagado - montoIGV : montoPagado;
 
-                DateTime fechaEmision = comprobantePagoDTO.First().fechaEmision.Value;
+                string filaCodEmpresa = "A;CODI_EMPR;;1";
+                writer.WriteLine(filaCodEmpresa);
 
-                string nombreArchivo = String.Format("{0}{1}_{2}_Simple_DGF.txt", inicialTipoComprobante, numeroSerie, numeroComprobante);
+                string filaTipoDTE = String.Format("A;TipoDTE;;{0}", comprobantePagoDTO.First().tipoComprobanteCod);
+                writer.WriteLine(filaTipoDTE);
 
                 string filaSerie = String.Format("A;Serie;;{0}{1}", inicialTipoComprobante, numeroSerie);
                 writer.WriteLine(filaSerie);
@@ -165,8 +171,21 @@ namespace Domain.Services.Implementations
                 string filaCorrelativo = String.Format("A;Correlativo;;{0}", numeroComprobante);
                 writer.WriteLine(filaCorrelativo);
 
+                string filaFechaEmision = String.Format("A;FchEmis;;{0}", fechaEmision.ToString(FormatosDateTime.BASIC_DATE3));
+                writer.WriteLine(filaFechaEmision);
+
+                string filaHoraEmision = String.Format("A;HoraEmision;;{0}", fechaEmision.ToString(FormatosDateTime.BASIC_TIME));
+                writer.WriteLine(filaHoraEmision);
+
+                string filaTipoMoneda = "A;TipoMoneda;;PEN";
+                writer.WriteLine(filaTipoMoneda);
+
+                #region EMISOR
                 string filaRUCEmisor = "A;RUTEmis;;20170934289";
                 writer.WriteLine(filaRUCEmisor);
+
+                string filaTipoRUCEmisor = "A;TipoRucEmis;;6";
+                writer.WriteLine(filaTipoRUCEmisor);
 
                 string filaNombreComercial = "A;NomComer;;UNIVERSIDAD NACIONAL FEDERICO VILLARREAL";
                 writer.WriteLine(filaNombreComercial);
@@ -174,17 +193,58 @@ namespace Domain.Services.Implementations
                 string filaRazonSocial = "A;RznSocEmis;;UNIVERSIDAD NACIONAL FEDERICO VILLARREAL";
                 writer.WriteLine(filaRazonSocial);
 
+                string filaCodigoLocalAnexo = "A;CodigoLocalAnexo;;";
+                writer.WriteLine(filaCodigoLocalAnexo);
+
+                string filaUbigeoEmisor = "A;ComuEmis;;150136";
+                writer.WriteLine(filaUbigeoEmisor);
+
+                string filaDireccionEmisor = "A;DirEmis;;CALLE CARLOS GONZALES 285,SAN MIGUEL";
+                writer.WriteLine(filaDireccionEmisor);
+                #endregion
+
+                #region RECEPTOR
+                string filaTipoRutReceptor = "A;TipoRutReceptor;;-";
+                writer.WriteLine(filaTipoRutReceptor);
+
+                string filaRutReceptor = String.Format("A;RUTRecep;;{0}", comprobantePagoDTO.First().codDepositante);
+                writer.WriteLine(filaRutReceptor);
+
+                string filaRazonSocialReceptor = String.Format("A;RznSocRecep;;{0}", comprobantePagoDTO.First().nomDepositante);
+                writer.WriteLine(filaRazonSocialReceptor);
+                #endregion
+
+                #region TOTALES
                 string filaMontoNeto = String.Format("A;MntNeto;;{0}", montoNeto.ToString(FormatosDecimal.BASIC_DECIMAL));
                 writer.WriteLine(filaMontoNeto);
 
-                string filaMontoTotalIGV = String.Format("A;MntTotalIgv;;{0}", montoIGV.ToString(FormatosDecimal.BASIC_DECIMAL));
-                writer.WriteLine(filaMontoTotalIGV);
+                string filaMontoExe = "A;MntExe;;0";
+                writer.WriteLine(filaMontoExe);
+
+                string filaMontoExo = "A;MntExo;;0";
+                writer.WriteLine(filaMontoExo);
 
                 string filaMontoTotal = String.Format("A;MntTotal;;{0}", montoPagado.ToString(FormatosDecimal.BASIC_DECIMAL));
                 writer.WriteLine(filaMontoTotal);
+                #endregion
 
-                string filaFechaEmision = String.Format("A;FchEmis;;{0}", fechaEmision.ToString(FormatosDateTime.BASIC_DATE3));
-                writer.WriteLine(filaFechaEmision);
+                #region LEYENDA
+                string filaCodigoLeyenda = "A;CodigoLeyenda;;";
+                writer.WriteLine(filaCodigoLeyenda);
+                #endregion
+
+                #region OTROS CONCEPTOS SUNAT
+                string filaTipoOperacion = "A;TipoOperacion;;0101";
+                writer.WriteLine(filaTipoOperacion);
+                #endregion
+
+                #region INFORMACIÓN DE FORMA DE PAGO
+                if (comprobantePagoDTO.First().tipoComprobanteCod == CodigoTipoComprobante.FACTURA)
+                {
+                    string filaFormaPago = "A;FormaPago;;Contado";
+                    writer.WriteLine(filaFormaPago);
+                }
+                #endregion
 
                 writer.Flush();
 

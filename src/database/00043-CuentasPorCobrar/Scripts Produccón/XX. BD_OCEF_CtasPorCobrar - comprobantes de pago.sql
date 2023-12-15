@@ -1,15 +1,7 @@
 /*
-HOY TARDE
----
-- Mantenimiento de Número de Serie (Sólo se pueden generar series hasta 9999).
-- Mantenimiento de Tipo de Comprobante.
-- Generar el TXT según formato de digiflow y almacenarlo en una carpeta remota.
----------------------------------------------------------------------------------
 --Correo de Jean: jnique@digiflow.pe
 --Correo de Alex: amoreno@digiflow.pe
 */
-
-
 
 USE BD_OCEF_CtasPorCobrar
 GO
