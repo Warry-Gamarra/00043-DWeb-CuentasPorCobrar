@@ -238,6 +238,20 @@ namespace Domain.Services.Implementations
                 writer.WriteLine(filaTipoOperacion);
                 #endregion
 
+                #region IMPUESTOS/RETENCIONES
+                string filaCodigoImpuesto = "A2;CodigoImpuesto;1;1000";
+                writer.WriteLine(filaCodigoImpuesto);
+
+                string filaMontoImpuesto = String.Format("A2;MontoImpuesto;1;{0}", montoIGV.ToString(FormatosDecimal.BASIC_DECIMAL));
+                writer.WriteLine(filaMontoImpuesto);
+
+                string filaTasaImpuesto = String.Format("A2;TasaImpuesto;1;{0}", igv * 100);
+                writer.WriteLine(filaTasaImpuesto);
+
+                string filaMontoImpuestoBase = String.Format("A2;MontoImpuestoBase;1;{0}", montoNeto.ToString(FormatosDecimal.BASIC_DECIMAL));
+                writer.WriteLine(filaMontoImpuestoBase);
+                #endregion
+
                 #region INFORMACIÓN DE FORMA DE PAGO
                 if (comprobantePagoDTO.First().tipoComprobanteCod == CodigoTipoComprobante.FACTURA)
                 {
@@ -283,9 +297,9 @@ namespace Domain.Services.Implementations
             {
                 string directorioBase = Digiflow.DIRECTORIO;
 
-                string directorioComprobanteCorrecto = Path.Combine(directorioBase, Digiflow.CarpetaCorrecto);
+                string directorioComprobanteCorrecto = Path.Combine(directorioBase, Digiflow.CARPETA_CORRECTO);
 
-                string directorioComprobanteError = Path.Combine(directorioBase, Digiflow.CarpetaError);
+                string directorioComprobanteError = Path.Combine(directorioBase, Digiflow.CARPETA_ERROR);
 
                 string[] comprobantesCorrectos = Directory.GetFiles(directorioComprobanteCorrecto, "*.txt");
 

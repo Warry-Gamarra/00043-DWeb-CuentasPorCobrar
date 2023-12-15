@@ -12,9 +12,10 @@ namespace WebApp.Models
 
         [Display(Name = "Número Serie")]
         [Required]
+        [Range(1, Int32.MaxValue, ErrorMessage = "El campo número de serie debe ser mayor a 1.")]
         public int numeroSerie { get; set; }
 
-        [Display(Name = "Números de serie permitidos")]
+        [Display(Name = "Números de comprobantes permitidos")]
         [Required]
         public int finNumeroComprobante { get; set; }
 

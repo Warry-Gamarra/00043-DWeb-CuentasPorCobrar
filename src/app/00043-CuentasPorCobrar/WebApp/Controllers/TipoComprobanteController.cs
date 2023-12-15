@@ -47,7 +47,8 @@ namespace WebApp.Controllers
             ViewBag.Title = "Editar Tipo de Comprobante";
 
             var model = _serviceFacade.ListarTiposComprobante()
-                .Where(x => x.tipoComprobanteID.Value == id);
+                .Where(x => x.tipoComprobanteID.Value == id)
+                .FirstOrDefault();
 
             return PartialView("_RegistrarTipoComprobante", model);
         }
@@ -55,7 +56,7 @@ namespace WebApp.Controllers
         [HttpPost]
         public JsonResult ChangeState(int RowID, bool B_habilitado)
         {
-            var result = _serviceFacade.ActualizarEstadoTipoComprobante(RowID, B_habilitado, WebSecurity.CurrentUserId);
+            var result = _serviceFacade.ActualizarEstadoTipoComprobante(RowID, B_habilitado, WebSecurity.CurrentUserId, Url.Action("ChangeState", "Dependencia"));
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }

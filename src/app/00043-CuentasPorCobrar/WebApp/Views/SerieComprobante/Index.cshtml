@@ -27,20 +27,19 @@
         <br />
         <div class="table-responsive" style="min-height:300px">
             @Html.Grid(Model).Columns(columns =>
-                            {
-                                columns.Add(c => c.numeroSerie).Titled("Número de Serie").Filterable(true);
-                                columns.Add(c => c.finNumeroComprobante).Titled("Cantidad Comprobantes").Filterable(true);
-                                columns.Add(c => c.diasAnterioresPermitido).Titled("Días para generar").Filterable(true);
-                                columns.Add(c => c.estaHabilitado).SetWidth(100).Css("text-center").Encoded(false).Sanitized(false)
-                                       .RenderValueAs(model => model.estaHabilitado ?
-                                                                            @Html.Raw("<span id=\"td" + @model.serieID.Value + "\"><button type=\"submit\" class=\"btn btn-xs btn-success\" onclick=\"ChangeStateReloadPage(" + @model.serieID.Value + ", " + @model.estaHabilitado.ToString().ToLower() + ", '" + @Url.Action("ChangeState", "SerieComprobante") + "');\"><i class=\"fa fa-check-circle-o\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Habilitado</span></button></span>")
-                                                                            : @Html.Raw("<span id=\"td" + @model.serieID.Value + "\"><button type=\"submit\" class=\"btn btn-xs btn-secondary\" onclick=\"ChangeStateReloadPage(" + @model.serieID.Value + ", " + @model.estaHabilitado.ToString().ToLower() + ", '" + @Url.Action("ChangeState", "SerieComprobante") + "');\"><i class=\"fa fa-minus-circle\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Deshabilitado</span></button></span>"))
-                                       .Filterable(true).SetWidth(160).Titled("Estado");
-                                columns.Add().SetWidth(200).Css("text-right").Encoded(false).Sanitized(false).RenderValueAs(model => @<a href="@Url.Action("Edit", "SerieComprobante", new { id = model.serieID.Value, area = "" })" class="modal-link"><i class="fa fa-pencil-square-o" aria-hidden="true">&nbsp;</i><span class="d-none d-md-inline-block">Editar</span></a>);
-}
-).WithPaging(10).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
+            {
+                columns.Add(c => c.numeroSerie).Css("text-center").Titled("Número de Serie").Filterable(true);
+                columns.Add(c => c.finNumeroComprobante).Css("text-center").Titled("Cantidad Comprobantes").Filterable(true);
+                columns.Add(c => c.diasAnterioresPermitido).Css("text-center").Titled("Días para generar").Filterable(true);
+                columns.Add(c => c.estaHabilitado).SetWidth(100).Css("text-center").Encoded(false).Sanitized(false)
+                    .RenderValueAs(model => model.estaHabilitado ?
+                    @Html.Raw("<span id=\"td" + @model.serieID.Value + "\"><button type=\"submit\" class=\"btn btn-xs btn-success\" onclick=\"ChangeStateReloadPage(" + @model.serieID.Value + ", " + @model.estaHabilitado.ToString().ToLower() + ", '" + @Url.Action("ChangeState", "SerieComprobante") + "');\"><i class=\"fa fa-check-circle-o\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Habilitado</span></button></span>")
+                    : @Html.Raw("<span id=\"td" + @model.serieID.Value + "\"><button type=\"submit\" class=\"btn btn-xs btn-secondary\" onclick=\"ChangeStateReloadPage(" + @model.serieID.Value + ", " + @model.estaHabilitado.ToString().ToLower() + ", '" + @Url.Action("ChangeState", "SerieComprobante") + "');\"><i class=\"fa fa-minus-circle\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Deshabilitado</span></button></span>"))
+                    .Filterable(false).SetWidth(160).Titled("Estado");
+                columns.Add().SetWidth(200).Css("text-center").Encoded(false).Sanitized(false).RenderValueAs(model => @<a href="@Url.Action("Edit", "SerieComprobante", new { id = model.serieID.Value, area = "" })" class="modal-link"><i class="fa fa-pencil-square-o" aria-hidden="true">&nbsp;</i><span class="d-none d-md-inline-block">Editar</span></a>);
+                columns.Add().SetWidth(200).Css("text-center").Encoded(false).Sanitized(false).RenderValueAs(model => @<a href="@Url.Action("Eliminar", "SerieComprobante", new { id = model.serieID.Value, area = "" })" class="modal-link"><i class="fa fa-trash" aria-hidden="true">&nbsp;</i><span class="d-none d-md-inline-block">Eliminar</span></a>);
+            }).WithPaging(10).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
         </div>
-
     </div>
 </div>
 

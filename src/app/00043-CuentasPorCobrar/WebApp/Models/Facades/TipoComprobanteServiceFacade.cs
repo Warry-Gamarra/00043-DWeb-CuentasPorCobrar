@@ -77,15 +77,26 @@ namespace WebApp.Models.Facades
                 };
             }
 
+            if (response.Value)
+            {
+                response.Success(false);
+            }
+            else
+            {
+                response.Error(true);
+            }
+
             return response;
         }
 
-        public Response ActualizarEstadoTipoComprobante(int tipoComprobanteID, bool estaHabilitado, int userID)
+        public Response ActualizarEstadoTipoComprobante(int tipoComprobanteID, bool estaHabilitado, int userID, string returnUrl)
         {
             Response response;
             try
             {
                 response = _service.ActualizarEstadoTipoComprobante(tipoComprobanteID, estaHabilitado, userID);
+
+                response.Redirect = returnUrl;
             }
             catch (Exception ex)
             {

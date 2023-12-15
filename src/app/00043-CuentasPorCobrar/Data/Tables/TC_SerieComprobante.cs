@@ -30,7 +30,7 @@ namespace Data.Tables
             {
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    var s_command = "SELECT * FROM dbo.TC_SerieComprobante;";
+                    var s_command = "SELECT * FROM dbo.TC_SerieComprobante ORDER BY I_NumeroSerie;";
 
                     result = _dbConnection.Query<TC_SerieComprobante>(s_command, commandType: CommandType.Text);
                 }

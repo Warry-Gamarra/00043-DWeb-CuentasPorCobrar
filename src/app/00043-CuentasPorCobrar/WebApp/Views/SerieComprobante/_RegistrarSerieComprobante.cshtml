@@ -1,0 +1,73 @@
+﻿@model WebApp.Models.SerieComprobanteModel
+
+@Scripts.Render("~/bundles/jqueryval")
+
+<div class="modal-header bg-dark-gray" style="border-radius: .2rem .2rem 0px 0px">
+    <h5 class="modal-title text-center"><i class="fa bi-building">&nbsp;</i> @ViewBag.Title</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+@using (Ajax.BeginForm("Save", "SerieComprobante", new { area = "" }, 
+    new AjaxOptions { 
+        HttpMethod = "POST", 
+        InsertionMode = InsertionMode.Replace, 
+        UpdateTargetId = "div_msg", 
+        OnBegin = "Load", 
+        OnSuccess = "Submited", 
+        OnComplete = "Stop" }))
+{
+    @Html.Hidden("submited", 0)
+    @Html.AntiForgeryToken()
+    <div class="modal-body">
+        <div class="container-fluid">
+            @Html.HiddenFor(model => model.serieID)
+            <div class="row">
+                <div class="col-12">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.numeroSerie, new { @class = "control-label" })
+                        @Html.TextBoxFor(model => model.numeroSerie, new { @class = "form-control" })
+                        <p class="text-danger small">@Html.ValidationMessageFor(model => model.numeroSerie)</p>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.finNumeroComprobante, new { @class = "control-label" })
+                        @Html.TextBoxFor(model => model.finNumeroComprobante, new { @class = "form-control" })
+                        <p class="text-danger small">@Html.ValidationMessageFor(model => model.finNumeroComprobante)</p>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.diasAnterioresPermitido, new { @class = "control-label" })
+                        @Html.TextBoxFor(model => model.diasAnterioresPermitido, new { @class = "form-control" })
+                        <p class="text-danger small">@Html.ValidationMessageFor(model => model.diasAnterioresPermitido)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer" id="div_msg">
+        <div class="col-md-12" style="display:none" id="loading">
+            <h6>Actualizando los datos...</h6>
+
+            <div class="progress">
+                <div class="indeterminate"></div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="btnsubmit"><i class="fa fa-save"></i>&nbsp;Guardar</button>
+        <button type="button" class="btn btn-secondary" id="btnCancel" data-dismiss="modal"><i class="fa fa-times-circle-o">&nbsp;</i>Cancelar</button>
+    </div>
+}
+
+<script>
+    $(document).on('ready', function () {
+        $('#btnsubmit').removeClass('disabled');
+    });
+
+    $("form").submit(function () {
+        if (parseInt($("#submited").val()) > 0) {
+            return false;
+        }
+    });
+</script>

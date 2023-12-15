@@ -73,9 +73,11 @@ namespace Domain.Helpers
 
         public static readonly decimal IGV = decimal.Parse(ConfigurationManager.AppSettings["IGV"].ToString());
 
-        public static readonly string CarpetaCorrecto = ConfigurationManager.AppSettings["CarpetaCorrecto"].ToString();
+        public static readonly string CARPETA_CORRECTO = ConfigurationManager.AppSettings["CarpetaCorrecto"].ToString();
 
-        public static readonly string CarpetaError = ConfigurationManager.AppSettings["CarpetaErrror"].ToString();
+        public static readonly string CARPETA_ERROR = ConfigurationManager.AppSettings["CarpetaErrror"].ToString();
+
+        public static readonly int MAXIMO_NUMERO_SERIE = int.Parse(ConfigurationManager.AppSettings["MaxNumSerie"].ToString());
     }
 
     public static class EstadoComprobante

@@ -15,7 +15,7 @@ namespace WebApp.Models.Facades
 
         Response GrabarTipoComprobante(TipoComprobanteModel model, int userID);
 
-        Response ActualizarEstadoTipoComprobante(int tipoComprobanteID, bool estaHabilitado, int userID);
+        Response ActualizarEstadoTipoComprobante(int tipoComprobanteID, bool estaHabilitado, int userID, string returnUrl);
 
         Response EliminarEstadoTipoComprobante(int tipoComprobanteID);
     }

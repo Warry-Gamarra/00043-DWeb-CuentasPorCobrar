@@ -31,47 +31,89 @@ namespace Domain.Services.Implementations
         {
             ResponseData result;
 
-            switch (saveOption)
+            int maxNumSerie = Digiflow.MAXIMO_NUMERO_SERIE;
+
+            if (entity.numeroSerie > maxNumSerie)
             {
-                case SaveOption.Insert:
-
-                    var grabar = new USP_I_GrabarSerieComprobante()
-                    {
-                        I_NumeroSerie = entity.numeroSerie,
-                        I_FinNumeroComprobante = entity.finNumeroComprobante,
-                        I_DiasAnterioresPermitido = entity.diasAnterioresPermitido,
-
-                    };
-
-                    result = grabar.Execute();
-
-                    break;
-
-                case SaveOption.Update:
-
-                    var actualizar = new USP_U_ActualizarSerieComprobante()
-                    {
-                        I_SerieID = entity.serieID.Value,
-                        I_NumeroSerie = entity.numeroSerie,
-                        I_FinNumeroComprobante = entity.finNumeroComprobante,
-                        I_DiasAnterioresPermitido = entity.diasAnterioresPermitido,
-                        UserID = userID
-                    };
-
-                    result = actualizar.Execute();
-
-                    break;
-
-                default:
-                    result = new ResponseData()
-                    {
-                        Value = false,
-                        Message = "Acción no válida."
-                    };
-
-                    break;
+                result = new ResponseData()
+                {
+                    Message = String.Format("El número de serie no puede ser mayor a \"{0}\".", maxNumSerie)
+                };
             }
+            else
+            {
+                switch (saveOption)
+                {
+                    case SaveOption.Insert:
 
+                        if (ListarSeriesComprobante(false).Where(x => x.numeroSerie == entity.numeroSerie).Count() == 0)
+                        {
+                            var grabar = new USP_I_GrabarSerieComprobante()
+                            {
+                                I_NumeroSerie = entity.numeroSerie,
+                                I_FinNumeroComprobante = entity.finNumeroComprobante,
+                                I_DiasAnterioresPermitido = entity.diasAnterioresPermitido,
+
+                            };
+
+                            result = grabar.Execute();
+                        }
+                        else
+                        {
+                            result = new ResponseData()
+                            {
+                                Message = String.Format("El número de serie \"{0}\" ya se encuentra registrado en el sistema.", entity.numeroSerie)
+                            };
+                        }
+                        
+                        break;
+
+                    case SaveOption.Update:
+
+                        if (entity.serieID.HasValue)
+                        {
+                            if (ListarSeriesComprobante(false).Where(x => x.serieID != entity.serieID.Value && x.numeroSerie == entity.numeroSerie).Count() == 0)
+                            {
+                                var actualizar = new USP_U_ActualizarSerieComprobante()
+                                {
+                                    I_SerieID = entity.serieID.Value,
+                                    I_NumeroSerie = entity.numeroSerie,
+                                    I_FinNumeroComprobante = entity.finNumeroComprobante,
+                                    I_DiasAnterioresPermitido = entity.diasAnterioresPermitido,
+                                    UserID = userID
+                                };
+
+                                result = actualizar.Execute();
+                            }
+                            else
+                            {
+                                result = new ResponseData()
+                                {
+                                    Message = String.Format("El número de serie \"{0}\" ya se encuentra registrado en el sistema.", entity.numeroSerie)
+                                };
+                            }
+                        }
+                        else
+                        {
+                            result = new ResponseData()
+                            {
+                                Message = "Ocurrió un error al obtener los datos. Por favor recargue la página e intente la actualización nuevamente."
+                            };
+                        }
+
+                        break;
+
+                    default:
+                        result = new ResponseData()
+                        {
+                            Value = false,
+                            Message = "Acción no válida."
+                        };
+
+                        break;
+                }
+            }
+            
             return new Response(result);
         }
 
@@ -82,7 +124,7 @@ namespace Domain.Services.Implementations
             var sp = new USP_U_ActualizarEstadoSerieComprobante()
             {
                 I_SerieID = serieID,
-                B_Habilitado = estaHabilitado,
+                B_Habilitado = !estaHabilitado,
                 UserID = userID
             };
 

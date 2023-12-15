@@ -16,7 +16,7 @@ namespace WebApp.Models.Facades
 
         Response GrabarSerieComprobante(SerieComprobanteModel model, int userID);
 
-        Response ActualizarEstadoSerieComprobante(int serieComprobanteID, bool estaHabilitado, int userID);
+        Response ActualizarEstadoSerieComprobante(int serieComprobanteID, bool estaHabilitado, int userID, string returnUrl);
 
         Response EliminarEstadoSerieComprobante(int serieComprobanteID);
     }

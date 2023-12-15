@@ -7,6 +7,7 @@ using System.Web;
 using WebApp.ViewModels;
 using Domain.Helpers;
 using Domain.Entities;
+using System.Web.Http.Results;
 
 namespace WebApp.Models.Facades
 {
@@ -75,15 +76,26 @@ namespace WebApp.Models.Facades
                 };
             }
 
+            if (response.Value)
+            {
+                response.Success(false);
+            }
+            else
+            {
+                response.Error(true);
+            }
+
             return response;
         }
 
-        public Response ActualizarEstadoSerieComprobante(int serieComprobanteID, bool estaHabilitado, int userID)
+        public Response ActualizarEstadoSerieComprobante(int serieComprobanteID, bool estaHabilitado, int userID, string returnUrl)
         {
             Response response;
             try
             {
                 response = _service.ActualizarEstadoSerieComprobante(serieComprobanteID, estaHabilitado, userID);
+
+                response.Redirect = returnUrl;
             }
             catch (Exception ex)
             {

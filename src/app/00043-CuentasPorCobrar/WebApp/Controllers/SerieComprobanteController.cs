@@ -46,7 +46,8 @@ namespace WebApp.Controllers
             ViewBag.Title = "Editar Serie de Comprobante";
 
             var model = _serviceFacade.ListarSeriesComprobante()
-                .Where(x => x.serieID.Value == id);
+                .Where(x => x.serieID.Value == id)
+                .FirstOrDefault();
 
             return PartialView("_RegistrarSerieComprobante", model);
         }
@@ -54,7 +55,7 @@ namespace WebApp.Controllers
         [HttpPost]
         public JsonResult ChangeState(int RowID, bool B_habilitado)
         {
-            var result = _serviceFacade.ActualizarEstadoSerieComprobante(RowID, B_habilitado, WebSecurity.CurrentUserId);
+            var result = _serviceFacade.ActualizarEstadoSerieComprobante(RowID, B_habilitado, WebSecurity.CurrentUserId, Url.Action("ChangeState", "Dependencia"));
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }

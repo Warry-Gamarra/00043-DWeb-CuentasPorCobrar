@@ -82,7 +82,7 @@ namespace Domain.Services.Implementations
             var sp = new USP_U_ActualizarEstadoTipoComprobante()
             {
                 I_TipoComprobanteID = tipoComprobanteID,
-                B_Habilitado = estaHabilitado,
+                B_Habilitado = !estaHabilitado,
                 UserID = userID
             };
 
