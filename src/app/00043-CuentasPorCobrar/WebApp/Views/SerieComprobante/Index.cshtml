@@ -1,0 +1,46 @@
+﻿@model IEnumerable<WebApp.Models.SerieComprobanteModel>
+@using GridMvc.Html
+
+<div class="container-fluid">
+    <div class="col-12">
+        <section class="content-header">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb float-right small d-none d-sm-inline-flex">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")"><i class="fa fa-home">&nbsp;</i>Inicio</a></li>
+                    <li class="breadcrumb-item"><span><i class="fa fa-cogs">&nbsp;</i>Configuración </span></li>
+                    <li class="breadcrumb-item active"><span><i class="fa fa-credit-card">&nbsp;</i>@ViewBag.Title </span></li>
+                </ol>
+            </nav>
+            <h1 class="">@ViewBag.Title <small></small></h1>
+        </section>
+    </div>
+    <br />
+
+    <div class="col-12">
+        <a href="@Url.Action("Create", "SerieComprobante")" class="btn btn-primary float-right modal-link">
+            <i class="fa fa-plus-circle"></i> Agregar Nueva Serie
+        </a>
+
+        <p class="h3"><small>Números de serie registrados</small></p>
+        <br />
+
+        <br />
+        <div class="table-responsive" style="min-height:300px">
+            @Html.Grid(Model).Columns(columns =>
+                            {
+                                columns.Add(c => c.numeroSerie).Titled("Número de Serie").Filterable(true);
+                                columns.Add(c => c.finNumeroComprobante).Titled("Cantidad Comprobantes").Filterable(true);
+                                columns.Add(c => c.diasAnterioresPermitido).Titled("Días para generar").Filterable(true);
+                                columns.Add(c => c.estaHabilitado).SetWidth(100).Css("text-center").Encoded(false).Sanitized(false)
+                                       .RenderValueAs(model => model.estaHabilitado ?
+                                                                            @Html.Raw("<span id=\"td" + @model.serieID.Value + "\"><button type=\"submit\" class=\"btn btn-xs btn-success\" onclick=\"ChangeStateReloadPage(" + @model.serieID.Value + ", " + @model.estaHabilitado.ToString().ToLower() + ", '" + @Url.Action("ChangeState", "SerieComprobante") + "');\"><i class=\"fa fa-check-circle-o\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Habilitado</span></button></span>")
+                                                                            : @Html.Raw("<span id=\"td" + @model.serieID.Value + "\"><button type=\"submit\" class=\"btn btn-xs btn-secondary\" onclick=\"ChangeStateReloadPage(" + @model.serieID.Value + ", " + @model.estaHabilitado.ToString().ToLower() + ", '" + @Url.Action("ChangeState", "SerieComprobante") + "');\"><i class=\"fa fa-minus-circle\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Deshabilitado</span></button></span>"))
+                                       .Filterable(true).SetWidth(160).Titled("Estado");
+                                columns.Add().SetWidth(200).Css("text-right").Encoded(false).Sanitized(false).RenderValueAs(model => @<a href="@Url.Action("Edit", "SerieComprobante", new { id = model.serieID.Value, area = "" })" class="modal-link"><i class="fa fa-pencil-square-o" aria-hidden="true">&nbsp;</i><span class="d-none d-md-inline-block">Editar</span></a>);
+}
+).WithPaging(10).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
+        </div>
+
+    </div>
+</div>
+

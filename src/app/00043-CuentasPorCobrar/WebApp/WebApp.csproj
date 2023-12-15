@@ -436,8 +436,10 @@
     <Compile Include="Controllers\ConceptoController.cs" />
     <Compile Include="Controllers\ProcesosController.cs" />
     <Compile Include="Controllers\ReportesController.cs" />
+    <Compile Include="Controllers\SerieComprobanteController.cs" />
     <Compile Include="Controllers\ServiceController.cs" />
     <Compile Include="Controllers\TasaController.cs" />
+    <Compile Include="Controllers\TipoComprobanteController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -706,6 +708,8 @@
     <Content Include="Views\ComprobantePago\Index.cshtml" />
     <Content Include="Views\ComprobantePago\_InformacioPago.cshtml" />
     <Content Include="Views\ComprobantePago\_GeneracionGrupal.cshtml" />
+    <Content Include="Views\SerieComprobante\Index.cshtml" />
+    <Content Include="Views\TipoComprobante\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

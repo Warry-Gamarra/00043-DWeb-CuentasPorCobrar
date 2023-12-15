@@ -21,5 +21,7 @@ namespace WebApp.Models
         [Display(Name = "Días de antigüedad")]
         [Required]
         public int diasAnterioresPermitido { get; set; }
+
+        public bool estaHabilitado { get; set; }
     }
 }

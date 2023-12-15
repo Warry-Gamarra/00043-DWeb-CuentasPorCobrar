@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web;
 using WebApp.ViewModels;
 using Domain.Helpers;
+using Domain.Entities;
 
 namespace WebApp.Models.Facades
 {
@@ -29,6 +30,88 @@ namespace WebApp.Models.Facades
             });
 
             return result;
+        }
+
+        public IEnumerable<SerieComprobanteModel> ListarSeriesComprobante()
+        {
+            var lista = _service.ListarSeriesComprobante(false);
+
+            var result = lista.Select(x => new SerieComprobanteModel()
+            {
+                serieID = x.serieID,
+                numeroSerie = x.numeroSerie,
+                diasAnterioresPermitido = x.diasAnterioresPermitido,
+                finNumeroComprobante = x.finNumeroComprobante,
+                estaHabilitado  = x.estaHabilitado
+            });
+
+            return result;
+        }
+
+        public Response GrabarSerieComprobante(SerieComprobanteModel model, int userID)
+        {
+            Response response;
+            SaveOption saveOption;
+
+            try
+            {
+                saveOption = model.serieID.HasValue ? SaveOption.Update : SaveOption.Insert;
+
+                var entity = new SerieComprobanteEntity()
+                {
+                    serieID = model.serieID,
+                    diasAnterioresPermitido = model.diasAnterioresPermitido,
+                    finNumeroComprobante = model.finNumeroComprobante,
+                    numeroSerie = model.numeroSerie
+                };
+
+                response = _service.GrabarSerieComprobante(entity, saveOption, userID);
+            }
+            catch (Exception ex)
+            {
+                response = new Response()
+                {
+                    Message = ex.Message
+                };
+            }
+
+            return response;
+        }
+
+        public Response ActualizarEstadoSerieComprobante(int serieComprobanteID, bool estaHabilitado, int userID)
+        {
+            Response response;
+            try
+            {
+                response = _service.ActualizarEstadoSerieComprobante(serieComprobanteID, estaHabilitado, userID);
+            }
+            catch (Exception ex)
+            {
+                response = new Response()
+                {
+                    Message = ex.Message
+                };
+            }
+
+            return response;
+        }
+
+        public Response EliminarEstadoSerieComprobante(int serieComprobanteID)
+        {
+            Response response;
+            try
+            {
+                response = _service.EliminarEstadoSerieComprobante(serieComprobanteID);
+            }
+            catch (Exception ex)
+            {
+                response = new Response()
+                {
+                    Message = ex.Message
+                };
+            }
+
+            return response;
         }
     }
 }

@@ -21,5 +21,6 @@ namespace WebApp.Models
         [Display(Name = "Inicial")]
         public string inicial { get; set; }
         
+        public bool estaHabilitado { get; set; }
     }
 }
