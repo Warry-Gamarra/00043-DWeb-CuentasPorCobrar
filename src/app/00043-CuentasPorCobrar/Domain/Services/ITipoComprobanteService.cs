@@ -16,6 +16,6 @@ namespace Domain.Services
 
         Response ActualizarEstadoTipoComprobante(int tipoComprobanteID, bool estaHabilitado, int userID);
 
-        Response EliminarEstadoTipoComprobante(int tipoComprobanteID);
+        Response EliminarTipoComprobante(int tipoComprobanteID);
     }
 }

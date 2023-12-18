@@ -109,12 +109,12 @@ namespace WebApp.Models.Facades
             return response;
         }
 
-        public Response EliminarEstadoTipoComprobante(int tipoComprobanteID)
+        public Response EliminarTipoComprobante(int tipoComprobanteID)
         {
             Response response;
             try
             {
-                response = _service.EliminarEstadoTipoComprobante(tipoComprobanteID);
+                response = _service.EliminarTipoComprobante(tipoComprobanteID);
             }
             catch (Exception ex)
             {

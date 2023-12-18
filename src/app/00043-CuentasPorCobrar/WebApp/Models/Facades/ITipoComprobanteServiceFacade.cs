@@ -17,6 +17,6 @@ namespace WebApp.Models.Facades
 
         Response ActualizarEstadoTipoComprobante(int tipoComprobanteID, bool estaHabilitado, int userID, string returnUrl);
 
-        Response EliminarEstadoTipoComprobante(int tipoComprobanteID);
+        Response EliminarTipoComprobante(int tipoComprobanteID);
     }
 }

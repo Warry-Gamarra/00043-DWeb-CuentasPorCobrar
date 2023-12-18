@@ -22,7 +22,7 @@
                     }
 
                     <li><a href="@Url.Action("ReportesPagoObligaciones", "EstadosCuenta")"><i class="fa fa-fw fa-tasks"></i>&nbsp; Reporte Pago de Obligaciones</a></li>
-                    
+
                     @if (User.IsInRole(RoleNames.ADMINISTRADOR) || User.IsInRole(RoleNames.CONSULTA) || User.IsInRole(RoleNames.TESORERIA))
                     {
                         <li><a href="@Url.Action("ResumenAnualObligacionesPorDia", "EstadosCuenta")"><i class="fa fa-bank"></i>&nbsp; Resumen Ingresos de Obligaciones</a></li>
@@ -58,33 +58,38 @@
                         @*<li><a href="@Url.Action("Index", "Devoluciones" )"><i class="fa fa-fw bi-box-arrow-down-right"></i>&nbsp; Devolución de pagos</a></li>*@
                         <li><a href="@Url.Action("ExportarRecaudacionTemporal", "Pagos")"><i class="fa fa-fw bi-file-binary-fill"></i>&nbsp; Exportar al Temporal de Pagos</a></li>
                     }
+
+                    <li><a href="@Url.Action("Index", "ComprobantePago")"><i class="fa fa-fw fa-file"></i>&nbsp; Comprobantes de pago </a></li>
                 </ul>
             </li>
 
-            if (User.IsInRole(RoleNames.ADMINISTRADOR))
+            if (User.IsInRole(RoleNames.ADMINISTRADOR) || User.IsInRole(RoleNames.TESORERIA))
             {
-                <li class="nav-item">
-                    <a href="javascript:;" class="nav-link" data-toggle="collapse" data-target="#settings">
-                        <i class="fa fa-fw fa-cogs"></i> Configuración<span class="pull-right"><i class="fa fa-fw fa-caret-down"></i></span>
-                    </a>
-                    <ul id="settings" class="collapse">
-                        <li><a href="@Url.Action("Obligaciones", "Procesos" )"><i class="fa fa-fw bi-stack"></i>&nbsp; Cuota de pago y conceptos</a></li>
-                        <li><a href="@Url.Action("Tasas", "Tasa" )"><i class="fa fa-fw fa-percent"></i>&nbsp; Tasas y servicios</a></li>
-                    </ul>
-                </li>
+                if (User.IsInRole(RoleNames.ADMINISTRADOR))
+                {
+                    <li class="nav-item">
+                        <a href="javascript:;" class="nav-link" data-toggle="collapse" data-target="#settings">
+                            <i class="fa fa-fw fa-cogs"></i> Configuración<span class="pull-right"><i class="fa fa-fw fa-caret-down"></i></span>
+                        </a>
+                        <ul id="settings" class="collapse">
+                            <li><a href="@Url.Action("Obligaciones", "Procesos" )"><i class="fa fa-fw bi-stack"></i>&nbsp; Cuota de pago y conceptos</a></li>
+                            <li><a href="@Url.Action("Tasas", "Tasa" )"><i class="fa fa-fw fa-percent"></i>&nbsp; Tasas y servicios</a></li>
+                        </ul>
+                    </li>
+                }
 
                 <li class="nav-item">
                     <a href="javascript:;" class="nav-link" data-toggle="collapse" data-target="#maintenance">
                         <i class="fa fa-fw bi-tools"></i> Mantenimiento<span class="pull-right"><i class="fa fa-fw fa-caret-down"></i></span>
                     </a>
                     <ul id="maintenance" class="collapse">
-                        <li class="dropdown-header">Plantillas</li>
-                        <li><a href="@Url.Action("Index", "CategoriaPago")"><i class="fa fa-fw bi-grid-1x2-fill"></i>&nbsp; Cuotas de pago</a></li>
-                        <li><a href="@Url.Action("Index", "Concepto", new { tipo = Domain.Helpers.TipoPago.Obligacion })"><i class="fa fa-fw bi-ui-checks-grid"></i>&nbsp; Conceptos obligaciones</a></li>
-                        <li><a href="@Url.Action("Index", "Concepto", new { tipo = Domain.Helpers.TipoPago.Tasa })"><i class="fa fa-fw bi-ui-checks"></i>&nbsp; Conceptos tasas</a></li>
-
                         @if (User.IsInRole(RoleNames.ADMINISTRADOR))
                         {
+                            <li class="dropdown-header">Plantillas</li>
+                            <li><a href="@Url.Action("Index", "CategoriaPago")"><i class="fa fa-fw bi-grid-1x2-fill"></i>&nbsp; Cuotas de pago</a></li>
+                            <li><a href="@Url.Action("Index", "Concepto", new { tipo = Domain.Helpers.TipoPago.Obligacion })"><i class="fa fa-fw bi-ui-checks-grid"></i>&nbsp; Conceptos obligaciones</a></li>
+                            <li><a href="@Url.Action("Index", "Concepto", new { tipo = Domain.Helpers.TipoPago.Tasa })"><i class="fa fa-fw bi-ui-checks"></i>&nbsp; Conceptos tasas</a></li>
+
                             <li class="dropdown-header">Recaudación</li>
                             <li><a href="@Url.Action("Index", "Clasificadores")"><i class="fa fa-fw bi-bar-chart-steps"></i>&nbsp; Clasificadores de ingreso</a></li>
                             <li><a href="@Url.Action("Index", "EntidadRecaudadora")"><i class="fa fa-fw bi-cash-coin"></i>&nbsp; Entidades recaudadoras</a></li>
@@ -98,6 +103,10 @@
                             <li><a href="@Url.Action("CamposTabla", "EstructuraArchivo")"><i class="fa fa-fw fa-columns"></i>&nbsp; Campos de tabla</a></li>
                             <li><a href="@Url.Action("Manage", "HelpCenter")"><i class="fa fa-fw fa-bookmark"></i>&nbsp; Documentación </a></li>
                         }
+
+                        <li class="dropdown-header">Comprobantes</li>
+                        <li><a href="@Url.Action("Index", "TipoComprobante")"><i class="fa fa-fw fa-copy"></i>&nbsp; Tipo de comprobante </a></li>
+                        <li><a href="@Url.Action("Index", "SerieComprobante")"><i class="fa fa-fw bi-stack"></i>&nbsp; Serie de comprobante</a></li>
                     </ul>
                 </li>
             }
@@ -143,12 +152,12 @@
                         <i class="fa fa-3x fa-fw fa-cogs"></i><br />Configuración
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="javascript:;" class="nav-link" data-toggle="collapse" title="Configuración" data-target="#maintenance">
-                        <i class="fa fa-3x fa-fw bi-tools"></i><br />Mantenimiento
-                    </a>
-                </li>
             }
+            <li class="nav-item">
+                <a href="javascript:;" class="nav-link" data-toggle="collapse" title="Mantenimiento" data-target="#maintenance">
+                    <i class="fa fa-3x fa-fw bi-tools"></i><br />Mantenimiento
+                </a>
+            </li>
         }
         <li class="nav-item">
             <a href="javascript:;" class="nav-link" data-toggle="collapse" title="Ayuda" data-target="#help">

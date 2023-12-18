@@ -20,7 +20,7 @@ namespace WebApp.Controllers
         }
 
 
-        //[Route("mantenimiento/serie-comprobante")]
+        [Route("mantenimiento/serie-comprobante")]
         public ActionResult Index()
         {
             ViewBag.Title = "Series de Comprobante";
@@ -55,20 +55,22 @@ namespace WebApp.Controllers
         [HttpPost]
         public JsonResult ChangeState(int RowID, bool B_habilitado)
         {
-            var result = _serviceFacade.ActualizarEstadoSerieComprobante(RowID, B_habilitado, WebSecurity.CurrentUserId, Url.Action("ChangeState", "Dependencia"));
+            var result = _serviceFacade.ActualizarEstadoSerieComprobante(RowID, B_habilitado, WebSecurity.CurrentUserId, Url.Action("ChangeState", "SerieComprobante"));
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
-        public JsonResult Eliminar(int RowID)
+        [ValidateAntiForgeryToken]
+        public JsonResult Eliminar(int id)
         {
-            var result = _serviceFacade.EliminarEstadoSerieComprobante(RowID);
+            var result = _serviceFacade.EliminarSerieComprobante(id);
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Save(SerieComprobanteModel model)
         {
             Response result = new Response();

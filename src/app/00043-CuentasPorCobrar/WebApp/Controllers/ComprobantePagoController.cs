@@ -36,9 +36,10 @@ namespace WebApp.Controllers
         }
 
         [HttpGet]
+        [Route("operaciones/comprobantes-de-pago")]
         public ActionResult Index(ConsultaComprobantePagoViewModel model)
         {
-            ViewBag.Title = "Consulta de Pagos en Banco";
+            ViewBag.Title = "Comprobantes de Pago";
 
             if (model.buscar)
             {

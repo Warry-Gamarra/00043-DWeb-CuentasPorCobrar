@@ -18,6 +18,6 @@ namespace WebApp.Models.Facades
 
         Response ActualizarEstadoSerieComprobante(int serieComprobanteID, bool estaHabilitado, int userID, string returnUrl);
 
-        Response EliminarEstadoSerieComprobante(int serieComprobanteID);
+        Response EliminarSerieComprobante(int serieComprobanteID);
     }
 }

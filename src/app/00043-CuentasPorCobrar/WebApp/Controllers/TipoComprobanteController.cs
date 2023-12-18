@@ -21,7 +21,7 @@ namespace WebApp.Controllers
         }
 
 
-        //[Route("mantenimiento/tipo-comprobante")]
+        [Route("mantenimiento/tipo-comprobante")]
         public ActionResult Index()
         {
             ViewBag.Title = "Tipos de Comprobante";
@@ -56,20 +56,22 @@ namespace WebApp.Controllers
         [HttpPost]
         public JsonResult ChangeState(int RowID, bool B_habilitado)
         {
-            var result = _serviceFacade.ActualizarEstadoTipoComprobante(RowID, B_habilitado, WebSecurity.CurrentUserId, Url.Action("ChangeState", "Dependencia"));
+            var result = _serviceFacade.ActualizarEstadoTipoComprobante(RowID, B_habilitado, WebSecurity.CurrentUserId, Url.Action("ChangeState", "TipoComprobante"));
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
-        public JsonResult Eliminar(int RowID)
+        [ValidateAntiForgeryToken]
+        public JsonResult Eliminar(int id)
         {
-            var result = _serviceFacade.EliminarEstadoTipoComprobante(RowID);
+            var result = _serviceFacade.EliminarTipoComprobante(id);
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Save(TipoComprobanteModel model)
         {
             Response result = new Response();

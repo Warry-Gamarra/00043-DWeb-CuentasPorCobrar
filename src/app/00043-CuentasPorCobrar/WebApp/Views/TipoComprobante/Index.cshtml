@@ -7,8 +7,8 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb float-right small d-none d-sm-inline-flex">
                     <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")"><i class="fa fa-home">&nbsp;</i>Inicio</a></li>
-                    <li class="breadcrumb-item"><span><i class="fa fa-cogs">&nbsp;</i>Configuración </span></li>
-                    <li class="breadcrumb-item active"><span><i class="fa fa-credit-card">&nbsp;</i>@ViewBag.Title </span></li>
+                    <li class="breadcrumb-item"><span><i class="fa bi-tools">&nbsp;</i>Mantenimiento </span></li>
+                    <li class="breadcrumb-item active"><span><i class="fa fa-copy">&nbsp;</i>@ViewBag.Title </span></li>
                 </ol>
             </nav>
             <h1 class="">@ViewBag.Title <small></small></h1>
@@ -37,10 +37,68 @@
                     : @Html.Raw("<span id=\"td" + @model.tipoComprobanteID.Value + "\"><button type=\"submit\" class=\"btn btn-xs btn-secondary\" onclick=\"ChangeStateReloadPage(" + @model.tipoComprobanteID.Value + ", " + @model.estaHabilitado.ToString().ToLower() + ", '" + @Url.Action("ChangeState", "TipoComprobante") + "');\"><i class=\"fa fa-minus-circle\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Deshabilitado</span></button></span>"))
                     .Filterable(true).SetWidth(160).Titled("Estado");
                 columns.Add().SetWidth(200).Css("text-center").Encoded(false).Sanitized(false).RenderValueAs(model => @<a href="@Url.Action("Edit", "TipoComprobante", new { id = model.tipoComprobanteID.Value, area = "" })" class="modal-link"><i class="fa fa-pencil-square-o" aria-hidden="true">&nbsp;</i><span class="d-none d-md-inline-block">Editar</span></a>);
-                columns.Add().SetWidth(200).Css("text-center").Encoded(false).Sanitized(false).RenderValueAs(model => @<a href="@Url.Action("Eliminar", "TipoComprobante", new { id = model.tipoComprobanteID.Value, area = "" })" class="modal-link"><i class="fa fa-trash" aria-hidden="true">&nbsp;</i><span class="d-none d-md-inline-block">Eliminar</span></a>);
+                columns.Add().SetWidth(200).Css("text-center").Encoded(false).Sanitized(false).RenderValueAs(model => "<a href=\"\" class=\"btn-eliminar\" data-id=\"" + model.tipoComprobanteID.ToString() + "\"><i class=\"fa fa-trash\" aria-hidden=\"true\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Eliminar</span></a>");
             }).WithPaging(10).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
         </div>
 
     </div>
 </div>
 
+<script type="text/javascript">
+    const Message = {
+        INFO: 'info',
+        SUCCESS: 'success',
+        WARNING: 'warning',
+        ERROR: 'error'
+    };
+
+    $(document).on('click', '.btn-eliminar', function (event) {
+        event.preventDefault();
+
+        let id = $(this).data("id");
+        let token = $('input[name="__RequestVerificationToken"]').val();
+
+        Swal.fire({
+            title: '',
+            text: '¿Desea eliminar este registro?',
+            icon: Message.WARNING,
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, continuar.',
+            cancelButtonText: 'No, cancelar.'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '@Url.Action("Eliminar", "TipoComprobante")/' + id,
+                    type: "POST",
+                    data: { __RequestVerificationToken: token },
+                    beforeSend: function () {
+                    },
+                    success: function (data) {
+                        let icon = data.Value ? Message.SUCCESS : Message.ERROR;
+
+                        mostrarMensajeSistema(data.Message, icon, data.Value);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                    }
+                });
+            }
+        });
+    });
+
+    function mostrarMensajeSistema(mensaje, icon, recargarPagina) {
+        Swal.fire({
+            title: '',
+            text: mensaje,
+            icon: icon,
+            timer: 6000,
+            confirmButtonColor: '#0069d9',
+
+        }).then((result) => {
+            if (result.isConfirmed && recargarPagina !== undefined && recargarPagina !== null && recargarPagina == true) {
+                location.reload();
+            }
+        });
+    }
+</script>

@@ -133,11 +133,11 @@ namespace Domain.Services.Implementations
             return new Response(result);
         }
 
-        public Response EliminarEstadoSerieComprobante(int serieID)
+        public Response EliminarSerieComprobante(int serieID)
         {
             ResponseData result;
 
-            var sp = new USP_U_ActualizarEstadoSerieComprobante()
+            var sp = new USP_D_EliminarSerieComprobante()
             {
                 I_SerieID = serieID
             };

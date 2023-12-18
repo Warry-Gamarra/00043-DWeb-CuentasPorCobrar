@@ -1,0 +1,73 @@
+﻿@model WebApp.Models.TipoComprobanteModel
+
+@Scripts.Render("~/bundles/jqueryval")
+
+<div class="modal-header bg-dark-gray" style="border-radius: .2rem .2rem 0px 0px">
+    <h5 class="modal-title text-center"><i class="fa bi-building">&nbsp;</i> @ViewBag.Title</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+@using (Ajax.BeginForm("Save", "TipoComprobante", new { area = "" }, 
+    new AjaxOptions { 
+        HttpMethod = "POST", 
+        InsertionMode = InsertionMode.Replace, 
+        UpdateTargetId = "div_msg", 
+        OnBegin = "Load", 
+        OnSuccess = "Submited", 
+        OnComplete = "Stop" }))
+{
+    @Html.Hidden("submited", 0)
+    @Html.AntiForgeryToken()
+    <div class="modal-body">
+        <div class="container-fluid">
+            @Html.HiddenFor(model => model.tipoComprobanteID)
+            <div class="row">
+                <div class="col-12">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.tipoComprobanteCod, new { @class = "control-label" })
+                        @Html.TextBoxFor(model => model.tipoComprobanteCod, new { @class = "form-control", @maxlength = "50" })
+                        <p class="text-danger small">@Html.ValidationMessageFor(model => model.tipoComprobanteCod)</p>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.tipoComprobanteDesc, new { @class = "control-label" })
+                        @Html.TextBoxFor(model => model.tipoComprobanteDesc, new { @class = "form-control", @maxlength = "250" })
+                        <p class="text-danger small">@Html.ValidationMessageFor(model => model.tipoComprobanteDesc)</p>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.inicial, new { @class = "control-label" })
+                        @Html.TextBoxFor(model => model.inicial, new { @class = "form-control", @maxlength = "5" })
+                        <p class="text-danger small">@Html.ValidationMessageFor(model => model.inicial)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer" id="div_msg">
+        <div class="col-md-12" style="display:none" id="loading">
+            <h6>Actualizando los datos...</h6>
+
+            <div class="progress">
+                <div class="indeterminate"></div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="btnsubmit"><i class="fa fa-save"></i>&nbsp;Guardar</button>
+        <button type="button" class="btn btn-secondary" id="btnCancel" data-dismiss="modal"><i class="fa fa-times-circle-o">&nbsp;</i>Cancelar</button>
+    </div>
+}
+
+<script>
+    $(document).on('ready', function () {
+        $('#btnsubmit').removeClass('disabled');
+    });
+
+    $("form").submit(function () {
+        if (parseInt($("#submited").val()) > 0) {
+            return false;
+        }
+    });
+</script>

@@ -16,6 +16,6 @@ namespace Domain.Services
 
         Response ActualizarEstadoSerieComprobante(int serieID, bool estaHabilitado, int userID);
 
-        Response EliminarEstadoSerieComprobante(int serieID);
+        Response EliminarSerieComprobante(int serieID);
     }
 }

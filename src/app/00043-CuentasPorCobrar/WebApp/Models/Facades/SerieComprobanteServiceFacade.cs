@@ -108,12 +108,12 @@ namespace WebApp.Models.Facades
             return response;
         }
 
-        public Response EliminarEstadoSerieComprobante(int serieComprobanteID)
+        public Response EliminarSerieComprobante(int serieComprobanteID)
         {
             Response response;
             try
             {
-                response = _service.EliminarEstadoSerieComprobante(serieComprobanteID);
+                response = _service.EliminarSerieComprobante(serieComprobanteID);
             }
             catch (Exception ex)
             {

@@ -91,11 +91,11 @@ namespace Domain.Services.Implementations
             return new Response(result);
         }
 
-        public Response EliminarEstadoTipoComprobante(int tipoComprobanteID)
+        public Response EliminarTipoComprobante(int tipoComprobanteID)
         {
             ResponseData result;
 
-            var sp = new USP_U_ActualizarEstadoTipoComprobante()
+            var sp = new USP_D_EliminarTipoComprobante()
             {
                 I_TipoComprobanteID = tipoComprobanteID
             };
