@@ -360,7 +360,9 @@ BEGIN
 	DECLARE @C_CodDepositante VARCHAR(250),
 			@I_EntidadFinanID INT,
 			@C_CodOperacion VARCHAR(250),
-			@D_FecPago DATETIME;
+			@D_FecPago DATETIME,
+			@OBLIGACION INT = 133,
+			@TASA INT = 134;
 
 	SELECT 
 		@C_CodDepositante = b.C_CodDepositante,
@@ -394,7 +396,11 @@ BEGIN
 		tipCom.T_TipoComprobanteDesc,
 		tipCom.T_Inicial,
 		estCom.C_EstadoComprobanteCod,
-		estCom.T_EstadoComprobanteDesc
+		estCom.T_EstadoComprobanteDesc,
+		CASE WHEN pagBan.I_TipoPagoID = @OBLIGACION THEN pagBan.T_ProcesoDescArchivo  + ' (F.VCTO.' + CONVERT(VARCHAR(10), pagBan.D_FecVenctoArchivo, 103) + ')'
+			ELSE (SELECT t.T_ConceptoPagoDesc FROM dbo.TRI_PagoProcesadoUnfv pr INNER JOIN dbo.TI_TasaUnfv t ON t.I_TasaUnfvID = pr.I_TasaUnfvID
+			WHERE pr.B_Anulado = 0 AND pr.I_PagoBancoID = pagBan.I_PagoBancoID) END AS T_Concepto,
+		pagBan.I_Cantidad
 	FROM dbo.TR_PagoBanco pagBan
 	INNER JOIN dbo.TC_EntidadFinanciera ban ON ban.I_EntidadFinanID = pagBan.I_EntidadFinanID
 	INNER JOIN dbo.TC_CuentaDeposito cta ON cta.I_CtaDepositoID = pagBan.I_CtaDepositoID
@@ -404,7 +410,7 @@ BEGIN
 	LEFT JOIN dbo.TC_SerieComprobante ser ON ser.I_SerieID = com.I_SerieID
 	LEFT JOIN dbo.TC_TipoComprobante tipCom ON tipCom.I_TipoComprobanteID = com.I_TipoComprobanteID
 	LEFT JOIN dbo.TC_EstadoComprobante estCom ON estCom.I_EstadoComprobanteID = com.I_EstadoComprobanteID
-	WHERE pagBan.B_Anulado = 0 AND NOT pagBan.I_TipoPagoID = 132 AND 
+	WHERE pagBan.B_Anulado = 0 AND NOT pagBan.I_CondicionPagoID = 132 AND 
 		pagBan.C_CodDepositante	 = @C_CodDepositante AND
 		pagBan.I_EntidadFinanID = @I_EntidadFinanID AND
 		pagBan.C_CodOperacion = @C_CodOperacion AND

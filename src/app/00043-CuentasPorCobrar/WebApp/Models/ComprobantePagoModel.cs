@@ -87,5 +87,9 @@ namespace WebApp.Models
                 return comprobanteID.HasValue ? String.Format("{0} - {1}", numeroSerie.Value.ToString("D4"), numeroComprobante.Value.ToString("D8")) : "---";
             }
         }
+
+        public string concepto { get; set; }
+
+        public int cantidad { get; set; }
     }
 }

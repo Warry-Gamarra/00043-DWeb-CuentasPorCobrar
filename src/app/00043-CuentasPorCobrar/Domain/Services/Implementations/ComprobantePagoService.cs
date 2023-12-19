@@ -53,6 +53,7 @@ namespace Domain.Services.Implementations
                     fecPago = x.D_FecPago,
                     montoPagado = x.I_MontoPago,
                     interesMoratorio = x.I_InteresMora,
+                    lugarPago = x.T_LugarPago,
                     condicionPago = x.T_Condicion,
                     tipoPago = x.I_TipoPagoID == 133 ? TipoPago.Obligacion : TipoPago.Tasa,
                     comprobanteID = x.I_ComprobanteID,
@@ -65,7 +66,7 @@ namespace Domain.Services.Implementations
                     inicial = x.T_Inicial,
                     estadoComprobanteCod = x.C_EstadoComprobanteCod,
                     estadoComprobanteDesc = x.T_EstadoComprobanteDesc
-                }); ;
+                });
 
             return result;
         }
@@ -85,6 +86,7 @@ namespace Domain.Services.Implementations
                     fecPago = x.D_FecPago,
                     montoPagado = x.I_MontoPago,
                     interesMoratorio = x.I_InteresMora,
+                    lugarPago = x.T_LugarPago,
                     condicionPago = x.T_Condicion,
                     tipoPago = x.I_TipoPagoID == 133 ? TipoPago.Obligacion : TipoPago.Tasa,
                     comprobanteID = x.I_ComprobanteID,
@@ -96,7 +98,9 @@ namespace Domain.Services.Implementations
                     tipoComprobanteDesc = x.T_TipoComprobanteDesc,
                     inicial = x.T_Inicial,
                     estadoComprobanteCod = x.C_EstadoComprobanteCod,
-                    estadoComprobanteDesc = x.T_EstadoComprobanteDesc
+                    estadoComprobanteDesc = x.T_EstadoComprobanteDesc,
+                    concepto = x.T_Concepto,
+                    cantidad = x.I_Cantidad
                 }); ;
 
             return result;
@@ -150,6 +154,8 @@ namespace Domain.Services.Implementations
                 string nombreArchivo = String.Format("{0}{1}_{2}.txt", inicialTipoComprobante, numeroSerie, numeroComprobante);
 
                 DateTime fechaEmision = comprobantePagoDTO.First().fechaEmision.Value;
+
+                DateTime fechaPago = comprobantePagoDTO.First().fecPago;
 
                 decimal montoPagado = comprobantePagoDTO.Sum(x => x.montoPagado + x.interesMoratorio);
 
@@ -245,7 +251,7 @@ namespace Domain.Services.Implementations
                 string filaMontoImpuesto = String.Format("A2;MontoImpuesto;1;{0}", montoIGV.ToString(FormatosDecimal.BASIC_DECIMAL));
                 writer.WriteLine(filaMontoImpuesto);
 
-                string filaTasaImpuesto = String.Format("A2;TasaImpuesto;1;{0}", igv * 100);
+                string filaTasaImpuesto = String.Format("A2;TasaImpuesto;1;{0}", (igv * 100).ToString(FormatosDecimal.BASIC_DECIMAL));
                 writer.WriteLine(filaTasaImpuesto);
 
                 string filaMontoImpuestoBase = String.Format("A2;MontoImpuestoBase;1;{0}", montoNeto.ToString(FormatosDecimal.BASIC_DECIMAL));
@@ -257,6 +263,102 @@ namespace Domain.Services.Implementations
                 {
                     string filaFormaPago = "A;FormaPago;;Contado";
                     writer.WriteLine(filaFormaPago);
+                }
+                #endregion
+
+                #region DETALLE
+                int fila = 1;
+
+                foreach (var item in comprobantePagoDTO)
+                {
+                    string filaNroLinDet = String.Format("B;NroLinDet;{0};1", fila);
+                    writer.WriteLine(filaNroLinDet);
+
+                    string filaQtyItem = String.Format("B;QtyItem;{0};", fila, item.cantidad.ToString(FormatosDecimal.BASIC_DECIMAL));
+                    writer.WriteLine(filaQtyItem);
+
+                    string filaUnmdItem = String.Format("B;UnmdItem;{0};NIU", fila);
+                    writer.WriteLine(filaUnmdItem);
+
+                    string filaNmbItem = String.Format("B;NmbItem;{0};{1}", fila, item.concepto);
+                    writer.WriteLine(filaNmbItem);
+
+                    var montoPagadoItem = (item.montoPagado + item.interesMoratorio);
+
+                    var soloIGV = 0;
+
+                    string filaPrcItem = String.Format("B;PrcItem;{0};{1}", fila, montoPagadoItem.ToString(FormatosDecimal.BASIC_DECIMAL));
+                    writer.WriteLine(filaPrcItem);
+
+                    string filaPrcItemSinIgv = String.Format("B;PrcItemSinIgv;{0};{1}", fila, montoPagadoItem.ToString(FormatosDecimal.BASIC_DECIMAL));
+                    writer.WriteLine(filaPrcItemSinIgv);
+
+                    string filaMontoItem = String.Format("B;MontoItem;{0};{1}", fila, montoPagadoItem.ToString(FormatosDecimal.BASIC_DECIMAL));
+                    writer.WriteLine(filaMontoItem);
+
+                    string filaIndExe = String.Format("B;IndExe;{0};10", fila);
+                    writer.WriteLine(filaIndExe);
+
+                    string filaCodigoTipoIgv = String.Format("B;CodigoTipoIgv;{0};1000", fila);
+                    writer.WriteLine(filaCodigoTipoIgv);
+
+                    string filaTasaIgv = String.Format("B;TasaIgv;{0};{1}", fila, (igv * 100).ToString(FormatosDecimal.BASIC_DECIMAL));
+                    writer.WriteLine(filaTasaIgv);
+
+                    string filaImpuestoIgv = String.Format("B;ImpuestoIgv;{0};{1}", fila, soloIGV.ToString(FormatosDecimal.BASIC_DECIMAL));
+                    writer.WriteLine(filaImpuestoIgv);
+
+                    string filaMontoBaseImp = String.Format("B;MontoBaseImp;{0};6.36", fila);
+                    writer.WriteLine(filaMontoBaseImp);
+
+                    fila++;
+                }
+                #endregion
+
+                #region DATOS ADICIONALES
+                int numeroDatoAdicional = 1;
+
+                string filaFechaPago = String.Format("E;TipoAdicSunat;{0};01", numeroDatoAdicional);
+                writer.WriteLine(filaFechaPago);
+
+                string filaFechaPagoValor = String.Format("E;DescripcionAdicsunat;{0};{1}", numeroDatoAdicional, fechaPago.ToString(FormatosDateTime.BASIC_DATE3));
+                writer.WriteLine(filaFechaPagoValor);
+
+                numeroDatoAdicional++;
+
+                string filaBanco = String.Format("E;TipoAdicSunat;{0};01", numeroDatoAdicional);
+                writer.WriteLine(filaBanco);
+
+                string filaBancoValor = String.Format("E;DescripcionAdicsunat;{0};{1}", numeroDatoAdicional, comprobantePagoDTO.First().entidadDesc);
+                writer.WriteLine(filaBancoValor);
+
+                numeroDatoAdicional++;
+
+                string filaCuentaBancaria = String.Format("E;TipoAdicSunat;{0};01", numeroDatoAdicional);
+                writer.WriteLine(filaCuentaBancaria);
+
+                string filaCuentaBancariaValor = String.Format("E;DescripcionAdicsunat;{0};{1}", numeroDatoAdicional, comprobantePagoDTO.First().numeroCuenta);
+                writer.WriteLine(filaCuentaBancariaValor);
+
+                numeroDatoAdicional++;
+
+                string filaCodOperacion = String.Format("E;TipoAdicSunat;{0};01", numeroDatoAdicional);
+                writer.WriteLine(filaCodOperacion);
+
+                string filaCodOperacionValor = String.Format("E;DescripcionAdicsunat;{0};{1}", numeroDatoAdicional, comprobantePagoDTO.First().codOperacion);
+                writer.WriteLine(filaCodOperacionValor);
+
+                numeroDatoAdicional++;
+
+                if  (comprobantePagoDTO.First().entidadFinanID == Bancos.BCP_ID)
+                {
+                    string filaCodInterno = String.Format("E;TipoAdicSunat;{0};01", numeroDatoAdicional);
+                    writer.WriteLine(filaCodInterno);
+
+                    string filaCodInternoValor = String.Format("E;DescripcionAdicsunat;{0};{1}", numeroDatoAdicional, comprobantePagoDTO.First().codigoInterno);
+                    writer.WriteLine(filaCodInternoValor);
+
+                    numeroDatoAdicional++;
                 }
                 #endregion
 

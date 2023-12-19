@@ -56,5 +56,9 @@ namespace Domain.Entities
         public string estadoComprobanteCod { get; set; }
 
         public string estadoComprobanteDesc { get; set; }
+
+        public string concepto { get; set; }
+
+        public int cantidad { get; set; }
     }
 }

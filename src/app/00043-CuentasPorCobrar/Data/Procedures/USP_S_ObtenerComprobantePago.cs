@@ -35,6 +35,8 @@ namespace Data.Procedures
 
         public decimal I_InteresMora { get; set; }
 
+        public string T_LugarPago { get; set; }
+
         public string T_Condicion { get; set; }
 
         public int I_TipoPagoID { get; set; }
@@ -58,6 +60,10 @@ namespace Data.Procedures
         public string C_EstadoComprobanteCod { get; set; }
 
         public string T_EstadoComprobanteDesc { get; set; }
+
+        public string T_Concepto { get; set; }
+
+        public int I_Cantidad { get; set; }
 
         public static IEnumerable<USP_S_ObtenerComprobantePago> GetAll(int pagoBancoID)
         {

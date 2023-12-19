@@ -84,7 +84,9 @@ namespace WebApp.Models.Facades
                     tipoComprobanteDesc = x.tipoComprobanteDesc,
                     inicial = x.inicial,
                     estadoComprobanteCod = x.estadoComprobanteCod,
-                    estadoComprobanteDesc = x.estadoComprobanteDesc
+                    estadoComprobanteDesc = x.estadoComprobanteDesc,
+                    concepto = x.concepto,
+                    cantidad = x.cantidad
                 });
 
             return resultado;

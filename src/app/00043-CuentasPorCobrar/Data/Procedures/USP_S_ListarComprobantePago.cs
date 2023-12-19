@@ -35,6 +35,8 @@ namespace Data.Procedures
 
         public decimal I_InteresMora { get; set; }
 
+        public string T_LugarPago { get; set; }
+
         public string T_Condicion { get; set; }
 
         public int I_TipoPagoID { get; set; }
