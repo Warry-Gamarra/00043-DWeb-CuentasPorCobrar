@@ -1,8 +1,3 @@
-/*
---Correo de Jean: jnique@digiflow.pe
---Correo de Alex: amoreno@digiflow.pe
-*/
-
 USE BD_OCEF_CtasPorCobrar
 GO
 
@@ -161,7 +156,7 @@ BEGIN
 
 				COMMIT TRAN
 				SET @B_Result = 1;
-				SET @T_Message = 'Generación de número de comprobante exitoso.';
+				SET @T_Message = 'Generación de número de comprobante (' + CAST(@I_NuevoNumeroComprobante AS VARCHAR(20)) + ') exitoso.';
 			END TRY
 			BEGIN CATCH
 				ROLLBACK TRAN
@@ -279,7 +274,7 @@ BEGIN
 	DECLARE @SQLString NVARCHAR(4000),  
 			@ParmDefinition NVARCHAR(500);
 
-	SET @SQLString = N'SELECT TOP 1000
+	SET @SQLString = N'SELECT
 		pagBan.I_PagoBancoID,
 		ban.I_EntidadFinanID,
 		ban.T_EntidadDesc,

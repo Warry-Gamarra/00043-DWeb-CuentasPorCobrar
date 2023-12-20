@@ -151,7 +151,7 @@ namespace Domain.Services.Implementations
 
                 string numeroComprobante = comprobantePagoDTO.First().numeroComprobante.Value.ToString("D8");
 
-                string nombreArchivo = String.Format("{0}{1}_{2}.txt", inicialTipoComprobante, numeroSerie, numeroComprobante);
+                string nombreArchivo = String.Format("{0}-{1}-{2}{3}.txt", Digiflow.RUC_UNFV, numeroSerie, inicialTipoComprobante, numeroComprobante);
 
                 DateTime fechaEmision = comprobantePagoDTO.First().fechaEmision.Value;
 
@@ -159,11 +159,17 @@ namespace Domain.Services.Implementations
 
                 decimal montoPagado = comprobantePagoDTO.Sum(x => x.montoPagado + x.interesMoratorio);
 
-                decimal igv = Digiflow.IGV;
+                decimal igv = comprobantePagoDTO.First().esGravado.Value ? Digiflow.IGV : 0;
 
-                decimal montoIGV = comprobantePagoDTO.First().esGravado.Value ? Math.Round((montoPagado * igv) / (1 + igv), 2) : 0;
+                decimal montoIGV = comprobantePagoDTO.First().esGravado.Value ? Math.Round((montoPagado * Digiflow.IGV) / (1 + Digiflow.IGV), 2) : 0;
 
                 decimal montoNeto = comprobantePagoDTO.First().esGravado.Value ? montoPagado - montoIGV : montoPagado;
+
+                string codigoImpuesto = comprobantePagoDTO.First().esGravado.Value ? "1000" : "9998";
+
+                string codigoTipoAfectacion = comprobantePagoDTO.First().esGravado.Value ? "10" : "30";
+
+                string codigoTipoOperacion = "0101";
 
                 string filaCodEmpresa = "A;CODI_EMPR;;1";
                 writer.WriteLine(filaCodEmpresa);
@@ -187,7 +193,7 @@ namespace Domain.Services.Implementations
                 writer.WriteLine(filaTipoMoneda);
 
                 #region EMISOR
-                string filaRUCEmisor = "A;RUTEmis;;20170934289";
+                string filaRUCEmisor = String.Format("A;RUTEmis;;{0}", Digiflow.RUC_UNFV);
                 writer.WriteLine(filaRUCEmisor);
 
                 string filaTipoRUCEmisor = "A;TipoRucEmis;;6";
@@ -240,12 +246,12 @@ namespace Domain.Services.Implementations
                 #endregion
 
                 #region OTROS CONCEPTOS SUNAT
-                string filaTipoOperacion = "A;TipoOperacion;;0101";
+                string filaTipoOperacion = String.Format("A;TipoOperacion;;{0}", codigoTipoOperacion);
                 writer.WriteLine(filaTipoOperacion);
                 #endregion
 
                 #region IMPUESTOS/RETENCIONES
-                string filaCodigoImpuesto = "A2;CodigoImpuesto;1;1000";
+                string filaCodigoImpuesto = String.Format("A2;CodigoImpuesto;1;{0}", codigoImpuesto);
                 writer.WriteLine(filaCodigoImpuesto);
 
                 string filaMontoImpuesto = String.Format("A2;MontoImpuesto;1;{0}", montoIGV.ToString(FormatosDecimal.BASIC_DECIMAL));
@@ -268,6 +274,11 @@ namespace Domain.Services.Implementations
 
                 #region DETALLE
                 int fila = 1;
+                decimal montoPagadoItem;
+                decimal montoSinIGV;
+                decimal precioUnitarioItem;
+                decimal montoIGVUnitarioItem;
+                decimal precioUnitarioItemSinIGV;
 
                 foreach (var item in comprobantePagoDTO)
                 {
@@ -283,32 +294,38 @@ namespace Domain.Services.Implementations
                     string filaNmbItem = String.Format("B;NmbItem;{0};{1}", fila, item.concepto);
                     writer.WriteLine(filaNmbItem);
 
-                    var montoPagadoItem = (item.montoPagado + item.interesMoratorio);
+                    montoPagadoItem = (item.montoPagado + item.interesMoratorio);
 
-                    var soloIGV = 0;
+                    precioUnitarioItem = Math.Round(montoPagadoItem / item.cantidad, 2);
 
-                    string filaPrcItem = String.Format("B;PrcItem;{0};{1}", fila, montoPagadoItem.ToString(FormatosDecimal.BASIC_DECIMAL));
+                    montoIGVUnitarioItem = comprobantePagoDTO.First().esGravado.Value ? Math.Round((montoPagadoItem * Digiflow.IGV) / (1 + Digiflow.IGV), 2) : 0;
+
+                    precioUnitarioItemSinIGV = comprobantePagoDTO.First().esGravado.Value ? precioUnitarioItem - montoIGVUnitarioItem : montoPagadoItem;
+
+                    montoSinIGV = precioUnitarioItemSinIGV * item.cantidad;
+
+                    string filaPrcItem = String.Format("B;PrcItem;{0};{1}", fila, precioUnitarioItem.ToString(FormatosDecimal.BASIC_DECIMAL));
                     writer.WriteLine(filaPrcItem);
 
-                    string filaPrcItemSinIgv = String.Format("B;PrcItemSinIgv;{0};{1}", fila, montoPagadoItem.ToString(FormatosDecimal.BASIC_DECIMAL));
+                    string filaPrcItemSinIgv = String.Format("B;PrcItemSinIgv;{0};{1}", fila, precioUnitarioItemSinIGV.ToString(FormatosDecimal.BASIC_DECIMAL));
                     writer.WriteLine(filaPrcItemSinIgv);
 
-                    string filaMontoItem = String.Format("B;MontoItem;{0};{1}", fila, montoPagadoItem.ToString(FormatosDecimal.BASIC_DECIMAL));
+                    string filaMontoItem = String.Format("B;MontoItem;{0};{1}", fila, montoSinIGV.ToString(FormatosDecimal.BASIC_DECIMAL));
                     writer.WriteLine(filaMontoItem);
 
-                    string filaIndExe = String.Format("B;IndExe;{0};10", fila);
+                    string filaIndExe = String.Format("B;IndExe;{0};{1}", fila, codigoTipoAfectacion);
                     writer.WriteLine(filaIndExe);
 
-                    string filaCodigoTipoIgv = String.Format("B;CodigoTipoIgv;{0};1000", fila);
+                    string filaCodigoTipoIgv = String.Format("B;CodigoTipoIgv;{0};{1}", fila, codigoImpuesto);
                     writer.WriteLine(filaCodigoTipoIgv);
 
                     string filaTasaIgv = String.Format("B;TasaIgv;{0};{1}", fila, (igv * 100).ToString(FormatosDecimal.BASIC_DECIMAL));
                     writer.WriteLine(filaTasaIgv);
 
-                    string filaImpuestoIgv = String.Format("B;ImpuestoIgv;{0};{1}", fila, soloIGV.ToString(FormatosDecimal.BASIC_DECIMAL));
+                    string filaImpuestoIgv = String.Format("B;ImpuestoIgv;{0};{1}", fila, (montoPagadoItem - montoSinIGV).ToString(FormatosDecimal.BASIC_DECIMAL));
                     writer.WriteLine(filaImpuestoIgv);
 
-                    string filaMontoBaseImp = String.Format("B;MontoBaseImp;{0};6.36", fila);
+                    string filaMontoBaseImp = String.Format("B;MontoBaseImp;{0};{1}", fila, montoSinIGV.ToString(FormatosDecimal.BASIC_DECIMAL));
                     writer.WriteLine(filaMontoBaseImp);
 
                     string filaCodigoProductoSunat = String.Format("B;CodigoProductoSunat;{0};", fila);
@@ -412,16 +429,16 @@ namespace Domain.Services.Implementations
                 {
                     string nombreArchivo = Path.GetFileNameWithoutExtension(item);
 
-                    string[] comprobante = nombreArchivo.Split('_');
+                    string[] comprobante = nombreArchivo.Split('-');
 
                     try
                     {
-                        int numeroSerie = int.Parse(comprobante[0].Length == 4 ? comprobante[0] : comprobante[0].Substring(comprobante[0].Length - 4));
+                        int numeroSerie = int.Parse(comprobante[1]);
 
-                        int numeroComprobante = int.Parse(comprobante[1]);
+                        int numeroComprobante = int.Parse(comprobante[2].Length == 8 ? comprobante[2] : comprobante[2].Substring(comprobante[2].Length - 8));
 
                         update = this.ActualizarEstadoComprobante(numeroSerie, numeroComprobante, EstadoComprobante.PROCESADO, currentUserID);
-
+                        
                         update.fileName = nombreArchivo;
                     }
                     catch (Exception ex)
@@ -445,13 +462,13 @@ namespace Domain.Services.Implementations
                 {
                     string nombreArchivo = Path.GetFileNameWithoutExtension(item);
 
-                    string[] comprobante = nombreArchivo.Split('_');
+                    string[] comprobante = nombreArchivo.Split('-');
 
                     try
                     {
-                        int numeroSerie = int.Parse(comprobante[0].Length == 4 ? comprobante[0] : comprobante[0].Substring(comprobante[0].Length - 4));
+                        int numeroSerie = int.Parse(comprobante[1]);
 
-                        int numeroComprobante = int.Parse(comprobante[1]);
+                        int numeroComprobante = int.Parse(comprobante[2].Length == 8 ? comprobante[2] : comprobante[2].Substring(comprobante[2].Length - 8));
 
                         update = this.ActualizarEstadoComprobante(numeroSerie, numeroComprobante, EstadoComprobante.ERROR, currentUserID);
 

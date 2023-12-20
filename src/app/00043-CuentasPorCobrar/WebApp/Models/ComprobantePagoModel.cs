@@ -76,7 +76,22 @@ namespace WebApp.Models
         {
             get
             {
-                return estadoComprobanteCod == EstadoComprobante.PROCESADO ? "text-success" : estadoComprobanteCod == EstadoComprobante.ERROR ? "text-danger" : "";
+                if (estadoComprobanteCod == EstadoComprobante.PROCESADO)
+                {
+                    return "text-success";
+                }
+                else if(estadoComprobanteCod == EstadoComprobante.ERROR)
+                {
+                    return "text-danger";
+                }
+                else if (estadoComprobanteCod == EstadoComprobante.PENDIENTE)
+                {
+                    return "text-warning";
+                }
+                else
+                {
+                    return "";
+                }
             }
         }
 

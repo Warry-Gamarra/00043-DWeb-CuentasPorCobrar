@@ -75,9 +75,11 @@ namespace Domain.Helpers
 
         public static readonly string CARPETA_CORRECTO = ConfigurationManager.AppSettings["CarpetaCorrecto"].ToString();
 
-        public static readonly string CARPETA_ERROR = ConfigurationManager.AppSettings["CarpetaErrror"].ToString();
+        public static readonly string CARPETA_ERROR = ConfigurationManager.AppSettings["CarpetaError"].ToString();
 
         public static readonly int MAXIMO_NUMERO_SERIE = int.Parse(ConfigurationManager.AppSettings["MaxNumSerie"].ToString());
+
+        public static readonly string RUC_UNFV = ConfigurationManager.AppSettings["RucUnfv"].ToString();
     }
 
     public static class EstadoComprobante

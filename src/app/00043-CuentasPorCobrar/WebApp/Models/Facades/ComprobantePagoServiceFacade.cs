@@ -16,10 +16,12 @@ namespace WebApp.Models.Facades
     public class ComprobantePagoServiceFacade : IComprobantePagoServiceFacade
     {
         private IComprobantePagoService _comprobantePagoService;
+        private ISerieComprobanteService _serieComprobanteService;
         
         public ComprobantePagoServiceFacade()
         {
             _comprobantePagoService = new ComprobantePagoService();
+            _serieComprobanteService = new SerieComprobanteService();
         }
 
         public IEnumerable<ComprobantePagoModel> ListarComprobantesPagoBanco(ConsultaComprobantePagoViewModel filtro)
@@ -137,6 +139,24 @@ namespace WebApp.Models.Facades
 
         public Response GenerarNumeroComprobante(ConsultaComprobantePagoViewModel filtro, int tipoComprobanteID, int serieID, bool esGravado, int currentUserID)
         {
+            DateTime fechaActual = DateTime.Now;
+
+            var serie = _serieComprobanteService.ListarSeriesComprobante(false).Where(s => s.serieID == serieID).First();
+
+            DateTime fechaLimite = fechaActual.AddDays(-1 * serie.diasAnterioresPermitido);
+
+            if (filtro.fechaInicio.HasValue)
+            {
+                if (filtro.fechaInicio.Value.Date < fechaActual.Date)
+                {
+                    filtro.fechaDesde = fechaLimite.ToString(FormatosDateTime.BASIC_DATE);
+                }
+            }
+            else
+            {
+                filtro.fechaDesde = fechaLimite.ToString(FormatosDateTime.BASIC_DATE);
+            }
+
             var listaPagos = _comprobantePagoService.ListarComprobantesPagoBanco(filtro.tipoPago, filtro.entidadFinanciera, filtro.idCtaDeposito,
                 filtro.codOperacion, filtro.codInterno, filtro.codDepositante, filtro.nomDepositante, filtro.fechaInicio, filtro.fechaFin,
                 filtro.tipoComprobanteID, filtro.estadoGeneracion, filtro.estadoComprobanteID)
