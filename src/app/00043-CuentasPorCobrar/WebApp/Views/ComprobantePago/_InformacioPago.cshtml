@@ -4,6 +4,7 @@
 @{
     var tieneComprobante = (bool)ViewBag.TieneComprobante;
     var pagoBancoID = (int)ViewBag.PagoBancoID;
+    int contadorFila = 1;
 }
 
 <div class="modal-header bg-dark-gray" style="border-radius: .2rem .2rem 0px 0px">
@@ -71,7 +72,7 @@
             <dd class="col-sm-8">
                 <select id="cmbEsGravado" class="form-control">
                     <option value="True">Sí</option>
-                    <option value="False">No</option>
+                    <option value="False" selected="selected">No</option>
                 </select>
             </dd>
         }
@@ -106,6 +107,29 @@
             </dd>
         </dl>
     }
+
+    <table class="table table-bordered table-hover table-sm">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Concepto</th>
+                <th>Monto</th>
+                <th>Mora</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var item in Model)
+            {
+                <tr>
+                    <td>@contadorFila</td>
+                    <td>@item.concepto</td>
+                    <td>@item.montoPagado</td>
+                    <td>@item.interesMoratorio</td>
+                </tr>
+                contadorFila++;
+            }
+        </tbody>
+    </table>
 </div>
 
 <div class="modal-footer" id="div_msg_comprobante">

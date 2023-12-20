@@ -311,6 +311,9 @@ namespace Domain.Services.Implementations
                     string filaMontoBaseImp = String.Format("B;MontoBaseImp;{0};6.36", fila);
                     writer.WriteLine(filaMontoBaseImp);
 
+                    string filaCodigoProductoSunat = String.Format("B;CodigoProductoSunat;{0};", fila);
+                    writer.WriteLine(filaCodigoProductoSunat);
+
                     fila++;
                 }
                 #endregion

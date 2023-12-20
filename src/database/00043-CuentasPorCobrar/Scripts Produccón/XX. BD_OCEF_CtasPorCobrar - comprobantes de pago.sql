@@ -414,7 +414,8 @@ BEGIN
 		pagBan.C_CodDepositante	 = @C_CodDepositante AND
 		pagBan.I_EntidadFinanID = @I_EntidadFinanID AND
 		pagBan.C_CodOperacion = @C_CodOperacion AND
-		DATEDIFF(SECOND, pagBan.D_FecPago, @D_FecPago) = 0;
+		DATEDIFF(SECOND, pagBan.D_FecPago, @D_FecPago) = 0
+	ORDER BY pagBan.D_FecVenctoArchivo;
 END
 GO
 
