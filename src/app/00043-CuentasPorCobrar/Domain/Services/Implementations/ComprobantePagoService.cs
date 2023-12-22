@@ -147,7 +147,7 @@ namespace Domain.Services.Implementations
 
                 string inicialTipoComprobante = comprobantePagoDTO.First().inicial;
 
-                string numeroSerie = comprobantePagoDTO.First().numeroSerie.Value.ToString("D4");
+                string numeroSerie = inicialTipoComprobante.Length > 0 ? comprobantePagoDTO.First().numeroSerie.Value.ToString("D" + (4 - inicialTipoComprobante.Length)) : comprobantePagoDTO.First().numeroSerie.Value.ToString("D4");
 
                 string numeroComprobante = comprobantePagoDTO.First().numeroComprobante.Value.ToString("D8");
 
@@ -219,10 +219,14 @@ namespace Domain.Services.Implementations
                 string filaTipoRutReceptor = "A;TipoRutReceptor;;-";
                 writer.WriteLine(filaTipoRutReceptor);
 
-                string filaRutReceptor = String.Format("A;RUTRecep;;{0}", comprobantePagoDTO.First().codDepositante);
+                string codDepositante = comprobantePagoDTO.First().codDepositante == null || comprobantePagoDTO.First().codDepositante.Length == 0 ? "-" : comprobantePagoDTO.First().codDepositante;
+
+                string filaRutReceptor = String.Format("A;RUTRecep;;{0}", codDepositante);
                 writer.WriteLine(filaRutReceptor);
 
-                string filaRazonSocialReceptor = String.Format("A;RznSocRecep;;{0}", comprobantePagoDTO.First().nomDepositante);
+                string nomDepositante = comprobantePagoDTO.First().nomDepositante == null || comprobantePagoDTO.First().nomDepositante.Length == 0 ? "-" : comprobantePagoDTO.First().nomDepositante;
+
+                string filaRazonSocialReceptor = String.Format("A;RznSocRecep;;{0}", nomDepositante);
                 writer.WriteLine(filaRazonSocialReceptor);
                 #endregion
 
@@ -241,7 +245,7 @@ namespace Domain.Services.Implementations
                 #endregion
 
                 #region LEYENDA
-                string filaCodigoLeyenda = "A;CodigoLeyenda;;";
+                string filaCodigoLeyenda = "A;CodigoLeyenda;;1002";
                 writer.WriteLine(filaCodigoLeyenda);
                 #endregion
 
@@ -285,7 +289,7 @@ namespace Domain.Services.Implementations
                     string filaNroLinDet = String.Format("B;NroLinDet;{0};1", fila);
                     writer.WriteLine(filaNroLinDet);
 
-                    string filaQtyItem = String.Format("B;QtyItem;{0};", fila, item.cantidad.ToString(FormatosDecimal.BASIC_DECIMAL));
+                    string filaQtyItem = String.Format("B;QtyItem;{0};{1}", fila, item.cantidad == 0 ? "1.00" : item.cantidad.ToString(FormatosDecimal.BASIC_DECIMAL));
                     writer.WriteLine(filaQtyItem);
 
                     string filaUnmdItem = String.Format("B;UnmdItem;{0};NIU", fila);
@@ -338,35 +342,75 @@ namespace Domain.Services.Implementations
                 #region DATOS ADICIONALES
                 int numeroDatoAdicional = 1;
 
+                writer.WriteLine(String.Format("E;TipoAdicSunat;{0};01", numeroDatoAdicional));
+                writer.WriteLine(String.Format("E;NmrLineasAdicSunat;{0};03", numeroDatoAdicional));
+                writer.WriteLine(String.Format("E;DescripcionAdicsunat;{0};-", numeroDatoAdicional));
+
+                numeroDatoAdicional++;
+
+                writer.WriteLine(String.Format("E;TipoAdicSunat;{0};01", numeroDatoAdicional));
+                writer.WriteLine(String.Format("E;NmrLineasAdicSunat;{0};01", numeroDatoAdicional));
+                writer.WriteLine(String.Format("E;DescripcionAdicsunat;{0};OF. TESORERÍA", numeroDatoAdicional));
+
+                numeroDatoAdicional++;
+
+                writer.WriteLine(String.Format("E;TipoAdicSunat;{0};01", numeroDatoAdicional));
+                writer.WriteLine(String.Format("E;NmrLineasAdicSunat;{0};02", numeroDatoAdicional));
+                writer.WriteLine(String.Format("E;DescripcionAdicsunat;{0};-", numeroDatoAdicional));
+
+                numeroDatoAdicional++;
+
+                writer.WriteLine(String.Format("E;TipoAdicSunat;{0};01", numeroDatoAdicional));
+                writer.WriteLine(String.Format("E;NmrLineasAdicSunat;{0};04", numeroDatoAdicional));
+                writer.WriteLine(String.Format("E;DescripcionAdicsunat;{0};-", numeroDatoAdicional));
+
+                numeroDatoAdicional++;
+
+                writer.WriteLine(String.Format("E;TipoAdicSunat;{0};01", numeroDatoAdicional));
+                writer.WriteLine(String.Format("E;NmrLineasAdicSunat;{0};{1}", numeroDatoAdicional, numeroDatoAdicional.ToString("D2")));
+                writer.WriteLine(String.Format("E;DescripcionAdicsunat;{0};-", numeroDatoAdicional));
+
+                numeroDatoAdicional++;
+
+                writer.WriteLine(String.Format("E;TipoAdicSunat;{0};01", numeroDatoAdicional));
+                writer.WriteLine(String.Format("E;NmrLineasAdicSunat;{0};{1}", numeroDatoAdicional, numeroDatoAdicional.ToString("D2")));
+                writer.WriteLine(String.Format("E;DescripcionAdicsunat;{0};-", numeroDatoAdicional));
+
+                numeroDatoAdicional++;
+
+                writer.WriteLine(String.Format("E;TipoAdicSunat;{0};01", numeroDatoAdicional));
+                writer.WriteLine(String.Format("E;NmrLineasAdicSunat;{0};{1}", numeroDatoAdicional, numeroDatoAdicional.ToString("D2")));
+                writer.WriteLine(String.Format("E;DescripcionAdicsunat;{0};-", numeroDatoAdicional));
+
+                numeroDatoAdicional++;
+
+                writer.WriteLine(String.Format("E;TipoAdicSunat;{0};01", numeroDatoAdicional));
+                writer.WriteLine(String.Format("E;NmrLineasAdicSunat;{0};{1}", numeroDatoAdicional, numeroDatoAdicional.ToString("D2")));
+                writer.WriteLine(String.Format("E;DescripcionAdicsunat;{0};-", numeroDatoAdicional));
+
+                numeroDatoAdicional++;
+
                 string filaFechaPago = String.Format("E;TipoAdicSunat;{0};01", numeroDatoAdicional);
                 writer.WriteLine(filaFechaPago);
-
+                writer.WriteLine(String.Format("E;NmrLineasAdicSunat;{0};{1}", numeroDatoAdicional, numeroDatoAdicional.ToString("D2")));
                 string filaFechaPagoValor = String.Format("E;DescripcionAdicsunat;{0};{1}", numeroDatoAdicional, fechaPago.ToString(FormatosDateTime.BASIC_DATE3));
                 writer.WriteLine(filaFechaPagoValor);
 
                 numeroDatoAdicional++;
 
-                string filaBanco = String.Format("E;TipoAdicSunat;{0};01", numeroDatoAdicional);
-                writer.WriteLine(filaBanco);
-
-                string filaBancoValor = String.Format("E;DescripcionAdicsunat;{0};{1}", numeroDatoAdicional, comprobantePagoDTO.First().entidadDesc);
-                writer.WriteLine(filaBancoValor);
+                string filaCodOperacion = String.Format("E;TipoAdicSunat;{0};01", numeroDatoAdicional);
+                writer.WriteLine(filaCodOperacion);
+                writer.WriteLine(String.Format("E;NmrLineasAdicSunat;{0};{1}", numeroDatoAdicional, numeroDatoAdicional.ToString("D2")));
+                string filaCodOperacionValor = String.Format("E;DescripcionAdicsunat;{0};{1}", numeroDatoAdicional, comprobantePagoDTO.First().codOperacion);
+                writer.WriteLine(filaCodOperacionValor);
 
                 numeroDatoAdicional++;
 
                 string filaCuentaBancaria = String.Format("E;TipoAdicSunat;{0};01", numeroDatoAdicional);
                 writer.WriteLine(filaCuentaBancaria);
-
-                string filaCuentaBancariaValor = String.Format("E;DescripcionAdicsunat;{0};{1}", numeroDatoAdicional, comprobantePagoDTO.First().numeroCuenta);
+                writer.WriteLine(String.Format("E;NmrLineasAdicSunat;{0};{1}", numeroDatoAdicional, numeroDatoAdicional.ToString("D2")));
+                string filaCuentaBancariaValor = String.Format("E;DescripcionAdicsunat;{0};{1}/{2}", numeroDatoAdicional, comprobantePagoDTO.First().entidadDesc, comprobantePagoDTO.First().numeroCuenta);
                 writer.WriteLine(filaCuentaBancariaValor);
-
-                numeroDatoAdicional++;
-
-                string filaCodOperacion = String.Format("E;TipoAdicSunat;{0};01", numeroDatoAdicional);
-                writer.WriteLine(filaCodOperacion);
-
-                string filaCodOperacionValor = String.Format("E;DescripcionAdicsunat;{0};{1}", numeroDatoAdicional, comprobantePagoDTO.First().codOperacion);
-                writer.WriteLine(filaCodOperacionValor);
 
                 numeroDatoAdicional++;
 
@@ -374,11 +418,9 @@ namespace Domain.Services.Implementations
                 {
                     string filaCodInterno = String.Format("E;TipoAdicSunat;{0};01", numeroDatoAdicional);
                     writer.WriteLine(filaCodInterno);
-
+                    writer.WriteLine(String.Format("E;NmrLineasAdicSunat;{0};{1}", numeroDatoAdicional, numeroDatoAdicional.ToString("D2")));
                     string filaCodInternoValor = String.Format("E;DescripcionAdicsunat;{0};{1}", numeroDatoAdicional, comprobantePagoDTO.First().codigoInterno);
                     writer.WriteLine(filaCodInternoValor);
-
-                    numeroDatoAdicional++;
                 }
                 #endregion
 
