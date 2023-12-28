@@ -26,5 +26,7 @@ namespace Domain.Services
         MatriculaDTO GetMatricula(int anio, int periodo, string codAlu, string codRc);
 
         string GetNombresCompletos(string codAlu);
+
+        Response EliminarMatricula(int matAluID, int currentUserId);
     }
 }

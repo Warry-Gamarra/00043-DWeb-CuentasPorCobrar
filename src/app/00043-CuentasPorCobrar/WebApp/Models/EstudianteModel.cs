@@ -173,5 +173,24 @@ namespace WebApp.Models
 
             return result;
         }
+
+        public Response EliminarMatricula(int matAluID, int currentUserId)
+        {
+            Response response;
+
+            try
+            {
+                response = _estudiante.EliminarMatricula(matAluID, currentUserId);
+            }
+            catch (Exception ex)
+            {
+                response = new Response()
+                {
+                    Message = ex.Message
+                };
+            }
+
+            return response;
+        }
     }
 }

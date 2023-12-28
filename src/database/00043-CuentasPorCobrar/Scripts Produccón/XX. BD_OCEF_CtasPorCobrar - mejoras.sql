@@ -55,6 +55,56 @@ GO
 USE BD_OCEF_CtasPorCobrar
 GO
 
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_EliminarMatricula')
+	DROP PROCEDURE [dbo].[USP_U_EliminarMatricula]
+GO
+
+CREATE PROCEDURE [dbo].[USP_U_EliminarMatricula]
+@I_MatAluID INT,
+@I_UsuarioMod INT,
+@B_Result BIT OUTPUT,
+@T_Message NVARCHAR(4000) OUTPUT
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	DECLARE @D_FecMod DATETIME = GETDATE();
+
+	BEGIN TRAN
+	BEGIN TRY
+		UPDATE dbo.TC_MatriculaCurso SET
+			B_Habilitado = 0,
+			B_Eliminado = 1,
+			I_UsuMod = @I_UsuarioMod,
+			D_FecMod = @D_FecMod
+		WHERE I_MatAluID = @I_MatAluID AND B_Habilitado = 1 AND B_Eliminado = 0;
+
+		UPDATE dbo.TC_MatriculaAlumno SET 
+			B_Habilitado = 0, 
+			B_Eliminado = 1,
+			I_UsuarioMod = @I_UsuarioMod,
+			D_FecMod = @D_FecMod
+		WHERE I_MatAluID = @I_MatAluID AND B_Habilitado = 1 AND B_Eliminado = 0;
+
+		COMMIT TRAN
+		SET @B_Result = 1;
+		SET @T_Message = 'Eliminación correcta.';
+	END TRY
+	BEGIN CATCH
+		ROLLBACK TRAN
+		SET @B_Result = 0;
+		SET @T_Message = ERROR_MESSAGE();
+	END CATCH
+END
+GO
+
+
+
+
+
+
+
+
 
 --Actualización de la tabla para la DEVOLUCIÓN DE DINERO
 ALTER TABLE dbo.TR_DevolucionPago DROP CONSTRAINT FK_PagoProcesadoUnfv_DevolucionPago

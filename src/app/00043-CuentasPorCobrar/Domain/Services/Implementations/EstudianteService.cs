@@ -1,4 +1,5 @@
-﻿using Data.Procedures;
+﻿using Data;
+using Data.Procedures;
 using Data.Tables;
 using Data.Types;
 using Data.Views;
@@ -333,6 +334,21 @@ namespace Domain.Services.Implementations
         public string GetNombresCompletos(string codAlu)
         {
             return VW_MatriculaAlumno.GetNombresCompletos(codAlu);
+        }
+
+        public Response EliminarMatricula(int matAluID, int currentUserId)
+        {
+            ResponseData result;
+
+            var sp = new USP_U_EliminarMatricula()
+            {
+                I_MatAluID = matAluID,
+                I_UsuarioMod = currentUserId
+            };
+
+            result = sp.Execute();
+
+            return new Response(result);
         }
     }
 }
