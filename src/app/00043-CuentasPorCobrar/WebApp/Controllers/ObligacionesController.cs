@@ -28,6 +28,7 @@ namespace WebApp.Controllers
         IReporteServiceFacade reporteServiceFacade;
         SelectModel selectModels;
         PagosModel pagosModel;
+        EstudianteModel estudianteModel;
 
         public ObligacionesController()
         {
@@ -42,6 +43,7 @@ namespace WebApp.Controllers
 
             selectModels = new SelectModel();
             pagosModel = new PagosModel();
+            estudianteModel = new EstudianteModel();
         }
 
         public ActionResult Generar(int? anio, int? periodo, string dependencia, bool? esIngresante, bool? sinObligaciones, bool soloAplicarExtmp = false, TipoEstudio tipoEstudio = TipoEstudio.Pregrado)
@@ -377,6 +379,15 @@ namespace WebApp.Controllers
             }
 
             return Json(response, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public JsonResult EliminarMatricula(int id)
+        {
+            var result = estudianteModel.EliminarMatricula(id, WebSecurity.CurrentUserId);
+
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
     }
 }

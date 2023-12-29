@@ -119,6 +119,8 @@
                                 columns.Add(c => c.T_MontoOblig).Titled("Monto").Filterable(true).Css("text-right");
                                 columns.Add(c => c.T_FecVencto).Titled("Fec. Venc.").Filterable(true).Css("text-right");
                                 columns.Add(c => c.T_Pagado).Titled("Estado").Filterable(true).Css("text-center");
+                                columns.Add().SetWidth(200).Css("text-center").Encoded(false).Sanitized(false)
+                                    .RenderValueAs(model => model.I_ObligacionAluID == 0 ? "<a href=\"\" class=\"btn-eliminar-obl\" data-id=\"" + model.I_MatAluID.ToString() + "\"><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></a>" : "");
                             }).WithPaging(12).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
                         </div>
                     </div>
@@ -749,6 +751,53 @@
             } else {
                 MostrarMensajeObligacionesPorAlumno("El Código de Alumno es obligatorio.", MESSAGE_TYPE.WARNING);
             }
+        });
+
+        $(document).on('click', '.btn-eliminar-obl', function (event) {
+            event.preventDefault();
+
+            let id = $(this).data("id");
+            let token = $('input[name="__RequestVerificationToken"]').val();
+
+            Swal.fire({
+                title: '',
+                text: '¿Desea eliminar este registro?',
+                icon: MESSAGE_TYPE.WARNING,
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si, continuar.',
+                cancelButtonText: 'No, cancelar.'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '@Url.Action("EliminarMatricula", "Obligaciones")/' + id,
+                        type: "POST",
+                        data: { __RequestVerificationToken: token },
+                        beforeSend: function () {
+                        },
+                        success: function (data) {
+                            if (data.Value) {
+                                Swal.fire({
+                                    title: '',
+                                    html: data.Message,
+                                    icon: MESSAGE_TYPE.SUCCESS,
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'Ok'
+                                }).then((result) => {
+                                    if (result.isConfirmed || result.dismiss === Swal.DismissReason.esc) {
+                                        location.reload();
+                                    }
+                                });
+                            } else {
+                                MostrarMensajeObligacionesPorAlumno(data.Message, MESSAGE_TYPE.ERROR);
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                        }
+                    });
+                }
+            });
         });
     </script>
 }

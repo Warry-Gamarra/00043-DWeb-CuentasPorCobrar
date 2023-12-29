@@ -340,13 +340,32 @@ namespace Domain.Services.Implementations
         {
             ResponseData result;
 
-            var sp = new USP_U_EliminarMatricula()
+            try
             {
-                I_MatAluID = matAluID,
-                I_UsuarioMod = currentUserId
-            };
+                if (!TR_ObligacionAluCab.ExisteObligacionPorMatricula(matAluID))
+                {
 
-            result = sp.Execute();
+                    var sp = new USP_U_EliminarMatricula()
+                    {
+                        I_MatAluID = matAluID,
+                        I_UsuarioMod = currentUserId
+                    };
+
+                    result = sp.Execute();
+                }
+                else
+                {
+                    result = new ResponseData() {
+                        Message = "El registro tiene obligaciones generadas."
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                result = new ResponseData() {
+                    Message = ex.Message
+                };
+            }
 
             return new Response(result);
         }

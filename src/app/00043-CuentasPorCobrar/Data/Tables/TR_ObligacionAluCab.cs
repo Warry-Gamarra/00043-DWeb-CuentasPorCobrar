@@ -60,5 +60,28 @@ namespace Data.Tables
             return result;
         }
 
+        public static bool ExisteObligacionPorMatricula(int I_MatAluID)
+        {
+            bool existe = false;
+
+            try
+            {
+                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
+                {
+                    var s_command = "SELECT c.* FROM TR_ObligacionAluCab c WHERE c.I_MatAluID = @I_MatAluID AND c.B_Habilitado = 1 AND c.B_Eliminado = 0;";
+
+                    var result = _dbConnection.Query<TR_ObligacionAluCab>(s_command, new { I_MatAluID = I_MatAluID },
+                        commandType: CommandType.Text);
+
+                    existe = result != null && result.Count() > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return existe;
+        }
     }
 }
