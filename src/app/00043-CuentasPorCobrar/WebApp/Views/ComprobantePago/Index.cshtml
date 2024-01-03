@@ -221,22 +221,23 @@
                             $('#modalEspera').modal('show');
                         },
                         success: function (data) {
-                            if (data !== null) {
-                                let icon = MESSAGE_TYPE.ERROR;
+                            let icon = MESSAGE_TYPE.ERROR;
 
-                                if (data.Value) {
-                                    icon = MESSAGE_TYPE.SUCCESS;
-                                }
-
-                                Swal.fire({
-                                    title: '',
-                                    text: data.Message,
-                                    icon: icon,
-                                    timer: 6000
-                                }).then((result) => {
-                                    $('#modalEspera').modal('hide');
-                                });
+                            if (data.Value) {
+                                icon = MESSAGE_TYPE.SUCCESS;
                             }
+
+                            Swal.fire({
+                                title: '',
+                                html: data.Message,
+                                icon: icon,
+                                confirmButtonColor: '#3085d6',
+                                confirmButtonText: 'Ok'
+                            }).then((result) => {
+                                if (result.isConfirmed || result.dismiss === Swal.DismissReason.esc) {
+                                    location.reload();
+                                }
+                            });
                         },
                         error: function (xhr, ajaxOptions, thrownError) {
                             var jsonException = JSON.parse(xhr.responseText);
