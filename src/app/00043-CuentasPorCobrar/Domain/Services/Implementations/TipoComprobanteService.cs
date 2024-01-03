@@ -35,30 +35,60 @@ namespace Domain.Services.Implementations
             {
                 case SaveOption.Insert:
 
-                    var grabar = new USP_I_GrabarTipoComprobante()
+                    if (!ListarTiposComprobante(false).Any(x => x.tipoComprobanteCod == entity.tipoComprobanteCod))
                     {
-                        C_TipoComprobanteCod = entity.tipoComprobanteCod,
-                        T_TipoComprobanteDesc = entity.tipoComprobanteDesc,
-                        T_Inicial = entity.inicial,
-                        UserID = userID
-                    };
+                        var grabar = new USP_I_GrabarTipoComprobante()
+                        {
+                            C_TipoComprobanteCod = entity.tipoComprobanteCod,
+                            T_TipoComprobanteDesc = entity.tipoComprobanteDesc,
+                            T_Inicial = entity.inicial,
+                            UserID = userID
+                        };
 
-                    result = grabar.Execute();
+                        result = grabar.Execute();
+                    }
+                    else
+                    {
+                        result = new ResponseData()
+                        {
+                            Message = String.Format("El código \"{0}\" ya se encuentra registrado en el sistema.", entity.tipoComprobanteCod)
+                        };
+                    }
 
                     break;
 
                 case SaveOption.Update:
 
-                    var actualizar = new USP_U_ActualizarTipoComprobante()
+                    if (entity.tipoComprobanteID.HasValue)
                     {
-                        I_TipoComprobanteID = entity.tipoComprobanteID.Value,
-                        C_TipoComprobanteCod = entity.tipoComprobanteCod,
-                        T_TipoComprobanteDesc = entity.tipoComprobanteDesc,
-                        T_Inicial = entity.inicial,
-                        UserID = userID
-                    };
+                        if (!ListarTiposComprobante(false).Any(x => x.tipoComprobanteID != entity.tipoComprobanteID && x.tipoComprobanteCod == entity.tipoComprobanteCod))
+                        {
+                            var actualizar = new USP_U_ActualizarTipoComprobante()
+                            {
+                                I_TipoComprobanteID = entity.tipoComprobanteID.Value,
+                                C_TipoComprobanteCod = entity.tipoComprobanteCod,
+                                T_TipoComprobanteDesc = entity.tipoComprobanteDesc,
+                                T_Inicial = entity.inicial,
+                                UserID = userID
+                            };
 
-                    result = actualizar.Execute();
+                            result = actualizar.Execute();
+                        }
+                        else
+                        {
+                            result = new ResponseData()
+                            {
+                                Message = String.Format("El código \"{0}\" ya se encuentra registrado en el sistema.", entity.tipoComprobanteCod)
+                            };
+                        }
+                    }
+                    else
+                    {
+                        result = new ResponseData()
+                        {
+                            Message = "Ocurrió un error al obtener los datos. Por favor recargue la página e intente la actualización nuevamente."
+                        };
+                    }
 
                     break;
 
@@ -95,13 +125,23 @@ namespace Domain.Services.Implementations
         {
             ResponseData result;
 
-            var sp = new USP_D_EliminarTipoComprobante()
+            if (!TR_Comprobante.ExistByTipo(tipoComprobanteID))
             {
-                I_TipoComprobanteID = tipoComprobanteID
-            };
+                var sp = new USP_D_EliminarTipoComprobante()
+                {
+                    I_TipoComprobanteID = tipoComprobanteID
+                };
 
-            result = sp.Execute();
-
+                result = sp.Execute();
+            }
+            else
+            {
+                result = new ResponseData()
+                {
+                    Message = "No se puede eliminar el registro seleccionado. Ya se generaron comprobantes con este tipo."
+                };
+            }
+            
             return new Response(result);
         }
     }

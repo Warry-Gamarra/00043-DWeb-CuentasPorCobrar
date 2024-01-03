@@ -137,13 +137,23 @@ namespace Domain.Services.Implementations
         {
             ResponseData result;
 
-            var sp = new USP_D_EliminarSerieComprobante()
+            if (!TR_Comprobante.ExistBySerie(serieID))
             {
-                I_SerieID = serieID
-            };
+                var sp = new USP_D_EliminarSerieComprobante()
+                {
+                    I_SerieID = serieID
+                };
 
-            result = sp.Execute();
-
+                result = sp.Execute();
+            }
+            else
+            {
+                result = new ResponseData()
+                {
+                    Message = "No se puede eliminar el registro seleccionado. Ya se generaron comprobantes con esta serie."
+                };
+            }
+            
             return new Response(result);
         }
     }

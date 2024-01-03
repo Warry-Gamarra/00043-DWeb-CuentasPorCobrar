@@ -122,6 +122,7 @@
     <Compile Include="Tables\TC_SerieComprobante.cs" />
     <Compile Include="Tables\TC_TipoComprobante.cs" />
     <Compile Include="Tables\TI_CtaDepo_Servicio.cs" />
+    <Compile Include="Tables\TR_Comprobante.cs" />
     <Compile Include="Views\VW_Servicio_X_CuentaDeposito.cs" />
     <Compile Include="Tables\TI_ConceptoCategoriaPago.cs" />
     <Compile Include="Tables\TI_TasaUnfv.cs" />
