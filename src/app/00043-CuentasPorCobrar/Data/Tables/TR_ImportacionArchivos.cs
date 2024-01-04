@@ -32,12 +32,12 @@ namespace Data.Tables
 
             try
             {
-                string s_command = @"SELECT	i.I_ImportacionID, i.T_NomArchivo, i.T_UrlArchivo, i.I_CantFilas, i.I_EntidadID, i.I_TipoArchivo, 
+                string s_command = @"SELECT TOP 1000 i.I_ImportacionID, i.T_NomArchivo, i.T_UrlArchivo, i.I_CantFilas, i.I_EntidadID, i.I_TipoArchivo, 
                     i.I_UsuarioCre, i.D_FecCre, i.I_UsuarioMod, i.D_FecMod, u.UserName, e.T_EntidadDesc
                     FROM	dbo.TR_ImportacionArchivo i
                     LEFT JOIN dbo.TC_Usuario U ON I.I_UsuarioCre = U.UserId
                     INNER JOIN dbo.TC_EntidadFinanciera e ON e.I_EntidadFinanID = i.I_EntidadID
-                    WHERE i.B_Eliminado = 0";
+                    WHERE i.B_Eliminado = 0 ORDER BY i.D_FecCre DESC;";
 
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {

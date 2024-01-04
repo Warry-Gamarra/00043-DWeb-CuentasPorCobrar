@@ -295,7 +295,7 @@ namespace Domain.Services.Implementations
                     string filaUnmdItem = String.Format("B;UnmdItem;{0};NIU", fila);
                     writer.WriteLine(filaUnmdItem);
 
-                    string filaNmbItem = String.Format("B;NmbItem;{0};{1}", fila, item.concepto);
+                    string filaNmbItem = String.Format("B;NmbItem;{0};{1}", fila, String.IsNullOrEmpty(item.concepto) ? "-" : item.concepto);
                     writer.WriteLine(filaNmbItem);
 
                     montoPagadoItem = (item.montoPagado + item.interesMoratorio);
