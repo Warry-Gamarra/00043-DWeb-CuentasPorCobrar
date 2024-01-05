@@ -62,6 +62,9 @@ namespace Domain.Services.Implementations
                     numeroComprobante = x.I_NumeroComprobante,
                     fechaEmision = x.D_FechaEmision,
                     esGravado = x.B_EsGravado,
+                    ruc = x.T_Ruc,
+                    direccion = x.T_Direccion,
+                    tipoComprobanteID = x.I_TipoComprobanteID,
                     tipoComprobanteCod = x.C_TipoComprobanteCod,
                     tipoComprobanteDesc = x.T_TipoComprobanteDesc,
                     inicial = x.T_Inicial,
@@ -96,6 +99,9 @@ namespace Domain.Services.Implementations
                     numeroComprobante = x.I_NumeroComprobante,
                     fechaEmision = x.D_FechaEmision,
                     esGravado = x.B_EsGravado,
+                    ruc = x.T_Ruc,
+                    direccion = x.T_Direccion,
+                    tipoComprobanteID = x.I_TipoComprobanteID,
                     tipoComprobanteCod = x.C_TipoComprobanteCod,
                     tipoComprobanteDesc = x.T_TipoComprobanteDesc,
                     inicial = x.T_Inicial,
@@ -108,7 +114,7 @@ namespace Domain.Services.Implementations
             return result;
         }
 
-        public Response GenerarNumeroComprobante(int[] pagosBancoID, int tipoComprobanteID, int serieID, bool esGravado, int currentUserID)
+        public Response GenerarNumeroComprobante(int[] pagosBancoID, int tipoComprobanteID, int serieID, bool esGravado, string ruc, string direccion, int currentUserID)
         {
             ResponseData result;
 
@@ -117,6 +123,8 @@ namespace Domain.Services.Implementations
                 I_TipoComprobanteID = tipoComprobanteID,
                 I_SerieID = serieID,
                 B_EsGravado = esGravado,
+                T_Ruc = ruc,
+                T_Direccion = direccion,
                 UserID = currentUserID
             };
 
@@ -218,18 +226,34 @@ namespace Domain.Services.Implementations
                 #endregion
 
                 #region RECEPTOR
-                string filaTipoRutReceptor = "A;TipoRutReceptor;;-";
+                string tipoRutReceptor, rutReceptor, dirReceptor;
+
+                if (comprobantePagoDTO.First().tipoComprobanteCod == CodigoTipoComprobante.FACTURA)
+                {
+                    tipoRutReceptor = "6";
+                    rutReceptor = comprobantePagoDTO.First().ruc;
+                    dirReceptor = comprobantePagoDTO.First().direccion;
+                }
+                else
+                {
+                    tipoRutReceptor = "-";
+                    rutReceptor = comprobantePagoDTO.First().codDepositante == null || comprobantePagoDTO.First().codDepositante.Length == 0 ? "-" : comprobantePagoDTO.First().codDepositante;
+                    dirReceptor = String.IsNullOrEmpty(comprobantePagoDTO.First().direccion) ? "-" : comprobantePagoDTO.First().direccion;
+                }
+
+                string filaTipoRutReceptor = String.Format("A;TipoRutReceptor;;{0}", tipoRutReceptor);
                 writer.WriteLine(filaTipoRutReceptor);
 
-                string codDepositante = comprobantePagoDTO.First().codDepositante == null || comprobantePagoDTO.First().codDepositante.Length == 0 ? "-" : comprobantePagoDTO.First().codDepositante;
-
-                string filaRutReceptor = String.Format("A;RUTRecep;;{0}", codDepositante);
+                string filaRutReceptor = String.Format("A;RUTRecep;;{0}", rutReceptor);
                 writer.WriteLine(filaRutReceptor);
 
                 string nomDepositante = comprobantePagoDTO.First().nomDepositante == null || comprobantePagoDTO.First().nomDepositante.Length == 0 ? "-" : comprobantePagoDTO.First().nomDepositante;
 
                 string filaRazonSocialReceptor = String.Format("A;RznSocRecep;;{0}", nomDepositante);
                 writer.WriteLine(filaRazonSocialReceptor);
+
+                string filaDirReceptor = String.Format("A;DirRecep;;{0}", dirReceptor);
+                writer.WriteLine(filaDirReceptor);
                 #endregion
 
                 #region TOTALES
@@ -439,14 +463,14 @@ namespace Domain.Services.Implementations
 
                 response = new Response() {
                     Value = true,
-                    Message = "Generación de número de comprobante y archivo TXT exitoso."
+                    Message = "Generación de archivo TXT exitoso."
                 };
             }
             catch(DirectoryNotFoundException)
             {
                 response = new Response()
                 {
-                    Message = "Se generó un número de comprobante, pero ocurrió un error al generar el TXT. Error: [No se encuentra el directorio para almacenar el archivo.]"
+                    Message = "Ocurrió un error al generar el TXT. Error: [No se encuentra el directorio para almacenar el archivo.]"
                 };
 
                 this.ActualizarEstadoComprobante(comprobantePagoDTO.First().numeroSerie.Value, comprobantePagoDTO.First().numeroComprobante.Value, EstadoComprobante.NOFILE, currentUserID);
@@ -455,7 +479,7 @@ namespace Domain.Services.Implementations
             {
                 response = new Response()
                 {
-                    Message = "Se generó un número de comprobante, pero ocurrió un error al generar el TXT. Error: [No se tienen permisos para acceder al directorio.]"
+                    Message = "Ocurrió un error al generar el TXT. Error: [No se tienen permisos para acceder al directorio.]"
                 };
 
                 this.ActualizarEstadoComprobante(comprobantePagoDTO.First().numeroSerie.Value, comprobantePagoDTO.First().numeroComprobante.Value, EstadoComprobante.NOFILE, currentUserID);
@@ -463,7 +487,7 @@ namespace Domain.Services.Implementations
             catch (Exception ex)
             {
                 response = new Response() { 
-                    Message = "Se generó un número de comprobante, pero ocurrió un error al generar el TXT. Error: [" + ex.Message + "]"
+                    Message = "Ocurrió un error al generar el TXT. Error: [" + ex.Message + "]"
                 };
 
                 this.ActualizarEstadoComprobante(comprobantePagoDTO.First().numeroSerie.Value, comprobantePagoDTO.First().numeroComprobante.Value, EstadoComprobante.NOFILE, currentUserID);

@@ -55,8 +55,98 @@ GO
 USE BD_OCEF_CtasPorCobrar
 GO
 
+ALTER TABLE dbo.TR_Comprobante ADD T_Direccion VARCHAR(250), T_Ruc VARCHAR(250)
+GO
+
 INSERT dbo.TC_EstadoComprobante(C_EstadoComprobanteCod, T_EstadoComprobanteDesc, B_Habilitado, I_UsuarioCre, D_FecCre) VALUES('NOF', 'Sin archivo', 1, 1, GETDATE())
 GO
+
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_GrabarComprobantePago')
+	DROP PROCEDURE [dbo].[USP_I_GrabarComprobantePago]
+GO
+
+CREATE PROCEDURE [dbo].[USP_I_GrabarComprobantePago]
+@PagoBancoIDs [dbo].[type_Ids] READONLY,
+@I_TipoComprobanteID INT,
+@I_SerieID INT,
+@B_EsGravado BIT,
+@T_Ruc VARCHAR(250),
+@T_Direccion VARCHAR(250),
+@UserID INT,
+@B_Result BIT OUTPUT,
+@T_Message NVARCHAR(4000) OUTPUT
+AS
+BEGIN  
+	SET NOCOUNT ON;
+	
+	DECLARE @I_ComprobanteID INT,
+			@I_NuevoNumeroComprobante INT,
+			@D_FechaAccion DATETIME,
+			@D_FechaEmision DATETIME,
+			@I_EstadoComprobanteID INT,
+			--VALIDACIONES
+			@I_FinNumeroComprobante INT,
+			@D_FecPago DATETIME,
+			@I_DiasPermitidos INT;
+
+	SET @I_NuevoNumeroComprobante = (SELECT ISNULL(MAX(c.I_NumeroComprobante), 0) FROM dbo.TR_Comprobante c WHERE c.I_SerieID = @I_SerieID) + 1;
+
+	SET @D_FecPago = (SELECT TOP 1 b.D_FecPago FROM dbo.TR_PagoBanco b WHERE b.I_PagoBancoID IN (SELECT i.ID FROM @PagoBancoIDs i))
+
+	SELECT @I_FinNumeroComprobante = s.I_FinNumeroComprobante, @I_DiasPermitidos = s.I_DiasAnterioresPermitido 
+	FROM dbo.TC_SerieComprobante s WHERE s.I_SerieID = @I_SerieID;
+
+	IF (@I_NuevoNumeroComprobante <= @I_FinNumeroComprobante) BEGIN
+		IF (DATEDIFF(DAY, @D_FecPago, GETDATE()) <= @I_DiasPermitidos) BEGIN
+
+			SET @I_EstadoComprobanteID = (SELECT I_EstadoComprobanteID FROM dbo.TC_EstadoComprobante WHERE C_EstadoComprobanteCod = 'PEN');
+		
+			SET @D_FechaAccion = GETDATE();
+		
+			SET @D_FechaEmision = GETDATE();
+
+			BEGIN TRAN
+			BEGIN TRY
+				INSERT dbo.TR_Comprobante(I_TipoComprobanteID, I_SerieID, I_NumeroComprobante, B_EsGravado, D_FechaEmision, I_EstadoComprobanteID, I_UsuarioCre, D_FecCre,
+					T_Ruc, T_Direccion)
+				VALUES(@I_TipoComprobanteID, @I_SerieID, @I_NuevoNumeroComprobante, @B_EsGravado, @D_FechaEmision, @I_EstadoComprobanteID, @UserID, @D_FechaAccion,
+					@T_Ruc, @T_Direccion);
+
+				SET @I_ComprobanteID = SCOPE_IDENTITY();
+
+				UPDATE dbo.TR_Comprobante_PagoBanco SET 
+					B_Habilitado = 0,
+					I_UsuarioMod = @UserID,
+					D_FecMod = @D_FechaAccion
+				WHERE I_PagoBancoID IN (SELECT ID FROM @PagoBancoIDs) AND B_Habilitado = 1;
+
+				INSERT dbo.TR_Comprobante_PagoBanco(I_ComprobanteID, I_PagoBancoID, B_Habilitado, I_UsuarioCre, D_FecCre)
+				SELECT @I_ComprobanteID, ID, 1, @UserID, @D_FechaAccion FROM @PagoBancoIDs;
+
+				COMMIT TRAN
+				SET @B_Result = 1;
+				SET @T_Message = 'Generación exitosa del número de comprobante "' + CAST(@I_NuevoNumeroComprobante AS VARCHAR(20)) + '".';
+			END TRY
+			BEGIN CATCH
+				ROLLBACK TRAN
+				SET @B_Result = 0;
+				SET @T_Message = ERROR_MESSAGE();
+			END CATCH
+
+		END ELSE BEGIN
+			SET @B_Result = 0;
+			SET @T_Message = 'Se excedió la cantidad de días de antigüedad (' + CAST(@I_DiasPermitidos AS VARCHAR) + ') del pago para generar el número de comprobante.';
+		END
+	END ELSE BEGIN
+		SET @B_Result = 0;
+		SET @T_Message = 'Se excedió el valor permitido (' + CAST(@I_FinNumeroComprobante AS VARCHAR(100)) + ') para el número de comprobante.';
+	END
+END
+GO
+
+
 
 IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarEstadoComprobantePago')
 	DROP PROCEDURE [dbo].[USP_U_ActualizarEstadoComprobantePago]
@@ -176,6 +266,9 @@ BEGIN
 		com.I_NumeroComprobante,
 		com.D_FechaEmision,
 		com.B_EsGravado,
+		com.T_Ruc,
+		com.T_Direccion,
+		tipCom.I_TipoComprobanteID,
 		tipCom.C_TipoComprobanteCod,
 		tipCom.T_TipoComprobanteDesc,
 		tipCom.T_Inicial,
@@ -270,6 +363,9 @@ BEGIN
 		com.I_NumeroComprobante,
 		com.D_FechaEmision,
 		com.B_EsGravado,
+		com.T_Ruc,
+		com.T_Direccion,
+		tipCom.I_TipoComprobanteID,
 		tipCom.C_TipoComprobanteCod,
 		tipCom.T_TipoComprobanteDesc,
 		tipCom.T_Inicial,

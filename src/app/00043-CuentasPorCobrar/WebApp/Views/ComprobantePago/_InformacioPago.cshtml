@@ -41,7 +41,10 @@
         <dt class="col-sm-4 mb-3">Tip. Comprobante</dt>
         @if (tieneComprobante)
         {
-            <dd class="col-sm-8">@Model.First().tipoComprobanteDesc</dd>
+            <dd class="col-sm-8">
+                @Model.First().tipoComprobanteDesc
+                <input type="hidden" value="@Model.First().tipoComprobanteID.Value" id="hdnTipoComprobante" />
+            </dd>
         }
         else
         {
@@ -79,12 +82,36 @@
 
         @if (tieneComprobante)
         {
+            if (Model.First().tipoComprobanteID.Value == 1)
+            { 
+                <dt class="col-sm-4 mb-3">RUC Receptor</dt>
+                <dd class="col-sm-8">@Model.First().ruc</dd>
+
+                <dt class="col-sm-4 mb-3">Dirección</dt>
+                <dd class="col-sm-8">@Model.First().direccion</dd>
+            }
+        }
+        else
+        {
+            <dt class="col-sm-4 mb-3" id="lblRuc">RUC Receptor</dt>
+            <dd class="col-sm-8" id="ddRuc">
+                <input type="text" name="txtRuc" id="txtRuc" class="form-control" />
+            </dd>
+
+            <dt class="col-sm-4 mb-3" id="lblDireccion">Dirección</dt>
+            <dd class="col-sm-8" id="ddDireccion">
+                <input type="text" name="txtDireccion" id="txtDireccion" class="form-control" />
+            </dd>
+        }
+
+        @if (tieneComprobante)
+        {
             <dt class="col-sm-4 mb-3">Estado</dt>
             <dd class="col-sm-8 @Model.First().textColorEstado">@Model.First().estadoComprobanteDesc</dd>
         }
     </dl>
 
-    @if (Model.First().estadoComprobanteCod == Domain.Helpers.EstadoComprobante.ERROR)
+    @if (tieneComprobante && Model.First().estadoComprobanteCod == Domain.Helpers.EstadoComprobante.ERROR)
     {
         <hr style="border-block-style: solid;" />
         <dl class="row">
@@ -104,6 +131,16 @@
                     <option value="True">Sí</option>
                     <option value="False">No</option>
                 </select>
+            </dd>
+
+            <dt class="col-sm-4 mb-3" id="lblRuc">RUC Receptor</dt>
+            <dd class="col-sm-8" id="ddRuc">
+                <input type="text" name="txtRuc" id="txtRuc" class="form-control" />
+            </dd>
+
+            <dt class="col-sm-4 mb-3" id="lblDireccion">Dirección</dt>
+            <dd class="col-sm-8" id="ddDireccion">
+                <input type="text" name="txtDireccion" id="txtDireccion" class="form-control" />
             </dd>
         </dl>
     }
@@ -161,47 +198,70 @@
 
 <script type="text/javascript">
     $(document).on('click', '#div_msg_comprobante #btnGenerar', function (e) {
-        let parametros = {
-            pagoBancoId: @pagoBancoID,
-            tipoComprobanteID: $('#frmGenerarComprobante #cmbTipoComprobante').val(),
-            serieID: $('#frmGenerarComprobante #cmbSerie').val(),
-            esGravado: $('#frmGenerarComprobante #cmbEsGravado').val(),
-            esNuevoRegistro: $('#hdnEsNuevaGeneracion').val()
-        };
+        let continuarRegistro = true;
+        let rucValue = $('#txtRuc').val().trim();
+        let regex = /^[0-9]+$/;
 
-        $.ajax({
-            type: 'POST',
-            url: '@Url.Action("GenerarNumeroComprobante", "ComprobantePago")',
-            data: parametros,
-            dataType: 'json',
-            beforeSend: function () {
-                $('#div_msg_comprobante #loading').css('display', 'block');
-                $('#div_msg_comprobante #loading h6').html('Generando número de comprobante...');
-            },
-            success: function (data) {
-                if (data !== null) {
-                    let icon = MESSAGE_TYPE.ERROR;
-
-                    if (data.Value) {
-                        icon = MESSAGE_TYPE.SUCCESS;
-                    }
-
-                    Swal.fire({
-                        title: '',
-                        text: data.Message,
-                        icon: icon,
-                        timer: 6000
-                    });
-                }
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-                var jsonException = JSON.parse(xhr.responseText);
-            },
-            complete: function () {
-                $('#div_msg_comprobante #loading').css('display', 'none');
-                $('#div_msg_comprobante #loading h6').html('');
+        if ($('#frmGenerarComprobante #cmbTipoComprobante').val() == TIPO_COMPROBANTE.FACTURA) {
+            if (rucValue.length !== 11) {
+                continuarRegistro = false;
+            } else if (!regex.test(rucValue)) {
+                continuarRegistro = false;
             }
-        });
+        }
+
+        if (continuarRegistro) {
+            let parametros = {
+                pagoBancoId: @pagoBancoID,
+                tipoComprobanteID: $('#frmGenerarComprobante #cmbTipoComprobante').val(),
+                serieID: $('#frmGenerarComprobante #cmbSerie').val(),
+                esGravado: $('#frmGenerarComprobante #cmbEsGravado').val(),
+                esNuevoRegistro: $('#hdnEsNuevaGeneracion').val(),
+                ruc: $('#frmGenerarComprobante #txtRuc').val(),
+                direccion: $('#frmGenerarComprobante #txtDireccion').val()
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GenerarNumeroComprobante", "ComprobantePago")',
+                data: parametros,
+                dataType: 'json',
+                beforeSend: function () {
+                    $('#div_msg_comprobante #loading').css('display', 'block');
+                    $('#div_msg_comprobante #loading h6').html('Generando número de comprobante...');
+                },
+                success: function (data) {
+                    if (data !== null) {
+                        let icon = MESSAGE_TYPE.ERROR;
+
+                        if (data.Value) {
+                            icon = MESSAGE_TYPE.SUCCESS;
+                        }
+
+                        Swal.fire({
+                            title: '',
+                            text: data.Message,
+                            icon: icon,
+                            timer: 6000
+                        });
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    var jsonException = JSON.parse(xhr.responseText);
+                },
+                complete: function () {
+                    $('#div_msg_comprobante #loading').css('display', 'none');
+                    $('#div_msg_comprobante #loading h6').html('');
+                }
+            });
+        } else {
+            Swal.fire({
+                title: '',
+                text: "El campo RUC Receptor es obligatorio y debe estar conformado por 11 dígitos.",
+                icon: MESSAGE_TYPE.WARNING,
+                timer: 6000
+            });
+        }
     });
 
     $(document).on('click', '#div_msg_comprobante #btnGenerarSoloArchivo', function (e) {
@@ -243,4 +303,28 @@
             }
         });
     });
+
+    $(document).on('change', '#frmGenerarComprobante #cmbTipoComprobante', function (e) {
+        mostrarCamposFactura();
+    });
+
+    mostrarCamposFactura();
+
+    function mostrarCamposFactura() {
+        let idTipoComprobante = $('#frmGenerarComprobante #cmbTipoComprobante').val();
+
+        let display = 'none';
+
+        if (idTipoComprobante == TIPO_COMPROBANTE.FACTURA) {
+            display = 'block';
+        }
+
+        $('#frmGenerarComprobante #lblRuc').css('display', display);
+        $('#frmGenerarComprobante #ddRuc').css('display', display);
+        $('#frmGenerarComprobante #lblDireccion').css('display', display);
+        $('#frmGenerarComprobante #ddDireccion').css('display', display);
+
+        $('#frmGenerarComprobante #txtRuc').val("");
+        $('#frmGenerarComprobante #txtDireccion').val("");
+    }
 </script>

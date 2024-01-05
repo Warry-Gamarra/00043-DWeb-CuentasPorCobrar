@@ -81,13 +81,13 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
-        public JsonResult GenerarNumeroComprobante(int pagoBancoId, int tipoComprobanteID, int serieID, bool esGravado, bool esNuevoRegistro)
+        public JsonResult GenerarNumeroComprobante(int pagoBancoId, int tipoComprobanteID, int serieID, bool esGravado, bool esNuevoRegistro, string ruc, string direccion)
         {
             var model = _comprobantePagoServiceFacade.ObtenerComprobantePagoBanco(pagoBancoId);
 
             int[] pagosBancoId = model.Select(x => x.pagoBancoID).ToArray();
 
-            var resultado = _comprobantePagoServiceFacade.GenerarNumeroComprobante(pagosBancoId, tipoComprobanteID, serieID, esGravado, esNuevoRegistro, WebSecurity.CurrentUserId);
+            var resultado = _comprobantePagoServiceFacade.GenerarNumeroComprobante(pagosBancoId, tipoComprobanteID, serieID, esGravado, esNuevoRegistro, ruc, direccion, WebSecurity.CurrentUserId);
 
             var jsonResponse = Json(resultado, JsonRequestBehavior.AllowGet);
 
@@ -113,7 +113,9 @@ namespace WebApp.Controllers
         {
             ViewBag.Title = "Generar Comprobantes de Pago";
 
-            ViewBag.ComboTipoComprobante = new SelectList(_tipoComprobanteServiceFacade.ListarTiposComprobante(true), "Value", "TextDisplay");
+            var listaTipoComprobante = _tipoComprobanteServiceFacade.ListarTiposComprobante(true, true);
+
+            ViewBag.ComboTipoComprobante = new SelectList(listaTipoComprobante, "Value", "TextDisplay");
 
             ViewBag.ComboSerieComprobante = new SelectList(_serieComprobanteServiceFacade.ListarSeriesComprobante(true), "Value", "TextDisplay");
 

@@ -9,7 +9,7 @@ namespace WebApp.Models.Facades
 {
     public interface ITipoComprobanteServiceFacade
     {
-        IEnumerable<SelectViewModel> ListarTiposComprobante(bool soloHabilitados);
+        IEnumerable<SelectViewModel> ListarTiposComprobante(bool soloHabilitados, bool excluirFactura = false);
 
         IEnumerable<TipoComprobanteModel> ListarTiposComprobante();
 

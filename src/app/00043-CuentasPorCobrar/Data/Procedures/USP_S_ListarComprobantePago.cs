@@ -53,6 +53,12 @@ namespace Data.Procedures
 
         public bool? B_EsGravado { get; set; }
 
+        public string T_Ruc { get; set; }
+
+        public string T_Direccion { get; set; }
+
+        public int? I_TipoComprobanteID { get; set; }
+
         public string C_TipoComprobanteCod { get; set; }
 
         public string T_TipoComprobanteDesc { get; set; }

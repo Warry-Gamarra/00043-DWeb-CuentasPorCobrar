@@ -112,5 +112,11 @@ namespace WebApp.Models
         public string concepto { get; set; }
 
         public int cantidad { get; set; }
+
+        public string ruc { get; set; }
+
+        public string direccion { get; set; }
+
+        public int? tipoComprobanteID { get; set; }
     }
 }

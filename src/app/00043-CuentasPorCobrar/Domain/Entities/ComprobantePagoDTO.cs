@@ -49,6 +49,12 @@ namespace Domain.Entities
 
         public bool? esGravado { get; set; }
 
+        public string ruc { get; set; }
+
+        public string direccion { get; set; }
+
+        public int? tipoComprobanteID { get; set; }
+
         public string tipoComprobanteCod { get; set; }
 
         public string tipoComprobanteDesc { get; set; }

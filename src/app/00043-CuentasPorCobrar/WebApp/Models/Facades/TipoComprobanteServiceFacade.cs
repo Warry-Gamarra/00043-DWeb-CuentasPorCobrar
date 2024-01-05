@@ -19,9 +19,14 @@ namespace WebApp.Models.Facades
             _service = new TipoComprobanteService();
         }
 
-        public IEnumerable<SelectViewModel> ListarTiposComprobante(bool soloHabilitados)
+        public IEnumerable<SelectViewModel> ListarTiposComprobante(bool soloHabilitados, bool excluirFactura = false)
         {
             var lista = _service.ListarTiposComprobante(soloHabilitados);
+
+            if (excluirFactura)
+            {
+                lista = lista.Where(x => x.tipoComprobanteCod != CodigoTipoComprobante.FACTURA);
+            }
 
             var result = lista
                 .OrderBy(x => x.tipoComprobanteDesc)
