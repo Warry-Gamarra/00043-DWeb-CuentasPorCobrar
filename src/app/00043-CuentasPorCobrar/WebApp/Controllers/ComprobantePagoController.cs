@@ -94,6 +94,20 @@ namespace WebApp.Controllers
             return jsonResponse;
         }
 
+        [HttpPost]
+        public JsonResult GenerarSoloArchivo(int pagoBancoId)
+        {
+            var model = _comprobantePagoServiceFacade.ObtenerComprobantePagoBanco(pagoBancoId);
+
+            int[] pagosBancoId = model.Select(x => x.pagoBancoID).ToArray();
+
+            var resultado = _comprobantePagoServiceFacade.GenerarSoloArchivo(pagosBancoId, WebSecurity.CurrentUserId);
+
+            var jsonResponse = Json(resultado, JsonRequestBehavior.AllowGet);
+
+            return jsonResponse;
+        }
+
         [HttpGet]
         public ActionResult GeneracionGrupal()
         {
@@ -110,6 +124,16 @@ namespace WebApp.Controllers
         public JsonResult GenerarNumeroComprobanteGrupal(ConsultaComprobantePagoViewModel model, int tipoComprobanteID, int serieID, bool esGravado)
         {
             var resultado = _comprobantePagoServiceFacade.GenerarNumeroComprobante(model, tipoComprobanteID, serieID, esGravado, WebSecurity.CurrentUserId);
+
+            var jsonResponse = Json(resultado, JsonRequestBehavior.AllowGet);
+
+            return jsonResponse;
+        }
+
+        [HttpPost]
+        public JsonResult GeneracionArchivosGrupal(ConsultaComprobantePagoViewModel model)
+        {
+            var resultado = _comprobantePagoServiceFacade.GenerarSoloArchivo(model, WebSecurity.CurrentUserId);
 
             var jsonResponse = Json(resultado, JsonRequestBehavior.AllowGet);
 

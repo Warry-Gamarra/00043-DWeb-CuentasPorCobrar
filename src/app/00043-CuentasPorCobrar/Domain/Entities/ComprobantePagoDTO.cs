@@ -39,6 +39,8 @@ namespace Domain.Entities
 
         public int? comprobanteID { get; set; }
 
+        public int? serieID { get; set; }
+
         public int? numeroSerie { get; set; }
 
         public int? numeroComprobante { get; set; }

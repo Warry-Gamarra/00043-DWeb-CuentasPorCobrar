@@ -43,6 +43,8 @@ namespace Data.Procedures
 
         public int? I_ComprobanteID { get; set; }
 
+        public int? I_SerieID { get; set; }
+
         public int? I_NumeroSerie { get; set; }
 
         public int? I_NumeroComprobante { get; set; }

@@ -46,6 +46,8 @@ namespace WebApp.Models
 
         public int? comprobanteID { get; set; }
 
+        public int? serieID { get; set; }
+
         public int? numeroSerie { get; set; }
 
         public int? numeroComprobante { get; set; }
@@ -87,6 +89,10 @@ namespace WebApp.Models
                 else if (estadoComprobanteCod == EstadoComprobante.PENDIENTE)
                 {
                     return "text-warning";
+                }
+                else if (estadoComprobanteCod == EstadoComprobante.NOFILE)
+                {
+                    return "text-secondary";
                 }
                 else
                 {

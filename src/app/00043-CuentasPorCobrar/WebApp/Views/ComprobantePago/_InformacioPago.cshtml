@@ -142,14 +142,18 @@
     @if (!tieneComprobante)
     {
         <input type="hidden" id="hdnEsNuevaGeneracion" name="hdnEsNuevaGeneracion" value="True" />
-        <button type="button" class="btn btn-primary" id="btnGenerar"><i class="fa fa-file"></i> Generar Número</button>
+        <button type="button" class="btn btn-primary" id="btnGenerar"><i class="fa fa-cog"></i> Generar Número</button>
     }
     else
     {
         if (Model.First().estadoComprobanteCod == Domain.Helpers.EstadoComprobante.ERROR)
         {
             <input type="hidden" id="hdnEsNuevaGeneracion" name="hdnEsNuevaGeneracion" value="False" />
-            <button type="button" class="btn btn-primary" id="btnGenerar"><i class="fa fa-file"></i> Generar Otro Número</button>
+            <button type="button" class="btn btn-primary" id="btnGenerar"><i class="fa fa-cog"></i> Generar Otro Número</button>
+        }
+        else if (Model.First().estadoComprobanteCod == Domain.Helpers.EstadoComprobante.NOFILE)
+        {
+            <button type="button" class="btn btn-primary" id="btnGenerarSoloArchivo"><i class="fa fa-file"></i> Generar sólo archivo</button>
         }
     }
     <button type="button" class="btn btn-secondary closeModal"><i class="fa fa-times-circle-o"></i> Cancelar</button>
@@ -173,6 +177,46 @@
             beforeSend: function () {
                 $('#div_msg_comprobante #loading').css('display', 'block');
                 $('#div_msg_comprobante #loading h6').html('Generando número de comprobante...');
+            },
+            success: function (data) {
+                if (data !== null) {
+                    let icon = MESSAGE_TYPE.ERROR;
+
+                    if (data.Value) {
+                        icon = MESSAGE_TYPE.SUCCESS;
+                    }
+
+                    Swal.fire({
+                        title: '',
+                        text: data.Message,
+                        icon: icon,
+                        timer: 6000
+                    });
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                var jsonException = JSON.parse(xhr.responseText);
+            },
+            complete: function () {
+                $('#div_msg_comprobante #loading').css('display', 'none');
+                $('#div_msg_comprobante #loading h6').html('');
+            }
+        });
+    });
+
+    $(document).on('click', '#div_msg_comprobante #btnGenerarSoloArchivo', function (e) {
+        let parametros = {
+            pagoBancoId: @pagoBancoID,
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GenerarSoloArchivo", "ComprobantePago")',
+            data: parametros,
+            dataType: 'json',
+            beforeSend: function () {
+                $('#div_msg_comprobante #loading').css('display', 'block');
+                $('#div_msg_comprobante #loading h6').html('Generando archivo TXT...');
             },
             success: function (data) {
                 if (data !== null) {

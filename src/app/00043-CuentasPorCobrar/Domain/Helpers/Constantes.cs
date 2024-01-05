@@ -89,6 +89,8 @@ namespace Domain.Helpers
         public const string PROCESADO = "PRO";
 
         public const string ERROR = "ERR";
+
+        public const string NOFILE = "NOF";
     }
 
     public static class CodigoTipoComprobante

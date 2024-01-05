@@ -57,6 +57,7 @@ namespace Domain.Services.Implementations
                     condicionPago = x.T_Condicion,
                     tipoPago = x.I_TipoPagoID == 133 ? TipoPago.Obligacion : TipoPago.Tasa,
                     comprobanteID = x.I_ComprobanteID,
+                    serieID = x.I_SerieID,
                     numeroSerie = x.I_NumeroSerie,
                     numeroComprobante = x.I_NumeroComprobante,
                     fechaEmision = x.D_FechaEmision,
@@ -90,6 +91,7 @@ namespace Domain.Services.Implementations
                     condicionPago = x.T_Condicion,
                     tipoPago = x.I_TipoPagoID == 133 ? TipoPago.Obligacion : TipoPago.Tasa,
                     comprobanteID = x.I_ComprobanteID,
+                    serieID = x.I_SerieID,
                     numeroSerie = x.I_NumeroSerie,
                     numeroComprobante = x.I_NumeroComprobante,
                     fechaEmision = x.D_FechaEmision,
@@ -132,15 +134,15 @@ namespace Domain.Services.Implementations
             return new Response(result);
         }
 
-        public Response GenerarTXTDigiFlow(int[] pagosBancoID)
+        public Response GenerarTXTDigiFlow(int[] pagosBancoID, int currentUserID)
         {
             IEnumerable<ComprobantePagoDTO> comprobantePagoDTO;
             Response response;
 
+            comprobantePagoDTO = this.ObtenerComprobantePagoBanco(pagosBancoID[0]);
+
             try
             {
-                comprobantePagoDTO = this.ObtenerComprobantePagoBanco(pagosBancoID[0]);
-
                 var memoryStream = new MemoryStream();
 
                 var writer = new StreamWriter(memoryStream, Encoding.Default);
@@ -409,7 +411,7 @@ namespace Domain.Services.Implementations
                 string filaCuentaBancaria = String.Format("E;TipoAdicSunat;{0};01", numeroDatoAdicional);
                 writer.WriteLine(filaCuentaBancaria);
                 writer.WriteLine(String.Format("E;NmrLineasAdicSunat;{0};{1}", numeroDatoAdicional, numeroDatoAdicional.ToString("D2")));
-                string filaCuentaBancariaValor = String.Format("E;DescripcionAdicsunat;{0};{1}/{2}", numeroDatoAdicional, comprobantePagoDTO.First().entidadDesc, comprobantePagoDTO.First().numeroCuenta);
+                string filaCuentaBancariaValor = String.Format("E;DescripcionAdicsunat;{0};{1} / {2}", numeroDatoAdicional, comprobantePagoDTO.First().entidadDesc, comprobantePagoDTO.First().numeroCuenta);
                 writer.WriteLine(filaCuentaBancariaValor);
 
                 numeroDatoAdicional++;
@@ -440,11 +442,31 @@ namespace Domain.Services.Implementations
                     Message = "Generación de número de comprobante y archivo TXT exitoso."
                 };
             }
+            catch(DirectoryNotFoundException)
+            {
+                response = new Response()
+                {
+                    Message = "Se generó un número de comprobante, pero ocurrió un error al generar el TXT. Error: [No se encuentra el directorio para almacenar el archivo.]"
+                };
+
+                this.ActualizarEstadoComprobante(comprobantePagoDTO.First().numeroSerie.Value, comprobantePagoDTO.First().numeroComprobante.Value, EstadoComprobante.NOFILE, currentUserID);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                response = new Response()
+                {
+                    Message = "Se generó un número de comprobante, pero ocurrió un error al generar el TXT. Error: [No se tienen permisos para acceder al directorio.]"
+                };
+
+                this.ActualizarEstadoComprobante(comprobantePagoDTO.First().numeroSerie.Value, comprobantePagoDTO.First().numeroComprobante.Value, EstadoComprobante.NOFILE, currentUserID);
+            }
             catch (Exception ex)
             {
                 response = new Response() { 
                     Message = "Se generó un número de comprobante, pero ocurrió un error al generar el TXT. Error: [" + ex.Message + "]"
                 };
+
+                this.ActualizarEstadoComprobante(comprobantePagoDTO.First().numeroSerie.Value, comprobantePagoDTO.First().numeroComprobante.Value, EstadoComprobante.NOFILE, currentUserID);
             }
 
             return response;

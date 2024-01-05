@@ -17,11 +17,13 @@ namespace WebApp.Models.Facades
     {
         private IComprobantePagoService _comprobantePagoService;
         private ISerieComprobanteService _serieComprobanteService;
+        private IEstadoComprobanteService _estadoComprobanteService;
         
         public ComprobantePagoServiceFacade()
         {
             _comprobantePagoService = new ComprobantePagoService();
             _serieComprobanteService = new SerieComprobanteService();
+            _estadoComprobanteService = new EstadoComprobanteService();
         }
 
         public IEnumerable<ComprobantePagoModel> ListarComprobantesPagoBanco(ConsultaComprobantePagoViewModel filtro)
@@ -45,6 +47,7 @@ namespace WebApp.Models.Facades
                     condicionPago = x.condicionPago,
                     tipoPago = x.tipoPago,
                     comprobanteID = x.comprobanteID,
+                    serieID = x.serieID,
                     numeroSerie = x.numeroSerie,
                     numeroComprobante = x.numeroComprobante,
                     fechaEmision = x.fechaEmision,
@@ -78,6 +81,7 @@ namespace WebApp.Models.Facades
                     condicionPago = x.condicionPago,
                     tipoPago = x.tipoPago,
                     comprobanteID = x.comprobanteID,
+                    serieID = x.serieID,
                     numeroSerie = x.numeroSerie,
                     numeroComprobante = x.numeroComprobante,
                     fechaEmision = x.fechaEmision,
@@ -110,7 +114,7 @@ namespace WebApp.Models.Facades
 
                     if (resultadoGeneracionNumComprobante.Value)
                     {
-                        resultadoGeneracionTXT = _comprobantePagoService.GenerarTXTDigiFlow(pagosBancoID);
+                        resultadoGeneracionTXT = _comprobantePagoService.GenerarTXTDigiFlow(pagosBancoID, currentUserID);
 
                         resultado = resultadoGeneracionTXT;
                     }
@@ -139,58 +143,74 @@ namespace WebApp.Models.Facades
 
         public Response GenerarNumeroComprobante(ConsultaComprobantePagoViewModel filtro, int tipoComprobanteID, int serieID, bool esGravado, int currentUserID)
         {
-            DateTime fechaActual = DateTime.Now;
-
             var serie = _serieComprobanteService.ListarSeriesComprobante(false).Where(s => s.serieID == serieID).First();
+
+            DateTime fechaActual = DateTime.Now;
 
             DateTime fechaLimite = fechaActual.AddDays(-1 * serie.diasAnterioresPermitido);
 
-            if (filtro.fechaInicio.HasValue)
+            if (!filtro.fechaInicio.HasValue && !filtro.fechaFin.HasValue)
             {
-                if (filtro.fechaInicio.Value.Date < fechaActual.Date)
+                filtro.fechaDesde = fechaLimite.ToString(FormatosDateTime.BASIC_DATE);
+
+                filtro.fechaHasta = fechaActual.ToString(FormatosDateTime.BASIC_DATE);
+            }
+            else
+            {
+                if (filtro.fechaInicio.HasValue)
+                {
+                    if (filtro.fechaInicio.Value.Date < fechaLimite.Date)
+                    {
+                        filtro.fechaDesde = fechaLimite.ToString(FormatosDateTime.BASIC_DATE);
+                    }
+                }
+                else
                 {
                     filtro.fechaDesde = fechaLimite.ToString(FormatosDateTime.BASIC_DATE);
                 }
             }
-            else
-            {
-                filtro.fechaDesde = fechaLimite.ToString(FormatosDateTime.BASIC_DATE);
-            }
-
+            
             var listaPagos = _comprobantePagoService.ListarComprobantesPagoBanco(filtro.tipoPago, filtro.entidadFinanciera, filtro.idCtaDeposito,
                 filtro.codOperacion, filtro.codInterno, filtro.codDepositante, filtro.nomDepositante, filtro.fechaInicio, filtro.fechaFin,
-                filtro.tipoComprobanteID, filtro.estadoGeneracion, filtro.estadoComprobanteID)
+                filtro.tipoComprobanteID, false, null)
                 .GroupBy(x => new { x.codOperacion, x.codDepositante, x.fecPago, x.entidadFinanID });
 
             var cantRegistros = listaPagos.Count();
 
-            var cantGeneracionCorrecta = 0;
-
-            bool esNuevoRegistro = true;
-
-            foreach (var pago in listaPagos)
-            {
-                var pagosBancoId = pago.Select(x => x.pagoBancoID).ToArray();
-
-                var resultado = this.GenerarNumeroComprobante(pagosBancoId, tipoComprobanteID, serieID, esGravado, esNuevoRegistro, currentUserID);
-
-                if (resultado.Value)
-                {
-                    cantGeneracionCorrecta++;
-                }
-            }
-
             var resultadoGeneral = new Response();
 
-            resultadoGeneral.Value = (cantRegistros == cantGeneracionCorrecta);
+            if (cantRegistros > 0)
+            {
+                var cantGeneracionCorrecta = 0;
 
-            resultadoGeneral.Message = resultadoGeneral.Value ? "La generación de archivo TXT correcto." :
-                    String.Format("Se {0} \"{1}\" {2} TXT de \"{3}\" {4}.",
-                    cantGeneracionCorrecta == 1 ? "generó" : "generaron",
-                    cantGeneracionCorrecta,
-                    cantGeneracionCorrecta == 1 ? "archivo" : "archivos",
-                    cantRegistros,
-                    cantRegistros == 1 ? "pago" : "pagos");
+                bool esNuevoRegistro = true;
+
+                foreach (var pago in listaPagos)
+                {
+                    var pagosBancoId = pago.Select(x => x.pagoBancoID).ToArray();
+
+                    var resultado = this.GenerarNumeroComprobante(pagosBancoId, tipoComprobanteID, serieID, esGravado, esNuevoRegistro, currentUserID);
+
+                    if (resultado.Value)
+                    {
+                        cantGeneracionCorrecta++;
+                    }
+                }
+
+                resultadoGeneral.Value = (cantRegistros == cantGeneracionCorrecta);
+
+                resultadoGeneral.Message = resultadoGeneral.Value ? "Generación de archivo(s) TXT correcto." :
+                        String.Format("Se {0} \"{1}\" {2} TXT de \"{3}\" {4}.",
+                        cantGeneracionCorrecta == 1 ? "generó" : "generaron",
+                        cantGeneracionCorrecta,
+                        cantGeneracionCorrecta == 1 ? "archivo" : "archivos",
+                        cantRegistros,
+                        cantRegistros == 1 ? "pago" : "pagos");
+            }
+            else
+            {
+                resultadoGeneral.Message = "No se encontraron pagos ó los pagos están fuera de fecha. Por favor recargue la página.";
+            }
 
             return resultadoGeneral;
         }
@@ -212,6 +232,102 @@ namespace WebApp.Models.Facades
             }
 
             return resultado;
+        }
+
+        public Response GenerarSoloArchivo(int[] pagosBancoID, int currentUserID)
+        {
+            Response resultado;
+
+            try
+            {
+                var comprobanteDTO = _comprobantePagoService.ObtenerComprobantePagoBanco(pagosBancoID[0]);
+
+                if (comprobanteDTO != null && comprobanteDTO.Count() > 0 && comprobanteDTO.First().estadoComprobanteCod == EstadoComprobante.NOFILE)
+                {
+                    resultado = _comprobantePagoService.GenerarTXTDigiFlow(pagosBancoID, currentUserID);   
+                    
+                    if (resultado.Value)
+                    {
+                        _comprobantePagoService.ActualizarEstadoComprobante(comprobanteDTO.First().numeroSerie.Value, 
+                            comprobanteDTO.First().numeroComprobante.Value, EstadoComprobante.PENDIENTE, currentUserID);
+
+                        resultado.Message = "El archivo se generó correctamente.";
+                    }
+                }
+                else
+                {
+                    resultado = new Response()
+                    {
+                        Message = "Ocurrió un error al validar él estado del pago. Por favor recargué la página e intente nuevamente."
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                resultado = new Response()
+                {
+                    Message = ex.Message
+                };
+            }
+
+            return resultado;
+        }
+
+        public Response GenerarSoloArchivo(ConsultaComprobantePagoViewModel filtro, int currentUserID)
+        {
+            int estadoComprobanteID = _estadoComprobanteService.ListarEstadosComprobante(false)
+                .First(x => x.estadoComprobanteCod == EstadoComprobante.NOFILE).estadoComprobanteID;
+
+            var listaPagos = _comprobantePagoService.ListarComprobantesPagoBanco(filtro.tipoPago, filtro.entidadFinanciera, filtro.idCtaDeposito,
+                filtro.codOperacion, filtro.codInterno, filtro.codDepositante, filtro.nomDepositante, filtro.fechaInicio, filtro.fechaFin,
+                filtro.tipoComprobanteID, true, estadoComprobanteID)
+                .GroupBy(x => new { x.codOperacion, x.codDepositante, x.fecPago, x.entidadFinanID });
+
+            var cantRegistros = listaPagos.Count();
+
+            var resultadoGeneral = new Response();
+
+            if (cantRegistros > 0)
+            {
+                var cantGeneracionCorrecta = 0;
+
+                foreach (var pago in listaPagos)
+                {
+                    var pagosBancoId = pago.Select(x => x.pagoBancoID).ToArray();
+
+                    var serie = _serieComprobanteService.ListarSeriesComprobante(false).Where(s => s.serieID == pago.First().serieID.Value).First();
+
+                    var fechaActual = DateTime.Now;
+
+                    var fechaLimite = fechaActual.AddDays(-1 * serie.diasAnterioresPermitido);
+
+                    if (pago.First().fecPago.Date >= fechaLimite.Date && pago.First().fecPago.Date <= fechaActual.Date)
+                    {
+                        var resultado = this.GenerarSoloArchivo(pagosBancoId, currentUserID);
+
+                        if (resultado.Value)
+                        {
+                            cantGeneracionCorrecta++;
+                        }
+                    }
+                }
+
+                resultadoGeneral.Value = (cantRegistros == cantGeneracionCorrecta);
+
+                resultadoGeneral.Message = resultadoGeneral.Value ? "Generación de archivo(s) TXT correcto." :
+                        String.Format("Se {0} \"{1}\" {2} TXT de \"{3}\" {4}.",
+                        cantGeneracionCorrecta == 1 ? "generó" : "generaron",
+                        cantGeneracionCorrecta,
+                        cantGeneracionCorrecta == 1 ? "archivo" : "archivos",
+                        cantRegistros,
+                        cantRegistros == 1 ? "pago" : "pagos");
+            }
+            else
+            {
+                resultadoGeneral.Message = "No se encontraron pagos. Por favor recargue la página.";
+            }
+
+            return resultadoGeneral;
         }
     }
 }

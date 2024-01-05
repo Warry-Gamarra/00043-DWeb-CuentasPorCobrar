@@ -120,7 +120,12 @@
                     @if (Model.resultado != null && Model.resultado.Count() > 0)
                     {
                         <a href="@Url.Action("GeneracionGrupal", "ComprobantePago")" class="modal-link">
-                            <i class="fa fa-file" aria-hidden="true"></i> Generar Número de Comprobantes</a>
+                            <i class="fa fa-cog" aria-hidden="true"></i> Generar Número de Comprobantes
+                        </a>
+                        <br />
+                        <a href="#" id="btnGenerarArchivosGrupal">
+                            <i class="fa fa-file" aria-hidden="true"></i> Volver a generar archivo TXT
+                        </a>
                     }
 
                     @Html.Grid(Model.resultado).Columns(columns =>
@@ -204,7 +209,7 @@
         $('#frmConsultaComprobantePago').on('click', '#btnVerificarEstadoComprobantes', function (e) {
             Swal.fire({
                 title: '',
-                text: '¿Dese verificar el estado de los comprobantes generados?',
+                text: '¿Desea verificar el estado de los comprobantes generados?',
                 icon: MESSAGE_TYPE.WARNING,
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -280,5 +285,71 @@
                 cmbCtasDeposito.empty();
             }
         }
+
+        $(document).on('click', '#btnGenerarArchivosGrupal', function (e) {
+            Swal.fire({
+                title: '',
+                text: '¿Desea generar los archivos TXT faltantes para la consulta realizada?',
+                icon: MESSAGE_TYPE.WARNING,
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si, continuar.',
+                cancelButtonText: 'No, cancelar.'
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    var parametros = {
+                        tipoPago: $('#frmConsultaComprobantePago #tipoPago').val(),
+                        estadoGeneracion: $('#frmConsultaComprobantePago #estadoGeneracion').val(),
+                        estadoComprobanteID: $('#frmConsultaComprobantePago #estadoComprobanteID').val(),
+                        tipoComprobanteID: $('#frmConsultaComprobantePago #tipoComprobanteID').val(),
+                        entidadFinanciera: $('#frmConsultaComprobantePago #entidadFinanciera').val(),
+                        idCtaDeposito: $('#frmConsultaComprobantePago #idCtaDeposito').val(),
+                        codOperacion: $('#frmConsultaComprobantePago #codOperacion').val(),
+                        codInterno: $('#frmConsultaComprobantePago #codInterno').val(),
+                        codDepositante: $('#frmConsultaComprobantePago #codDepositante').val(),
+                        nomDepositante: $('#frmConsultaComprobantePago #nomDepositante').val(),
+                        fechaDesde: $('#frmConsultaComprobantePago #fechaDesde').val(),
+                        fechaHasta: $('#frmConsultaComprobantePago #fechaHasta').val()
+                    };
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("GeneracionArchivosGrupal", "ComprobantePago")',
+                        data: parametros,
+                        dataType: 'json',
+                        beforeSend: function () {
+                            $('#modalEspera').modal('show');
+                        },
+                        success: function (data) {
+                            let icon = MESSAGE_TYPE.ERROR;
+
+                            if (data.Value) {
+                                icon = MESSAGE_TYPE.SUCCESS;
+                            }
+
+                            Swal.fire({
+                                title: '',
+                                html: data.Message,
+                                icon: icon,
+                                confirmButtonColor: '#3085d6',
+                                confirmButtonText: 'Ok'
+                            }).then((result) => {
+                                if (result.isConfirmed || result.dismiss === Swal.DismissReason.esc) {
+                                    location.reload();
+                                }
+                            });
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            var jsonException = JSON.parse(xhr.responseText);
+                        },
+                        complete: function () {
+                            $('#modalEspera').modal('hide');
+                        }
+                    });
+                }
+            });
+        });
     </script>
 }
