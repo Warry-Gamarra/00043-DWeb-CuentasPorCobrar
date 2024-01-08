@@ -213,7 +213,7 @@
                             </table>
                         </div>
 
-                        <div class="table-responsive mt-4" style="max-height: 170px">
+                        <div class="table-responsive mt-4" style="max-height: 270px">
                             <p class="h5">Cuotas a pagar en Banco</p>
 
                             <table class="table table-sm table-hover" id="tblCuotasPago">
@@ -233,7 +233,7 @@
 
                         </div>
 
-                        <div class="table-responsive mt-4 col-md-2" id="areaImpresion"></div>
+                        <div class="table-responsive mt-4 mb-4 col-md-2" id="areaImpresion"></div>
                     </div>
                 </div>
             </div>
@@ -630,8 +630,12 @@
 
             let parametros = "?anio=" + anio + "&periodo=" + periodo + "&codalu=" + codAlu + "&codrc=" + codRc;
 
-            printDiv.html('<a href="@Url.Action("ReporteObligaciones", "Reportes")' + parametros + '" target="_blank" id="btnImprimirConstancia" class="btn btn-block btn-primary">' +
-                '<i class="fa fa-fw fa-search-plus"></i> Imprimir</a>');
+            let btnImprimir = '<a href="@Url.Action("ReporteObligaciones", "Reportes")' + parametros + '" target="_blank" id="btnImprimirConstancia" class="btn btn-block btn-primary">' +
+                '<i class="fa fa-fw fa-search-plus"></i> Imprimir</a>';
+
+            let btnAmplirCreditos = '<button type="button" id="btnAmpliarCreditos" class="btn btn-block btn-primary"><i class="fa fa-fw fa-plus"></i> Ampliación de créditos</button>';
+
+            printDiv.html(btnImprimir + btnAmplirCreditos);
         }
 
         function OcultarBotonImpresion() {
@@ -798,6 +802,10 @@
                     });
                 }
             });
+        });
+
+        $(document).on('click', '#btnAmpliarCreditos', function (e) {
+            alert('Click');
         });
     </script>
 }
