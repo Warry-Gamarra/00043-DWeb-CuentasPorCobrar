@@ -105,7 +105,7 @@ namespace WebApp.Models
         {
             get
             {
-                return comprobanteID.HasValue ? String.Format("{0} - {1}", numeroSerie.Value.ToString("D4"), numeroComprobante.Value.ToString("D8")) : "---";
+                return comprobanteID.HasValue ? String.Format("{0}{1} - {2}", inicial, numeroSerie.Value.ToString("D3"), numeroComprobante.Value.ToString("D8")) : "---";
             }
         }
 
