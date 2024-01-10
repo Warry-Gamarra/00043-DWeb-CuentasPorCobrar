@@ -1,8 +1,10 @@
-﻿using DocumentFormat.OpenXml.EMMA;
+﻿using ClosedXML.Excel;
+using DocumentFormat.OpenXml.EMMA;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using Domain.Helpers;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -60,6 +62,92 @@ namespace WebApp.Controllers
             ViewBag.EstadosGeneracionComprobante = new SelectList(generalServiceFacade.Listar_EstadoGeneracionComprobante(), "Value", "TextDisplay");
 
             return View(model);
+        }
+
+        [HttpGet]
+        public ActionResult DescargarExcel(ConsultaComprobantePagoViewModel model)
+        {
+            if (model.buscar)
+            {
+                model.resultado = _comprobantePagoServiceFacade.ListarComprobantesPagoBanco(model);
+            }
+            else
+            {
+                return RedirectToAction("Index", "ComprobantePago");
+            }
+
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.Worksheets.Add("Comprobantes");
+
+                worksheet.Columns("A:B").Width = 14;
+                worksheet.Column("C").Width = 15;
+                worksheet.Columns("D:F").Width = 14;
+                worksheet.Column("G").Width = 35;
+                worksheet.Column("H").Width = 20;
+                worksheet.Column("I").Width = 14;
+                worksheet.Column("J").Width = 20;
+                worksheet.Column("K").Width = 15;
+                worksheet.Column("L").Width = 14;
+                worksheet.Column("M").Width = 20;
+                worksheet.Column("N").Width = 14;
+
+                int currentRow = 1;
+
+                #region Header
+                worksheet.Cell(currentRow, 1).Value = "Comprobante";
+                worksheet.Cell(currentRow, 2).Value = "Tipo comprobante";
+                worksheet.Cell(currentRow, 3).Value = "Tipo pago";
+                worksheet.Cell(currentRow, 4).Value = "Código de operación";
+                worksheet.Cell(currentRow, 5).Value = "Código interno (BCP)";
+                worksheet.Cell(currentRow, 6).Value = "Código de depositante";
+                worksheet.Cell(currentRow, 7).Value = "Nombre de depositante";
+                worksheet.Cell(currentRow, 8).Value = "Fecha de pago";
+                worksheet.Cell(currentRow, 9).Value = "Total pagado";
+                worksheet.Cell(currentRow, 10).Value = "Banco";
+                worksheet.Cell(currentRow, 11).Value = "Número de cuenta";
+                worksheet.Cell(currentRow, 12).Value = "Estado";
+                worksheet.Cell(currentRow, 13).Value = "Fecha de emisión";
+                worksheet.Cell(currentRow, 14).Value = "Pago gravado";
+                #endregion
+
+                currentRow++;
+
+                #region Body
+                foreach (var item in model.resultado)
+                {
+                    worksheet.Cell(currentRow, 1).SetValue<string>(item.comprobantePago);
+                    worksheet.Cell(currentRow, 2).SetValue<string>(item.tipoComprobanteDesc);
+                    worksheet.Cell(currentRow, 3).SetValue<string>(item.tipoPago.ToString());
+                    worksheet.Cell(currentRow, 4).SetValue<string>(item.codOperacion);
+                    worksheet.Cell(currentRow, 5).SetValue<string>(item.codigoInterno);
+                    worksheet.Cell(currentRow, 6).SetValue<string>(item.codDepositante);
+                    worksheet.Cell(currentRow, 7).SetValue<string>(item.nomDepositante);
+                    worksheet.Cell(currentRow, 8).SetValue<DateTime>(item.fecPago);
+                    worksheet.Cell(currentRow, 9).SetValue<Decimal>(item.montoTotal);
+                    worksheet.Cell(currentRow, 10).SetValue<string>(item.entidadDesc);
+                    worksheet.Cell(currentRow, 11).SetValue<string>(item.numeroCuenta);
+                    worksheet.Cell(currentRow, 12).SetValue<string>(item.estadoComprobanteDesc);
+                    worksheet.Cell(currentRow, 13).SetValue<DateTime?>(item.fechaEmision);
+                    worksheet.Cell(currentRow, 14).SetValue<string>(item.gravadoDesc);
+
+                    currentRow++;
+                }
+                #endregion
+
+                worksheet.Range(worksheet.Cell(2, 8), worksheet.Cell(currentRow, 8)).Style.DateFormat.Format = FormatosDateTime.BASIC_DATETIME;
+                worksheet.Range(worksheet.Cell(2, 9), worksheet.Cell(currentRow, 9)).Style.NumberFormat.Format = FormatosDecimal.BASIC_DECIMAL;
+                worksheet.Range(worksheet.Cell(2, 13), worksheet.Cell(currentRow, 13)).Style.DateFormat.Format = FormatosDateTime.BASIC_DATETIME;
+
+                using (var stream = new MemoryStream())
+                {
+                    workbook.SaveAs(stream);
+
+                    var content = stream.ToArray();
+
+                    return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Consulta Comprobantes de Pago.xlsx");
+                }
+            }
         }
 
         [HttpGet]

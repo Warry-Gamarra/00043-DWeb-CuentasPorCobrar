@@ -34,7 +34,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body bg-light-gray">
-                        <form name="frmConsultaComprobantePago" id="frmConsultaComprobantePago" method="get" action="@Url.Action("Index", "ComprobantePago")">
+                        <form name="frmConsultaComprobantePago" id="frmConsultaComprobantePago" method="get">
                             <div class="form-row">
                                 @Html.Hidden("buscar", true)
                                 <div class="form-group col-xl-2 col-lg-3 col-md-4">
@@ -123,9 +123,9 @@
                             <i class="fa fa-cog" aria-hidden="true"></i> Generar Número de Comprobantes
                         </a>
                         <br />
-                        <a href="#" id="btnGenerarArchivosGrupal">
-                            <i class="fa fa-file" aria-hidden="true"></i> Volver a generar archivo TXT
-                        </a>
+                        <button id="btnGenerarArchivosGrupal" class="btn btn-link pl-0"><i class="fa fa-file" aria-hidden="true"></i> Volver a generar archivo TXT</button>
+                        <br />
+                        <button id="btnDescargaExcel" class="btn btn-link pl-0"><i class="fa fa-download" aria-hidden="true"></i> Descargar información en Excel [.xlsx]</button>
                     }
 
                     @Html.Grid(Model.resultado).Columns(columns =>
@@ -139,8 +139,10 @@
                         columns.Add(c => c.fecPago).Titled("Fec.Pago").Css("text-center");
                         columns.Add(c => c.montoTotal).Titled("Total Pagado").Css("text-center");
                         columns.Add(c => c.entidadDesc).Titled("Banco");
+                        columns.Add(c => c.estadoComprobanteDesc).Titled("Estado");
                         columns.Add().SetWidth(100).Encoded(false).Sanitized(false).Css("text-center").RenderValueAs(
-                            model => "<a href=" + Url.Action("InformacioPago", "ComprobantePago", new { id = model.pagoBancoID }) + " class=\"modal-link " + model.textColorEstado + "\"><i class=\"fa fa-file\" aria-hidden=\"true\" title=\"Número de Comprobante\"></i></a>");
+                            model => "<a href=" + Url.Action("InformacioPago", "ComprobantePago", new { id = model.pagoBancoID }) + " class=\"modal-link " + model.textColorEstado + 
+                            "\" title=\"" + model.estadoComprobanteDesc + "\"><i class=\"fa fa-file\" aria-hidden=\"true\"></i></a>");
                     }).WithPaging(12).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
                 </div>
             </div>
@@ -183,7 +185,8 @@
             format: 'dd/mm/yyyy',
             autoclose: true,
             weekStart: 0,
-            clearBtn: true
+            clearBtn: true,
+            todayHighlight: true
         }).on('hide', function (e) {
             e.stopPropagation();
         });
@@ -201,6 +204,11 @@
 
         $('#frmConsultaComprobantePago').on("click", "#btnConsulta", function (e) {
             document.forms.frmConsultaComprobantePago.action = "@Url.Action("Index", "ComprobantePago")";
+            document.forms.frmConsultaComprobantePago.submit();
+        });
+
+        $(document).on("click", "#btnDescargaExcel", function (e) {
+            document.forms.frmConsultaComprobantePago.action = "@Url.Action("DescargarExcel", "ComprobantePago")";
             document.forms.frmConsultaComprobantePago.submit();
         });
 
