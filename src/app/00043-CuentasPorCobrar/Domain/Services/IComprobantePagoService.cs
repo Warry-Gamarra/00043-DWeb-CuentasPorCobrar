@@ -23,5 +23,7 @@ namespace Domain.Services
         Response VerificarEstadoComprobantes(int currentUserID);
 
         UpdateComprobanteStatus ActualizarEstadoComprobante(int numeroSerie, int numeroComprobante, string estadoComprobante, int userID);
+
+        Response DarBajarComprobante(int comprobanteID, int currentUserID);
     }
 }

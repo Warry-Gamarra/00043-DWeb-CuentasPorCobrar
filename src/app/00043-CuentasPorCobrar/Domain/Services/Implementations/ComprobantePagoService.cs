@@ -606,5 +606,30 @@ namespace Domain.Services.Implementations
 
             return new UpdateComprobanteStatus() { success = result.Value, message = result.Message };
         }
+
+        public Response DarBajarComprobante(int comprobanteID, int currentUserID)
+        {
+            ResponseData result;
+
+            try
+            {
+                var sp = new USP_U_DarBajaComprobante()
+                {
+                    I_ComprobanteID = comprobanteID,
+                    UserID = currentUserID
+                };
+
+                result = sp.Execute();
+            }
+            catch (Exception ex)
+            {
+                result = new ResponseData()
+                {
+                    Message = ex.Message
+                };
+            }
+
+            return new Response(result);
+        }
     }
 }

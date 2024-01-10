@@ -338,5 +338,36 @@ namespace WebApp.Models.Facades
 
             return resultadoGeneral;
         }
+
+        public Response DarBajarComprobante(int[] pagosBancoID, int currentUserID)
+        {
+            Response resultado;
+
+            try
+            {
+                var comprobanteDTO = _comprobantePagoService.ObtenerComprobantePagoBanco(pagosBancoID[0]);
+
+                if (comprobanteDTO != null && comprobanteDTO.Count() > 0 && comprobanteDTO.First().comprobanteID.HasValue)
+                {
+                    resultado = _comprobantePagoService.DarBajarComprobante(comprobanteDTO.First().comprobanteID.Value, currentUserID);
+                }
+                else
+                {
+                    resultado = new Response()
+                    {
+                        Message = "Ocurrió un error al obtener los datos del pago. Por favor recargué la página e intente nuevamente."
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                resultado = new Response()
+                {
+                    Message = ex.Message
+                };
+            }
+
+            return resultado;
+        }
     }
 }

@@ -23,5 +23,7 @@ namespace WebApp.Models.Facades
         Response GenerarSoloArchivo(int[] pagosBancoID, int currentUserID);
 
         Response GenerarSoloArchivo(ConsultaComprobantePagoViewModel filtro, int currentUserID);
+
+        Response DarBajarComprobante(int[] comprobanteID, int currentUserID);
     }
 }

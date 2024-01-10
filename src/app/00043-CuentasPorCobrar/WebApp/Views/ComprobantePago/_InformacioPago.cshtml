@@ -192,6 +192,7 @@
         {
             <button type="button" class="btn btn-primary" id="btnGenerarSoloArchivo"><i class="fa fa-file"></i> Generar sólo archivo</button>
         }
+        <button type="button" class="btn btn-danger" id="btnDarBaja"><i class="fa fa-trash-o"></i> Dar de baja</button>
     }
     <button type="button" class="btn btn-secondary closeModal"><i class="fa fa-times-circle-o"></i> Cancelar</button>
 </div>
@@ -327,4 +328,44 @@
         $('#frmGenerarComprobante #txtRuc').val("");
         $('#frmGenerarComprobante #txtDireccion').val("");
     }
+
+    $(document).on('click', '#div_msg_comprobante #btnDarBaja', function (e) {
+        let parametros = {
+            pagoBancoId: @pagoBancoID,
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("DarBaja", "ComprobantePago")',
+            data: parametros,
+            dataType: 'json',
+            beforeSend: function () {
+                $('#div_msg_comprobante #loading').css('display', 'block');
+                $('#div_msg_comprobante #loading h6').html('Dando baja a comprobante...');
+            },
+            success: function (data) {
+                if (data !== null) {
+                    let icon = MESSAGE_TYPE.ERROR;
+
+                    if (data.Value) {
+                        icon = MESSAGE_TYPE.SUCCESS;
+                    }
+
+                    Swal.fire({
+                        title: '',
+                        text: data.Message,
+                        icon: icon,
+                        timer: 6000
+                    });
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                var jsonException = JSON.parse(xhr.responseText);
+            },
+            complete: function () {
+                $('#div_msg_comprobante #loading').css('display', 'none');
+                $('#div_msg_comprobante #loading h6').html('');
+            }
+        });
+    });
 </script>

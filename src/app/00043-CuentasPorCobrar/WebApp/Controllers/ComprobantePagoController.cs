@@ -239,5 +239,19 @@ namespace WebApp.Controllers
 
             return jsonResponse;
         }
+
+        [HttpPost]
+        public JsonResult DarBaja(int pagoBancoId)
+        {
+            var model = _comprobantePagoServiceFacade.ObtenerComprobantePagoBanco(pagoBancoId);
+
+            int[] pagosBancoId = model.Select(x => x.pagoBancoID).ToArray();
+
+            var resultado = _comprobantePagoServiceFacade.DarBajarComprobante(pagosBancoId, WebSecurity.CurrentUserId);
+
+            var jsonResponse = Json(resultado, JsonRequestBehavior.AllowGet);
+
+            return jsonResponse;
+        }
     }
 }
