@@ -271,7 +271,7 @@ namespace Domain.Services.Implementations
                 #endregion
 
                 #region LEYENDA
-                string filaCodigoLeyenda = "A;CodigoLeyenda;;1002";
+                string filaCodigoLeyenda = "A;CodigoLeyenda;;";
                 writer.WriteLine(filaCodigoLeyenda);
                 #endregion
 
