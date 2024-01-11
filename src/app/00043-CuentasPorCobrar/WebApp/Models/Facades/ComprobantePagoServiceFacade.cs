@@ -339,7 +339,7 @@ namespace WebApp.Models.Facades
             return resultadoGeneral;
         }
 
-        public Response DarBajarComprobante(int[] pagosBancoID, int currentUserID)
+        public Response DarBajarComprobante(int[] pagosBancoID, DateTime fecBaja, string motivoBaja, int currentUserID)
         {
             Response resultado;
 
@@ -349,7 +349,7 @@ namespace WebApp.Models.Facades
 
                 if (comprobanteDTO != null && comprobanteDTO.Count() > 0 && comprobanteDTO.First().comprobanteID.HasValue)
                 {
-                    resultado = _comprobantePagoService.DarBajarComprobante(comprobanteDTO.First().comprobanteID.Value, currentUserID);
+                    resultado = _comprobantePagoService.DarBajarComprobante(comprobanteDTO.First().comprobanteID.Value, fecBaja, motivoBaja, currentUserID);
                 }
                 else
                 {

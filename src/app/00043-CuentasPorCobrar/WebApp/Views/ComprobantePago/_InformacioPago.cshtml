@@ -9,7 +9,7 @@
 
 <div class="modal-header bg-dark-gray" style="border-radius: .2rem .2rem 0px 0px">
     <h5 class="modal-title text-center"><i class="fa bi-layers-half">&nbsp;</i> @ViewBag.Title</h5>
-    <button type="button" class="close closeModal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 </div>
 
 <div class="modal-body" id="frmGenerarComprobante">
@@ -192,9 +192,8 @@
         {
             <button type="button" class="btn btn-primary" id="btnGenerarSoloArchivo"><i class="fa fa-file"></i> Generar sólo archivo</button>
         }
-        <button type="button" class="btn btn-danger" id="btnDarBaja"><i class="fa fa-trash-o"></i> Dar de baja</button>
     }
-    <button type="button" class="btn btn-secondary closeModal"><i class="fa fa-times-circle-o"></i> Cancelar</button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> Cancelar</button>
 </div>
 
 <script type="text/javascript">
@@ -328,44 +327,4 @@
         $('#frmGenerarComprobante #txtRuc').val("");
         $('#frmGenerarComprobante #txtDireccion').val("");
     }
-
-    $(document).on('click', '#div_msg_comprobante #btnDarBaja', function (e) {
-        let parametros = {
-            pagoBancoId: @pagoBancoID,
-        };
-
-        $.ajax({
-            type: 'POST',
-            url: '@Url.Action("DarBaja", "ComprobantePago")',
-            data: parametros,
-            dataType: 'json',
-            beforeSend: function () {
-                $('#div_msg_comprobante #loading').css('display', 'block');
-                $('#div_msg_comprobante #loading h6').html('Dando baja a comprobante...');
-            },
-            success: function (data) {
-                if (data !== null) {
-                    let icon = MESSAGE_TYPE.ERROR;
-
-                    if (data.Value) {
-                        icon = MESSAGE_TYPE.SUCCESS;
-                    }
-
-                    Swal.fire({
-                        title: '',
-                        text: data.Message,
-                        icon: icon,
-                        timer: 6000
-                    });
-                }
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-                var jsonException = JSON.parse(xhr.responseText);
-            },
-            complete: function () {
-                $('#div_msg_comprobante #loading').css('display', 'none');
-                $('#div_msg_comprobante #loading h6').html('');
-            }
-        });
-    });
 </script>

@@ -607,7 +607,7 @@ namespace Domain.Services.Implementations
             return new UpdateComprobanteStatus() { success = result.Value, message = result.Message };
         }
 
-        public Response DarBajarComprobante(int comprobanteID, int currentUserID)
+        public Response DarBajarComprobante(int comprobanteID, DateTime fecBaja, string motivoBaja, int currentUserID)
         {
             ResponseData result;
 
@@ -616,6 +616,8 @@ namespace Domain.Services.Implementations
                 var sp = new USP_U_DarBajaComprobante()
                 {
                     I_ComprobanteID = comprobanteID,
+                    D_FecBaja = fecBaja,
+                    T_MotivoBaja = motivoBaja,
                     UserID = currentUserID
                 };
 

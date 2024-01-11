@@ -24,6 +24,6 @@ namespace WebApp.Models.Facades
 
         Response GenerarSoloArchivo(ConsultaComprobantePagoViewModel filtro, int currentUserID);
 
-        Response DarBajarComprobante(int[] comprobanteID, int currentUserID);
+        Response DarBajarComprobante(int[] pagosBancoID, DateTime fecBaja, string motivoBaja, int currentUserID);
     }
 }

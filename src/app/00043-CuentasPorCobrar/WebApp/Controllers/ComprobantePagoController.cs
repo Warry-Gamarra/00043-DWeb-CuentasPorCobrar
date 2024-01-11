@@ -4,6 +4,7 @@ using DocumentFormat.OpenXml.Office2010.Excel;
 using Domain.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -240,14 +241,55 @@ namespace WebApp.Controllers
             return jsonResponse;
         }
 
-        [HttpPost]
-        public JsonResult DarBaja(int pagoBancoId)
+        [HttpGet]
+        public ActionResult BajaComprobante(int id)
         {
-            var model = _comprobantePagoServiceFacade.ObtenerComprobantePagoBanco(pagoBancoId);
+            var model = _comprobantePagoServiceFacade.ObtenerComprobantePagoBanco(id);
 
-            int[] pagosBancoId = model.Select(x => x.pagoBancoID).ToArray();
+            ViewBag.Title = "Comprobante de Pago";
 
-            var resultado = _comprobantePagoServiceFacade.DarBajarComprobante(pagosBancoId, WebSecurity.CurrentUserId);
+            ViewBag.TieneComprobante = model.First().comprobanteID.HasValue;
+
+            ViewBag.PagoBancoID = id;
+
+            ViewBag.ComboTipoComprobante = new SelectList(_tipoComprobanteServiceFacade.ListarTiposComprobante(true), "Value", "TextDisplay");
+
+            ViewBag.ComboSerieComprobante = new SelectList(_serieComprobanteServiceFacade.ListarSeriesComprobante(true), "Value", "TextDisplay");
+
+            return PartialView("_BajaComprobante", model);
+        }
+
+        [HttpPost]
+        public JsonResult DarBaja(int pagoBancoId, string fecBaja, string motivoBaja)
+        {
+            Response resultado;
+
+            if (String.IsNullOrWhiteSpace(fecBaja))
+            {
+                resultado = new Response() {
+                    Message = "La fecha de baja es obligatorio."
+                };
+            }
+            else
+            {
+                try
+                {
+                    var fechaBaja = DateTime.ParseExact(fecBaja, FormatosDateTime.BASIC_DATE, CultureInfo.InvariantCulture);
+
+                    var model = _comprobantePagoServiceFacade.ObtenerComprobantePagoBanco(pagoBancoId);
+
+                    int[] pagosBancoId = model.Select(x => x.pagoBancoID).ToArray();
+
+                    resultado = _comprobantePagoServiceFacade.DarBajarComprobante(pagosBancoId, fechaBaja, motivoBaja, WebSecurity.CurrentUserId);
+                }
+                catch (Exception ex)
+                {
+                    resultado = new Response()
+                    {
+                        Message = ex.Message
+                    };
+                }
+            }
 
             var jsonResponse = Json(resultado, JsonRequestBehavior.AllowGet);
 

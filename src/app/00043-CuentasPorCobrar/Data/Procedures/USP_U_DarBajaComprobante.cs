@@ -14,6 +14,10 @@ namespace Data.Procedures
     {
         public int I_ComprobanteID { get; set; }
 
+        public DateTime D_FecBaja { get; set; }
+        
+        public string T_MotivoBaja { get; set; }
+
         public int UserID { get; set; }
 
         public ResponseData Execute()
@@ -28,6 +32,8 @@ namespace Data.Procedures
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
                     parameters.Add(name: "I_ComprobanteID", dbType: DbType.Int32, value: this.I_ComprobanteID);
+                    parameters.Add(name: "D_FecBaja", dbType: DbType.DateTime, value: this.D_FecBaja);
+                    parameters.Add(name: "T_MotivoBaja", dbType: DbType.String, value: this.T_MotivoBaja);
                     parameters.Add(name: "UserID", dbType: DbType.Int32, value: this.UserID);
                     parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);
                     parameters.Add(name: "T_Message", dbType: DbType.String, size: 4000, direction: ParameterDirection.Output);

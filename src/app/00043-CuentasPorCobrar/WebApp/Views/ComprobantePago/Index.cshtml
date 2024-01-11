@@ -139,10 +139,12 @@
                         columns.Add(c => c.fecPago).Titled("Fec.Pago").Css("text-center");
                         columns.Add(c => c.montoTotal).Titled("Total Pagado").Css("text-center");
                         columns.Add(c => c.entidadDesc).Titled("Banco");
-                        columns.Add(c => c.estadoComprobanteDesc).Titled("Estado");
-                        columns.Add().SetWidth(100).Encoded(false).Sanitized(false).Css("text-center").RenderValueAs(
+                        columns.Add(c => c.fechaEmision).Titled("Fec.Emisión");
+                        columns.Add().SetWidth(50).Encoded(false).Sanitized(false).Css("text-center").RenderValueAs(
                             model => "<a href=" + Url.Action("InformacioPago", "ComprobantePago", new { id = model.pagoBancoID }) + " class=\"modal-link " + model.textColorEstado + 
                             "\" title=\"" + model.estadoComprobanteDesc + "\"><i class=\"fa fa-file\" aria-hidden=\"true\"></i></a>");
+                        columns.Add().SetWidth(50).Encoded(false).Sanitized(false).Css("text-center").RenderValueAs(
+                            model => model.comprobanteID.HasValue ? "<a href=" + Url.Action("BajaComprobante", "ComprobantePago", new { id = model.pagoBancoID }) + " class=\"modal-link\" title=\"Dar de baja al comprobante\"><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></a>" : "");
                     }).WithPaging(12).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
                 </div>
             </div>
@@ -194,11 +196,7 @@
         $('#datepicker .input-daterange #fechaDesde').datepicker('update', "@Model.fechaDesde");
         $('#datepicker .input-daterange #fechaHasta').datepicker('update', "@Model.fechaHasta");
 
-        $(document).on("click", ".modal-header .closeModal", function (e) {
-            window.location.reload();
-        });
-
-        $(document).on("click", ".modal-footer .closeModal", function (e) {
+        $('#modal-container').on('hidden.bs.modal', function () {
             window.location.reload();
         });
 
@@ -216,55 +214,6 @@
             let idEntidadFinanc = this.value;
 
             ObtenerCtasDeposito(idEntidadFinanc);
-        });
-
-        $('#frmConsultaComprobantePago').on('click', '#btnVerificarEstadoComprobantes', function (e) {
-            Swal.fire({
-                title: '',
-                text: '¿Desea verificar el estado de los comprobantes generados?',
-                icon: MESSAGE_TYPE.WARNING,
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Si, continuar.',
-                cancelButtonText: 'No, cancelar.'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        type: 'POST',
-                        url: '@Url.Action("VerificarEstadoComprobantes", "ComprobantePago")',
-                        dataType: 'json',
-                        beforeSend: function () {
-                            $('#modalEspera').modal('show');
-                        },
-                        success: function (data) {
-                            let icon = MESSAGE_TYPE.ERROR;
-
-                            if (data.Value) {
-                                icon = MESSAGE_TYPE.SUCCESS;
-                            }
-
-                            Swal.fire({
-                                title: '',
-                                html: data.Message,
-                                icon: icon,
-                                confirmButtonColor: '#3085d6',
-                                confirmButtonText: 'Ok'
-                            }).then((result) => {
-                                if (result.isConfirmed || result.dismiss === Swal.DismissReason.esc) {
-                                    location.reload();
-                                }
-                            });
-                        },
-                        error: function (xhr, ajaxOptions, thrownError) {
-                            var jsonException = JSON.parse(xhr.responseText);
-                        },
-                        complete: function () {
-                            $('#modalEspera').modal('hide');
-                        }
-                    });
-                }
-            });
         });
 
         function ObtenerCtasDeposito(idEntidadFinanc) {
@@ -330,6 +279,55 @@
                         type: 'POST',
                         url: '@Url.Action("GeneracionArchivosGrupal", "ComprobantePago")',
                         data: parametros,
+                        dataType: 'json',
+                        beforeSend: function () {
+                            $('#modalEspera').modal('show');
+                        },
+                        success: function (data) {
+                            let icon = MESSAGE_TYPE.ERROR;
+
+                            if (data.Value) {
+                                icon = MESSAGE_TYPE.SUCCESS;
+                            }
+
+                            Swal.fire({
+                                title: '',
+                                html: data.Message,
+                                icon: icon,
+                                confirmButtonColor: '#3085d6',
+                                confirmButtonText: 'Ok'
+                            }).then((result) => {
+                                if (result.isConfirmed || result.dismiss === Swal.DismissReason.esc) {
+                                    location.reload();
+                                }
+                            });
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            var jsonException = JSON.parse(xhr.responseText);
+                        },
+                        complete: function () {
+                            $('#modalEspera').modal('hide');
+                        }
+                    });
+                }
+            });
+        });
+
+        $('#frmConsultaComprobantePago').on('click', '#btnVerificarEstadoComprobantes', function (e) {
+            Swal.fire({
+                title: '',
+                text: '¿Desea verificar el estado de los comprobantes generados?',
+                icon: MESSAGE_TYPE.WARNING,
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si, continuar.',
+                cancelButtonText: 'No, cancelar.'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("VerificarEstadoComprobantes", "ComprobantePago")',
                         dataType: 'json',
                         beforeSend: function () {
                             $('#modalEspera').modal('show');

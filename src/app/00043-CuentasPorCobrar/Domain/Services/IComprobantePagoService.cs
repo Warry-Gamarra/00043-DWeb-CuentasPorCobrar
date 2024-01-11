@@ -24,6 +24,6 @@ namespace Domain.Services
 
         UpdateComprobanteStatus ActualizarEstadoComprobante(int numeroSerie, int numeroComprobante, string estadoComprobante, int userID);
 
-        Response DarBajarComprobante(int comprobanteID, int currentUserID);
+        Response DarBajarComprobante(int comprobanteID, DateTime fecBaja, string motivoBaja, int currentUserID);
     }
 }

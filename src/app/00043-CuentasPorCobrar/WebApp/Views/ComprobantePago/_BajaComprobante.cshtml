@@ -1,0 +1,188 @@
+﻿@model IEnumerable<WebApp.Models.ComprobantePagoModel>
+@Scripts.Render("~/bundles/jqueryval")
+
+@{
+    var tieneComprobante = (bool)ViewBag.TieneComprobante;
+    var pagoBancoID = (int)ViewBag.PagoBancoID;
+    int contadorFila = 1;
+}
+
+<div class="modal-header bg-dark-gray" style="border-radius: .2rem .2rem 0px 0px">
+    <h5 class="modal-title text-center"><i class="fa bi-layers-half">&nbsp;</i> @ViewBag.Title</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+
+<div class="modal-body" id="frmGenerarComprobante">
+    <dl class="row">
+        <dt class="col-sm-4 mb-3">Código Depositante</dt>
+        <dd class="col-sm-8">@Model.First().codDepositante</dd>
+
+        <dt class="col-sm-4 mb-3">Nom. Depositante</dt>
+        <dd class="col-sm-8">@Model.First().nomDepositante</dd>
+
+        <dt class="col-sm-4 mb-3">Total Pagado</dt>
+        <dd class="col-sm-8">@Model.Sum(x => x.montoTotal).ToString(Domain.Helpers.FormatosDecimal.BASIC_DECIMAL)</dd>
+
+        <dt class="col-sm-4 mb-3">Fecha Pago</dt>
+        <dd class="col-sm-8">@Model.First().fecPago.ToString(Domain.Helpers.FormatosDateTime.BASIC_DATETIME)</dd>
+
+        <dt class="col-sm-4 mb-3">Cód. Operacion</dt>
+        <dd class="col-sm-8">@Model.First().codOperacion</dd>
+
+        @if (Model.First().entidadFinanID == Domain.Helpers.Bancos.BCP_ID)
+        {
+            <dt class="col-sm-4 mb-3">Cód. Interno</dt>
+            <dd class="col-sm-8">@Model.First().codigoInterno</dd>
+        }
+
+        <dt class="col-sm-4 mb-3">Banco</dt>
+        <dd class="col-sm-8">@Model.First().entidadDesc</dd>
+
+        <dt class="col-sm-4 mb-3">Tip. Comprobante</dt>
+        <dd class="col-sm-8">@Model.First().tipoComprobanteDesc</dd>
+
+        <dt class="col-sm-4 mb-3">Serie Comprobante</dt>
+        <dd class="col-sm-8">@Model.First().comprobantePago</dd>
+
+        <dt class="col-sm-4 mb-3">Es Gravado</dt>
+        <dd class="col-sm-8">@Model.First().gravadoDesc</dd>
+
+        @if (Model.First().tipoComprobanteID.Value == 1)
+        {
+            <dt class="col-sm-4 mb-3">RUC Receptor</dt>
+            <dd class="col-sm-8">@Model.First().ruc</dd>
+
+            <dt class="col-sm-4 mb-3">Dirección</dt>
+            <dd class="col-sm-8">@Model.First().direccion</dd>
+        }
+
+        <dt class="col-sm-4 mb-3">Estado</dt>
+        <dd class="col-sm-8 @Model.First().textColorEstado">@Model.First().estadoComprobanteDesc</dd>
+    </dl>
+
+    <table class="table table-bordered table-hover table-sm">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Concepto</th>
+                <th>Monto</th>
+                <th>Mora</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@contadorFila</td>
+                    <td>@item.concepto</td>
+                    <td>@item.montoPagado</td>
+                    <td>@item.interesMoratorio</td>
+                </tr>
+                contadorFila++;
+            }
+        </tbody>
+    </table>
+
+    <hr style="border-block-style: solid;" />
+
+    <form>
+        <div class="form-group form-row">
+            <label class="control-label col-form-label col-4" for="FecVencto">Fecha baja</label>
+            <div class="col-8">
+                <div class="input-group date" id="datepicker_fecBaja">
+                    <input class="form-control" id="fecBaja" name="fecBaja" type="text" />
+                    <div class="input-group-append">
+                        <span class="input-group-text"><i class="fa fa-calendar-o"></i></span>
+                    </div>
+                </div>
+                <p class="text-danger small"><span class="field-validation-valid" data-valmsg-for="FecVencto" data-valmsg-replace="true"></span></p>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="control-label col-form-label col-4" for="txtMotivoBaja">Motivo baja</label>
+            <div class="col-8 pl-2">
+                <textarea name="txtMotivoBaja" id="txtMotivoBaja" class="form-control" maxlength="250" rows="3"></textarea>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal-footer" id="div_msg_comprobante">
+    <div class="col-md-12" style="display: none;" id="loading">
+        <h6></h6>
+        <div class="progress">
+            <div class="indeterminate"></div>
+        </div>
+    </div>
+    <button type="button" class="btn btn-danger" id="btnDarBaja"><i class="fa fa-trash-o"></i> Dar de baja</button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> Cancelar</button>
+</div>
+
+<script type="text/javascript">
+    $('#datepicker_fecBaja').datepicker({
+        todayBtn: 'linked',
+        language: 'es',
+        format: 'dd/mm/yyyy',
+        autoclose: true,
+        weekStart: 0,
+        clearBtn: true,
+        todayHighlight: true
+    }).on('hide', function (e) {
+        e.stopPropagation();
+    });
+
+    $(document).on('click', '#div_msg_comprobante #btnDarBaja', function (e) {
+        let fecBaja = $('#fecBaja').val()
+        let motivoBaja = $('#txtMotivoBaja').val().trim();
+
+        if (fecBaja.length == 10 && motivoBaja.length > 0) {
+            let parametros = {
+                pagoBancoId: @pagoBancoID,
+                fecBaja: fecBaja,
+                motivoBaja: motivoBaja
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("DarBaja", "ComprobantePago")',
+                data: parametros,
+                dataType: 'json',
+                beforeSend: function () {
+                    $('#div_msg_comprobante #loading').css('display', 'block');
+                    $('#div_msg_comprobante #loading h6').html('Dando baja a comprobante...');
+                },
+                success: function (data) {
+                    if (data !== null) {
+                        let icon = MESSAGE_TYPE.ERROR;
+
+                        if (data.Value) {
+                            icon = MESSAGE_TYPE.SUCCESS;
+                        }
+
+                        Swal.fire({
+                            title: '',
+                            text: data.Message,
+                            icon: icon,
+                            timer: 6000
+                        });
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    var jsonException = JSON.parse(xhr.responseText);
+                },
+                complete: function () {
+                    $('#div_msg_comprobante #loading').css('display', 'none');
+                    $('#div_msg_comprobante #loading h6').html('');
+                }
+            });
+        } else {
+            Swal.fire({
+                title: '',
+                text: "El campo Fecha y Motivo de baja son obligatorios.",
+                icon: MESSAGE_TYPE.WARNING,
+                timer: 6000
+            });
+        }
+    });
+</script>
