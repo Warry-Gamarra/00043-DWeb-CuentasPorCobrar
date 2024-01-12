@@ -124,5 +124,7 @@ namespace WebApp.Models
         public string T_LugarPago { get; set; }
 
         public bool B_Mora { get; set; }
+
+        public bool B_EsPagoMatricula { get; set; }
     }
 }

@@ -1,0 +1,131 @@
+﻿@model IEnumerable<WebApp.Models.ObligacionDetalleModel>
+@Scripts.Render("~/bundles/jqueryval")
+
+@{ 
+    var lista = Model.GroupBy(x => new { x.I_ObligacionAluID, x.T_ProcesoDesc });
+}
+
+<div class="modal-header bg-dark-gray" style="border-radius: .2rem .2rem 0px 0px">
+    <h5 class="modal-title text-center"><i class="fa bi-layers-half">&nbsp;</i> Ampliación de créditos</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+
+<form>
+    <div class="modal-body">
+        <table class="table table-sm table-hover" id="tblCuotasPago">
+            <thead class="thead-light">
+                <tr>
+                    <th>Cuota pago</th>
+                    <th>Concepto</th>
+                    <th>Monto</th>
+                    <th>Fec. Vencimiento</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var cuota in lista)
+                {
+                    int contador = 1;
+
+                    foreach (var detalle in cuota)
+                    {
+                        <tr>
+                            @if (contador == 1)
+                            {
+                                <td rowspan="@cuota.Count()">@cuota.Key.T_ProcesoDesc</td>
+                            }
+                            <td>@detalle.T_ConceptoDesc</td>
+                            <td><input type="text" class="form-control" value="@detalle.T_Monto" /></td>
+                            <td>
+                                <div class="input-group date">
+                                    <input type="text" id="txtFecVencto" name="txtFecVencto" class="form-control" readonly="readonly" value="@detalle.T_FecVencto" />
+                                    <div class="input-group-append">
+                                        <span class="input-group-text"><i class="fa fa-calendar-o"></i></span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><input type="checkbox" name="chkObligacion" /></td>
+                        </tr>
+
+                        contador++;
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="modal-footer" id="div_msg">
+        <div class="col-md-12" style="display:none;" id="loading">
+            <h6>Actualizando los datos...</h6>
+
+            <div class="progress">
+                <div class="indeterminate"></div>
+            </div>
+        </div>
+
+        <button type="button" class="btn btn-primary" id="btnGrabar"><i class="fa fa-save"></i>&nbsp;Guardar</button>
+        <button type="button" class="btn btn-secondary" id="btnCancel" data-dismiss="modal"><i class="fa fa-times-circle-o">&nbsp;</i>Cancelar</button>
+    </div>
+</form>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.input-group.date').datepicker({
+            todayBtn: 'linked',
+            language: 'es',
+            format: 'dd/mm/yyyy',
+            autoclose: true,
+            weekStart: 0,
+            orientation: 'bottom auto',
+            calendarWeeks: true,
+        }).on('hide', function (e) {
+            e.stopPropagation();
+        });
+
+        $('form').on('click', '#btnGrabar', function (e) {
+            let listaObligaciones = [
+                { procesoId: 545, matricula: 123, monto: 250.00, fechaVcto: '12/01/2024', conceptoID: 7646 },
+                { procesoId: 548, matricula: 123, monto: 350.00, fechaVcto: '13/02/2024', conceptoID: 7649 },
+                { procesoId: 548, matricula: 123, monto: 350.00, fechaVcto: '14/03/2024', conceptoID: 7649 },
+                { procesoId: 548, matricula: 123, monto: 350.00, fechaVcto: '15/04/2024', conceptoID: 7649 },
+                { procesoId: 548, matricula: 123, monto: 350.00, fechaVcto: '16/05/2024', conceptoID: 7649 }
+            ];
+
+            let token = $('input[name="__RequestVerificationToken"]').val();
+
+            let parametros = {
+                obligaciones: listaObligaciones,
+                tipoDocumento: 1,
+                descripcionDocumento: 'Motivo',
+                __RequestVerificationToken: token
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GuardarAmpliacionCreditos", "Obligaciones")',
+                data: parametros,
+                dataType: 'json',
+                beforeSend: function () { },
+                success: function (data) {
+                    if (data) {
+                        if (data.Value) {
+                            MostrarMensajeObligacionesPorAlumno(data.Message, MESSAGE_TYPE.SUCCESS);
+
+                            let anio = $('#cmbAnioIndividual').val();
+                            let periodo = $('#cmbPeriodoIndividual').val();
+                            let codAlu = $('#txtCodAlumno').val();
+                            let codRc = $('#cmbEspecialidad').val();
+
+                            BuscarObligacionesAlumno(anio, periodo, codRc, codAlu, false);
+                        } else {
+                            MostrarMensajeObligacionesPorAlumno(data.Message, MESSAGE_TYPE.ERROR);
+                        }
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    var jsonException = JSON.parse(xhr.responseText);
+                    MostrarMensajeObligacionesPorAlumno(jsonException.Message, MESSAGE_TYPE.ERROR);
+                }
+            });
+        });
+    });
+</script>

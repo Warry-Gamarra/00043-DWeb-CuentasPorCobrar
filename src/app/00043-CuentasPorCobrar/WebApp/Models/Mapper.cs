@@ -60,7 +60,8 @@ namespace WebApp.Models
                 T_TipoAlumno = obligacionDetalleDTO.T_TipoAlumno,
                 I_TipoDocumento = obligacionDetalleDTO.I_TipoDocumento,
                 T_DescDocumento = obligacionDetalleDTO.T_DescDocumento,
-                B_Mora = obligacionDetalleDTO.B_Mora
+                B_Mora = obligacionDetalleDTO.B_Mora,
+                B_EsPagoMatricula = obligacionDetalleDTO.B_EsPagoMatricula
             };
 
             return obligacionDetalleModel;

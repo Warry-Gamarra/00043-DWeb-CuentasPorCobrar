@@ -713,6 +713,7 @@
     <Content Include="Views\SerieComprobante\_RegistrarSerieComprobante.cshtml" />
     <Content Include="Views\TipoComprobante\_RegistrarTipoComprobante.cshtml" />
     <Content Include="Views\ComprobantePago\_BajaComprobante.cshtml" />
+    <Content Include="Views\Obligaciones\_AmpliarCreditos.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

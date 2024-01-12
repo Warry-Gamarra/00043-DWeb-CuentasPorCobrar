@@ -78,6 +78,8 @@ namespace Data.Views
 
         public string T_DescDocumento { get; set; }
 
+        public bool B_EsPagoMatricula { get; set; }
+
         public static IEnumerable<VW_DetalleObligaciones> FindByAlumno(int anio, int periodo, string codAlu, string codRc)
         {
             IEnumerable<VW_DetalleObligaciones> result;

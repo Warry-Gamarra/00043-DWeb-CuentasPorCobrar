@@ -154,7 +154,8 @@ namespace Domain.Entities
                 T_TipoAlumno = detalleObligaciones.T_TipoAlumno,
                 B_Mora = detalleObligaciones.B_Mora,
                 I_TipoDocumento = detalleObligaciones.I_TipoDocumento,
-                T_DescDocumento = detalleObligaciones.T_DescDocumento
+                T_DescDocumento = detalleObligaciones.T_DescDocumento,
+                B_EsPagoMatricula = detalleObligaciones.B_EsPagoMatricula
             };
 
             return obligacionDetalleDTO;

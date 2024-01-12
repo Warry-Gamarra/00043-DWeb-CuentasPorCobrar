@@ -1,4 +1,5 @@
 ﻿using DocumentFormat.OpenXml.EMMA;
+using DocumentFormat.OpenXml.Office2010.Excel;
 using Domain.Helpers;
 using Domain.Services;
 using System;
@@ -386,6 +387,23 @@ namespace WebApp.Controllers
         public JsonResult EliminarMatricula(int id)
         {
             var result = estudianteModel.EliminarMatricula(id, WebSecurity.CurrentUserId);
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult AmpliarCreditos(int anio, int periodo, string codalu, string codrc)
+        {
+            var model = obligacionServiceFacade.Obtener_DetallePago(anio, periodo, codalu, codrc)
+                .Where(x => x.I_Prioridad == 2 || (x.I_Prioridad == 1 && x.B_EsPagoMatricula));
+
+            return PartialView("_AmpliarCreditos", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public JsonResult GuardarAmpliacionCreditos(IEnumerable<dynamic> obligaciones, int tipoDocumento, string descripcionDocumento)
+        {
+            var result = new Response();
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
