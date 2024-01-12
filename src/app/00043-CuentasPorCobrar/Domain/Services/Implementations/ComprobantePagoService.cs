@@ -260,7 +260,9 @@ namespace Domain.Services.Implementations
                 string filaMontoNeto = String.Format("A;MntNeto;;{0}", montoNeto.ToString(FormatosDecimal.BASIC_DECIMAL));
                 writer.WriteLine(filaMontoNeto);
 
-                string filaMontoExe = "A;MntExe;;0";
+                decimal mntExe = comprobantePagoDTO.First().esGravado.Value ? 0 : montoNeto;
+
+                string filaMontoExe = String.Format("A;MntExe;;{0}", mntExe.ToString(FormatosDecimal.BASIC_DECIMAL));
                 writer.WriteLine(filaMontoExe);
 
                 string filaMontoExo = "A;MntExo;;0";
