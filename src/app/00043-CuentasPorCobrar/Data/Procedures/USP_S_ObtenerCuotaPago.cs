@@ -52,6 +52,8 @@ namespace Data.Procedures
 
         public DateTime D_FecCre { get; set; }
 
+        public bool B_EsAmpliacionCred { get; set; }
+
         public static USP_S_ObtenerCuotaPago Execute(int obligacionID)
         {
             DynamicParameters parameters;

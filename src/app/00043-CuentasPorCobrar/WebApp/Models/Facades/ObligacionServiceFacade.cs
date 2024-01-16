@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Http.Results;
+using System.Xml.XPath;
 
 namespace WebApp.Models.Facades
 {
@@ -373,6 +375,71 @@ namespace WebApp.Models.Facades
         public Response AnularObligacion(int obligacionID, int currentUserID)
         {
             return _obligacionService.AnularObligacion(obligacionID, currentUserID);
+        }
+
+        public List<Response> RegistrarAmpliacionCreditos(IEnumerable<AmpliacionCreditoModel> conceptosObligacion, int tipoDocumentoID, string descripcionDocumento, int currentUserID)
+        {
+            var generalResult = new List<Response>();
+            Response result;
+
+            try
+            {
+                if (conceptosObligacion != null && conceptosObligacion.Count() > 0)
+                {
+                    
+
+                    var listaAgrupada = conceptosObligacion.GroupBy(x => new { x.procesoId, x.procesoDesc, x.matAluID, x.fechaVcto, x.sFechaVcto });
+
+                    foreach (var obligacion in listaAgrupada)
+                    {
+                        var obligacionesRegistradas = _obligacionService.Obtener_ObligacionesAluCab(obligacion.Key.procesoId, obligacion.Key.matAluID);
+
+                        if (obligacionesRegistradas.Any(x => x.D_FecVencto.Value.Date == obligacion.Key.fechaVcto.Date))
+                        {
+                            result = new Response()
+                            {
+                                Message = String.Format("Debe seleccionar una fecha de vencimiento diferente para \"{0} ({1})\".", obligacion.Key.procesoDesc, obligacion.Key.sFechaVcto),
+                                Color = "danger"
+                            };
+                        }
+                        else
+                        {
+                            var conceptos = obligacion.Select(x => new ConceptosObligacionType { concPagID = x.conceptoID, monto = x.monto });
+
+                            result = _obligacionService.RegistrarAmpliacionCreditos(conceptos, obligacion.Key.procesoId, obligacion.Key.matAluID, obligacion.Key.fechaVcto,
+                                tipoDocumentoID, descripcionDocumento, currentUserID);
+
+                            result.Message = result.Value ? String.Format("Registro realizado con éxito para \"{0} ({1})\".", obligacion.Key.procesoDesc, obligacion.Key.sFechaVcto) : result.Message;
+
+                            result.Color = result.Value ? "success" : "danger";
+                        }
+
+                        generalResult.Add(result);
+                    }
+                }
+                else
+                {
+                    result = new Response()
+                    {
+                        Message = "No hay conceptos seleccionados.",
+                        Color = "danger"
+                    };
+
+                    generalResult.Add(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                result = new Response()
+                {
+                    Message = ex.Message,
+                    Color = "danger"
+                };
+
+                generalResult.Add(result);
+            }
+
+            return generalResult;
         }
     }
 }

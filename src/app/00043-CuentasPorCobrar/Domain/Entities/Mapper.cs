@@ -155,7 +155,10 @@ namespace Domain.Entities
                 B_Mora = detalleObligaciones.B_Mora,
                 I_TipoDocumento = detalleObligaciones.I_TipoDocumento,
                 T_DescDocumento = detalleObligaciones.T_DescDocumento,
-                B_EsPagoMatricula = detalleObligaciones.B_EsPagoMatricula
+                B_EsPagoMatricula = detalleObligaciones.B_EsPagoMatricula,
+                I_MatAluID = detalleObligaciones.I_MatAluID,
+                I_ConcPagID = detalleObligaciones.I_ConcPagID,
+                B_EsAmpliacionCred = detalleObligaciones.B_EsAmpliacionCred
             };
 
             return obligacionDetalleDTO;
@@ -213,6 +216,7 @@ namespace Domain.Entities
                 I_MontoPagadoSinMora = cuotaPago.I_MontoPagadoSinMora,
                 B_Pagado = cuotaPago.B_Pagado,
                 D_FecCre = cuotaPago.D_FecCre,
+                B_EsAmpliacionCred = cuotaPago.B_EsAmpliacionCred
             };
 
             return cuotaPagoDTO;
@@ -457,7 +461,8 @@ namespace Domain.Entities
                 I_UsuarioCre = obligacionAluCab.I_UsuarioCre,
                 D_FecCre = obligacionAluCab.D_FecCre,
                 I_UsuarioMod = obligacionAluCab.I_UsuarioMod,
-                D_FecMod = obligacionAluCab.D_FecMod
+                D_FecMod = obligacionAluCab.D_FecMod,
+                esAmpliacionCred = obligacionAluCab.B_EsAmpliacionCred
             };
 
             return result;
@@ -766,6 +771,22 @@ namespace Domain.Entities
             };
 
             return dto;
+        }
+
+        public static DataTable ConceptosObligacionType_To_DataTable(IEnumerable<ConceptosObligacionType> dataConceptos)
+        {
+            DataTable dataTable = new DataTable();
+
+            dataTable.Columns.Add("I_ConcPagID");
+
+            dataTable.Columns.Add("I_Monto");
+
+            foreach (var item in dataConceptos)
+            {
+                dataTable.Rows.Add(item.concPagID, item.monto);
+            }
+
+            return dataTable;
         }
     }
 }

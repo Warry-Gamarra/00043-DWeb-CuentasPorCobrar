@@ -2,6 +2,7 @@
 using DocumentFormat.OpenXml.Office2010.Excel;
 using Domain.Helpers;
 using Domain.Services;
+using Domain.Services.Implementations;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -394,16 +395,16 @@ namespace WebApp.Controllers
         public ActionResult AmpliarCreditos(int anio, int periodo, string codalu, string codrc)
         {
             var model = obligacionServiceFacade.Obtener_DetallePago(anio, periodo, codalu, codrc)
-                .Where(x => x.I_Prioridad == 2 || (x.I_Prioridad == 1 && x.B_EsPagoMatricula));
+                .Where(x => !x.B_EsAmpliacionCred && (x.I_Prioridad == 2 || (x.I_Prioridad == 1 && x.B_EsPagoMatricula)));
 
             return PartialView("_AmpliarCreditos", model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult GuardarAmpliacionCreditos(IEnumerable<dynamic> obligaciones, int tipoDocumento, string descripcionDocumento)
+        public JsonResult GuardarAmpliacionCreditos(IEnumerable<AmpliacionCreditoModel> conceptosObligacion, int tipoDocumentoID, string descripcionDocumento)
         {
-            var result = new Response();
+            var result = obligacionServiceFacade.RegistrarAmpliacionCreditos(conceptosObligacion, tipoDocumentoID, descripcionDocumento, WebSecurity.CurrentUserId);
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }

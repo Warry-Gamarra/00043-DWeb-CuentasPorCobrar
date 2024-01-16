@@ -83,6 +83,7 @@
     <Compile Include="Entities\ClasificadorEquivalencia.cs" />
     <Compile Include="Entities\ColumnaSeccion.cs" />
     <Compile Include="Entities\ComprobantePagoDTO.cs" />
+    <Compile Include="Entities\ConceptosObligacionType.cs" />
     <Compile Include="Entities\DevolucionPago.cs" />
     <Compile Include="Entities\EstadoComprobanteDTO.cs" />
     <Compile Include="Entities\EstadoObligacionDTO.cs" />

@@ -33,5 +33,7 @@ namespace Domain.Entities
         public int? I_UsuarioMod { get; set; }
 
         public DateTime? D_FecMod { get; set; }
+
+        public bool esAmpliacionCred { get; set; }
     }
 }

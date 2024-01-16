@@ -61,7 +61,10 @@ namespace WebApp.Models
                 I_TipoDocumento = obligacionDetalleDTO.I_TipoDocumento,
                 T_DescDocumento = obligacionDetalleDTO.T_DescDocumento,
                 B_Mora = obligacionDetalleDTO.B_Mora,
-                B_EsPagoMatricula = obligacionDetalleDTO.B_EsPagoMatricula
+                B_EsPagoMatricula = obligacionDetalleDTO.B_EsPagoMatricula,
+                I_MatAluID = obligacionDetalleDTO.I_MatAluID,
+                I_ConcPagID = obligacionDetalleDTO.I_ConcPagID,
+                B_EsAmpliacionCred = obligacionDetalleDTO.B_EsAmpliacionCred
             };
 
             return obligacionDetalleModel;
@@ -100,7 +103,8 @@ namespace WebApp.Models
                 D_FecCre = cuotaPagoDTO.D_FecCre,
                 C_CodServicio = cuotaPagoDTO.C_CodServicio,
                 T_FacDesc = cuotaPagoDTO.T_FacDesc,
-                T_DenomProg = cuotaPagoDTO.T_DenomProg
+                T_DenomProg = cuotaPagoDTO.T_DenomProg,
+                B_EsAmpliacionCred = cuotaPagoDTO.B_EsAmpliacionCred
             };
 
             return cuotaPagoModel;

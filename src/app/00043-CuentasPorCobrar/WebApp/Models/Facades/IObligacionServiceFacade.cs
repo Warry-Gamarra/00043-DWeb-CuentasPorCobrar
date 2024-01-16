@@ -29,5 +29,7 @@ namespace WebApp.Models.Facades
         Response ActualizarMontoObligaciones(int obligacionAluDetID, decimal monto, int tipoDocumento, string documento, int userID);
 
         Response AnularObligacion(int obligacionID, int currentUserID);
+
+        List<Response> RegistrarAmpliacionCreditos(IEnumerable<AmpliacionCreditoModel> conceptosObligacion, int tipoDocumentoID, string descripcionDocumento, int currentUserID);
     }
 }

@@ -3,6 +3,8 @@
 
 @{ 
     var lista = Model.GroupBy(x => new { x.I_ObligacionAluID, x.T_ProcesoDesc });
+
+    var matriculaID = Model.First().I_MatAluID;
 }
 
 <div class="modal-header bg-dark-gray" style="border-radius: .2rem .2rem 0px 0px">
@@ -12,7 +14,7 @@
 
 <form>
     <div class="modal-body">
-        <table class="table table-sm table-hover" id="tblCuotasPago">
+        <table class="table table-sm table-hover" id="tblConceptosObligacion">
             <thead class="thead-light">
                 <tr>
                     <th>Cuota pago</th>
@@ -35,16 +37,22 @@
                                 <td rowspan="@cuota.Count()">@cuota.Key.T_ProcesoDesc</td>
                             }
                             <td>@detalle.T_ConceptoDesc</td>
-                            <td><input type="text" class="form-control" value="@detalle.T_Monto" /></td>
+                            <td><input type="text" class="form-control" name="txtMonto" value="@detalle.T_Monto" /></td>
                             <td>
                                 <div class="input-group date">
-                                    <input type="text" id="txtFecVencto" name="txtFecVencto" class="form-control" readonly="readonly" value="@detalle.T_FecVencto" />
+                                    <input type="text" class="form-control" readonly="readonly" name="txtFecVencto" value="@detalle.T_FecVencto" />
                                     <div class="input-group-append">
                                         <span class="input-group-text"><i class="fa fa-calendar-o"></i></span>
                                     </div>
                                 </div>
                             </td>
-                            <td><input type="checkbox" name="chkObligacion" /></td>
+                            <td>
+                                <input type="checkbox" name="chkObligacion" />
+                                <input type="hidden" name="hdnProcesoID" value="@detalle.I_ProcesoID" />
+                                <input type="hidden" name="hdnMatAluID" value="@detalle.I_MatAluID" />
+                                <input type="hidden" name="hdnConceptoID" value="@detalle.I_ConcPagID" />
+                                <input type="hidden" name="hdnProcesoDesc" value="@detalle.T_ProcesoDesc" />
+                            </td>
                         </tr>
 
                         contador++;
@@ -53,14 +61,16 @@
             </tbody>
         </table>
     </div>
-    <div class="modal-footer" id="div_msg">
+    <div class="modal-footer" id="div_result">
         <div class="col-md-12" style="display:none;" id="loading">
-            <h6>Actualizando los datos...</h6>
+            <h6>Registrando los datos...</h6>
 
             <div class="progress">
                 <div class="indeterminate"></div>
             </div>
         </div>
+
+        <div class="col-md-12" style="display:none;" id="msg"></div>
 
         <button type="button" class="btn btn-primary" id="btnGrabar"><i class="fa fa-save"></i>&nbsp;Guardar</button>
         <button type="button" class="btn btn-secondary" id="btnCancel" data-dismiss="modal"><i class="fa fa-times-circle-o">&nbsp;</i>Cancelar</button>
@@ -82,19 +92,11 @@
         });
 
         $('form').on('click', '#btnGrabar', function (e) {
-            let listaObligaciones = [
-                { procesoId: 545, matricula: 123, monto: 250.00, fechaVcto: '12/01/2024', conceptoID: 7646 },
-                { procesoId: 548, matricula: 123, monto: 350.00, fechaVcto: '13/02/2024', conceptoID: 7649 },
-                { procesoId: 548, matricula: 123, monto: 350.00, fechaVcto: '14/03/2024', conceptoID: 7649 },
-                { procesoId: 548, matricula: 123, monto: 350.00, fechaVcto: '15/04/2024', conceptoID: 7649 },
-                { procesoId: 548, matricula: 123, monto: 350.00, fechaVcto: '16/05/2024', conceptoID: 7649 }
-            ];
-
             let token = $('input[name="__RequestVerificationToken"]').val();
 
             let parametros = {
-                obligaciones: listaObligaciones,
-                tipoDocumento: 1,
+                conceptosObligacion: ObtenerConceptosMarcados(),
+                tipoDocumentoID: 1,
                 descripcionDocumento: 'Motivo',
                 __RequestVerificationToken: token
             };
@@ -104,28 +106,77 @@
                 url: '@Url.Action("GuardarAmpliacionCreditos", "Obligaciones")',
                 data: parametros,
                 dataType: 'json',
-                beforeSend: function () { },
+                beforeSend: function () {
+                    $('#div_result #loading').css('display', 'block');
+                    $('#div_result #msg').html('');
+                    $('#div_result #msg').css('display', 'none');
+                },
                 success: function (data) {
-                    if (data) {
-                        if (data.Value) {
-                            MostrarMensajeObligacionesPorAlumno(data.Message, MESSAGE_TYPE.SUCCESS);
+                    $('#div_result #loading').css('display', 'none');
 
-                            let anio = $('#cmbAnioIndividual').val();
-                            let periodo = $('#cmbPeriodoIndividual').val();
-                            let codAlu = $('#txtCodAlumno').val();
-                            let codRc = $('#cmbEspecialidad').val();
+                    let totalCorrectos = 0;
 
-                            BuscarObligacionesAlumno(anio, periodo, codRc, codAlu, false);
-                        } else {
-                            MostrarMensajeObligacionesPorAlumno(data.Message, MESSAGE_TYPE.ERROR);
+                    let html = '';
+                    data.forEach(function (item) {
+                        html += '<li class="text-' + item.Color + '">' + item.Message + '</li>';
+                        if (item.Value) {
+                            totalCorrectos++;
                         }
+                    });
+                    
+                    $('#div_result #msg').html('<ul>' + html + '</ul>');
+                    $('#div_result #msg').css('display', 'block');
+
+                    if (totalCorrectos > 0) {
+                        let anio = $('#cmbAnioIndividual').val();
+                        let periodo = $('#cmbPeriodoIndividual').val();
+                        let codAlu = $('#txtCodAlumno').val();
+                        let codRc = $('#cmbEspecialidad').val();
+
+                        BuscarObligacionesAlumno(anio, periodo, codRc, codAlu, false);
                     }
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
+                    $('#div_result #loading').css('display', 'none');
+
                     var jsonException = JSON.parse(xhr.responseText);
                     MostrarMensajeObligacionesPorAlumno(jsonException.Message, MESSAGE_TYPE.ERROR);
                 }
             });
         });
     });
+
+    function ObtenerConceptosMarcados() {
+        let conceptosObligacion = [];
+
+        $('#tblConceptosObligacion tbody tr').each(function () {
+
+            let procesoID = $(this).find('input[name=hdnProcesoID]').val();
+
+            let matAluID = $(this).find('input[name=hdnMatAluID]').val();
+
+            let monto = $(this).find('input[name="txtMonto"]').val();
+
+            let fechaVto = $(this).find('input[name="txtFecVencto"]').val();
+
+            let conceptoID = $(this).find('input[name=hdnConceptoID]').val();
+
+            let procesoDesc = $(this).find('input[name=hdnProcesoDesc]').val();
+
+            let marcado = $(this).find('input[name="chkObligacion"]').prop('checked');
+
+            if (marcado) {
+                conceptosObligacion.push({
+                    procesoId: procesoID,
+                    matAluID: matAluID,
+                    monto: monto,
+                    sFechaVcto: fechaVto,
+                    conceptoID: conceptoID,
+                    procesoDesc: procesoDesc
+                });
+            }
+        });
+
+        return conceptosObligacion;
+    }
 </script>

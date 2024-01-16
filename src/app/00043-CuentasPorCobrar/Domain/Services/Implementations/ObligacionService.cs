@@ -261,6 +261,15 @@ namespace Domain.Services.Implementations
             return result;
         }
 
+        public IEnumerable<ObligacionAluCabEntity> Obtener_ObligacionesAluCab(int procesoID, int matAluID)
+        {
+            var lista = TR_ObligacionAluCab.FindByMatriculaAndProceso(procesoID, matAluID);
+
+            var result = lista.Select(x => Mapper.TR_ObligacionAluCab_To_ObligacionAluCabEntity(x));
+
+            return result;
+        }
+
         public CuotaPagoDTO Obtener_CuotaPago(int obligacionID)
         {
             var cuotaPago = USP_S_ObtenerCuotaPago.Execute(obligacionID);
@@ -296,6 +305,37 @@ namespace Domain.Services.Implementations
         public Response AnularObligacion(int obligacionID, int currentUserID)
         {
             var result = USP_U_AnularObligacionAlumno.Execute(obligacionID, currentUserID);
+
+            return new Response(result);
+        }
+
+        public Response RegistrarAmpliacionCreditos(IEnumerable<ConceptosObligacionType> listaConceptos, int procesoID, int matAluID, DateTime fecVencto, int tipoDocumento, string descDocumento, int currentUserID)
+        {
+            ResponseData result;
+
+            try
+            {
+                var dataTable = Mapper.ConceptosObligacionType_To_DataTable(listaConceptos);
+
+                var sp = new USP_I_RegistrarAmpliacionCredito()
+                {
+                    I_ProcesoID = procesoID,
+                    I_MatAluID = matAluID,
+                    D_FecVencto = fecVencto,
+                    I_TipoDocumento = tipoDocumento,
+                    T_DescDocumento = descDocumento,
+                    UserID = currentUserID
+                };
+
+                result = sp.Execute(dataTable);
+            }
+            catch (Exception ex)
+            {
+                result = new ResponseData()
+                {
+                    Message = ex.Message
+                };
+            }
 
             return new Response(result);
         }

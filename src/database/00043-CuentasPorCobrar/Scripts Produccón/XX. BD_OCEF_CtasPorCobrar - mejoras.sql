@@ -66,7 +66,8 @@ SELECT
  per.T_OpcionCod AS C_Periodo, per.T_OpcionDesc AS T_Periodo,   
  pro.T_ProcesoDesc, ISNULL(cp.T_ConceptoPagoDesc, con.T_ConceptoDesc) AS T_ConceptoDesc, cat.T_CatPagoDesc, det.I_Monto, det.B_Pagado, det.D_FecVencto, pro.I_Prioridad,  
  cab.C_Moneda, cp.I_TipoObligacion, cat.I_Nivel, niv.T_OpcionCod AS C_Nivel, niv.T_OpcionDesc AS T_Nivel, cat.I_TipoAlumno, tipal.T_OpcionCod AS C_TipoAlumno,   
- tipal.T_OpcionDesc AS T_TipoAlumno, cp.B_Mora, det.I_TipoDocumento, det.T_DescDocumento, cp.B_EsPagoMatricula
+ tipal.T_OpcionDesc AS T_TipoAlumno, cp.B_Mora, det.I_TipoDocumento, det.T_DescDocumento, 
+ cp.B_EsPagoMatricula, mat.I_MatAluID, cp.I_ConcPagID, cab.B_EsAmpliacionCred
 FROM dbo.VW_MatriculaAlumno mat  
 INNER JOIN dbo.TR_ObligacionAluCab cab ON cab.I_MatAluID = mat.I_MatAluID AND cab.B_Habilitado = 1 AND cab.B_Eliminado = 0   
 INNER JOIN dbo.TR_ObligacionAluDet det ON det.I_ObligacionAluID = cab.I_ObligacionAluID and det.B_Habilitado = 1 AND det.B_Eliminado = 0  
@@ -78,6 +79,112 @@ INNER JOIN dbo.TC_CatalogoOpcion per ON per.I_OpcionID = mat.I_Periodo
 INNER JOIN dbo.TC_CatalogoOpcion niv ON niv.I_OpcionID = cat.I_Nivel  
 INNER JOIN dbo.TC_CatalogoOpcion tipal ON tipal.I_OpcionID = cat.I_TipoAlumno
 GO
+
+
+
+CREATE TYPE dbo.type_ConceptosObligacion AS TABLE(I_ConcPagID INT, I_Monto DECIMAL(15, 2))
+GO
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_RegistrarAmpliacionCredito')
+	DROP PROCEDURE [dbo].[USP_I_RegistrarAmpliacionCredito]
+GO
+ 
+CREATE PROCEDURE dbo.USP_I_RegistrarAmpliacionCredito
+@ConceptosObligacion [dbo].[type_ConceptosObligacion] READONLY,
+@I_ProcesoID INT,
+@I_MatAluID INT,
+@D_FecVencto DATETIME,
+@I_TipoDocumento INT,
+@T_DescDocumento VARCHAR(250),
+@UserID INT,
+@B_Result BIT OUTPUT,
+@T_Message NVARCHAR(4000) OUTPUT
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	DECLARE @D_FechaAccion DATETIME,
+			@I_ObligacionAluID INT,
+			@I_MontoOblig DECIMAL(15, 2);
+
+	BEGIN TRAN
+	BEGIN TRY
+		SET @D_FechaAccion = GETDATE();
+
+		SET @I_MontoOblig = (SELECT SUM(I_Monto) FROM @ConceptosObligacion)
+			
+		INSERT dbo.TR_ObligacionAluCab(I_ProcesoID, I_MatAluID, C_Moneda, I_MontoOblig, D_FecVencto, B_Pagado, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, B_EsAmpliacionCred)
+		VALUES (@I_ProcesoID, @I_MatAluID, 'PEN', @I_MontoOblig, @D_FecVencto, 0, 1, 0, @UserID, @D_FechaAccion, 1)
+
+		SET @I_ObligacionAluID = SCOPE_IDENTITY();
+
+		INSERT dbo.TR_ObligacionAluDet(I_ObligacionAluID, I_ConcPagID, I_Monto, B_Pagado, D_FecVencto, I_TipoDocumento, T_DescDocumento, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, B_Mora)
+		SELECT  @I_ObligacionAluID, I_ConcPagID, I_Monto, 0, @D_FecVencto, @I_TipoDocumento, @T_DescDocumento, 1, 0, @UserID, @D_FechaAccion, 0 FROM @ConceptosObligacion
+
+		COMMIT TRAN
+		SET @B_Result = 1;
+		SET @T_Message = 'Registro realizado con éxito.';
+	END TRY
+	BEGIN CATCH
+		ROLLBACK TRAN
+		SET @B_Result = 0;
+		SET @T_Message = ERROR_MESSAGE();
+	END CATCH
+END
+GO
+
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_ObtenerCuotaPago')
+	DROP PROCEDURE [dbo].[USP_S_ObtenerCuotaPago]
+GO
+
+CREATE PROCEDURE USP_S_ObtenerCuotaPago
+@I_ObligacionAluID INT  
+AS  
+BEGIN  
+	SET NOCOUNT ON;  
+  
+	SELECT  
+		cab.I_ObligacionAluID,  
+		mat.C_CodAlu,  
+		mat.C_RcCod,  
+		mat.T_Nombre,  
+		mat.T_ApePaterno,  
+		mat.T_ApeMaterno,  
+		mat.I_Anio,  
+		mat.I_Periodo,  
+		per.T_OpcionCod AS C_Periodo,  
+		per.T_OpcionDesc AS T_Periodo,  
+		pro.I_ProcesoID,  
+		pro.T_ProcesoDesc,  
+		cab.D_FecVencto,  
+		pro.I_Prioridad,  
+		pro.N_CodBanco,  
+		cab.I_MontoOblig,  
+		ISNULL(  
+			(SELECT SUM(pagpro.I_MontoPagado) FROM dbo.TRI_PagoProcesadoUnfv pagpro  
+			INNER JOIN dbo.TR_ObligacionAluDet det ON det.I_ObligacionAluDetID = pagpro.I_ObligacionAluDetID   
+			WHERE det.I_ObligacionAluID = cab.I_ObligacionAluID AND det.B_Habilitado = 1 AND det.B_Eliminado = 0 AND pagpro.B_Anulado = 0), 0) AS I_MontoPagadoActual,  
+		ISNULL(  
+			(SELECT SUM(pagpro.I_MontoPagado) FROM dbo.TRI_PagoProcesadoUnfv pagpro  
+			INNER JOIN dbo.TR_ObligacionAluDet det ON det.I_ObligacionAluDetID = pagpro.I_ObligacionAluDetID  
+			WHERE det.I_ObligacionAluID = cab.I_ObligacionAluID AND det.B_Habilitado = 1 AND det.B_Eliminado = 0 AND pagpro.B_Anulado = 0 AND det.B_Mora = 0), 0) AS I_MontoPagadoSinMora,  
+		cab.B_Pagado,  
+		cab.D_FecCre,
+		cab.B_EsAmpliacionCred
+	FROM dbo.VW_MatriculaAlumno mat  
+	INNER JOIN dbo.TR_ObligacionAluCab cab ON cab.I_MatAluID = mat.I_MatAluID AND cab.B_Habilitado = 1 AND cab.B_Eliminado = 0  
+	INNER JOIN dbo.TC_Proceso pro ON pro.I_ProcesoID = cab.I_ProcesoID AND pro.B_Eliminado = 0  
+	INNER JOIN dbo.TC_CatalogoOpcion per ON per.I_OpcionID = mat.I_Periodo  
+	WHERE cab.I_ObligacionAluID = @I_ObligacionAluID  
+END  
+GO
+
+
+
+
+
 
 
 --Actualización de la tabla par a la DEVOLUCIÓN DE DINERO

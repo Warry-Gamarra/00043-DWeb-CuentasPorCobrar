@@ -127,5 +127,7 @@ namespace WebApp.Models
         public string T_Banco { get; set; }
 
         public string T_CtaDeposito { get; set; }
+
+        public bool B_EsAmpliacionCred {  get; set; }
     }
 }

@@ -67,5 +67,7 @@ namespace Domain.Entities
         public string T_FacDesc { get; set; }
 
         public string T_DenomProg { get; set; }
+
+        public bool B_EsAmpliacionCred {  get; set; }
     }
 }

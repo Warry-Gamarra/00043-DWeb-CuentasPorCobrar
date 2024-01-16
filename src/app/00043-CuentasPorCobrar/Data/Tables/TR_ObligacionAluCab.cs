@@ -38,6 +38,8 @@ namespace Data.Tables
 
         public DateTime? D_FecMod { get; set; }
 
+        public bool B_EsAmpliacionCred { get; set; }
+
         public static TR_ObligacionAluCab FindByID(int I_ObligacionAluID)
         {
             TR_ObligacionAluCab result;
@@ -49,6 +51,29 @@ namespace Data.Tables
                     var s_command = @"SELECT c.* FROM TR_ObligacionAluCab c WHERE c.B_Eliminado = 0 AND c.I_ObligacionAluID = @I_ObligacionAluID";
 
                     result = _dbConnection.QueryFirstOrDefault<TR_ObligacionAluCab>(s_command, new { I_ObligacionAluID = I_ObligacionAluID }, 
+                        commandType: CommandType.Text);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
+
+        public static IEnumerable<TR_ObligacionAluCab> FindByMatriculaAndProceso(int I_ProcesoID, int I_MatAluID)
+        {
+            IEnumerable<TR_ObligacionAluCab> result;
+
+            try
+            {
+                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
+                {
+                    var s_command = @"SELECT * FROM dbo.TR_ObligacionAluCab c
+                        WHERE c.I_MatAluID = @I_MatAluID and C.I_ProcesoID = @I_ProcesoID AND c.B_Habilitado = 1 AND c.B_Eliminado = 0";
+
+                    result = _dbConnection.Query<TR_ObligacionAluCab>(s_command, new { I_ProcesoID = I_ProcesoID, I_MatAluID = I_MatAluID },
                         commandType: CommandType.Text);
                 }
             }

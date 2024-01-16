@@ -31,6 +31,8 @@ namespace Domain.Services
 
         ObligacionAluCabEntity Obtener_ObligacionAluCab(int obligacionCabID);
 
+        IEnumerable<ObligacionAluCabEntity> Obtener_ObligacionesAluCab(int procesoID, int matAluID);
+
         CuotaPagoDTO Obtener_CuotaPago(int obligacionID);
 
         IEnumerable<ObligacionDetalleDTO> Obtener_DetalleObligacion_X_Obligacion(int idObligacion);
@@ -40,5 +42,7 @@ namespace Domain.Services
         Response ActualizarMontoObligaciones(int obligacionAluDetID, decimal monto, int tipoDocumento, string documento, int userID);
 
         Response AnularObligacion(int obligacionID, int currentUserID);
+
+        Response RegistrarAmpliacionCreditos(IEnumerable<ConceptosObligacionType> listaConceptos, int procesoID, int matAluID, DateTime fecVencto, int tipoDocumento, string descDocumento, int currentUserID);
     }
 }

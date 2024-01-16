@@ -126,5 +126,11 @@ namespace WebApp.Models
         public bool B_Mora { get; set; }
 
         public bool B_EsPagoMatricula { get; set; }
+
+        public int I_MatAluID { get; set; }
+
+        public int I_ConcPagID { get; set; }
+
+        public bool B_EsAmpliacionCred {  get; set; }
     }
 }
