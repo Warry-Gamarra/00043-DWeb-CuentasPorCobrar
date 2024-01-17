@@ -168,7 +168,9 @@ BEGIN
       
 		IF (@B_EditarFecha = 1) BEGIN    
 			
-			SET @D_FecVencto = CASE WHEN (DATEDIFF(DAY, @CurrentDate, @D_FecVencto) >= 0) THEN @D_FecVencto ELSE @D_FecVenctoExt END;
+			SET @D_FecVencto = CASE WHEN @D_FecVenctoExt IS NOT NULL 
+				THEN (CASE WHEN DATEDIFF(DAY, @CurrentDate, @D_FecVencto) >= 0 THEN @D_FecVencto ELSE @D_FecVenctoExt END) 
+				ELSE @D_FecVencto END;
 
 			UPDATE det SET det.D_FecVencto = @D_FecVencto, I_UsuarioMod = @I_UsuarioMod, D_FecMod = @CurrentDate     
 			FROM dbo.TR_ObligacionAluCab cab    
@@ -381,10 +383,14 @@ BEGIN
   SET @B_SoloAplicarExtemporaneo = CASE WHEN @B_SoloAplicarExtemporaneo IS NULL THEN 0 ELSE @B_SoloAplicarExtemporaneo END;
  --1ro Obtener los conceptos según año y periodo  
  DECLARE @N_GradoBachiller CHAR(1) = '1'  
+ DECLARE @D_CurrentDate DATETIME = GETDATE();
   
- SELECT p.I_ProcesoID, p.D_FecVencto, cp.T_CatPagoDesc, conpag.I_ConcPagID, con.T_ConceptoDesc, cp.I_TipoAlumno, conpag.M_Monto, conpag.M_MontoMinimo, conpag.I_TipoObligacion,  
- ISNULL(conpag.B_Calculado, 0) AS B_Calculado, conpag.I_Calculado, ISNULL(conpag.B_GrupoCodRc, 0) AS B_GrupoCodRc, gr.T_OpcionCod AS I_GrupoCodRc, conpag.B_ModalidadIngreso, moding.T_OpcionCod AS C_CodModIng,   
- ISNULL(conpag.B_EsPagoMatricula, 0) AS B_EsPagoMatricula, ISNULL(con.B_EsPagoExtmp, 0) AS B_EsPagoExtmp, conpag.N_NroPagos, cp.I_Prioridad  
+ SELECT 
+	p.I_ProcesoID, p.D_FecVencto,
+	CASE WHEN p.D_FecVenctoExt IS NOT NULL THEN (CASE WHEN DATEDIFF(DAY, @D_CurrentDate, p.D_FecVencto) >=0 THEN p.D_FecVencto ELSE p.D_FecVenctoExt END) ELSE p.D_FecVencto END AS D_FecVenctoRegistro,
+    cp.T_CatPagoDesc, conpag.I_ConcPagID, con.T_ConceptoDesc, cp.I_TipoAlumno, conpag.M_Monto, conpag.M_MontoMinimo, conpag.I_TipoObligacion,  
+	ISNULL(conpag.B_Calculado, 0) AS B_Calculado, conpag.I_Calculado, ISNULL(conpag.B_GrupoCodRc, 0) AS B_GrupoCodRc, gr.T_OpcionCod AS I_GrupoCodRc, conpag.B_ModalidadIngreso, moding.T_OpcionCod AS C_CodModIng,   
+	ISNULL(conpag.B_EsPagoMatricula, 0) AS B_EsPagoMatricula, ISNULL(con.B_EsPagoExtmp, 0) AS B_EsPagoExtmp, conpag.N_NroPagos, cp.I_Prioridad  
  INTO #tmp_conceptos_pregrado  
  FROM dbo.TC_Proceso p  
  INNER JOIN dbo.TC_CategoriaPago cp ON cp.I_CatPagoID = p.I_CatPagoID  
@@ -451,7 +457,6 @@ BEGIN
  DECLARE @Tmp_Procesos TABLE (I_ProcesoID INT, I_ConcPagID INT, M_Monto DECIMAL(15,2), D_FecVencto DATETIME, I_TipoObligacion INT, I_Prioridad TINYINT)  
   
  DECLARE @C_Moneda VARCHAR(3) = 'PEN',  
-   @D_CurrentDate DATETIME = GETDATE(),  
    @I_FilaActual INT = 1,  
    @I_CantRegistros INT = (SELECT MAX(id) FROM #Tmp_MatriculaAlumno),  
      
@@ -517,7 +522,7 @@ BEGIN
 		B_EsPagoMatricula = 1 AND C_CodModIng = @C_CodModIng) = 1  
 	   begin  
 		INSERT @Tmp_Procesos(I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad)  
-		SELECT I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad FROM #tmp_conceptos_pregrado  
+		SELECT I_ProcesoID, I_ConcPagID, M_Monto, D_FecVenctoRegistro, I_TipoObligacion, I_Prioridad FROM #tmp_conceptos_pregrado  
 		WHERE I_TipoAlumno = @I_TipoAlumno AND I_TipoObligacion = @I_Matricula AND   
 		 B_EsPagoMatricula = 1 AND C_CodModIng = @C_CodModIng  
 	   end  
@@ -528,7 +533,7 @@ BEGIN
 		 B_EsPagoMatricula = 1 AND C_CodModIng is NULL) = 1  
 		begin  
 		 INSERT @Tmp_Procesos(I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad)  
-		 SELECT I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad FROM #tmp_conceptos_pregrado  
+		 SELECT I_ProcesoID, I_ConcPagID, M_Monto, D_FecVenctoRegistro, I_TipoObligacion, I_Prioridad FROM #tmp_conceptos_pregrado  
 		 WHERE I_TipoAlumno = @I_TipoAlumno AND I_TipoObligacion = @I_Matricula AND   
 		  B_EsPagoMatricula = 1 AND C_CodModIng is NULL  
 		end   
@@ -536,7 +541,7 @@ BEGIN
   
 	   --Pagos generales de matrícula  
 	   INSERT @Tmp_Procesos(I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad)  
-	   SELECT I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad FROM #tmp_conceptos_pregrado  
+	   SELECT I_ProcesoID, I_ConcPagID, M_Monto, D_FecVenctoRegistro, I_TipoObligacion, I_Prioridad FROM #tmp_conceptos_pregrado  
 	   WHERE I_TipoAlumno = @I_TipoAlumno AND I_TipoObligacion = @I_Matricula AND  
 		B_EsPagoMatricula = 0 AND B_Calculado = 0 AND B_GrupoCodRc = 0 AND B_EsPagoExtmp = 0  
   
@@ -546,7 +551,7 @@ BEGIN
 		B_EsPagoMatricula = 0 AND B_GrupoCodRc = 1 AND I_GrupoCodRc = @N_Grupo) = 1  
 	   begin  
 		INSERT @Tmp_Procesos(I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad)  
-		SELECT I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad FROM #tmp_conceptos_pregrado  
+		SELECT I_ProcesoID, I_ConcPagID, M_Monto, D_FecVenctoRegistro, I_TipoObligacion, I_Prioridad FROM #tmp_conceptos_pregrado  
 		WHERE I_TipoAlumno = @I_TipoAlumno AND I_TipoObligacion = @I_Matricula AND   
 		 B_EsPagoMatricula = 0 AND B_GrupoCodRc = 1 AND I_GrupoCodRc = @N_Grupo  
 	   end  
@@ -560,7 +565,7 @@ BEGIN
 		 WHERE nv.B_Eliminado = 0 AND nv.C_CodAlu = @C_CodAlu AND nv.C_CodRc = @C_CodRc AND nv.I_Anio = @I_Anio AND nv.I_Periodo = @I_Periodo)  
 		begin  
 		 INSERT @Tmp_Procesos(I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad)  
-		 SELECT I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad FROM #tmp_conceptos_pregrado  
+		 SELECT I_ProcesoID, I_ConcPagID, M_Monto, D_FecVenctoRegistro, I_TipoObligacion, I_Prioridad FROM #tmp_conceptos_pregrado  
 		 WHERE I_TipoAlumno = @I_AlumnoRegular AND I_TipoObligacion = @I_Matricula AND  
 		  B_EsPagoMatricula = 0 AND B_Calculado = 1 AND I_Calculado = @I_MultaNoVotar  
 		end  
@@ -573,7 +578,7 @@ BEGIN
 		 DATEDIFF(DAY, @D_CurrentDate, D_FecVencto) < 0) = 1  
 	   begin  
 		INSERT @Tmp_Procesos(I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad)  
-		SELECT I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad FROM #tmp_conceptos_pregrado  
+		SELECT I_ProcesoID, I_ConcPagID, M_Monto, D_FecVenctoRegistro, I_TipoObligacion, I_Prioridad FROM #tmp_conceptos_pregrado  
 		WHERE I_TipoAlumno = @I_TipoAlumno AND I_TipoObligacion = @I_Matricula AND   
 		 B_EsPagoMatricula = 0 AND B_EsPagoExtmp = 1 AND  
 		 DATEDIFF(DAY, @D_CurrentDate, D_FecVencto) < 0  
@@ -596,16 +601,16 @@ BEGIN
   
 		 with CTE_Recursivo AS  
 		 (  
-		  SELECT 1 AS num, I_ProcesoID, I_ConcPagID, D_FecVencto, I_TipoObligacion, I_Prioridad FROM #tmp_conceptos_pregrado  
+		  SELECT 1 AS num, I_ProcesoID, I_ConcPagID, D_FecVenctoRegistro, I_TipoObligacion, I_Prioridad FROM #tmp_conceptos_pregrado  
 		  WHERE I_TipoAlumno = @I_TipoAlumno AND B_Calculado = 1 AND I_Calculado = @I_DeudasAnteriores  
 		  UNION ALL  
-		  SELECT num + 1, I_ProcesoID, I_ConcPagID, D_FecVencto, I_TipoObligacion, I_Prioridad  
+		  SELECT num + 1, I_ProcesoID, I_ConcPagID, D_FecVenctoRegistro, I_TipoObligacion, I_Prioridad  
 		  FROM CTE_Recursivo  
 		  WHERE num < @N_NroPagos  
 		 )  
 		 INSERT @Tmp_Procesos(I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad)  
 		 SELECT I_ProcesoID, I_ConcPagID, dbo.FN_CalcularCuotasDeuda(@I_MontoDeuda, @N_NroPagos, num) AS M_Monto,   
-		  DATEADD(MONTH, num-1, D_FecVencto), I_TipoObligacion, I_Prioridad  
+		  DATEADD(MONTH, num-1, D_FecVenctoRegistro), I_TipoObligacion, I_Prioridad  
 		 FROM CTE_Recursivo;  
 		end  
 	   end  
@@ -625,16 +630,16 @@ BEGIN
       
 		 with CTE_Recursivo AS  
 		 (  
-		  SELECT 1 AS num, I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad FROM #tmp_conceptos_pregrado  
+		  SELECT 1 AS num, I_ProcesoID, I_ConcPagID, M_Monto, D_FecVenctoRegistro, I_TipoObligacion, I_Prioridad FROM #tmp_conceptos_pregrado  
 		  WHERE I_TipoAlumno = @I_TipoAlumno AND B_Calculado = 1 AND I_Calculado = @I_CrdtDesaprobados  
 		  UNION ALL  
-		  SELECT num + 1, I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad  
+		  SELECT num + 1, I_ProcesoID, I_ConcPagID, M_Monto, D_FecVenctoRegistro, I_TipoObligacion, I_Prioridad  
 		  FROM CTE_Recursivo  
 		  WHERE num < @N_NroPagos  
 		 )  
 		 INSERT @Tmp_Procesos(I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad)  
 		 SELECT I_ProcesoID, I_ConcPagID, CAST((M_Monto * @I_MultiplicMontoCredt) / @N_NroPagos AS DECIMAL(15,2)),   
-		  DATEADD(MONTH, num-1, D_FecVencto), I_TipoObligacion, I_Prioridad  
+		  DATEADD(MONTH, num-1, D_FecVenctoRegistro), I_TipoObligacion, I_Prioridad  
 		 FROM CTE_Recursivo  
 		end  
 	   end  
@@ -648,16 +653,16 @@ BEGIN
       
 		with CTE_Recursivo AS  
 		(  
-		 SELECT 1 AS num, I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad FROM #tmp_conceptos_pregrado  
+		 SELECT 1 AS num, I_ProcesoID, I_ConcPagID, M_Monto, D_FecVenctoRegistro, I_TipoObligacion, I_Prioridad FROM #tmp_conceptos_pregrado  
 		 WHERE I_TipoAlumno = @I_TipoAlumno AND B_Calculado = 1 AND I_Calculado = @I_Pensiones AND C_CodModIng = @C_CodModIng  
 		 UNION ALL  
-		 SELECT num + 1, I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad  
+		 SELECT num + 1, I_ProcesoID, I_ConcPagID, M_Monto, D_FecVenctoRegistro, I_TipoObligacion, I_Prioridad  
 		 FROM CTE_Recursivo  
 		 WHERE num < @N_NroPagos  
 		)  
 		INSERT @Tmp_Procesos(I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad)  
 		SELECT I_ProcesoID, I_ConcPagID, CAST(M_Monto / @N_NroPagos AS DECIMAL(15,2)) AS M_Monto,   
-		 DATEADD(MONTH, num-1, D_FecVencto), I_TipoObligacion, I_Prioridad  
+		 DATEADD(MONTH, num-1, D_FecVenctoRegistro), I_TipoObligacion, I_Prioridad  
 		FROM CTE_Recursivo  
 	   end  
 	END
@@ -669,7 +674,7 @@ BEGIN
 		 DATEDIFF(DAY, @D_CurrentDate, D_FecVencto) < 0) = 1  
 	   begin  
 		INSERT @Tmp_Procesos(I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad)  
-		SELECT I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad FROM #tmp_conceptos_pregrado  
+		SELECT I_ProcesoID, I_ConcPagID, M_Monto, D_FecVenctoRegistro, I_TipoObligacion, I_Prioridad FROM #tmp_conceptos_pregrado  
 		WHERE I_TipoAlumno = @I_TipoAlumno AND I_TipoObligacion = @I_Matricula AND   
 		 B_EsPagoMatricula = 0 AND B_EsPagoExtmp = 1 AND  
 		 DATEDIFF(DAY, @D_CurrentDate, D_FecVencto) < 0  
@@ -919,10 +924,13 @@ BEGIN
 
 	DECLARE @N_GradoMaestria CHAR(1) = '2';
 	DECLARE @N_Doctorado CHAR(1) = '3';
-    
+    DECLARE @D_CurrentDate DATETIME = GETDATE();
+
 	--1ro Obtener los conceptos según ano y periodo  
 	SELECT 
-		p.I_ProcesoID, p.D_FecVencto, cp.T_CatPagoDesc, conpag.I_ConcPagID, con.T_ConceptoDesc, cp.I_TipoAlumno, conpag.M_Monto, conpag.M_MontoMinimo, conpag.I_TipoObligacion,  
+		p.I_ProcesoID, p.D_FecVencto, 
+		CASE WHEN p.D_FecVenctoExt IS NOT NULL THEN (CASE WHEN DATEDIFF(DAY, @D_CurrentDate, p.D_FecVencto) >=0 THEN p.D_FecVencto ELSE p.D_FecVenctoExt END) ELSE p.D_FecVencto END AS D_FecVenctoRegistro,
+		cp.T_CatPagoDesc, conpag.I_ConcPagID, con.T_ConceptoDesc, cp.I_TipoAlumno, conpag.M_Monto, conpag.M_MontoMinimo, conpag.I_TipoObligacion,  
 		ISNULL(conpag.B_Calculado, 0) AS B_Calculado, conpag.I_Calculado, ISNULL(conpag.B_GrupoCodRc, 0) AS B_GrupoCodRc,  conpag.I_GrupoCodRc, conpag.B_ModalidadIngreso, moding.T_OpcionCod AS C_CodModIng,   
 		ISNULL(conpag.B_EsPagoMatricula, 0) AS B_EsPagoMatricula, ISNULL(conpag.B_EsPagoExtmp, 0) AS B_EsPagoExtmp, conpag.N_NroPagos, cp.I_Prioridad, cp.I_Nivel, niv.T_OpcionCod AS C_Nivel  
 		INTO #tmp_conceptos_posgrado  
@@ -994,8 +1002,7 @@ BEGIN
 	--3ro Comienzo con el calculo las obligaciones por alumno almacenandolas en @Tmp_Procesos.  
 	DECLARE @Tmp_Procesos TABLE (I_ProcesoID INT, I_ConcPagID INT, M_Monto DECIMAL(15,2), D_FecVencto DATETIME, I_TipoObligacion INT, I_Prioridad TINYINT);
   
-	DECLARE @C_Moneda VARCHAR(3) = 'PEN',  
-		@D_CurrentDate DATETIME = GETDATE(),  
+	DECLARE @C_Moneda VARCHAR(3) = 'PEN',
 		@I_FilaActual INT = 1,  
 		@I_CantRegistros INT = (SELECT MAX(id) FROM #Tmp_MatriculaAlumno),  
   
@@ -1064,7 +1071,7 @@ BEGIN
 				B_EsPagoMatricula = 1 AND C_CodModIng = @C_CodModIng AND C_Nivel = @N_Grado) = 1  
 				BEGIN  
 					INSERT @Tmp_Procesos(I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad)  
-					SELECT I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad FROM #tmp_conceptos_posgrado  
+					SELECT I_ProcesoID, I_ConcPagID, M_Monto, D_FecVenctoRegistro, I_TipoObligacion, I_Prioridad FROM #tmp_conceptos_posgrado  
 					WHERE I_TipoAlumno = @I_TipoAlumno AND I_TipoObligacion = @I_Matricula AND   
 						B_EsPagoMatricula = 1 AND C_CodModIng = @C_CodModIng AND C_Nivel = @N_Grado  
 				END  
@@ -1075,7 +1082,7 @@ BEGIN
 						B_EsPagoMatricula = 1 AND C_Nivel = @N_Grado AND C_CodModIng is NULL) = 1  
 					BEGIN  
 						INSERT @Tmp_Procesos(I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad)  
-						SELECT I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad FROM #tmp_conceptos_posgrado  
+						SELECT I_ProcesoID, I_ConcPagID, M_Monto, D_FecVenctoRegistro, I_TipoObligacion, I_Prioridad FROM #tmp_conceptos_posgrado  
 						WHERE I_TipoAlumno = @I_TipoAlumno AND I_TipoObligacion = @I_Matricula AND   
 						B_EsPagoMatricula = 1 AND C_Nivel = @N_Grado AND C_CodModIng is NULL  
 					END   
@@ -1083,7 +1090,7 @@ BEGIN
   
 				--Pagos generales de matrícula  
 				INSERT @Tmp_Procesos(I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad)  
-				SELECT I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad FROM #tmp_conceptos_posgrado  
+				SELECT I_ProcesoID, I_ConcPagID, M_Monto, D_FecVenctoRegistro, I_TipoObligacion, I_Prioridad FROM #tmp_conceptos_posgrado  
 				WHERE I_TipoAlumno = @I_TipoAlumno AND I_TipoObligacion = @I_Matricula AND  
 					B_EsPagoMatricula = 0 AND B_Calculado = 0 AND B_GrupoCodRc = 0 AND B_EsPagoExtmp = 0 AND C_Nivel = @N_Grado  
   
@@ -1094,7 +1101,7 @@ BEGIN
 					DATEDIFF(DAY, @D_CurrentDate, D_FecVencto) < 0) = 1  
 				BEGIN  
 					INSERT @Tmp_Procesos(I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad)  
-					SELECT I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad FROM #tmp_conceptos_posgrado  
+					SELECT I_ProcesoID, I_ConcPagID, M_Monto, D_FecVenctoRegistro, I_TipoObligacion, I_Prioridad FROM #tmp_conceptos_posgrado  
 					WHERE I_TipoAlumno = @I_TipoAlumno AND I_TipoObligacion = @I_Matricula AND   
 						B_EsPagoMatricula = 0 AND B_EsPagoExtmp = 1 AND C_Nivel = @N_Grado AND  
 						DATEDIFF(DAY, @D_CurrentDate, D_FecVencto) < 0  
@@ -1109,16 +1116,16 @@ BEGIN
       
 					with CTE_Recursivo AS  
 					(  
-						SELECT 1 AS num, I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad FROM #tmp_conceptos_posgrado  
+						SELECT 1 AS num, I_ProcesoID, I_ConcPagID, M_Monto, D_FecVenctoRegistro, I_TipoObligacion, I_Prioridad FROM #tmp_conceptos_posgrado  
 						WHERE I_TipoAlumno = @I_TipoAlumno AND B_Calculado = 1 AND I_Calculado = @I_Pensiones AND C_Nivel = @N_Grado  
 						UNION ALL  
-						SELECT num + 1, I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad  
+						SELECT num + 1, I_ProcesoID, I_ConcPagID, M_Monto, D_FecVenctoRegistro, I_TipoObligacion, I_Prioridad  
 						FROM CTE_Recursivo  
 						WHERE num < @N_NroPagos  
 					)  
 					INSERT @Tmp_Procesos(I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad)  
 					SELECT I_ProcesoID, I_ConcPagID, CAST(M_Monto / @N_NroPagos AS DECIMAL(15,2)) AS M_Monto,   
-						DATEADD(MONTH, num-1, D_FecVencto), I_TipoObligacion, I_Prioridad  
+						DATEADD(MONTH, num-1, D_FecVenctoRegistro), I_TipoObligacion, I_Prioridad  
 					FROM CTE_Recursivo  
 				END 
 			END
@@ -1131,7 +1138,7 @@ BEGIN
 					DATEDIFF(DAY, @D_CurrentDate, D_FecVencto) < 0) = 1  
 				BEGIN  
 					INSERT @Tmp_Procesos(I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad)  
-					SELECT I_ProcesoID, I_ConcPagID, M_Monto, D_FecVencto, I_TipoObligacion, I_Prioridad FROM #tmp_conceptos_posgrado  
+					SELECT I_ProcesoID, I_ConcPagID, M_Monto, D_FecVenctoRegistro, I_TipoObligacion, I_Prioridad FROM #tmp_conceptos_posgrado  
 					WHERE I_TipoAlumno = @I_TipoAlumno AND I_TipoObligacion = @I_Matricula AND   
 						B_EsPagoMatricula = 0 AND B_EsPagoExtmp = 1 AND C_Nivel = @N_Grado AND  
 						DATEDIFF(DAY, @D_CurrentDate, D_FecVencto) < 0
