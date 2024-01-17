@@ -57,6 +57,18 @@
                 </div>
             </div>
             <div class="form-group form-row">
+                @Html.LabelFor(model => model.FecVenctoExt, new { @class = "control-label col-form-label col-4" })
+                <div class="col-8">
+                    <div class="input-group date" id="datepicker_fecventoExt">
+                        @Html.TextBox("txtFecVenctoExt", Model.FecVenctoExt, "{0:dd/MM/yyyy}", new { @class = "form-control" })
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="fa fa-calendar-o"></i></span>
+                        </div>
+                    </div>
+                    <p class="text-danger small">@Html.ValidationMessageFor(model => model.FecVenctoExt)</p>
+                </div>
+            </div>
+            <div class="form-group form-row">
                 @Html.LabelFor(model => model.CtaDepositoID, new { @class = "control-label col-form-label col-4" })
                 <div class="col-8">
                     @Html.ListBoxFor(model => model.CtaDepositoID, ViewBag.CtasDeposito as SelectList, new { @class = "select-multiple form-control text-uppercase", multiple = "true" })

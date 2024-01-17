@@ -54,6 +54,170 @@ USE BD_OCEF_CtasPorCobrar
 GO
 
 
+ALTER TABLE TC_Proceso ADD D_FecVenctoExt DATETIME
+GO
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_GrabarProceso')
+	DROP PROCEDURE [dbo].[USP_I_GrabarProceso]
+GO
+
+CREATE PROCEDURE dbo.USP_I_GrabarProceso
+ @I_CatPagoID int,  
+ @I_Anio smallint = null,  
+ @D_FecVencto datetime = null,  
+ @D_FecVenctoExt datetime = null,  
+ @I_Prioridad tinyint = null,  
+ @I_Periodo int = null,  
+ @N_CodBanco varchar(10) = null,  
+ @T_ProcesoDesc varchar(250) = null,  
+ @I_UsuarioCre int,  
+ @I_CuotaPagoID INT,  
+ @I_ProcesoID int OUTPUT,  
+ @B_Result bit OUTPUT,  
+ @T_Message nvarchar(4000) OUTPUT  
+AS  
+BEGIN  
+ SET NOCOUNT ON;  
+    
+ BEGIN TRAN  
+  
+ BEGIN TRY  
+  DECLARE @I_Grado INT,    
+  @I_AlumnoDestino INT    
+    
+  INSERT dbo.TC_Proceso(I_CatPagoID, I_Anio, D_FecVencto, T_ProcesoDesc, N_CodBanco, I_Prioridad, I_Periodo, B_Migrado, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre,  
+  I_CuotaPagoID, D_FecVenctoExt)    
+  VALUES(@I_CatPagoID, @I_Anio, @D_FecVencto, @T_ProcesoDesc, @N_CodBanco, @I_Prioridad, @I_Periodo, 0, 1, 0, @I_UsuarioCre, getdate(), @I_CuotaPagoID, @D_FecVenctoExt)    
+        
+  SET @I_ProcesoID = SCOPE_IDENTITY()    
+      
+  SELECT @I_Grado = I_Nivel, @I_AlumnoDestino = I_TipoAlumno FROM dbo.TC_CategoriaPago     
+   WHERE I_CatPagoID = @I_CatPagoID    
+    
+  INSERT INTO TI_ConceptoPago    
+   (I_ProcesoID, I_ConceptoID, T_ConceptoPagoDesc, B_Fraccionable, B_ConceptoGeneral, B_AgrupaConcepto, I_AlumnosDestino, I_GradoDestino, I_TipoObligacion,    
+   T_Clasificador, B_Calculado, I_Calculado, B_AnioPeriodo, I_Anio, I_Periodo, B_Especialidad, B_Dependencia, B_GrupoCodRc, I_GrupoCodRc,    
+   B_ModalidadIngreso, I_ModalidadIngresoID, B_ConceptoAgrupa, I_ConceptoAgrupaID, B_ConceptoAfecta, N_NroPagos, B_Porcentaje, C_Moneda,    
+   M_Monto, M_MontoMinimo, T_DescripcionLarga, T_Documento, B_Habilitado, B_Eliminado, I_UsuarioCre, D_FecCre, B_Migrado)    
+      
+  SELECT @I_ProcesoID, CCP.I_ConceptoID, C.T_ConceptoDesc, 0, 0, 0, @I_AlumnoDestino, @I_Grado, 9,    
+  C.T_Clasificador, C.B_Calculado, C.I_Calculado, 1, @I_Anio, @I_Periodo, 0, 0, c.B_GrupoCodRc, c.I_GrupoCodRc,    
+  c.B_ModalidadIngreso, c.I_ModalidadIngresoID, c.B_ConceptoAgrupa, c.I_ConceptoAgrupaID, 0, c.N_NroPagos, c.B_Porcentaje, c.C_Moneda,    
+  c.I_Monto, c.I_MontoMinimo, c.T_DescripcionLarga, c.T_Documento, 1, 0, @I_UsuarioCre, getdate(), 0    
+  FROM TI_ConceptoCategoriaPago CCP    
+  INNER JOIN TC_Concepto C ON CCP.I_ConceptoID = C.I_ConceptoID    
+  WHERE I_CatPagoID = @I_CatPagoID    
+      
+  COMMIT TRAN  
+  
+  SET @B_Result = 1    
+  SET @T_Message = 'Inserción de datos correcta.'  
+ END TRY  
+ BEGIN CATCH  
+  ROLLBACK TRAN  
+  SET @I_ProcesoID = 0  
+  SET @B_Result = 0  
+  SET @T_Message = ERROR_MESSAGE()  
+ END CATCH  
+END  
+GO
+
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_U_ActualizarProceso')
+DROP PROCEDURE [dbo].[USP_U_ActualizarProceso]
+GO
+
+CREATE PROCEDURE dbo.USP_U_ActualizarProceso  
+@I_ProcesoID int,    
+@I_CatPagoID int,    
+@I_Anio smallint = null,    
+@D_FecVencto datetime = null,    
+@D_FecVenctoExt DATETIME = NULL,
+@I_Prioridad tinyint = null,    
+@N_CodBanco varchar(10) = null,    
+@T_ProcesoDesc varchar(250) = null,    
+@B_Habilitado bit,    
+@I_UsuarioMod int,    
+@B_EditarFecha bit,    
+@I_CuotaPagoID INT = NULL,  
+@B_Result bit OUTPUT,    
+@T_Message nvarchar(4000) OUTPUT    
+AS    
+BEGIN    
+	SET NOCOUNT ON;  
+   
+	BEGIN TRAN  
+   
+	BEGIN TRY  
+		DECLARE @CurrentDate datetime = getdate();  
+    
+		UPDATE dbo.TC_Proceso SET    
+			I_CatPagoID = @I_CatPagoID,     
+			I_Anio = @I_Anio,     
+			D_FecVencto = @D_FecVencto,     
+			D_FecVenctoExt = @D_FecVenctoExt,
+			I_Prioridad = @I_Prioridad,    
+			N_CodBanco = @N_CodBanco,    
+			T_ProcesoDesc = @T_ProcesoDesc,    
+			B_Habilitado = @B_Habilitado,    
+			I_UsuarioMod = @I_UsuarioMod,    
+			D_FecMod = @CurrentDate,  
+			I_CuotaPagoID = @I_CuotaPagoID  
+		WHERE I_ProcesoID = @I_ProcesoID;  
+      
+		IF (@B_EditarFecha = 1) BEGIN    
+			
+			SET @D_FecVencto = CASE WHEN (DATEDIFF(DAY, @CurrentDate, @D_FecVencto) >= 0) THEN @D_FecVencto ELSE @D_FecVenctoExt END;
+
+			UPDATE det SET det.D_FecVencto = @D_FecVencto, I_UsuarioMod = @I_UsuarioMod, D_FecMod = @CurrentDate     
+			FROM dbo.TR_ObligacionAluCab cab    
+			INNER JOIN dbo.TR_ObligacionAluDet det ON det.I_ObligacionAluID = cab.I_ObligacionAluID AND det.B_Habilitado = 1 AND det.B_Eliminado = 0    
+			WHERE cab.B_Habilitado = 1 AND cab.B_Eliminado = 0 AND cab.B_Pagado = 0 AND det.B_Pagado = 0 AND cab.I_ProcesoID = @I_ProcesoID AND cab.B_EsAmpliacionCred = 0;  
+    
+			UPDATE cab SET cab.D_FecVencto = @D_FecVencto, I_UsuarioMod = @I_UsuarioMod, D_FecMod = @CurrentDate    
+			FROM dbo.TR_ObligacionAluCab cab    
+			WHERE cab.B_Habilitado = 1 AND cab.B_Eliminado = 0 AND cab.B_Pagado = 0 AND cab.I_ProcesoID = @I_ProcesoID AND cab.B_EsAmpliacionCred = 0;  
+		END    
+    
+		COMMIT TRAN  
+  
+		SET @B_Result = 1;  
+		SET @T_Message = 'Actualización de datos correcta.';  
+	END TRY    
+	BEGIN CATCH    
+		ROLLBACK TRAN  
+  
+		SET @B_Result = 0;  
+		SET @T_Message = ERROR_MESSAGE() + ' LINE: ' + CAST(ERROR_LINE() AS varchar(10));  
+	END CATCH    
+END    
+GO
+
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_Procesos')
+	DROP PROCEDURE [dbo].[USP_S_Procesos]
+GO
+
+CREATE PROCEDURE dbo.USP_S_Procesos  
+AS  
+BEGIN  
+ SET NOCOUNT ON;  
+ SELECT p.I_ProcesoID, cp.I_CatPagoID, cp.T_CatPagoDesc, per.T_OpcionDesc AS T_PeriodoDesc, I_Periodo, per.T_OpcionCod AS C_PeriodoCod,  
+  p.I_Anio, p.D_FecVencto, p.I_Prioridad, p.N_CodBanco, p.T_ProcesoDesc, cp.B_Obligacion, cp.I_Nivel, niv.T_OpcionCod AS C_Nivel,  
+  cp.I_TipoAlumno, tipAlu.T_OpcionDesc AS T_TipoAlumno, tipAlu.T_OpcionCod as C_TipoAlumno, I_CuotaPagoID, p.D_FecVenctoExt
+ FROM dbo.TC_Proceso p  
+ INNER JOIN dbo.TC_CategoriaPago cp ON p.I_CatPagoID = cp.I_CatPagoID  
+ LEFT JOIN dbo.TC_CatalogoOpcion per ON per.I_OpcionID = p.I_Periodo  
+ LEFT JOIN dbo.TC_CatalogoOpcion niv ON niv.I_OpcionID = cp.I_Nivel  
+ LEFT JOIN dbo.TC_CatalogoOpcion tipAlu ON tipAlu.I_OpcionID = cp.I_TipoAlumno  
+ WHERE p.B_Eliminado = 0;
+END
+GO
+
+
+
 IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_DetalleObligaciones')
 	DROP VIEW [dbo].[VW_DetalleObligaciones]
 GO

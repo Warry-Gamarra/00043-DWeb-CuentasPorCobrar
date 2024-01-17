@@ -22,5 +22,6 @@ namespace Domain.Entities
         public bool editarFecha { get;  set; }
 
         public int? cuotaPagoID { get; set; }
+        public DateTime? D_FecVenctoExt { get; set; }
     }
 }

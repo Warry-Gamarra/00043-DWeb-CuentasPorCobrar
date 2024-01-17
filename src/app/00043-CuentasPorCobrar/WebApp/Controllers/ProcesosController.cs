@@ -105,11 +105,13 @@ namespace WebApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Save(RegistroProcesoViewModel model, DateTime txtFecVencto)
+        public ActionResult Save(RegistroProcesoViewModel model, DateTime txtFecVencto, DateTime? txtFecVenctoExt)
         {
             Response result = new Response();
 
             model.FecVencto = txtFecVencto;
+
+            model.FecVenctoExt = txtFecVenctoExt;
 
             if (ModelState.IsValid)
             {

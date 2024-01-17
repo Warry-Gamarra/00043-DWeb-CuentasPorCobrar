@@ -16,8 +16,8 @@ namespace WebApp.ViewModels
         public string T_Periodo { get; set; }
         public DateTime? D_FecVencto { get; set; }
         public short? I_Prioridad { get; set; }
-
         public string C_Nivel { get; set; }
+        public DateTime? D_FecVenctoExt { get; set; }
     }
 
     public class RegistroProcesoViewModel
@@ -54,6 +54,9 @@ namespace WebApp.ViewModels
         public bool editarFecha { get; set; }
 
         public int? CuotaPagoID { get; set; }
+
+        [Display(Name = "Fecha Extemporáneo")]
+        public DateTime? FecVenctoExt { get; set; }
     }
 
 

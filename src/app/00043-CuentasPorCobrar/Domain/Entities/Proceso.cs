@@ -27,5 +27,6 @@ namespace Domain.Entities
         public string C_TipoAlumno { get; set; }
 
         public int? cuotaPagoID { get; set; }
+        public DateTime? D_FecVenctoExt { get; set; }
     }
 }

@@ -128,34 +128,9 @@ namespace WebApp.Models
                     T_Periodo = x.T_PeriodoDesc,
                     I_Anio = x.I_Anio,
                     D_FecVencto = x.D_FecVencto,
+                    D_FecVenctoExt = x.D_FecVenctoExt,
                     I_Prioridad = x.I_Prioridad,
                     C_Nivel = x.C_Nivel
-                }).ToList();
-            }
-
-            return result;
-        }
-
-
-        public List<ProcesoViewModel> Listar_Tasas()
-        {
-            //return ObtenerConceptosTipoObligacionHabilitados(null, TipoObligacion.OtrosPagos);
-
-            List<ProcesoViewModel> result = new List<ProcesoViewModel>();
-
-            var lista = _procesoService.Listar_Procesos().Where(x => !x.B_Obligacion);
-
-            if (lista != null)
-            {
-                result = lista.Select(x => new ProcesoViewModel()
-                {
-                    I_ProcesoID = x.I_ProcesoID,
-                    T_CatPagoDesc = x.T_CatPagoDesc,
-                    T_ProcesoDesc = string.IsNullOrEmpty(x.T_ProcesoDesc) ? $"{x.I_Anio.ToString()}-{x.C_PeriodoCod}-{x.T_CatPagoDesc}" : x.T_ProcesoDesc,
-                    T_Periodo = x.T_PeriodoDesc,
-                    I_Anio = x.I_Anio,
-                    D_FecVencto = x.D_FecVencto,
-                    I_Prioridad = x.I_Prioridad
                 }).ToList();
             }
 
@@ -191,6 +166,7 @@ namespace WebApp.Models
                 I_Anio = model.Anio,
                 I_Periodo = model.PerAcadId,
                 D_FecVencto = model.FecVencto,
+                D_FecVenctoExt = model.FecVenctoExt,
                 I_Prioridad = model.PrioridadId,
                 N_CodBanco = model.CodBcoComercio,
                 T_ProcesoDesc = model.DescProceso,
@@ -316,6 +292,7 @@ namespace WebApp.Models
                 PerAcadId = proceso.I_Periodo,
                 DescProceso = string.IsNullOrEmpty(proceso.T_ProcesoDesc) ? $"{proceso.I_Anio.ToString()}-{proceso.C_PeriodoCod}-{proceso.T_CatPagoDesc}" : proceso.T_ProcesoDesc,
                 FecVencto = proceso.D_FecVencto,
+                FecVenctoExt = proceso.D_FecVenctoExt,
                 PrioridadId = proceso.I_Prioridad,
                 CtasBcoComercio = ctasBcoComercio.Select(x => x.I_CtaDepID).ToArray(),
                 CodBcoComercio = proceso.N_CodBanco,

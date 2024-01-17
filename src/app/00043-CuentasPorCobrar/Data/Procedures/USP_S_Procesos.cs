@@ -22,6 +22,7 @@ namespace Data.Procedures
         public string N_CodBanco { get; set; }
         public short? I_Anio { get; set; }
         public DateTime? D_FecVencto { get; set; }
+        public DateTime? D_FecVenctoExt { get; set; }
         public short? I_Prioridad { get; set; }
         public bool B_Obligacion { get; set; }
         public int I_Nivel { get; set; }

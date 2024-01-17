@@ -16,6 +16,7 @@ namespace Data.Procedures
         public int? I_Anio { get; set; }
         public int MyProperty { get; set; }
         public DateTime? D_FecVencto { get; set; }
+        public DateTime? D_FecVenctoExt { get; set; }
         public int? I_Prioridad { get; set; }
         public int? I_Periodo { get; set; }
         public string N_CodBanco { get; set; }
@@ -39,6 +40,7 @@ namespace Data.Procedures
                     parameters.Add(name: "I_Anio", dbType: DbType.Int16, value: this.I_Anio);
                     parameters.Add(name: "I_Periodo", dbType: DbType.Int16, value: this.I_Periodo);
                     parameters.Add(name: "D_FecVencto", dbType: DbType.DateTime, value: this.D_FecVencto);
+                    parameters.Add(name: "D_FecVenctoExt", dbType: DbType.DateTime, value: this.D_FecVenctoExt);
                     parameters.Add(name: "I_Prioridad", dbType: DbType.Byte, value: this.I_Prioridad);
                     parameters.Add(name: "N_CodBanco", dbType: DbType.String, size: 10, value: this.N_CodBanco);
                     parameters.Add(name: "T_ProcesoDesc", dbType: DbType.String, size: 250, value: this.T_ProcesoDesc);

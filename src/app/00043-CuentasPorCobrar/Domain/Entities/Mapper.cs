@@ -248,6 +248,7 @@ namespace Domain.Entities
                 I_Periodo = uspProceso.I_Periodo,
                 I_Anio = uspProceso.I_Anio,
                 D_FecVencto = uspProceso.D_FecVencto,
+                D_FecVenctoExt = uspProceso.D_FecVenctoExt,
                 I_Prioridad = uspProceso.I_Prioridad,
                 N_CodBanco = uspProceso.N_CodBanco,
                 B_Obligacion = uspProceso.B_Obligacion,
