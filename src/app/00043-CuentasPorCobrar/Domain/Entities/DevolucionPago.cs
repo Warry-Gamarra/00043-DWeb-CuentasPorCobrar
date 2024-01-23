@@ -15,7 +15,7 @@ namespace Domain.Entities
         public int? DevolucionId { get; set; }
         public int EntidadRecaudadoraId { get; set; }
         public string EntidadRecaudadoraDesc { get; set; }
-        public int PagoReferenciaId { get; set; }
+        public int PagoBancoID { get; set; }
         public string CodOperacionPago { get; set; }
         public string ReferenciaBCP { get; set; }
         public string ConceptoPago { get; set; }
@@ -36,7 +36,7 @@ namespace Domain.Entities
         public DevolucionPago(VW_DevolucionPago table)
         {
             this.DevolucionId = table.I_DevolucionPagoID;
-            this.PagoReferenciaId = table.I_PagoBancoID;
+            this.PagoBancoID = table.I_PagoBancoID;
             this.CodOperacionPago = table.C_CodOperacion;
             this.ReferenciaBCP = table.C_ReferenciaBCP;
             this.ConceptoPago = table.T_ConceptoPagoDesc;
@@ -82,7 +82,6 @@ namespace Domain.Entities
 
         public Response Save(DevolucionPago devolucionPago, int currentUserId, SaveOption saveOption)
         {
-            _devolucionPagoRepository.I_DevolucionPagoID = devolucionPago.DevolucionId ?? 0;
             _devolucionPagoRepository.I_MontoPagoDev = devolucionPago.MontoDevolucion;
             _devolucionPagoRepository.D_FecDevAprob = devolucionPago.FecAprueba;
             _devolucionPagoRepository.D_FecDevPago = devolucionPago.FecDevuelve;
@@ -91,12 +90,13 @@ namespace Domain.Entities
             switch (saveOption)
             {
                 case SaveOption.Insert:
-                    _devolucionPagoRepository.I_PagoProcesID = devolucionPago.PagoReferenciaId;
+                    _devolucionPagoRepository.I_PagoBancoID = devolucionPago.PagoBancoID;
                     _devolucionPagoRepository.D_FecProc = devolucionPago.FecPagoRef;
                     _devolucionPagoRepository.D_FecCre = DateTime.Now;
                     return new Response(_devolucionPagoRepository.Insert(currentUserId));
 
                 case SaveOption.Update:
+                    _devolucionPagoRepository.I_DevolucionPagoID = devolucionPago.DevolucionId.Value;
                     _devolucionPagoRepository.D_FecMod = DateTime.Now;
                     return new Response(_devolucionPagoRepository.Update(currentUserId));
             }

@@ -59,7 +59,7 @@ namespace WebApp.Models
             {
                 DevolucionId = model.DevolucionId ?? 0,
                 EntidadRecaudadoraId = model.EntidadRecaudadora,
-                PagoReferenciaId = model.DatosPago.PagoId,
+                PagoBancoID = model.DatosPago.PagoId,
                 MontoDevolucion = model.MontoDevolucion,
                 FecAprueba = model.FecAprueba,
                 FecDevuelve = model.FecDevuelve,

@@ -83,7 +83,7 @@ namespace WebApp.ViewModels
             this.Comentario = devolucionPago.Comentario;
             this.DatosPago = new DatosPagoViewModel()
             {
-                PagoId = devolucionPago.PagoReferenciaId,
+                PagoId = devolucionPago.PagoBancoID,
                 FecPago = devolucionPago.FecPagoRef,
                 EntidadRecaudadoraId = devolucionPago.EntidadRecaudadoraId,
                 EntidadRecaudadora = devolucionPago.EntidadRecaudadoraDesc,

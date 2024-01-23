@@ -330,7 +330,7 @@ namespace Domain.Services.Implementations
 
                     precioUnitarioItem = Math.Round(montoPagadoItem / item.cantidad, 2);
 
-                    montoIGVUnitarioItem = comprobantePagoDTO.First().esGravado.Value ? Math.Round((montoPagadoItem * Digiflow.IGV) / (1 + Digiflow.IGV), 2) : 0;
+                    montoIGVUnitarioItem = comprobantePagoDTO.First().esGravado.Value ? Math.Round((precioUnitarioItem * Digiflow.IGV) / (1 + Digiflow.IGV), 2) : 0;
 
                     precioUnitarioItemSinIGV = comprobantePagoDTO.First().esGravado.Value ? precioUnitarioItem - montoIGVUnitarioItem : montoPagadoItem;
 

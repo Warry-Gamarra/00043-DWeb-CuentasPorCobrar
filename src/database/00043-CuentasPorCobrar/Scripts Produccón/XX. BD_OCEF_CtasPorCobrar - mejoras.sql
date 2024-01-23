@@ -1401,6 +1401,32 @@ AS
 )
 GO
 
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_I_GrabarDevolucionPago')
+	DROP PROCEDURE [dbo].[USP_I_GrabarDevolucionPago]
+GO
+
+CREATE PROCEDURE [dbo].[USP_I_GrabarDevolucionPago]
+@I_PagoBancoID int
+,@I_MontoPagoDev decimal(15,2)
+,@D_FecDevAprob  datetime
+,@D_FecDevPago  datetime
+,@D_FecProc   datetime
+,@T_Comentario  varchar(500)
+,@D_FecCre   datetime
+,@CurrentUserId  int
+,@B_Result bit OUTPUT
+,@T_Message nvarchar(4000) OUTPUT
+AS
+BEGIN
+	SET NOCOUNT ON;
+	
+	INSERT INTO TR_DevolucionPago (I_PagoBancoID, I_MontoPagoDev, D_FecDevAprob, D_FecDevPago, D_FecProc, T_Comentario, B_Anulado, I_UsuarioCre, D_FecCre)
+	VALUES (@I_PagoBancoID, @I_MontoPagoDev, @D_FecDevAprob, @D_FecDevPago, @D_FecProc, @T_Comentario, 0, @CurrentUserId, @D_FecCre);
+END
+GO
+
 --SELECT * FROM dbo.VW_DevolucionPago
 
 --select t.C_CodTasa, t.T_ConceptoPagoDesc, t.M_Monto, pr.I_MontoPagado, pr.I_PagoDemas, p.I_MontoPago, * 

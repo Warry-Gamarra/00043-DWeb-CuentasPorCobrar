@@ -13,7 +13,7 @@ namespace Data.Tables
     public class TR_DevolucionPago
     {
         public int I_DevolucionPagoID { get; set; }
-        public int I_PagoProcesID { get; set; }
+        public int I_PagoBancoID { get; set; }
         public decimal I_MontoPagoDev { get; set; }
         public DateTime? D_FecDevAprob { get; set; }
         public DateTime? D_FecDevPago { get; set; }
@@ -107,8 +107,7 @@ namespace Data.Tables
             {
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
-                    parameters.Add(name: "I_DevolucionPagoID", dbType: DbType.Int32, value: this.I_DevolucionPagoID);
-                    parameters.Add(name: "I_PagoProcesID", dbType: DbType.Int32, value: this.I_PagoProcesID);
+                    parameters.Add(name: "I_PagoBancoID", dbType: DbType.Int32, value: this.I_PagoBancoID);
                     parameters.Add(name: "I_MontoPagoDev", dbType: DbType.Decimal, value: this.I_MontoPagoDev);
                     parameters.Add(name: "D_FecDevAprob", dbType: DbType.DateTime, value: this.D_FecDevAprob);
                     parameters.Add(name: "D_FecDevPago", dbType: DbType.DateTime, value: this.D_FecDevPago);
