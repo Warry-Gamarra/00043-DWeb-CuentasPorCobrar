@@ -144,10 +144,9 @@ namespace Domain.Services.Implementations
 
         public Response GenerarTXTDigiFlow(int[] pagosBancoID, int currentUserID)
         {
-            IEnumerable<ComprobantePagoDTO> comprobantePagoDTO;
             Response response;
 
-            comprobantePagoDTO = this.ObtenerComprobantePagoBanco(pagosBancoID[0]);
+            var comprobantePagoDTO = ObtenerComprobantePagoBanco(pagosBancoID[0]);
 
             try
             {
@@ -155,52 +154,31 @@ namespace Domain.Services.Implementations
 
                 var writer = new StreamWriter(memoryStream, Encoding.Default);
 
-                string inicialTipoComprobante = comprobantePagoDTO.First().inicial;
+                var comprobante = new CabeceraComprobanteDTO(comprobantePagoDTO);
 
-                string numeroSerie = inicialTipoComprobante.Length > 0 ? comprobantePagoDTO.First().numeroSerie.Value.ToString("D" + (4 - inicialTipoComprobante.Length)) : comprobantePagoDTO.First().numeroSerie.Value.ToString("D4");
-
-                string numeroComprobante = comprobantePagoDTO.First().numeroComprobante.Value.ToString("D8");
-
-                string nombreArchivo = String.Format("{0}-{1}-{2}{3}.txt", Digiflow.RUC_UNFV, numeroSerie, inicialTipoComprobante, numeroComprobante);
-
-                DateTime fechaEmision = comprobantePagoDTO.First().fechaEmision.Value;
-
-                DateTime fechaPago = comprobantePagoDTO.First().fecPago;
-
-                decimal montoPagado = comprobantePagoDTO.Sum(x => x.montoPagado + x.interesMoratorio);
-
-                decimal igv = comprobantePagoDTO.First().esGravado.Value ? Digiflow.IGV : 0;
-
-                decimal montoIGV = comprobantePagoDTO.First().esGravado.Value ? Math.Round((montoPagado * Digiflow.IGV) / (1 + Digiflow.IGV), 2) : 0;
-
-                decimal montoNeto = comprobantePagoDTO.First().esGravado.Value ? montoPagado - montoIGV : montoPagado;
-
-                string codigoImpuesto = comprobantePagoDTO.First().esGravado.Value ? "1000" : "9998";
-
-                string codigoTipoAfectacion = comprobantePagoDTO.First().esGravado.Value ? "10" : "30";
-
-                string codigoTipoOperacion = "0101";
+                #region Cabecera
 
                 string filaCodEmpresa = "A;CODI_EMPR;;1";
                 writer.WriteLine(filaCodEmpresa);
 
-                string filaTipoDTE = String.Format("A;TipoDTE;;{0}", comprobantePagoDTO.First().tipoComprobanteCod);
+                string filaTipoDTE = String.Format("A;TipoDTE;;{0}", comprobante.tipoComprobanteCod);
                 writer.WriteLine(filaTipoDTE);
 
-                string filaSerie = String.Format("A;Serie;;{0}{1}", inicialTipoComprobante, numeroSerie);
+                string filaSerie = String.Format("A;Serie;;{0}{1}", comprobante.inicialTipoComprobante, comprobante.numeroSerie);
                 writer.WriteLine(filaSerie);
 
-                string filaCorrelativo = String.Format("A;Correlativo;;{0}", numeroComprobante);
+                string filaCorrelativo = String.Format("A;Correlativo;;{0}", comprobante.numeroComprobante);
                 writer.WriteLine(filaCorrelativo);
 
-                string filaFechaEmision = String.Format("A;FchEmis;;{0}", fechaEmision.ToString(FormatosDateTime.BASIC_DATE3));
+                string filaFechaEmision = String.Format("A;FchEmis;;{0}", comprobante.fechaEmision.ToString(FormatosDateTime.BASIC_DATE3));
                 writer.WriteLine(filaFechaEmision);
 
-                string filaHoraEmision = String.Format("A;HoraEmision;;{0}", fechaEmision.ToString(FormatosDateTime.BASIC_TIME));
+                string filaHoraEmision = String.Format("A;HoraEmision;;{0}", comprobante.fechaEmision.ToString(FormatosDateTime.BASIC_TIME));
                 writer.WriteLine(filaHoraEmision);
 
                 string filaTipoMoneda = "A;TipoMoneda;;PEN";
                 writer.WriteLine(filaTipoMoneda);
+                #endregion
 
                 #region EMISOR
                 string filaRUCEmisor = String.Format("A;RUTEmis;;{0}", Digiflow.RUC_UNFV);
@@ -226,49 +204,30 @@ namespace Domain.Services.Implementations
                 #endregion
 
                 #region RECEPTOR
-                string tipoRutReceptor, rutReceptor, dirReceptor;
-
-                if (comprobantePagoDTO.First().tipoComprobanteCod == CodigoTipoComprobante.FACTURA)
-                {
-                    tipoRutReceptor = "6";
-                    rutReceptor = comprobantePagoDTO.First().ruc;
-                    dirReceptor = comprobantePagoDTO.First().direccion;
-                }
-                else
-                {
-                    tipoRutReceptor = "-";
-                    rutReceptor = comprobantePagoDTO.First().codDepositante == null || comprobantePagoDTO.First().codDepositante.Length == 0 ? "-" : comprobantePagoDTO.First().codDepositante;
-                    dirReceptor = String.IsNullOrEmpty(comprobantePagoDTO.First().direccion) ? "-" : comprobantePagoDTO.First().direccion;
-                }
-
-                string filaTipoRutReceptor = String.Format("A;TipoRutReceptor;;{0}", tipoRutReceptor);
+                string filaTipoRutReceptor = String.Format("A;TipoRutReceptor;;{0}", comprobante.tipoRutReceptor);
                 writer.WriteLine(filaTipoRutReceptor);
 
-                string filaRutReceptor = String.Format("A;RUTRecep;;{0}", rutReceptor);
+                string filaRutReceptor = String.Format("A;RUTRecep;;{0}", comprobante.rutReceptor);
                 writer.WriteLine(filaRutReceptor);
 
-                string nomDepositante = comprobantePagoDTO.First().nomDepositante == null || comprobantePagoDTO.First().nomDepositante.Length == 0 ? "-" : comprobantePagoDTO.First().nomDepositante;
-
-                string filaRazonSocialReceptor = String.Format("A;RznSocRecep;;{0}", nomDepositante);
+                string filaRazonSocialReceptor = String.Format("A;RznSocRecep;;{0}", comprobante.nomDepositante);
                 writer.WriteLine(filaRazonSocialReceptor);
 
-                string filaDirReceptor = String.Format("A;DirRecep;;{0}", dirReceptor);
+                string filaDirReceptor = String.Format("A;DirRecep;;{0}", comprobante.dirReceptor);
                 writer.WriteLine(filaDirReceptor);
                 #endregion
 
                 #region TOTALES
-                string filaMontoNeto = String.Format("A;MntNeto;;{0}", montoNeto.ToString(FormatosDecimal.BASIC_DECIMAL));
+                string filaMontoNeto = String.Format("A;MntNeto;;{0}", comprobante.montoNeto.ToString(FormatosDecimal.BASIC_DECIMAL));
                 writer.WriteLine(filaMontoNeto);
 
-                decimal mntExe = comprobantePagoDTO.First().esGravado.Value ? 0 : montoNeto;
-
-                string filaMontoExe = String.Format("A;MntExe;;{0}", mntExe.ToString(FormatosDecimal.BASIC_DECIMAL));
+                string filaMontoExe = String.Format("A;MntExe;;{0}", comprobante.mntExe.ToString(FormatosDecimal.BASIC_DECIMAL));
                 writer.WriteLine(filaMontoExe);
 
                 string filaMontoExo = "A;MntExo;;0";
                 writer.WriteLine(filaMontoExo);
 
-                string filaMontoTotal = String.Format("A;MntTotal;;{0}", montoPagado.ToString(FormatosDecimal.BASIC_DECIMAL));
+                string filaMontoTotal = String.Format("A;MntTotal;;{0}", comprobante.montoPagado.ToString(FormatosDecimal.BASIC_DECIMAL));
                 writer.WriteLine(filaMontoTotal);
                 #endregion
 
@@ -278,26 +237,26 @@ namespace Domain.Services.Implementations
                 #endregion
 
                 #region OTROS CONCEPTOS SUNAT
-                string filaTipoOperacion = String.Format("A;TipoOperacion;;{0}", codigoTipoOperacion);
+                string filaTipoOperacion = String.Format("A;TipoOperacion;;{0}", "0101");
                 writer.WriteLine(filaTipoOperacion);
                 #endregion
 
                 #region IMPUESTOS/RETENCIONES
-                string filaCodigoImpuesto = String.Format("A2;CodigoImpuesto;1;{0}", codigoImpuesto);
+                string filaCodigoImpuesto = String.Format("A2;CodigoImpuesto;1;{0}", comprobante.codigoImpuesto);
                 writer.WriteLine(filaCodigoImpuesto);
 
-                string filaMontoImpuesto = String.Format("A2;MontoImpuesto;1;{0}", montoIGV.ToString(FormatosDecimal.BASIC_DECIMAL));
+                string filaMontoImpuesto = String.Format("A2;MontoImpuesto;1;{0}", comprobante.montoIGV.ToString(FormatosDecimal.BASIC_DECIMAL));
                 writer.WriteLine(filaMontoImpuesto);
 
-                string filaTasaImpuesto = String.Format("A2;TasaImpuesto;1;{0}", (igv * 100).ToString(FormatosDecimal.BASIC_DECIMAL));
+                string filaTasaImpuesto = String.Format("A2;TasaImpuesto;1;{0}", (comprobante.igv * 100).ToString(FormatosDecimal.BASIC_DECIMAL));
                 writer.WriteLine(filaTasaImpuesto);
 
-                string filaMontoImpuestoBase = String.Format("A2;MontoImpuestoBase;1;{0}", montoNeto.ToString(FormatosDecimal.BASIC_DECIMAL));
+                string filaMontoImpuestoBase = String.Format("A2;MontoImpuestoBase;1;{0}", comprobante.montoNeto.ToString(FormatosDecimal.BASIC_DECIMAL));
                 writer.WriteLine(filaMontoImpuestoBase);
                 #endregion
 
                 #region INFORMACIÓN DE FORMA DE PAGO
-                if (comprobantePagoDTO.First().tipoComprobanteCod == CodigoTipoComprobante.FACTURA)
+                if (comprobante.tipoComprobanteCod == CodigoTipoComprobante.FACTURA)
                 {
                     string filaFormaPago = "A;FormaPago;;Contado";
                     writer.WriteLine(filaFormaPago);
@@ -306,58 +265,44 @@ namespace Domain.Services.Implementations
 
                 #region DETALLE
                 int fila = 1;
-                decimal montoPagadoItem;
-                decimal montoSinIGV;
-                decimal precioUnitarioItem;
-                decimal montoIGVUnitarioItem;
-                decimal precioUnitarioItemSinIGV;
 
-                foreach (var item in comprobantePagoDTO)
+                foreach (var item in comprobante.items)
                 {
                     string filaNroLinDet = String.Format("B;NroLinDet;{0};1", fila);
                     writer.WriteLine(filaNroLinDet);
 
-                    string filaQtyItem = String.Format("B;QtyItem;{0};{1}", fila, item.cantidad == 0 ? "1.00" : item.cantidad.ToString(FormatosDecimal.BASIC_DECIMAL));
+                    string filaQtyItem = String.Format("B;QtyItem;{0};{1}", fila, item.cantidad.ToString(FormatosDecimal.BASIC_DECIMAL));
                     writer.WriteLine(filaQtyItem);
 
                     string filaUnmdItem = String.Format("B;UnmdItem;{0};NIU", fila);
                     writer.WriteLine(filaUnmdItem);
 
-                    string filaNmbItem = String.Format("B;NmbItem;{0};{1}", fila, String.IsNullOrEmpty(item.concepto) ? "-" : item.concepto);
+                    string filaNmbItem = String.Format("B;NmbItem;{0};{1}", fila, item.concepto);
                     writer.WriteLine(filaNmbItem);
 
-                    montoPagadoItem = (item.montoPagado + item.interesMoratorio);
 
-                    precioUnitarioItem = Math.Round(montoPagadoItem / item.cantidad, 2);
-
-                    montoIGVUnitarioItem = comprobantePagoDTO.First().esGravado.Value ? Math.Round((precioUnitarioItem * Digiflow.IGV) / (1 + Digiflow.IGV), 2) : 0;
-
-                    precioUnitarioItemSinIGV = comprobantePagoDTO.First().esGravado.Value ? precioUnitarioItem - montoIGVUnitarioItem : montoPagadoItem;
-
-                    montoSinIGV = precioUnitarioItemSinIGV * item.cantidad;
-
-                    string filaPrcItem = String.Format("B;PrcItem;{0};{1}", fila, precioUnitarioItem.ToString(FormatosDecimal.BASIC_DECIMAL));
+                    string filaPrcItem = String.Format("B;PrcItem;{0};{1}", fila, item.montoTotalUnitario.ToString(FormatosDecimal.BASIC_DECIMAL));
                     writer.WriteLine(filaPrcItem);
 
-                    string filaPrcItemSinIgv = String.Format("B;PrcItemSinIgv;{0};{1}", fila, precioUnitarioItemSinIGV.ToString(FormatosDecimal.BASIC_DECIMAL));
+                    string filaPrcItemSinIgv = String.Format("B;PrcItemSinIgv;{0};{1}", fila, item.montoUnitario.ToString(FormatosDecimal.BASIC_DECIMAL));
                     writer.WriteLine(filaPrcItemSinIgv);
 
-                    string filaMontoItem = String.Format("B;MontoItem;{0};{1}", fila, montoSinIGV.ToString(FormatosDecimal.BASIC_DECIMAL));
+                    string filaMontoItem = String.Format("B;MontoItem;{0};{1}", fila, item.montoUnitarioTotal.ToString(FormatosDecimal.BASIC_DECIMAL));
                     writer.WriteLine(filaMontoItem);
 
-                    string filaIndExe = String.Format("B;IndExe;{0};{1}", fila, codigoTipoAfectacion);
+                    string filaIndExe = String.Format("B;IndExe;{0};{1}", fila, comprobante.codigoTipoAfectacion);
                     writer.WriteLine(filaIndExe);
 
-                    string filaCodigoTipoIgv = String.Format("B;CodigoTipoIgv;{0};{1}", fila, codigoImpuesto);
+                    string filaCodigoTipoIgv = String.Format("B;CodigoTipoIgv;{0};{1}", fila, comprobante.codigoImpuesto);
                     writer.WriteLine(filaCodigoTipoIgv);
 
-                    string filaTasaIgv = String.Format("B;TasaIgv;{0};{1}", fila, (igv * 100).ToString(FormatosDecimal.BASIC_DECIMAL));
+                    string filaTasaIgv = String.Format("B;TasaIgv;{0};{1}", fila, (comprobante.igv * 100).ToString(FormatosDecimal.BASIC_DECIMAL));
                     writer.WriteLine(filaTasaIgv);
 
-                    string filaImpuestoIgv = String.Format("B;ImpuestoIgv;{0};{1}", fila, (montoPagadoItem - montoSinIGV).ToString(FormatosDecimal.BASIC_DECIMAL));
+                    string filaImpuestoIgv = String.Format("B;ImpuestoIgv;{0};{1}", fila, item.montoIGVTotal.ToString(FormatosDecimal.BASIC_DECIMAL));
                     writer.WriteLine(filaImpuestoIgv);
 
-                    string filaMontoBaseImp = String.Format("B;MontoBaseImp;{0};{1}", fila, montoSinIGV.ToString(FormatosDecimal.BASIC_DECIMAL));
+                    string filaMontoBaseImp = String.Format("B;MontoBaseImp;{0};{1}", fila, item.montoUnitarioTotal.ToString(FormatosDecimal.BASIC_DECIMAL));
                     writer.WriteLine(filaMontoBaseImp);
 
                     string filaCodigoProductoSunat = String.Format("B;CodigoProductoSunat;{0};", fila);
@@ -421,7 +366,7 @@ namespace Domain.Services.Implementations
                 string filaFechaPago = String.Format("E;TipoAdicSunat;{0};01", numeroDatoAdicional);
                 writer.WriteLine(filaFechaPago);
                 writer.WriteLine(String.Format("E;NmrLineasAdicSunat;{0};{1}", numeroDatoAdicional, numeroDatoAdicional.ToString("D2")));
-                string filaFechaPagoValor = String.Format("E;DescripcionAdicsunat;{0};{1}", numeroDatoAdicional, fechaPago.ToString(FormatosDateTime.BASIC_DATE3));
+                string filaFechaPagoValor = String.Format("E;DescripcionAdicsunat;{0};{1}", numeroDatoAdicional, comprobante.fecPago.ToString(FormatosDateTime.BASIC_DATE3));
                 writer.WriteLine(filaFechaPagoValor);
 
                 numeroDatoAdicional++;
@@ -429,7 +374,7 @@ namespace Domain.Services.Implementations
                 string filaCodOperacion = String.Format("E;TipoAdicSunat;{0};01", numeroDatoAdicional);
                 writer.WriteLine(filaCodOperacion);
                 writer.WriteLine(String.Format("E;NmrLineasAdicSunat;{0};{1}", numeroDatoAdicional, numeroDatoAdicional.ToString("D2")));
-                string filaCodOperacionValor = String.Format("E;DescripcionAdicsunat;{0};{1}", numeroDatoAdicional, comprobantePagoDTO.First().codOperacion);
+                string filaCodOperacionValor = String.Format("E;DescripcionAdicsunat;{0};{1}", numeroDatoAdicional, comprobante.codOperacion);
                 writer.WriteLine(filaCodOperacionValor);
 
                 numeroDatoAdicional++;
@@ -437,17 +382,17 @@ namespace Domain.Services.Implementations
                 string filaCuentaBancaria = String.Format("E;TipoAdicSunat;{0};01", numeroDatoAdicional);
                 writer.WriteLine(filaCuentaBancaria);
                 writer.WriteLine(String.Format("E;NmrLineasAdicSunat;{0};{1}", numeroDatoAdicional, numeroDatoAdicional.ToString("D2")));
-                string filaCuentaBancariaValor = String.Format("E;DescripcionAdicsunat;{0};{1} / {2}", numeroDatoAdicional, comprobantePagoDTO.First().entidadDesc, comprobantePagoDTO.First().numeroCuenta);
+                string filaCuentaBancariaValor = String.Format("E;DescripcionAdicsunat;{0};{1} / {2}", numeroDatoAdicional, comprobante.entidadDesc, comprobante.numeroCuenta);
                 writer.WriteLine(filaCuentaBancariaValor);
 
                 numeroDatoAdicional++;
 
-                if  (comprobantePagoDTO.First().entidadFinanID == Bancos.BCP_ID)
+                if  (comprobante.entidadFinanID == Bancos.BCP_ID)
                 {
                     string filaCodInterno = String.Format("E;TipoAdicSunat;{0};01", numeroDatoAdicional);
                     writer.WriteLine(filaCodInterno);
                     writer.WriteLine(String.Format("E;NmrLineasAdicSunat;{0};{1}", numeroDatoAdicional, numeroDatoAdicional.ToString("D2")));
-                    string filaCodInternoValor = String.Format("E;DescripcionAdicsunat;{0};{1}", numeroDatoAdicional, comprobantePagoDTO.First().codigoInterno);
+                    string filaCodInternoValor = String.Format("E;DescripcionAdicsunat;{0};{1}", numeroDatoAdicional, comprobante.codigoInterno);
                     writer.WriteLine(filaCodInternoValor);
                 }
                 #endregion
@@ -458,7 +403,7 @@ namespace Domain.Services.Implementations
 
                 string directorioGuardado = Digiflow.DIRECTORIO;
 
-                using (FileStream fileStream = new FileStream(Path.Combine(directorioGuardado, nombreArchivo), FileMode.Create))
+                using (FileStream fileStream = new FileStream(Path.Combine(directorioGuardado, comprobante.nombreArchivo), FileMode.Create))
                 {
                     memoryStream.CopyTo(fileStream);
                 }
