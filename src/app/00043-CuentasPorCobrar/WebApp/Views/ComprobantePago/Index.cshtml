@@ -141,10 +141,11 @@
                         columns.Add(c => c.entidadDesc).Titled("Banco");
                         columns.Add(c => c.fechaEmision).Titled("Fec.Emisión");
                         columns.Add().SetWidth(50).Encoded(false).Sanitized(false).Css("text-center").RenderValueAs(
-                            model => "<a href=" + Url.Action("InformacioPago", "ComprobantePago", new { id = model.pagoBancoID }) + " class=\"modal-link " + model.textColorEstado + 
+                            model => "<a href=" + Url.Action("InformacioPago", "ComprobantePago", new { idPago = model.pagoBancoID, idComprobante = model.comprobanteID }) + " class=\"modal-link " + model.textColorEstado + 
                             "\" title=\"" + model.estadoComprobanteDesc + "\"><i class=\"fa fa-file\" aria-hidden=\"true\"></i></a>");
                         columns.Add().SetWidth(50).Encoded(false).Sanitized(false).Css("text-center").RenderValueAs(
-                            model => model.comprobanteID.HasValue ? "<a href=" + Url.Action("BajaComprobante", "ComprobantePago", new { id = model.pagoBancoID }) + " class=\"modal-link\" title=\"Dar de baja al comprobante\"><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></a>" : "");
+                            model => model.comprobanteID.HasValue && model.estadoComprobanteCod != Domain.Helpers.EstadoComprobante.BAJA ? 
+                                "<a href=" + Url.Action("BajaComprobante", "ComprobantePago", new { idComprobante = model.comprobanteID.Value }) + " class=\"modal-link\" title=\"Dar de baja al comprobante\"><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></a>" : "");
                     }).WithPaging(12).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
                 </div>
             </div>

@@ -73,7 +73,7 @@ namespace Data.Procedures
 
         public int I_Cantidad { get; set; }
 
-        public static IEnumerable<USP_S_ObtenerComprobantePago> GetAll(int pagoBancoID)
+        public static IEnumerable<USP_S_ObtenerComprobantePago> GetAll(int pagoBancoID, int? comprobanteID)
         {
             string s_command;
             IEnumerable<USP_S_ObtenerComprobantePago> result;
@@ -85,7 +85,8 @@ namespace Data.Procedures
 
                 parameters = new DynamicParameters();
                 parameters.Add(name: "I_PagoBancoID", dbType: DbType.Int32, value: pagoBancoID);
-                
+                parameters.Add(name: "I_ComprobanteID", dbType: DbType.Int32, value: comprobanteID);
+
                 using (var _dbConnection = new SqlConnection(Database.ConnectionString))
                 {
                     result = _dbConnection.Query<USP_S_ObtenerComprobantePago>(s_command, parameters, commandType: CommandType.StoredProcedure);

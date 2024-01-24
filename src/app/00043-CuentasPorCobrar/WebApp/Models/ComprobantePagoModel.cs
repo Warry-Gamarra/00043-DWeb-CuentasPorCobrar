@@ -94,6 +94,10 @@ namespace WebApp.Models
                 {
                     return "text-secondary";
                 }
+                else if (estadoComprobanteCod == EstadoComprobante.BAJA)
+                {
+                    return "text-dark";
+                }
                 else
                 {
                     return "";

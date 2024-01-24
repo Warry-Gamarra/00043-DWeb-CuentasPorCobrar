@@ -3,7 +3,7 @@
 
 @{
     var tieneComprobante = (bool)ViewBag.TieneComprobante;
-    var pagoBancoID = (int)ViewBag.PagoBancoID;
+    var comprobanteID = (int)ViewBag.ComprobanteID;
     int contadorFila = 1;
 }
 
@@ -138,7 +138,7 @@
 
         if (fecBaja.length == 10 && motivoBaja.length > 0) {
             let parametros = {
-                pagoBancoId: @pagoBancoID,
+                comprobanteID: @comprobanteID,
                 fecBaja: fecBaja,
                 motivoBaja: motivoBaja
             };

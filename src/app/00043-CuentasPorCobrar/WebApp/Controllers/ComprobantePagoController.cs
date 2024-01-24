@@ -152,15 +152,17 @@ namespace WebApp.Controllers
         }
 
         [HttpGet]
-        public ActionResult InformacioPago(int id)
+        public ActionResult InformacioPago(int idPago, int? idComprobante)
         {
-            var model = _comprobantePagoServiceFacade.ObtenerComprobantePagoBanco(id);
+            var model = _comprobantePagoServiceFacade.ObtenerComprobantePagoBanco(idPago, idComprobante);
 
             ViewBag.Title = "Comprobante de Pago";
 
             ViewBag.TieneComprobante = model.First().comprobanteID.HasValue;
 
-            ViewBag.PagoBancoID = id;
+            ViewBag.PagoBancoID = idPago;
+
+            ViewBag.ComprobanteID = idComprobante;
 
             ViewBag.ComboTipoComprobante = new SelectList(_tipoComprobanteServiceFacade.ListarTiposComprobante(true), "Value", "TextDisplay");
 
@@ -172,7 +174,7 @@ namespace WebApp.Controllers
         [HttpPost]
         public JsonResult GenerarNumeroComprobante(int pagoBancoId, int tipoComprobanteID, int serieID, bool esGravado, bool esNuevoRegistro, string ruc, string direccion)
         {
-            var model = _comprobantePagoServiceFacade.ObtenerComprobantePagoBanco(pagoBancoId);
+            var model = _comprobantePagoServiceFacade.ObtenerComprobantePagoBanco(pagoBancoId, null);
 
             int[] pagosBancoId = model.Select(x => x.pagoBancoID).ToArray();
 
@@ -186,7 +188,7 @@ namespace WebApp.Controllers
         [HttpPost]
         public JsonResult GenerarSoloArchivo(int pagoBancoId)
         {
-            var model = _comprobantePagoServiceFacade.ObtenerComprobantePagoBanco(pagoBancoId);
+            var model = _comprobantePagoServiceFacade.ObtenerComprobantePagoBanco(pagoBancoId, null);
 
             int[] pagosBancoId = model.Select(x => x.pagoBancoID).ToArray();
 
@@ -242,15 +244,15 @@ namespace WebApp.Controllers
         }
 
         [HttpGet]
-        public ActionResult BajaComprobante(int id)
+        public ActionResult BajaComprobante(int idComprobante)
         {
-            var model = _comprobantePagoServiceFacade.ObtenerComprobantePagoBanco(id);
+            var model = _comprobantePagoServiceFacade.ObtenerComprobantePagoBanco(0, idComprobante);
 
             ViewBag.Title = "Comprobante de Pago";
 
             ViewBag.TieneComprobante = model.First().comprobanteID.HasValue;
 
-            ViewBag.PagoBancoID = id;
+            ViewBag.ComprobanteID = idComprobante;
 
             ViewBag.ComboTipoComprobante = new SelectList(_tipoComprobanteServiceFacade.ListarTiposComprobante(true), "Value", "TextDisplay");
 
@@ -260,7 +262,7 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
-        public JsonResult DarBaja(int pagoBancoId, string fecBaja, string motivoBaja)
+        public JsonResult DarBaja(int comprobanteID, string fecBaja, string motivoBaja)
         {
             Response resultado;
 
@@ -276,11 +278,7 @@ namespace WebApp.Controllers
                 {
                     var fechaBaja = DateTime.ParseExact(fecBaja, FormatosDateTime.BASIC_DATE, CultureInfo.InvariantCulture);
 
-                    var model = _comprobantePagoServiceFacade.ObtenerComprobantePagoBanco(pagoBancoId);
-
-                    int[] pagosBancoId = model.Select(x => x.pagoBancoID).ToArray();
-
-                    resultado = _comprobantePagoServiceFacade.DarBajarComprobante(pagosBancoId, fechaBaja, motivoBaja, WebSecurity.CurrentUserId);
+                    resultado = _comprobantePagoServiceFacade.DarBajarComprobante(comprobanteID, fechaBaja, motivoBaja, WebSecurity.CurrentUserId);
                 }
                 catch (Exception ex)
                 {

@@ -91,6 +91,8 @@ namespace Domain.Helpers
         public const string ERROR = "ERR";
 
         public const string NOFILE = "NOF";
+
+        public const string BAJA = "BAJ";
     }
 
     public static class CodigoTipoComprobante

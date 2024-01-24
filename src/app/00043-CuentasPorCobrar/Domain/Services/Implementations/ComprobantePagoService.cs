@@ -75,9 +75,9 @@ namespace Domain.Services.Implementations
             return result;
         }
 
-        public IEnumerable<ComprobantePagoDTO> ObtenerComprobantePagoBanco(int pagoBancoID)
+        public IEnumerable<ComprobantePagoDTO> ObtenerComprobantePagoBanco(int pagoBancoID, int? comprobanteID)
         {
-            var result = USP_S_ObtenerComprobantePago.GetAll(pagoBancoID)
+            var result = USP_S_ObtenerComprobantePago.GetAll(pagoBancoID, comprobanteID)
                 .Select(x => new ComprobantePagoDTO() {
                     pagoBancoID = x.I_PagoBancoID,
                     entidadFinanID = x.I_EntidadFinanID,
@@ -146,7 +146,7 @@ namespace Domain.Services.Implementations
         {
             Response response;
 
-            var comprobantePagoDTO = ObtenerComprobantePagoBanco(pagosBancoID[0]);
+            var comprobantePagoDTO = ObtenerComprobantePagoBanco(pagosBancoID[0], null);
 
             try
             {

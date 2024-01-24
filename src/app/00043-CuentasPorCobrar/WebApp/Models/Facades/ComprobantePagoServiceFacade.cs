@@ -65,9 +65,9 @@ namespace WebApp.Models.Facades
             return resultado;
         }
 
-        public IEnumerable<ComprobantePagoModel> ObtenerComprobantePagoBanco(int pagoBancoID)
+        public IEnumerable<ComprobantePagoModel> ObtenerComprobantePagoBanco(int pagoBancoID, int? comprobanteID)
         {
-            var resultado = _comprobantePagoService.ObtenerComprobantePagoBanco(pagoBancoID)
+            var resultado = _comprobantePagoService.ObtenerComprobantePagoBanco(pagoBancoID, comprobanteID)
                 .Select(x => new ComprobantePagoModel() {
                     pagoBancoID = x.pagoBancoID,
                     entidadFinanID = x.entidadFinanID,
@@ -113,7 +113,7 @@ namespace WebApp.Models.Facades
 
             try
             {
-                var comprobanteDTO = _comprobantePagoService.ObtenerComprobantePagoBanco(pagosBancoID[0]);
+                var comprobanteDTO = _comprobantePagoService.ObtenerComprobantePagoBanco(pagosBancoID[0], null);
 
                 if (comprobanteDTO.Where(x => x.comprobanteID.HasValue).Count() == 0 || (!esNuevoRegistro && comprobanteDTO.First().estadoComprobanteCod == EstadoComprobante.ERROR))
                 {
@@ -249,7 +249,7 @@ namespace WebApp.Models.Facades
 
             try
             {
-                var comprobanteDTO = _comprobantePagoService.ObtenerComprobantePagoBanco(pagosBancoID[0]);
+                var comprobanteDTO = _comprobantePagoService.ObtenerComprobantePagoBanco(pagosBancoID[0], null);
 
                 if (comprobanteDTO != null && comprobanteDTO.Count() > 0 && comprobanteDTO.First().estadoComprobanteCod == EstadoComprobante.NOFILE)
                 {
@@ -339,17 +339,17 @@ namespace WebApp.Models.Facades
             return resultadoGeneral;
         }
 
-        public Response DarBajarComprobante(int[] pagosBancoID, DateTime fecBaja, string motivoBaja, int currentUserID)
+        public Response DarBajarComprobante(int comprobanteID, DateTime fecBaja, string motivoBaja, int currentUserID)
         {
             Response resultado;
 
             try
             {
-                var comprobanteDTO = _comprobantePagoService.ObtenerComprobantePagoBanco(pagosBancoID[0]);
+                var comprobanteDTO = _comprobantePagoService.ObtenerComprobantePagoBanco(0, comprobanteID);
 
                 if (comprobanteDTO != null && comprobanteDTO.Count() > 0 && comprobanteDTO.First().comprobanteID.HasValue)
                 {
-                    resultado = _comprobantePagoService.DarBajarComprobante(comprobanteDTO.First().comprobanteID.Value, fecBaja, motivoBaja, currentUserID);
+                    resultado = _comprobantePagoService.DarBajarComprobante(comprobanteID, fecBaja, motivoBaja, currentUserID);
                 }
                 else
                 {

@@ -12,7 +12,7 @@ namespace WebApp.Models.Facades
     {
         IEnumerable<ComprobantePagoModel> ListarComprobantesPagoBanco(ConsultaComprobantePagoViewModel filtro);
 
-        IEnumerable<ComprobantePagoModel> ObtenerComprobantePagoBanco(int pagoBancoID);
+        IEnumerable<ComprobantePagoModel> ObtenerComprobantePagoBanco(int pagoBancoID, int? comprobanteID);
 
         Response GenerarNumeroComprobante(int[] pagosBancoID, int tipoComprobanteID, int serieID, bool esGravado, bool esNuevoRegistro, string ruc, string direccion, int currentUserID);
 
@@ -24,6 +24,6 @@ namespace WebApp.Models.Facades
 
         Response GenerarSoloArchivo(ConsultaComprobantePagoViewModel filtro, int currentUserID);
 
-        Response DarBajarComprobante(int[] pagosBancoID, DateTime fecBaja, string motivoBaja, int currentUserID);
+        Response DarBajarComprobante(int comprobanteID, DateTime fecBaja, string motivoBaja, int currentUserID);
     }
 }
