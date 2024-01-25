@@ -34,6 +34,7 @@ namespace Domain.Helpers
     public static class FormatosDecimal
     {
         public const string BASIC_DECIMAL = "#,0.00";
+        public const string BASIC_DECIMAL_NO_COMA = "0.00";
     }
 
     public static class ConstantesBCP

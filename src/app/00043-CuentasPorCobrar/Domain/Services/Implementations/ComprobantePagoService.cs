@@ -218,16 +218,16 @@ namespace Domain.Services.Implementations
                 #endregion
 
                 #region TOTALES
-                string filaMontoNeto = String.Format("A;MntNeto;;{0}", comprobante.montoNeto.ToString(FormatosDecimal.BASIC_DECIMAL));
+                string filaMontoNeto = String.Format("A;MntNeto;;{0}", comprobante.montoNeto.ToString(FormatosDecimal.BASIC_DECIMAL_NO_COMA));
                 writer.WriteLine(filaMontoNeto);
 
-                string filaMontoExe = String.Format("A;MntExe;;{0}", comprobante.mntExe.ToString(FormatosDecimal.BASIC_DECIMAL));
+                string filaMontoExe = String.Format("A;MntExe;;{0}", comprobante.mntExe.ToString(FormatosDecimal.BASIC_DECIMAL_NO_COMA));
                 writer.WriteLine(filaMontoExe);
 
                 string filaMontoExo = "A;MntExo;;0";
                 writer.WriteLine(filaMontoExo);
 
-                string filaMontoTotal = String.Format("A;MntTotal;;{0}", comprobante.montoPagado.ToString(FormatosDecimal.BASIC_DECIMAL));
+                string filaMontoTotal = String.Format("A;MntTotal;;{0}", comprobante.montoPagado.ToString(FormatosDecimal.BASIC_DECIMAL_NO_COMA));
                 writer.WriteLine(filaMontoTotal);
                 #endregion
 
@@ -245,13 +245,13 @@ namespace Domain.Services.Implementations
                 string filaCodigoImpuesto = String.Format("A2;CodigoImpuesto;1;{0}", comprobante.codigoImpuesto);
                 writer.WriteLine(filaCodigoImpuesto);
 
-                string filaMontoImpuesto = String.Format("A2;MontoImpuesto;1;{0}", comprobante.montoIGV.ToString(FormatosDecimal.BASIC_DECIMAL));
+                string filaMontoImpuesto = String.Format("A2;MontoImpuesto;1;{0}", comprobante.montoIGV.ToString(FormatosDecimal.BASIC_DECIMAL_NO_COMA));
                 writer.WriteLine(filaMontoImpuesto);
 
-                string filaTasaImpuesto = String.Format("A2;TasaImpuesto;1;{0}", (comprobante.igv * 100).ToString(FormatosDecimal.BASIC_DECIMAL));
+                string filaTasaImpuesto = String.Format("A2;TasaImpuesto;1;{0}", (comprobante.igv * 100).ToString(FormatosDecimal.BASIC_DECIMAL_NO_COMA));
                 writer.WriteLine(filaTasaImpuesto);
 
-                string filaMontoImpuestoBase = String.Format("A2;MontoImpuestoBase;1;{0}", comprobante.montoNeto.ToString(FormatosDecimal.BASIC_DECIMAL));
+                string filaMontoImpuestoBase = String.Format("A2;MontoImpuestoBase;1;{0}", comprobante.montoNeto.ToString(FormatosDecimal.BASIC_DECIMAL_NO_COMA));
                 writer.WriteLine(filaMontoImpuestoBase);
                 #endregion
 
@@ -271,7 +271,7 @@ namespace Domain.Services.Implementations
                     string filaNroLinDet = String.Format("B;NroLinDet;{0};1", fila);
                     writer.WriteLine(filaNroLinDet);
 
-                    string filaQtyItem = String.Format("B;QtyItem;{0};{1}", fila, item.cantidad.ToString(FormatosDecimal.BASIC_DECIMAL));
+                    string filaQtyItem = String.Format("B;QtyItem;{0};{1}", fila, item.cantidad.ToString(FormatosDecimal.BASIC_DECIMAL_NO_COMA));
                     writer.WriteLine(filaQtyItem);
 
                     string filaUnmdItem = String.Format("B;UnmdItem;{0};NIU", fila);
@@ -281,13 +281,13 @@ namespace Domain.Services.Implementations
                     writer.WriteLine(filaNmbItem);
 
 
-                    string filaPrcItem = String.Format("B;PrcItem;{0};{1}", fila, item.montoTotalUnitario.ToString(FormatosDecimal.BASIC_DECIMAL));
+                    string filaPrcItem = String.Format("B;PrcItem;{0};{1}", fila, item.montoTotalUnitario.ToString(FormatosDecimal.BASIC_DECIMAL_NO_COMA));
                     writer.WriteLine(filaPrcItem);
 
-                    string filaPrcItemSinIgv = String.Format("B;PrcItemSinIgv;{0};{1}", fila, item.montoUnitario.ToString(FormatosDecimal.BASIC_DECIMAL));
+                    string filaPrcItemSinIgv = String.Format("B;PrcItemSinIgv;{0};{1}", fila, item.montoUnitario.ToString(FormatosDecimal.BASIC_DECIMAL_NO_COMA));
                     writer.WriteLine(filaPrcItemSinIgv);
 
-                    string filaMontoItem = String.Format("B;MontoItem;{0};{1}", fila, item.montoUnitarioTotal.ToString(FormatosDecimal.BASIC_DECIMAL));
+                    string filaMontoItem = String.Format("B;MontoItem;{0};{1}", fila, item.montoUnitarioTotal.ToString(FormatosDecimal.BASIC_DECIMAL_NO_COMA));
                     writer.WriteLine(filaMontoItem);
 
                     string filaIndExe = String.Format("B;IndExe;{0};{1}", fila, comprobante.codigoTipoAfectacion);
@@ -296,13 +296,13 @@ namespace Domain.Services.Implementations
                     string filaCodigoTipoIgv = String.Format("B;CodigoTipoIgv;{0};{1}", fila, comprobante.codigoImpuesto);
                     writer.WriteLine(filaCodigoTipoIgv);
 
-                    string filaTasaIgv = String.Format("B;TasaIgv;{0};{1}", fila, (comprobante.igv * 100).ToString(FormatosDecimal.BASIC_DECIMAL));
+                    string filaTasaIgv = String.Format("B;TasaIgv;{0};{1}", fila, (comprobante.igv * 100).ToString(FormatosDecimal.BASIC_DECIMAL_NO_COMA));
                     writer.WriteLine(filaTasaIgv);
 
-                    string filaImpuestoIgv = String.Format("B;ImpuestoIgv;{0};{1}", fila, item.montoIGVTotal.ToString(FormatosDecimal.BASIC_DECIMAL));
+                    string filaImpuestoIgv = String.Format("B;ImpuestoIgv;{0};{1}", fila, item.montoIGVTotal.ToString(FormatosDecimal.BASIC_DECIMAL_NO_COMA));
                     writer.WriteLine(filaImpuestoIgv);
 
-                    string filaMontoBaseImp = String.Format("B;MontoBaseImp;{0};{1}", fila, item.montoUnitarioTotal.ToString(FormatosDecimal.BASIC_DECIMAL));
+                    string filaMontoBaseImp = String.Format("B;MontoBaseImp;{0};{1}", fila, item.montoUnitarioTotal.ToString(FormatosDecimal.BASIC_DECIMAL_NO_COMA));
                     writer.WriteLine(filaMontoBaseImp);
 
                     string filaCodigoProductoSunat = String.Format("B;CodigoProductoSunat;{0};", fila);

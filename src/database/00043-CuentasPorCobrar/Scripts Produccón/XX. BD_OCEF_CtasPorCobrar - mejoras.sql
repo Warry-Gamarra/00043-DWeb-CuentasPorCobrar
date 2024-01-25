@@ -114,8 +114,17 @@ AS
 BEGIN
 	SET NOCOUNT ON;
 	
-	INSERT INTO TR_DevolucionPago (I_PagoBancoID, I_MontoPagoDev, D_FecDevAprob, D_FecDevPago, D_FecProc, T_Comentario, B_Anulado, I_UsuarioCre, D_FecCre)
-	VALUES (@I_PagoBancoID, @I_MontoPagoDev, @D_FecDevAprob, @D_FecDevPago, @D_FecProc, @T_Comentario, 0, @CurrentUserId, @D_FecCre);
+	BEGIN TRY
+		INSERT INTO TR_DevolucionPago (I_PagoBancoID, I_MontoPagoDev, D_FecDevAprob, D_FecDevPago, D_FecProc, T_Comentario, B_Anulado, I_UsuarioCre, D_FecCre)
+		VALUES (@I_PagoBancoID, @I_MontoPagoDev, @D_FecDevAprob, @D_FecDevPago, @D_FecProc, @T_Comentario, 0, @CurrentUserId, @D_FecCre);
+
+		SET @B_Result = 1;
+		SET @T_Message = 'Registro correcto.';
+	END TRY
+	BEGIN CATCH
+		SET @B_Result = 0;
+		SET @T_Message = ERROR_MESSAGE();
+	END CATCH
 END
 GO
 
