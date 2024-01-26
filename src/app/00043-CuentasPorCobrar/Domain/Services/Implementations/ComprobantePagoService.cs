@@ -268,7 +268,7 @@ namespace Domain.Services.Implementations
 
                 foreach (var item in comprobante.items)
                 {
-                    string filaNroLinDet = String.Format("B;NroLinDet;{0};1", fila);
+                    string filaNroLinDet = String.Format("B;NroLinDet;{0};{0}", fila);
                     writer.WriteLine(filaNroLinDet);
 
                     string filaQtyItem = String.Format("B;QtyItem;{0};{1}", fila, item.cantidad.ToString(FormatosDecimal.BASIC_DECIMAL_NO_COMA));
