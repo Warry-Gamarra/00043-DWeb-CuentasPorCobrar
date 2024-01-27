@@ -1,10 +1,12 @@
-﻿using Data.Views;
+﻿using Data.Procedures;
+using Data.Views;
 using Domain.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.UI.WebControls;
 
 namespace Domain.Entities
 {
@@ -73,6 +75,27 @@ namespace Domain.Entities
             this.CodRc = tabla.C_RcCod;
             this.CodAlumno = tabla.C_CodAlu;
             this.ConceptoPagoDesc = tabla.T_Concepto;
+        }
+
+        public PagoEntity(VW_PagosParaDevolucion sp)
+        {
+            this.PagoBancoId = sp.I_PagoBancoID;
+            this.CodOperacion = sp.C_CodOperacion;
+            this.CodDepositante = sp.C_CodDepositante;
+            this.NomDepositante = sp.T_NomDepositante;
+            this.EntidadRecaudaID = sp.I_EntidadFinanID;
+            this.EntidadRecaudaDesc = sp.T_EntidadDesc;
+            this.CtaDepositoID = sp.I_CtaDepositoID;
+            this.NumeroCuenta = sp.C_NumeroCuenta;
+            this.FecPago = sp.D_FecPago;
+            this.Cantidad = sp.I_Cantidad;
+            this.Moneda = sp.C_Moneda;
+            this.ConceptoPagoDesc = sp.T_Concepto;
+            this.LugarPago = sp.T_LugarPago;
+            this.MontoPago = sp.I_MontoPago + sp.I_InteresMora;
+            this.InformacionAdicional = sp.T_InformacionAdicional;
+            this.I_TipoPago = sp.I_TipoPagoID == 133 ? TipoPago.Obligacion : (sp.I_TipoPagoID == 134 ? TipoPago.Tasa : 
+                throw new NotImplementedException("Tipo de pago desconocido"));
         }
     }
 }

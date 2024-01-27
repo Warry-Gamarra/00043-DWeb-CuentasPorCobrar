@@ -69,6 +69,7 @@
     <Compile Include="Connection\Database.cs" />
     <Compile Include="Connection\ResponseData.cs" />
     <Compile Include="Procedures\USP_I_RegistrarAmpliacionCredito.cs" />
+    <Compile Include="Views\VW_PagosParaDevolucion.cs" />
     <Compile Include="Procedures\USP_U_DarBajaComprobante.cs" />
     <Compile Include="Procedures\USP_U_EliminarMatricula.cs" />
     <Compile Include="Procedures\USP_D_EliminarSerieComprobante.cs" />

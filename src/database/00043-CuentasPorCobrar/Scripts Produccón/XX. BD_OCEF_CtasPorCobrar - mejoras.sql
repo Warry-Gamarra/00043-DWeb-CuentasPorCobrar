@@ -80,17 +80,90 @@ AS
 		INNER JOIN TR_PagoBanco PB ON DP.I_PagoBancoID = PB.I_PagoBancoID
 		INNER JOIN TC_EntidadFinanciera EF ON PB.I_EntidadFinanID = EF.I_EntidadFinanID
 		LEFT JOIN dbo.TC_Proceso pr ON pr.I_ProcesoID = pb.I_ProcesoIDArchivo
-	WHERE Dp.B_Anulado = 0)
+	WHERE Dp.B_Anulado = 0 AND pb.I_TipoPagoID = 133)
 	UNION
 	(SELECT DP.*, PP.I_MontoPagado, PB.I_EntidadFinanID, PB.C_CodOperacion, PB.C_CodigoInterno AS C_ReferenciaBCP, PB.D_FecPago
 		, EF.T_EntidadDesc, TU.T_ConceptoPagoDesc
 	FROM TR_DevolucionPago DP
 		INNER JOIN TR_PagoBanco PB ON DP.I_PagoBancoID = PB.I_PagoBancoID
-		INNER JOIN TRI_PagoProcesadoUnfv PP ON PB.I_PagoBancoID = PP.I_PagoProcesID
+		INNER JOIN TRI_PagoProcesadoUnfv PP ON PB.I_PagoBancoID = PP.I_PagoBancoID
 		INNER JOIN TC_EntidadFinanciera EF ON PB.I_EntidadFinanID = EF.I_EntidadFinanID
 		INNER JOIN TI_TasaUnfv TU ON TU.I_TasaUnfvID = PP.I_TasaUnfvID
-	WHERE DP.B_Anulado = 0)
+	WHERE DP.B_Anulado = 0 AND pb.I_TipoPagoID = 134)
 )
+GO
+
+
+
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_PagosParaDevolucion')
+	DROP VIEW [dbo].[VW_PagosParaDevolucion]
+GO
+
+CREATE VIEW [dbo].[VW_PagosParaDevolucion]
+AS
+(SELECT
+	pagBan.I_TipoPagoID,
+	pagban.I_PagoBancoID,
+	pagban.C_CodOperacion,
+	pagban.C_CodigoInterno,
+	pagban.C_CodDepositante,
+	pagban.T_NomDepositante,
+	ef.I_EntidadFinanID,
+	ef.T_EntidadDesc,
+	cta.I_CtaDepositoID,
+	cta.C_NumeroCuenta,	
+	pagban.D_FecPago,
+	pagban.I_Cantidad,
+	pagban.C_Moneda,
+	CASE WHEN pagpro.I_PagoProcesID IS NULL THEN pagban.T_ProcesoDescArchivo ELSE (CAST(pro.I_Anio AS varchar) + '-' + tipPer.T_OpcionCod + ' ' + cat.T_CatPagoDesc) END AS T_Concepto,
+	pagban.T_LugarPago, 
+	pagBan.I_MontoPago,
+	pagBan.I_InteresMora,
+	pagban.T_InformacionAdicional
+FROM dbo.TR_PagoBanco pagban
+	LEFT JOIN dbo.TRI_PagoProcesadoUnfv pagpro ON pagpro.I_PagoBancoID = pagban.I_PagoBancoID AND pagpro.B_Anulado = 0
+	LEFT JOIN dbo.TR_ObligacionAluDet det ON det.I_ObligacionAluDetID = pagpro.I_ObligacionAluDetID AND det.B_Eliminado = 0 AND det.B_Habilitado = 1
+	LEFT JOIN dbo.TR_ObligacionAluCab cab ON cab.I_ObligacionAluID = det.I_ObligacionAluID AND cab.B_Eliminado = 0 AND cab.B_Habilitado = 1
+	LEFT JOIN dbo.TC_Proceso pro ON pro.I_ProcesoID = cab.I_ProcesoID AND pro.B_Eliminado = 0
+	LEFT JOIN dbo.TC_CategoriaPago cat ON cat.I_CatPagoID = pro.I_CatPagoID AND cat.B_Eliminado = 0
+	LEFT JOIN dbo.TC_CatalogoOpcion tipPer ON tipPer.I_ParametroID = 5 AND tipPer.I_OpcionID = pro.I_Periodo
+	INNER JOIN dbo.TC_CuentaDeposito cta ON cta.I_CtaDepositoID = pagban.I_CtaDepositoID
+	INNER JOIN dbo.TC_EntidadFinanciera ef ON ef.I_EntidadFinanID = pagban.I_EntidadFinanID
+WHERE pagban.B_Anulado = 0 AND pagban.I_TipoPagoID = 133 AND NOT pagban.I_CondicionPagoID = 132
+GROUP BY pagBan.I_TipoPagoID, pagban.I_PagoBancoID, pagban.C_CodOperacion, pagban.C_CodigoInterno, pagban.C_CodDepositante, pagban.T_NomDepositante,
+	ef.I_EntidadFinanID, ef.T_EntidadDesc, cta.I_CtaDepositoID, cta.C_NumeroCuenta,	 pagban.D_FecPago, pagban.I_Cantidad, pagban.C_Moneda,
+	pagpro.I_PagoProcesID, pagban.T_ProcesoDescArchivo, pro.I_Anio, tipPer.T_OpcionCod, cat.T_CatPagoDesc, pagban.T_LugarPago, pagBan.I_MontoPago, pagBan.I_InteresMora, pagban.T_InformacionAdicional)
+	
+UNION
+
+(SELECT 
+	pag.I_TipoPagoID,
+	pag.I_PagoBancoID,
+	pag.C_CodOperacion,
+	pag.C_CodigoInterno,
+	pag.C_CodDepositante,
+	pag.T_NomDepositante,
+	pag.I_EntidadFinanID,
+	ef.T_EntidadDesc,
+	cd.I_CtaDepositoID,
+	cd.C_NumeroCuenta,
+	pag.D_FecPago,
+	pag.I_Cantidad,
+	pag.C_Moneda,
+	t.T_ConceptoPagoDesc AS T_Concepto,
+	pag.T_LugarPago,
+	pag.I_MontoPago,
+	pag.I_InteresMora,
+	pag.T_InformacionAdicional
+	--cons.I_AnioConstancia, cons.I_NroConstancia
+FROM dbo.TR_PagoBanco pag    
+	INNER JOIN dbo.TRI_PagoProcesadoUnfv pr ON pr.I_PagoBancoID = pag.I_PagoBancoID
+	INNER JOIN dbo.TI_TasaUnfv t ON t.I_TasaUnfvID = pr.I_TasaUnfvID
+	INNER JOIN dbo.TC_EntidadFinanciera ef ON ef.I_EntidadFinanID = pag.I_EntidadFinanID
+	INNER JOIN dbo.TC_CuentaDeposito cd ON cd.I_CtaDepositoID = pr.I_CtaDepositoID
+	LEFT JOIN dbo.TR_ConstanciaPago cons ON cons.I_PagoBancoID = pag.I_PagoBancoID
+WHERE pag.B_Anulado = 0 AND pr.B_Anulado = 0 AND pag.I_TipoPagoID = 134 AND NOT pag.I_CondicionPagoID = 132)
 GO
 
 
@@ -128,17 +201,27 @@ BEGIN
 END
 GO
 
---SELECT * FROM dbo.VW_DevolucionPago
 
---select t.C_CodTasa, t.T_ConceptoPagoDesc, t.M_Monto, pr.I_MontoPagado, pr.I_PagoDemas, p.I_MontoPago, * 
---from dbo.TR_PagoBanco p
---inner join dbo.TRI_PagoProcesadoUnfv pr on pr.I_PagoBancoID = p.I_PagoBancoID
---inner join dbo.TI_TasaUnfv t on t.I_TasaUnfvID = pr.I_TasaUnfvID
---where p.B_Anulado = 0 and pr.B_Anulado = 0 and p.I_TipoPagoID = 134 and t.M_Monto > 0
---	and pr.I_PagoDemas > 0
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_PagoTasas')
+	DROP VIEW [dbo].[VW_PagoTasas]
+GO
 
-
---SELECT * FROM TR_PagoBanco
---SELECT * FROM TRI_PagoProcesadoUnfv
-
-
+CREATE VIEW [dbo].[VW_PagoTasas]
+AS
+	SELECT
+		pag.I_PagoBancoID, t.I_TasaUnfvID, pag.I_EntidadFinanID, ef.T_EntidadDesc, cd.I_CtaDepositoID, cd.C_NumeroCuenta, t.C_CodTasa, t.T_ConceptoPagoDesc,
+		t.T_Clasificador, cl.C_CodClasificador, cl.T_ClasificadorDesc, t.M_Monto,
+		pag.C_CodOperacion, pag.C_CodDepositante, pag.T_NomDepositante, pag.D_FecPago, pr.I_MontoPagado, pag.D_FecCre, pag.D_FecMod,
+		pag.C_CodigoInterno, pag.T_Observacion,
+		cons.I_AnioConstancia, cons.I_NroConstancia, pag.I_CondicionPagoID, cond.T_OpcionDesc AS T_Condicion,
+		pag.T_LugarPago, pag.I_Cantidad
+	FROM dbo.TR_PagoBanco pag
+		INNER JOIN dbo.TRI_PagoProcesadoUnfv pr ON pr.I_PagoBancoID = pag.I_PagoBancoID
+		INNER JOIN dbo.TI_TasaUnfv t ON t.I_TasaUnfvID = pr.I_TasaUnfvID
+		INNER JOIN dbo.TC_EntidadFinanciera ef ON ef.I_EntidadFinanID = pag.I_EntidadFinanID
+		INNER JOIN dbo.TC_CuentaDeposito cd ON cd.I_CtaDepositoID = pr.I_CtaDepositoID
+		INNER JOIN dbo.TC_CatalogoOpcion cond ON cond.I_OpcionID = pag.I_CondicionPagoID
+		LEFT JOIN dbo.VW_Clasificadores cl ON cl.C_ClasificConceptoCod = t.T_Clasificador
+		LEFT JOIN dbo.TR_ConstanciaPago cons ON cons.I_PagoBancoID = pag.I_PagoBancoID
+	WHERE pag.B_Anulado = 0 AND pr.B_Anulado = 0 AND t.B_Eliminado = 0 AND ef.B_Eliminado = 0
+GO

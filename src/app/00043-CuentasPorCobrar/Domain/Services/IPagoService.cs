@@ -16,7 +16,7 @@ namespace Domain.Services
         void GrabarRegistroArchivo(string fileName, string urlFile, int rowsCount, int entidadFinanID, int tipoArchivoID, int currentUserId);
         Response AnularRegistroPago(int pagoProcesId, int currentUserId, DateTime fecUpdate);
         Response GrabarNroSiafPago(int pagoProcesId, int nroSiaf, int currentUserId, DateTime fecUpdate);
-        PagoEntity ObtenerDatosPago(int pagpagoBancoIdoProcesId);
+        PagoEntity ObtenerDatosPago(int pagoBancoId);
         List<PagoEntity> ListarPagosRegistrados(DateTime? fecIni, DateTime? fecFin, int? dependenciaId, int? entRecaudaId);
         List<PagoEntity> ListarPagosRegistrados(DateTime? fecIni, DateTime? fecFin, TipoEstudio? tipoEstudio, int? entRecaudaId);
         List<PagoEntity> BuscarPagoRegistrado(int entRecaudaId, string codOperacion);

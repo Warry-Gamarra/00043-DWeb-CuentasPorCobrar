@@ -33,6 +33,8 @@ namespace WebApp.ViewModels
         [Display(Name = "Nro SIAF")]
         public int? NroSIAF { get; set; }
 
+        public TipoPago TipoPago { get; set; }
+
         public DatosPagoViewModel() { }
 
         public DatosPagoViewModel(PagoEntity pagoEntity)
@@ -46,6 +48,7 @@ namespace WebApp.ViewModels
             this.FecPago = pagoEntity.FecPago;
             this.MontoPago = pagoEntity.MontoPago;
             this.NroSIAF = pagoEntity.NroSIAF;
+            this.TipoPago = pagoEntity.I_TipoPago;
         }
     }
 }

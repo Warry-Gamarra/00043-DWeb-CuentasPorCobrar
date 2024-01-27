@@ -100,9 +100,9 @@ namespace Domain.Services.Implementations
         {
             List<PagoEntity> result = new List<PagoEntity>();
 
-            foreach (var item in VW_Pagos.Find(entRecaudaId, codOperacion))
+            foreach(var pago in VW_PagosParaDevolucion.FindByCodOperacion(entRecaudaId, codOperacion))
             {
-                result.Add(new PagoEntity(item));
+                result.Add(new PagoEntity(pago));
             }
 
             return result;
@@ -123,9 +123,9 @@ namespace Domain.Services.Implementations
             return result;
         }
 
-        public PagoEntity ObtenerDatosPago(int pagoProcesId)
+        public PagoEntity ObtenerDatosPago(int pagoBancoId)
         {
-            return new PagoEntity(VW_Pagos.Find(pagoProcesId));
+            return new PagoEntity(VW_PagosParaDevolucion.FindByID(pagoBancoId));
         }
 
         public IEnumerable<ArchivoImportadoDTO> ListarArchivosImportados(TipoArchivoEntFinan tipoArchivo)
