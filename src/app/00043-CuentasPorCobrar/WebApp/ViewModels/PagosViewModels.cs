@@ -35,6 +35,8 @@ namespace WebApp.ViewModels
 
         public TipoPago TipoPago { get; set; }
 
+        public bool DevolucionPermitida { get; set; }
+
         public DatosPagoViewModel() { }
 
         public DatosPagoViewModel(PagoEntity pagoEntity)
@@ -49,6 +51,7 @@ namespace WebApp.ViewModels
             this.MontoPago = pagoEntity.MontoPago;
             this.NroSIAF = pagoEntity.NroSIAF;
             this.TipoPago = pagoEntity.I_TipoPago;
+            this.DevolucionPermitida = pagoEntity.DevolucionPermitida;
         }
     }
 }

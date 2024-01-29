@@ -39,7 +39,9 @@ namespace Domain.Entities
         public string InformacionAdicional { get; set; }
         public TipoPago I_TipoPago { get; set; }
         public int? NroSIAF { get; set; }
-        
+
+        public bool DevolucionPermitida { get; set; }
+
         private readonly VW_Pagos vW_Pagos;
 
         public PagoEntity()
@@ -96,6 +98,7 @@ namespace Domain.Entities
             this.InformacionAdicional = sp.T_InformacionAdicional;
             this.I_TipoPago = sp.I_TipoPagoID == 133 ? TipoPago.Obligacion : (sp.I_TipoPagoID == 134 ? TipoPago.Tasa : 
                 throw new NotImplementedException("Tipo de pago desconocido"));
+            this.DevolucionPermitida = sp.B_DevolucionPermitida;
         }
     }
 }

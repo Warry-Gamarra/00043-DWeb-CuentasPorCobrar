@@ -109,15 +109,32 @@
     </div>
 
     <div class="modal-footer" id="div_msg">
-        <div class="col-md-12" style="display:none" id="loading">
-            <h6>Actualizando los datos...</h6>
+        @if (Model.DatosPago.DevolucionPermitida)
+        {
+            <div class="col-md-12" style="display:none" id="loading">
+                <h6>Actualizando los datos...</h6>
 
-            <div class="progress">
-                <div class="indeterminate"></div>
+                <div class="progress">
+                    <div class="indeterminate"></div>
+                </div>
             </div>
-        </div>
-
-        <button type="submit" class="btn btn-primary" id="btnsubmit"><i class="fa fa-save"></i>&nbsp;Guardar</button>
+            <button type="submit" class="btn btn-primary" id="btnsubmit"><i class="fa fa-save"></i>&nbsp;Guardar</button>
+        }
+        else
+        {
+            <div class="col-md-12">
+                <h6>
+                    @if (Model.DatosPago.TipoPago == Domain.Helpers.TipoPago.Obligacion)
+                    {
+                        <text>No se puede aplicar devolución a pagos relacionados con obligaciones o que tengan número de comprobante.</text>
+                    }
+                    else if(Model.DatosPago.TipoPago == Domain.Helpers.TipoPago.Tasa)
+                    {
+                        <text>No se puede aplicar devolución a pagos de tasas que tengan un número de constancia y/o comprobante.</text>
+                    }
+                </h6>
+            </div>
+        }
         <button type="button" class="btn btn-secondary" id="btnCancel" data-dismiss="modal"><i class="fa fa-times-circle-o">&nbsp;</i>Cancelar</button>
     </div>
 }

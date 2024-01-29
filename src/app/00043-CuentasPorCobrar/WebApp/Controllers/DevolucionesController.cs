@@ -13,7 +13,6 @@ namespace WebApp.Controllers
     [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
     public class DevolucionesController : Controller
     {
-        // GET: Devoluciones
         private readonly EntidadRecaudadoraModel _entidadRecaudadora;
         private readonly DevolucionPagoModel _devolucionPagoModel;
         private readonly PagosModel _pagosModel;

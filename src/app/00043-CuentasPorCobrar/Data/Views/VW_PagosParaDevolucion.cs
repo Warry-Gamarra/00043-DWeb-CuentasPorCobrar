@@ -48,6 +48,8 @@ namespace Data.Views
 
         public string T_InformacionAdicional { get; set; }
 
+        public bool B_DevolucionPermitida {  get; set; }
+
         public static IEnumerable<VW_PagosParaDevolucion> FindByCodOperacion(int I_EntidadFinanID, string C_CodOperacion)
         {
             IEnumerable<VW_PagosParaDevolucion> result;
