@@ -108,28 +108,49 @@ namespace WebApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Save(RegistrarDevolucionPagoViewModel model, string txtFecAprueba, string txtFecDevuelve)
         {
-            Response result = new Response();
-
-            if (!string.IsNullOrEmpty(txtFecAprueba)) model.FecAprueba = DateTime.Parse(txtFecAprueba);
-            if (!string.IsNullOrEmpty(txtFecDevuelve)) model.FecDevuelve = DateTime.Parse(txtFecDevuelve);
-
-            if (ModelState.IsValid)
+            Response result = new Response()
             {
-                result = _devolucionPagoModel.Save(model, WebSecurity.CurrentUserId);
+                Color = "danger",
+                Icon = "fa-times-circle"
+            };
+
+            var pago = _pagosModel.ObtenerDatosPago(model.DatosPago.PagoId);
+
+            if (pago.DevolucionPermitida)
+            {
+                if (!string.IsNullOrEmpty(txtFecAprueba)) model.FecAprueba = DateTime.Parse(txtFecAprueba);
+                if (!string.IsNullOrEmpty(txtFecDevuelve)) model.FecDevuelve = DateTime.Parse(txtFecDevuelve);
+
+                if (ModelState.IsValid)
+                {
+                    result = _devolucionPagoModel.Save(model, WebSecurity.CurrentUserId);
+                }
+                else
+                {
+                    string details = "";
+                    foreach (ModelState modelState in ViewData.ModelState.Values)
+                    {
+                        foreach (ModelError error in modelState.Errors)
+                        {
+                            details += error.ErrorMessage + " / ";
+                        }
+                    }
+
+                    ResponseModel.Error(result, "Ha ocurrido un error con el envio de datos. " + details);
+                }
             }
             else
             {
-                string details = "";
-                foreach (ModelState modelState in ViewData.ModelState.Values)
+                if (pago.TipoPago == TipoPago.Obligacion)
                 {
-                    foreach (ModelError error in modelState.Errors)
-                    {
-                        details += error.ErrorMessage + " / ";
-                    }
+                    result.Message = "No se puede aplicar devolución a pagos relacionados con obligaciones o que tengan número de comprobante.";
                 }
-
-                ResponseModel.Error(result, "Ha ocurrido un error con el envio de datos. " + details);
+                else if(pago.TipoPago == TipoPago.Tasa)
+                {
+                    result.Message = "No se puede aplicar devolución a pagos de tasas que tengan un número de constancia y/o comprobante.";
+                }
             }
+            
             return PartialView("_MsgPartialWR", result);
         }
     }
