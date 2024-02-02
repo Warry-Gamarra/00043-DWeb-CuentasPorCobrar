@@ -359,7 +359,7 @@ namespace Domain.Services.Implementations
 
                 writer.WriteLine(String.Format("E;TipoAdicSunat;{0};01", numeroDatoAdicional));
                 writer.WriteLine(String.Format("E;NmrLineasAdicSunat;{0};{1}", numeroDatoAdicional, numeroDatoAdicional.ToString("D2")));
-                writer.WriteLine(String.Format("E;DescripcionAdicsunat;{0};-", numeroDatoAdicional));
+                writer.WriteLine(String.Format("E;DescripcionAdicsunat;{0};{1}", numeroDatoAdicional, comprobante.nomDepositante));
 
                 numeroDatoAdicional++;
 
