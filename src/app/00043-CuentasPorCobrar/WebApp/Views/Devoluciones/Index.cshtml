@@ -33,19 +33,19 @@
 
         <div class="table-responsive" style="min-height:300px">
            @Html.Grid(Model).Columns(columns =>
-           {
-               columns.Add(c => c.EntidadRecaudadora).SetWidth(150).Titled("Entidad recaudadora").Filterable(true);
-               columns.Add(c => c.CodOperacionPago).Css("text-center").SetWidth(150).Titled("Nro. recibo").Filterable(true);
-               columns.Add(c => c.Concepto).SetWidth(150).Titled("Concepto").Filterable(true);
-               columns.Add(c => c.MontoPago).Css("text-right").SetWidth(150).Titled("Monto pagado").Filterable(true);
-               columns.Add(c => c.MontoDevolucion).Css("text-right").SetWidth(150).Titled("Monto devuelto").Filterable(true);
-               columns.Add(c => c.FecAprobacion).RenderValueAs(m => m.FecAprobacion.Value.ToShortDateString()).Css("text-center").SetWidth(150).Titled("Fec. aprobación").Filterable(true);
-               columns.Add(c => c.FecDevuelve).RenderValueAs(m => m.FecDevuelve.HasValue ? m.FecDevuelve.Value.ToShortDateString(): "Sin fecha").Css("text-center").SetWidth(150).Titled("Fec. devolución").Filterable(true);
-               columns.Add().Css("text-center").Encoded(false).Sanitized(false).Filterable(true).SetWidth(160).Titled("Anular")
-                   .RenderValueAs(model => @Html.Raw("<button type=\"button\" class=\"btn btn-xs btn-warning\" onclick=\"anularDevolucion(" + @model.DevolucionId + ");\"><i class=\"fa fa-exclamation-circle\">&nbsp;</i>Anular</button>"));
-               columns.Add().Css("text-right").Encoded(false).Sanitized(false).Filterable(true).SetWidth(200)
-                   .RenderValueAs(model => @Html.Raw("<a class=\"modal-link-lg\" href=\"" + @Url.Action("Edit", "Devoluciones", new { id = model.DevolucionId, area = "" }) + "\"><i class=\"fa fa-pencil-square-o\" title=\"editar\" data-toggle=\"tooltip\" data-placement=\"bottom\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Editar</span></a>"));
-           }).WithPaging(10).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
+      {
+          columns.Add(c => c.EntidadRecaudadora).SetWidth(150).Titled("Entidad recaudadora").Filterable(true);
+          columns.Add(c => c.CodOperacionPago).Css("text-center").SetWidth(150).Titled("Nro. recibo").Filterable(true);
+          columns.Add(c => c.Concepto).SetWidth(150).Titled("Concepto").Filterable(true);
+          columns.Add(c => c.MontoPago).Css("text-right").SetWidth(150).Titled("Monto pagado").Filterable(true);
+          columns.Add(c => c.MontoDevolucion).Css("text-right").SetWidth(150).Titled("Monto devuelto").Filterable(true);
+          columns.Add(c => c.FecAprobacion).RenderValueAs(m => m.FecAprobacion.Value.ToShortDateString()).Css("text-center").SetWidth(150).Titled("Fec. aprobación").Filterable(true);
+          columns.Add(c => c.FecDevuelve).RenderValueAs(m => m.FecDevuelve.HasValue ? m.FecDevuelve.Value.ToShortDateString(): "Sin fecha").Css("text-center").SetWidth(150).Titled("Fec. devolución").Filterable(true);
+          columns.Add().Css("text-center").Encoded(false).Sanitized(false).Filterable(true).SetWidth(160).Titled("Anular")
+              .RenderValueAs(model => @Html.Raw("<button type=\"button\" class=\"btn btn-xs btn-warning\" onclick=\"anularDevolucion(" + model.DevolucionId + ", '" + model.Concepto + "', " + model.MontoDevolucion + ");\"><i class=\"fa fa-exclamation-circle\">&nbsp;</i>Anular</button>"));
+          columns.Add().Css("text-right").Encoded(false).Sanitized(false).Filterable(true).SetWidth(200)
+              .RenderValueAs(model => @Html.Raw("<a class=\"modal-link-lg\" href=\"" + @Url.Action("Edit", "Devoluciones", new { id = model.DevolucionId, area = "" }) + "\"><i class=\"fa fa-pencil-square-o\" title=\"editar\" data-toggle=\"tooltip\" data-placement=\"bottom\">&nbsp;</i><span class=\"d-none d-md-inline-block\">Editar</span></a>"));
+      }).WithPaging(10).Sortable(true).WithGridItemsCount("Registros encontrados").EmptyText("No se encontraron registros")
         </div>
     </div>
 </div>
@@ -58,23 +58,37 @@
         })
     })
 
-    function anularDevolucion(devolucionId) {
-        var parametros = {
-            devolucionId: devolucionId,
-        };
+    function anularDevolucion(devolucionId, concepto, montoDevolucion) {
+        Swal.fire({
+            title: '',
+            html: '¿Desea anular el pago de <b>S/. ' + montoDevolucion + '</b> para el concepto de <b>' + concepto + '</b>?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, continuar.',
+            cancelButtonText: 'No, cancelar.'
+        }).then((result) => {
+            if (result.isConfirmed) {
 
-        $.ajax({
-            cache: false,
-            url: '@Url.Action("Anular", "Devoluciones", new { area = "" })',
-            type: "POST",
-            data: parametros,
-            dataType: "json",
-            success: function (data) {
-                if (data['Value']) { location.reload(); }
-                else { toastr.warning(data['Message']); }
-            },
-            error: function () {
-                toastr.error("No se pudo actualizar el estado. Intente nuevamente en unos segundos.<br /> Si el problema persiste comuníquese con el área de soporte de la aplicación.");
+                var parametros = {
+                    devolucionId: devolucionId,
+                };
+
+                $.ajax({
+                    cache: false,
+                    url: '@Url.Action("Anular", "Devoluciones", new { area = "" })',
+                    type: "POST",
+                    data: parametros,
+                    dataType: "json",
+                    success: function (data) {
+                        if (data['Value']) { location.reload(); }
+                        else { toastr.warning(data['Message']); }
+                    },
+                    error: function () {
+                        toastr.error("No se pudo actualizar el estado. Intente nuevamente en unos segundos.<br /> Si el problema persiste comuníquese con el área de soporte de la aplicación.");
+                    }
+                });
             }
         });
     }
