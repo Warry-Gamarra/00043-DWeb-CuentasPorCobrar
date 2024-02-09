@@ -14,5 +14,7 @@ namespace Domain.Services
         DevolucionPago Find(int devolucionPagoId);
         Response Save(DevolucionPago devolucionPago, int currentUserId, SaveOption saveOption);
         Response AnularDevolucion(int devolucionPagoId, int currentUserId);
+
+        bool ExisteDevolucion(int pagoBancoID);
     }
 }

@@ -30,6 +30,7 @@ namespace WebApp.Controllers
         private readonly EntidadRecaudadoraModel entidadRecaudadora;
         public readonly DependenciaModel _dependenciaModel;
         private readonly IMatriculaServiceFacade matriculaServiceFacade;
+        private readonly DevolucionPagoModel _devolucionPagoModel;
 
         public PagosController()
         {
@@ -44,6 +45,7 @@ namespace WebApp.Controllers
             entidadRecaudadora = new EntidadRecaudadoraModel();
             _dependenciaModel = new DependenciaModel();
             matriculaServiceFacade = new MatriculaServiceFacade();
+            _devolucionPagoModel = new DevolucionPagoModel();
         }
 
         [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
@@ -689,6 +691,14 @@ namespace WebApp.Controllers
                 {
                     Value = false,
                     Message = "Los extornos no se pueden utilizar para pagar una obligación."
+                };
+            }
+            else if(_devolucionPagoModel.ExisteDevolucion(idPagoBanco))
+            {
+                response = new Response()
+                {
+                    Value = false,
+                    Message = "El pago tiene registrado una devolución."
                 };
             }
             else

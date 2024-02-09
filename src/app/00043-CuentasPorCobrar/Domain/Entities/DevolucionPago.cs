@@ -107,5 +107,17 @@ namespace Domain.Entities
                 Message = "Operación Inválida."
             };
         }
+
+        public bool ExisteDevolucion(int pagoBancoID)
+        {
+            try
+            {
+                return _devolucionPagoRepository.ExisteDevolucion(pagoBancoID);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

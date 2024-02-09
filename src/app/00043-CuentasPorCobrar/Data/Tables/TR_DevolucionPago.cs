@@ -25,48 +25,6 @@ namespace Data.Tables
         public DateTime? D_FecMod { get; set; }
         public bool B_Anulado { get; set; }
 
-        public List<TR_DevolucionPago> Find()
-        {
-            List<TR_DevolucionPago> result;
-
-            try
-            {
-                string s_command = @"SELECT D.* FROM dbo.TR_DevolucionPago D;";
-
-                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
-                {
-                    result = _dbConnection.Query<TR_DevolucionPago>(s_command, commandType: CommandType.Text).ToList();
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return result;
-        }
-
-        public TR_DevolucionPago Find(int devolucionPagoID)
-        {
-            TR_DevolucionPago result;
-
-            try
-            {
-                string s_command = @"SELECT D.* FROM dbo.TR_DevolucionPago D WHERE D.I_DevolucionPagoID = @I_DevolucionPagoID;";
-
-                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
-                {
-                    result = _dbConnection.Query<TR_DevolucionPago>(s_command, new { I_DevolucionPagoID = devolucionPagoID }, commandType: CommandType.Text).FirstOrDefault();
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return result;
-        }
-
         public ResponseData AnularDevolcionPago(int currentUserId)
         {
             ResponseData result = new ResponseData();
@@ -169,6 +127,27 @@ namespace Data.Tables
             return result;
         }
 
+        public bool ExisteDevolucion(int I_PagoBancoID)
+        {
+            bool exist;
 
+            try
+            {
+                string s_command = "SELECT d.I_DevolucionPagoID FROM TR_DevolucionPago d WHERE d.B_Anulado = 0 AND d.I_PagoBancoID = @I_PagoBancoID;";
+
+                using (var _dbConnection = new SqlConnection(Database.ConnectionString))
+                {
+                    var result = _dbConnection.Query<TR_DevolucionPago>(s_command, new { I_PagoBancoID = I_PagoBancoID }, commandType: CommandType.Text).FirstOrDefault();
+
+                    exist = (result != null);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return exist;
+        }
     }
 }

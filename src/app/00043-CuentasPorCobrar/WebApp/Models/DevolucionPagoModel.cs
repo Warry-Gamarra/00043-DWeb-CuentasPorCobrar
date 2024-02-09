@@ -81,5 +81,9 @@ namespace WebApp.Models
             return result;
         }
 
+        public bool ExisteDevolucion(int pagoBancoID)
+        {
+            return _devolucionPago.ExisteDevolucion(pagoBancoID);
+        }
     }
 }
