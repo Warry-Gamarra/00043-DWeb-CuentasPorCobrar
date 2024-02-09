@@ -58,6 +58,8 @@ namespace WebApp.Controllers
 
             var model = _devolucionPagoModel.Find(id);
 
+            model.DatosPago.DevolucionPermitida = true;
+
             return PartialView("_RegistroDevolucionPago", model);
         }
 
