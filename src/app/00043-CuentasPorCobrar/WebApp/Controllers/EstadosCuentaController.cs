@@ -59,14 +59,18 @@ namespace WebApp.Controllers
 
             var user = usersModel.Find(userId.Value);
 
+            IEnumerable<SelectViewModel> listaTipoEstudios = generalServiceFacade.Listar_TipoEstudios(model.idDependencia);
+
             if (user.RoleName.Equals(RoleNames.DEPENDENCIA))
             {
                 model.idDependencia = user.DependenciaId;
 
                 model.tipoEstudio = (model.idDependencia == DependenciaEUPG.ID) ? TipoEstudio.Posgrado : TipoEstudio.Pregrado;
+
+                listaTipoEstudios = listaTipoEstudios.Where(x => x.Value == model.tipoEstudio.ToString());
             }
 
-            ViewBag.TipoEstudios = new SelectList(generalServiceFacade.Listar_TipoEstudios(model.idDependencia), "Value", "TextDisplay", model.tipoEstudio);
+            ViewBag.TipoEstudios = new SelectList(listaTipoEstudios, "Value", "TextDisplay", model.tipoEstudio);
 
             ViewBag.TipoReportes = new SelectList(generalServiceFacade.Listar_TipoReporteObligaciones(model.idDependencia), "Value", "TextDisplay", model.tipoReporte);
 

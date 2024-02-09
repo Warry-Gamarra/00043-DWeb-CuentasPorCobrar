@@ -239,6 +239,8 @@ namespace WebApp.Controllers
 
             bool mostrarReporteObligaciones = true;
 
+            var listaTipoEstudio = generalServiceFacade.Listar_TipoEstudios(model.dependencia);
+
             if (user.RoleName.Equals(RoleNames.DEPENDENCIA))
             {
                 model.dependencia = user.DependenciaId;
@@ -246,8 +248,10 @@ namespace WebApp.Controllers
                 model.tipoEstudio = (model.dependencia == DependenciaEUPG.ID) ? TipoEstudio.Posgrado : TipoEstudio.Pregrado;
 
                 mostrarReporteObligaciones = false;
-            }
 
+                listaTipoEstudio = listaTipoEstudio.Where(x => x.Value == model.tipoEstudio.ToString());
+            }
+            
             var listaDependencias = programasClientFacade.GetDependencias(model.tipoEstudio, model.dependencia);
 
             model.codFac = (user.RoleName.Equals(RoleNames.DEPENDENCIA)) ? listaDependencias.First().Value : model.codFac;
@@ -261,7 +265,7 @@ namespace WebApp.Controllers
 
             ViewBag.Anios = new SelectList(generalServiceFacade.Listar_Anios(), "Value", "TextDisplay", model.anio.HasValue ? model.anio.Value : DateTime.Now.Year);
             ViewBag.Periodos = new SelectList(catalogoServiceFacade.Listar_Periodos(), "Value", "TextDisplay", model.periodo);
-            ViewBag.TipoEstudios = new SelectList(generalServiceFacade.Listar_TipoEstudios(model.dependencia), "Value", "TextDisplay", model.tipoEstudio);
+            ViewBag.TipoEstudios = new SelectList(listaTipoEstudio, "Value", "TextDisplay", model.tipoEstudio);
             ViewBag.Dependencias = new SelectList(listaDependencias, "Value", "TextDisplay", model.codFac);
             ViewBag.Escuelas = new SelectList(programasClientFacade.GetEscuelas(model.tipoEstudio, model.codFac), "Value", "TextDisplay", model.codEsc);
             ViewBag.Especialidades = new SelectList(programasClientFacade.GetEspecialidades(model.tipoEstudio, model.codFac, model.codEsc), "Value", "TextDisplay", model.codRc);
