@@ -10,6 +10,8 @@ using System.Configuration;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Net.PeerToPeer;
+using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -402,6 +404,13 @@ namespace Domain.Services.Implementations
                 memoryStream.Seek(0, SeekOrigin.Begin);
 
                 string directorioGuardado = Digiflow.DIRECTORIO;
+                string usuarioWindows = Digiflow.USUARIO_WINDOWS;
+                string claveWindows = Digiflow.CLAVE_WINDOWS;
+                string dominio = Digiflow.DOMINIO;
+
+                NetworkCredential networkCredential = new NetworkCredential(usuarioWindows, claveWindows, dominio);
+                CredentialCache credentialCache = new CredentialCache();
+                credentialCache.Add(new Uri(directorioGuardado), "Basic", networkCredential);
 
                 using (FileStream fileStream = new FileStream(Path.Combine(directorioGuardado, comprobante.nombreArchivo), FileMode.Create))
                 {

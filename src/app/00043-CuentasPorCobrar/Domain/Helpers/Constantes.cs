@@ -81,6 +81,12 @@ namespace Domain.Helpers
         public static readonly int MAXIMO_NUMERO_SERIE = int.Parse(ConfigurationManager.AppSettings["MaxNumSerie"].ToString());
 
         public static readonly string RUC_UNFV = ConfigurationManager.AppSettings["RucUnfv"].ToString();
+
+        public static readonly string USUARIO_WINDOWS = ConfigurationManager.AppSettings["UsuarioWindows"].ToString();
+
+        public static readonly string CLAVE_WINDOWS = ConfigurationManager.AppSettings["ClaveWindows"].ToString();
+
+        public static readonly string DOMINIO = ConfigurationManager.AppSettings["Dominio"].ToString();
     }
 
     public static class EstadoComprobante
