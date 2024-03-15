@@ -396,7 +396,9 @@
     <Content Include="Assets\toastr\js\toastr.config.js" />
     <Content Include="Assets\toastr\js\toastr.min.js" />
     <Content Include="bin\CL_CustomMail.dll" />
-    <Content Include="bin\CL_CustomMail.pdb" />
+    <Content Include="bin\CL_CustomMail.pdb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Assets\jquery\modernizr-2.6.2.js" />
