@@ -70,23 +70,17 @@ namespace Domain.Helpers
 
     public  static class Digiflow
     {
-        public static readonly string DIRECTORIO = ConfigurationManager.AppSettings["DirectorioDigiflow"].ToString();
-
         public static readonly decimal IGV = decimal.Parse(ConfigurationManager.AppSettings["IGV"].ToString());
-
-        public static readonly string CARPETA_CORRECTO = ConfigurationManager.AppSettings["CarpetaCorrecto"].ToString();
-
-        public static readonly string CARPETA_ERROR = ConfigurationManager.AppSettings["CarpetaError"].ToString();
 
         public static readonly int MAXIMO_NUMERO_SERIE = int.Parse(ConfigurationManager.AppSettings["MaxNumSerie"].ToString());
 
         public static readonly string RUC_UNFV = ConfigurationManager.AppSettings["RucUnfv"].ToString();
 
-        public static readonly string USUARIO_WINDOWS = ConfigurationManager.AppSettings["UsuarioWindows"].ToString();
+        public static readonly string GENERAR_COMPROBANTE_URL = ConfigurationManager.AppSettings["ComprobantesApiBaseUrl"].ToString() + "api/comprobantes/generararchivo/";
 
-        public static readonly string CLAVE_WINDOWS = ConfigurationManager.AppSettings["ClaveWindows"].ToString();
+        public static readonly string LISTAR_CORRECTOS_URL = ConfigurationManager.AppSettings["ComprobantesApiBaseUrl"].ToString() + "api/comprobantes/listarcorrectos/";
 
-        public static readonly string DOMINIO = ConfigurationManager.AppSettings["Dominio"].ToString();
+        public static readonly string LISTAR_ERRORES_URL = ConfigurationManager.AppSettings["ComprobantesApiBaseUrl"].ToString() + "api/comprobantes/listarerrores/";
     }
 
     public static class EstadoComprobante

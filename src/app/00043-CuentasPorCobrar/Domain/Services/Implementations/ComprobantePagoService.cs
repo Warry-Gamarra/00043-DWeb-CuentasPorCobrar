@@ -1,20 +1,18 @@
 ﻿using Data;
 using Data.Procedures;
-using Data.Views;
 using Domain.Entities;
 using Domain.Helpers;
+using Domain.UnfvRepositorioClient;
+using Newtonsoft.Json;
 using System;
-using System.CodeDom;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 using System.IO;
 using System.Linq;
-using System.Net.PeerToPeer;
 using System.Net;
-using System.Reflection;
+using System.Runtime.Remoting.Messaging;
+using System.Security.Policy;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Services.Implementations
 {
@@ -403,18 +401,43 @@ namespace Domain.Services.Implementations
 
                 memoryStream.Seek(0, SeekOrigin.Begin);
 
-                string directorioGuardado = Digiflow.DIRECTORIO;
-                string usuarioWindows = Digiflow.USUARIO_WINDOWS;
-                string claveWindows = Digiflow.CLAVE_WINDOWS;
-                string dominio = Digiflow.DOMINIO;
+                byte[] fileBytes = memoryStream.ToArray();
 
-                NetworkCredential networkCredential = new NetworkCredential(usuarioWindows, claveWindows, dominio);
-                CredentialCache credentialCache = new CredentialCache();
-                credentialCache.Add(new Uri(directorioGuardado), "Basic", networkCredential);
+                UriBuilder uri = new UriBuilder(Digiflow.GENERAR_COMPROBANTE_URL);
 
-                using (FileStream fileStream = new FileStream(Path.Combine(directorioGuardado, comprobante.nombreArchivo), FileMode.Create))
+                string url = uri.ToString();
+
+                string boundary = "---------------------------" + DateTime.Now.Ticks.ToString("x");
+
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+
+                request.Method = HttpVerb.POST.ToString();
+
+                request.ContentType = "multipart/form-data; boundary=" + boundary;
+
+                using (var requestStream = request.GetRequestStream())
+                using (var sWriter = new StreamWriter(requestStream))
                 {
-                    memoryStream.CopyTo(fileStream);
+                    sWriter.WriteLine("--" + boundary);
+                    sWriter.WriteLine("Content-Disposition: form-data; name=\"archivo\"; filename=\"" + comprobante.nombreArchivo + "\"");
+                    sWriter.WriteLine("Content-Type: application/octet-stream");
+                    sWriter.WriteLine();
+                    sWriter.Flush();
+
+                    requestStream.Write(fileBytes, 0, fileBytes.Length);
+
+                    sWriter.WriteLine();
+                    sWriter.WriteLine("--" + boundary + "--");
+                    sWriter.Flush();
+                }
+
+                using (var httpResponse = (HttpWebResponse)request.GetResponse())
+                using (var responseStream = httpResponse.GetResponseStream())
+                using (var reader = new StreamReader(responseStream))
+                {
+                    string jsonResponse = reader.ReadToEnd();
+
+                    string result = JsonConvert.DeserializeObject<string>(jsonResponse);
                 }
 
                 response = new Response() {
@@ -459,15 +482,27 @@ namespace Domain.Services.Implementations
 
             Response response;
 
+            List<string> comprobantesCorrectos;
+            List<string> comprobantesErroneos;
+
             try
             {
-                string directorioBase = Digiflow.DIRECTORIO;
+                UriBuilder uri = new UriBuilder(Digiflow.LISTAR_CORRECTOS_URL);
 
-                string directorioComprobanteCorrecto = Path.Combine(directorioBase, Digiflow.CARPETA_CORRECTO);
+                string url = uri.ToString();
 
-                string directorioComprobanteError = Path.Combine(directorioBase, Digiflow.CARPETA_ERROR);
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
 
-                string[] comprobantesCorrectos = Directory.GetFiles(directorioComprobanteCorrecto, "*.txt");
+                request.Method = HttpVerb.GET.ToString();
+
+                using (var httpResponse = (HttpWebResponse)request.GetResponse())
+                using (var responseStream = httpResponse.GetResponseStream())
+                using (var reader = new StreamReader(responseStream))
+                {
+                    string jsonResponse = reader.ReadToEnd();
+
+                    comprobantesCorrectos = JsonConvert.DeserializeObject<List<string>>(jsonResponse);
+                }
 
                 foreach (var item in comprobantesCorrectos)
                 {
@@ -500,9 +535,24 @@ namespace Domain.Services.Implementations
                     }
                 }
 
-                string[] comprobantesErroneos = Directory.GetFiles(directorioComprobanteError, "*.txt");
+                UriBuilder uri2 = new UriBuilder(Digiflow.LISTAR_ERRORES_URL);
 
-                foreach(var item in comprobantesErroneos)
+                string url2 = uri2.ToString();
+
+                HttpWebRequest request2 = (HttpWebRequest)WebRequest.Create(url2);
+
+                request2.Method = HttpVerb.GET.ToString();
+
+                using (var httpResponse = (HttpWebResponse)request2.GetResponse())
+                using (var responseStream = httpResponse.GetResponseStream())
+                using (var reader = new StreamReader(responseStream))
+                {
+                    string jsonResponse = reader.ReadToEnd();
+
+                    comprobantesErroneos = JsonConvert.DeserializeObject<List<string>>(jsonResponse);
+                }
+
+                foreach (var item in comprobantesErroneos)
                 {
                     string nombreArchivo = Path.GetFileNameWithoutExtension(item);
 
