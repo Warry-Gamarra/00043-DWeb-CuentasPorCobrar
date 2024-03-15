@@ -2,7 +2,6 @@
 using Data.Procedures;
 using Domain.Entities;
 using Domain.Helpers;
-using Domain.UnfvRepositorioClient;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -10,14 +9,14 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Runtime.Remoting.Messaging;
-using System.Security.Policy;
 using System.Text;
 
 namespace Domain.Services.Implementations
 {
     public class ComprobantePagoService : IComprobantePagoService
     {
+        private const string ApiKey = "7238e942-0498-4bc8-bce6-c041446eb5b9";
+
         public IEnumerable<ComprobantePagoDTO> ListarComprobantesPagoBanco(TipoPago? tipoPago, int? idEntidadFinanciera, int? ctaDeposito, 
             string codOperacion, string codigoInterno, string codDepositante, string nomDepositante, DateTime? fechaInicio, DateTime? fechaFinal,
             int? tipoComprobanteID, bool? estadoGeneracion, int? estadoComprobanteID)
@@ -415,6 +414,8 @@ namespace Domain.Services.Implementations
 
                 request.ContentType = "multipart/form-data; boundary=" + boundary;
 
+                request.Headers.Add("X-API-Key", ApiKey);
+
                 using (var requestStream = request.GetRequestStream())
                 using (var sWriter = new StreamWriter(requestStream))
                 {
@@ -445,23 +446,45 @@ namespace Domain.Services.Implementations
                     Message = "Generación de archivo TXT exitoso."
                 };
             }
-            catch(DirectoryNotFoundException)
+            catch (WebException webEx)
             {
-                response = new Response()
+                if (webEx.Status == WebExceptionStatus.ProtocolError)
                 {
-                    Message = "Ocurrió un error al generar el TXT. Error: [No se encuentra el directorio para almacenar el archivo.]"
-                };
+                    var httpResponse = webEx.Response as HttpWebResponse;
 
-                this.ActualizarEstadoComprobante(comprobantePagoDTO.First().numeroSerie.Value, comprobantePagoDTO.First().numeroComprobante.Value, EstadoComprobante.NOFILE, currentUserID);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                response = new Response()
+                    if (httpResponse != null && httpResponse.StatusCode == HttpStatusCode.BadRequest)
+                    {
+                        using (var reader = new StreamReader(httpResponse.GetResponseStream()))
+                        {
+                            WResponse webResponse = JsonConvert.DeserializeObject<WResponse>(reader.ReadToEnd());
+
+                            response = new Response()
+                            {
+                                Message = "Ocurrió un error al generar el TXT. Error: [" + webResponse.Message + "]"
+                            };
+
+                            this.ActualizarEstadoComprobante(comprobantePagoDTO.First().numeroSerie.Value, comprobantePagoDTO.First().numeroComprobante.Value, EstadoComprobante.NOFILE, currentUserID);
+                        }
+                    }
+                    else
+                    {
+                        response = new Response()
+                        {
+                            Message = "Ocurrió un error al generar el TXT. Error: [" + webEx.Message + "]"
+                        };
+
+                        this.ActualizarEstadoComprobante(comprobantePagoDTO.First().numeroSerie.Value, comprobantePagoDTO.First().numeroComprobante.Value, EstadoComprobante.NOFILE, currentUserID);
+                    }
+                }
+                else
                 {
-                    Message = "Ocurrió un error al generar el TXT. Error: [No se tienen permisos para acceder al directorio.]"
-                };
+                    response = new Response()
+                    {
+                        Message = "Ocurrió un error al generar el TXT. Error: [" + webEx.Message + "]"
+                    };
 
-                this.ActualizarEstadoComprobante(comprobantePagoDTO.First().numeroSerie.Value, comprobantePagoDTO.First().numeroComprobante.Value, EstadoComprobante.NOFILE, currentUserID);
+                    this.ActualizarEstadoComprobante(comprobantePagoDTO.First().numeroSerie.Value, comprobantePagoDTO.First().numeroComprobante.Value, EstadoComprobante.NOFILE, currentUserID);
+                }
             }
             catch (Exception ex)
             {
@@ -477,32 +500,14 @@ namespace Domain.Services.Implementations
 
         public Response VerificarEstadoComprobantes(int currentUserID)
         {
+            List<string> comprobantesCorrectos, comprobantesErroneos;
             var listaErrores = new List<UpdateComprobanteStatus>();
             UpdateComprobanteStatus update;
-
             Response response;
-
-            List<string> comprobantesCorrectos;
-            List<string> comprobantesErroneos;
 
             try
             {
-                UriBuilder uri = new UriBuilder(Digiflow.LISTAR_CORRECTOS_URL);
-
-                string url = uri.ToString();
-
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-
-                request.Method = HttpVerb.GET.ToString();
-
-                using (var httpResponse = (HttpWebResponse)request.GetResponse())
-                using (var responseStream = httpResponse.GetResponseStream())
-                using (var reader = new StreamReader(responseStream))
-                {
-                    string jsonResponse = reader.ReadToEnd();
-
-                    comprobantesCorrectos = JsonConvert.DeserializeObject<List<string>>(jsonResponse);
-                }
+                comprobantesCorrectos = ObtenerListaArchivos(Digiflow.LISTAR_CORRECTOS_URL);
 
                 foreach (var item in comprobantesCorrectos)
                 {
@@ -535,22 +540,7 @@ namespace Domain.Services.Implementations
                     }
                 }
 
-                UriBuilder uri2 = new UriBuilder(Digiflow.LISTAR_ERRORES_URL);
-
-                string url2 = uri2.ToString();
-
-                HttpWebRequest request2 = (HttpWebRequest)WebRequest.Create(url2);
-
-                request2.Method = HttpVerb.GET.ToString();
-
-                using (var httpResponse = (HttpWebResponse)request2.GetResponse())
-                using (var responseStream = httpResponse.GetResponseStream())
-                using (var reader = new StreamReader(responseStream))
-                {
-                    string jsonResponse = reader.ReadToEnd();
-
-                    comprobantesErroneos = JsonConvert.DeserializeObject<List<string>>(jsonResponse);
-                }
+                comprobantesErroneos = ObtenerListaArchivos(Digiflow.LISTAR_ERRORES_URL);
 
                 foreach (var item in comprobantesErroneos)
                 {
@@ -587,6 +577,40 @@ namespace Domain.Services.Implementations
                     Value = listaErrores.Count() == 0,
                     Message = listaErrores.Count() == 0 ? "Comprobación correcta." : "No se lograron actualizar \"" + listaErrores.Count().ToString() + "\" comprobantes."
                 };
+            }
+            catch (WebException webEx)
+            {
+                if (webEx.Status == WebExceptionStatus.ProtocolError)
+                {
+                    var httpResponse = webEx.Response as HttpWebResponse;
+
+                    if (httpResponse != null && httpResponse.StatusCode == HttpStatusCode.BadRequest)
+                    {
+                        using (var reader = new StreamReader(httpResponse.GetResponseStream()))
+                        {
+                            WResponse webResponse = JsonConvert.DeserializeObject<WResponse>(reader.ReadToEnd());
+
+                            response = new Response()
+                            {
+                                Message = webResponse.Message
+                            };
+                        }
+                    }
+                    else
+                    {
+                        response = new Response()
+                        {
+                            Message = webEx.Message
+                        };
+                    }
+                }
+                else
+                {
+                    response = new Response()
+                    {
+                        Message = webEx.Message
+                    };
+                }
             }
             catch (Exception ex)
             {
@@ -638,6 +662,32 @@ namespace Domain.Services.Implementations
             }
 
             return new Response(result);
+        }
+
+        private List<string> ObtenerListaArchivos(string serviceUrl)
+        {
+            List<string> archivos;
+
+            UriBuilder uri = new UriBuilder(serviceUrl);
+
+            string url = uri.ToString();
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+
+            request.Method = HttpVerb.GET.ToString();
+
+            request.Headers.Add("X-API-Key", ApiKey);
+
+            using (var httpResponse = (HttpWebResponse)request.GetResponse())
+            using (var responseStream = httpResponse.GetResponseStream())
+            using (var reader = new StreamReader(responseStream))
+            {
+                string jsonResponse = reader.ReadToEnd();
+
+                archivos = JsonConvert.DeserializeObject<List<string>>(jsonResponse);
+            }
+
+            return archivos;
         }
     }
 }
