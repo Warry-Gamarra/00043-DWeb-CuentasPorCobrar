@@ -29,7 +29,7 @@ namespace Domain.Entities
             }
             else
             {
-                tipoRutReceptor = "-";
+                tipoRutReceptor = "1";
                 rutReceptor = comprobantePagoDTO.First().codDepositante == null || comprobantePagoDTO.First().codDepositante.Length == 0 ? "-" : comprobantePagoDTO.First().codDepositante;
                 dirReceptor = String.IsNullOrEmpty(comprobantePagoDTO.First().direccion) ? "-" : comprobantePagoDTO.First().direccion;
             }
