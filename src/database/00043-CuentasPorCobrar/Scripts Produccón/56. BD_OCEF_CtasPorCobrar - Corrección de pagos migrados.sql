@@ -22,25 +22,15 @@ BEGIN TRY
 	GROUP BY I_MigracionRowID, C_CodOperacion
 	HAVING COUNT(*) > 1;
 
-	SELECT b.* FROM dbo.TR_PagoBanco b
-	INNER JOIN @migrados m  ON b.I_MigracionRowID = m.I_MigracionRowID
-	WHERE b.B_Anulado = 0 AND b.I_CtaDepositoID = 9
-		AND b.I_MontoPago = 11.50
-	ORDER BY 1;
-
-	----Anulación de registros con número de cuenta erróneo
-	--UPDATE b SET b.B_Anulado = 1 FROM dbo.TR_PagoBanco b
-	--INNER JOIN @migrados m ON b.I_MigracionRowID = m.I_MigracionRowID
-	--WHERE b.B_Anulado = 0 AND b.I_CtaDepositoID = 9;
-
-	----Cambio de estado de registros con número de cuenta correcto
-	--UPDATE b SET b.I_CondicionPagoID = 135 FROM dbo.TR_PagoBanco b
-	--INNER JOIN @migrados m ON b.I_MigracionRowID = m.I_MigracionRowID
-	--WHERE b.B_Anulado = 0 AND b.I_CtaDepositoID = 7;
+	--Anulación de registros con número de cuenta erróneo
+	UPDATE b SET b.B_Anulado = 1 
+	FROM dbo.TR_PagoBanco b
+	INNER JOIN @migrados m ON b.I_MigracionRowID = m.I_MigracionRowID
+	WHERE b.B_Anulado = 0;
 
 	COMMIT TRAN
 
-	PRINT 'Actualizaciones correctas.'
+	PRINT 'Anulaciones correctas.'
 END TRY
 BEGIN CATCH
 	ROLLBACK TRAN
@@ -48,10 +38,3 @@ BEGIN CATCH
 	PRINT ERROR_MESSAGE()
 END CATCH
 GO
-
---135	Pago a una obligación pagada anteriormente
---136	Pago a obligación inexistente
---137	Pago desenlazado de una obligación
---142	No existe concepto de interés moratorio
-
-select * from dbo.TR_PagoBanco where I_MontoPago = '2022018081'

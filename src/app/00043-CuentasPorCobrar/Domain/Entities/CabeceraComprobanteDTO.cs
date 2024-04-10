@@ -34,7 +34,7 @@ namespace Domain.Entities
                 dirReceptor = String.IsNullOrEmpty(comprobantePagoDTO.First().direccion) ? "-" : comprobantePagoDTO.First().direccion;
             }
 
-            nomDepositante = comprobantePagoDTO.First().nomDepositante == null || comprobantePagoDTO.First().nomDepositante.Length == 0 ? "-" : comprobantePagoDTO.First().nomDepositante;
+            nomDepositante = comprobantePagoDTO.First().nomDepositante == null || comprobantePagoDTO.First().nomDepositante.Length == 0 ? "No Definido" : comprobantePagoDTO.First().nomDepositante;
 
             esGravado = comprobantePagoDTO.First().esGravado.Value;
 
