@@ -1,16 +1,11 @@
 USE BD_OCEF_CtasPorCobrar
 GO
 
---SELECT * FROM dbo.TR_Comprobante c
---INNER JOIN dbo.TR_Comprobante_PagoBanco p ON p.I_ComprobanteID = c.I_ComprobanteID
---WHERE p.B_Habilitado = 1 AND c.I_TipoComprobanteID = 2 AND c.I_SerieID = 2 AND c.I_NumeroComprobante = 41
-
---SELECT * FROM dbo.TR_PagoBanco where I_PagoBancoID = 2300297
-
 BEGIN TRAN
 BEGIN try
 
-	UPDATE c SET c.I_EstadoComprobanteID = 3 FROM dbo.TR_Comprobante c
+	UPDATE c SET c.I_EstadoComprobanteID = 3
+	FROM dbo.TR_Comprobante c
 	INNER JOIN dbo.TR_Comprobante_PagoBanco p ON p.I_ComprobanteID = c.I_ComprobanteID
 	WHERE p.B_Habilitado = 1 AND c.I_TipoComprobanteID = 2 AND c.I_SerieID = 2 AND c.I_NumeroComprobante IN (
 		41,
