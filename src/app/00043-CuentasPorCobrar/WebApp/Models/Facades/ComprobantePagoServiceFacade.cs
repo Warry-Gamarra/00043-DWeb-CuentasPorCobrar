@@ -178,10 +178,11 @@ namespace WebApp.Models.Facades
                     filtro.fechaDesde = fechaLimite.ToString(FormatosDateTime.BASIC_DATE);
                 }
             }
-            
+
             var listaPagos = _comprobantePagoService.ListarComprobantesPagoBanco(filtro.tipoPago, filtro.entidadFinanciera, filtro.idCtaDeposito,
                 filtro.codOperacion, filtro.codInterno, filtro.codDepositante, filtro.nomDepositante, filtro.fechaInicio, filtro.fechaFin,
-                filtro.tipoComprobanteID, false, null)
+                filtro.tipoComprobanteID, filtro.estadoGeneracion, filtro.estadoComprobanteID)
+                .Where( x=> x.estadoComprobanteCod != EstadoComprobante.PROCESADO)
                 .GroupBy(x => new { x.codOperacion, x.codDepositante, x.fecPago, x.entidadFinanID });
 
             var cantRegistros = listaPagos.Count();
@@ -192,11 +193,11 @@ namespace WebApp.Models.Facades
             {
                 var cantGeneracionCorrecta = 0;
 
-                bool esNuevoRegistro = true;
-
                 foreach (var pago in listaPagos)
                 {
                     var pagosBancoId = pago.Select(x => x.pagoBancoID).ToArray();
+
+                    var esNuevoRegistro = !pago.First().comprobanteID.HasValue;
 
                     var resultado = this.GenerarNumeroComprobante(pagosBancoId, tipoComprobanteID, serieID, esGravado, esNuevoRegistro, null, null, currentUserID);
 
