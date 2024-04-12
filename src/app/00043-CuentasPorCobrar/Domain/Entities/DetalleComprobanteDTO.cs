@@ -9,9 +9,11 @@ namespace Domain.Entities
 {
     public class DetalleComprobanteDTO
     {
-        public DetalleComprobanteDTO(string concepto, int cantidad, decimal montoPagado, decimal interesMoratorio, decimal igv)
+        public DetalleComprobanteDTO(string concepto, int cantidad, decimal montoPagado, decimal interesMoratorio, decimal igv, string codTasa)
         {
             this.concepto = String.IsNullOrEmpty(concepto) ? "-" : concepto;
+
+            this.codTasa = String.IsNullOrEmpty(codTasa) ? "-" : codTasa;
 
             this.cantidad = cantidad == 0 ? 1 : cantidad;
 
@@ -23,6 +25,8 @@ namespace Domain.Entities
         }
 
         public string concepto { get; }
+
+        public string codTasa { get; }
 
         public decimal montoUnitario
         {

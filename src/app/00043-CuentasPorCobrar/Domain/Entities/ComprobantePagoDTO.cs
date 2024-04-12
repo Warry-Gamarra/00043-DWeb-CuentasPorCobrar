@@ -68,5 +68,7 @@ namespace Domain.Entities
         public string concepto { get; set; }
 
         public int cantidad { get; set; }
+
+        public string codTasa { get; set; }
     }
 }

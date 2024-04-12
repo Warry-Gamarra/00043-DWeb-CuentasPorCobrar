@@ -73,6 +73,8 @@ namespace Data.Procedures
 
         public int I_Cantidad { get; set; }
 
+        public string C_CodTasa { get; set; }
+
         public static IEnumerable<USP_S_ObtenerComprobantePago> GetAll(int pagoBancoID, int? comprobanteID)
         {
             string s_command;

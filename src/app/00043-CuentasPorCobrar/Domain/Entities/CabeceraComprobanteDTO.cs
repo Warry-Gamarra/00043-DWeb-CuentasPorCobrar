@@ -21,6 +21,8 @@ namespace Domain.Entities
 
             fechaEmision = comprobantePagoDTO.First().fechaEmision.Value;
 
+            tipoPago = comprobantePagoDTO.First().tipoPago;
+
             if (tipoComprobanteCod == CodigoTipoComprobante.FACTURA)
             {
                 tipoRutReceptor = "6";
@@ -44,7 +46,7 @@ namespace Domain.Entities
 
             foreach (var item in comprobantePagoDTO)
             {
-                var detalle = new DetalleComprobanteDTO(item.concepto, item.cantidad, item.montoPagado, item.interesMoratorio, igv);
+                var detalle = new DetalleComprobanteDTO(item.concepto, item.cantidad, item.montoPagado, item.interesMoratorio, igv, item.codTasa);
 
                 items.Add(detalle);
             }
@@ -63,7 +65,7 @@ namespace Domain.Entities
 
             numeroCuenta = comprobantePagoDTO.First().numeroCuenta;
 
-            codigoInterno = comprobantePagoDTO.First().codigoInterno;
+            codigoInterno = comprobantePagoDTO.First().entidadFinanID == Bancos.BCP_ID ? comprobantePagoDTO.First().codigoInterno : "-";
 
             nombreArchivo = String.Format("{0}-{1}-{2}{3}.txt", Digiflow.RUC_UNFV, numeroSerie, inicialTipoComprobante, numeroComprobante);
         }
@@ -141,5 +143,7 @@ namespace Domain.Entities
         public List<DetalleComprobanteDTO> items { get; }
 
         public string nombreArchivo { get; }
+
+        public TipoPago tipoPago { get; set; }
     }
 }
