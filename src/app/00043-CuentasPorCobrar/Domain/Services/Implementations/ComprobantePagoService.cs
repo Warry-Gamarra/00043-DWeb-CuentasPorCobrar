@@ -385,27 +385,31 @@ namespace Domain.Services.Implementations
                 string filaCuentaBancariaValor = String.Format("E;DescripcionAdicsunat;{0};{1} / {2}", numeroDatoAdicional, comprobante.entidadDesc, comprobante.numeroCuenta);
                 writer.WriteLine(filaCuentaBancariaValor);
 
-                numeroDatoAdicional++;
-
-                string filaCodInterno = String.Format("E;TipoAdicSunat;{0};01", numeroDatoAdicional);
-                writer.WriteLine(filaCodInterno);
-                writer.WriteLine(String.Format("E;NmrLineasAdicSunat;{0};{1}", numeroDatoAdicional, numeroDatoAdicional.ToString("D2")));
-                string filaCodInternoValor = String.Format("E;DescripcionAdicsunat;{0};{1}", numeroDatoAdicional, comprobante.codigoInterno);
-                writer.WriteLine(filaCodInternoValor);
-
                 if (comprobante.tipoPago == TipoPago.Tasa)
                 {
                     numeroDatoAdicional++;
 
+                    int contador = 1;
+                    int contador2 = 11;
+
                     foreach (var item in comprobante.items)
                     {
-                        string filaCodTasa = String.Format("E;TipoAdicSunat;{0};01", numeroDatoAdicional);
-                        writer.WriteLine(filaCodTasa);
-                        writer.WriteLine(String.Format("E;NmrLineasAdicSunat;{0};{1}", numeroDatoAdicional, numeroDatoAdicional.ToString("D2")));
+                        string filaTipoAdicSunat = String.Format("E;TipoAdicSunat;{0};02", numeroDatoAdicional);
+                        writer.WriteLine(filaTipoAdicSunat);
+
+                        string filaNmrLineasDetalle = String.Format("E;NmrLineasDetalle;{0};{1}", numeroDatoAdicional, contador);
+                        writer.WriteLine(filaNmrLineasDetalle);
+
+
+                        string filaNmrLineasAdicSunat = String.Format("E;NmrLineasAdicSunat;{0};{1}", numeroDatoAdicional, contador2);
+                        writer.WriteLine(filaNmrLineasAdicSunat);
+
                         string filaCodTasaValor = String.Format("E;DescripcionAdicsunat;{0};{1}", numeroDatoAdicional, item.codTasa);
                         writer.WriteLine(filaCodTasaValor);
 
                         numeroDatoAdicional++;
+                        contador++;
+                        contador2 += 10;
                     }
                 }
 
