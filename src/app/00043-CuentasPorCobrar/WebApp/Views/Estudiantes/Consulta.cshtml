@@ -290,7 +290,6 @@
                             let html = (data.length == 1) ? '' : '<option value="">TODOS</option>';
 
                             $.each(data, function (i, item) {
-                                debugger;
                                 html += '<option value="' + item.Value + '">' + item.TextDisplay + '</option>'
 
                                 if (i == 0) {

@@ -124,7 +124,7 @@ namespace WebApp.Controllers
 
             var totalGenerado = (cuotas_pago != null && cuotas_pago.Count > 0) ? cuotas_pago.Sum(x => x.I_MontoOblig ?? 0) : 0;
 
-            var totalPagado = (cuotas_pago != null && cuotas_pago.Count > 0) ? cuotas_pago.Sum(x => x.I_MontoPagadoSinMora) : 0;
+            var totalPagado = (cuotas_pago != null && cuotas_pago.Count > 0) ? cuotas_pago.Where(x => x.B_Pagado).Sum(x => x.I_MontoOblig ?? 0) : 0;
 
             var totalDeuda = totalGenerado - totalPagado;
 

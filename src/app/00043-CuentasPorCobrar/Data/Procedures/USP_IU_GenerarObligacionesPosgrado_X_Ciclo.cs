@@ -47,7 +47,7 @@ namespace Data.Procedures
                     parameters.Add(name: "B_Result", dbType: DbType.Boolean, direction: ParameterDirection.Output);
                     parameters.Add(name: "T_Message", dbType: DbType.String, size: 4000, direction: ParameterDirection.Output);
 
-                    _dbConnection.Execute(s_command, parameters, commandType: CommandType.StoredProcedure);
+                    _dbConnection.Execute(s_command, parameters, commandType: CommandType.StoredProcedure, commandTimeout: 120);
 
                     result.Value = parameters.Get<bool>("B_Result");
                     result.Message = parameters.Get<string>("T_Message");

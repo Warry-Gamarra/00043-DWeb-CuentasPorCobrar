@@ -2,16 +2,6 @@ USE BD_OCEF_CtasPorCobrar
 GO
 
 
---SELECT * FROM dbo.TR_PagoBanco where i_pagobancoid = 357911
-
---update dbo.TR_PagoBanco  set I_ProcesoIDArchivo = 552, T_ProcesoDescArchivo = 'desc' where i_pagobancoid = 357911
-
-
---SELECT * FROM dbo.TR_PagoBanco b WHERE b.C_CodOperacion = '3314240846'
-
---SELECT * FROM dbo.TRI_PagoProcesadoUnfv p WHERE p.I_PagoBancoID = 2304299
---GO
-
 IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = 'USP_S_ListadoEstadoObligaciones')
 	DROP PROCEDURE [dbo].[USP_S_ListadoEstadoObligaciones]
 GO
@@ -249,4 +239,38 @@ BEGIN
 	INNER JOIN dbo.TC_CatalogoOpcion per ON per.I_OpcionID = mat.I_Periodo
 	WHERE mat.I_Anio = @I_Anio AND mat.I_Periodo = @I_Periodo AND mat.C_CodAlu = @C_CodAlu AND mat.C_RcCod = @C_RcCod;
 END
+GO
+
+
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VW_PagoBancoObligaciones')
+	DROP VIEW [dbo].[VW_PagoBancoObligaciones]
+GO
+    
+CREATE VIEW [dbo].[VW_PagoBancoObligaciones]
+AS    
+	SELECT b.I_PagoBancoID, e.I_EntidadFinanID, e.T_EntidadDesc, cd.I_CtaDepositoID, cd.C_NumeroCuenta, b.C_CodOperacion, b.C_CodDepositante,
+		c.I_ObligacionAluID, m.I_MatAluID, m.C_CodAlu, b.T_NomDepositante, m.T_Nombre, m.T_ApePaterno, m.T_ApeMaterno, m.N_Grado,
+		b.D_FecPago, b.I_MontoPago, b.I_InteresMora, b.T_LugarPago, b.D_FecCre, b.I_CondicionPagoID, cn.T_OpcionDesc AS T_Condicion, b.T_Observacion,
+		b.T_MotivoCoreccion, ISNULL(SUM(p.I_MontoPagado), 0) AS I_MontoProcesado, b.C_CodigoInterno,
+		ISNULL(pro.T_ProcesoDesc, (CASE WHEN b.T_ProcesoDescArchivo IS NOT NULL THEN b.T_ProcesoDescArchivo ELSE 
+			(SELECT TOP 1 tpro.T_ProcesoDesc FROM dbo.TC_Proceso tpro WHERE tpro.I_ProcesoID = b.I_ProcesoIDArchivo) END)) AS T_ProcesoDesc,
+		ISNULL(pro.D_FecVencto, b.D_FecVenctoArchivo) AS D_FecVencto,
+		cons.I_AnioConstancia, cons.I_NroConstancia
+	FROM TR_PagoBanco b
+	LEFT JOIN dbo.TRI_PagoProcesadoUnfv p ON p.I_PagoBancoID = b.I_PagoBancoID AND p.B_Anulado = 0
+	LEFT JOIN dbo.TR_ObligacionAluDet d ON d.I_ObligacionAluDetID = p.I_ObligacionAluDetID AND d.B_Habilitado = 1 AND d.B_Eliminado = 0
+	LEFT JOIN dbo.TR_ObligacionAluCab c ON c.I_ObligacionAluID = d.I_ObligacionAluID AND c.B_Habilitado = 1 AND c.B_Eliminado = 0
+	LEFT JOIN dbo.VW_MatriculaAlumno m ON m.I_MatAluID = c.I_MatAluID
+	LEFT JOIN dbo.TC_Proceso pro ON pro.I_ProcesoID = c.I_ProcesoID
+	INNER JOIN dbo.TC_EntidadFinanciera e ON e.I_EntidadFinanID = b.I_EntidadFinanID
+	INNER JOIN dbo.TC_CuentaDeposito cd ON cd.I_CtaDepositoID = b.I_CtaDepositoID
+	INNER JOIN dbo.TC_CatalogoOpcion cn ON cn.I_OpcionID = b.I_CondicionPagoID
+	LEFT JOIN dbo.TR_ConstanciaPago cons ON cons.I_PagoBancoID = b.I_PagoBancoID
+	WHERE b.I_TipoPagoID = 133 AND b.B_Anulado = 0
+	GROUP BY b.I_PagoBancoID, e.I_EntidadFinanID, cd.I_CtaDepositoID, cd.C_NumeroCuenta, e.T_EntidadDesc, b.C_CodOperacion, b.C_CodDepositante,
+		c.I_ObligacionAluID, m.I_MatAluID, m.C_CodAlu, b.T_NomDepositante, m.T_Nombre, m.T_ApePaterno, m.T_ApeMaterno, m.N_Grado,
+		b.D_FecPago, b.I_MontoPago, b.I_InteresMora, b.T_LugarPago, b.D_FecCre, b.I_CondicionPagoID, cn.T_OpcionDesc, b.T_Observacion, b.T_MotivoCoreccion,
+		b.C_CodigoInterno, pro.T_ProcesoDesc, b.T_ProcesoDescArchivo, pro.D_FecVencto, b.D_FecVenctoArchivo,
+		cons.I_AnioConstancia, cons.I_NroConstancia, b.I_ProcesoIDArchivo
 GO
