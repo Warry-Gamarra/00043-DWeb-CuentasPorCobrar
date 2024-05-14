@@ -99,7 +99,7 @@ namespace WebApp.Models
 
             tipoRegistro = "DD";
 
-            foreach (var item in cuotas_pago.OrderBy(c => c.T_ApePaterno).ThenBy(c => c.T_ApeMaterno))
+            foreach (var item in cuotas_pago.OrderBy(c => c.T_ApePaterno).ThenBy(c => c.T_ApeMaterno).ThenBy(c => c.T_NroOrden))
             {
                 string codigoDepositante = item.C_CodAlu.PadLeft(14, '0');
                 string nombreDepositante = item.T_NombresCompletos;

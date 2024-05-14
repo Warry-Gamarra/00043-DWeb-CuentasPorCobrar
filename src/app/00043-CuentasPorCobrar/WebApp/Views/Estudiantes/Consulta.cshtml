@@ -151,10 +151,10 @@
                    columns.Add(c => c.T_EsIngresante).Titled("Tipo alumno").Filterable(true);
                    columns.Add().Titled("Cuota").Encoded(false).Sanitized(false).RenderValueAs(model =>
                       ViewBag.MostrarReporteObligaciones ? ("<a href=\"" + Url.Action("ReporteObligaciones", "Reportes", new { anio = model.I_Anio, periodo = model.I_Periodo, codalu = model.C_CodAlu, codrc = model.C_RcCod }) +
-                      "\" target=\"_blank\">" + model.T_ProcesoDesc + "</a>") : model.T_ProcesoDesc);
+                      "\" target=\"_blank\">" + model.T_ProcesoDesc + "</a>") : model.T_ProcesoDesc).Filterable(true);
                    columns.Add(c => c.I_MontoOblig).Titled("Monto Obl.").Filterable(true).Css("text-center");
-                   columns.Add(c => c.I_MontoPagadoActual).Titled("Pagado actual").Filterable(true).Css("text-center");
                    columns.Add(c => c.T_FecVencto).Titled("Fec.Vcto.").Filterable(true).Css("text-center");
+                   columns.Add(c => c.T_MontoPagos).Titled("Pagado actual").Filterable(true).Css("text-center");
                    columns.Add(c => c.T_FecPagos).Titled("Fec.Pago").Filterable(true).Css("text-center");
                    columns.Add().Titled("Estado").Encoded(false).Sanitized(false).RenderValueAs(model =>
                        model.B_Pagado.HasValue ? ("<a href=\"" + Url.Action("VerPagosObligacion", "Pagos", new { obligacionID = model.I_ObligacionAluID, soloLectura = true }) +

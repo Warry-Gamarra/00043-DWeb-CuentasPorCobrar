@@ -380,6 +380,7 @@ namespace WebApp.Models
                 I_MontoPagadoActual = dto.I_MontoPagadoActual,
                 D_FecCre = dto.D_FecCre,
                 D_FecMod = dto.D_FecMod,
+                T_MontoPagos = dto.T_MontoPagos,
                 T_FecPagos = dto.T_FecPagos
             };
 

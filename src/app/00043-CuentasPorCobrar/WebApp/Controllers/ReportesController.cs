@@ -106,7 +106,7 @@ namespace WebApp.Controllers
 
             reportDataSets.Add(dataSet1, alumnoObligacionAlumnoDSet);
 
-            reportDataSets.Add(dataSet2, detalleObligacionAlumnoDSet);
+            reportDataSets.Add(dataSet2, detalleObligacionAlumnoDSet.OrderBy(d => d.T_NroOrden));
 
             var parameterList = new List<ReportParameter>();
 

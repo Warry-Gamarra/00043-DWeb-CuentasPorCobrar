@@ -395,7 +395,7 @@ namespace WebApp.Controllers
         public ActionResult AmpliarCreditos(int anio, int periodo, string codalu, string codrc)
         {
             var model = obligacionServiceFacade.Obtener_DetallePago(anio, periodo, codalu, codrc)
-                .Where(x => !x.B_EsAmpliacionCred && (x.I_Prioridad == 2 || (x.I_Prioridad == 1 && x.B_EsPagoMatricula)));
+                .Where(x => !x.B_Mora && !x.B_EsAmpliacionCred && (x.I_Prioridad == 2 || (x.I_Prioridad == 1 && x.B_EsPagoMatricula)));
 
             return PartialView("_AmpliarCreditos", model);
         }

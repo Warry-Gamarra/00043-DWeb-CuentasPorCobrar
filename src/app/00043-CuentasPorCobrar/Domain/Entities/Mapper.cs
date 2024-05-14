@@ -563,6 +563,7 @@ namespace Domain.Entities
                 I_MontoPagadoActual = sp.I_MontoPagadoActual,
                 D_FecCre = sp.D_FecCre,
                 D_FecMod = sp.D_FecMod,
+                T_MontoPagos = sp.T_MontoPagos,
                 T_FecPagos = sp.T_FecPagos
             };
 
