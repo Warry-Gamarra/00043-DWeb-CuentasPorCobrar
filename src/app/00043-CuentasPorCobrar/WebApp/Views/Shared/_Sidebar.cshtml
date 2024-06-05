@@ -3,7 +3,8 @@
 <div class="main-sidebar">
     <ul class="nav side-nav">
         <li class="nav-item"><a href="@Url.Action("Index", "Home")" class="nav-link"><i class="fa fa-fw fa-home"></i> Dashboard</a></li>
-        @if (User.IsInRole(RoleNames.ADMINISTRADOR) || User.IsInRole(RoleNames.CONSULTA) || User.IsInRole(RoleNames.DEPENDENCIA) || User.IsInRole(RoleNames.TESORERIA))
+        @if (User.IsInRole(RoleNames.ADMINISTRADOR) || User.IsInRole(RoleNames.CONSULTA) || User.IsInRole(RoleNames.DEPENDENCIA) || User.IsInRole(RoleNames.TESORERIA) 
+            || User.IsInRole(RoleNames.TESORERIA_AVANZADO))
         {
             <li class="nav-item">
                 <a href="javascript:;" class="nav-link" data-toggle="collapse" data-target="#inquiries">
@@ -16,14 +17,14 @@
                     @*<li><a href="@Url.Action("Generar", "Obligaciones")"><i class="fa fa-fw fa-th-large"></i>&nbsp; Consolidado por clasificador</a></li>*@
                     <li><a href="@Url.Action("Consulta", "Estudiantes")"><i class="fa bi-person-lines-fill"></i>&nbsp; Consulta estudiantes</a></li>
 
-                    @if (User.IsInRole(RoleNames.ADMINISTRADOR) || User.IsInRole(RoleNames.CONSULTA) || User.IsInRole(RoleNames.TESORERIA))
+                    @if (User.IsInRole(RoleNames.ADMINISTRADOR) || User.IsInRole(RoleNames.CONSULTA) || User.IsInRole(RoleNames.TESORERIA) || User.IsInRole(RoleNames.TESORERIA_AVANZADO))
                     {
                         <li><a href="@Url.Action("ListarPagosBancoObligaciones", "EstadosCuenta")"><i class="fa fa-bank"></i>&nbsp; Consulta Ingresos de Obligaciones</a></li>
                     }
 
                     <li><a href="@Url.Action("ReportesPagoObligaciones", "EstadosCuenta")"><i class="fa fa-fw fa-tasks"></i>&nbsp; Reporte Pago de Obligaciones</a></li>
 
-                    @if (User.IsInRole(RoleNames.ADMINISTRADOR) || User.IsInRole(RoleNames.CONSULTA) || User.IsInRole(RoleNames.TESORERIA))
+                    @if (User.IsInRole(RoleNames.ADMINISTRADOR) || User.IsInRole(RoleNames.CONSULTA) || User.IsInRole(RoleNames.TESORERIA) || User.IsInRole(RoleNames.TESORERIA_AVANZADO))
                     {
                         <li><a href="@Url.Action("ResumenAnualObligacionesPorDia", "EstadosCuenta")"><i class="fa fa-bank"></i>&nbsp; Resumen Ingresos de Obligaciones</a></li>
                         <li><a href="@Url.Action("CantidadDePagosPorDia", "EstadosCuenta")"><i class="fa fa-fw fa-tasks"></i>&nbsp; Cantidad de pagos por día</a></li>
@@ -33,14 +34,14 @@
             </li>
         }
 
-        @if (User.IsInRole(RoleNames.ADMINISTRADOR) || User.IsInRole(RoleNames.TESORERIA))
+        @if (User.IsInRole(RoleNames.ADMINISTRADOR) || User.IsInRole(RoleNames.TESORERIA) || User.IsInRole(RoleNames.TESORERIA_AVANZADO))
         {
             <li class="nav-item">
                 <a href="javascript:;" class="nav-link" data-toggle="collapse" data-target="#operations">
                     <i class="fa fa-fw fa-refresh"></i> Operaciones<span class="pull-right"><i class="fa fa-fw fa-caret-down"></i></span>
                 </a>
                 <ul id="operations" class="collapse">
-                    @if (User.IsInRole(RoleNames.ADMINISTRADOR))
+                    @if (User.IsInRole(RoleNames.ADMINISTRADOR) || User.IsInRole(RoleNames.TESORERIA_AVANZADO))
                     {
                         <li><a href="@Url.Action("Index", "Estudiantes")"><i class="fa fa-fw fa-user-plus"></i>&nbsp; Carga de alumnos</a></li>
                         <li><a href="@Url.Action("Generar", "Obligaciones")"><i class="fa fa-fw bi-person-lines-fill"></i>&nbsp; Generar obligaciones</a></li>
@@ -53,7 +54,7 @@
                     <li><a href="@Url.Action("ConsultaPagoTasa", "Tasa")"><i class="fa bi-person-lines-fill"></i>&nbsp; Gestión pago tasas</a></li>
                     <li><a href="@Url.Action("Index", "Devoluciones" )"><i class="fa fa-fw bi-box-arrow-down-right"></i>&nbsp; Devolución de pagos</a></li>
 
-                    @if (User.IsInRole(RoleNames.ADMINISTRADOR))
+                    @if (User.IsInRole(RoleNames.ADMINISTRADOR) || User.IsInRole(RoleNames.TESORERIA_AVANZADO))
                     {
                         @*<li><a href="@Url.Action("Actualizar", "Pagos")"><i class="fa fa-fw bi-safe-fill"></i>&nbsp; Actualizar pagos</a></li>*@
                         <li><a href="@Url.Action("ExportarRecaudacionTemporal", "Pagos")"><i class="fa fa-fw bi-file-binary-fill"></i>&nbsp; Exportar al Temporal de Pagos</a></li>
@@ -63,7 +64,7 @@
                 </ul>
             </li>
 
-            if (User.IsInRole(RoleNames.ADMINISTRADOR))
+            if (User.IsInRole(RoleNames.ADMINISTRADOR) || User.IsInRole(RoleNames.TESORERIA_AVANZADO))
             {
                 <li class="nav-item">
                     <a href="javascript:;" class="nav-link" data-toggle="collapse" data-target="#settings">
@@ -81,7 +82,7 @@
                     <i class="fa fa-fw bi-tools"></i> Mantenimiento<span class="pull-right"><i class="fa fa-fw fa-caret-down"></i></span>
                 </a>
                 <ul id="maintenance" class="collapse">
-                    @if (User.IsInRole(RoleNames.ADMINISTRADOR))
+                    @if (User.IsInRole(RoleNames.ADMINISTRADOR) || User.IsInRole(RoleNames.TESORERIA_AVANZADO))
                     {
                         <li class="dropdown-header">Plantillas</li>
                         <li><a href="@Url.Action("Index", "CategoriaPago")"><i class="fa fa-fw bi-grid-1x2-fill"></i>&nbsp; Cuotas de pago</a></li>
@@ -92,14 +93,22 @@
                         <li><a href="@Url.Action("Index", "Clasificadores")"><i class="fa fa-fw bi-bar-chart-steps"></i>&nbsp; Clasificadores de ingreso</a></li>
                         <li><a href="@Url.Action("Index", "EntidadRecaudadora")"><i class="fa fa-fw bi-cash-coin"></i>&nbsp; Entidades recaudadoras</a></li>
                         <li><a href="@Url.Action("Index", "CuentaDeposito")"><i class="fa fa-fw fa-credit-card"></i>&nbsp; Números de cuenta</a></li>
-                        <li><a href="@Url.Action("Index", "EstructuraArchivo")"><i class="fa fa-fw fa-copy"></i>&nbsp; Archivos de intercambio</a></li>
-
+                        if (User.IsInRole(RoleNames.ADMINISTRADOR))
+                        {
+                            <li><a href="@Url.Action("Index", "EstructuraArchivo")"><i class="fa fa-fw fa-copy"></i>&nbsp; Archivos de intercambio</a></li>
+                        }
                         <li class="dropdown-header">Aplicación</li>
-                        <li><a href="@Url.Action("Index", "Correo")"><i class="fa fa-fw fa-envelope"></i>&nbsp; Correo de aplicación </a></li>
+                        if (User.IsInRole(RoleNames.ADMINISTRADOR))
+                        {
+                            <li><a href="@Url.Action("Index", "Correo")"><i class="fa fa-fw fa-envelope"></i>&nbsp; Correo de aplicación </a></li>
+                        }
                         <li><a href="@Url.Action("Index", "Dependencia")"><i class="fa fa-fw bi-building"></i>&nbsp; Dependencias</a></li>
-                        <li><a href="@Url.Action("Index", "Users")"><i class="fa fa-fw fa-users"></i>&nbsp; Usuarios </a></li>
-                        <li><a href="@Url.Action("CamposTabla", "EstructuraArchivo")"><i class="fa fa-fw fa-columns"></i>&nbsp; Campos de tabla</a></li>
-                        <li><a href="@Url.Action("Manage", "HelpCenter")"><i class="fa fa-fw fa-bookmark"></i>&nbsp; Documentación </a></li>
+                        if (User.IsInRole(RoleNames.ADMINISTRADOR))
+                        {
+                            <li><a href="@Url.Action("Index", "Users")"><i class="fa fa-fw fa-users"></i>&nbsp; Usuarios </a></li>
+                            <li><a href="@Url.Action("CamposTabla", "EstructuraArchivo")"><i class="fa fa-fw fa-columns"></i>&nbsp; Campos de tabla</a></li>
+                            <li><a href="@Url.Action("Manage", "HelpCenter")"><i class="fa fa-fw fa-bookmark"></i>&nbsp; Documentación </a></li>
+                        }
                     }
 
                     <li class="dropdown-header">Comprobantes</li>
@@ -126,7 +135,8 @@
                 <i class="fa fa-3x fa-home"></i><br />Dashboard
             </a>
         </li>
-        @if (User.IsInRole(RoleNames.ADMINISTRADOR) || User.IsInRole(RoleNames.CONSULTA) || User.IsInRole(RoleNames.DEPENDENCIA) || User.IsInRole(RoleNames.TESORERIA))
+        @if (User.IsInRole(RoleNames.ADMINISTRADOR) || User.IsInRole(RoleNames.CONSULTA) || User.IsInRole(RoleNames.DEPENDENCIA) || User.IsInRole(RoleNames.TESORERIA)
+             || User.IsInRole(RoleNames.TESORERIA_AVANZADO))
         {
             <li class="nav-item">
                 <a href="javascript:;" class="nav-link" data-toggle="collapse" title="Consultas" data-target="#inquiries">
@@ -135,14 +145,14 @@
             </li>
         }
 
-        @if (User.IsInRole(RoleNames.ADMINISTRADOR) || User.IsInRole(RoleNames.TESORERIA))
+        @if (User.IsInRole(RoleNames.ADMINISTRADOR) || User.IsInRole(RoleNames.TESORERIA) || User.IsInRole(RoleNames.TESORERIA_AVANZADO))
         {
             <li class="nav-item">
                 <a href="javascript:;" class="nav-link" data-toggle="collapse" title="Operaciones" data-target="#operations">
                     <i class="fa fa-3x fa-refresh"></i><br />Operaciones
                 </a>
             </li>
-            if (User.IsInRole(RoleNames.ADMINISTRADOR))
+            if (User.IsInRole(RoleNames.ADMINISTRADOR) || User.IsInRole(RoleNames.TESORERIA_AVANZADO))
             {
                 <li class="nav-item">
                     <a href="javascript:;" class="nav-link" data-toggle="collapse" title="Configuración" data-target="#settings">

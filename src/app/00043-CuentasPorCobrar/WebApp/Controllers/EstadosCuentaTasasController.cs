@@ -14,7 +14,7 @@ using WebMatrix.WebData;
 namespace WebApp.Controllers
 {
     [Authorize]
-    [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONSULTA + ", " + RoleNames.TESORERIA)]
+    [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONSULTA + ", " + RoleNames.TESORERIA + ", " + RoleNames.TESORERIA_AVANZADO)]
     public class EstadosCuentaTasasController : Controller
     {
         ITasaServiceFacade tasaService;
@@ -28,7 +28,7 @@ namespace WebApp.Controllers
             usersModel = new UsersModel();
         }
 
-        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONSULTA + ", " + RoleNames.TESORERIA)]
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONSULTA + ", " + RoleNames.TESORERIA + ", " + RoleNames.TESORERIA_AVANZADO)]
         [Route("consulta/tasas")]
         public ActionResult Consulta(ConsultaPagoTasasViewModel model)
         {
@@ -40,7 +40,7 @@ namespace WebApp.Controllers
 
                 var user = usersModel.Find(WebSecurity.CurrentUserId);
 
-                if (user.RoleName.Equals(RoleNames.ADMINISTRADOR) || user.RoleName.Equals(RoleNames.TESORERIA))
+                if (user.RoleName.Equals(RoleNames.ADMINISTRADOR) || user.RoleName.Equals(RoleNames.TESORERIA) || user.RoleName.Equals(RoleNames.TESORERIA_AVANZADO))
                 {
                     verConstanciaPago = true;
                 }

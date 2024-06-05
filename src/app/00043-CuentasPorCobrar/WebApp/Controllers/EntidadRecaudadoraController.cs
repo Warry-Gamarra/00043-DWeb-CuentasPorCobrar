@@ -10,7 +10,7 @@ using WebMatrix.WebData;
 
 namespace WebApp.Controllers
 {
-    [Authorize(Roles = RoleNames.ADMINISTRADOR)]
+    [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA_AVANZADO)]
     public class EntidadRecaudadoraController : Controller
     {
         public readonly EntidadRecaudadoraModel _entidadRecaudadora;

@@ -14,7 +14,7 @@ using WebMatrix.WebData;
 
 namespace WebApp.Controllers
 {
-    [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
+    [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA + ", " + RoleNames.TESORERIA_AVANZADO)]
     public class ProcesosController : Controller
     {
         private readonly ProcesoModel _procesoModel;

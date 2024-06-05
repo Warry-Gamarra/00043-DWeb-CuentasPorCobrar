@@ -13,7 +13,7 @@ using WebMatrix.WebData;
 
 namespace WebApp.Controllers
 {
-    [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONSULTA + ", " + RoleNames.DEPENDENCIA + ", " + RoleNames.TESORERIA)]
+    [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONSULTA + ", " + RoleNames.DEPENDENCIA + ", " + RoleNames.TESORERIA + ", " + RoleNames.TESORERIA_AVANZADO)]
     public class EstudiantesController : Controller
     {
         private readonly EstudianteModel _seleccionarArchivoModel;
@@ -40,7 +40,7 @@ namespace WebApp.Controllers
             usersModel = new UsersModel();
         }
 
-        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA + ", " + RoleNames.TESORERIA_AVANZADO)]
         [Route("operaciones/cargar-estudiantes")]
         public ActionResult Index()
         {
@@ -49,7 +49,7 @@ namespace WebApp.Controllers
             return View();
         }
 
-        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA + ", " + RoleNames.TESORERIA_AVANZADO)]
         [Route("operaciones/cargar-aptos-pregrado")]
         public ActionResult CargarArchivoMatriculaPregrado()
         {
@@ -57,7 +57,7 @@ namespace WebApp.Controllers
             return PartialView("_SeleccionarArchivo", model);
         }
 
-        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA + ", " + RoleNames.TESORERIA_AVANZADO)]
         [Route("operaciones/cargar-aptos-posgrado")]
         public ActionResult CargarArchivoMatriculaPosgrado()
         {
@@ -65,7 +65,7 @@ namespace WebApp.Controllers
             return PartialView("_SeleccionarArchivo", model);
         }
 
-        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA + ", " + RoleNames.TESORERIA_AVANZADO)]
         [Route("operaciones/cargar-aptos-segunda-especialidad")]
         public ActionResult CargarArchivoMatriculaSegundaEspecialidad()
         {
@@ -73,7 +73,7 @@ namespace WebApp.Controllers
             return PartialView("_SeleccionarArchivo", model);
         }
 
-        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA + ", " + RoleNames.TESORERIA_AVANZADO)]
         [Route("operaciones/cargar-aptos-residentado")]
         public ActionResult CargarArchivoMatriculaResidentado()
         {
@@ -81,7 +81,7 @@ namespace WebApp.Controllers
             return PartialView("_SeleccionarArchivo", model);
         }
 
-        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA + ", " + RoleNames.TESORERIA_AVANZADO)]
         [Route("operaciones/cargar-multas-pregrado")]
         public ActionResult CargarArchivoMultaPregrado()
         {
@@ -89,7 +89,7 @@ namespace WebApp.Controllers
             return PartialView("_SeleccionarArchivo", model);
         }
 
-        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA + ", " + RoleNames.TESORERIA_AVANZADO)]
         [HttpPost]
         public ActionResult CargarArchivoMatricula(HttpPostedFileBase file, TipoAlumno tipoAlumno)
         {
@@ -104,7 +104,7 @@ namespace WebApp.Controllers
         }
 
         [Route("operaciones/cargar-aptos/resultado")]
-        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA + ", " + RoleNames.TESORERIA_AVANZADO)]
         public ActionResult DescargarRegistrosObservados()
         {
             if (Session["MATRICULA_RESPONSE"] == null || Session["MATRICULA_RESPONSE_TIPO_ALUMNO"] == null)
@@ -172,7 +172,7 @@ namespace WebApp.Controllers
             }
         }
 
-        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA + ", " + RoleNames.TESORERIA_AVANZADO)]
         [HttpPost]
         public ActionResult CargarArchivoMulta(HttpPostedFileBase file, TipoAlumno tipoAlumno)
         {
@@ -186,7 +186,7 @@ namespace WebApp.Controllers
         }
 
         [Route("operaciones/cargar-multas-pregrado/resultado")]
-        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA + ", " + RoleNames.TESORERIA_AVANZADO)]
         public ActionResult DescargarMultasSinRegistrar()
         {
             if (Session["MULTAS_SIN_REGISTRAR_RESPONSE"] == null)
@@ -227,7 +227,7 @@ namespace WebApp.Controllers
             }
         }
 
-        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONSULTA + ", " + RoleNames.TESORERIA + ", " + RoleNames.DEPENDENCIA)]
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONSULTA + ", " + RoleNames.TESORERIA + ", " + RoleNames.DEPENDENCIA + ", " + RoleNames.TESORERIA_AVANZADO)]
         [Route("consulta/estudiantes")]
         public ActionResult Consulta(ConsultaObligacionEstudianteViewModel model)
         {

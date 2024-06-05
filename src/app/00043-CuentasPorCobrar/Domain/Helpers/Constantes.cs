@@ -61,6 +61,8 @@ namespace Domain.Helpers
         public const string TESORERIA = "Tesorería";
 
         public const string DEPENDENCIA = "Dependencia";
+
+        public const string TESORERIA_AVANZADO = "Tesorería Avanzado";
     }
 
     public static class DependenciaEUPG

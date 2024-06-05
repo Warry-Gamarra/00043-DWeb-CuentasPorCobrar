@@ -17,7 +17,7 @@ using WebMatrix.WebData;
 namespace WebApp.Controllers
 {
     [Authorize]
-    [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONSULTA + ", " + RoleNames.DEPENDENCIA + ", " + RoleNames.TESORERIA)]
+    [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONSULTA + ", " + RoleNames.DEPENDENCIA + ", " + RoleNames.TESORERIA + ", " + RoleNames.TESORERIA_AVANZADO)]
     public class EstadosCuentaController : Controller
     {
         IReporteServiceFacade reporteServiceFacade;
@@ -49,7 +49,7 @@ namespace WebApp.Controllers
             return View();
         }
 
-        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONSULTA + ", " + RoleNames.TESORERIA + ", " + RoleNames.DEPENDENCIA)]
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONSULTA + ", " + RoleNames.TESORERIA + ", " + RoleNames.DEPENDENCIA + ", " + RoleNames.TESORERIA_AVANZADO)]
         [Route("consultas/reporte-pago-de-obligaciones")]
         public ActionResult ReportesPagoObligaciones(ReportePagosObligacionesViewModel model)
         {
@@ -615,7 +615,7 @@ namespace WebApp.Controllers
             return workbook;
         }
 
-        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONSULTA + ", " + RoleNames.TESORERIA)]
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONSULTA + ", " + RoleNames.TESORERIA + ", " + RoleNames.TESORERIA_AVANZADO)]
         [Route("consulta/ingresos-de-obligaciones")]
         public ActionResult ListarPagosBancoObligaciones(ConsultaPagosBancoObligacionesViewModel model)
         {
@@ -627,7 +627,7 @@ namespace WebApp.Controllers
 
                 var user = usersModel.Find(WebSecurity.CurrentUserId);
 
-                if (user.RoleName.Equals(RoleNames.ADMINISTRADOR) || user.RoleName.Equals(RoleNames.TESORERIA))
+                if (user.RoleName.Equals(RoleNames.ADMINISTRADOR) || user.RoleName.Equals(RoleNames.TESORERIA) || user.RoleName.Equals(RoleNames.TESORERIA_AVANZADO))
                 {
                     verConstanciaPago = true;
                 }
@@ -649,7 +649,7 @@ namespace WebApp.Controllers
             return View(model);
         }
 
-        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONSULTA + ", " + RoleNames.TESORERIA)]
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONSULTA + ", " + RoleNames.TESORERIA + ", " + RoleNames.TESORERIA_AVANZADO)]
         [Route("consulta/ingresos-de-obligaciones/descarga")]
         public ActionResult ListarPagosBancoObligacionesDescargaExcel(ConsultaPagosBancoObligacionesViewModel model)
         {
@@ -724,7 +724,7 @@ namespace WebApp.Controllers
             }
         }
 
-        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONSULTA + ", " + RoleNames.TESORERIA)]
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONSULTA + ", " + RoleNames.TESORERIA + ", " + RoleNames.TESORERIA_AVANZADO)]
         [Route("consultas/resumen-obligaciones-por-dia")]
         public ActionResult ResumenAnualObligacionesPorDia(int? anio, int? entidadFinanID, int? ctaDepositoID, int? condicion)
         {
@@ -856,7 +856,7 @@ namespace WebApp.Controllers
             }
         }
 
-        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONSULTA + ", " + RoleNames.TESORERIA)]
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONSULTA + ", " + RoleNames.TESORERIA + ", " + RoleNames.TESORERIA_AVANZADO)]
         [Route("consultas/pagos-por-dia")]
         public ActionResult CantidadDePagosPorDia(int? anio, int? tipoPago, int? entidadFinanID, int? ctaDepositoID, int? condicion)
         {

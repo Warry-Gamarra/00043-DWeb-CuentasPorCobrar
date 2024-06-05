@@ -35,7 +35,7 @@ namespace WebApp.Controllers
             _tasaService = new TasaServiceFacade();
         }
 
-        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONTABILIDAD + ", " + RoleNames.TESORERIA + ", " + RoleNames.CONSULTA)]
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONTABILIDAD + ", " + RoleNames.TESORERIA + ", " + RoleNames.CONSULTA + ", " + RoleNames.TESORERIA_AVANZADO)]
         [Route("obligaciones/reporte-obligacion-alumno")]
         public ActionResult ReporteObligaciones(int anio, int periodo, string codalu, string codrc)
         {
@@ -161,7 +161,7 @@ namespace WebApp.Controllers
             return File(reporte.RenderedBytes, reporte.MimeType);
         }
 
-        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA + ", " + RoleNames.TESORERIA_AVANZADO)]
         [Route("consulta/ingresos-de-obligaciones/constancia-pago-obligacion")]
         public ActionResult ImprimirConstanciaPagoObligacion(int id)
         {
@@ -239,7 +239,7 @@ namespace WebApp.Controllers
             }
         }
 
-        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONTABILIDAD + ", " + RoleNames.TESORERIA)]
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONTABILIDAD + ", " + RoleNames.TESORERIA + ", " + RoleNames.TESORERIA_AVANZADO)]
         [Route("consulta/ingresos-de-obligaciones/constancias-pago-obligacion")]
         public ActionResult DescargarConstanciaPagoObligaciones(ConsultaPagosBancoObligacionesViewModel model)
         {
@@ -336,7 +336,7 @@ namespace WebApp.Controllers
             }
         }
 
-        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA)]
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.TESORERIA + ", " + RoleNames.TESORERIA_AVANZADO)]
         [Route("consulta/ingresos-de-obligaciones/constancia-pago-tasa")]
         public ActionResult ImprimirConstanciaPagoTasa(int id)
         {
@@ -402,7 +402,7 @@ namespace WebApp.Controllers
             }
         }
 
-        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONTABILIDAD + ", " + RoleNames.TESORERIA)]
+        [Authorize(Roles = RoleNames.ADMINISTRADOR + ", " + RoleNames.CONTABILIDAD + ", " + RoleNames.TESORERIA + ", " + RoleNames.TESORERIA_AVANZADO)]
         [Route("consulta/ingresos-de-obligaciones/constancias-pago-tasa")]
         public ActionResult DescargarConstanciaPagoTasas(ConsultaPagoTasasViewModel model)
         {
